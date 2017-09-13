@@ -1,0 +1,93 @@
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu" data-widget="tree">
+            {#<li class="header">MAIN NAVIGATION</li>#}
+            <li class="treeview"> {# class="active menu-open" #}
+                <a href="#">
+                    <i class="fa fa-users"></i>
+                    <span>Clientes</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="{{ path('agregar-cliente') }}">
+                            <i class="fa fa-minus"></i> Agregar
+                        </a>
+                    </li>
+                    <li> {# class="active" #}
+                        <a href="{{ path('lista-cliente') }}">
+                            <i class="fa fa-minus"></i> Listado
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-ship"></i>
+                    <span>Marina</span>
+                    <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="pages/layout/top-nav.html"><i class="fa fa-minus"></i> Administración</a>
+                    </li>
+                    <li><a href="pages/layout/boxed.html"><i class="fa fa-minus"></i> Nueva cotización</a></li>
+                    <li><a href="pages/layout/fixed.html"><i class="fa fa-minus"></i> Cotizaciones</a></li>
+                </ul>
+                <hr>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-anchor"></i>
+                    <span>Astillero</span>
+                    <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="pages/charts/chartjs.html"><i class="fa fa-minus"></i> Nueva cotización </a></li>
+                    <li><a href="pages/charts/morris.html"><i class="fa fa-minus"></i> Cotizaciones</a></li>
+                    <li><a href="pages/charts/flot.html"><i class="fa fa-minus"></i> Aceptaciones</a></li>
+                    <li><a href="pages/charts/inline.html"><i class="fa fa-minus"></i> ODT</a></li>
+                </ul>
+                <hr>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-th"></i>
+                    <span>Productos</span>
+                </a>
+                <hr>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-address-book-o"></i>
+                    <span>Recursos Humanos</span>
+                </a>
+                <hr>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-archive"></i>
+                    <span>Contabilidad</span>
+                </a>
+                <hr>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-file-text-o"></i>
+                    <span>Reportes</span>
+                </a>
+                <hr>
+            </li>
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

@@ -27,33 +27,35 @@
 .skin-novo .main-header .navbar .nav .open > a:hover,
 .skin-novo .main-header .navbar .nav .open > a:focus,
 .skin-novo .main-header .navbar .nav > .active > a {
-    background: #0097f6;
+    /*background: #0097f6;*/
+    background: #363c52;
     color: #ffffff;
 }
 .skin-novo .main-header .navbar .sidebar-toggle {
-    color: #333333;
+    color: #5a626f;
 }
 .skin-novo .main-header .navbar .sidebar-toggle:hover {
     color: #999999;
-    background: #0097f6;
+    /*background: #0097f6;*/
+    background: #363c52;
 }
 .skin-novo .main-header .navbar > .sidebar-toggle {
     color: #5a626f;
-    border-right: 1px solid #eee;
+    /*border-right: 1px solid;*/
 }
 .skin-novo .main-header .navbar .navbar-nav > li > a {
     border-right: 1px solid #eee;
 }
 .skin-novo .main-header .navbar .navbar-custom-menu .navbar-nav > li > a,
 .skin-novo .main-header .navbar .navbar-right > li > a {
-    border-left: 1px solid #eee;
+    /*border-left: 1px solid #eee;*/
     border-right-width: 0;
 }
 .skin-novo .main-header > .logo {
     background-color: #292e41;
     color: #333333;
     border-bottom: 0 solid transparent;
-    border-right: 1px solid #eee;
+    /*border-right: 1px solid #eee;*/
 }
 .skin-novo .main-header > .logo:hover {
     background-color: #292e41;
@@ -99,14 +101,15 @@
 /*.skin-novo .sidebar-menu > li.active > a,*/
 .skin-novo .sidebar-menu > li.menu-open > a {
     color: #ffffff;
-    /*background: #0097f6;*/
+    background: #363c52;
+    border-left: 3px solid #0097f6;
 }
 .skin-novo .sidebar-menu > li.active > a {
     border-left-color: #0097f6;
 }
 .skin-novo .sidebar-menu > li > .treeview-menu {
     /*margin: 0 1px;*/
-    /*background: #2c3b41;*/
+    background: #363c52;
 }
 .skin-novo .sidebar a {
     color: #b8c7ce;
@@ -175,4 +178,32 @@
 }
 .skin-novo .control-sidebar-dark .nav-tabs.control-sidebar-tabs>li.active>a {
     background: #363c52;
+}
+
+.skin-novo .main-header{
+    max-height: 140px;
+    background: #292e41;
+}
+
+.skin-novo .main-header{
+    box-shadow: 0 4px 8px #191919;
+}
+hr {
+    margin-top: 0 !important;
+    border-bottom: 1px solid rgba(62, 70, 99, 0.38) !important;
+    border-top: 2px solid rgba(0,0,0,0.2) !important;
+    margin-bottom: 0 !important;
+}
+@media (min-width: 768px) {
+    .skin-novo .main-sidebar {
+        padding-top: 98px;
+    }
+    nav hr{
+        margin-left: -230px;
+    }
+}
+@media (max-width: 767px) {
+    .main-sidebar {
+        padding-top: 146px;
+    }
 }

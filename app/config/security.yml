@@ -43,17 +43,18 @@ security:
         main:
             pattern: /.*
             form_login:
-                login_path: /login
-                check_path: /login
-                default_target_path: /admin
+                login_path: /
+                check_path: /
+                default_target_path: /inicio
             logout:
                 path:   /logout
-                target: /admin
+                target: /
             security: true
             anonymous: true
     access_control:
-        - { path: /inicio, roles: ROLE_USER }
-        - { path: /admin, roles: ROLE_ADMIN }
+        - { path: /logout, roles: ROLE_ADMIN }
+        - { path: /inicio, roles: ROLE_ADMIN }
+        - { path: /clientes, roles: ROLE_ADMIN }
 #        - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 #        - { path: /cms/user, roles: ROLE_ADMIN }
 #        - { path: /cms/category, roles: ROLE_ADMIN }

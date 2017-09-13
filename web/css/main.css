@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
 body{
     color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
 }
 .hoja-login{
     height: auto;
@@ -49,4 +53,23 @@ body{
     -webkit-border-radius: 16px;
     -moz-border-radius: 16px;
     border-radius: 16px;
+}
+/*-----*/
+
+.letra-etiqueta-usuario{
+    font-size: 19px;
+}
+.letra-nombre-usuario{
+    color: #0097f6;
+}
+.btn-salir span{
+    position: relative;
+    top: -5px;
+    color: #ffffff;
+}
+.btn-salir i{
+    color: #0097f6;
+}
+.sidebar hr{
+    width: 95%;
 }
