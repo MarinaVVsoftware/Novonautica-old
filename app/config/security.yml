@@ -23,7 +23,8 @@ security:
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
     encoders:
-        Symfony\Component\Security\Core\User\User: plaintext
+#        Symfony\Component\Security\Core\User\User: plaintext
+        Symfony\Component\Security\Core\User\User: bcrypt
         AppBundle\Entity\User: bcrypt
     role_hierarchy:
         ROLE_ADMIN: [ROLE_USER]
@@ -35,7 +36,7 @@ security:
         in_memory:
             memory:
                 users:
-                    admin: {password: adminpass, roles: ROLE_ADMIN}
+                    admin: {password: $2y$13$KUmVI3Dmoqk5FMp/Wls4oOa0frKbn6fKadLZ5YKhdWO5wisHIhDAK, roles: ROLE_ADMIN}
 #        user_db:
 #            entity: { class: AppBundle\Entity\User, property: username }
     firewalls:
@@ -44,10 +45,10 @@ security:
             form_login:
                 login_path: /login
                 check_path: /login
-                default_target_path: /
+                default_target_path: /admin
             logout:
                 path:   /logout
-                target: /
+                target: /admin
             security: true
             anonymous: true
     access_control:

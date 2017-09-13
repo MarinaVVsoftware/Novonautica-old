@@ -1,0 +1,52 @@
+body{
+    color: #fff;
+}
+.hoja-login{
+    height: auto;
+    min-height: 100%;
+    background: url("../img/inicio-fondo.png");
+    background-size: cover;
+    position:relative;
+}
+.hoja-login>body{
+    width: 100%;
+    background: none;
+    position: absolute;
+    top:30%;
+}
+.panel-login,
+.panel-login>.panel-heading,
+.panel-login>.panel-body{
+    background: none;
+    border:none;
+    text-align: center;
+}
+.boton-login{
+    background: url("../img/inicio-botton.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 75px;
+}
+.boton-login:hover{
+    background: url("../img/inicio-botton-on.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    color: #ffffff;
+}
+.btn.active.focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn:active:focus, .btn:focus{
+    outline: none;
+    color: #ffffff;
+}
+.panel-login img{
+    width: 200px;
+}
+.panel-login input{
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+    border-radius: 16px;
+}
