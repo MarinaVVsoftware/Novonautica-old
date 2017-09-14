@@ -1,0 +1,30 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block title %}
+    Novonautiva | Agenda
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Agenda</h3>
+                </div>
+                <div class="panel-body panel-pestanias">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="primero active"><a href="#mes" aria-controls="mes" role="tab" data-toggle="tab">Mes</a></li>
+                        <li role="presentation"><a href="#semana" aria-controls="semana" role="tab" data-toggle="tab">Semana</a></li>
+                        <li role="presentation"><a href="#dia" aria-controls="dia" role="tab" data-toggle="tab">Día</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="mes">...1</div>
+                        <div role="tabpanel" class="tab-pane" id="semana">...2</div>
+                        <div role="tabpanel" class="tab-pane" id="dia">...3</div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

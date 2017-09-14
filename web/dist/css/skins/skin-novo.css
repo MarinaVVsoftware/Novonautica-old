@@ -188,22 +188,4 @@
 .skin-novo .main-header{
     box-shadow: 0 4px 8px #191919;
 }
-hr {
-    margin-top: 0 !important;
-    border-bottom: 1px solid rgba(62, 70, 99, 0.38) !important;
-    border-top: 2px solid rgba(0,0,0,0.2) !important;
-    margin-bottom: 0 !important;
-}
-@media (min-width: 768px) {
-    .skin-novo .main-sidebar {
-        padding-top: 98px;
-    }
-    nav hr{
-        margin-left: -230px;
-    }
-}
-@media (max-width: 767px) {
-    .main-sidebar {
-        padding-top: 146px;
-    }
-}
+

@@ -1,3 +1,75 @@
+{% set menuClientes='' %}
+{% set menuMarina='' %}
+{% set menuAstillero='' %}
+{% set menuProductos='' %}
+{% set menuRH='' %}
+{% set menuConta='' %}
+{% set menuReportes='' %}
+
+{% set actCA='' %}
+{% set actCL='' %}
+{% set actMAg='' %}
+{% set actMA='' %}
+{% set actMN='' %}
+{% set actMC='' %}
+{% set actAN='' %}
+{% set actAC='' %}
+{% set actAA='' %}
+{% set actAO='' %}
+
+
+{% if clienteagregar is defined %}
+    {% set menuClientes =' active menu-open' %}
+    {% set actCA=' active' %}
+{% endif %}
+{% if clientelistado is defined %}
+    {% set menuClientes=' active menu-open' %}
+    {% set actCL=' active' %}
+{% endif %}
+{% if marinaagenda is defined %}
+    {% set menuMarina=' active menu-open' %}
+    {% set actMAg=' active' %}
+{% endif %}
+{% if marinaadministracion is defined %}
+    {% set menuMarina=' active menu-open' %}
+    {% set actMA=' active' %}
+{% endif %}
+{% if marinanuevacotizacion is defined %}
+    {% set menuMarina=' active menu-open' %}
+    {% set actMN=' active' %}
+{% endif %}
+{% if marinacotizaciones is defined %}
+    {% set menuMarina=' active menu-open' %}
+    {% set actMC=' active' %}
+{% endif %}
+{% if astilleronuevacotizacion is defined %}
+    {% set menuAstillero = ' active menu-open' %}
+    {% set actAN = ' active' %}
+{% endif %}
+{% if astillerocotizaciones is defined %}
+    {% set menuAstillero = ' active menu-open' %}
+    {% set actAC=' active' %}
+{% endif %}
+{% if astilleroaceptaciones is defined %}
+    {% set menuAstillero = ' active menu-open' %}
+    {% set actAA=' active' %}
+{% endif %}
+{% if astilleroodt is defined %}
+    {% set menuAstillero = ' active menu-open' %}
+    {% set actAO=' active' %}
+{% endif %}
+{% if productos is defined %}
+    {% set menuProductos=' active' %}
+{% endif %}
+{% if recursoshumanos is defined %}
+    {% set menuRH=' active' %}
+{% endif %}
+{% if contabilidad is defined %}
+    {% set menuConta=' active' %}
+{% endif %}
+{% if reportes is defined %}
+    {% set menuReportes=' active' %}
+{% endif %}
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
@@ -5,7 +77,7 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             {#<li class="header">MAIN NAVIGATION</li>#}
-            <li class="treeview"> {# class="active menu-open" #}
+            <li class="treeview {{ menuClientes }}"> {# class="active menu-open" #}
                 <a href="#">
                     <i class="fa fa-users"></i>
                     <span>Clientes</span>
@@ -14,36 +86,52 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li>
-                        <a href="{{ path('agregar-cliente') }}">
+                    <li class="{{ actCA }}">
+                        <a href="{{ path('clientes-agregar') }}">
                             <i class="fa fa-minus"></i> Agregar
                         </a>
                     </li>
-                    <li> {# class="active" #}
-                        <a href="{{ path('lista-cliente') }}">
+                    <li class="{{ actCL }}">
+                        <a href="{{ path('clientes-lista') }}">
                             <i class="fa fa-minus"></i> Listado
                         </a>
                     </li>
                 </ul>
                 <hr>
             </li>
-            <li class="treeview">
+            <li class="treeview {{ menuMarina }}">
                 <a href="#">
                     <i class="fa fa-ship"></i>
-                    <span>Marina</span>
+                    <span>Marina Humeda</span>
                     <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="pages/layout/top-nav.html"><i class="fa fa-minus"></i> Administración</a>
+                    <li class="{{ actMAg }}">
+                        <a href="{{ path('marina-agenda') }}">
+                            <i class="fa fa-minus"></i> Agenda
+                        </a>
                     </li>
-                    <li><a href="pages/layout/boxed.html"><i class="fa fa-minus"></i> Nueva cotización</a></li>
-                    <li><a href="pages/layout/fixed.html"><i class="fa fa-minus"></i> Cotizaciones</a></li>
+                    <li class="{{ actMA }}">
+                        <a href="{{ path('marina-administracion') }}">
+                            <i class="fa fa-minus"></i> Administración
+                        </a>
+                    </li>
+                    <li class="{{ actMN }}">
+                        <a href="{{ path('marina-nueva-cotizacion') }}">
+                            <i class="fa fa-minus"></i> Nueva cotización
+                        </a>
+                    </li>
+                    <li class="{{ actMC }}">
+                        <a href="{{ path('marina-cotizaciones') }}">
+                            <i class="fa fa-minus"></i> Cotizaciones
+                        </a>
+                    </li>
                 </ul>
                 <hr>
             </li>
-            <li class="treeview">
+            <li class="treeview  {{ menuAstillero }}">
                 <a href="#">
                     <i class="fa fa-anchor"></i>
                     <span>Astillero</span>
@@ -52,36 +140,44 @@
                         </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="pages/charts/chartjs.html"><i class="fa fa-minus"></i> Nueva cotización </a></li>
-                    <li><a href="pages/charts/morris.html"><i class="fa fa-minus"></i> Cotizaciones</a></li>
-                    <li><a href="pages/charts/flot.html"><i class="fa fa-minus"></i> Aceptaciones</a></li>
-                    <li><a href="pages/charts/inline.html"><i class="fa fa-minus"></i> ODT</a></li>
+                    <li class="{{ actAN }}">
+                        <a href="{{ path('astillero-nueva-cotizacion') }}"><i class="fa fa-minus"></i> Nueva cotización </a>
+                    </li>
+                    <li class="{{ actAC }}">
+                        <a href="{{ path('astillero-cotizaciones') }}"><i class="fa fa-minus"></i> Cotizaciones</a>
+                    </li>
+                    <li class="{{ actAA }}">
+                        <a href="{{ path('astillero-aceptaciones') }}"><i class="fa fa-minus"></i> Aceptaciones</a>
+                    </li>
+                    <li class="{{ actAO }}">
+                        <a href="{{ path('astillero-odt') }}"><i class="fa fa-minus"></i> ODT</a>
+                    </li>
                 </ul>
                 <hr>
             </li>
-            <li class="treeview">
-                <a href="#">
+            <li class="{{ menuProductos }}">
+                <a href="{{ path('productos') }}">
                     <i class="fa fa-th"></i>
                     <span>Productos</span>
                 </a>
                 <hr>
             </li>
-            <li class="treeview">
-                <a href="#">
+            <li class="{{ menuRH }}">
+                <a href="{{ path('recursos-humanos') }}">
                     <i class="fa fa-address-book-o"></i>
                     <span>Recursos Humanos</span>
                 </a>
                 <hr>
             </li>
-            <li class="treeview">
-                <a href="#">
+            <li class="{{ menuConta }}">
+                <a href="{{ path('contabilidad') }}">
                     <i class="fa fa-archive"></i>
                     <span>Contabilidad</span>
                 </a>
                 <hr>
             </li>
-            <li class="treeview">
-                <a href="#">
+            <li class="{{ menuReportes }}">
+                <a href="{{ path('reportes') }}">
                     <i class="fa fa-file-text-o"></i>
                     <span>Reportes</span>
                 </a>

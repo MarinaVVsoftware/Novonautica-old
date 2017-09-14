@@ -1,75 +1,189 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
 
-body{
+body {
     color: #fff;
     font-family: 'Montserrat', sans-serif;
     font-size: 14px;
 }
-.hoja-login{
+hr {
+    margin-top: 0 !important;
+    border-bottom: 1px solid rgba(62, 70, 99, 0.38) !important;
+    border-top: 2px solid rgba(0,0,0,0.2) !important;
+    margin-bottom: 0 !important;
+}
+.hoja-login {
     height: auto;
     min-height: 100%;
     background: url("../img/inicio-fondo.png");
     background-size: cover;
-    position:relative;
+    position: relative;
 }
-.hoja-login>body{
+
+.hoja-login > body {
     width: 100%;
     background: none;
     position: absolute;
-    top:30%;
+    top: 30%;
 }
+
 .panel-login,
-.panel-login>.panel-heading,
-.panel-login>.panel-body{
+.panel-login > .panel-heading,
+.panel-login > .panel-body {
     background: none;
-    border:none;
+    border: none;
     text-align: center;
 }
-.boton-login{
+
+.boton-login {
     background: url("../img/inicio-botton.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
     width: 100px;
     height: 75px;
 }
-.boton-login:hover{
+
+.boton-login:hover {
     background: url("../img/inicio-botton-on.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
     color: #ffffff;
 }
+
 .btn.active.focus,
 .btn.active:focus,
 .btn.focus,
 .btn:active.focus,
-.btn:active:focus, .btn:focus{
+.btn:active:focus, .btn:focus {
     outline: none;
     color: #ffffff;
 }
-.panel-login img{
+
+.panel-login img {
     width: 200px;
 }
-.panel-login input{
+
+.panel-login input {
     -webkit-border-radius: 16px;
     -moz-border-radius: 16px;
     border-radius: 16px;
 }
+
 /*-----*/
 
-.letra-etiqueta-usuario{
+.letra-etiqueta-usuario {
     font-size: 19px;
 }
-.letra-nombre-usuario{
+
+.letra-nombre-usuario {
     color: #0097f6;
 }
-.btn-salir span{
+
+.btn-salir span {
     position: relative;
     top: -5px;
     color: #ffffff;
 }
-.btn-salir i{
+
+.btn-salir i {
     color: #0097f6;
 }
-.sidebar hr{
+
+.sidebar hr {
     width: 95%;
+}
+
+.content {
+    padding: 30px;
+}
+
+.panel-novo {
+    border: none;
+}
+
+.panel-novo .panel-title {
+    color: #0097f6;
+    font-size: 27px;
+}
+
+.panel-novo > .panel-heading {
+    background-color: #292e41;
+}
+
+.panel-novo > .panel-body {
+    background-color: #363c52;
+    min-height: 400px;
+}
+.panel-novo thead{
+    background-color: #292e41;
+    border-top: 2px solid #1c1f29;
+}
+.table>thead>tr>th {
+    border: 2px solid #1c1f29;
+}
+.panel-novo th, .panel-novo td {
+    border-left: 2px solid #292e41;
+    border-bottom: 2px solid #292e41;
+    border-right: 2px solid #292e41;
+}
+.panel-novo .panel-pestanias{
+    padding-top: 0;
+}
+.panel-novo .nav-tabs{
+    border: none;
+}
+.panel-novo .nav-tabs>li>a {
+    margin-right: 0;
+    border: none;
+    border-radius: 0;
+    /*background: #292e41;*/
+    background: url("../img/pestania-no-select.png");
+    background-size: 100% 100%;
+    color: #fff;
+    /*-webkit-clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);*/
+    /*clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);*/
+}
+.panel-novo .nav-tabs>li.active>a
+{
+    color: #fff;
+    /*background: #0097f6;*/
+    background: url("../img/pestania-select-medio.png");
+    background-size: 100% 100%;
+    border: none;
+    z-index: 1;
+}
+.panel-novo .nav-tabs>li>a:hover{
+    color: #9b9b9b;
+}
+.panel-novo .nav>li>a{
+    padding: 10px 35px;
+}
+.panel .nav>.primero>a{
+    background: #292e41;
+    -webkit-clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
+    clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
+}
+.panel-novo .nav-tabs>li{
+    margin-left: -30px;
+}
+.panel-novo .nav-tabs>li.primero{
+    margin-left: 0;
+}
+.panel-body .tab-content{
+    padding: 20px 15px;
+}
+@media (min-width: 768px) {
+    .skin-novo .main-sidebar {
+        padding-top: 98px;
+    }
+    nav hr{
+        margin-left: -230px;
+    }
+}
+@media (max-width: 767px) {
+    .main-sidebar {
+        padding-top: 146px;
+    }
+    .panel-novo .nav-tabs>li{
+        margin-left: 0;
+    }
 }

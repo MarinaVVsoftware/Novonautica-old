@@ -55,6 +55,12 @@ security:
         - { path: /logout, roles: ROLE_ADMIN }
         - { path: /inicio, roles: ROLE_ADMIN }
         - { path: /clientes, roles: ROLE_ADMIN }
+        - { path: /marina, roles: ROLE_ADMIN }
+        - { path: /astillero, roles: ROLE_ADMIN }
+        - { path: /productos, roles: ROLE_ADMIN }
+        - { path: /recursos-humanos, roles: ROLE_ADMIN }
+        - { path: /contabilidad, roles: ROLE_ADMIN }
+        - { path: /reportes, roles: ROLE_ADMIN }
 #        - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 #        - { path: /cms/user, roles: ROLE_ADMIN }
 #        - { path: /cms/category, roles: ROLE_ADMIN }
