@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Luiz
- * Date: 11/09/2017
- * Time: 03:54 PM
- */
+
 
 namespace AppBundle\Controller;
 
@@ -12,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
-class SecurityController extends Controller
+class SecuriryController extends Controller
 {
     /**
      * @Route("/", name="login")

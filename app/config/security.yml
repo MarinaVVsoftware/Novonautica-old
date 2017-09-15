@@ -24,21 +24,21 @@ security:
             #form_login: ~
     encoders:
 #        Symfony\Component\Security\Core\User\User: plaintext
-        Symfony\Component\Security\Core\User\User: bcrypt
-        AppBundle\Entity\User: bcrypt
+        Symfony\Component\Security\Core\User\User: plaintext
+        AppBundle\Entity\Usuario: plaintext
     role_hierarchy:
         ROLE_ADMIN: [ROLE_USER]
     providers:
         chain_provider:
             chain:
-#                providers: [in_memory, user_db]
-                providers: [in_memory]
+                providers: [in_memory, user_db]
+#                providers: [in_memory]
         in_memory:
             memory:
                 users:
-                    admin: {password: $2y$13$KUmVI3Dmoqk5FMp/Wls4oOa0frKbn6fKadLZ5YKhdWO5wisHIhDAK, roles: ROLE_ADMIN}
-#        user_db:
-#            entity: { class: AppBundle\Entity\User, property: username }
+                    admin: {password: adminpass, roles: ROLE_ADMIN} #$2y$13$KUmVI3Dmoqk5FMp/Wls4oOa0frKbn6fKadLZ5YKhdWO5wisHIhDAK
+        user_db:
+            entity: { class: AppBundle\Entity\Usuario, property: correo } #con que campo se va a loguear
     firewalls:
         main:
             pattern: /.*
@@ -53,9 +53,9 @@ security:
             anonymous: true
     access_control:
         - { path: /logout, roles: ROLE_ADMIN }
-        - { path: /inicio, roles: ROLE_ADMIN }
+        - { path: /inicio, roles: ROLE_USER }
         - { path: /clientes, roles: ROLE_ADMIN }
-        - { path: /marina, roles: ROLE_ADMIN }
+        - { path: /marina, roles: ROLE_USER }
         - { path: /astillero, roles: ROLE_ADMIN }
         - { path: /productos, roles: ROLE_ADMIN }
         - { path: /recursos-humanos, roles: ROLE_ADMIN }
