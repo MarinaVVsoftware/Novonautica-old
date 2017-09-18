@@ -1,0 +1,27 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Agregar Usuario</h3>
+                </div>
+                <div class="panel-body">
+                    {#<h1>Usuario creation</h1>#}
+
+                    {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <input type="submit" value="Create"/>
+                    {{ form_end(form) }}
+
+                    <ul>
+                        <li>
+                            <a href="{{ path('usuario_index') }}">Back to the list</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

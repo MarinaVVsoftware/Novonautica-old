@@ -5,6 +5,7 @@
 {% set menuRH='' %}
 {% set menuConta='' %}
 {% set menuReportes='' %}
+{% set menuUsuarios='' %}
 
 {% set actCA='' %}
 {% set actCL='' %}
@@ -69,6 +70,9 @@
 {% endif %}
 {% if reportes is defined %}
     {% set menuReportes=' active' %}
+{% endif %}
+{% if usuariosmenu is defined %}
+    {% set menuUsuarios =' active' %}
 {% endif %}
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
@@ -141,7 +145,8 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="{{ actAN }}">
-                        <a href="{{ path('astillero-nueva-cotizacion') }}"><i class="fa fa-minus"></i> Nueva cotización </a>
+                        <a href="{{ path('astillero-nueva-cotizacion') }}"><i class="fa fa-minus"></i> Nueva cotización
+                        </a>
                     </li>
                     <li class="{{ actAC }}">
                         <a href="{{ path('astillero-cotizaciones') }}"><i class="fa fa-minus"></i> Cotizaciones</a>
@@ -183,6 +188,15 @@
                 </a>
                 <hr>
             </li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="{{ menuUsuarios }}">
+                    <a href="{{ path('usuario_index') }}">
+                        <i class="fa fa-user-o"></i>
+                        <span>Usuarios</span>
+                    </a>
+                    <hr>
+                </li>
+            {% endif %}
         </ul>
     </section>
     <!-- /.sidebar -->

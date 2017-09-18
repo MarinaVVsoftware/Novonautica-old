@@ -154,7 +154,8 @@ class Usuario implements AdvancedUserInterface, \Serializable
      */
     public function setPassword($password)
     {
-        $this->password = $password;
+//        $this->password = $password;
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
 
         return $this;
     }
@@ -193,29 +194,29 @@ class Usuario implements AdvancedUserInterface, \Serializable
         return $this->estatus;
     }
 
-    /**
-     * Set idrol
-     *
-     * @param integer $idrol
-     *
-     * @return Usuario
-     */
-    public function setIdrol($idrol)
-    {
-        $this->idrol = $idrol;
-
-        return $this;
-    }
-
-    /**
-     * Get idrol
-     *
-     * @return int
-     */
-    public function getIdrol()
-    {
-        return $this->idrol;
-    }
+//    /**
+//     * Set idrol
+//     *
+//     * @param integer $idrol
+//     *
+//     * @return Usuario
+//     */
+//    public function setIdrol($idrol)
+//    {
+//        $this->idrol = $idrol;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get idrol
+//     *
+//     * @return int
+//     */
+//    public function getIdrol()
+//    {
+//        return $this->idrol;
+//    }
 
     public function isAccountNonExpired()
     {
@@ -272,18 +273,31 @@ class Usuario implements AdvancedUserInterface, \Serializable
 
     public function getRoles()
     {
-        //return array('ROLE_USER');
+        //return array('ROLE_ASTILLERO');
         //return array($this->rol);
-        return [$this->getUserRole()->getRole()];
+        return [$this->getRol()->getRole()];
     }
+
+    /**
+     * Set rol
+     *
+     * @param \AppBundle\Entity\Rol $rol
+     *
+     * @return Usuario
+     */
+    public function setRol(\AppBundle\Entity\Rol $rol = null)
+    {
+        $this->rol = $rol;
+        return $this;
+    }
+
     /**
      * Get rol
      *
      * @return \AppBundle\Entity\Rol
      */
-    public function getUserRole()
+    public function getRol()
     {
         return $this->rol;
     }
-
 }

@@ -45,7 +45,29 @@ class Rol //Implements RoleInterface
      */
     private $estatus;
 
+    public function __toString()
+    {
+        return $this->descripcion;
+    }
+    /**
+     * @ORM\OneToMany(targetEntity="Usuario", mappedBy="rol")
+     */
+    private $usuarios;
 
+    public function __construct()
+    {
+        $this->usuarios = new ArrayCollection();
+    }
+
+//    /**
+//     * Get usuarios
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getUsuarios()
+//    {
+//        return $this->usuarios;
+//    }
     /**
      * Get id
      *
@@ -74,6 +96,7 @@ class Rol //Implements RoleInterface
      * Get role
      *
      * @return string
+     *
      */
     public function getRole()
     {
@@ -129,14 +152,27 @@ class Rol //Implements RoleInterface
     }
 
 
-    /**
-     * @ORM\OneToMany(targetEntity="Usuario", mappedBy="rol")
-     */
-    private $usuarios;
 
-    public function __construct()
+    /**
+     * Add user
+     *
+     * @param \AppBundle\Entity\Usuario $usuario
+     *
+     * @return Rol
+     */
+    public function addUser(\AppBundle\Entity\Usuario $usuario)
     {
-        $this->usuarios = new ArrayCollection();
+        $this->usuarios[] = $usuario;
+        return $this;
+    }
+    /**
+     * Remove user
+     *
+     * @param \AppBundle\Entity\Usuario $usuario
+     */
+    public function removeUser(\AppBundle\Entity\Usuario $usuario)
+    {
+        $this->usuarios->removeElement($usuario);
     }
 
     /**

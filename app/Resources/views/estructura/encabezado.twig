@@ -242,7 +242,7 @@
                                     {#<img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="user-image"#}
                                     {#alt="User Image">#}
                                     <span class="hidden-xs letra-etiqueta-usuario">Bienvenido: </span>
-                                    <span class="hidden-xs letra-nombre-usuario">{{ app.user.username }}</span>
+                                    <span class="hidden-xs letra-nombre-usuario">{{ app.user.username | default('Anonimo') }}</span>
 
                                 </a>
                                 <ul class="dropdown-menu">

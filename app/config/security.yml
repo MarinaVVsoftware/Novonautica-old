@@ -24,8 +24,8 @@ security:
             #form_login: ~
     encoders:
 #        Symfony\Component\Security\Core\User\User: plaintext
-        Symfony\Component\Security\Core\User\User: plaintext
-        AppBundle\Entity\Usuario: plaintext
+        Symfony\Component\Security\Core\User\User: bcrypt
+        AppBundle\Entity\Usuario: bcrypt
     role_hierarchy:
         ROLE_ADMIN: [ROLE_USER]
     providers:
@@ -36,7 +36,7 @@ security:
         in_memory:
             memory:
                 users:
-                    admin: {password: adminpass, roles: ROLE_ADMIN} #$2y$13$KUmVI3Dmoqk5FMp/Wls4oOa0frKbn6fKadLZ5YKhdWO5wisHIhDAK
+                    admin: {password: $2y$13$PtyUxnCzEXe3PN06SdGXRu9N8.rQMZx.vLoCaC0S56g6rOPs4kM/y, roles: ROLE_ADMIN} #password: adminpass
         user_db:
             entity: { class: AppBundle\Entity\Usuario, property: correo } #con que campo se va a loguear
     firewalls:
@@ -53,7 +53,7 @@ security:
             anonymous: true
     access_control:
         - { path: /logout, roles: ROLE_ADMIN }
-        - { path: /inicio, roles: [ROLE_MARINA,ROLE_ASTILLERO] }
+        - { path: /inicio, roles: [ROLE_ADMIN,ROLE_MARINA,ROLE_ASTILLERO] }
         - { path: /clientes, roles: ROLE_ADMIN }
         - { path: /marina, roles: ROLE_MARINA }
         - { path: /astillero, roles: ROLE_ASTILLERO }
@@ -61,8 +61,6 @@ security:
         - { path: /recursos-humanos, roles: [ROLE_MARINA,ROLE_ASTILLERO] }
         - { path: /contabilidad, roles: ROLE_ADMIN }
         - { path: /reportes, roles: ROLE_ADMIN }
+        - { path: /usuario, roles: ROLE_ADMIN }
 #        - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: /cms/user, roles: ROLE_ADMIN }
-#        - { path: /cms/category, roles: ROLE_ADMIN }
-#        - { path: /cms/page, roles: ROLE_USER }
 #        - { path: /.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }

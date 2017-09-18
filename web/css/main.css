@@ -175,6 +175,44 @@ hr {
 .panel-body .tab-content{
     padding: 20px 15px;
 }
+.panel-body > form input, .panel-body> form select{
+    background: #3e4766;
+    border: none;
+    text-align: center;
+    border-radius: 17px;
+    padding: 5px 4px;
+}
+.panel-body > form input:focus,.panel-body> form select:focus{
+    outline: none;
+}
+/*.panel-body > form input[type=submit]{*/
+    /*border-radius:0;*/
+/*}*/
+.btn-morado-claro{
+    background: #3e4766;
+    color: #fff;
+}
+.btn-morado-claro:hover{
+    background: #5d6696;
+    color: #fff;
+}
+.btn-azul{
+    background: #0097f6;
+    color: #fff;
+}
+.btn-azul:hover{
+    background: #4bc7fb;
+    color: #fff;
+}
+form > .btn-borrar{
+
+    background: #8c0400;
+    color: #fff;
+}
+form > .btn-borrar:hover{
+    background: #d40400;
+    color: #fff;
+}
 @media (min-width: 768px) {
     .skin-novo .main-sidebar {
         padding-top: 98px;
