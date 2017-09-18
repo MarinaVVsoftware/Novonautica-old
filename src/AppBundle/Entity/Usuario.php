@@ -241,14 +241,14 @@ class Usuario implements AdvancedUserInterface, \Serializable
     public function serialize()
     {
         return serialize(array(
-            // ...
+
             $this->id
         ));
     }
     public function unserialize($serialized)
     {
         list (
-            // ...
+
             $this->id
             ) = unserialize($serialized);
     }
@@ -265,17 +265,25 @@ class Usuario implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="Rol", inversedBy="usuarios")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Rol", inversedBy="usuarios")
      * @ORM\JoinColumn(name="idrol", referencedColumnName="id")
      */
     private $rol;
 
-
     public function getRoles()
     {
         //return array('ROLE_USER');
-        return array($this->rol);
+        //return array($this->rol);
+        return [$this->getUserRole()->getRole()];
     }
-
+    /**
+     * Get rol
+     *
+     * @return \AppBundle\Entity\Rol
+     */
+    public function getUserRole()
+    {
+        return $this->rol;
+    }
 
 }

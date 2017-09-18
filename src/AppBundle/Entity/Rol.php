@@ -3,7 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\Role\RoleInterface;
+//use Symfony\Component\Security\Core\Role\RoleInterface;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="rol")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RolRepository")
  */
-class Rol Implements RoleInterface
+class Rol //Implements RoleInterface
 {
     /**
      * @var int
@@ -27,9 +27,9 @@ class Rol Implements RoleInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="rolname", type="string", length=255)
+     * @ORM\Column(name="role", type="string", length=255)
      */
-    private $rolname;
+    private $role;
 
     /**
      * @var string
@@ -57,27 +57,27 @@ class Rol Implements RoleInterface
     }
 
     /**
-     * Set rolname
+     * Set role
      *
-     * @param string $rolname
+     * @param string $role
      *
      * @return Rol
      */
-    public function setRolname($rolname)
+    public function setRole($role)
     {
-        $this->rolname = $rolname;
+        $this->role = $role;
 
         return $this;
     }
 
     /**
-     * Get rolname
+     * Get role
      *
      * @return string
      */
-    public function getRolname()
+    public function getRole()
     {
-        return $this->rolname;
+        return $this->role;
     }
 
     /**
@@ -128,6 +128,7 @@ class Rol Implements RoleInterface
         return $this->estatus;
     }
 
+
     /**
      * @ORM\OneToMany(targetEntity="Usuario", mappedBy="rol")
      */
@@ -139,11 +140,13 @@ class Rol Implements RoleInterface
     }
 
     /**
-     * @see RoleInterface
+     * Get usuarios
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function getRole()
+    public function getUsuarios()
     {
-        return $this->rolname;
+        return $this->usuarios;
     }
 }
 

@@ -53,12 +53,12 @@ security:
             anonymous: true
     access_control:
         - { path: /logout, roles: ROLE_ADMIN }
-        - { path: /inicio, roles: ROLE_USER }
+        - { path: /inicio, roles: [ROLE_MARINA,ROLE_ASTILLERO] }
         - { path: /clientes, roles: ROLE_ADMIN }
-        - { path: /marina, roles: ROLE_USER }
-        - { path: /astillero, roles: ROLE_ADMIN }
+        - { path: /marina, roles: ROLE_MARINA }
+        - { path: /astillero, roles: ROLE_ASTILLERO }
         - { path: /productos, roles: ROLE_ADMIN }
-        - { path: /recursos-humanos, roles: ROLE_ADMIN }
+        - { path: /recursos-humanos, roles: [ROLE_MARINA,ROLE_ASTILLERO] }
         - { path: /contabilidad, roles: ROLE_ADMIN }
         - { path: /reportes, roles: ROLE_ADMIN }
 #        - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
