@@ -26,7 +26,7 @@
                                 <div class="alert alert-warning alert-dismissible" role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                                                 aria-hidden="true">&times;</span></button>
-                                    <p class="text-center">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+                                    <p class="text-center">{{ error.messageKey|trans(error.messageData, 'security','es') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -36,12 +36,12 @@
                             <form action="{{ path('login') }}" method="post" class="form-horizontal">
                                 <div class="form-group">
                                     <label class="control-label">Usuario</label>
-                                    <input type="text" id="username" class="form-control" name="_username"
+                                    <input type="text" id="username" class="form-control text-center" name="_username"
                                            value="{{ last_username }}"/>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Contraseña</label>
-                                    <input type="password" id="password" class="form-control" name="_password"/>
+                                    <input type="password" id="password" class="form-control text-center" name="_password"/>
                                 </div>
                                 <div class="form-group">
 

@@ -11,15 +11,78 @@
                     {#<h1>Usuario creation</h1>#}
 
                     {{ form_start(form) }}
-                    {{ form_widget(form) }}
-                    <input type="submit" value="Create"/>
-                    {{ form_end(form) }}
+                    {#{{ form_widget(form) }}#}
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>
+                                {{ form_label(form.nombre) }}
+                            </p>
+                            <p>
+                                {{ form_errors(form.nombre) }}
+                                {{ form_widget(form.nombre) }}
+                            </p>
+                            <p>
+                                {{ form_label(form.correo) }}
+                            </p>
+                            <p>
+                                {{ form_errors(form.correo) }}
+                                {{ form_widget(form.correo) }}
+                            </p>
+                            <p>
+                                {{ form_label(form.username) }}
+                            </p>
+                            <p>
+                                {{ form_errors(form.username) }}
+                                {{ form_widget(form.username) }}
+                            </p>
+                            <p>
+                                Estatus
+                                <span class="cont-label-novo">
+                                    {{ form_errors(form.estatus) }}
+                                    {{ form_widget(form.estatus) }}
+                                    {{ form_label(form.estatus) }}
+                                </span>
+                            </p>
 
-                    <ul>
-                        <li>
-                            <a href="{{ path('usuario_index') }}">Back to the list</a>
-                        </li>
-                    </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <p>
+                                {{ form_label(form.password.first) }}
+                            </p>
+                            <p>
+                                {{ form_errors(form.password.first) }}
+                                {{ form_widget(form.password.first) }}
+                            </p>
+                            <p>
+                                {{ form_label(form.password.second) }}
+                            </p>
+                            <p>
+                                {{ form_errors(form.password.second) }}
+                                {{ form_widget(form.password.second) }}
+                            </p>
+                            <p>
+                                {{ form_label(form.rol) }}
+                            </p>
+                            <p>
+                                {{ form_errors(form.rol) }}
+                                {{ form_widget(form.rol) }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="submit" value="Agregar" class="btn btn-azul pull-right"/>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="{{ path('usuario_index') }}" class="btn btn-morado-claro">
+                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Regresar
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>

@@ -9,22 +9,84 @@
                 </div>
                 <div class="panel-body">
                     {#<h1>Editar Usuario</h1>#}
-
                     {{ form_start(edit_form) }}
-                    {{ form_widget(edit_form) }}
-                    <input type="submit" value="Edit"/>
-                    {{ form_end(edit_form) }}
+                    {#{{ form_widget(edit_form) }}#}
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>
+                                {{ form_label(edit_form.nombre) }}
+                            </p>
+                            <p>
+                                {{ form_widget(edit_form.nombre) }}
+                                {{ form_errors(edit_form.nombre) }}
+                            </p>
+                            <p>
+                                {{ form_label(edit_form.correo) }}
+                            </p>
+                            <p>
+                                {{ form_widget(edit_form.correo) }}
+                                {{ form_errors(edit_form.correo) }}
+                            </p>
+                            <p>
+                                {{ form_label(edit_form.username) }}
+                            </p>
+                            <p>
+                                {{ form_widget(edit_form.username) }}
+                                {{ form_errors(edit_form.username) }}
+                            </p>
+                            <p>
+                                Estatus
+                                <span class="cont-label-novo">
+                                    {{ form_errors(edit_form.estatus) }}
+                                    {{ form_widget(edit_form.estatus) }}
+                                    {{ form_label(edit_form.estatus) }}
+                                </span>
+                            </p>
 
-                    <ul>
-                        <li>
-                            <a href="{{ path('usuario_index') }}">Back to the list</a>
-                        </li>
-                        <li>
+                        </div>
+                        <div class="col-md-3">
+                            <p>
+                                {{ form_label(edit_form.password.first) }}
+                            </p>
+                            <p>
+                                {{ form_widget(edit_form.password.first) }}
+                                {{ form_errors(edit_form.password.first) }}
+                            </p>
+                            <p>
+                                {{ form_label(edit_form.password.second) }}
+                            </p>
+                            <p>
+                                {{ form_widget(edit_form.password.second) }}
+                                {{ form_errors(edit_form.password.second) }}
+                            </p>
+                            <p>
+                                {{ form_label(edit_form.rol) }}
+                            </p>
+                            <p>
+                                {{ form_widget(edit_form.rol) }}
+                                {{ form_errors(edit_form.rol) }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="submit" value="Editar" class="btn btn-azul pull-right"/>
+                        </div>
+                    </div>
+                    {{ form_end(edit_form) }}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a class="btn btn-morado-claro" href="{{ path('usuario_index') }}">
+                                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                Regresar
+                            </a>
                             {{ form_start(delete_form) }}
-                            <input type="submit" value="Delete">
+                            <input type="submit" value="Borrar" class="btn btn-borrar pull-right">
                             {{ form_end(delete_form) }}
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </section>

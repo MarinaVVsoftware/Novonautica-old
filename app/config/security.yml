@@ -55,10 +55,10 @@ security:
         - { path: /logout, roles: ROLE_ADMIN }
         - { path: /inicio, roles: [ROLE_ADMIN,ROLE_MARINA,ROLE_ASTILLERO] }
         - { path: /clientes, roles: ROLE_ADMIN }
-        - { path: /marina, roles: ROLE_MARINA }
-        - { path: /astillero, roles: ROLE_ASTILLERO }
+        - { path: /marina, roles: [ROLE_ADMIN,ROLE_MARINA] }
+        - { path: /astillero, roles: [ROLE_ADMIN,ROLE_MARINA,ROLE_ASTILLERO] }
         - { path: /productos, roles: ROLE_ADMIN }
-        - { path: /recursos-humanos, roles: [ROLE_MARINA,ROLE_ASTILLERO] }
+        - { path: /recursos-humanos, roles: [ROLE_ADMIN,ROLE_MARINA,ROLE_ASTILLERO] }
         - { path: /contabilidad, roles: ROLE_ADMIN }
         - { path: /reportes, roles: ROLE_ADMIN }
         - { path: /usuario, roles: ROLE_ADMIN }
