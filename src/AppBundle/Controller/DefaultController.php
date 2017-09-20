@@ -65,6 +65,15 @@ class DefaultController extends Controller
         ]);
     }
     /**
+     * @Route("/marina-humeda/agenda/nuevo-evento", name="marina-agenda-nuevo-evento")
+     */
+    public function displayMarinaAgendaNuevoEvento(Request $request)
+    {
+        return $this->render('marina-agenda-nuevo-evento.twig', [
+            'marinaagenda' => 1
+        ]);
+    }
+    /**
      * @Route("/marina-humeda/administracion", name="marina-administracion")
      */
     public function displayMarinaAdministracion(Request $request)
@@ -124,6 +133,24 @@ class DefaultController extends Controller
     public function displayAstilleroODT(Request $request)
     {
         return $this->render('astillero-odt.twig', [
+            'astilleroodt' => 1
+        ]);
+    }
+    /**
+     * @Route("/astillero/odt/asigna-dias", name="astillero-odt-dias")
+     */
+    public function displayAstilleroODTDias(Request $request)
+    {
+        return $this->render('astillero-odt-dias.twig', [
+            'astilleroodt' => 1
+        ]);
+    }
+    /**
+     * @Route("/astillero/odt/asigna-horas", name="astillero-odt-horas")
+     */
+    public function displayAstilleroODTHoras(Request $request)
+    {
+        return $this->render('astillero-odt-horas.twig', [
             'astilleroodt' => 1
         ]);
     }

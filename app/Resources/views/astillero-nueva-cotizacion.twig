@@ -14,35 +14,154 @@
                 </div>
                 <div class="panel-body panel-pestanias">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="primero active"><a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a></li>
-                        <li role="presentation"><a href="#basicos" aria-controls="basicos" role="tab" data-toggle="tab">Servicios Básicos</a></li>
-                        <li role="presentation"><a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a></li>
+                        <li role="presentation" class="primero active"><a href="#generales" aria-controls="generales"
+                                                                          role="tab" data-toggle="tab">Generales</a>
+                        </li>
+                        <li role="presentation"><a href="#basicos" aria-controls="basicos" role="tab" data-toggle="tab">Servicios
+                                Básicos</a></li>
+                        <li role="presentation"><a href="#servicios" aria-controls="servicios" role="tab"
+                                                   data-toggle="tab">Servicios</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="generales">...1</div>
-                        <div role="tabpanel" class="tab-pane" id="basicos">...2</div>
-                        <div role="tabpanel" class="tab-pane" id="servicios">
-                            <div class="row negative">
-                                <div class="text-right col-md-8">
-                                    <label class="labelcambio" for="cambio">Tipo de cambio:</label>
-                                    <input type="text" class="form-control inputcambio" id="cambio" value="19.32 MXN">
+                        <div role="tabpanel" class="tab-pane active" id="generales">
+                            <form>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label>Cliente:</label><br/>
+                                        <input type="text">
+                                        <label>Número Telefónico:</label><br/>
+                                        <input type="text">
+                                        <label>Correo Electrónico:</label><br/>
+                                        <input type="text">
+                                        <label>R.F.C:</label><br/>
+                                        <input type="text">
+                                        <label>Razón social:</label><br/>
+                                        <input type="text">
+                                        <label>Clabe bancaria:</label><br/>
+                                        <input type="text">
+                                        <label>Número de cuenta:</label><br/>
+                                        <input type="text">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>Banco:</label><br/>
+                                        <input type="text">
+                                        <label>Dirección fiscal:</label><br/>
+                                        <input type="text">
+                                        <br/>
+                                        <br/>
+                                        <input type="text">
+                                        <br/>
+                                        <br/>
+                                        <input type="text">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>Embarcación:</label><br/>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="radio">
+                                                    <input id="radio-1" name="radio" type="radio" checked>
+                                                    <label for="radio-1" class="radio-label">La Sirenita</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="radio">
+                                                    <input id="radio-2" name="radio" type="radio">
+                                                    <label  for="radio-2" class="radio-label">La Rumorosa</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <label>Tipo de Embarcación:</label><br/>
+                                        <input type="text">
+                                        <label>Eslora:</label><br/>
+                                        <input type="text">
+                                        <label>Manga:</label><br/>
+                                        <input type="text">
+                                        <label>Nombre del capitán:</label><br/>
+                                        <input type="text">
+                                        <label>Teléfono del capitán:</label><br/>
+                                        <input type="text">
+                                        <label>Email del capitán:</label><br/>
+                                        <input type="text">
+                                        <br/>
+                                        <br/>
+                                    </div>
                                 </div>
-                                <div class="col-md-4"> </div>
-                                <div class="col-md-12"><p class="textos pmargin">Precios en USD</p></div>
-                                <div class="col-md-8">
-                                    <table class="table table-condensed menu text-center" cellspacing="0">
-                                        <thead class="morado">
+                                <div class="row">
+                                    <div class="col-sm-3 col-sm-offset-6">
+                                        <input type="submit" value="Guardar" class="btn btn-azul">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="basicos">
+                            <form>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label>Fecha de Llegada:</label><br/>
+                                        <input type="text">
+                                        <label>Fecha de Salida:</label><br/>
+                                        <input type="text">
+                                        <label>Días de estadía:</label><br/>
+                                        <input type="text">
+                                        <label>Días adicionales:</label><br/>
+                                        <input type="text">
+                                        <label>Lugar de trabajo:</label><br/>
+                                        <input type="text">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>Encargado del proyecto:</label><br/>
+                                        <input type="text">
+                                        <label>Uso de rampa:</label><br/>
+                                        <input type="text">
+                                        <label>Uso de explanada:</label><br/>
+                                        <input type="text">
+                                        <label>Días adicionales (USD):</label><br/>
+                                        <input type="text">
+                                        <label>Uso de karcher:</label><br/>
+                                        <input type="text">
+                                        <label>Limpieza de locación:</label><br/>
+                                        <input type="text">
+                                        <label>Conexión a electricidad:</label><br/>
+                                        <input type="text">
+                                        <label>Sacar: Varada y botadura x pies:</label><br/>
+                                        <input type="text">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3 col-sm-offset-6">
+                                        <input type="submit" value="Guardar" class="btn btn-azul">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="servicios">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <span>Precio en USD</span>
+                                </div>
+                                <div class="col-sm-6 text-right">
+                                    <span>Tipo de cambio: </span>
+                                    <div class="btn btn-morado-claro">19.32 MXN</div>
+                                    <br />
+                                    <br />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <table class="table">
+                                        <thead>
                                         <tr>
-                                            <th class="cantidad">Cant.</th>
-                                            <th class="productodescripcion">Producto / Servicio</th>
+                                            <th>Cant.</th>
+                                            <th>Producto / Servicio</th>
                                             <th>Prec. Unit.</th>
                                             <th>IVA</th>
                                             <th>Descuento</th>
-                                            <th class="productodescripcion">Descripción</th>
-                                            <th class="subtotales">Sub-totales</th>
+                                            <th>Descripción</th>
+                                            <th>Sub-Totales</th>
                                         </tr>
                                         </thead>
-                                        <tbody class="azulon">
+                                        <tbody>
                                         <tr>
                                             <td>1</td>
                                             <td>Producto</td>
@@ -63,42 +182,6 @@
                                         </tr>
                                         <tr>
                                             <td>1</td>
-                                            <td>Producto</td>
-                                            <td>Prec. Unit.</td>
-                                            <td>IVA</td>
-                                            <td>Descuento</td>
-                                            <td>Descripción</td>
-                                            <td>$1,213.25</td>
-                                        </tr>
-                                        <tr>
-                                            <td>10</td>
-                                            <td>Producto</td>
-                                            <td>Prec. Unit.</td>
-                                            <td>IVA</td>
-                                            <td>Descuento</td>
-                                            <td>Descripción</td>
-                                            <td>$1,213.25</td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Producto</td>
-                                            <td>Prec. Unit.</td>
-                                            <td>IVA</td>
-                                            <td>Descuento</td>
-                                            <td>Descripción</td>
-                                            <td>$1,213.25</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Producto</td>
-                                            <td>Prec. Unit.</td>
-                                            <td>IVA</td>
-                                            <td>Descuento</td>
-                                            <td>Descripción</td>
-                                            <td>$1,213.25</td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
                                             <td>Producto</td>
                                             <td>Prec. Unit.</td>
                                             <td>IVA</td>
@@ -117,38 +200,31 @@
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <div class="col-md-6">
-                                        <div class="text-left">
-                                            <input class="miniboton" type="submit" value="+ Producto/Servicio">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-md-offset-3">
-                                        <div class="text-right">
-                                            <hr class="borde2">
-                                            <p class="azul subtitulo texto">Sub-total:</p>
-                                            <br>
-                                            <p class="subtitulo subtexto">$19,854.36USD</p>
-                                            <hr class="borde2">
-                                            <p class="azul subtitulo texto">I.V.A.:</p>
-                                            <br>
-                                            <p class="subtitulo subtexto">$2,254.40USD</p>
-                                            <hr class="borde2">
-                                            <p class="azul subtitulo texto">Total:</p>
-                                            <br>
-                                            <p class="subtitulo subtexto">$22,075.72USD</p>
-                                            <hr class="borde2">
-                                        </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <a class="btn btn-morado-claro">Visualizar</a>
+                                    <br/>
+                                    <br/>
+                                    <a class="btn btn-azul">Guardar</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <div class="btn btn-morado-claro">
+                                        + Producto / Servicio
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="text-center">
-                                        <input class="botonvis" type="submit" value="Visualizar">
-                                        <input class="botonaceptar" type="submit" value="Aceptar">
-                                        <input class="botonrechazar" type="submit" value="Rechazar">
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-
+                                <div class="col-sm-4 col-sm-offset-2 text-right">
+                                    <hr>
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>$19,854.36 USD</p>
+                                    <hr>
+                                    <p class="letra-azul">IVA:</p>
+                                    <p>$2,254.40 USD</p>
+                                    <hr>
+                                    <p class="letra-azul">Total:</p>
+                                    <p>$22,075.72 USD</p>
+                                    <hr>
                                 </div>
                             </div>
                         </div>

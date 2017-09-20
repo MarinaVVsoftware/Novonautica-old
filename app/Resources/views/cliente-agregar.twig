@@ -5,22 +5,82 @@
 {% endblock %}
 
 {% block contwrapper %}
-<div class="content-wrapper">
-    {#<section class="content-header">#}
+    <div class="content-wrapper">
+        {#<section class="content-header">#}
         {#<h1>#}
-            {#Nuevo cliente#}
+        {#Nuevo cliente#}
         {#</h1>#}
-    {#</section>#}
-    <section class="content">
-        <div class="panel panel-novo">
-            <div class="panel-heading">
-                <h3 class="panel-title">Nuevo cliente</h3>
-                ID:0000
+        {#</section>#}
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Nuevo cliente</h3>
+                    ID:0000
+                </div>
+                <div class="panel-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label>Nombre:</label><br/>
+                                <input type="text">
+                                <label>Telefono:</label><br/>
+                                <input type="text">
+                                <label>Celular:</label><br/>
+                                <input type="text">
+                                <label>E-mail:</label><br/>
+                                <input type="text">
+                                <label>Dirección:</label><br/>
+                                <input type="text">
+                                <br />
+                                <br />
+                                <hr>
+                                <br />
+                                <br />
+                                <label>Empresa:</label><br/>
+                                <input type="text">
+                                <label>Razón Social:</label><br/>
+                                <input type="text">
+                                <label>RFC:</label><br/>
+                                <input type="text">
+                                <label>Dirección Fiscal:</label><br/>
+                                <input type="text">
+                                <label>E-mail facturación:</label><br/>
+                                <input type="text">
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Nombre de la embarcación:</label><br/>
+                                <input type="text">
+                                <label>Marca:</label><br/>
+                                <input type="text">
+                                <label>Modelo:</label><br/>
+                                <input type="text">
+                                <label>Año:</label><br/>
+                                <input type="text">
+                                <label>Motor:</label><br/>
+                                <input type="text">
+                                <br />
+                                <br />
+                                <a> + Agregar Motor </a>
+                                <br />
+                                <br />
+                                <label>Calado:</label><br/>
+                                <input type="text">
+                                <label>Manga:</label><br/>
+                                <input type="text">
+                                <label>Eslora:</label><br/>
+                                <input type="text">
+                                <label>Combustible Lts:</label><br/>
+                                <input type="text">
+                                <label>Agua Lts:</label><br/>
+                                <input type="text">
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="submit" value="Guardar" class="btn btn-azul">
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="panel-body">
-                Contenido
-            </div>
-        </div>
-    </section>
-</div>
+        </section>
+    </div>
 {% endblock %}

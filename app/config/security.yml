@@ -39,6 +39,8 @@ security:
                     admin: {password: $2y$13$PtyUxnCzEXe3PN06SdGXRu9N8.rQMZx.vLoCaC0S56g6rOPs4kM/y, roles: ROLE_ADMIN} #password: adminpass
         user_db:
             entity: { class: AppBundle\Entity\Usuario, property: correo } #con que campo se va a loguear
+#    role_hierarchy:
+#            ROLE_ADMIN: [ROLE_MARINA, ROLE_ASTILLERO]
     firewalls:
         main:
             pattern: /.*
