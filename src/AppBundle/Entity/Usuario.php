@@ -13,8 +13,6 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  */
 class Usuario implements AdvancedUserInterface, \Serializable
 {
-
-
     /**
      * @var int
      *
@@ -86,7 +84,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
 
         return $this;
     }
- 
+
     /**
      * Get nombre
      *
