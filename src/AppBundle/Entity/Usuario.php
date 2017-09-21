@@ -57,13 +57,11 @@ class Usuario implements AdvancedUserInterface, \Serializable
      */
     private $estatus;
 
-
     /**
-     * @var int
-     *
-     * @ORM\Column(name="idrol", type="smallint")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Rol", inversedBy="usuarios")
+     * @ORM\JoinColumn(name="idrol", referencedColumnName="id")
      */
-    private $idrol;
+    private $rol;
 
     /**
      * Get id
@@ -88,7 +86,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
 
         return $this;
     }
-
+ 
     /**
      * Get nombre
      *
@@ -194,30 +192,6 @@ class Usuario implements AdvancedUserInterface, \Serializable
         return $this->estatus;
     }
 
-//    /**
-//     * Set idrol
-//     *
-//     * @param integer $idrol
-//     *
-//     * @return Usuario
-//     */
-//    public function setIdrol($idrol)
-//    {
-//        $this->idrol = $idrol;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get idrol
-//     *
-//     * @return int
-//     */
-//    public function getIdrol()
-//    {
-//        return $this->idrol;
-//    }
-
     public function isAccountNonExpired()
     {
         return true;
@@ -265,11 +239,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
         return null;
     }
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Rol", inversedBy="usuarios")
-     * @ORM\JoinColumn(name="idrol", referencedColumnName="id")
-     */
-    private $rol;
+
 
     public function getRoles()
     {
