@@ -1,0 +1,413 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+body {
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+}
+hr {
+    margin-top: 0 !important;
+    border-bottom: 1px solid rgba(62, 70, 99, 0.38) !important;
+    border-top: 2px solid rgba(0,0,0,0.2) !important;
+    margin-bottom: 0 !important;
+}
+a{
+    color: #ffffff;
+}
+/*++++ colores fondo ++++*/
+.fondo-azul{
+    background-color: #0097f6;
+}
+.fondo-rojo{
+    background-color: #DB235C;
+}
+.fondo-amarillo{
+    background-color: #dc9f00;
+}
+.fondo-verde{
+    background-color: #009933;
+}
+.fondo-naranja{
+    background-color: #FF6600;
+}
+.fondo-blanco{
+    background-color: #ffffff !important;
+}
+/*++ fin colores fondo +++*/
+
+/*++++ colores letra +++++*/
+.letra-azul{
+    color: #0097f6;
+}
+/*++ fin colores letra ++++*/
+
+/*++++ botones color ++++*/
+.btn-morado-claro{
+    background: #3e4766;
+    color: #fff;
+}
+.btn-morado-claro:hover{
+    background: #5d6696;
+    color: #fff;
+}
+.btn-azul{
+    background: #0097f6;
+    color: #fff;
+}
+.btn-azul:hover{
+    background: #4bc7fb;
+    color: #fff;
+}
+.btn-contorno-azul{
+    background: #292e41;
+    color: #fff;
+    border:1px solid #0097f6;
+}
+.btn-contorno-azul:hover{
+    color: #ffffff;
+    background: #3e4766;
+}
+form > .btn-borrar{
+    background: #8c0400;
+    color: #fff;
+}
+form > .btn-borrar:hover{
+    background: #d40400;
+    color: #fff;
+}
+/*++ fin botones color ++*/
+
+/*+++++ check box estilo ++++++*/
+.cont-label-novo {
+    width: 20px;
+    position: relative;
+    margin: 20px auto;
+}
+.cont-label-novo label {
+    width: 20px;
+    max-width: none;
+    height: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /*background: -webkit-linear-gradient(top, #222222 0%, #45484d 100%);*/
+    /*background: linear-gradient(to bottom, #222222 0%, #45484d 100%);*/
+    background: #3e4766;
+    border-radius: 4px;
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.4);
+}
+.cont-label-novo label:after {
+    content: '';
+    width: 14px;
+    height: 8px;
+    position: absolute;
+    top: 5px;
+    left: 3px;
+    border: 3px solid #0097f6;
+    border-top: none;
+    border-right: none;
+    background: transparent;
+    opacity: 0;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+.cont-label-novo label:hover::after {
+    opacity: 0.3;
+}
+.cont-label-novo input[type=checkbox] {
+    /*visibility: hidden;*/
+}
+.cont-label-novo input[type=checkbox]:checked + label:after {
+    opacity: 1;
+}
+/*+++ fin check box estilo ++++*/
+
+.hoja-login {
+    height: auto;
+    min-height: 100%;
+    background: url("../img/inicio-fondo.png");
+    background-size: cover;
+    position: relative;
+}
+
+.hoja-login > body {
+    width: 100%;
+    background: none;
+    position: absolute;
+    top: 30%;
+}
+
+.panel-login,
+.panel-login > .panel-heading,
+.panel-login > .panel-body {
+    background: none;
+    border: none;
+    text-align: center;
+}
+
+.boton-login {
+    background: url("../img/inicio-botton.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 75px;
+}
+
+.boton-login:hover {
+    background: url("../img/inicio-botton-on.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    color: #ffffff;
+}
+
+.btn.active.focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn:active:focus, .btn:focus {
+    outline: none;
+    color: #ffffff;
+}
+
+.panel-login img {
+    width: 200px;
+}
+
+.panel-login input {
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+    border-radius: 16px;
+}
+
+.letra-etiqueta-usuario {
+    font-size: 19px;
+}
+
+.letra-nombre-usuario {
+    color: #0097f6;
+}
+
+.btn-salir span {
+    position: relative;
+    top: -5px;
+    color: #ffffff;
+}
+.btn-salir i {
+    color: #0097f6;
+}
+
+.sidebar hr {
+    width: 95%;
+}
+
+.content {
+    padding: 30px;
+}
+
+.panel-novo {
+    border: none;
+}
+
+.panel-novo .panel-title {
+    color: #0097f6;
+    font-size: 27px;
+}
+
+.panel-novo > .panel-heading {
+    background-color: #292e41;
+}
+
+.panel-novo > .panel-body {
+    background-color: #363c52;
+    min-height: 400px;
+}
+.panel-novo thead{
+    background-color: #292e41;
+    border-top: 2px solid #1c1f29;
+}
+.table>thead>tr>th {
+    border: 2px solid #1c1f29;
+}
+.panel-novo th, .panel-novo td {
+    border-left: 2px solid #292e41;
+    border-bottom: 2px solid #292e41;
+    border-right: 2px solid #292e41;
+}
+.panel-novo tbody tr:hover{
+    background: #3e4766;
+    cursor: pointer;
+}
+.panel-novo .panel-pestanias{
+    padding-top: 0;
+}
+.panel-novo .nav-tabs{
+    border: none;
+}
+.panel-novo .nav-tabs>li>a {
+    margin-right: 0;
+    border: none;
+    border-radius: 0;
+    /*background: #292e41;*/
+    background: url("../img/pestania-no-select.png");
+    background-size: 100% 100%;
+    color: #fff;
+    /*-webkit-clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);*/
+    /*clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);*/
+    min-width: 180px;
+    text-align: center;
+}
+.panel-novo .nav-tabs>li.active>a
+{
+    color: #fff;
+    /*background: #0097f6;*/
+    background: url("../img/pestania-select-medio.png");
+    background-size: 100% 100%;
+    border: none;
+    z-index: 1;
+}
+.panel-novo .nav-tabs>li>a:hover{
+    color: #9b9b9b;
+}
+.panel-novo .nav>li>a{
+    padding: 10px 35px;
+}
+.panel .nav>.primero>a{
+    background: #292e41;
+    -webkit-clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
+    clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
+}
+.panel-novo .nav-tabs>li{
+    margin-left: -34px;
+}
+.panel-novo .nav-tabs>li.primero{
+    margin-left: 0;
+}
+.panel-body .tab-content{
+    padding: 20px 15px;
+}
+.panel-body  form input[type="text"],
+.panel-body  form input[type="email"],
+.panel-body  form input[type="password"],
+.panel-body  form select{
+    background: #3e4766;
+    border: none;
+    border-radius: 17px;
+    padding: 5px 15px;
+    width: 100%;
+}
+.panel-body form input:focus,.panel-body form select:focus{
+    outline: none;
+}
+
+@media (min-width: 768px) {
+    .skin-novo .main-sidebar {
+        padding-top: 98px;
+    }
+    nav hr{
+        margin-left: -230px;
+    }
+}
+@media (max-width: 767px) {
+    .main-sidebar {
+        padding-top: 146px;
+    }
+    .panel-novo .nav-tabs>li{
+        margin-left: 0;
+    }
+}
+
+/* ---- temporal ----*/
+.etiqueta-evento{
+    color: #ffffff;
+    text-align: left;
+    margin-right: -8px;
+    margin-left: -8px;
+    margin-bottom: 4px;
+    padding: 4px;
+}
+.panel-novo .calendario tbody tr:hover{
+    background: none;
+    cursor: none;
+}
+.calendario tbody td:hover{
+    background: #3e4766;
+    cursor: pointer;
+}
+#mnsmas {
+    height: 20px;
+    padding-top: 0px;
+    background: transparent;
+    color: #008CBA;
+    border: 1px solid #008CBA;
+}
+#hrs {
+    text-align: center;
+    width: 90px;
+    height: 20px;
+    padding-top: 0px;
+    color: white;
+    font-size: 0.90em;
+    border: 1px solid #008CBA;
+    margin-left: -4px;
+    margin-right: -4px;
+}
+#mnsmas {
+    height: 20px;
+    padding-top: 0px;
+    background: transparent;
+    color: #008CBA;
+    border: 1px solid #008CBA;
+}
+.margenboton {
+    margin-right: 30px;
+}
+.padingleft {
+    padding-left: 25px;
+}
+.estatus-personal{
+    width: 24px;
+}
+/* ---- fin temporal ----*/
+
+.radio {
+    margin: 0.5rem;
+}
+.radio input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+.radio input[type="radio"] + .radio-label:before {
+    content: '';
+    background:   #3e4766;
+    border-radius: 100%;
+    border: 1px solid #0097f6;
+    display: inline-block;
+    width: 1.4em;
+    height: 1.4em;
+    position: relative;
+    top: -0.2em;
+    margin-right: 1em;
+    vertical-align: top;
+    cursor: pointer;
+    text-align: center;
+    -webkit-transition: all 250ms ease;
+    transition: all 250ms ease;
+}
+.radio input[type="radio"]:checked + .radio-label:before {
+    background-color: #3197EE;
+    box-shadow: inset 0 0 0 4px #3e4766;
+}
+
+.radio input[type="radio"]:focus + .radio-label:before {
+    outline: none;
+    border-color: #3197EE;
+}
+.radio input[type="radio"]:disabled + .radio-label:before {
+    box-shadow: inset 0 0 0 4px #f4f4f4;
+    border-color: #b4b4b4;
+    background: #b4b4b4;
+}
+.radio input[type="radio"] + .radio-label:empty:before {
+    margin-right: 0;
+}

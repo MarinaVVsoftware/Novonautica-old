@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html class="hoja-login">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Bienvenido</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="theme-color" content="#292e41" />
+    <link rel="icon" href="{{ asset('img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="panel panel-default panel-login">
+                <div class="panel-heading">
+                    <img src="{{ asset('img/logo.svg') }}" class="img-responsive center-block">
+                </div>
+                <div class="panel-body">
+                    {% if error %}
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-6">
+                                <div class="alert alert-warning alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span></button>
+                                    <p class="text-center">{{ error.messageKey|trans(error.messageData, 'security','es') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <form action="{{ path('login') }}" method="post" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="control-label">Usuario</label>
+                                    <input type="text" id="username" class="form-control text-center fondo-blanco" name="_username"
+                                           value="{{ last_username }}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Contraseña</label>
+                                    <input type="password" id="password" class="form-control text-center fondo-blanco" name="_password"/>
+                                </div>
+                                <div class="form-group">
+
+                                    <button type="submit" class="btn boton-login">
+                                        <span>Entrar</span>
+                                    </button>
+
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ asset('bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/main.js') }}"></script>
+</body>
+</html>
