@@ -37,7 +37,7 @@ class UsuarioType extends AbstractType
                 'label' => 'Password'
             ])
             ->add('estatus',null,[
-                'label' => ' ',
+                'label' => ' '
             ])
 //            ->add('idrol')
             ->add('rol', EntityType::class, [

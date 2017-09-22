@@ -1,0 +1,64 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block title %}
+    Novonautiva | Editar Cliente
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Editar Usuario</h3>
+                </div>
+                <div class="panel-body">
+
+                    {{ form_start(edit_form) }}
+                    <div class="row">
+                        <div class="col-sm-5">
+                            {{ form_row(edit_form.nombre) }}
+                            {{ form_row(edit_form.correo) }}
+                            {{ form_row(edit_form.password) }}
+                            {{ form_row(edit_form.telefono) }}
+                            {{ form_row(edit_form.celular) }}
+                            {{ form_row(edit_form.direccion) }}
+                        </div>
+                        <div class="col-sm-5">
+                            {{ form_row(edit_form.empresa) }}
+                            {{ form_row(edit_form.razonsocial) }}
+                            {{ form_row(edit_form.rfc) }}
+                            {{ form_row(edit_form.direccionfiscal) }}
+                            {{ form_row(edit_form.correofacturacion) }}
+                            <div>
+                                Estatus
+                                <span class="cont-label-novo">
+                                {{ form_errors(edit_form.estatus) }}
+                                    {{ form_widget(edit_form.estatus) }}
+                                    {{ form_label(edit_form.estatus) }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input type="submit" value="Guardar" class="btn btn-azul center-block"/>
+                        </div>
+                    </div>
+                    {{ form_end(edit_form) }}
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a class="btn btn-morado-claro" href="{{ path('cliente_index') }}">
+                                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                Regresar
+                            </a>
+                            {{ form_start(delete_form) }}
+                            <input type="submit" value="Borrar" class="btn btn-borrar pull-right">
+                            {{ form_end(delete_form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

@@ -58,8 +58,14 @@ class Barco
     private $estatus;
 
     /**
-     * One Product has Many Features.
-     * @ORM\OneToMany(targetEntity="Motor", mappedBy="barcos")
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="barcos")
+     * @ORM\JoinColumn(name="idcliente", referencedColumnName="id")
+     */
+    private $cliente;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Motor", mappedBy="barco")
      */
     private $motores;
 
@@ -195,6 +201,39 @@ class Barco
     public function getEstatus()
     {
         return $this->estatus;
+    }
+
+    /**
+     * Get motores
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMotores()
+    {
+        return $this->motores;
+    }
+
+    /**
+     * Set cliente
+     *
+     * @param \AppBundle\Entity\Cliente $cliente
+     *
+     * @return Barco
+     */
+    public function setCliente(\AppBundle\Entity\Cliente $cliente = null)
+    {
+        $this->cliente = $cliente;
+        return $this;
+    }
+
+    /**
+     * Get cliente
+     *
+     * @return \AppBundle\Entity\Cliente
+     */
+    public function getCliente()
+    {
+        return $this->cliente;
     }
 }
 

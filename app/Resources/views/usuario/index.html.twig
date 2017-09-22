@@ -1,5 +1,9 @@
 {% extends 'estructura/plantilla.twig' %}
 
+{% block title %}
+    Novonautiva | Usuarios
+{% endblock %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -34,14 +38,9 @@
                                 <td>{% if usuario.estatus %}Activado{% else %}Desactivado{% endif %}</td>
                                 <td>{{ usuario.rol }}</td>
                                 <td>
-                                    {#<ul>#}
-                                        {#<li>#}
-                                            <a class="btn btn-morado-claro" href="{{ path('usuario_show', { 'id': usuario.id }) }}">Ver</a>
-                                        {#</li>#}
-                                        {#<li>#}
-                                            <a class="btn btn-azul" href="{{ path('usuario_edit', { 'id': usuario.id }) }}">Editar</a>
-                                        {#</li>#}
-                                    {#</ul>#}
+                                    <a class="btn btn-morado-claro"
+                                       href="{{ path('usuario_show', { 'id': usuario.id }) }}">Ver</a>
+                                    <a class="btn btn-azul" href="{{ path('usuario_edit', { 'id': usuario.id }) }}">Editar</a>
                                 </td>
                             </tr>
                         {% endfor %}

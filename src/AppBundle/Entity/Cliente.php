@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Cliente
@@ -118,6 +119,16 @@ class Cliente
      * @ORM\Column(name="estatus", type="boolean")
      */
     private $estatus;
+
+    /**
+     * One Product has Many Features.
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Barco", mappedBy="cliente")
+     */
+    private $barcos;
+
+    public function __construct() {
+        $this->barcos = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -463,6 +474,16 @@ class Cliente
     public function getEstatus()
     {
         return $this->estatus;
+    }
+
+    /**
+     * Get barcos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBarcos()
+    {
+        return $this->barcos;
     }
 }
 

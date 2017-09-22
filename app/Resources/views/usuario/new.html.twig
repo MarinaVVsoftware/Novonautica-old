@@ -1,5 +1,9 @@
 {% extends 'estructura/plantilla.twig' %}
 
+{% block title %}
+    Novonautiva | Usuarios agregar
+{% endblock %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -8,10 +12,7 @@
                     <h3 class="panel-title">Agregar Usuario</h3>
                 </div>
                 <div class="panel-body">
-                    {#<h1>Usuario creation</h1>#}
-
                     {{ form_start(form) }}
-                    {#{{ form_widget(form) }}#}
                     <div class="row">
                         <div class="col-md-3">
                             <p>
@@ -39,7 +40,7 @@
                                 Estatus
                                 <span class="cont-label-novo">
                                     {{ form_errors(form.estatus) }}
-                                    {{ form_widget(form.estatus) }}
+                                    {{ form_widget(form.estatus,{'attr': { 'checked': 'true' }}) }}
                                     {{ form_label(form.estatus) }}
                                 </span>
                             </p>

@@ -81,7 +81,7 @@ class Motor
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="motores")
      * @ORM\JoinColumn(name="idbarco", referencedColumnName="id")
      */
-    private $barcos;
+    private $barco;
 
     /**
      * Get id
@@ -283,6 +283,29 @@ class Motor
     public function getEstatus()
     {
         return $this->estatus;
+    }
+
+    /**
+     * Set barco
+     *
+     * @param \AppBundle\Entity\Barco $barco
+     *
+     * @return Motor
+     */
+    public function setBarco(\AppBundle\Entity\Barco $barco = null)
+    {
+        $this->barco = $barco;
+        return $this;
+    }
+
+    /**
+     * Get barco
+     *
+     * @return \AppBundle\Entity\Barco
+     */
+    public function getBarco()
+    {
+        return $this->barco;
     }
 }
 
