@@ -129,6 +129,10 @@ class Cliente
     public function __construct() {
         $this->barcos = new ArrayCollection();
     }
+    public function __toString()
+    {
+        return $this->nombre;
+    }
 
     /**
      * Get id
@@ -476,6 +480,31 @@ class Cliente
         return $this->estatus;
     }
 
+
+    /**
+     * Add barco
+     *
+     * @param \AppBundle\Entity\Barco $barco
+     *
+     * @return Cliente
+     */
+    public function addBarco(\AppBundle\Entity\Barco $barco)
+    {
+        $this->barcos[] = $barco;
+
+        return $this;
+    }
+
+    /**
+     * Remove barco
+     *
+     * @param \AppBundle\Entity\Barco $barco
+     */
+    public function removeBarco(\AppBundle\Entity\Barco $barco)
+    {
+        $this->barcos->removeElement($barco);
+    }
+
     /**
      * Get barcos
      *
@@ -486,4 +515,3 @@ class Cliente
         return $this->barcos;
     }
 }
-

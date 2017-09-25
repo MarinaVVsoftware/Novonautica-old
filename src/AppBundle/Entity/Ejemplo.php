@@ -125,4 +125,3 @@ class Ejemplo
         return $this->campo3;
     }
 }
-

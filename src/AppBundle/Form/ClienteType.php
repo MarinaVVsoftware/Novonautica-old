@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 //use Doctrine\DBAL\Types\TextType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -27,8 +28,7 @@ class ClienteType extends AbstractType
             ->add('direccion',TextType::class,[
                 'label'=>'Dirección'
             ])
-//            ->add('fecharegistro')
-//            ->add('horaregistro')
+
             ->add('empresa')
             ->add('razonsocial',TextType::class,[
                 'label'=>'Razón Social'
@@ -44,7 +44,13 @@ class ClienteType extends AbstractType
             ])
             ->add('estatus',null,[
                 'label'=>' '
-            ]);
+            ])
+            ->add('barcos',CollectionType::class,[
+                'entry_type' => BarcoType::class,
+                'label' => false
+            ])
+        ;
+
     }
     
     /**

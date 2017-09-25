@@ -44,9 +44,9 @@ class Barco
     private $modelo;
 
     /**
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(name="anio", type="datetime", nullable=true)
+     * @ORM\Column(name="anio", type="integer", nullable=true)
      */
     private $anio;
 
@@ -71,6 +71,11 @@ class Barco
 
     public function __construct() {
         $this->motores = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->nombre;
     }
 
     /**
@@ -158,7 +163,7 @@ class Barco
     /**
      * Set anio
      *
-     * @param \DateTime $anio
+     * @param integer $anio
      *
      * @return Barco
      */
@@ -172,7 +177,7 @@ class Barco
     /**
      * Get anio
      *
-     * @return \DateTime
+     * @return int
      */
     public function getAnio()
     {
@@ -235,5 +240,28 @@ class Barco
     {
         return $this->cliente;
     }
-}
 
+    /**
+     * Add motore
+     *
+     * @param \AppBundle\Entity\Motor $motore
+     *
+     * @return Barco
+     */
+    public function addMotore(\AppBundle\Entity\Motor $motore)
+    {
+        $this->motores[] = $motore;
+
+        return $this;
+    }
+
+    /**
+     * Remove motore
+     *
+     * @param \AppBundle\Entity\Motor $motore
+     */
+    public function removeMotore(\AppBundle\Entity\Motor $motore)
+    {
+        $this->motores->removeElement($motore);
+    }
+}

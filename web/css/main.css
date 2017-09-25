@@ -289,6 +289,7 @@ form > .btn-borrar:hover{
 .panel-body  form input[type="text"],
 .panel-body  form input[type="email"],
 .panel-body  form input[type="password"],
+.panel-body  form input[type="number"],
 .panel-body  form select{
     background: #3e4766;
     border: none;
@@ -299,7 +300,10 @@ form > .btn-borrar:hover{
 .panel-body form input:focus,.panel-body form select:focus{
     outline: none;
 }
-
+.espacio-linea{
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
 @media (min-width: 768px) {
     .skin-novo .main-sidebar {
         padding-top: 98px;

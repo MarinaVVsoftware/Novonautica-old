@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Barco;
 use AppBundle\Entity\Cliente;
+use AppBundle\Entity\Motor;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
@@ -41,9 +43,13 @@ class ClienteController extends Controller
     public function newAction(Request $request)
     {
         $cliente = new Cliente();
+        $barco = new Barco();
+        $motor = new Motor();
+        $cliente->addBarco($barco);
+        $barco->addMotore($motor);
         $form = $this->createForm('AppBundle\Form\ClienteType', $cliente);
         $form->handleRequest($request);
-
+        dump($barco,$motor);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($cliente);

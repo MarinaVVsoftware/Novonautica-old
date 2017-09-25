@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Barcos list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Anio</th>
+                <th>Estatus</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for barco in barcos %}
+            <tr>
+                <td><a href="{{ path('barco_show', { 'id': barco.id }) }}">{{ barco.id }}</a></td>
+                <td>{{ barco.nombre }}</td>
+                <td>{{ barco.marca }}</td>
+                <td>{{ barco.modelo }}</td>
+                <td>{% if barco.anio %}{{ barco.anio|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if barco.estatus %}Yes{% else %}No{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('barco_show', { 'id': barco.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('barco_edit', { 'id': barco.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('barco_new') }}">Create a new barco</a>
+        </li>
+    </ul>
+{% endblock %}
