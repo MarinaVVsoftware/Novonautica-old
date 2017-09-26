@@ -6,6 +6,7 @@ use AppBundle\Entity\Barco;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Barco controller.
@@ -81,16 +82,58 @@ class BarcoController extends Controller
      */
     public function editAction(Request $request, Barco $barco)
     {
+//        $deleteForm = $this->createDeleteForm($barco);
+//        $editForm = $this->createForm('AppBundle\Form\BarcoType', $barco);
+//        $editForm->handleRequest($request);
+//
+//        if ($editForm->isSubmitted() && $editForm->isValid()) {
+//            $this->getDoctrine()->getManager()->flush();
+//
+//            return $this->redirectToRoute('barco_edit', array('id' => $barco->getId()));
+//        }
+//
+//        return $this->render('barco/edit.html.twig', array(
+//            'barco' => $barco,
+//            'edit_form' => $editForm->createView(),
+//            'delete_form' => $deleteForm->createView(),
+//        ));
+        $em = $this->getDoctrine()->getManager();
+        $barco = $em->getRepository(Barco::class)->find($barco->getId());
+
+        if (!$barco) {
+            throw $this->createNotFoundException('No hay barcos encontrados para el id '.$barco->getId());
+        }
+
+        $originalMotores = new ArrayCollection();
+
+        foreach ($barco->getMotores() as $motor) {
+            $originalMotores->add($motor);
+        }
         $deleteForm = $this->createDeleteForm($barco);
         $editForm = $this->createForm('AppBundle\Form\BarcoType', $barco);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            foreach ($originalMotores as $motor){
+                if (false === $barco->getMotores()->contains($motor)) {
+                    // remove the Task from the Tag
+                    $motor->getBarco()->removeMotore($motor);
 
+                    // if it was a many-to-one relationship, remove the relationship like this
+                     //$motor->setBarco(null);
+
+                    $em->persist($motor);
+
+                    // if you wanted to delete the Tag entirely, you can also do that
+                     $em->remove($motor);
+                }
+            }
+            $em->persist($barco);
+            $em->flush();
+
+            // redirect back to some edit page
             return $this->redirectToRoute('barco_edit', array('id' => $barco->getId()));
         }
-
         return $this->render('barco/edit.html.twig', array(
             'barco' => $barco,
             'edit_form' => $editForm->createView(),

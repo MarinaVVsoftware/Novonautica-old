@@ -18,4 +18,20 @@ jQuery('#add-another-motor').click(function (e) {
     // create a new list element and add it to the list
     var newLi = jQuery('<div></div>').html(newWidget);
     newLi.appendTo(motorList);
+
+    // also add a remove button, just for this example
+    newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar</a>');
+
+    newLi.before(newLi);
+
+
+
+});
+// handle the removal, just for this example
+$('.remove-motor').click(function(e) {
+    e.preventDefault();
+    console.log('quitar motor');
+    $(this).parent().remove();
+
+    return false;
 });

@@ -79,7 +79,7 @@ class Motor
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="motores")
-     * @ORM\JoinColumn(name="idbarco", referencedColumnName="id")
+     * @ORM\JoinColumn(name="idbarco", referencedColumnName="id",onDelete="CASCADE")
      */
     private $barco;
 
@@ -174,7 +174,7 @@ class Motor
      */
     public function setManga($manga)
     {
-        $this->modelo = $manga;
+        $this->manga = $manga;
 
         return $this;
     }
@@ -198,7 +198,7 @@ class Motor
      */
     public function setEslora($eslora)
     {
-        $this->modelo = $eslora;
+        $this->eslora= $eslora;
 
         return $this;
     }
@@ -246,7 +246,7 @@ class Motor
      */
     public function setAgua($agua)
     {
-        $this->combustible = $agua;
+        $this->agua = $agua;
 
         return $this;
     }

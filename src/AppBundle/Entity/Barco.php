@@ -60,12 +60,12 @@ class Barco
     /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="barcos")
-     * @ORM\JoinColumn(name="idcliente", referencedColumnName="id")
+     * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
      */
     private $cliente;
 
     /**
-     * @ORM\OneToMany(targetEntity="Motor", mappedBy="barco")
+     * @ORM\OneToMany(targetEntity="Motor", mappedBy="barco",cascade={"persist"})
      */
     private $motores;
 
@@ -250,6 +250,8 @@ class Barco
      */
     public function addMotore(\AppBundle\Entity\Motor $motore)
     {
+        $motore->setBarco($this);
+//        $this->motores->add($motore);
         $this->motores[] = $motore;
 
         return $this;

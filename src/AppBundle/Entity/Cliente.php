@@ -121,8 +121,8 @@ class Cliente
     private $estatus;
 
     /**
-     * One Product has Many Features.
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Barco", mappedBy="cliente")
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Barco", mappedBy="cliente",cascade={"persist"})
      */
     private $barcos;
 
@@ -490,6 +490,8 @@ class Cliente
      */
     public function addBarco(\AppBundle\Entity\Barco $barco)
     {
+        $barco->setCliente($this);
+        //$this->barcos->add($barco);
         $this->barcos[] = $barco;
 
         return $this;

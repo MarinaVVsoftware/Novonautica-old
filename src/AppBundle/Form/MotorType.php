@@ -2,9 +2,11 @@
 
 namespace AppBundle\Form;
 
+//use Doctrine\DBAL\Types\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class MotorType extends AbstractType
 {
@@ -14,7 +16,9 @@ class MotorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('marca')
+            ->add('marca',TextType::class,[
+                'label' => 'Marca del motor'
+            ])
             ->add('modelo')
             ->add('calado')
             ->add('manga')

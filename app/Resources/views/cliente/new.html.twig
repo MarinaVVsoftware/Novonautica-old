@@ -71,37 +71,20 @@
                     </div>
 
                     <div id="motor-fields-list"
-                         data-prototype="{{ form_row(form.barcos.children[0].motores.vars.prototype)|e }}">
+                         class="motores"
+                         data-prototype="{{ form_widget(form.barcos.children[0].motores.vars.prototype)|e('html_attr') }}">
                         {% for motorField in form.barcos.children[0].motores %}
                             {% form_theme motorField 'motor/form-cliente.twig' %}
                             {{ form_row(motorField) }}
-                            {#<div class="row motor-lista">#}
-                                {#<div class="col-sm-5">#}
-                                    {#{{ form_row(motorField.marca) }}#}
-                                    {#{{ form_row(motorField.modelo) }}#}
-                                    {#{{ form_row(motorField.calado) }}#}
-                                    {#{{ form_row(motorField.manga) }}#}
-                                {#</div>#}
-                                {#<div class="col-sm-5">#}
-                                    {#{{ form_row(motorField.eslora) }}#}
-                                    {#{{ form_row(motorField.combustible) }}#}
-                                    {#{{ form_row(motorField.agua) }}#}
-                                    {#<div>#}
-                                        {#Estatus Motor#}
-                                        {#<span class="cont-label-novo">#}
-                                        {#{{ form_errors(motorField.estatus) }}#}
-                                            {#{{ form_widget(motorField.estatus,{'attr':{'checked':'true'}}) }}#}
-                                            {#{{ form_label(motorField.estatus) }}#}
-                                    {#</span>#}
-                                    {#</div>#}
-                                {#</div>#}
-                            {#</div>#}
                         {% endfor %}
                     </div>
-
-                    <a href="#" id="add-another-motor" data-cantidad="{{ form.barcos.children[0].motores|length }}">+
-                        Agregar Motor</a>
-
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="#" id="add-another-motor" class="letra-azul" data-cantidad="{{ form.barcos.children[0].motores|length }}">
+                                + Agregar Motor
+                            </a>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-sm-12">
                             <input type="submit" value="Guardar" class="btn btn-azul pull-right"/>
