@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Motor;
 use AppBundle\Entity\Barco;
+use AppBundle\Entity\Cliente;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
@@ -35,25 +37,29 @@ class BarcoController extends Controller
     /**
      * Creates a new barco entity.
      *
-     * @Route("/new", name="barco_new")
+     * @Route("/{cliente}/nuevo", name="barco_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request,Cliente $cliente)
     {
         $barco = new Barco();
+        $motor = new Motor();
+        $barco->addMotore($motor);
         $form = $this->createForm('AppBundle\Form\BarcoType', $barco);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $barco->setCliente($cliente);
             $em->persist($barco);
             $em->flush();
 
-            return $this->redirectToRoute('barco_show', array('id' => $barco->getId()));
+            return $this->redirectToRoute('cliente_show', array('id' => $barco->getCliente()->getId()));
         }
 
         return $this->render('barco/new.html.twig', array(
             'barco' => $barco,
+            'cliente' => $cliente,
             'form' => $form->createView(),
         ));
     }
@@ -99,7 +105,7 @@ class BarcoController extends Controller
 //        ));
         $em = $this->getDoctrine()->getManager();
         $barco = $em->getRepository(Barco::class)->find($barco->getId());
-
+        $cliente = $barco->getCliente();
         if (!$barco) {
             throw $this->createNotFoundException('No hay barcos encontrados para el id '.$barco->getId());
         }
@@ -132,10 +138,12 @@ class BarcoController extends Controller
             $em->flush();
 
             // redirect back to some edit page
-            return $this->redirectToRoute('barco_edit', array('id' => $barco->getId()));
+//            return $this->redirectToRoute('barco_edit', array('id' => $barco->getId()));
+            return $this->redirectToRoute('cliente_show', array('id' => $barco->getCliente()->getId()));
         }
         return $this->render('barco/edit.html.twig', array(
             'barco' => $barco,
+            'cliente' => $cliente,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));

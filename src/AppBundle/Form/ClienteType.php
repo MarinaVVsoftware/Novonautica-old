@@ -6,6 +6,8 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -50,7 +52,14 @@ class ClienteType extends AbstractType
                 'label' => false
             ])
         ;
- 
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $cliente = $event->getData();
+//            $form = $event->getForm();
+//
+//            if($cliente->getId()){ //si el id del cliente es diferente de nulo entonces no muestra los inputs de barco
+//                $form->remove('barcos');
+//            }
+//        });
     }
     
     /**

@@ -20,7 +20,7 @@ jQuery('#add-another-motor').click(function (e) {
     newLi.appendTo(motorList);
 
     // also add a remove button, just for this example
-    newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar</a>');
+    newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
 
     newLi.before(newLi);
 

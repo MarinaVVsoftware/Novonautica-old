@@ -31,7 +31,7 @@
                             <th>Dirección Fiscal</th>
                             <th>Correo Facturación</th>
                             <th>Estatus</th>
-                            <th>Actions</th>
+                            <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -54,7 +54,7 @@
                                 <td>{% if cliente.estatus %}Activado{% else %}Desactivado{% endif %}</td>
                                 <td>
                                     <a class="btn btn-morado-claro"
-                                       href="{{ path('cliente_show', { 'id': cliente.id }) }}">Ver</a>
+                                       href="{{ path('cliente_show', { 'id': cliente.id }) }}">Detalle</a>
                                     <a class="btn btn-azul" href="{{ path('cliente_edit', { 'id': cliente.id }) }}">Editar</a>
                                 </td>
                             </tr>
