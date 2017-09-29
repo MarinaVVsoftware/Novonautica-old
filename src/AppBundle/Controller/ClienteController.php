@@ -113,51 +113,52 @@ class ClienteController extends Controller
 //            'clientelistado' => 1,
 //        ));
 
-        $em = $this->getDoctrine()->getManager();
         $barcos = $cliente->getBarcos();
+        $barco = new Barco();
 
+        $em = $this->getDoctrine()->getManager();
 
-        foreach ($cliente->getBarcos() as $barco) {
-            $barco = $em->getRepository(Barco::class)->find($barco->getId());
-            $cliente = $barco->getCliente();
-            if (!$barco) {
-                throw $this->createNotFoundException('No hay barcos encontrados para el id ' . $barco->getId());
-            }
-            $originalMotores = new ArrayCollection();
+        //$barco = $em->getRepository(Barco::class)->find($barco->getId());
+        $cliente = $barco->getCliente();
+        if (!$barco) {
+            throw $this->createNotFoundException('No hay barcos encontrados para el id '.$barco->getId());
+        }
 
-            foreach ($barco->getMotores() as $motor) {
-                $originalMotores->add($motor);
-            }
-            $deleteForm = $this->createDeleteForm($cliente);
-            $editForm = $this->createForm('AppBundle\Form\ClienteType', $cliente);
-            $editForm->handleRequest($request);
+        $originalMotores = new ArrayCollection();
 
-            if ($editForm->isSubmitted() && $editForm->isValid()) {
-
-                foreach ($originalMotores as $motor) {
-                    if (false === $barco->getMotores()->contains($motor)) {
-                        // remove the Task from the Tag
-                        $motor->getBarco()->removeMotore($motor);
-
-                        // if it was a many-to-one relationship, remove the relationship like this
-                        //$motor->setBarco(null);
-
-                        $em->persist($motor);
-
-                        // if you wanted to delete the Tag entirely, you can also do that
-                        $em->remove($motor);
-                    }
-                }
-                $em->persist($barco);
-
-
-                $em->flush();
-
-                return $this->redirectToRoute('cliente_edit', array('id' => $cliente->getId()));
-            }
+        foreach ($barco->getMotores() as $motor) {
+            $originalMotores->add($motor);
         }
 
 
+
+        $deleteForm = $this->createDeleteForm($cliente);
+        $editForm = $this->createForm('AppBundle\Form\ClienteType', $cliente);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            foreach ($originalMotores as $motor){
+                if (false === $barco->getMotores()->contains($motor)) {
+                    // remove the Task from the Tag
+                    $motor->getBarco()->removeMotore($motor);
+
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    //$motor->setBarco(null);
+
+                    $em->persist($motor);
+
+                    // if you wanted to delete the Tag entirely, you can also do that
+                    $em->remove($motor);
+                }
+            }
+            $em->persist($barco);
+            $em->flush();
+
+            // redirect back to some edit page
+            return $this->redirectToRoute('cliente_show', array('id' => $barco->getCliente()->getId()));
+
+        }
         return $this->render('cliente/edit.html.twig', array(
             'cliente' => $cliente,
             'barcos' => $barcos,
@@ -165,7 +166,6 @@ class ClienteController extends Controller
             'delete_form' => $deleteForm->createView(),
             'clientelistado' => 1,
         ));
-
     }
 
     /**
