@@ -5,9 +5,11 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Barco;
 use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Motor;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Cliente controller.
@@ -92,16 +94,69 @@ class ClienteController extends Controller
      */
     public function editAction(Request $request, Cliente $cliente)
     {
-        $deleteForm = $this->createDeleteForm($cliente);
-        $editForm = $this->createForm('AppBundle\Form\ClienteType', $cliente);
-        $editForm->handleRequest($request);
-        $barcos = $cliente->getBarcos();
-        dump($cliente);
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+//        $deleteForm = $this->createDeleteForm($cliente);
+//        $editForm = $this->createForm('AppBundle\Form\ClienteType', $cliente);
+//        $editForm->handleRequest($request);
+//        $barcos = $cliente->getBarcos();
+//        dump($cliente);
+//        if ($editForm->isSubmitted() && $editForm->isValid()) {
+//            $this->getDoctrine()->getManager()->flush();
+//
+//            return $this->redirectToRoute('cliente_edit', array('id' => $cliente->getId()));
+//        }
+//
+//        return $this->render('cliente/edit.html.twig', array(
+//            'cliente' => $cliente,
+//            'barcos' => $barcos,
+//            'edit_form' => $editForm->createView(),
+//            'delete_form' => $deleteForm->createView(),
+//            'clientelistado' => 1,
+//        ));
 
-            return $this->redirectToRoute('cliente_edit', array('id' => $cliente->getId()));
+        $em = $this->getDoctrine()->getManager();
+        $barcos = $cliente->getBarcos();
+
+
+        foreach ($cliente->getBarcos() as $barco) {
+            $barco = $em->getRepository(Barco::class)->find($barco->getId());
+            $cliente = $barco->getCliente();
+            if (!$barco) {
+                throw $this->createNotFoundException('No hay barcos encontrados para el id ' . $barco->getId());
+            }
+            $originalMotores = new ArrayCollection();
+
+            foreach ($barco->getMotores() as $motor) {
+                $originalMotores->add($motor);
+            }
+            $deleteForm = $this->createDeleteForm($cliente);
+            $editForm = $this->createForm('AppBundle\Form\ClienteType', $cliente);
+            $editForm->handleRequest($request);
+
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+                foreach ($originalMotores as $motor) {
+                    if (false === $barco->getMotores()->contains($motor)) {
+                        // remove the Task from the Tag
+                        $motor->getBarco()->removeMotore($motor);
+
+                        // if it was a many-to-one relationship, remove the relationship like this
+                        //$motor->setBarco(null);
+
+                        $em->persist($motor);
+
+                        // if you wanted to delete the Tag entirely, you can also do that
+                        $em->remove($motor);
+                    }
+                }
+                $em->persist($barco);
+
+
+                $em->flush();
+
+                return $this->redirectToRoute('cliente_edit', array('id' => $cliente->getId()));
+            }
         }
+
 
         return $this->render('cliente/edit.html.twig', array(
             'cliente' => $cliente,
@@ -110,6 +165,7 @@ class ClienteController extends Controller
             'delete_form' => $deleteForm->createView(),
             'clientelistado' => 1,
         ));
+
     }
 
     /**
@@ -144,7 +200,6 @@ class ClienteController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('cliente_delete', array('id' => $cliente->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

@@ -70,17 +70,17 @@
                         </div>
                     </div>
 
-                    <div id="motor-fields-list"
-                         class="motores"
+                    <div id="motor-fields-list0"
+                         class="lista-motores"
                          data-prototype="{{ form_widget(form.barcos.children[0].motores.vars.prototype)|e('html_attr') }}">
                         {% for motorField in form.barcos.children[0].motores %}
                             {% form_theme motorField 'motor/form-cliente.twig' %}
-                            {{ form_row(motorField) }}
+                            {{ form_widget(motorField) }}
                         {% endfor %}
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <a href="#" id="add-another-motor" class="letra-azul" data-cantidad="{{ form.barcos.children[0].motores|length }}">
+                            <a href="#" id="" class="add-another-motor letra-azul" data-cantidad="{{ form.barcos.children[0].motores|length }}" data-idlista="0">
                                 + Agregar Motor
                             </a>
                         </div>

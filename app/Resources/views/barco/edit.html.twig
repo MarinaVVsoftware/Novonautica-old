@@ -54,17 +54,18 @@
                             <hr>
                         </div>
                     </div>
-                    <div id="motor-fields-list"
-                         class="motores"
+
+                    <div id="motor-fields-list0"
+                         class="lista-motores"
                          data-prototype="{{ form_widget(edit_form.motores.vars.prototype)|e('html_attr') }}">
                         {% for motorField in edit_form.motores %}
                             {% form_theme motorField 'motor/form-cliente.twig' %}
-                            {{ form_row(motorField) }}
+                            {{ form_widget(motorField) }}
                         {% endfor %}
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <a href="#" id="add-another-motor" class="letra-azul" data-cantidad="{{ edit_form.motores|length }}">
+                            <a href="#" id="" class="add-another-motor letra-azul" data-cantidad="{{ edit_form.motores|length }}" data-idlista="0">
                                 + Agregar Motor
                             </a>
                         </div>

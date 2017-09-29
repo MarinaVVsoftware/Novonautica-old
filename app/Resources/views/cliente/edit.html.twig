@@ -61,44 +61,69 @@
                                 </div>
                             </div>
                         </div>
-                        {% for barco in edit_form.barcos %}
-                        <div role="tabpanel" class="tab-pane" id="{{ form_widget(barco.id) }}">
+
+
+                        {% for i,barco in barcos %}
+                        <div role="tabpanel" class="tab-pane" id="{{ barco.id }}">
                             <div class="row">
                                 <div class="col-sm-5">
-                                    {{ form_row(barco.nombre) }}
-                                    {{ form_row(barco.marca) }}
+                                    {{ form_row(edit_form.barcos[i].nombre) }}
+                                    {{ form_row(edit_form.barcos[i].marca) }}
+                                    <div>
+                                        Estatus
+                                        <span class="cont-label-novo">
+                                            {{ form_errors(edit_form.barcos[i].estatus) }}
+                                            {{ form_widget(edit_form.barcos[i].estatus) }}
+                                            {{ form_label(edit_form.barcos[i].estatus) }}
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="col-sm-5">
-
+                                    {{ form_row(edit_form.barcos[i].modelo) }}
+                                    {{ form_row(edit_form.barcos[i].anio) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 espacio-linea">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div id="motor-fields-list{{ barco.id }}"
+                                 class="lista-motores"
+                                 data-prototype="{{ form_widget(edit_form.barcos[i].motores.vars.prototype)|e('html_attr') }}">
+                                {% for motorField in edit_form.barcos[i].motores %}
+                                    {% form_theme motorField 'motor/form-cliente.twig' %}
+                                    {{ form_widget(motorField) }}
+                                {% endfor %}
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a href="#" id="" class="add-another-motor letra-azul" data-cantidad="{{ edit_form.barcos[i].motores|length }}" data-idlista="{{ barco.id }}">
+                                        + Agregar Motor
+                                    </a>
                                 </div>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
-
-                    {#<div class="row">#}
-                        {#<div class="col-sm-12 espacio-linea">#}
-                            {#<hr>#}
-                        {#</div>#}
-                    {#</div>#}
-                    {#<div class="row">#}
-                        {#<div class="col-sm-12">#}
-                            {#Barcos#}
-                        {#</div>#}
-                    {#</div>#}
-                    {#<div class="row">#}
-                        {#<div class="col-sm-12">#}
+                    <div class="row">
+                        <div class="col-sm-12 espacio-linea">
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
                             {#{% for barco in barcos %}#}
                                 {#<a href="{{ path('barco_edit',{'id':barco.id}) }}" class="btn btn-azul">{{ barco.nombre }}</a>#}
                             {#{% endfor %}#}
-                            {#<a href="{{ path('barco_new',{'cliente':cliente.id}) }}" class="btn btn-azul">+ Agregar Barco</a>#}
-                        {#</div>#}
-                    {#</div>#}
-                    {#<div class="row">#}
-                        {#<div class="col-sm-12">#}
-                            {#<input type="submit" value="Guardar" class="btn btn-azul center-block"/>#}
-                        {#</div>#}
-                    {#</div>#}
+                            <a href="{{ path('barco_new',{'cliente':cliente.id}) }}" class="btn btn-azul">+ Agregar Barco</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input type="submit" value="Guardar" class="btn btn-azul center-block"/>
+                        </div>
+                    </div>
 
                     {{ form_end(edit_form) }}
 
