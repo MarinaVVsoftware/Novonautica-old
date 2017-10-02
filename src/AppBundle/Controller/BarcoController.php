@@ -88,21 +88,7 @@ class BarcoController extends Controller
      */
     public function editAction(Request $request, Barco $barco)
     {
-//        $deleteForm = $this->createDeleteForm($barco);
-//        $editForm = $this->createForm('AppBundle\Form\BarcoType', $barco);
-//        $editForm->handleRequest($request);
-//
-//        if ($editForm->isSubmitted() && $editForm->isValid()) {
-//            $this->getDoctrine()->getManager()->flush();
-//
-//            return $this->redirectToRoute('barco_edit', array('id' => $barco->getId()));
-//        }
-//
-//        return $this->render('barco/edit.html.twig', array(
-//            'barco' => $barco,
-//            'edit_form' => $editForm->createView(),
-//            'delete_form' => $deleteForm->createView(),
-//        ));
+
         $em = $this->getDoctrine()->getManager();
         $barco = $em->getRepository(Barco::class)->find($barco->getId());
         $cliente = $barco->getCliente();

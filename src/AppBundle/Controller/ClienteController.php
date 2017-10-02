@@ -93,44 +93,25 @@ class ClienteController extends Controller
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Cliente $cliente)
-    {
-//        $deleteForm = $this->createDeleteForm($cliente);
-//        $editForm = $this->createForm('AppBundle\Form\ClienteType', $cliente);
-//        $editForm->handleRequest($request);
-//        $barcos = $cliente->getBarcos();
-//        dump($cliente);
-//        if ($editForm->isSubmitted() && $editForm->isValid()) {
-//            $this->getDoctrine()->getManager()->flush();
-//
-//            return $this->redirectToRoute('cliente_edit', array('id' => $cliente->getId()));
-//        }
-//
-//        return $this->render('cliente/edit.html.twig', array(
-//            'cliente' => $cliente,
-//            'barcos' => $barcos,
-//            'edit_form' => $editForm->createView(),
-//            'delete_form' => $deleteForm->createView(),
-//            'clientelistado' => 1,
-//        ));
-
+    { 
         $barcos = $cliente->getBarcos();
-        $barco = new Barco();
+        $barcomotores = [];
 
         $em = $this->getDoctrine()->getManager();
 
-        //$barco = $em->getRepository(Barco::class)->find($barco->getId());
-        $cliente = $barco->getCliente();
-        if (!$barco) {
-            throw $this->createNotFoundException('No hay barcos encontrados para el id '.$barco->getId());
+        foreach ($barcos as $barco){
+            $barco = $em->getRepository(Barco::class)->find($barco->getId());
+            $cliente = $barco->getCliente();
+            if (!$barco) {
+                throw $this->createNotFoundException('No hay barcos encontrados para el id '.$barco->getId());
+            }
+            $originalMotores = new ArrayCollection();
+
+            foreach ($barco->getMotores() as $motor) {
+                $originalMotores->add($motor);
+            }
+            $barcomotores[$barco->getId()] = $originalMotores; //guardamos en el arreglo la coleccion de motores correspondiente a su id de barco
         }
-
-        $originalMotores = new ArrayCollection();
-
-        foreach ($barco->getMotores() as $motor) {
-            $originalMotores->add($motor);
-        }
-
-
 
         $deleteForm = $this->createDeleteForm($cliente);
         $editForm = $this->createForm('AppBundle\Form\ClienteType', $cliente);
@@ -138,25 +119,33 @@ class ClienteController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
-            foreach ($originalMotores as $motor){
-                if (false === $barco->getMotores()->contains($motor)) {
-                    // remove the Task from the Tag
-                    $motor->getBarco()->removeMotore($motor);
 
-                    // if it was a many-to-one relationship, remove the relationship like this
-                    //$motor->setBarco(null);
+            foreach ($barcos as $barco){
+                $om = $barcomotores[$barco->getId()]; //extraemos la coleccion de motores del barco correspondiente
 
-                    $em->persist($motor);
+                foreach ($om as $motor){
 
-                    // if you wanted to delete the Tag entirely, you can also do that
-                    $em->remove($motor);
+                    if (false === $barco->getMotores()->contains($motor)) {
+                        // remove the Task from the Tag
+                        $motor->getBarco()->removeMotore($motor);
+
+                        // if it was a many-to-one relationship, remove the relationship like this
+                        //$motor->setBarco(null);
+
+                        $em->persist($motor);
+
+                        // if you wanted to delete the Tag entirely, you can also do that
+                        $em->remove($motor);
+                    }
+                    $em->persist($barco);
+
                 }
             }
-            $em->persist($barco);
+
             $em->flush();
 
             // redirect back to some edit page
-            return $this->redirectToRoute('cliente_show', array('id' => $barco->getCliente()->getId()));
+            return $this->redirectToRoute('cliente_show', array('id' => $cliente->getId()));
 
         }
         return $this->render('cliente/edit.html.twig', array(
