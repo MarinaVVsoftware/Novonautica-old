@@ -1,6 +1,6 @@
 {% block form_widget %}
     {% spaceless %}
-        <div class="row">
+        {#<div class="row">#}
             <a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>
             <div class="col-sm-5">
                 {{ form_row(form.marca) }}
@@ -10,7 +10,7 @@
                 {{ form_row(form.eslora) }}
                 {{ form_row(form.combustible) }}
                 {{ form_row(form.agua) }}
-                <div>
+                <div class="input-estatus">
                     Estatus Motor
                     <span class="cont-label-novo">
                         {{ form_errors(form.estatus) }}
@@ -19,6 +19,9 @@
                     </span>
                 </div>
             </div>
-        </div>
+            <div class="col-sm-12 espacio-linea">
+                <hr>
+            </div>
+        {#</div>#}
     {% endspaceless %}
 {% endblock form_widget %}

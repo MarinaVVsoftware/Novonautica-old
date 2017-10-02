@@ -29,7 +29,7 @@
                             {{ form_row(form.direccionfiscal) }}
                             {{ form_row(form.correofacturacion) }}
 
-                            <div>
+                            <div class="input-estatus">
                                 Estatus Cliente
                                 <span class="cont-label-novo">
                                 {{ form_errors(form.estatus) }}
@@ -49,7 +49,7 @@
                             {{ form_row(form.barcos.children[0].nombre) }}
                             {{ form_row(form.barcos.children[0].marca) }}
 
-                            <div>
+                            <div class="input-estatus">
                                 Estatus Barco
                                 <span class="cont-label-novo">
                                     {{ form_errors(form.barcos.children[0].estatus) }}
@@ -72,10 +72,17 @@
 
                     <div id="motor-fields-list0"
                          class="lista-motores"
-                         data-prototype="{{ form_widget(form.barcos.children[0].motores.vars.prototype)|e('html_attr') }}">
+                         data-prototype="
+                                    {% filter escape %}
+                                    {{ include('motor/form-cliente.twig', { 'form': form.barcos.children[0].motores.vars.prototype }) }}
+                                        {#{{ form_widget(form.barcos.children[0].motores.vars.prototype)|e('html_attr') }}#}
+                                    {% endfilter %}
+                                        ">
                         {% for motorField in form.barcos.children[0].motores %}
                             {% form_theme motorField 'motor/form-cliente.twig' %}
-                            {{ form_widget(motorField) }}
+                            <div class="row">
+                                {{ form_widget(motorField) }}
+                            </div>
                         {% endfor %}
                     </div>
                     <div class="row">

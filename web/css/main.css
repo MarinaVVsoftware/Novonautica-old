@@ -79,6 +79,9 @@ form > .btn-borrar:hover,btn-borrar:hover{
 /*++ fin botones color ++*/
 
 /*+++++ check box estilo ++++++*/
+.input-estatus{
+    margin-top: 2rem;
+}
 .cont-label-novo {
     width: 20px;
     position: relative;

@@ -11,7 +11,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Editar Barco</h3>
+                            <h3 class="panel-title">Editar Barco: {{ cliente }}</h3>
                         </div>
                         <div class="col-sm-6">
                             <a href="{{ path('cliente_show',{'id':cliente.id}) }}" class="btn btn-contorno-azul pull-right">
@@ -23,18 +23,18 @@
 
                 </div>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <p><strong>Cliente: {{ cliente }}</strong></p>
-                        </div>
-                    </div>
+                    {#<div class="row">#}
+                        {#<div class="col-sm-12">#}
+                            {#<p><strong>Cliente: {{ cliente }}</strong></p>#}
+                        {#</div>#}
+                    {#</div>#}
                     {{ form_start(edit_form) }}
                     <div class="row">
                         <div class="col-sm-5">
                             {{ form_row(edit_form.nombre) }}
                             {{ form_row(edit_form.marca) }}
 
-                            <div>
+                            <div class="input-estatus">
                                 Estatus Barco
                                 <span class="cont-label-novo">
                                     {{ form_errors(edit_form.estatus) }}
@@ -57,10 +57,17 @@
 
                     <div id="motor-fields-list0"
                          class="lista-motores"
-                         data-prototype="{{ form_widget(edit_form.motores.vars.prototype)|e('html_attr') }}">
+                         data-prototype="
+                                         {% filter escape %}
+                                            {{ include('motor/form-cliente.twig', { 'form': edit_form.motores.vars.prototype }) }}
+                                            {#{{ form_widget(edit_form.motores.vars.prototype)|e('html_attr') }}#}
+                                         {% endfilter %}
+                                        ">
                         {% for motorField in edit_form.motores %}
                             {% form_theme motorField 'motor/form-cliente.twig' %}
-                            {{ form_widget(motorField) }}
+                            <div class="row">
+                                {{ form_widget(motorField) }}
+                            </div>
                         {% endfor %}
                     </div>
                     <div class="row">

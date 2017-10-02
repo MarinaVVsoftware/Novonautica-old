@@ -93,7 +93,7 @@ class ClienteController extends Controller
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Cliente $cliente)
-    { 
+    {
         $barcos = $cliente->getBarcos();
         $barcomotores = [];
 

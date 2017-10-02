@@ -50,7 +50,7 @@
                                     {{ form_row(edit_form.rfc) }}
                                     {{ form_row(edit_form.direccionfiscal) }}
                                     {{ form_row(edit_form.correofacturacion) }}
-                                    <div>
+                                    <div class="input-estatus">
                                         Estatus
                                         <span class="cont-label-novo">
                                             {{ form_errors(edit_form.estatus) }}
@@ -58,6 +58,11 @@
                                             {{ form_label(edit_form.estatus) }}
                                         </span>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 espacio-linea">
+                                    <hr>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +74,7 @@
                                 <div class="col-sm-5">
                                     {{ form_row(edit_form.barcos[i].nombre) }}
                                     {{ form_row(edit_form.barcos[i].marca) }}
-                                    <div>
+                                    <div class="input-estatus">
                                         Estatus
                                         <span class="cont-label-novo">
                                             {{ form_errors(edit_form.barcos[i].estatus) }}
@@ -90,10 +95,17 @@
                             </div>
                             <div id="motor-fields-list{{ barco.id }}"
                                  class="lista-motores"
-                                 data-prototype="{{ form_widget(edit_form.barcos[i].motores.vars.prototype)|e('html_attr') }}">
+                                 data-prototype="
+                                                {% filter escape %}
+                                                    {{ include('motor/form-cliente.twig', { 'form': edit_form.barcos[i].motores.vars.prototype }) }}
+                                                    {#{{ form_widget(edit_form.barcos[i].motores.vars.prototype)|e('html_attr') }}#}
+                                                {% endfilter %}
+                                                ">
                                 {% for motorField in edit_form.barcos[i].motores %}
                                     {% form_theme motorField 'motor/form-cliente.twig' %}
-                                    {{ form_widget(motorField) }}
+                                    <div class="row">
+                                        {{ form_widget(motorField) }}
+                                    </div>
                                 {% endfor %}
                             </div>
                             <div class="row">
@@ -106,11 +118,7 @@
                         </div>
                         {% endfor %}
                     </div>
-                    <div class="row">
-                        <div class="col-sm-12 espacio-linea">
-                            <hr>
-                        </div>
-                    </div>
+
                     <div class="row">
                         <div class="col-sm-12">
                             {#{% for barco in barcos %}#}
