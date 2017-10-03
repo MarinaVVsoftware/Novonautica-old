@@ -1,0 +1,227 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block title %}
+    Novonautiva | Ver Cliente
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">Detalle cliente: {{ cliente.nombre }}</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('cliente_index') }}">
+                                {#<i class="fa fa-arrow-left" aria-hidden="true"></i>#}
+                                Regresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body panel-pestanias">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="primero active">
+                            <a href="#cliente" aria-controls="cliente" role="tab" data-toggle="tab">Cliente</a>
+                        </li>
+                        {% for barco in cliente.barcos %}
+                            <li role="presentation">
+                                <a href="#{{ barco.id }}" aria-controls="{{ barco.id }}" role="tab"
+                                   data-toggle="tab">{{ barco.nombre }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="cliente">
+                            <div class="row">
+                                <div class="col-sm-10 col-sm-offset-1">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <th>Id</th>
+                                            <td>{{ cliente.id }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <td>{{ cliente.nombre }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Correo</th>
+                                            <td>{{ cliente.correo }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Password</th>
+                                            <td>{{ cliente.password }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Teléfono</th>
+                                            <td>{{ cliente.telefono }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Celular</th>
+                                            <td>{{ cliente.celular }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Dirección</th>
+                                            <td>{{ cliente.direccion }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Fecha Registro</th>
+                                            <td>{% if cliente.fecharegistro %}{{ cliente.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Hora Registro</th>
+                                            <td>{% if cliente.horaregistro %}{{ cliente.horaregistro|date('H:i:s') }}{% endif %}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Empresa</th>
+                                            <td>{{ cliente.empresa }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Razon Social</th>
+                                            <td>{{ cliente.razonsocial }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>RFC</th>
+                                            <td>{{ cliente.rfc }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Dirección Fiscal</th>
+                                            <td>{{ cliente.direccionfiscal }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Correo Facturacion</th>
+                                            <td>{{ cliente.correofacturacion }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Estatus</th>
+                                            <td>{% if cliente.estatus %}Activado{% else %}Desactivado{% endif %}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <a class="btn btn-azul" href="{{ path('cliente_edit', { 'id': cliente.id }) }}">Editar Todo</a>
+                                </div>
+                                {#<div class="col-sm-8">#}
+                                {#{{ form_start(delete_form) }}#}
+                                {#<input type="submit" value="Borrar" class="btn btn-borrar pull-right">#}
+                                {#{{ form_end(delete_form) }}#}
+                                {#</div>#}
+                            </div>
+                        </div>
+                        {% for barco in cliente.barcos %}
+                            <div role="tabpanel" class="tab-pane" id="{{ barco.id }}">
+                                <div class="row">
+                                    <div class="col-sm-10 col-sm-offset-1">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>Barco</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th>Id</th>
+                                                <td>{{ barco.id }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nombre barco</th>
+                                                <td>{{ barco.nombre }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Marca</th>
+                                                <td>{{ barco.marca }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Modelo</th>
+                                                <td>{{ barco.modelo }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Año</th>
+                                                <td>{{ barco.anio }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Estatus</th>
+                                                <td>{% if barco.estatus %}Activado{% else %}Desactivado{% endif %}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                {% for motor in barco.motores %}
+                                    <div class="row">
+                                        <div class="col-sm-10 col-sm-offset-1">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th>Motor</th>
+                                                    <th></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <td>{{ motor.id }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Marca motor</th>
+                                                    <td>{{ motor.marca }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Modelo</th>
+                                                    <td>{{ motor.modelo }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Calado</th>
+                                                    <td>{{ motor.calado }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Manga</th>
+                                                    <td>{{ motor.manga }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Eslora</th>
+                                                    <td>{{ motor.eslora }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Combustible (lts)</th>
+                                                    <td>{{ motor.combustible }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Agua (lts)</th>
+                                                    <td>{{ motor.agua }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Estatus</th>
+                                                    <td>{% if motor.estatus %}Activado{% else %}Desactivado{% endif %}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <a href="{{ path('barco_edit',{'id':barco.id}) }}" class="btn btn-azul">Editar Barco</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

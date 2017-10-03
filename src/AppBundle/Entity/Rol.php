@@ -49,6 +49,7 @@ class Rol //Implements RoleInterface
     {
         return $this->descripcion;
     }
+
     /**
      * @ORM\OneToMany(targetEntity="Usuario", mappedBy="rol")
      */
@@ -59,15 +60,6 @@ class Rol //Implements RoleInterface
         $this->usuarios = new ArrayCollection();
     }
 
-//    /**
-//     * Get usuarios
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getUsuarios()
-//    {
-//        return $this->usuarios;
-//    }
     /**
      * Get id
      *
@@ -184,5 +176,28 @@ class Rol //Implements RoleInterface
     {
         return $this->usuarios;
     }
-}
 
+    /**
+     * Add usuario
+     *
+     * @param \AppBundle\Entity\Usuario $usuario
+     *
+     * @return Rol
+     */
+    public function addUsuario(\AppBundle\Entity\Usuario $usuario)
+    {
+        $this->usuarios[] = $usuario;
+
+        return $this;
+    }
+
+    /**
+     * Remove usuario
+     *
+     * @param \AppBundle\Entity\Usuario $usuario
+     */
+    public function removeUsuario(\AppBundle\Entity\Usuario $usuario)
+    {
+        $this->usuarios->removeElement($usuario);
+    }
+}

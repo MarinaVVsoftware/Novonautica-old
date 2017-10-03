@@ -1,5 +1,9 @@
 {% extends 'estructura/plantilla.twig' %}
 
+{% block title %}
+    Novonautiva | Usuarios editar
+{% endblock %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -8,9 +12,7 @@
                     <h3 class="panel-title">Editar Usuario</h3>
                 </div>
                 <div class="panel-body">
-                    {#<h1>Editar Usuario</h1>#}
                     {{ form_start(edit_form) }}
-                    {#{{ form_widget(edit_form) }}#}
                     <div class="row">
                         <div class="col-md-3">
                             <p>

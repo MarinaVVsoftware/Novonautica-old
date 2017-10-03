@@ -189,3 +189,9 @@
     box-shadow: 0 4px 8px #191919;
 }
 
+.skin-novo .main-footer{
+    background: #292e41;
+    padding: 15px;
+    color: #fff;
+    border:none;
+}

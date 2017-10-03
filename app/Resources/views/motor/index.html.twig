@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Motors list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Calado</th>
+                <th>Manga</th>
+                <th>Eslora</th>
+                <th>Combustible</th>
+                <th>Agua</th>
+                <th>Estatus</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for motor in motors %}
+            <tr>
+                <td><a href="{{ path('motor_show', { 'id': motor.id }) }}">{{ motor.id }}</a></td>
+                <td>{{ motor.marca }}</td>
+                <td>{{ motor.modelo }}</td>
+                <td>{{ motor.calado }}</td>
+                <td>{{ motor.manga }}</td>
+                <td>{{ motor.eslora }}</td>
+                <td>{{ motor.combustible }}</td>
+                <td>{{ motor.agua }}</td>
+                <td>{% if motor.estatus %}Yes{% else %}No{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('motor_show', { 'id': motor.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('motor_edit', { 'id': motor.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('motor_new') }}">Create a new motor</a>
+        </li>
+    </ul>
+{% endblock %}
