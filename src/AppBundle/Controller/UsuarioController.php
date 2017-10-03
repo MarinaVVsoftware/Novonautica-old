@@ -36,7 +36,7 @@ class UsuarioController extends Controller
     /**
      * Creates a new usuario entity.
      *
-     * @Route("/new", name="usuario_new")
+     * @Route("/nuevo", name="usuario_new")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -78,7 +78,7 @@ class UsuarioController extends Controller
     /**
      * Displays a form to edit an existing usuario entity.
      *
-     * @Route("/{id}/edit", name="usuario_edit")
+     * @Route("/{id}/editar", name="usuario_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Usuario $usuario)

@@ -8,26 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
-//    /**
-//     * @Route("/", name="homepage")
-//     */
-//    public function indexAction(Request $request)
-//    {
-//        // replace this example code with whatever you need
-//        return $this->render('default/index.html.twig', [
-//            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-//        ]);
-//    }
-//    /**
-//     * @Route("/inicio", name="demo1")
-//     */
-//    public function displayAction(Request $request)
-//    {
-//        // replace this example code with whatever you need
-//        return $this->render('default/demo.twig', [
-//            //'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-//        ]);
-//    }
+
     /**
      * @Route("/inicio", name="incio")
      */
@@ -37,24 +18,27 @@ class DefaultController extends Controller
         return $this->render('inicio.twig', [
         ]);
     }
-    /**
-     * @Route("/clientes/agregar", name="clientes-agregar")
-     */
-    public function displayNuevoCliente(Request $request)
-    {
-        return $this->render('cliente-agregar.twig', [
-            'clienteagregar' => 1
-        ]);
-    }
-    /**
-     * @Route("/clientes/listado", name="clientes-lista")
-     */
-    public function displayListaCliente(Request $request)
-    {
-        return $this->render('cliente-listado.twig', [
-            'clientelistado' => 1
-        ]);
-    }
+
+//    /**
+//     * @Route("/clientes/agregar", name="clientes-agregar")
+//     */
+//    public function displayNuevoCliente(Request $request)
+//    {
+//        return $this->render('cliente-agregar.twig', [
+//            'clienteagregar' => 1
+//        ]);
+//    }
+
+//    /**
+//     * @Route("/clientes/listado", name="clientes-lista")
+//     */
+//    public function displayListaCliente(Request $request)
+//    {
+//        return $this->render('cliente-listado.twig', [
+//            'clientelistado' => 1
+//        ]);
+//    }
+
     /**
      * @Route("/marina-humeda/agenda", name="marina-agenda")
      */

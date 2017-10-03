@@ -190,8 +190,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
         return $this->estatus;
     }
 
-<<<<<<< Updated upstream
-=======
+
     /**
      * Set rol
      *
@@ -215,7 +214,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
         return $this->rol;
     }
 
->>>>>>> Stashed changes
+
     public function isAccountNonExpired()
     {
         return true;
@@ -252,10 +251,6 @@ class Usuario implements AdvancedUserInterface, \Serializable
             ) = unserialize($serialized);
     }
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     public function eraseCredentials()
     {
     }
@@ -266,41 +261,12 @@ class Usuario implements AdvancedUserInterface, \Serializable
         return null;
     }
 
-<<<<<<< Updated upstream
 
-
-=======
->>>>>>> Stashed changes
     public function getRoles()
     {
         //return array('ROLE_ASTILLERO');
         //return array($this->rol);
         return [$this->getRol()->getRole()];
     }
-<<<<<<< Updated upstream
 
-    /**
-     * Set rol
-     *
-     * @param \AppBundle\Entity\Rol $rol
-     *
-     * @return Usuario
-     */
-    public function setRol(\AppBundle\Entity\Rol $rol = null)
-    {
-        $this->rol = $rol;
-        return $this;
-    }
-
-    /**
-     * Get rol
-     *
-     * @return \AppBundle\Entity\Rol
-     */
-    public function getRol()
-    {
-        return $this->rol;
-    }
-=======
->>>>>>> Stashed changes
 }

@@ -1,53 +1,55 @@
 {% extends 'estructura/plantilla.twig' %}
 
+{% block title %}
+    Novonautiva | Usuarios ver
+{% endblock %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
             <div class="panel panel-novo">
-
                 <div class="panel-heading">
                     <h3 class="panel-title">{{ usuario.nombre }}</h3>
                 </div>
                 <div class="panel-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th>Id</th>
-                            <td>{{ usuario.id }}</td>
-                        </tr>
-                        <tr>
-                            <th>Nombre</th>
-                            <td>{{ usuario.nombre }}</td>
-                        </tr>
-                        <tr>
-                            <th>Correo</th>
-                            <td>{{ usuario.correo }}</td>
-                        </tr>
-                        <tr>
-                            <th>Nombre de Usuario</th>
-                            <td>{{ usuario.username }}</td>
-                        </tr>
-                        {#<tr>#}
-                            {#<th>Password</th>#}
-                            {#<td>{{ usuario.password }}</td>#}
-                        {#</tr>#}
-                        <tr>
-                            <th>Estatus</th>
-                            <td>{% if usuario.estatus %}Activado{% else %}Desactivado{% endif %}</td>
-                        </tr>
-                        <tr>
-                            <th>Nivel</th>
-                            <td>{{ usuario.rol }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th>Id</th>
+                                    <td>{{ usuario.id }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <td>{{ usuario.nombre }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Correo</th>
+                                    <td>{{ usuario.correo }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nombre de Usuario</th>
+                                    <td>{{ usuario.username }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Estatus</th>
+                                    <td>{% if usuario.estatus %}Activado{% else %}Desactivado{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nivel</th>
+                                    <td>{{ usuario.rol }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-sm-4">
                             <a class="btn btn-morado-claro" href="{{ path('usuario_index') }}">Regresar</a>

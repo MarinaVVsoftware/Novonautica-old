@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Barco</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ barco.id }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ barco.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Marca</th>
+                <td>{{ barco.marca }}</td>
+            </tr>
+            <tr>
+                <th>Modelo</th>
+                <td>{{ barco.modelo }}</td>
+            </tr>
+            <tr>
+                <th>Anio</th>
+                <td>{% if barco.anio %}{{ barco.anio|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Estatus</th>
+                <td>{% if barco.estatus %}Yes{% else %}No{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('barco_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('barco_edit', { 'id': barco.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

@@ -67,17 +67,21 @@ a{
     color: #ffffff;
     background: #3e4766;
 }
-form > .btn-borrar{
+form > .btn-borrar,.btn-borrar{
     background: #8c0400;
     color: #fff;
 }
-form > .btn-borrar:hover{
+form > .btn-borrar:hover,btn-borrar:hover{
     background: #d40400;
     color: #fff;
 }
+
 /*++ fin botones color ++*/
 
 /*+++++ check box estilo ++++++*/
+.input-estatus{
+    margin-top: 2rem;
+}
 .cont-label-novo {
     width: 20px;
     position: relative;
@@ -289,6 +293,7 @@ form > .btn-borrar:hover{
 .panel-body  form input[type="text"],
 .panel-body  form input[type="email"],
 .panel-body  form input[type="password"],
+.panel-body  form input[type="number"],
 .panel-body  form select{
     background: #3e4766;
     border: none;
@@ -299,7 +304,10 @@ form > .btn-borrar:hover{
 .panel-body form input:focus,.panel-body form select:focus{
     outline: none;
 }
-
+.espacio-linea{
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
 @media (min-width: 768px) {
     .skin-novo .main-sidebar {
         padding-top: 98px;
