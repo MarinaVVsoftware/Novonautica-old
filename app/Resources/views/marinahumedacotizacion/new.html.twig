@@ -1,0 +1,58 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block title %}
+    Novonautiva | Nueva cotización
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Nuevo Cotización</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="radio">
+                        <input id="radio-1" name="radio" type="radio" checked>
+                        <label for="radio-1" class="radio-label">La Sirenita</label>
+                    </div>
+                    <div class="radio">
+                        <input id="radio-2" name="radio" type="radio">
+                        <label  for="radio-2" class="radio-label">La Rumorosa</label>
+                    </div>
+
+                    {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {{ form_row(form.cliente) }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form_row(form.barco) }}
+                        </div>
+                    </div>
+                    {{ form_row(form.fechaLlegada) }}
+                    {{ form_row(form.fechaSalida) }}
+                    {{ form_row(form.diasEstadia) }}
+                    {{ form_row(form.diasAdicionales) }}
+                    {{ form_row(form.precioDia) }}
+                    {{ form_row(form.descuento) }}
+                    {{ form_row(form.gasolina) }}
+                    {{ form_row(form.agua) }}
+                    {{ form_row(form.electricidad) }}
+                    {{ form_row(form.dezasolve) }}
+                    {{ form_row(form.limpieza) }}
+                    <input type="submit" value="Create"/>
+                    {{ form_end(form) }}
+                    <ul>
+                        <li>
+                            <a href="{{ path('marina-humeda_index') }}">Back to the list</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script>
+
+    </script>
+{% endblock %}

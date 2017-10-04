@@ -131,8 +131,15 @@ class Cliente
      */
     private $barcos;
 
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaCotizacion", mappedBy="cliente")
+     */
+    private $mhcotizaciones;
+
     public function __construct() {
         $this->barcos = new ArrayCollection();
+        $this->mhcotizaciones = new ArrayCollection();
     }
     public function __toString()
     {
@@ -521,4 +528,39 @@ class Cliente
     {
         return $this->barcos;
     }
+
+    /**
+     * Add marinahumedacotizacion
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion
+     *
+     * @return Cliente
+     */
+    public function addMarinaHumedaCotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion)
+    {
+        $marinahumedacotizacion->setCliente($this);
+        $this->mhcotizaciones[] = $marinahumedacotizacion;
+        return $this;
+    }
+
+    /**
+     * Remove marinahumedacotizacion
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion
+     */
+    public function removeMarinaHumedaCotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion)
+    {
+        $this->mhcotizaciones->removeElement($marinahumedacotizacion);
+    }
+
+    /**
+     * Get mhcotizaciones
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMHcotizaciones()
+    {
+        return $this->mhcotizaciones;
+    }
+
 }

@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Marinahumedacotizacions list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fechallegada</th>
+                <th>Fechasalida</th>
+                <th>Diasestadia</th>
+                <th>Diasadicionales</th>
+                <th>Preciodia</th>
+                <th>Descuento</th>
+                <th>Gasolina</th>
+                <th>Agua</th>
+                <th>Electricidad</th>
+                <th>Dezasolve</th>
+                <th>Limpieza</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for marinaHumedaCotizacion in marinaHumedaCotizacions %}
+            <tr>
+                <td><a href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">{{ marinaHumedaCotizacion.id }}</a></td>
+                <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ marinaHumedaCotizacion.diasEstadia }}</td>
+                <td>{{ marinaHumedaCotizacion.diasAdicionales }}</td>
+                <td>{{ marinaHumedaCotizacion.precioDia }}</td>
+                <td>{{ marinaHumedaCotizacion.descuento }}</td>
+                <td>{{ marinaHumedaCotizacion.gasolina }}</td>
+                <td>{{ marinaHumedaCotizacion.agua }}</td>
+                <td>{{ marinaHumedaCotizacion.electricidad }}</td>
+                <td>{{ marinaHumedaCotizacion.dezasolve }}</td>
+                <td>{{ marinaHumedaCotizacion.limpieza }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('marina-humeda_new') }}">Create a new marinaHumedaCotizacion</a>
+        </li>
+    </ul>
+{% endblock %}

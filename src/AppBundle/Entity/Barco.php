@@ -69,8 +69,14 @@ class Barco
      */
     private $motores;
 
+    /**
+     * @ORM\OneToMany(targetEntity="MarinaHumedaCotizacion", mappedBy="barco")
+     */
+    private $mhcotizaciones;
+
     public function __construct() {
         $this->motores = new ArrayCollection();
+        $this->mhcotizaciones = new ArrayCollection();
     }
 
     public function __toString()
@@ -209,16 +215,6 @@ class Barco
     }
 
     /**
-     * Get motores
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getMotores()
-    {
-        return $this->motores;
-    }
-
-    /**
      * Set cliente
      *
      * @param \AppBundle\Entity\Cliente $cliente
@@ -239,6 +235,16 @@ class Barco
     public function getCliente()
     {
         return $this->cliente;
+    }
+
+    /**
+     * Get motores
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMotores()
+    {
+        return $this->motores;
     }
 
     /**
@@ -265,5 +271,41 @@ class Barco
     public function removeMotore(\AppBundle\Entity\Motor $motore)
     {
         $this->motores->removeElement($motore);
+    }
+
+
+
+    /**
+     * Add marinahumedacotizacion
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion
+     *
+     * @return Barco
+     */
+    public function addMarinaHumedaCotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion)
+    {
+        $marinahumedacotizacion->setBarco($this);
+        $this->mhcotizaciones[] = $marinahumedacotizacion;
+        return $this;
+    }
+
+    /**
+     * Remove marinahumedacotizacion
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion
+     */
+    public function removeMarinaHumedaCotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion)
+    {
+        $this->mhcotizaciones->removeElement($marinahumedacotizacion);
+    }
+
+    /**
+     * Get mhcotizaciones
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMHcotizaciones()
+    {
+        return $this->mhcotizaciones;
     }
 }

@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Marinahumedacotizacion</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ marinaHumedaCotizacion.id }}</td>
+            </tr>
+            <tr>
+                <th>Fechallegada</th>
+                <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Fechasalida</th>
+                <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Diasestadia</th>
+                <td>{{ marinaHumedaCotizacion.diasEstadia }}</td>
+            </tr>
+            <tr>
+                <th>Diasadicionales</th>
+                <td>{{ marinaHumedaCotizacion.diasAdicionales }}</td>
+            </tr>
+            <tr>
+                <th>Preciodia</th>
+                <td>{{ marinaHumedaCotizacion.precioDia }}</td>
+            </tr>
+            <tr>
+                <th>Descuento</th>
+                <td>{{ marinaHumedaCotizacion.descuento }}</td>
+            </tr>
+            <tr>
+                <th>Gasolina</th>
+                <td>{{ marinaHumedaCotizacion.gasolina }}</td>
+            </tr>
+            <tr>
+                <th>Agua</th>
+                <td>{{ marinaHumedaCotizacion.agua }}</td>
+            </tr>
+            <tr>
+                <th>Electricidad</th>
+                <td>{{ marinaHumedaCotizacion.electricidad }}</td>
+            </tr>
+            <tr>
+                <th>Dezasolve</th>
+                <td>{{ marinaHumedaCotizacion.dezasolve }}</td>
+            </tr>
+            <tr>
+                <th>Limpieza</th>
+                <td>{{ marinaHumedaCotizacion.limpieza }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('marina-humeda_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}
