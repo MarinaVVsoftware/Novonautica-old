@@ -1,0 +1,61 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block title %}
+    Novonautiva | Agenda
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">Agenda</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="{{ path('evento_new') }}" class="btn btn-contorno-azul pull-right">+ Nuevo evento</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body panel-pestanias">
+                    <div id='calendario'></div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $('#calendario').fullCalendar({
+
+            customButtons: {
+                myCustomButton: {
+                    text: '+ Nuevo Evento',
+                    click: function() {
+                        alert('agregar evento');
+                    }
+                }
+            },
+            header: {
+                left: 'month,agendaWeek,agendaDay',
+                center: 'prev,title,next',
+                right: '' //'today myCustomButton'
+            },
+            editable: false,
+            droppable: true,
+             events: [
+                 {% for evento in marinaEventos %}
+                 {
+                     title: "{{ evento.titulo }} {{ evento.descripcion }}",
+                     start: "{{ evento.fechainicio|date('Y-m-d') }} {{ evento.horainicio|date('H:i:s') }}",
+                     end: "{{ evento.fechafin|date('Y-m-d') }} {{ evento.horafin|date('H:i:s') }}",
+                     url: "{{ path('evento_show', { 'id': evento.id }) }}"
+                 },
+                 {% endfor %}
+             ]
+//            color: 'blue',   // a non-ajax option
+//            textColor: 'white'
+        });
+    </script>
+{% endblock %}

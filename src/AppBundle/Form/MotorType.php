@@ -17,18 +17,16 @@ class MotorType extends AbstractType
     {
         $builder
             ->add('marca',TextType::class,[
-                'label' => 'Marca del motor'
+                'label' => 'Marca del motor',
+                'required' => false
             ])
-            ->add('modelo')
-            ->add('calado')
-            ->add('manga')
-            ->add('eslora')
-            ->add('combustible')
-            ->add('agua')
-            ->add('estatus',null,[
-                'label' => ' '
+            ->add('modelo',TextType::class,[
+                'required' => false
             ])
-//            ->add('barco')
+//            ->add('estatus',null,[
+//                'label' => ' ',
+//                'required' => false
+//            ])
         ;
     }
     

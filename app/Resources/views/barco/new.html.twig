@@ -23,28 +23,40 @@
 
                 </div>
                 <div class="panel-body">
-                    {#<div class="row">#}
-                        {#<div class="col-sm-12">#}
-                            {#<p><strong>Cliente: {{ cliente }}</strong></p>#}
-                        {#</div>#}
-                    {#</div>#}
+                    {% form_theme form 'estructura/temaerror.html.twig' %}
                     {{ form_start(form) }}
                     <div class="row">
-                        <div class="col-sm-5">
-                            {{ form_row(form.nombre) }}
-                            {{ form_row(form.marca) }}
-                            <div class="input-estatus">
-                                <span>Estatus</span>
-                                <span class="cont-label-novo">
-                                    {{ form_errors(form.estatus) }}
-                                    {{ form_widget(form.estatus,{'attr':{'checked':'true'}}) }}
-                                    {{ form_label(form.estatus) }}
-                                </span>
-                            </div>
+                        <div class="col-sm-6">
+                            {{ form_errors(form.nombre) }}
+                            {{ form_errors(form.correoCapitan) }}
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-5">
+                            {{ form_label(form.nombre) }}
+                            {{ form_widget(form.nombre) }}
+                            {{ form_row(form.marca) }}
                             {{ form_row(form.modelo) }}
                             {{ form_row(form.anio) }}
+                            {{ form_row(form.calado) }}
+                            {{ form_row(form.manga) }}
+                            {#<div class="input-estatus">#}
+                                {#<span>Estatus</span>#}
+                                {#<span class="cont-label-novo">#}
+                                    {#{{ form_errors(form.estatus) }}#}
+                                    {#{{ form_widget(form.estatus,{'attr':{'checked':'true'}}) }}#}
+                                    {#{{ form_label(form.estatus) }}#}
+                                {#</span>#}
+                            {#</div>#}
+                        </div>
+                        <div class="col-sm-5">
+                            {{ form_row(form.eslora) }}
+                            {{ form_row(form.combustible) }}
+                            {{ form_row(form.agua) }}
+                            {{ form_row(form.nombreCapitan) }}
+                            {{ form_row(form.telefonoCapitan) }}
+                            {{ form_label(form.correoCapitan) }}
+                            {{ form_widget(form.correoCapitan) }}
                         </div>
                     </div>
 
@@ -54,7 +66,7 @@
                         </div>
                     </div>
                     <div id="motor-fields-list0"
-                         class="motores"
+                         class="lista-motores"
                          data-prototype="
                                          {% filter escape %}
                                             {{ include('motor/form-cliente.twig', { 'form': form.motores.vars.prototype }) }}
@@ -77,10 +89,21 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <input type="submit" value="Guardar" class="btn btn-azul center-block"/>
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
                         </div>
                     </div>
                     {{ form_end(form) }}
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <a href="{{ path('cliente_edit',{'id':cliente.id}) }}" class="btn btn-naranja pull-right">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

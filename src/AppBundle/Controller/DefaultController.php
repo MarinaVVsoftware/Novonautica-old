@@ -20,79 +20,14 @@ class DefaultController extends Controller
     }
 
 //    /**
-//     * @Route("/clientes/agregar", name="clientes-agregar")
+//     * @Route("/astillero/nueva-cotizacion", name="astillero-nueva-cotizacion")
 //     */
-//    public function displayNuevoCliente(Request $request)
+//    public function displayAstilleroNuevaCotizacion(Request $request)
 //    {
-//        return $this->render('cliente-agregar.twig', [
-//            'clienteagregar' => 1
+//        return $this->render('astillero-nueva-cotizacion.twig', [
+//            'astilleronuevacotizacion' => 1
 //        ]);
 //    }
-
-//    /**
-//     * @Route("/clientes/listado", name="clientes-lista")
-//     */
-//    public function displayListaCliente(Request $request)
-//    {
-//        return $this->render('cliente-listado.twig', [
-//            'clientelistado' => 1
-//        ]);
-//    }
-
-    /**
-     * @Route("/marina-humeda/agenda", name="marina-agenda")
-     */
-    public function displayMarinaAgenda(Request $request)
-    {
-        return $this->render('marina-agenda.twig', [
-            'marinaagenda' => 1
-        ]);
-    }
-    /**
-     * @Route("/marina-humeda/agenda/nuevo-evento", name="marina-agenda-nuevo-evento")
-     */
-    public function displayMarinaAgendaNuevoEvento(Request $request)
-    {
-        return $this->render('marina-agenda-nuevo-evento.twig', [
-            'marinaagenda' => 1
-        ]);
-    }
-    /**
-     * @Route("/marina-humeda/administracion", name="marina-administracion")
-     */
-    public function displayMarinaAdministracion(Request $request)
-    {
-        return $this->render('marina-administracion.twig', [
-            'marinaadministracion' => 1
-        ]);
-    }
-    /**
-     * @Route("/marina-humeda/nueva-cotizacion", name="marina-nueva-cotizacion")
-     */
-    public function displayMarinaNuevaCotizacion(Request $request)
-    {
-        return $this->render('marina-nueva-cotizacion.twig', [
-            'marinanuevacotizacion' => 1
-        ]);
-    }
-    /**
-     * @Route("/marina-humeda/cotizaciones", name="marina-cotizaciones")
-     */
-    public function displayMarinaCotizaciones(Request $request)
-    {
-        return $this->render('marina-cotizaciones.twig', [
-            'marinacotizaciones' => 1
-        ]);
-    }
-    /**
-     * @Route("/astillero/nueva-cotizacion", name="astillero-nueva-cotizacion")
-     */
-    public function displayAstilleroNuevaCotizacion(Request $request)
-    {
-        return $this->render('astillero-nueva-cotizacion.twig', [
-            'astilleronuevacotizacion' => 1
-        ]);
-    }
     /**
      * @Route("/astillero/cotizaciones", name="astillero-cotizaciones")
      */
@@ -138,15 +73,7 @@ class DefaultController extends Controller
             'astilleroodt' => 1
         ]);
     }
-    /**
-     * @Route("/productos", name="productos")
-     */
-    public function displayProductos(Request $request)
-    {
-        return $this->render('productos.twig', [
-            'productos' => 1
-        ]);
-    }
+
     /**
      * @Route("/recursos-humanos", name="recursos-humanos")
      */

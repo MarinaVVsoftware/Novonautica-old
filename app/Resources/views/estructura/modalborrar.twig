@@ -1,0 +1,24 @@
+<div class="modal fade ventanaborrar" id="modalBorrar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center" id="myModalLabel">¿Está realmente seguro que desea borrarlo?</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        {% block botonborra %}
+                        {% endblock %}
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-naranja pull-right" data-dismiss="modal">
+                            <i class="fa fa-ban" aria-hidden="true"></i>
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

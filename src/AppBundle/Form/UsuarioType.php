@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class UsuarioType extends AbstractType
 {
@@ -26,15 +27,19 @@ class UsuarioType extends AbstractType
         $builder
             ->add('nombre', TextType::class, [
                 'label' => 'Nombre',
+                'required' => false
             ])
-            ->add('correo', EmailType::class, [
-                'label' => 'Email'
+            ->add('correo', TextType::class, [
+                'label' => 'Email',
+                'required' => false
             ])
             ->add('username', TextType::class, [
-                'label' => 'Nombre Usuario'
+                'label' => 'Nombre Usuario',
+                'required' => false
             ])
             ->add('password', PasswordType::class, [
-                'label' => 'Password'
+                'label' => 'Password',
+                'required' => false
             ])
             ->add('estatus',null,[
                 'label' => ' '
@@ -51,15 +56,18 @@ class UsuarioType extends AbstractType
             if (!$user || null === $user->getId()) {
                 $form->add('password', RepeatedType::class, [
                     'type' => PasswordType::class,
+                    'required' => false,
                     'first_options' => ['label' => 'Contraseña'],
-                    'second_options' => ['label' => 'Repetir contraseña']
+                    'second_options' => ['label' => 'Repetir contraseña'],
+                    'invalid_message' => 'Las contraseñas no concuerdan'
                 ]);
             } else {
                 $form->add('password', RepeatedType::class, [
                     'type' => PasswordType::class,
                     'required' => false,
                     'first_options' => ['label' => 'Contraseña', 'empty_data' => $user->getPassword()],
-                    'second_options' => ['label' => 'Repetir contraseña', 'empty_data' => $user->getPassword()]
+                    'second_options' => ['label' => 'Repetir contraseña', 'empty_data' => $user->getPassword()],
+                    'invalid_message' => 'Las contraseñas no concuerdan'
                 ]);
             }
         });

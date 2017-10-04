@@ -48,8 +48,8 @@
         -webkit-appearance: none; }
 
 .select2-dropdown {
-  background-color: white;
-  border: 1px solid #aaa;
+  background-color: #363c52;
+  border: 1px solid #0097f6 !important;
   border-radius: 4px;
   box-sizing: border-box;
   display: block;
@@ -90,6 +90,7 @@
   display: block;
   padding: 4px; }
   .select2-search--dropdown .select2-search__field {
+    background: #3e4766;
     padding: 4px;
     width: 100%;
     box-sizing: border-box; }
@@ -126,11 +127,12 @@
   width: 1px !important; }
 
 .select2-container--default .select2-selection--single {
-  background-color: #fff;
-  border: 1px solid #aaa;
-  border-radius: 4px; }
+  background-color: #3e4766 !important;
+  border: 1px solid #3e4766 !important;
+  border-radius: 17px !important;
+}
   .select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: #444;
+    /*color: #444;*/
     line-height: 28px; }
   .select2-container--default .select2-selection--single .select2-selection__clear {
     cursor: pointer;
@@ -265,7 +267,9 @@
   color: #999; }
 
 .select2-container--default .select2-results__option[aria-selected=true] {
-  background-color: #ddd; }
+  background-color: #0097f6 !important;
+  color: #fff !important;
+}
 
 .select2-container--default .select2-results__option .select2-results__option {
   padding-left: 1em; }
@@ -288,8 +292,10 @@
             padding-left: 6em; }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background-color: #5897fb;
-  color: white; }
+  background: none !important;
+  color: #fff !important;
+  border: 1px solid #0097f6 !important;
+}
 
 .select2-container--default .select2-results__group {
   cursor: default;
@@ -482,3 +488,21 @@
 
 .select2-container--classic.select2-container--open .select2-dropdown {
   border-color: #5897fb; }
+
+.select2-results__options::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #5a626f;
+}
+
+.select2-results__options::-webkit-scrollbar
+{
+  width: 10px;
+  background-color: #F5F5F5;
+}
+
+.select2-results__options::-webkit-scrollbar-thumb
+{
+  background-color: #181c2b;
+  /*border: 2px solid #555555;*/
+}

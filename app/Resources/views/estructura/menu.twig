@@ -6,6 +6,7 @@
 {% set menuConta='' %}
 {% set menuReportes='' %}
 {% set menuUsuarios='' %}
+{% set menuAjustes='' %}
 
 {% set actCA='' %}
 {% set actCL='' %}
@@ -59,7 +60,7 @@
     {% set menuAstillero = ' active menu-open' %}
     {% set actAO=' active' %}
 {% endif %}
-{% if productos is defined %}
+{% if productosMenu is defined %}
     {% set menuProductos=' active' %}
 {% endif %}
 {% if recursoshumanos is defined %}
@@ -73,6 +74,9 @@
 {% endif %}
 {% if usuariosmenu is defined %}
     {% set menuUsuarios =' active' %}
+{% endif %}
+{% if ajustesmenu is defined %}
+    {% set menuAjustes=' active' %}
 {% endif %}
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
@@ -123,12 +127,12 @@
                         </a>
                     </li>
                     <li class="{{ actMN }}">
-                        <a href="{{ path('marina-nueva-cotizacion') }}">
+                        <a href="{{ path('marina-humeda_new') }}">
                             <i class="fa fa-minus"></i> Nueva cotización
                         </a>
                     </li>
                     <li class="{{ actMC }}">
-                        <a href="{{ path('marina-cotizaciones') }}">
+                        <a href="{{ path('marina-humeda_index') }}">
                             <i class="fa fa-minus"></i> Cotizaciones
                         </a>
                     </li>
@@ -145,11 +149,11 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="{{ actAN }}">
-                        <a href="{{ path('astillero-nueva-cotizacion') }}"><i class="fa fa-minus"></i> Nueva cotización
+                        <a href="{{ path('astillero_new') }}"><i class="fa fa-minus"></i> Nueva cotización
                         </a>
                     </li>
                     <li class="{{ actAC }}">
-                        <a href="{{ path('astillero-cotizaciones') }}"><i class="fa fa-minus"></i> Cotizaciones</a>
+                        <a href="{{ path('astillero_index') }}"><i class="fa fa-minus"></i> Cotizaciones</a>
                     </li>
                     <li class="{{ actAA }}">
                         <a href="{{ path('astillero-aceptaciones') }}"><i class="fa fa-minus"></i> Aceptaciones</a>
@@ -160,28 +164,28 @@
                 </ul>
                 <hr>
             </li>
-            <li class="{{ menuProductos }}">
-                <a href="{{ path('productos') }}">
+            <li class="{{ menuProductos }} only">
+                <a href="{{ path('producto_index') }}">
                     <i class="fa fa-th"></i>
                     <span>Productos</span>
                 </a>
                 <hr>
             </li>
-            <li class="{{ menuRH }}">
+            <li class="{{ menuRH }} only">
                 <a href="{{ path('recursos-humanos') }}">
                     <i class="fa fa-address-book-o"></i>
                     <span>Recursos Humanos</span>
                 </a>
                 <hr>
             </li>
-            <li class="{{ menuConta }}">
+            <li class="{{ menuConta }} only">
                 <a href="{{ path('contabilidad') }}">
                     <i class="fa fa-archive"></i>
                     <span>Contabilidad</span>
                 </a>
                 <hr>
             </li>
-            <li class="{{ menuReportes }}">
+            <li class="{{ menuReportes }} only">
                 <a href="{{ path('reportes') }}">
                     <i class="fa fa-file-text-o"></i>
                     <span>Reportes</span>
@@ -189,7 +193,7 @@
                 <hr>
             </li>
             {% if is_granted('ROLE_ADMIN') %}
-                <li class="{{ menuUsuarios }}">
+                <li class="{{ menuUsuarios }} only">
                     <a href="{{ path('usuario_index') }}">
                         <i class="fa fa-user-o"></i>
                         <span>Usuarios</span>
@@ -197,6 +201,13 @@
                     <hr>
                 </li>
             {% endif %}
+            <li class="{{ menuAjustes }} only">
+                <a href="{{ path('ajustes_index') }}">
+                    <i class="fa fa-cog" aria-hidden="true"></i>
+                    <span>Ajustes</span>
+                </a>
+                <hr>
+            </li>
         </ul>
     </section>
     <!-- /.sidebar -->

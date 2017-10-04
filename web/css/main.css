@@ -14,6 +14,9 @@ hr {
 a{
     color: #ffffff;
 }
+.btn{
+    min-width: 120px;
+}
 /*++++ colores fondo ++++*/
 .fondo-azul{
     background-color: #0097f6;
@@ -40,6 +43,15 @@ a{
     color: #0097f6;
 }
 /*++ fin colores letra ++++*/
+
+/*++++ tamaño letra +++++*/
+.tipo-letra1{
+    font-size: 2rem;
+}
+.tipo-letra2{
+    font-size: 1.5rem;
+}
+/*+++ fin tamaño letra ++++*/
 
 /*++++ botones color ++++*/
 .btn-morado-claro{
@@ -71,12 +83,28 @@ form > .btn-borrar,.btn-borrar{
     background: #8c0400;
     color: #fff;
 }
-form > .btn-borrar:hover,btn-borrar:hover{
+form > .btn-borrar:hover,.btn-borrar:hover{
     background: #d40400;
     color: #fff;
 }
-
+.btn-naranja{
+    background-color: #FF6600;
+    color: #fff;
+}
+.btn-naranja:hover{
+    background-color: #ff960d;
+    color: #fff;
+}
 /*++ fin botones color ++*/
+
+/*++++ mensajes sistema ++++*/
+.alert-danger{
+    background: #FF6600 !important;
+    border-color: #FF6600;
+    padding: 7px;
+    margin-bottom: 3px;
+}
+/*++ fin mensajes sistema ++*/
 
 /*+++++ check box estilo ++++++*/
 .input-estatus{
@@ -127,6 +155,75 @@ form > .btn-borrar:hover,btn-borrar:hover{
 }
 /*+++ fin check box estilo ++++*/
 
+/*+++++ radio boton +++++*/
+.radio {
+    margin: 0.5rem;
+}
+.radio>label{
+    margin-bottom: 4px;
+}
+.radio input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+.radio input[type="radio"] + label:before {
+    content: '';
+    background:   #3e4766;
+    border-radius: 100%;
+    border: 1px solid #0097f6;
+    display: inline-block;
+    width: 1.4em;
+    height: 1.4em;
+    position: relative;
+    top: -0.2em;
+    margin-right: 1em;
+    vertical-align: top;
+    cursor: pointer;
+    text-align: center;
+    -webkit-transition: all 250ms ease;
+    transition: all 250ms ease;
+}
+.radio input[type="radio"]:checked + label:before {
+    background-color: #3197EE;
+    box-shadow: inset 0 0 0 4px #3e4766;
+}
+
+.radio input[type="radio"]:focus + .radio-label:before {
+    outline: none;
+    border-color: #3197EE;
+}
+.radio input[type="radio"]:disabled + .radio-label:before {
+    box-shadow: inset 0 0 0 4px #f4f4f4;
+    border-color: #b4b4b4;
+    background: #b4b4b4;
+}
+.radio input[type="radio"] + .radio-label:empty:before {
+    margin-right: 0;
+}
+/*++++ fin radio boton ++++*/
+#loading {
+    /*visibility: hidden;*/
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: block;
+    /*opacity: 0.7;*/
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2000;
+    text-align: center;
+}
+
+#loading-image {
+    color: #ffffff;
+    position: absolute;
+    bottom: 50%;
+}
+
+.wrapper{
+    overflow-y: hidden;
+}
 .hoja-login {
     height: auto;
     min-height: 100%;
@@ -221,10 +318,15 @@ form > .btn-borrar:hover,btn-borrar:hover{
 .panel-novo > .panel-heading {
     background-color: #292e41;
 }
-
-.panel-novo > .panel-body {
+.panel-novo > .panel-body,
+.panel-novo > .panel-footer {
     background-color: #363c52;
+}
+.panel-novo > .panel-body{
     min-height: 400px;
+}
+.panel-novo > .panel-footer {
+    border-top: none;
 }
 .panel-novo thead{
     background-color: #292e41;
@@ -234,13 +336,26 @@ form > .btn-borrar:hover,btn-borrar:hover{
     border: 2px solid #1c1f29;
 }
 .panel-novo th, .panel-novo td {
-    border-left: 2px solid #292e41;
+    border-left: 2px solid #292e41 !important;
     border-bottom: 2px solid #292e41;
-    border-right: 2px solid #292e41;
+    border-right: 2px solid #292e41 !important;
 }
 .panel-novo tbody tr:hover{
-    background: #3e4766;
+    /*background: #3e4766;*/
     cursor: pointer;
+}
+.panel-novo tbody td input[type="text"]{
+    background: none;
+    padding: 0px;
+    border-radius: 0;
+    text-align: center;
+}
+.panel-novo tbody td .btn{
+    min-width: auto;
+}
+.panel-novo tbody .servicio-agregado>td{
+    padding: 0 !important;
+    vertical-align: middle;
 }
 .panel-novo .panel-pestanias{
     padding-top: 0;
@@ -248,7 +363,8 @@ form > .btn-borrar:hover,btn-borrar:hover{
 .panel-novo .nav-tabs{
     border: none;
 }
-.panel-novo .nav-tabs>li>a {
+.panel-novo .nav-tabs>li>a,
+.fc-left>.fc-button-group>.fc-state-default{
     margin-right: 0;
     border: none;
     border-radius: 0;
@@ -261,7 +377,8 @@ form > .btn-borrar:hover,btn-borrar:hover{
     min-width: 180px;
     text-align: center;
 }
-.panel-novo .nav-tabs>li.active>a
+.panel-novo .nav-tabs>li.active>a,
+.fc-left>.fc-button-group>button.fc-state-active
 {
     color: #fff;
     /*background: #0097f6;*/
@@ -276,16 +393,28 @@ form > .btn-borrar:hover,btn-borrar:hover{
 .panel-novo .nav>li>a{
     padding: 10px 35px;
 }
-.panel .nav>.primero>a{
+.panel .nav>.primero>a,
+.fc-left>.fc-button-group>.fc-month-button
+{
     background: #292e41;
     -webkit-clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
     clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
 }
-.panel-novo .nav-tabs>li{
+.panel-novo .nav-tabs>li,
+.fc-left>.fc-button-group>.fc-state-default
+{
     margin-left: -34px;
 }
-.panel-novo .nav-tabs>li.primero{
+.panel-novo .nav-tabs>li.primero,
+.fc-left>.fc-button-group>.fc-month-button
+{
     margin-left: 0;
+}
+.fc-left>.fc-button-group>.fc-state-hover{
+    z-index: 0;
+}
+.fc-left>.fc-button-group>button:focus{
+    outline: none;
 }
 .panel-body .tab-content{
     padding: 20px 15px;
@@ -294,19 +423,44 @@ form > .btn-borrar:hover,btn-borrar:hover{
 .panel-body  form input[type="email"],
 .panel-body  form input[type="password"],
 .panel-body  form input[type="number"],
-.panel-body  form select{
+.panel-body  form select,
+.panel-body  form textarea,
+.panel-body  form .info-input {
     background: #3e4766;
     border: none;
     border-radius: 17px;
     padding: 5px 15px;
     width: 100%;
 }
-.panel-body form input:focus,.panel-body form select:focus{
+.panel-body  form input[type="time"]{
+    text-align: center;
+    color: #ffffff;
+    border: 1px solid #008CBA;
+    background: #363c52;
+}
+.panel-body form input[type="time"]::-webkit-inner-spin-button{
+    background: #363c52;
+}
+.panel-body form .info-input{
+    min-height: 30px;
+}
+.panel-body form input:focus,
+.panel-body form select:focus,
+.panel-body form textarea{
     outline: none;
 }
 .espacio-linea{
     padding-top: 3rem;
     padding-bottom: 3rem;
+}
+.espacio-linea-arriba2{
+    padding-top: 2rem;
+}
+.espacio-linea-abajo2{
+    padding-bottom: 2rem;
+}
+.align-middle{
+    vertical-align: middle !important;
 }
 @media (min-width: 768px) {
     .skin-novo .main-sidebar {
@@ -378,44 +532,215 @@ form > .btn-borrar:hover,btn-borrar:hover{
 }
 /* ---- fin temporal ----*/
 
-.radio {
-    margin: 0.5rem;
+/*++++ datepicker calendario ++++*/
+.panel-body  form .input-calendario{
+    border: 1px solid #0097f6 !important;
+    border-radius: 0px !important;
+    background: url(../img/calendario-icon.png) no-repeat 97% !important;
+    background-size: 20px !important;
 }
-.radio input[type="radio"] {
-    position: absolute;
-    opacity: 0;
+.datepicker-dropdown{
+    background: #292e41;
+    border: none;
+    padding: 0px;
 }
-.radio input[type="radio"] + .radio-label:before {
-    content: '';
-    background:   #3e4766;
-    border-radius: 100%;
-    border: 1px solid #0097f6;
-    display: inline-block;
-    width: 1.4em;
-    height: 1.4em;
-    position: relative;
-    top: -0.2em;
-    margin-right: 1em;
-    vertical-align: top;
-    cursor: pointer;
-    text-align: center;
-    -webkit-transition: all 250ms ease;
+.datepicker-days > table > thead > tr >th{
+    background: #3e4766;
+    border-radius: 0px;
+}
+.datepicker .datepicker-switch:hover,
+.datepicker .next:hover,
+.datepicker .prev:hover,
+.datepicker tfoot tr th:hover {
+    background: #0097f6;
+}
+.datepicker table tr td.day.focused,
+.datepicker table tr td.day:hover {
+    background: #0097f6;
+}
+.datepicker table tr td.active,
+.datepicker table tr td.active.disabled,
+.datepicker table tr td.active.disabled:hover,
+.datepicker table tr td.active:hover {
+    background: #0097f6 !important;
+    border-radius: 20px;
+}
+.datepicker table tr td.selected,
+.datepicker table tr td.selected.disabled,
+.datepicker table tr td.selected.disabled:hover,
+.datepicker table tr td.selected:hover {
+    background-image: none;
+    background: #0097f6;
+    border-radius: 20px;
+}
+.datepicker table tr td.range,
+.datepicker table tr td.range.disabled,
+.datepicker table tr td.range.disabled:hover,
+.datepicker table tr td.range:hover {
+    background: #3e4766;
+}
+.datepicker table tr td span.focused, .datepicker table tr td span:hover {
+    background: #0097f6;
+}
+/*++++ fin datepicker calendario ++++*/
+
+/*+++++ calendario agenda +++++*/
+.fc-widget-header {
+     background: none;
+}
+.fc-state-default {
+    text-shadow: none;
+    box-shadow: none;
+}
+.fc-toolbar{
+    padding-top: 0px;
+}
+.fc-unthemed td.fc-today{
+    background: #3e4766
+}
+.fc-center>div>button,
+.fc-center>div>h2 {
+    float: left;
+}
+.fc-center button{
+    background: none;
+    color: #0c97f4;
+    margin:0;
+    border:none;
+}
+.fc-center button:focus{
+    outline:none;
+}
+.fc-center button>span{
+    font-size:2rem;
+}
+.fc button .fc-icon {
+    margin: 0;
+    line-height: 2.5rem;
+}
+.fc-center button:hover{
+    background: none;
+}
+.fc-center .fc-prev-button{
+    padding: 0px;
+    margin-right: 1rem;
+}
+.fc-center .fc-next-button{
+    padding: 0px;
+    margin-left: 1rem;
+}
+.fc-toolbar .fc-center{
+    width: 100%;
+    padding-top: 2rem;
+}
+.fc-body thead{
+    background: none;
+}
+.fc-unthemed .fc-content,
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-list-heading td,
+.fc-unthemed .fc-list-view,
+.fc-unthemed .fc-popover,
+.fc-unthemed .fc-row,
+.fc-unthemed tbody,
+.fc-unthemed td,
+.fc-unthemed th,
+.fc-unthemed thead {
+    border-color: #282d40;
+}
+/*+++ fin calendario agenda +++++*/
+
+/*++++++++ radio boton aceptar,rechazar +++++++*/
+
+.middle input[type="radio"] {
+    display: none;
+}
+.middle .opcionaceptar:checked + label {
+    background-color: #009933;
+}
+.middle .opcionrechazar:checked + label {
+    background-color: #FF6600;
+}
+.middle .opcionpendiente:checked + label {
+    background-color: #858585;
+}
+.middle input[type="radio"]:checked + label span {
+    color: #ffffff;
+    transform: translateY(70px);
+}
+.middle input[type="radio"]:checked + label span:before {
+    transform: translateY(0px);
+    opacity: 1;
+}
+.middle .opcionaceptar + label:hover{
+    background-color: #009933;
+    box-shadow: 0px 0px 15px 1px #009933;
+}
+.middle .opcionrechazar + label:hover{
+    background-color: #FF6600;
+    box-shadow: 0px 0px 15px 1px #FF6600;
+}
+.middle .opcionpendiente + label:hover{
+    background-color: #858585;
+    box-shadow: 0px 0px 15px 1px #858585;
+
+}
+.middle label {
+    padding: 10px 30px;
+    border-radius: 4px;
+    border: 2px solid #292e41;
     transition: all 250ms ease;
-}
-.radio input[type="radio"]:checked + .radio-label:before {
-    background-color: #3197EE;
-    box-shadow: inset 0 0 0 4px #3e4766;
+    will-change: transition;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    font-weight: 900;
+    margin-right: 2rem;
 }
 
-.radio input[type="radio"]:focus + .radio-label:before {
-    outline: none;
-    border-color: #3197EE;
+
+.middle label:active {
+    transform: translateY(10px);
 }
-.radio input[type="radio"]:disabled + .radio-label:before {
-    box-shadow: inset 0 0 0 4px #f4f4f4;
-    border-color: #b4b4b4;
-    background: #b4b4b4;
+.middle label span {
+    position: absolute;
+    transform: translate(0, 60px);
+    left: 0;
+    right: 0;
+    transition: all 300ms ease;
+    font-size: 1.5em;
+    user-select: none;
+    color: #000;
 }
-.radio input[type="radio"] + .radio-label:empty:before {
-    margin-right: 0;
+.middle .opcionaceptar + label:before,
+.middle .opcionrechazar + label:before,
+.middle .opcionpendiente + label:before {
+    content: '';
+    font-size: 1.2em;
+    display: block;
+    transform: translateY(-80px);
+    opacity: 0;
+    transition: all 300ms ease-in-out;
+    font-weight: normal;
+    color: #000000;
+}
+/*++++++ fin radio boton aceptar,rechazar +++++*/
+
+/*+++++ Modal borrar ++++*/
+    .ventanaborrar .modal-content{
+        background: #363c52;
+    }
+    .ventanainfomapa .modal-content .modal-header{
+        background: #3e4766;
+    }
+    .ventanainfomapa .modal-content .modal-body,
+    .ventanainfomapa .modal-footer{
+        border-top: 0px !important;
+        background: #292e41;
+    }
+/*++ Fin Modal borrar ++*/
+
+.barcoespacio:hover,text:hover{
+    cursor: pointer;
 }
