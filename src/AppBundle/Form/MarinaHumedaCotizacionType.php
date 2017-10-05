@@ -3,12 +3,14 @@
 namespace AppBundle\Form;
 
 
+//use Doctrine\DBAL\Types\FloatType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormInterface;
 use AppBundle\Entity\Cliente;
@@ -24,8 +26,7 @@ class MarinaHumedaCotizacionType extends AbstractType
             ->add('cliente',EntityType::class,[
                 'class' => 'AppBundle:Cliente',
                 'label' => 'Cliente',
-                'attr' =>['id' => 'cliente']
-
+                'placeholder' => 'Seleccionar...'
             ])
             ->add('fechaLlegada',DateType::class,[
                 'label' => 'Fecha llegada'
@@ -38,8 +39,14 @@ class MarinaHumedaCotizacionType extends AbstractType
             ->add('precioDia')
             ->add('descuento')
             ->add('gasolina')
-            ->add('agua')
-            ->add('electricidad')
+            ->add('agua',null,[
+                'label' => 'Abastecimiento de agua:'
+            ])
+            ->add('electricidad',MoneyType::class,[
+                'label' => 'Conexión a electricidad',
+                'currency'=>'USD',
+                'divisor' => 100
+            ])
             ->add('dezasolve')
             ->add('limpieza');
 
@@ -50,11 +57,9 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'class' => 'AppBundle:Barco',
                 'placeholder' => '',
                 'choices' => $barcos,
-                'attr' =>['id' => 'barco',
-
-                         ],
                 'expanded' => true,
                 'multiple' => false
+
             ));
         };
 

@@ -1,72 +1,97 @@
-{% extends 'base.html.twig' %}
+{% extends 'estructura/plantilla.twig' %}
 
-{% block body %}
-    <h1>Marinahumedacotizacion</h1>
+{% block title %}
+    Novonautiva | Ver Cotización Marina Humeda
+{% endblock %}
 
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ marinaHumedaCotizacion.id }}</td>
-            </tr>
-            <tr>
-                <th>Fechallegada</th>
-                <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Fechasalida</th>
-                <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Diasestadia</th>
-                <td>{{ marinaHumedaCotizacion.diasEstadia }}</td>
-            </tr>
-            <tr>
-                <th>Diasadicionales</th>
-                <td>{{ marinaHumedaCotizacion.diasAdicionales }}</td>
-            </tr>
-            <tr>
-                <th>Preciodia</th>
-                <td>{{ marinaHumedaCotizacion.precioDia }}</td>
-            </tr>
-            <tr>
-                <th>Descuento</th>
-                <td>{{ marinaHumedaCotizacion.descuento }}</td>
-            </tr>
-            <tr>
-                <th>Gasolina</th>
-                <td>{{ marinaHumedaCotizacion.gasolina }}</td>
-            </tr>
-            <tr>
-                <th>Agua</th>
-                <td>{{ marinaHumedaCotizacion.agua }}</td>
-            </tr>
-            <tr>
-                <th>Electricidad</th>
-                <td>{{ marinaHumedaCotizacion.electricidad }}</td>
-            </tr>
-            <tr>
-                <th>Dezasolve</th>
-                <td>{{ marinaHumedaCotizacion.dezasolve }}</td>
-            </tr>
-            <tr>
-                <th>Limpieza</th>
-                <td>{{ marinaHumedaCotizacion.limpieza }}</td>
-            </tr>
-        </tbody>
-    </table>
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">Cotización Marina Humeda</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_index') }}">Regresar</a>
+                        </div>
+                    </div>
 
-    <ul>
-        <li>
-            <a href="{{ path('marina-humeda_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ marinaHumedaCotizacion.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fechallegada</th>
+                            <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('Y-m-d') }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Fechasalida</th>
+                            <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('Y-m-d') }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Diasestadia</th>
+                            <td>{{ marinaHumedaCotizacion.diasEstadia }}</td>
+                        </tr>
+                        <tr>
+                            <th>Diasadicionales</th>
+                            <td>{{ marinaHumedaCotizacion.diasAdicionales }}</td>
+                        </tr>
+                        <tr>
+                            <th>Preciodia</th>
+                            <td>{{ marinaHumedaCotizacion.precioDia }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descuento</th>
+                            <td>{{ marinaHumedaCotizacion.descuento }}</td>
+                        </tr>
+                        <tr>
+                            <th>Gasolina</th>
+                            <td>{{ marinaHumedaCotizacion.gasolina }}</td>
+                        </tr>
+                        <tr>
+                            <th>Agua</th>
+                            <td>{{ marinaHumedaCotizacion.agua }}</td>
+                        </tr>
+                        <tr>
+                            <th>Electricidad</th>
+                            <td>{{ marinaHumedaCotizacion.electricidad }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dezasolve</th>
+                            <td>{{ marinaHumedaCotizacion.dezasolve }}</td>
+                        </tr>
+                        <tr>
+                            <th>Limpieza</th>
+                            <td>{{ marinaHumedaCotizacion.limpieza }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <a class="btn btn-azul" href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">Editar</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            {{ form_start(delete_form) }}
+                            <input type="submit" value="Borrar" class="btn btn-borrar pull-right">
+                            {{ form_end(delete_form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 {% endblock %}

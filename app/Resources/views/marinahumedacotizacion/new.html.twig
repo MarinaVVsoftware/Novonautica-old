@@ -9,50 +9,76 @@
         <section class="content">
             <div class="panel panel-novo">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Nuevo Cotización</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="radio">
-                        <input id="radio-1" name="radio" type="radio" checked>
-                        <label for="radio-1" class="radio-label">La Sirenita</label>
-                    </div>
-                    <div class="radio">
-                        <input id="radio-2" name="radio" type="radio">
-                        <label  for="radio-2" class="radio-label">La Rumorosa</label>
-                    </div>
-
-                    {{ form_start(form) }}
                     <div class="row">
                         <div class="col-sm-6">
-                            {{ form_row(form.cliente) }}
+                            <h3 class="panel-title">Nueva Cotización</h3>
                         </div>
                         <div class="col-sm-6">
-                            {{ form_row(form.barco) }}
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_index') }}">Regresar</a>
                         </div>
                     </div>
-                    {{ form_row(form.fechaLlegada) }}
-                    {{ form_row(form.fechaSalida) }}
-                    {{ form_row(form.diasEstadia) }}
-                    {{ form_row(form.diasAdicionales) }}
-                    {{ form_row(form.precioDia) }}
-                    {{ form_row(form.descuento) }}
-                    {{ form_row(form.gasolina) }}
-                    {{ form_row(form.agua) }}
-                    {{ form_row(form.electricidad) }}
-                    {{ form_row(form.dezasolve) }}
-                    {{ form_row(form.limpieza) }}
-                    <input type="submit" value="Create"/>
-                    {{ form_end(form) }}
-                    <ul>
-                        <li>
-                            <a href="{{ path('marina-humeda_index') }}">Back to the list</a>
+                </div>
+                <div class="panel-body panel-pestanias">
+                    {{ form_start(form) }}
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="primero active">
+                            <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Total</a>
                         </li>
                     </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="generales">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_row(form.cliente) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{ form_errors(form.barco) }}
+                                    <div class="radio">
+                                        {{ form_label(form.barco) }}
+                                        {{ form_widget(form.barco) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="servicios">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_row(form.fechaLlegada) }}
+                                    {{ form_row(form.fechaSalida) }}
+                                    {{ form_row(form.diasEstadia) }}
+                                    {{ form_row(form.diasAdicionales) }}
+                                    {{ form_row(form.precioDia) }}
+                                    {{ form_row(form.descuento) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{ form_row(form.electricidad) }}
+                                    {{ form_row(form.agua) }}
+
+                                    {{ form_row(form.gasolina) }}
+                                    {{ form_row(form.dezasolve) }}
+                                    {{ form_row(form.limpieza) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="total">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input type="submit" value="Guardar" class="btn btn-azul center-block"/>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+
                 </div>
             </div>
         </section>
     </div>
-    <script>
-
-    </script>
 {% endblock %}

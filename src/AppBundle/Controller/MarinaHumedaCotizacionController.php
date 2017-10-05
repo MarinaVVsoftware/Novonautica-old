@@ -6,7 +6,8 @@ use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Form\MarinaHumedaCotizacionType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Marinahumedacotizacion controller.
@@ -18,7 +19,7 @@ class MarinaHumedaCotizacionController extends Controller
     /**
      * Lists all marinaHumedaCotizacion entities.
      *
-     * @Route("/", name="marina-humeda_index")
+     * @Route("/cotizaciones", name="marina-humeda_index")
      * @Method("GET")
      */
     public function indexAction()
@@ -29,13 +30,15 @@ class MarinaHumedaCotizacionController extends Controller
 
         return $this->render('marinahumedacotizacion/index.html.twig', array(
             'marinaHumedaCotizacions' => $marinaHumedaCotizacions,
+            'marinacotizaciones' => 1
+
         ));
     }
 
     /**
      * Creates a new marinaHumedaCotizacion entity.
      *
-     * @Route("/new", name="marina-humeda_new")
+     * @Route("/nueva-cotizacion", name="marina-humeda_new")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -44,30 +47,18 @@ class MarinaHumedaCotizacionController extends Controller
         $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // ... save the meetup, redirect etc.
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($marinaHumedaCotizacion);
+            $em->flush();
+
+            return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
         }
 
         return $this->render('marinahumedacotizacion/new.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'form' => $form->createView(),
+            'marinanuevacotizacion' => 1
         ));
-
-//        $marinaHumedaCotizacion = new Marinahumedacotizacion();
-//        $form = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionType', $marinaHumedaCotizacion);
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($marinaHumedaCotizacion);
-//            $em->flush();
-//
-//            return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
-//        }
-//
-//        return $this->render('marinahumedacotizacion/new.html.twig', array(
-//            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
-//            'form' => $form->createView(),
-//        ));
 
 
     }
@@ -85,19 +76,20 @@ class MarinaHumedaCotizacionController extends Controller
         return $this->render('marinahumedacotizacion/show.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'delete_form' => $deleteForm->createView(),
+            'marinacotizaciones' => 1
         ));
     }
 
     /**
      * Displays a form to edit an existing marinaHumedaCotizacion entity.
      *
-     * @Route("/{id}/edit", name="marina-humeda_edit")
+     * @Route("/{id}/editar", name="marina-humeda_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
         $deleteForm = $this->createDeleteForm($marinaHumedaCotizacion);
-        $editForm = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionType', $marinaHumedaCotizacion);
+        $editForm = $this->createForm( 'AppBundle\Form\MarinaHumedaCotizacionType', $marinaHumedaCotizacion);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -110,6 +102,7 @@ class MarinaHumedaCotizacionController extends Controller
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'marinacotizaciones' => 1
         ));
     }
 
@@ -173,24 +166,6 @@ class MarinaHumedaCotizacionController extends Controller
     {
         return $this->render('marina-administracion.twig', [
             'marinaadministracion' => 1
-        ]);
-    }
-    /**
-     * @Route("/nueva-cotizacion", name="marina-nueva-cotizacion")
-     */
-    public function displayMarinaNuevaCotizacion(Request $request)
-    {
-        return $this->render('marina-nueva-cotizacion.twig', [
-            'marinanuevacotizacion' => 1
-        ]);
-    }
-    /**
-     * @Route("/cotizaciones", name="marina-cotizaciones")
-     */
-    public function displayMarinaCotizaciones(Request $request)
-    {
-        return $this->render('marina-cotizaciones.twig', [
-            'marinacotizaciones' => 1
         ]);
     }
 

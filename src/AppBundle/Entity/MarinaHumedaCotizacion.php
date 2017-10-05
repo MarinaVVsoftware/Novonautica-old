@@ -78,23 +78,23 @@ class MarinaHumedaCotizacion
     private $agua;
 
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(name="electricidad", type="integer")
+     * @ORM\Column(name="electricidad", type="float")
      */
     private $electricidad;
 
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(name="dezasolve", type="integer", nullable=true)
+     * @ORM\Column(name="dezasolve", type="float", nullable=true)
      */
     private $dezasolve;
 
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(name="limpieza", type="integer", nullable=true)
+     * @ORM\Column(name="limpieza", type="float", nullable=true)
      */
     private $limpieza;
 
@@ -317,7 +317,7 @@ class MarinaHumedaCotizacion
     /**
      * Set electricidad
      *
-     * @param integer $electricidad
+     * @param float $electricidad
      *
      * @return MarinaHumedaCotizacion
      */
@@ -331,7 +331,7 @@ class MarinaHumedaCotizacion
     /**
      * Get electricidad
      *
-     * @return int
+     * @return float
      */
     public function getElectricidad()
     {
@@ -341,7 +341,7 @@ class MarinaHumedaCotizacion
     /**
      * Set dezasolve
      *
-     * @param integer $dezasolve
+     * @param float $dezasolve
      *
      * @return MarinaHumedaCotizacion
      */
@@ -355,7 +355,7 @@ class MarinaHumedaCotizacion
     /**
      * Get dezasolve
      *
-     * @return int
+     * @return float
      */
     public function getDezasolve()
     {
@@ -365,7 +365,7 @@ class MarinaHumedaCotizacion
     /**
      * Set limpieza
      *
-     * @param integer $limpieza
+     * @param float $limpieza
      *
      * @return MarinaHumedaCotizacion
      */
@@ -379,7 +379,7 @@ class MarinaHumedaCotizacion
     /**
      * Get limpieza
      *
-     * @return int
+     * @return float
      */
     public function getLimpieza()
     {
@@ -429,7 +429,7 @@ class MarinaHumedaCotizacion
      */
     public function getBarco()
     {
-        return $this->cliente;
+        return $this->barco;
     }
 
 }
