@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 
 //use Doctrine\DBAL\Types\FloatType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -36,19 +37,60 @@ class MarinaHumedaCotizacionType extends AbstractType
             ])
             ->add('diasEstadia')
             ->add('diasAdicionales')
-            ->add('precioDia')
+            ->add('precioDia',MoneyType::class,[
+                'label' => 'Precio por día',
+                'currency' => false,
+                'divisor' => 100
+            ])
             ->add('descuento')
-            ->add('gasolina')
-            ->add('agua',null,[
-                'label' => 'Abastecimiento de agua:'
+            ->add('gasolinalitros',NumberType::class,[
+                'label' => 'Gasolina (Litros)'
+            ])
+            ->add('gasolinaprecio',MoneyType::class,[
+                'label' => 'Gasolina (Precio por litro)',
+                'currency' => false,
+                'divisor' => 100
+            ])
+            ->add('gasolinatotal',MoneyType::class,[
+                'label' => 'Gasolina total',
+                'currency' => false,
+                'divisor' => 100
+            ])
+            ->add('agua',MoneyType::class,[
+                'label' => 'Abastecimiento de agua',
+                'currency' => false,
+                'divisor' => 100
             ])
             ->add('electricidad',MoneyType::class,[
                 'label' => 'Conexión a electricidad',
-                'currency'=>'USD',
+                'currency' => false,
                 'divisor' => 100
             ])
-            ->add('dezasolve')
-            ->add('limpieza');
+            ->add('dezasolve',MoneyType::class,[
+                'currency' => false,
+                'divisor' => 100
+            ])
+            ->add('limpieza',MoneyType::class,[
+                'label' => 'Limpieza de locación',
+                'currency' => false,
+                'divisor' => 100
+            ])
+            ->add('subtotal',MoneyType::class,[
+                'label' => 'Sub-Total',
+                'currency' => false,
+                'divisor' => 100
+            ])
+            ->add('iva',MoneyType::class,[
+                'label' => 'I.V.A',
+                'currency' => false,
+                'divisor' => 100
+            ])
+            ->add('total',MoneyType::class,[
+                'label' => 'Total',
+                'currency' => false,
+                'divisor' => 100
+            ])
+        ;
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();

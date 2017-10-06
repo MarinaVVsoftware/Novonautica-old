@@ -24,23 +24,51 @@ class MarinaHumedaCotizacion
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha_llegada", type="datetime", nullable=true)
+     * @ORM\Column(name="fecha_llegada", type="datetime")
      */
     private $fechaLlegada;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha_salida", type="datetime", nullable=true)
+     * @ORM\Column(name="fecha_salida", type="datetime")
      */
     private $fechaSalida;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="dias_estadia", type="integer", nullable=true)
+     * @ORM\Column(name="dias_estadia", type="integer")
      */
     private $diasEstadia;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="dias_estadia_iva", type="float")
+     */
+    private $diasEstadiaIva;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="dias_estadia_descuento", type="float")
+     */
+    private $diasEstadiaDescuento;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="dias_estadia_subtotal", type="float")
+     */
+    private $diasEstadiaSubtotal;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="dias_precio_unidad", type="float")
+     */
+    private $diasPrecioUnidad;
 
     /**
      * @var int
@@ -52,9 +80,24 @@ class MarinaHumedaCotizacion
     /**
      * @var float
      *
-     * @ORM\Column(name="precio_dia", type="float")
+     * @ORM\Column(name="dias_adicionales_iva", type="float", nullable=true)
      */
-    private $precioDia;
+    private $diasAdicionalesIva;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="dias_adicionales_descuento", type="flaot", nullable=true)
+     */
+    private $diasAdicionalesDescuento;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="dias_adicionales_Subtotal", type="float", nullable=true)
+     */
+    private $diasAdicionalesSubtotal;
+
 
     /**
      * @var float
@@ -66,9 +109,37 @@ class MarinaHumedaCotizacion
     /**
      * @var float
      *
-     * @ORM\Column(name="gasolina", type="float", nullable=true)
+     * @ORM\Column(name="gasolina_litros", type="float", nullable=true)
      */
-    private $gasolina;
+    private $gasolinaLitros;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="gasolina_precio", type="float", nullable=true)
+     */
+    private $gasolinaPrecio;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="gasolina_iva", type="float", nullable=true)
+     */
+    private $gasolinaIva;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="gasolina_descuento", type="float", nullable=true)
+     */
+    private $gasolinaDescuento;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="gasolina_subtotal", type="float", nullable=true)
+     */
+    private $gasolinaSubtotal;
 
     /**
      * @var float
@@ -97,6 +168,27 @@ class MarinaHumedaCotizacion
      * @ORM\Column(name="limpieza", type="float", nullable=true)
      */
     private $limpieza;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="subtotal", type="float", nullable=true)
+     */
+    private $subtotal;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="iva", type="float", nullable=true)
+     */
+    private $iva;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="total", type="float", nullable=true)
+     */
+    private $total;
 
     /**
      *
@@ -267,30 +359,6 @@ class MarinaHumedaCotizacion
     }
 
     /**
-     * Set gasolina
-     *
-     * @param float $gasolina
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setGasolina($gasolina)
-    {
-        $this->gasolina = $gasolina;
-
-        return $this;
-    }
-
-    /**
-     * Get gasolina
-     *
-     * @return float
-     */
-    public function getGasolina()
-    {
-        return $this->gasolina;
-    }
-
-    /**
      * Set agua
      *
      * @param float $agua
@@ -387,6 +455,150 @@ class MarinaHumedaCotizacion
     }
 
     /**
+     * Set gasolinalitros
+     *
+     * @param float $gasolinalitros
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setGasolinalitros($gasolinalitros)
+    {
+        $this->gasolinalitros = $gasolinalitros;
+
+        return $this;
+    }
+
+    /**
+     * Get gasolinalitros
+     *
+     * @return float
+     */
+    public function getGasolinalitros()
+    {
+        return $this->gasolinalitros;
+    }
+
+    /**
+     * Set gasolinaprecio
+     *
+     * @param float $gasolinaprecio
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setGasolinaprecio($gasolinaprecio)
+    {
+        $this->gasolinaprecio = $gasolinaprecio;
+
+        return $this;
+    }
+
+    /**
+     * Get gasolinaprecio
+     *
+     * @return float
+     */
+    public function getGasolinaprecio()
+    {
+        return $this->gasolinaprecio;
+    }
+
+    /**
+     * Set gasolinatotal
+     *
+     * @param float $gasolinatotal
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setGasolinatotal($gasolinatotal)
+    {
+        $this->gasolinatotal = $gasolinatotal;
+
+        return $this;
+    }
+
+    /**
+     * Get gasolinatotal
+     *
+     * @return float
+     */
+    public function getGasolinatotal()
+    {
+        return $this->gasolinatotal;
+    }
+
+    /**
+     * Set subtotal
+     *
+     * @param float $subtotal
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setSubtotal($subtotal)
+    {
+        $this->subtotal = $subtotal;
+
+        return $this;
+    }
+
+    /**
+     * Get subtotal
+     *
+     * @return float
+     */
+    public function getSubtotal()
+    {
+        return $this->subtotal;
+    }
+
+    /**
+     * Set iva
+     *
+     * @param float $iva
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setIva($iva)
+    {
+        $this->iva = $iva;
+
+        return $this;
+    }
+
+    /**
+     * Get iva
+     *
+     * @return float
+     */
+    public function getIva()
+    {
+        return $this->iva;
+    }
+
+    /**
+     * Set total
+     *
+     * @param float $total
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
+
+        return $this;
+    }
+
+    /**
+     * Get total
+     *
+     * @return float
+     */
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    /**
      * Set cliente
      *
      * @param \AppBundle\Entity\Cliente $cliente
@@ -433,4 +645,3 @@ class MarinaHumedaCotizacion
     }
 
 }
-

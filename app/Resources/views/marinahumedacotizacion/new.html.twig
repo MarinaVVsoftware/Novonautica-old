@@ -59,20 +59,117 @@
                                 <div class="col-sm-3">
                                     {{ form_row(form.electricidad) }}
                                     {{ form_row(form.agua) }}
-
-                                    {{ form_row(form.gasolina) }}
+                                    {{ form_row(form.gasolinalitros) }}
+                                    {{ form_row(form.gasolinaprecio) }}
+                                    {{ form_row(form.gasolinatotal) }}
                                     {{ form_row(form.dezasolve) }}
                                     {{ form_row(form.limpieza) }}
                                 </div>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="total">
+                            <div class="row">
+                                <div class="col-sm-9 text-right">
+                                    <span>Tipo de cambio:</span>
+                                    <div id="tipocambio" class="">19.32 MXN</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <small>Precios en USD</small>
+                                </div>
+                            </div>
 
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <table class="table text-center">
+                                        <thead>
+                                            <tr>
+                                                <th>Cantidad</th>
+                                                <th>Servicio</th>
+                                                <th>Prec. Unid.</th>
+                                                <th>IVA</th>
+                                                <th>Descuento</th>
+                                                <th>Sub-Totales</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td id="dec"></td>
+                                                <td>Días estancia</td>
+                                                <td id="dep"></td>
+                                                <td id=""></td>
+                                                <td id=""></td>
+                                                <td id=""></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Dias Adicionales</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Conexión a electricidad</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Abastecimiento de agua</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Gasolina</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Dezasolve</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Limpieza de locación</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-sm-3">
+                                    <a class="btn btn-morado-claro">Visualizar</a>
+                                    <input type="submit" value="Guardar" class="btn btn-azul"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right">
+                                    {{ form_row(form.subtotal) }}
+                                    {{ form_row(form.iva) }}
+                                    {{ form_row(form.total) }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <input type="submit" value="Guardar" class="btn btn-azul center-block"/>
+
                         </div>
                     </div>
                     {{ form_end(form) }}

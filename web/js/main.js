@@ -24,7 +24,7 @@ jQuery('.add-another-motor').click(function (e) {
     newLi.before(newLi);
 });
 // handle the removal, just for this example
-$('.remove-motor').click(function(e) {
+$('.lista-motores').on('click','.remove-motor',function(e) {
     e.preventDefault();
     //console.log('quitar motor');
     $(this).parent().remove();

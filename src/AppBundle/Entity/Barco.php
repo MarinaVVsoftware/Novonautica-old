@@ -308,4 +308,28 @@ class Barco
     {
         return $this->mhcotizaciones;
     }
+
+    /**
+     * Add mhcotizacione
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+     *
+     * @return Barco
+     */
+    public function addMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+    {
+        $this->mhcotizaciones[] = $mhcotizacione;
+
+        return $this;
+    }
+
+    /**
+     * Remove mhcotizacione
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+     */
+    public function removeMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+    {
+        $this->mhcotizaciones->removeElement($mhcotizacione);
+    }
 }
