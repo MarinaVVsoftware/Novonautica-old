@@ -4,7 +4,9 @@ namespace AppBundle\Form;
 
 
 //use Doctrine\DBAL\Types\FloatType;
+use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -35,63 +37,29 @@ class MarinaHumedaCotizacionType extends AbstractType
             ->add('fechaSalida',DateType::class,[
                 'label' => 'Fecha Salida'
             ])
-            ->add('diasEstadia')
-            ->add('diasAdicionales')
-            ->add('precioDia',MoneyType::class,[
-                'label' => 'Precio por día',
-                'currency' => false,
-                'divisor' => 100
-            ])
             ->add('descuento')
-            ->add('gasolinalitros',NumberType::class,[
-                'label' => 'Gasolina (Litros)'
-            ])
-            ->add('gasolinaprecio',MoneyType::class,[
-                'label' => 'Gasolina (Precio por litro)',
-                'currency' => false,
-                'divisor' => 100
-            ])
-            ->add('gasolinatotal',MoneyType::class,[
-                'label' => 'Gasolina total',
-                'currency' => false,
-                'divisor' => 100
-            ])
-            ->add('agua',MoneyType::class,[
-                'label' => 'Abastecimiento de agua',
-                'currency' => false,
-                'divisor' => 100
-            ])
-            ->add('electricidad',MoneyType::class,[
-                'label' => 'Conexión a electricidad',
-                'currency' => false,
-                'divisor' => 100
-            ])
-            ->add('dezasolve',MoneyType::class,[
-                'currency' => false,
-                'divisor' => 100
-            ])
-            ->add('limpieza',MoneyType::class,[
-                'label' => 'Limpieza de locación',
-                'currency' => false,
-                'divisor' => 100
-            ])
+            ->add('dolar')
             ->add('subtotal',MoneyType::class,[
                 'label' => 'Sub-Total',
                 'currency' => false,
-                'divisor' => 100
+
             ])
             ->add('iva',MoneyType::class,[
                 'label' => 'I.V.A',
                 'currency' => false,
-                'divisor' => 100
+
             ])
             ->add('total',MoneyType::class,[
                 'label' => 'Total',
                 'currency' => false,
-                'divisor' => 100
+
+            ])
+            ->add('mhcservicios',CollectionType::class,[
+                'entry_type' => MarinaHumedaCotizaServiciosType::class,
+                'label' => false
             ])
         ;
-
+dump($builder);
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();
 
@@ -149,6 +117,14 @@ class MarinaHumedaCotizacionType extends AbstractType
 //            }
 //        );
 
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            //$mhcservicios = $event->getData();
+//            $form = $event->getForm();
+//
+//            if ($form == 0) { //si el id del cliente es diferente de nulo entonces no muestra los inputs de barco
+//                $form->remove('barcos');
+//            }
+//        });
     }
     
     /**

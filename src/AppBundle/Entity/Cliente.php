@@ -137,9 +137,11 @@ class Cliente
      */
     private $mhcotizaciones;
 
+
     public function __construct() {
         $this->barcos = new ArrayCollection();
         $this->mhcotizaciones = new ArrayCollection();
+        $this->mhcservicios = new ArrayCollection();
     }
     public function __toString()
     {
@@ -564,27 +566,28 @@ class Cliente
     }
 
 
-    /**
-     * Add mhcotizacione
-     *
-     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
-     *
-     * @return Cliente
-     */
-    public function addMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
-    {
-        $this->mhcotizaciones[] = $mhcotizacione;
+//    /**
+//     * Add mhcotizacione
+//     *
+//     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+//     *
+//     * @return Cliente
+//     */
+//    public function addMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+//    {
+//        $this->mhcotizaciones[] = $mhcotizacione;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove mhcotizacione
+//     *
+//     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+//     */
+//    public function removeMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+//    {
+//        $this->mhcotizaciones->removeElement($mhcotizacione);
+//    }
 
-        return $this;
-    }
-
-    /**
-     * Remove mhcotizacione
-     *
-     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
-     */
-    public function removeMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
-    {
-        $this->mhcotizaciones->removeElement($mhcotizacione);
-    }
 }

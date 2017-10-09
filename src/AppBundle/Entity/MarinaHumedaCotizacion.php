@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,138 +37,208 @@ class MarinaHumedaCotizacion
     private $fechaSalida;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="dias_estadia", type="integer")
-     */
-    private $diasEstadia;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="dias_estadia_iva", type="float")
-     */
-    private $diasEstadiaIva;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="dias_estadia_descuento", type="float")
-     */
-    private $diasEstadiaDescuento;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="dias_estadia_subtotal", type="float")
-     */
-    private $diasEstadiaSubtotal;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="dias_precio_unidad", type="float")
-     */
-    private $diasPrecioUnidad;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="dias_adicionales", type="integer", nullable=true)
-     */
-    private $diasAdicionales;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="dias_adicionales_iva", type="float", nullable=true)
-     */
-    private $diasAdicionalesIva;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="dias_adicionales_descuento", type="flaot", nullable=true)
-     */
-    private $diasAdicionalesDescuento;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="dias_adicionales_Subtotal", type="float", nullable=true)
-     */
-    private $diasAdicionalesSubtotal;
-
-
-    /**
      * @var float
      *
      * @ORM\Column(name="descuento", type="float", nullable=true)
      */
     private $descuento;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="gasolina_litros", type="float", nullable=true)
-     */
-    private $gasolinaLitros;
+//    /**
+//     * @var int
+//     *
+//     * @ORM\Column(name="dias_estadia", type="integer")
+//     */
+//    private $diasEstadia;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="dias_estadia_iva", type="float")
+//     */
+//    private $diasEstadiaIva;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="dias_estadia_descuento", type="float")
+//     */
+//    private $diasEstadiaDescuento;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="dias_estadia_total", type="float")
+//     */
+//    private $diasEstadiaTotal;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="dias_precio", type="float")
+//     */
+//    private $diasPrecio;
+
+//    /**
+//     * @var int
+//     *
+//     * @ORM\Column(name="dias_adicionales", type="integer", nullable=true)
+//     */
+//    private $diasAdicionales;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="dias_adicionales_iva", type="float", nullable=true)
+//     */
+//    private $diasAdicionalesIva;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="dias_adicionales_descuento", type="float", nullable=true)
+//     */
+//    private $diasAdicionalesDescuento;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="dias_adicionales_total", type="float", nullable=true)
+//     */
+//    private $diasAdicionalesTotal;
+
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="gasolina_litros", type="float", nullable=true)
+//     */
+//    private $gasolinaLitros;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="gasolina_precio", type="float", nullable=true)
+//     */
+//    private $gasolinaPrecio;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="gasolina_iva", type="float", nullable=true)
+//     */
+//    private $gasolinaIva;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="gasolina_descuento", type="float", nullable=true)
+//     */
+//    private $gasolinaDescuento;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="gasolina_total", type="float", nullable=true)
+//     */
+//    private $gasolinaTotal;
+
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="agua_precio", type="float")
+//     */
+//    private $aguaPrecio;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="agua_iva", type="float")
+//     */
+//    private $aguaIva;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="agua_descuento", type="float")
+//     */
+//    private $aguaDescuento;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="agua_total", type="float")
+//     */
+//    private $aguaTotal;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="electricidad", type="float")
+//     */
+//    private $electricidad;
+//
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="dezasolve_precio", type="float", nullable=true)
+//     */
+//    private $dezasolvePrecio;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="dezasolve_iva", type="float", nullable=true)
+//     */
+//    private $dezasolveIva;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="dezasolve_descuento", type="float", nullable=true)
+//     */
+//    private $dezasolveDescuento;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="dezasolve_total", type="float", nullable=true)
+//     */
+//    private $dezasolveTotal;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="limpieza_precio", type="float", nullable=true)
+//     */
+//    private $limpiezaPrecio;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="limpieza_iva", type="float", nullable=true)
+//     */
+//    private $limpiezaIva;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="limpieza_descuento", type="float", nullable=true)
+//     */
+//    private $limpiezaDescuento;
+//
+//    /**
+//     * @var float
+//     *
+//     * @ORM\Column(name="limpieza_total", type="float", nullable=true)
+//     */
+//    private $limpiezaTotal;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="gasolina_precio", type="float", nullable=true)
+     * @ORM\Column(name="dolar", type="float", nullable=true)
      */
-    private $gasolinaPrecio;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="gasolina_iva", type="float", nullable=true)
-     */
-    private $gasolinaIva;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="gasolina_descuento", type="float", nullable=true)
-     */
-    private $gasolinaDescuento;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="gasolina_subtotal", type="float", nullable=true)
-     */
-    private $gasolinaSubtotal;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="agua", type="float")
-     */
-    private $agua;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="electricidad", type="float")
-     */
-    private $electricidad;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="dezasolve", type="float", nullable=true)
-     */
-    private $dezasolve;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="limpieza", type="float", nullable=true)
-     */
-    private $limpieza;
+    private $dolar;
 
     /**
      * @var float
@@ -203,6 +274,20 @@ class MarinaHumedaCotizacion
      * @ORM\JoinColumn(name="idbarco", referencedColumnName="id")
      */
     private $barco;
+
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaCotizaServicios", mappedBy="marinahumedacotizacion",cascade={"persist"})
+     */
+    private $mhcservicios;
+
+    public function __construct() {
+        $this->mhcservicios = new ArrayCollection();
+    }
+//    public function __toString()
+//    {
+//        return $this->;
+//    }
 
     /**
      * Get id
@@ -263,78 +348,6 @@ class MarinaHumedaCotizacion
     }
 
     /**
-     * Set diasEstadia
-     *
-     * @param integer $diasEstadia
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setDiasEstadia($diasEstadia)
-    {
-        $this->diasEstadia = $diasEstadia;
-
-        return $this;
-    }
-
-    /**
-     * Get diasEstadia
-     *
-     * @return int
-     */
-    public function getDiasEstadia()
-    {
-        return $this->diasEstadia;
-    }
-
-    /**
-     * Set diasAdicionales
-     *
-     * @param integer $diasAdicionales
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setDiasAdicionales($diasAdicionales)
-    {
-        $this->diasAdicionales = $diasAdicionales;
-
-        return $this;
-    }
-
-    /**
-     * Get diasAdicionales
-     *
-     * @return int
-     */
-    public function getDiasAdicionales()
-    {
-        return $this->diasAdicionales;
-    }
-
-    /**
-     * Set precioDia
-     *
-     * @param float $precioDia
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setPrecioDia($precioDia)
-    {
-        $this->precioDia = $precioDia;
-
-        return $this;
-    }
-
-    /**
-     * Get precioDia
-     *
-     * @return float
-     */
-    public function getPrecioDia()
-    {
-        return $this->precioDia;
-    }
-
-    /**
      * Set descuento
      *
      * @param float $descuento
@@ -358,172 +371,676 @@ class MarinaHumedaCotizacion
         return $this->descuento;
     }
 
+//    /**
+//     * Set diasEstadia
+//     *
+//     * @param integer $diasEstadia
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDiasEstadia($diasEstadia)
+//    {
+//        $this->diasEstadia = $diasEstadia;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get diasEstadia
+//     *
+//     * @return int
+//     */
+//    public function getDiasEstadia()
+//    {
+//        return $this->diasEstadia;
+//    }
+//
+//    /**
+//     * Set diasEstadiaIva
+//     *
+//     * @param float $diasEstadiaIva
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDiasEstadiaIva($diasEstadiaIva)
+//    {
+//        $this->diasEstadiaIva = $diasEstadiaIva;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get diasEstadiaIva
+//     *
+//     * @return float
+//     */
+//    public function getDiasEstadiaIva()
+//    {
+//        return $this->diasEstadiaIva;
+//    }
+//
+//    /**
+//     * Set diasEstadiaDescuento
+//     *
+//     * @param float $diasEstadiaDescuento
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDiasEstadiaDescuento($diasEstadiaDescuento)
+//    {
+//        $this->diasEstadiaDescuento = $diasEstadiaDescuento;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get diasEstadiaDescuento
+//     *
+//     * @return float
+//     */
+//    public function getDiasEstadiaDescuento()
+//    {
+//        return $this->diasEstadiaDescuento;
+//    }
+//
+//    /**
+//     * Set diasEstadiaTotal
+//     *
+//     * @param float $diasEstadiaTotal
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDiasEstadiaTotal($diasEstadiaTotal)
+//    {
+//        $this->diasEstadiaTotal = $diasEstadiaTotal;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get diasEstadiaTotal
+//     *
+//     * @return float
+//     */
+//    public function getDiasEstadiaTotal()
+//    {
+//        return $this->diasEstadiaTotal;
+//    }
+//
+//    /**
+//     * Set diasPrecio
+//     *
+//     * @param float $diasPrecio
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDiasPrecio($diasPrecio)
+//    {
+//        $this->diasPrecio = $diasPrecio;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get diasPrecio
+//     *
+//     * @return float
+//     */
+//    public function getDiasPrecio()
+//    {
+//        return $this->diasPrecio;
+//    }
+//
+//    /**
+//     * Set diasAdicionales
+//     *
+//     * @param integer $diasAdicionales
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDiasAdicionales($diasAdicionales)
+//    {
+//        $this->diasAdicionales = $diasAdicionales;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get diasAdicionales
+//     *
+//     * @return int
+//     */
+//    public function getDiasAdicionales()
+//    {
+//        return $this->diasAdicionales;
+//    }
+//
+//    /**
+//     * Set diasAdicionalesIva
+//     *
+//     * @param float $diasAdicionalesIva
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDiasAdicionalesIva($diasAdicionalesIva)
+//    {
+//        $this->diasAdicionalesIva = $diasAdicionalesIva;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get diasAdicionalesIva
+//     *
+//     * @return float
+//     */
+//    public function getDiasAdicionalesIva()
+//    {
+//        return $this->diasAdicionalesIva;
+//    }
+//
+//    /**
+//     * Set diasAdicionalesDescuento
+//     *
+//     * @param float $diasAdicionalesDescuento
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDiasAdicionalesDescuento($diasAdicionalesDescuento)
+//    {
+//        $this->diasAdicionalesDescuento = $diasAdicionalesDescuento;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get diasAdicionalesDescuento
+//     *
+//     * @return float
+//     */
+//    public function getDiasAdicionalesDescuento()
+//    {
+//        return $this->diasAdicionalesDescuento;
+//    }
+//
+//    /**
+//     * Set diasAdicionalesTotal
+//     *
+//     * @param float $diasAdicionalesTotal
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDiasAdicionalesTotal($diasAdicionalesTotal)
+//    {
+//        $this->diasAdicionalesTotal = $diasAdicionalesTotal;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get diasAdicionalesTotal
+//     *
+//     * @return float
+//     */
+//    public function getDiasAdicionalesTotal()
+//    {
+//        return $this->diasAdicionalesTotal;
+//    }
+//
+//    /**
+//     * Set gasolinaLitros
+//     *
+//     * @param float $gasolinaLitros
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setGasolinaLitros($gasolinaLitros)
+//    {
+//        $this->gasolinaLitros = $gasolinaLitros;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get gasolinaLitros
+//     *
+//     * @return float
+//     */
+//    public function getGasolinaLitros()
+//    {
+//        return $this->gasolinaLitros;
+//    }
+//
+//    /**
+//     * Set gasolinaPrecio
+//     *
+//     * @param float $gasolinaPrecio
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setGasolinaPrecio($gasolinaPrecio)
+//    {
+//        $this->gasolinaPrecio = $gasolinaPrecio;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get gasolinaPrecio
+//     *
+//     * @return float
+//     */
+//    public function getGasolinaPrecio()
+//    {
+//        return $this->gasolinaPrecio;
+//    }
+//
+//    /**
+//     * Set gasolinaIva
+//     *
+//     * @param float $gasolinaIva
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setGasolinaIva($gasolinaIva)
+//    {
+//        $this->gasolinaIva = $gasolinaIva;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get gasolinaIva
+//     *
+//     * @return float
+//     */
+//    public function getGasolinaIva()
+//    {
+//        return $this->gasolinaIva;
+//    }
+//
+//    /**
+//     * Set gasolinaDescuento
+//     *
+//     * @param float $gasolinaDescuento
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setGasolinaDescuento($gasolinaDescuento)
+//    {
+//        $this->gasolinaDescuento = $gasolinaDescuento;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get gasolinaDescuento
+//     *
+//     * @return float
+//     */
+//    public function getGasolinaDescuento()
+//    {
+//        return $this->gasolinaDescuento;
+//    }
+//
+//    /**
+//     * Set gasolinaTotal
+//     *
+//     * @param float $gasolinaTotal
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setGasolinaTotal($gasolinaTotal)
+//    {
+//        $this->gasolinaTotal = $gasolinaTotal;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get gasolinaTotal
+//     *
+//     * @return float
+//     */
+//    public function getGasolinaTotal()
+//    {
+//        return $this->gasolinaTotal;
+//    }
+//
+//    /**
+//     * Set electricidad
+//     *
+//     * @param float $electricidad
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setElectricidad($electricidad)
+//    {
+//        $this->electricidad = $electricidad;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get electricidad
+//     *
+//     * @return float
+//     */
+//    public function getElectricidad()
+//    {
+//        return $this->electricidad;
+//    }
+//
+//    /**
+//     * Set aguaPrecio
+//     *
+//     * @param float $aguaPrecio
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setAguaPrecio($aguaPrecio)
+//    {
+//        $this->aguaPrecio = $aguaPrecio;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get aguaPrecio
+//     *
+//     * @return float
+//     */
+//    public function getAguaPrecio()
+//    {
+//        return $this->aguaPrecio;
+//    }
+//
+//    /**
+//     * Set aguaIva
+//     *
+//     * @param float $aguaIva
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setAguaIva($aguaIva)
+//    {
+//        $this->aguaIva = $aguaIva;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get aguaIva
+//     *
+//     * @return float
+//     */
+//    public function getAguaIva()
+//    {
+//        return $this->aguaIva;
+//    }
+//
+//    /**
+//     * Set aguaDescuento
+//     *
+//     * @param float $aguaDescuento
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setAguaDescuento($aguaDescuento)
+//    {
+//        $this->aguaDescuento = $aguaDescuento;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get aguaDescuento
+//     *
+//     * @return float
+//     */
+//    public function getAguaDescuento()
+//    {
+//        return $this->aguaDescuento;
+//    }
+//
+//    /**
+//     * Set aguaTotal
+//     *
+//     * @param float $aguaTotal
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setAguaTotal($aguaTotal)
+//    {
+//        $this->aguaTotal = $aguaTotal;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get aguaTotal
+//     *
+//     * @return float
+//     */
+//    public function getAguaTotal()
+//    {
+//        return $this->aguaTotal;
+//    }
+//
+//    /**
+//     * Set dezasolvePrecio
+//     *
+//     * @param float $dezasolvePrecio
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDezasolvePrecio($dezasolvePrecio)
+//    {
+//        $this->dezasolvePrecio = $dezasolvePrecio;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get dezasolvePrecio
+//     *
+//     * @return float
+//     */
+//    public function getDezasolvePrecio()
+//    {
+//        return $this->dezasolvePrecio;
+//    }
+//
+//    /**
+//     * Set dezasolveIva
+//     *
+//     * @param float $dezasolveIva
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDezasolveIva($dezasolveIva)
+//    {
+//        $this->dezasolveIva = $dezasolveIva;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get dezasolveIva
+//     *
+//     * @return float
+//     */
+//    public function getDezasolveIva()
+//    {
+//        return $this->dezasolveIva;
+//    }
+//
+//    /**
+//     * Set dezasolveDescuento
+//     *
+//     * @param float $dezasolveDescuento
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDezasolveDescuento($dezasolveDescuento)
+//    {
+//        $this->dezasolveDescuento = $dezasolveDescuento;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get dezasolveDescuento
+//     *
+//     * @return float
+//     */
+//    public function getDezasolveDescuento()
+//    {
+//        return $this->dezasolveDescuento;
+//    }
+//
+//    /**
+//     * Set dezasolveTotal
+//     *
+//     * @param float $dezasolveTotal
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setDezasolveTotal($dezasolveTotal)
+//    {
+//        $this->dezasolveTotal = $dezasolveTotal;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get dezasolveTotal
+//     *
+//     * @return float
+//     */
+//    public function getDezasolveTotal()
+//    {
+//        return $this->dezasolveTotal;
+//    }
+//
+//    /**
+//     * Set limpiezaPrecio
+//     *
+//     * @param float $limpiezaPrecio
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setLimpiezaPrecio($limpiezaPrecio)
+//    {
+//        $this->limpiezaPrecio = $limpiezaPrecio;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get limpiezaPrecio
+//     *
+//     * @return float
+//     */
+//    public function getLimpiezaPrecio()
+//    {
+//        return $this->limpiezaPrecio;
+//    }
+//
+//    /**
+//     * Set limpiezaIva
+//     *
+//     * @param float $limpiezaIva
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setLimpiezaIva($limpiezaIva)
+//    {
+//        $this->limpiezaIva = $limpiezaIva;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get limpiezaIva
+//     *
+//     * @return float
+//     */
+//    public function getLimpiezaIva()
+//    {
+//        return $this->limpiezaIva;
+//    }
+//
+//    /**
+//     * Set limpiezaDescuento
+//     *
+//     * @param float $limpiezaDescuento
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setLimpiezaDescuento($limpiezaDescuento)
+//    {
+//        $this->limpiezaDescuento = $limpiezaDescuento;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get limpiezaDescuento
+//     *
+//     * @return float
+//     */
+//    public function getLimpiezaDescuento()
+//    {
+//        return $this->limpiezaDescuento;
+//    }
+//
+//    /**
+//     * Set limpiezaTotal
+//     *
+//     * @param float $limpiezaTotal
+//     *
+//     * @return MarinaHumedaCotizacion
+//     */
+//    public function setLimpiezaTotal($limpiezaTotal)
+//    {
+//        $this->limpiezaTotal = $limpiezaTotal;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get limpiezaTotal
+//     *
+//     * @return float
+//     */
+//    public function getLimpiezaTotal()
+//    {
+//        return $this->limpiezaTotal;
+//    }
+
     /**
-     * Set agua
+     * Set dolar
      *
-     * @param float $agua
+     * @param float $dolar
      *
      * @return MarinaHumedaCotizacion
      */
-    public function setAgua($agua)
+    public function setDolar($dolar)
     {
-        $this->agua = $agua;
+        $this->subtotal = $dolar;
 
         return $this;
     }
 
     /**
-     * Get agua
+     * Get dolar
      *
      * @return float
      */
-    public function getAgua()
+    public function getDolar()
     {
-        return $this->agua;
-    }
-
-    /**
-     * Set electricidad
-     *
-     * @param float $electricidad
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setElectricidad($electricidad)
-    {
-        $this->electricidad = $electricidad;
-
-        return $this;
-    }
-
-    /**
-     * Get electricidad
-     *
-     * @return float
-     */
-    public function getElectricidad()
-    {
-        return $this->electricidad;
-    }
-
-    /**
-     * Set dezasolve
-     *
-     * @param float $dezasolve
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setDezasolve($dezasolve)
-    {
-        $this->dezasolve = $dezasolve;
-
-        return $this;
-    }
-
-    /**
-     * Get dezasolve
-     *
-     * @return float
-     */
-    public function getDezasolve()
-    {
-        return $this->dezasolve;
-    }
-
-    /**
-     * Set limpieza
-     *
-     * @param float $limpieza
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setLimpieza($limpieza)
-    {
-        $this->limpieza = $limpieza;
-
-        return $this;
-    }
-
-    /**
-     * Get limpieza
-     *
-     * @return float
-     */
-    public function getLimpieza()
-    {
-        return $this->limpieza;
-    }
-
-    /**
-     * Set gasolinalitros
-     *
-     * @param float $gasolinalitros
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setGasolinalitros($gasolinalitros)
-    {
-        $this->gasolinalitros = $gasolinalitros;
-
-        return $this;
-    }
-
-    /**
-     * Get gasolinalitros
-     *
-     * @return float
-     */
-    public function getGasolinalitros()
-    {
-        return $this->gasolinalitros;
-    }
-
-    /**
-     * Set gasolinaprecio
-     *
-     * @param float $gasolinaprecio
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setGasolinaprecio($gasolinaprecio)
-    {
-        $this->gasolinaprecio = $gasolinaprecio;
-
-        return $this;
-    }
-
-    /**
-     * Get gasolinaprecio
-     *
-     * @return float
-     */
-    public function getGasolinaprecio()
-    {
-        return $this->gasolinaprecio;
-    }
-
-    /**
-     * Set gasolinatotal
-     *
-     * @param float $gasolinatotal
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setGasolinatotal($gasolinatotal)
-    {
-        $this->gasolinatotal = $gasolinatotal;
-
-        return $this;
-    }
-
-    /**
-     * Get gasolinatotal
-     *
-     * @return float
-     */
-    public function getGasolinatotal()
-    {
-        return $this->gasolinatotal;
+        return $this->dolar;
     }
 
     /**
@@ -644,4 +1161,37 @@ class MarinaHumedaCotizacion
         return $this->barco;
     }
 
+    /**
+     * Add marinahumedacotizaservicios
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizaServicios $marinahumedacotizaservicios
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function addMarinaHumedaCotizaServicios(\AppBundle\Entity\MarinaHumedaCotizaServicios $marinahumedacotizaservicios)
+    {
+        $marinahumedacotizaservicios->setMarinaHumedaCotizacion($this);
+        $this->mhcservicios[] = $marinahumedacotizaservicios;
+        return $this;
+    }
+
+    /**
+     * Remove marinahumedacotizaservicios
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizaServicios $marinahumedacotizaservicios
+     */
+    public function removeMarinaHumedaCotizaServicios(\AppBundle\Entity\MarinaHumedaCotizaServicios $marinahumedacotizaservicios)
+    {
+        $this->mhcservicios->removeElement($marinahumedacotizaservicios);
+    }
+
+    /**
+     * Get mhcservicios
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMHCservicios()
+    {
+        return $this->mhcservicios;
+    }
 }

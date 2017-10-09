@@ -51,19 +51,34 @@
                                 <div class="col-sm-3">
                                     {{ form_row(form.fechaLlegada) }}
                                     {{ form_row(form.fechaSalida) }}
-                                    {{ form_row(form.diasEstadia) }}
-                                    {{ form_row(form.diasAdicionales) }}
-                                    {{ form_row(form.precioDia) }}
+                                    <label>Días Estadía:</label>
+                                    {{ form_widget(form.mhcservicios.children.0.cantidad) }}
+                                    <label>Días Adicionales:</label>
+                                    {{ form_widget(form.mhcservicios.children.1.cantidad) }}
+                                    <label>Precio por día</label>
+                                    {{ form_widget(form.mhcservicios.children.0.precio) }}
+
                                     {{ form_row(form.descuento) }}
+
+                                    <label>Abastecimiento gasolina (LT):</label>
+                                    {{ form_widget(form.mhcservicios.children.2.cantidad) }}
+                                    <label>Abastecimiento gasolina (Precio):</label>
+                                    {{ form_widget(form.mhcservicios.children.2.precio) }}
+
                                 </div>
                                 <div class="col-sm-3">
-                                    {{ form_row(form.electricidad) }}
-                                    {{ form_row(form.agua) }}
-                                    {{ form_row(form.gasolinalitros) }}
-                                    {{ form_row(form.gasolinaprecio) }}
-                                    {{ form_row(form.gasolinatotal) }}
-                                    {{ form_row(form.dezasolve) }}
-                                    {{ form_row(form.limpieza) }}
+                                    <label>Abastecimiento Agua</label>
+                                    {{ form_widget(form.mhcservicios.children.3.precio) }}
+
+                                    <label>Conexión a electricidad</label>
+                                    {{ form_widget(form.mhcservicios.children.4.precio) }}
+
+                                    <label>Dezasolve</label>
+                                    {{ form_widget(form.mhcservicios.children.5.precio) }}
+
+                                    <label>Limpieza de locación</label>
+                                    {{ form_widget(form.mhcservicios.children.6.precio) }}
+
                                 </div>
                             </div>
                         </div>
@@ -160,6 +175,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-5 col-sm-offset-4 text-right">
+                                    {{ form_row(form.dolar) }}
                                     {{ form_row(form.subtotal) }}
                                     {{ form_row(form.iva) }}
                                     {{ form_row(form.total) }}

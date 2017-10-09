@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\MarinaHumedaCotizacion;
+use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Form\MarinaHumedaCotizacionType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -44,6 +45,16 @@ class MarinaHumedaCotizacionController extends Controller
     public function newAction(Request $request)
     {
         $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
+        $marinaHumedaCotizaServicios = new MarinaHumedaCotizaServicios();
+        $marinaHumedaCotizacion
+            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
+            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
+            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
+            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
+            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
+            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
+            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
+            ;
         $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
