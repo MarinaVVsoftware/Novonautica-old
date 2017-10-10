@@ -54,3 +54,6 @@ elcliente.change(function() {
         }
     });
 });
+$(document).ready(function() {
+    $('.select-buscador').select2();
+});

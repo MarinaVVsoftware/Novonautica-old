@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Form\MarinaHumedaCotizacionType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -45,24 +46,189 @@ class MarinaHumedaCotizacionController extends Controller
     public function newAction(Request $request)
     {
         $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
-        $marinaHumedaCotizaServicios = new MarinaHumedaCotizaServicios();
+        $marinaDiasEstadia = new MarinaHumedaCotizaServicios();
+        $marinaDiasAdicionales = new MarinaHumedaCotizaServicios();
+        $marinaGasolina = new MarinaHumedaCotizaServicios();
+        $marinaAgua = new MarinaHumedaCotizaServicios();
+        $marinaElectricidad = new MarinaHumedaCotizaServicios();
+        $marinaDezasolve = new MarinaHumedaCotizaServicios();
+        $marinaLimpieza = new MarinaHumedaCotizaServicios();
         $marinaHumedaCotizacion
-            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
-            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
-            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
-            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
-            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
-            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
-            ->addMarinaHumedaCotizaServicios($marinaHumedaCotizaServicios)
+            ->addMarinaHumedaCotizaServicios($marinaDiasEstadia)
+            ->addMarinaHumedaCotizaServicios($marinaDiasAdicionales)
+            ->addMarinaHumedaCotizaServicios($marinaGasolina)
+            ->addMarinaHumedaCotizaServicios($marinaAgua)
+            ->addMarinaHumedaCotizaServicios($marinaElectricidad)
+            ->addMarinaHumedaCotizaServicios($marinaDezasolve)
+            ->addMarinaHumedaCotizaServicios($marinaLimpieza)
             ;
         $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $granSubtotal = 0;
+            $granIva = 0;
+            $granTotal = 0;
+            $dolar = 18;
+            $iva = 0.16;
+            $descuento = $marinaHumedaCotizacion->getDescuento();
+
+            $nombre = 'Días Estadía';
+            $cantidad = $marinaDiasEstadia->getCantidad();
+            $precio = $marinaDiasEstadia->getPrecio();
+
+            $subTotal = $cantidad * $precio;
+            $descuentoTot = ($subTotal * $descuento) / 100;
+            $ivaTot = $subTotal * $iva;
+            $total = $subTotal + $descuentoTot + $ivaTot;
+
+            $marinaDiasEstadia
+                ->setServicio($nombre)
+                ->setSubtotal($subTotal)
+                ->setDescuento($descuentoTot)
+                ->setIva($ivaTot)
+                ->setTotal($total);
+
+            $granSubtotal+=$subTotal;
+            $granIva+=$ivaTot;
+            $granTotal+=$total;
+
+            $nombre = 'Días Adicionales';
+            $cantidad = $marinaDiasAdicionales->getCantidad();
+            //$precio = $marinaHCS->getPrecio();
+
+            $subTotal = $cantidad * $precio;
+            $descuentoTot = ($subTotal * $descuento) / 100;
+            $ivaTot = $subTotal * $iva;
+            $total = $subTotal + $descuentoTot + $ivaTot;
+
+            $marinaDiasAdicionales
+                ->setServicio($nombre)
+                ->setPrecio($precio)
+                ->setSubtotal($subTotal)
+                ->setDescuento($descuentoTot)
+                ->setIva($ivaTot)
+                ->setTotal($total);
+
+            $granSubtotal+=$subTotal;
+            $granIva+=$ivaTot;
+            $granTotal+=$total;
+
+            $nombre = 'Abastecimiento de gasolina';
+            $cantidad = $marinaGasolina->getCantidad();
+            $precio = $marinaGasolina->getPrecio();
+
+            $subTotal = $cantidad * $precio;
+            $descuentoTot = ($subTotal * $descuento) / 100;
+            $ivaTot = $subTotal * $iva;
+            $total = $subTotal + $descuentoTot + $ivaTot;
+
+            $marinaGasolina
+                ->setServicio($nombre)
+                ->setSubtotal($subTotal)
+                ->setDescuento($descuentoTot)
+                ->setIva($ivaTot)
+                ->setTotal($total);
+
+            $granSubtotal+=$subTotal;
+            $granIva+=$ivaTot;
+            $granTotal+=$total;
+
+            $nombre = 'Abastecimiento de agua';
+            $cantidad = 1;
+            $precio = $marinaAgua->getPrecio();
+
+            $subTotal = $cantidad * $precio;
+            $descuentoTot = ($subTotal * $descuento) / 100;
+            $ivaTot = $subTotal * $iva;
+            $total = $subTotal + $descuentoTot + $ivaTot;
+
+            $marinaAgua
+                ->setServicio($nombre)
+                ->setCantidad($cantidad)
+                ->setSubtotal($subTotal)
+                ->setDescuento($descuentoTot)
+                ->setIva($ivaTot)
+                ->setTotal($total);
+
+            $granSubtotal+=$subTotal;
+            $granIva+=$ivaTot;
+            $granTotal+=$total;
+
+            $nombre = 'Conexión a electricidad';
+            $cantidad = 1;
+            $precio = $marinaElectricidad->getPrecio();
+
+            $subTotal = $cantidad * $precio;
+            $descuentoTot = ($subTotal * $descuento) / 100;
+            $ivaTot = $subTotal * $iva;
+            $total = $subTotal + $descuentoTot + $ivaTot;
+
+            $marinaElectricidad
+                ->setServicio($nombre)
+                ->setCantidad($cantidad)
+                ->setSubtotal($subTotal)
+                ->setDescuento($descuentoTot)
+                ->setIva($ivaTot)
+                ->setTotal($total);
+
+            $granSubtotal+=$subTotal;
+            $granIva+=$ivaTot;
+            $granTotal+=$total;
+
+            $nombre = 'Dezasolve';
+            $cantidad = 1;
+            $precio = $marinaDezasolve->getPrecio();
+
+            $subTotal = $cantidad * $precio;
+            $descuentoTot = ($subTotal * $descuento) / 100;
+            $ivaTot = $subTotal * $iva;
+            $total = $subTotal + $descuentoTot + $ivaTot;
+
+            $marinaDezasolve
+                ->setServicio($nombre)
+                ->setCantidad($cantidad)
+                ->setSubtotal($subTotal)
+                ->setDescuento($descuentoTot)
+                ->setIva($ivaTot)
+                ->setTotal($total);
+
+            $granSubtotal+=$subTotal;
+            $granIva+=$ivaTot;
+            $granTotal+=$total;
+
+            $nombre = 'Limpieza de locación';
+            $cantidad = 1;
+            $precio = $marinaLimpieza->getPrecio();
+
+            $subTotal = $cantidad * $precio;
+            $descuentoTot = ($subTotal * $descuento) / 100;
+            $ivaTot = $subTotal * $iva;
+            $total = $subTotal + $descuentoTot + $ivaTot;
+
+            $marinaLimpieza
+                ->setServicio($nombre)
+                ->setCantidad($cantidad)
+                ->setSubtotal($subTotal)
+                ->setDescuento($descuentoTot)
+                ->setIva($ivaTot)
+                ->setTotal($total);
+
+            $granSubtotal+=$subTotal;
+            $granIva+=$ivaTot;
+            $granTotal+=$total;
+
+            //-------------------------------------------------
+            $marinaHumedaCotizacion
+                ->setDolar($dolar)
+                ->setSubtotal($granSubtotal)
+                ->setIva($granIva)
+                ->setTotal($granTotal);
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
 
             return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
+
         }
 
         return $this->render('marinahumedacotizacion/new.html.twig', array(

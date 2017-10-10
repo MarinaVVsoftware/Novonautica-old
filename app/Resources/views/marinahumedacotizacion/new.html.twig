@@ -175,10 +175,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-5 col-sm-offset-4 text-right">
-                                    {{ form_row(form.dolar) }}
-                                    {{ form_row(form.subtotal) }}
-                                    {{ form_row(form.iva) }}
-                                    {{ form_row(form.total) }}
+
                                 </div>
                             </div>
                         </div>
@@ -188,6 +185,11 @@
 
                         </div>
                     </div>
+                    {{ form_widget(form.mhcservicios.children.1.precio,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.3.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.4.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.5.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.6.cantidad,{'attr':{'class':'hidden'}}) }}
                     {{ form_end(form) }}
 
                 </div>

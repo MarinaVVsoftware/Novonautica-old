@@ -29,7 +29,9 @@ class MarinaHumedaCotizacionType extends AbstractType
             ->add('cliente',EntityType::class,[
                 'class' => 'AppBundle:Cliente',
                 'label' => 'Cliente',
-                'placeholder' => 'Seleccionar...'
+                'placeholder' => 'Seleccionar...',
+                'attr' => ['class' => 'select-buscador'],
+
             ])
             ->add('fechaLlegada',DateType::class,[
                 'label' => 'Fecha llegada'
@@ -38,28 +40,13 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'label' => 'Fecha Salida'
             ])
             ->add('descuento')
-            ->add('dolar')
-            ->add('subtotal',MoneyType::class,[
-                'label' => 'Sub-Total',
-                'currency' => false,
 
-            ])
-            ->add('iva',MoneyType::class,[
-                'label' => 'I.V.A',
-                'currency' => false,
-
-            ])
-            ->add('total',MoneyType::class,[
-                'label' => 'Total',
-                'currency' => false,
-
-            ])
             ->add('mhcservicios',CollectionType::class,[
                 'entry_type' => MarinaHumedaCotizaServiciosType::class,
                 'label' => false
             ])
         ;
-dump($builder);
+
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();
 
@@ -117,14 +104,7 @@ dump($builder);
 //            }
 //        );
 
-//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-//            //$mhcservicios = $event->getData();
-//            $form = $event->getForm();
-//
-//            if ($form == 0) { //si el id del cliente es diferente de nulo entonces no muestra los inputs de barco
-//                $form->remove('barcos');
-//            }
-//        });
+
     }
     
     /**

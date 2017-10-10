@@ -45,6 +45,13 @@ class MarinaHumedaCotizaServicios
     /**
      * @var float
      *
+     * @ORM\Column(name="subtotal", type="float", nullable=true)
+     */
+    private $subtotal;
+
+    /**
+     * @var float
+     *
      * @ORM\Column(name="iva", type="float", nullable=true)
      */
     private $iva;
@@ -153,6 +160,30 @@ class MarinaHumedaCotizaServicios
     }
 
     /**
+     * Set subtotal
+     *
+     * @param float $subtotal
+     *
+     * @return MarinaHumedaCotizaServicios
+     */
+    public function setSubtotal($subtotal)
+    {
+        $this->subtotal = $subtotal;
+
+        return $this;
+    }
+
+    /**
+     * Get subtotal
+     *
+     * @return float
+     */
+    public function getSubtotal()
+    {
+        return $this->subtotal;
+    }
+
+    /**
      * Set iva
      *
      * @param float $iva
@@ -246,5 +277,6 @@ class MarinaHumedaCotizaServicios
     {
         return $this->marinahumedacotizacion;
     }
+
 }
 

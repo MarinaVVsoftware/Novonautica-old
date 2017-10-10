@@ -16,17 +16,14 @@
                     <thead>
                     <tr>
                         <th>Id</th>
+                        <th>Cliente</th>
+                        <th>Barco</th>
                         <th>Fecha llegada</th>
                         <th>Fecha salida</th>
-                        <th>Dias estadia</th>
-                        <th>Dias adicionales</th>
-                        <th>Precio por dia</th>
                         <th>Descuento</th>
-                        <th>Gasolina (Lt)</th>
-                        <th>Agua</th>
-                        <th>Conexion electricidad</th>
-                        <th>Dezasolve</th>
-                        <th>Limpieza de locación</th>
+                        <th>Subtotal</th>
+                        <th>Iva</th>
+                        <th>Total</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
@@ -34,17 +31,14 @@
                     {% for marinaHumedaCotizacion in marinaHumedaCotizacions %}
                         <tr>
                             <td><a href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">{{ marinaHumedaCotizacion.id }}</a></td>
+                            <td>{{ marinaHumedaCotizacion.cliente }}</td>
+                            <td>{{ marinaHumedaCotizacion.barco }}</td>
                             <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('Y-m-d') }}{% endif %}</td>
                             <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('Y-m-d') }}{% endif %}</td>
-                            <td>{{ marinaHumedaCotizacion.diasEstadia }}</td>
-                            <td>{{ marinaHumedaCotizacion.diasAdicionales }}</td>
-                            <td>{{ marinaHumedaCotizacion.precioDia }}</td>
                             <td>{{ marinaHumedaCotizacion.descuento }}</td>
-                            <td>{{ marinaHumedaCotizacion.gasolina }}</td>
-                            <td>{{ marinaHumedaCotizacion.agua }}</td>
-                            <td>{{ marinaHumedaCotizacion.electricidad }}</td>
-                            <td>{{ marinaHumedaCotizacion.dezasolve }}</td>
-                            <td>{{ marinaHumedaCotizacion.limpieza }}</td>
+                            <td>{{ marinaHumedaCotizacion.subtotal }}</td>
+                            <td>{{ marinaHumedaCotizacion.iva }}</td>
+                            <td>{{ marinaHumedaCotizacion.total }}</td>
                             <td>
                                 <a class="btn btn-morado-claro" href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">Detalle</a>
                                 <a class="btn btn-azul" href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">Editar</a>
