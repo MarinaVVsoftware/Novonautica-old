@@ -36,6 +36,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     {{ form_row(form.cliente) }}
+
                                 </div>
                                 <div class="col-sm-3">
                                     {{ form_errors(form.barco) }}
@@ -58,26 +59,69 @@
                                     <label>Precio por día</label>
                                     {{ form_widget(form.mhcservicios.children.0.precio) }}
 
-                                    {{ form_row(form.descuento) }}
+                                    <label>Descuento(%)</label>
+                                    {{ form_widget(form.descuento,{'value':0}) }}
 
-                                    <label>Abastecimiento gasolina (LT):</label>
-                                    {{ form_widget(form.mhcservicios.children.2.cantidad) }}
-                                    <label>Abastecimiento gasolina (Precio):</label>
-                                    {{ form_widget(form.mhcservicios.children.2.precio) }}
-
-                                </div>
-                                <div class="col-sm-3">
                                     <label>Abastecimiento Agua</label>
-                                    {{ form_widget(form.mhcservicios.children.3.precio) }}
+                                    {{ form_widget(form.mhcservicios.children.3.precio,{'value':0}) }}
 
                                     <label>Conexión a electricidad</label>
-                                    {{ form_widget(form.mhcservicios.children.4.precio) }}
+                                    {{ form_widget(form.mhcservicios.children.4.precio,{'value':0}) }}
 
-                                    <label>Dezasolve</label>
-                                    {{ form_widget(form.mhcservicios.children.5.precio) }}
+                                </div>
+                                <div class="col-sm-7 col-sm-offset-1">
+                                    <div class="row">
+                                        <div class="col-sm-1">
+                                            <div class="input-estatus">
+                                                <span class="cont-label-novo">
+                                                    {{ form_errors(form.mhcservicios.children.2.estatus) }}
+                                                    {{ form_widget(form.mhcservicios.children.2.estatus) }}
+                                                    {#{{ form_widget(form.mhcservicios.children.2.estatus,{'attr':{'checked':'false'}}) }}#}
+                                                    {{ form_label(form.mhcservicios.children.2.estatus) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label>Abastecimiento gasolina (LT):</label>
+                                            {{ form_widget(form.mhcservicios.children.2.cantidad) }}
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label>Gasolina precio por litro:</label>
+                                            {{ form_widget(form.mhcservicios.children.2.precio) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-1">
+                                            <div class="input-estatus">
+                                                <span class="cont-label-novo">
+                                                    {{ form_errors(form.mhcservicios.children.5.estatus) }}
+                                                    {{ form_widget(form.mhcservicios.children.5.estatus) }}
+                                                    {{ form_label(form.mhcservicios.children.5.estatus) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label>Dezasolve</label>
+                                            {{ form_widget(form.mhcservicios.children.5.precio) }}
+                                        </div>
+                                    </div>
 
-                                    <label>Limpieza de locación</label>
-                                    {{ form_widget(form.mhcservicios.children.6.precio) }}
+                                    <div class="row">
+                                        <div class="col-sm-1">
+                                            <div class="input-estatus">
+                                                <span class="cont-label-novo">
+                                                    {{ form_errors(form.mhcservicios.children.6.estatus) }}
+                                                    {{ form_widget(form.mhcservicios.children.6.estatus) }}
+                                                    {{ form_label(form.mhcservicios.children.6.estatus) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label>Limpieza de locación</label>
+                                            {{ form_widget(form.mhcservicios.children.6.precio) }}
+                                        </div>
+                                    </div>
+
 
                                 </div>
                             </div>
@@ -97,53 +141,59 @@
 
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <table class="table text-center">
+                                    <table id="mh_nuevacotizacion" class="table text-center">
                                         <thead>
                                             <tr>
                                                 <th>Cantidad</th>
                                                 <th>Servicio</th>
                                                 <th>Prec. Unid.</th>
+                                                <th>Sub-Total</th>
                                                 <th>IVA</th>
                                                 <th>Descuento</th>
-                                                <th>Sub-Totales</th>
+                                                <th>Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td id="dec"></td>
+                                                <td id="de_cantidad">0</td>
                                                 <td>Días estancia</td>
-                                                <td id="dep"></td>
-                                                <td id=""></td>
-                                                <td id=""></td>
-                                                <td id=""></td>
+                                                <td id="de_precio">0</td>
+                                                <td id="de_subtotal">0</td>
+                                                <td id="de_iva">0</td>
+                                                <td id="de_descuento">0</td>
+                                                <td id="de_total">0</td>
                                             </tr>
                                             <tr>
-                                                <td></td>
+                                                <td id="da_cantidad">0</td>
                                                 <td>Dias Adicionales</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td id="da_precio">0</td>
+                                                <td id="da_subtotal">0</td>
+                                                <td id="da_iva">0</td>
+                                                <td id="da_descuento">0</td>
+                                                <td id="da_total">0</td>
                                             </tr>
                                             <tr>
-                                                <td></td>
-                                                <td>Conexión a electricidad</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
+                                                <td>1</td>
                                                 <td>Abastecimiento de agua</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td id="a_precio">0</td>
+                                                <td id="a_subtotal">0</td>
+                                                <td id="a_iva">0</td>
+                                                <td id="a_descuento">0</td>
+                                                <td id="a_total">0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Conexión a electricidad</td>
+                                                <td id="e_precio">0</td>
+                                                <td id="e_subtotal">0</td>
+                                                <td id="e_iva">0</td>
+                                                <td id="e_descuento">0</td>
+                                                <td id="e_total">0</td>
                                             </tr>
                                             <tr>
                                                 <td></td>
                                                 <td>Gasolina</td>
+                                                <td></td>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -156,10 +206,12 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
+                                                <td></td>
                                             </tr>
                                             <tr>
                                                 <td></td>
                                                 <td>Limpieza de locación</td>
+                                                <td></td>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -174,22 +226,64 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-5 col-sm-offset-4 text-right">
-
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $<span id="gransubtot">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $<span id="graniva">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $<span id="grantot">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-12">
 
-                        </div>
-                    </div>
                     {{ form_widget(form.mhcservicios.children.1.precio,{'attr':{'class':'hidden'}}) }}
                     {{ form_widget(form.mhcservicios.children.3.cantidad,{'attr':{'class':'hidden'}}) }}
                     {{ form_widget(form.mhcservicios.children.4.cantidad,{'attr':{'class':'hidden'}}) }}
                     {{ form_widget(form.mhcservicios.children.5.cantidad,{'attr':{'class':'hidden'}}) }}
                     {{ form_widget(form.mhcservicios.children.6.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.0.estatus,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.1.estatus,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.3.estatus,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.4.estatus,{'attr':{'class':'hidden'}}) }}
                     {{ form_end(form) }}
 
                 </div>

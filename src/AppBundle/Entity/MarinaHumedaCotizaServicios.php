@@ -71,6 +71,13 @@ class MarinaHumedaCotizaServicios
     private $total;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="estatus", type="boolean")
+     */
+    private $estatus;
+
+    /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MarinaHumedaCotizacion", inversedBy="mhcservicios")
      * @ORM\JoinColumn(name="idmhcotizacion", referencedColumnName="id")
@@ -253,6 +260,30 @@ class MarinaHumedaCotizaServicios
     public function getTotal()
     {
         return $this->total;
+    }
+
+    /**
+     * Set estatus
+     *
+     * @param boolean $estatus
+     *
+     * @return MarinaHumedaCotizaServicios
+     */
+    public function setEstatus($estatus)
+    {
+        $this->estatus = $estatus;
+
+        return $this;
+    }
+
+    /**
+     * Get estatus
+     *
+     * @return bool
+     */
+    public function getEstatus()
+    {
+        return $this->estatus;
     }
 
     /**

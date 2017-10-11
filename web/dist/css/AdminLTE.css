@@ -4285,11 +4285,11 @@ table.text-center th {
   color: #999;
 }
 .select2-container--default .select2-results__option[aria-selected=true] {
-  background-color: #ddd;
+  /*background-color: #ddd;*/
 }
 .select2-container--default .select2-results__option[aria-selected=true],
 .select2-container--default .select2-results__option[aria-selected=true]:hover {
-  color: #444;
+  /*color: #444;*/
 }
 .select2-container--default .select2-selection--multiple {
   border: 1px solid #d2d6de;

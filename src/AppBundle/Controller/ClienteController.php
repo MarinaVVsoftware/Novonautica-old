@@ -191,4 +191,5 @@ class ClienteController extends Controller
             ->setMethod('DELETE')
             ->getForm();
     }
+
 }

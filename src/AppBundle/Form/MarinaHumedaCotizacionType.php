@@ -56,7 +56,6 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'choices' => $barcos,
                 'expanded' => true,
                 'multiple' => false
-
             ));
         };
 

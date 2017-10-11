@@ -10,6 +10,7 @@ namespace AppBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -24,6 +25,9 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
             //->add('servicio')
             ->add('cantidad')
             ->add('precio')
+            ->add('estatus', null,[
+                'label' => ' '
+            ])
             //->add('iva')
             //->add('descuento')
             //->add('total')

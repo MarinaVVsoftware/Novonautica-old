@@ -40,6 +40,15 @@ a{
     color: #0097f6;
 }
 /*++ fin colores letra ++++*/
+.tipo-letra1{
+    font-size: 2rem;
+}
+.tipo-letra2{
+    font-size: 1.5rem;
+}
+/*++++ tamaño letra +++++*/
+
+/*+++ fin tamaño letra ++++*/
 
 /*++++ botones color ++++*/
 .btn-morado-claro{
