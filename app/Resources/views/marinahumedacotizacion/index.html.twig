@@ -20,9 +20,10 @@
                         <th>Barco</th>
                         <th>Fecha llegada</th>
                         <th>Fecha salida</th>
-                        <th>Descuento</th>
+                        <th>Descuento(%)</th>
                         <th>Subtotal</th>
-                        <th>Iva</th>
+                        <th>Iva Total</th>
+                        <th>Descuento Total</th>
                         <th>Total</th>
                         <th>Acciones</th>
                     </tr>
@@ -33,11 +34,12 @@
                             <td><a href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">{{ marinaHumedaCotizacion.id }}</a></td>
                             <td>{{ marinaHumedaCotizacion.cliente }}</td>
                             <td>{{ marinaHumedaCotizacion.barco }}</td>
-                            <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('Y-m-d') }}{% endif %}</td>
-                            <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('Y-m-d') }}{% endif %}</td>
+                            <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
+                            <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</td>
                             <td>{{ marinaHumedaCotizacion.descuento }}</td>
                             <td>{{ marinaHumedaCotizacion.subtotal }}</td>
-                            <td>{{ marinaHumedaCotizacion.iva }}</td>
+                            <td>{{ marinaHumedaCotizacion.ivatotal }}</td>
+                            <td>{{ marinaHumedaCotizacion.descuentototal }}</td>
                             <td>{{ marinaHumedaCotizacion.total }}</td>
                             <td>
                                 <a class="btn btn-morado-claro" href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">Detalle</a>

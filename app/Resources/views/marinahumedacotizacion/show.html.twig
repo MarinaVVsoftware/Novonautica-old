@@ -17,67 +17,170 @@
                             <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_index') }}">Regresar</a>
                         </div>
                     </div>
-
                 </div>
-                <div class="panel-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th>Id</th>
-                            <td>{{ marinaHumedaCotizacion.id }}</td>
-                        </tr>
-                        <tr>
-                            <th>Fechallegada</th>
-                            <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('Y-m-d') }}{% endif %}</td>
-                        </tr>
-                        <tr>
-                            <th>Fechasalida</th>
-                            <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('Y-m-d') }}{% endif %}</td>
-                        </tr>
-                        <tr>
-                            <th>Diasestadia</th>
-                            <td>{{ marinaHumedaCotizacion.diasEstadia }}</td>
-                        </tr>
-                        <tr>
-                            <th>Diasadicionales</th>
-                            <td>{{ marinaHumedaCotizacion.diasAdicionales }}</td>
-                        </tr>
-                        <tr>
-                            <th>Preciodia</th>
-                            <td>{{ marinaHumedaCotizacion.precioDia }}</td>
-                        </tr>
-                        <tr>
-                            <th>Descuento</th>
-                            <td>{{ marinaHumedaCotizacion.descuento }}</td>
-                        </tr>
-                        <tr>
-                            <th>Gasolina</th>
-                            <td>{{ marinaHumedaCotizacion.gasolina }}</td>
-                        </tr>
-                        <tr>
-                            <th>Agua</th>
-                            <td>{{ marinaHumedaCotizacion.agua }}</td>
-                        </tr>
-                        <tr>
-                            <th>Electricidad</th>
-                            <td>{{ marinaHumedaCotizacion.electricidad }}</td>
-                        </tr>
-                        <tr>
-                            <th>Dezasolve</th>
-                            <td>{{ marinaHumedaCotizacion.dezasolve }}</td>
-                        </tr>
-                        <tr>
-                            <th>Limpieza</th>
-                            <td>{{ marinaHumedaCotizacion.limpieza }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="panel-body panel-pestanias">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="primero active">
+                            <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#totales" aria-controls="totales" role="tab" data-toggle="tab">Totales</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="generales">
+                            <div class="row">
+                                <div class="col-sm-10 col-sm-offset-1">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <th>Id</th>
+                                            <td>{{ marinaHumedaCotizacion.id }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Cliente</th>
+                                            <td>{{ marinaHumedaCotizacion.cliente }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Barco</th>
+                                            <td>{{ marinaHumedaCotizacion.barco }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Fechallegada</th>
+                                            <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Fechasalida</th>
+                                            <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Descuento %</th>
+                                            <td>{{ marinaHumedaCotizacion.descuento }}%</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="totales">
+                            <div class="row">
+                                <div class="col-sm-9 col-sm-offset-1">
+                                    <span>Descuento del: {{ marinaHumedaCotizacion.descuento }} %</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-10 text-right">
+                                    <span>Tipo de cambio:</span>
+                                    <div id="tipocambio" class="">{{ marinaHumedaCotizacion.dolar }} MXN</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9 col-sm-offset-1">
+                                    <small>Precios en USD</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9 col-sm-offset-1">
+                                    <table id="mh_nuevacotizacion" class="table text-center">
+                                        <thead>
+                                        <tr>
+                                            <th>Cantidad</th>
+                                            <th>Servicio</th>
+                                            <th>Prec. Unid.</th>
+                                            <th>Sub-Total</th>
+                                            <th>IVA</th>
+                                            <th>Descuento</th>
+                                            <th>Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody> 
+                                        {% for mhservicio in marinaHumedaCotizacion.mhcservicios  %}
+                                            {% if mhservicio.estatus %}
+                                                <tr>
+                                                    <td>{{ mhservicio.cantidad }}</td>
+                                                    <td>{{ mhservicio.servicio }}</td>
+                                                    <td>{{ mhservicio.precio }}</td>
+                                                    <td>{{ mhservicio.subtotal }}</td>
+                                                    <td>{{ mhservicio.iva }}</td>
+                                                    <td>{{ mhservicio.descuento }}</td>
+                                                    <td>{{ mhservicio.total }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-6">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-5 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $<span id="gransubtot">{{ marinaHumedaCotizacion.subtotal }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-6">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-5 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $<span id="graniva">{{ marinaHumedaCotizacion.ivatotal }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-6">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-5 text-right tipo-letra1">
+                                    <p class="letra-azul">Descuento:</p>
+                                    <p>
+                                        $<span id="grandescuento">{{ marinaHumedaCotizacion.descuentototal }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-6">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-5 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $<span id="grantot">{{ marinaHumedaCotizacion.total }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-6">
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-sm-4">
                             <a class="btn btn-azul" href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">Editar</a>

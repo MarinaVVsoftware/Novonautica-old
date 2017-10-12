@@ -57,42 +57,92 @@ elcliente.change(function() {
 });
 $(document).ready(function() {
     $('.select-buscador').select2();
+    $.fn.datepicker.dates['es'] = {
+        days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+        daysShort: ["Dom", "Lun", "Mar", "Mi", "Ju", "Vi", "Sab"],
+        daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+        months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+        today: "Hoy",
+        clear: "Quitar",
+        // format: "dd-mm-yyyy",
+        titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+        weekStart: 0
+    };
+    $('.input-daterange').datepicker({
+        format: 'dd-mm-yyyy',
+        language: "es",
+        orientation: "bottom auto",
+    });
 });
 
 //--- para marina humeda nueva cotización ---
+
 var de_cantidad = 0;
 var da_cantidad = 0;
 var precio_dia = 0;
+var a_precio = 0;
+var a_cantidad = 1;
+var e_precio = 0;
+var e_cantidad = 1;
+var descuento = 0;
 
 $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').keyup(function () {
     de_cantidad = $(this).val();
     precio_dia = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
     $('#de_cantidad').html(de_cantidad);
     calculaSubtotales(de_cantidad,precio_dia,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
-
+    calculaTotales();
 });
+
 $('#appbundle_marinahumedacotizacion_mhcservicios_1_cantidad').keyup(function () {
     da_cantidad = $(this).val();
     precio_dia = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
     $('#da_cantidad').html(da_cantidad);
     calculaSubtotales(da_cantidad,precio_dia,$('#da_subtotal'),$('#da_iva'),$('#da_descuento'),$('#da_total'));
+    calculaTotales();
 });
+
 $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').keyup(function () {
     precio_dia = $(this).val();
+    de_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').val();
+    da_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_1_cantidad').val();
     $('#de_precio').html(precio_dia);
     $('#da_precio').html(precio_dia);
+    calculaSubtotales(de_cantidad,precio_dia,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
+    calculaSubtotales(da_cantidad,precio_dia,$('#da_subtotal'),$('#da_iva'),$('#da_descuento'),$('#da_total'));
+    calculaTotales();
+
 });
+
 $('#appbundle_marinahumedacotizacion_mhcservicios_3_precio').keyup(function () {
-   var a_precio = $(this).val();
-   $('#a_precio').html(a_precio);
+    a_precio = $(this).val();
+    $('#a_precio').html(a_precio);
+    calculaSubtotales(a_cantidad,a_precio,$('#a_subtotal'),$('#a_iva'),$('#a_descuento'),$('#a_total'));
+    calculaTotales();
 });
+
 $('#appbundle_marinahumedacotizacion_mhcservicios_4_precio').keyup(function () {
-    var e_precio = $(this).val();
+    e_precio = $(this).val();
     $('#e_precio').html(e_precio);
+    calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
+    calculaTotales();
 });
+
 $('#appbundle_marinahumedacotizacion_descuento').keyup(function () {
-   var descuento = $(this).val();
+    descuento = $(this).val();
+    de_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').val();
+    da_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_1_cantidad').val();
+    precio_dia = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
+    a_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_3_precio').val();
+    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_4_precio').val();
+    calculaSubtotales(de_cantidad,precio_dia,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
+    calculaSubtotales(da_cantidad,precio_dia,$('#da_subtotal'),$('#da_iva'),$('#da_descuento'),$('#da_total'));
+    calculaSubtotales(a_cantidad,a_precio,$('#a_subtotal'),$('#a_iva'),$('#a_descuento'),$('#a_total'));
+    calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
+    calculaTotales();
 });
+
 
 function calculaSubtotales(cantidad,precio,tdsubtot,tdiva,tddesc,tdtot){
     var iva = 0.16
@@ -106,17 +156,19 @@ function calculaSubtotales(cantidad,precio,tdsubtot,tdiva,tddesc,tdtot){
     tddesc.html((desctot).toFixed(2));
     tdtot.html(total);
     tdtot.data('valor',total);
-
-    calculaTotales();
 }
 
 function calculaTotales() {
-    console.log($('#de_total').data('valor'));
-    console.log($('#da_total').data('valor'));
-    var grantotal = ($('#de_total').data('valor') + $('#da_total').data('valor')).toFixed(2);
+    //console.log($('#de_total').data('valor'));
+    //console.log($('#da_total').data('valor'));
+    var grantotal = (parseFloat($('#de_total').data('valor')) +
+        parseFloat($('#da_total').data('valor')) +
+        parseFloat($('#a_total').data('valor'))
+    ).toFixed(2);
     console.log('total '+grantotal);
     $('#grantot').html(grantotal);
 }
+
 
 // $('#appbundle_marinahumedacotizacion_mhcservicios_2_estatus').on('click',function(){
 //    console.log('hola');

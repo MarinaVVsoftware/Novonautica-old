@@ -68,6 +68,7 @@ class MarinaHumedaCotizacionController extends Controller
             $em = $this->getDoctrine()->getManager();
             $granSubtotal = 0;
             $granIva = 0;
+            $granDescuento=0;
             $granTotal = 0;
             $dolar = 18;
             $iva = 0.16;
@@ -80,10 +81,11 @@ class MarinaHumedaCotizacionController extends Controller
             $subTotal = $cantidad * $precio;
             $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = $subTotal * $iva;
-            $total = $subTotal + $descuentoTot + $ivaTot;
+            $total = $subTotal - $descuentoTot + $ivaTot;
 
             $marinaDiasEstadia
                 ->setServicio($nombre)
+                ->setEstatus(1)
                 ->setSubtotal($subTotal)
                 ->setDescuento($descuentoTot)
                 ->setIva($ivaTot)
@@ -91,6 +93,7 @@ class MarinaHumedaCotizacionController extends Controller
 
             $granSubtotal+=$subTotal;
             $granIva+=$ivaTot;
+            $granDescuento+=$descuentoTot;
             $granTotal+=$total;
 
             $nombre = 'Días Adicionales';
@@ -100,10 +103,11 @@ class MarinaHumedaCotizacionController extends Controller
             $subTotal = $cantidad * $precio;
             $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = $subTotal * $iva;
-            $total = $subTotal + $descuentoTot + $ivaTot;
+            $total = $subTotal - $descuentoTot + $ivaTot;
 
             $marinaDiasAdicionales
                 ->setServicio($nombre)
+                ->setEstatus(1)
                 ->setPrecio($precio)
                 ->setSubtotal($subTotal)
                 ->setDescuento($descuentoTot)
@@ -112,6 +116,7 @@ class MarinaHumedaCotizacionController extends Controller
 
             $granSubtotal+=$subTotal;
             $granIva+=$ivaTot;
+            $granDescuento+=$descuentoTot;
             $granTotal+=$total;
 
             $nombre = 'Abastecimiento de gasolina';
@@ -121,7 +126,7 @@ class MarinaHumedaCotizacionController extends Controller
             $subTotal = $cantidad * $precio;
             $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = $subTotal * $iva;
-            $total = $subTotal + $descuentoTot + $ivaTot;
+            $total = $subTotal - $descuentoTot + $ivaTot;
 
             $marinaGasolina
                 ->setServicio($nombre)
@@ -130,9 +135,12 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setIva($ivaTot)
                 ->setTotal($total);
 
-            $granSubtotal+=$subTotal;
-            $granIva+=$ivaTot;
-            $granTotal+=$total;
+            if($marinaGasolina->getEstatus() == 1){
+                $granSubtotal+=$subTotal;
+                $granIva+=$ivaTot;
+                $granDescuento+=$descuentoTot;
+                $granTotal+=$total;
+            }
 
             $nombre = 'Abastecimiento de agua';
             $cantidad = 1;
@@ -141,10 +149,11 @@ class MarinaHumedaCotizacionController extends Controller
             $subTotal = $cantidad * $precio;
             $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = $subTotal * $iva;
-            $total = $subTotal + $descuentoTot + $ivaTot;
+            $total = $subTotal - $descuentoTot + $ivaTot;
 
             $marinaAgua
                 ->setServicio($nombre)
+                ->setEstatus(1)
                 ->setCantidad($cantidad)
                 ->setSubtotal($subTotal)
                 ->setDescuento($descuentoTot)
@@ -153,6 +162,7 @@ class MarinaHumedaCotizacionController extends Controller
 
             $granSubtotal+=$subTotal;
             $granIva+=$ivaTot;
+            $granDescuento+=$descuentoTot;
             $granTotal+=$total;
 
             $nombre = 'Conexión a electricidad';
@@ -162,10 +172,11 @@ class MarinaHumedaCotizacionController extends Controller
             $subTotal = $cantidad * $precio;
             $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = $subTotal * $iva;
-            $total = $subTotal + $descuentoTot + $ivaTot;
+            $total = $subTotal - $descuentoTot + $ivaTot;
 
             $marinaElectricidad
                 ->setServicio($nombre)
+                ->setEstatus(1)
                 ->setCantidad($cantidad)
                 ->setSubtotal($subTotal)
                 ->setDescuento($descuentoTot)
@@ -174,6 +185,7 @@ class MarinaHumedaCotizacionController extends Controller
 
             $granSubtotal+=$subTotal;
             $granIva+=$ivaTot;
+            $granDescuento+=$descuentoTot;
             $granTotal+=$total;
 
             $nombre = 'Dezasolve';
@@ -183,7 +195,7 @@ class MarinaHumedaCotizacionController extends Controller
             $subTotal = $cantidad * $precio;
             $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = $subTotal * $iva;
-            $total = $subTotal + $descuentoTot + $ivaTot;
+            $total = $subTotal - $descuentoTot + $ivaTot;
 
             $marinaDezasolve
                 ->setServicio($nombre)
@@ -193,9 +205,12 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setIva($ivaTot)
                 ->setTotal($total);
 
-            $granSubtotal+=$subTotal;
-            $granIva+=$ivaTot;
-            $granTotal+=$total;
+            if($marinaDezasolve->getEstatus() == 1){
+                $granSubtotal+=$subTotal;
+                $granIva+=$ivaTot;
+                $granDescuento+=$descuentoTot;
+                $granTotal+=$total;
+            }
 
             $nombre = 'Limpieza de locación';
             $cantidad = 1;
@@ -204,7 +219,7 @@ class MarinaHumedaCotizacionController extends Controller
             $subTotal = $cantidad * $precio;
             $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = $subTotal * $iva;
-            $total = $subTotal + $descuentoTot + $ivaTot;
+            $total = $subTotal - $descuentoTot + $ivaTot;
 
             $marinaLimpieza
                 ->setServicio($nombre)
@@ -214,20 +229,26 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setIva($ivaTot)
                 ->setTotal($total);
 
-            $granSubtotal+=$subTotal;
-            $granIva+=$ivaTot;
-            $granTotal+=$total;
+            if($marinaLimpieza->getEstatus() == 1){
+                $granSubtotal+=$subTotal;
+                $granIva+=$ivaTot;
+                $granDescuento+=$descuentoTot;
+                $granTotal+=$total;
+            }
 
             //-------------------------------------------------
             $marinaHumedaCotizacion
                 ->setDolar($dolar)
+                ->setIva($iva)
                 ->setSubtotal($granSubtotal)
-                ->setIva($granIva)
+                ->setIvatotal($granIva)
+                ->setDescuentototal($granDescuento)
                 ->setTotal($granTotal);
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
 
-            return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
+//            return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
+            return $this->redirectToRoute('marina-humeda_index');
 
         }
 

@@ -50,8 +50,23 @@
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
                                 <div class="col-sm-3">
-                                    {{ form_row(form.fechaLlegada) }}
-                                    {{ form_row(form.fechaSalida) }}
+
+                                    <div class="input-daterange" id="rangoFehas">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                {{ form_label(form.fechaLlegada) }}
+                                                {{ form_errors(form.fechaLlegada) }}
+                                                {{ form_widget(form.fechaLlegada) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                {{ form_label(form.fechaSalida) }}
+                                                {{ form_errors(form.fechaSalida) }}
+                                                {{ form_widget(form.fechaSalida) }}
+                                            </div>
+                                        </div>
+                                    </div>
                                     <label>Días Estadía:</label>
                                     {{ form_widget(form.mhcservicios.children.0.cantidad) }}
                                     <label>Días Adicionales:</label>
@@ -161,7 +176,7 @@
                                                 <td id="de_subtotal">0</td>
                                                 <td id="de_iva">0</td>
                                                 <td id="de_descuento">0</td>
-                                                <td id="de_total">0</td>
+                                                <td id="de_total" data-valor="0">0</td>
                                             </tr>
                                             <tr>
                                                 <td id="da_cantidad">0</td>
@@ -170,7 +185,7 @@
                                                 <td id="da_subtotal">0</td>
                                                 <td id="da_iva">0</td>
                                                 <td id="da_descuento">0</td>
-                                                <td id="da_total">0</td>
+                                                <td id="da_total" data-valor="0">0</td>
                                             </tr>
                                             <tr>
                                                 <td>1</td>
@@ -179,7 +194,7 @@
                                                 <td id="a_subtotal">0</td>
                                                 <td id="a_iva">0</td>
                                                 <td id="a_descuento">0</td>
-                                                <td id="a_total">0</td>
+                                                <td id="a_total" data-valor="0">0</td>
                                             </tr>
                                             <tr>
                                                 <td>1</td>
@@ -188,7 +203,7 @@
                                                 <td id="e_subtotal">0</td>
                                                 <td id="e_iva">0</td>
                                                 <td id="e_descuento">0</td>
-                                                <td id="e_total">0</td>
+                                                <td id="e_total" data-valor="0">0</td>
                                             </tr>
                                             <tr>
                                                 <td></td>

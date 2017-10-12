@@ -43,202 +43,19 @@ class MarinaHumedaCotizacion
      */
     private $descuento;
 
-//    /**
-//     * @var int
-//     *
-//     * @ORM\Column(name="dias_estadia", type="integer")
-//     */
-//    private $diasEstadia;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="dias_estadia_iva", type="float")
-//     */
-//    private $diasEstadiaIva;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="dias_estadia_descuento", type="float")
-//     */
-//    private $diasEstadiaDescuento;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="dias_estadia_total", type="float")
-//     */
-//    private $diasEstadiaTotal;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="dias_precio", type="float")
-//     */
-//    private $diasPrecio;
-
-//    /**
-//     * @var int
-//     *
-//     * @ORM\Column(name="dias_adicionales", type="integer", nullable=true)
-//     */
-//    private $diasAdicionales;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="dias_adicionales_iva", type="float", nullable=true)
-//     */
-//    private $diasAdicionalesIva;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="dias_adicionales_descuento", type="float", nullable=true)
-//     */
-//    private $diasAdicionalesDescuento;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="dias_adicionales_total", type="float", nullable=true)
-//     */
-//    private $diasAdicionalesTotal;
-
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="gasolina_litros", type="float", nullable=true)
-//     */
-//    private $gasolinaLitros;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="gasolina_precio", type="float", nullable=true)
-//     */
-//    private $gasolinaPrecio;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="gasolina_iva", type="float", nullable=true)
-//     */
-//    private $gasolinaIva;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="gasolina_descuento", type="float", nullable=true)
-//     */
-//    private $gasolinaDescuento;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="gasolina_total", type="float", nullable=true)
-//     */
-//    private $gasolinaTotal;
-
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="agua_precio", type="float")
-//     */
-//    private $aguaPrecio;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="agua_iva", type="float")
-//     */
-//    private $aguaIva;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="agua_descuento", type="float")
-//     */
-//    private $aguaDescuento;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="agua_total", type="float")
-//     */
-//    private $aguaTotal;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="electricidad", type="float")
-//     */
-//    private $electricidad;
-//
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="dezasolve_precio", type="float", nullable=true)
-//     */
-//    private $dezasolvePrecio;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="dezasolve_iva", type="float", nullable=true)
-//     */
-//    private $dezasolveIva;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="dezasolve_descuento", type="float", nullable=true)
-//     */
-//    private $dezasolveDescuento;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="dezasolve_total", type="float", nullable=true)
-//     */
-//    private $dezasolveTotal;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="limpieza_precio", type="float", nullable=true)
-//     */
-//    private $limpiezaPrecio;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="limpieza_iva", type="float", nullable=true)
-//     */
-//    private $limpiezaIva;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="limpieza_descuento", type="float", nullable=true)
-//     */
-//    private $limpiezaDescuento;
-//
-//    /**
-//     * @var float
-//     *
-//     * @ORM\Column(name="limpieza_total", type="float", nullable=true)
-//     */
-//    private $limpiezaTotal;
-
     /**
      * @var float
      *
      * @ORM\Column(name="dolar", type="float", nullable=true)
      */
     private $dolar;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="iva", type="float", nullable=true)
+     */
+    private $iva;
 
     /**
      * @var float
@@ -250,9 +67,16 @@ class MarinaHumedaCotizacion
     /**
      * @var float
      *
-     * @ORM\Column(name="iva", type="float", nullable=true)
+     * @ORM\Column(name="ivatotal", type="float", nullable=true)
      */
-    private $iva;
+    private $ivatotal;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="descuentototal", type="float", nullable=true)
+     */
+    private $descuentototal;
 
     /**
      * @var float
@@ -1028,7 +852,7 @@ class MarinaHumedaCotizacion
      */
     public function setDolar($dolar)
     {
-        $this->subtotal = $dolar;
+        $this->dolar = $dolar;
 
         return $this;
     }
@@ -1041,6 +865,30 @@ class MarinaHumedaCotizacion
     public function getDolar()
     {
         return $this->dolar;
+    }
+
+    /**
+     * Set iva
+     *
+     * @param float $iva
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setIva($iva)
+    {
+        $this->iva = $iva;
+
+        return $this;
+    }
+
+    /**
+     * Get iva
+     *
+     * @return float
+     */
+    public function getIva()
+    {
+        return $this->iva;
     }
 
     /**
@@ -1068,27 +916,51 @@ class MarinaHumedaCotizacion
     }
 
     /**
-     * Set iva
+     * Set ivatotal
      *
-     * @param float $iva
+     * @param float $ivatotal
      *
      * @return MarinaHumedaCotizacion
      */
-    public function setIva($iva)
+    public function setIvatotal($ivatotal)
     {
-        $this->iva = $iva;
+        $this->ivatotal = $ivatotal;
 
         return $this;
     }
 
     /**
-     * Get iva
+     * Get ivatotal
      *
      * @return float
      */
-    public function getIva()
+    public function getIvatotal()
     {
-        return $this->iva;
+        return $this->ivatotal;
+    }
+
+    /**
+     * Set descuentototal
+     *
+     * @param float $descuentototal
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setDescuentototal($descuentototal)
+    {
+        $this->descuentototal = $descuentototal;
+
+        return $this;
+    }
+
+    /**
+     * Get descuentototal
+     *
+     * @return float
+     */
+    public function getDescuentototal()
+    {
+        return $this->descuentototal;
     }
 
     /**
