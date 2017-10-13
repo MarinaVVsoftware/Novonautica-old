@@ -52,11 +52,11 @@
                                             <td>{{ marinaHumedaCotizacion.barco }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Fechallegada</th>
+                                            <th>Fecha llegada</th>
                                             <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
                                         </tr>
                                         <tr>
-                                            <th>Fechasalida</th>
+                                            <th>Fecha salida</th>
                                             <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</td>
                                         </tr>
                                         <tr>
@@ -99,7 +99,7 @@
                                             <th>Total</th>
                                         </tr>
                                         </thead>
-                                        <tbody> 
+                                        <tbody>
                                         {% for mhservicio in marinaHumedaCotizacion.mhcservicios  %}
                                             {% if mhservicio.estatus %}
                                                 <tr>

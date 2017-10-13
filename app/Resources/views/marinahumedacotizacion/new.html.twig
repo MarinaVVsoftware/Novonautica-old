@@ -136,8 +136,6 @@
                                             {{ form_widget(form.mhcservicios.children.6.precio) }}
                                         </div>
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
@@ -173,64 +171,64 @@
                                                 <td id="de_cantidad">0</td>
                                                 <td>Días estancia</td>
                                                 <td id="de_precio">0</td>
-                                                <td id="de_subtotal">0</td>
-                                                <td id="de_iva">0</td>
-                                                <td id="de_descuento">0</td>
+                                                <td id="de_subtotal" data-valor="0">0</td>
+                                                <td id="de_iva" data-valor="0">0</td>
+                                                <td id="de_descuento" data-valor="0">0</td>
                                                 <td id="de_total" data-valor="0">0</td>
                                             </tr>
                                             <tr>
                                                 <td id="da_cantidad">0</td>
                                                 <td>Dias Adicionales</td>
                                                 <td id="da_precio">0</td>
-                                                <td id="da_subtotal">0</td>
-                                                <td id="da_iva">0</td>
-                                                <td id="da_descuento">0</td>
+                                                <td id="da_subtotal" data-valor="0">0</td>
+                                                <td id="da_iva" data-valor="0">0</td>
+                                                <td id="da_descuento" data-valor="0">0</td>
                                                 <td id="da_total" data-valor="0">0</td>
                                             </tr>
                                             <tr>
                                                 <td>1</td>
                                                 <td>Abastecimiento de agua</td>
                                                 <td id="a_precio">0</td>
-                                                <td id="a_subtotal">0</td>
-                                                <td id="a_iva">0</td>
-                                                <td id="a_descuento">0</td>
+                                                <td id="a_subtotal" data-valor="0">0</td>
+                                                <td id="a_iva" data-valor="0">0</td>
+                                                <td id="a_descuento" data-valor="0">0</td>
                                                 <td id="a_total" data-valor="0">0</td>
                                             </tr>
                                             <tr>
                                                 <td>1</td>
                                                 <td>Conexión a electricidad</td>
                                                 <td id="e_precio">0</td>
-                                                <td id="e_subtotal">0</td>
-                                                <td id="e_iva">0</td>
-                                                <td id="e_descuento">0</td>
+                                                <td id="e_subtotal" data-valor="0">0</td>
+                                                <td id="e_iva" data-valor="0">0</td>
+                                                <td id="e_descuento" data-valor="0">0</td>
                                                 <td id="e_total" data-valor="0">0</td>
                                             </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>Gasolina</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                            <tr id="cotizagasolina" class="hidden">
+                                                <td id="g_cantidad">0</td>
+                                                <td>Abastecimiento de gasolina</td>
+                                                <td id="g_precio">0</td>
+                                                <td id="g_subtotal" data-valor="0">0</td>
+                                                <td id="g_iva" data-valor="0">0</td>
+                                                <td id="g_descuento" data-valor="0">0</td>
+                                                <td id="g_total" data-valor="0">0</td>
                                             </tr>
-                                            <tr>
-                                                <td></td>
+                                            <tr id="cotizadezasolve" class="hidden">
+                                                <td>1</td>
                                                 <td>Dezasolve</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td id="d_precio">0</td>
+                                                <td id="d_subtotal" data-valor="0">0</td>
+                                                <td id="d_iva" data-valor="0">0</td>
+                                                <td id="d_descuento" data-valor="0">0</td>
+                                                <td id="d_total" data-valor="0">0</td>
                                             </tr>
-                                            <tr>
-                                                <td></td>
+                                            <tr id="cotizalimpieza" class="hidden">
+                                                <td>1</td>
                                                 <td>Limpieza de locación</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td id="l_precio">0</td>
+                                                <td id="l_subtotal" data-valor="0">0</td>
+                                                <td id="l_iva" data-valor="0">0</td>
+                                                <td id="l_descuento" data-valor="0">0</td>
+                                                <td id="l_total" data-valor="0">0</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -264,6 +262,20 @@
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
                                         $<span id="graniva">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Descuento:</p>
+                                    <p>
+                                        $<span id="grandecuento">00.00</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
