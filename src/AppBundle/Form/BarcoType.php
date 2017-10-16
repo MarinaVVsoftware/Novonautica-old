@@ -28,6 +28,20 @@ class BarcoType extends AbstractType
             ->add('anio',IntegerType::class,[
                 'label' => 'Año'
             ])
+            ->add('calado')
+            ->add('manga')
+            ->add('eslora')
+            ->add('combustible')
+            ->add('agua')
+            ->add('nombreCapitan',TextType::class,[
+                'label' => 'Nombre del capitán'
+            ])
+            ->add('telefonoCapitan',TextType::class,[
+                'label' => 'Teléfono del capitán'
+                ])
+            ->add('correoCapitan',TextType::class,[
+                'label' => 'Correo del capitán'
+            ])
             ->add('estatus',null,[
                 'label' => ' '
             ])

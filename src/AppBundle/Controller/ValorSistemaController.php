@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 /**
  * Valorsistema controller.
  *
- * @Route("ajustes") 
+ * @Route("ajustes")
  */
 class ValorSistemaController extends Controller
 {

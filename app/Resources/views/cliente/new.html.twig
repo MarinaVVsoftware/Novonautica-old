@@ -48,7 +48,10 @@
                         <div class="col-sm-5">
                             {{ form_row(form.barcos.children[0].nombre) }}
                             {{ form_row(form.barcos.children[0].marca) }}
-
+                            {{ form_row(form.barcos.children[0].modelo) }}
+                            {{ form_row(form.barcos.children[0].anio) }}
+                            {{ form_row(form.barcos.children[0].calado) }}
+                            {{ form_row(form.barcos.children[0].manga) }}
                             <div class="input-estatus">
                                 Estatus Barco
                                 <span class="cont-label-novo">
@@ -60,8 +63,12 @@
 
                         </div>
                         <div class="col-sm-5">
-                            {{ form_row(form.barcos.children[0].modelo) }}
-                            {{ form_row(form.barcos.children[0].anio) }}
+                            {{ form_row(form.barcos.children[0].eslora) }}
+                            {{ form_row(form.barcos.children[0].combustible) }}
+                            {{ form_row(form.barcos.children[0].agua) }}
+                            {{ form_row(form.barcos.children[0].nombreCapitan) }}
+                            {{ form_row(form.barcos.children[0].telefonoCapitan) }}
+                            {{ form_row(form.barcos.children[0].correoCapitan) }}
                         </div>
                     </div>
                     <div class="row">
@@ -69,7 +76,6 @@
                             <hr>
                         </div>
                     </div>
-
                     <div id="motor-fields-list0"
                          class="lista-motores"
                          data-prototype="

@@ -51,6 +51,62 @@ class Barco
     private $anio;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="calado", type="string", length=100, nullable=true)
+     */
+    private $calado;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="manga", type="string", length=100, nullable=true)
+     */
+    private $manga;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="eslora", type="string", length=100, nullable=true)
+     */
+    private $eslora;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="combustible", type="integer", nullable=true)
+     */
+    private $combustible;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="agua", type="integer", nullable=true)
+     */
+    private $agua;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_capitan", type="string", length=255, nullable=true)
+     */
+    private $nombreCapitan;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="telefono_capitan", type="string", length=255, nullable=true)
+     */
+    private $telefonoCapitan;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="correo_capitan", type="string", length=255, nullable=true)
+     */
+    private $correoCapitan;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="estatus", type="boolean")
@@ -188,6 +244,198 @@ class Barco
     public function getAnio()
     {
         return $this->anio;
+    }
+
+    /**
+     * Set calado
+     *
+     * @param string $calado
+     *
+     * @return Barco
+     */
+    public function setCalado($calado)
+    {
+        $this->calado = $calado;
+
+        return $this;
+    }
+
+    /**
+     * Get calado
+     *
+     * @return string
+     */
+    public function getCalado()
+    {
+        return $this->calado;
+    }
+
+    /**
+     * Set manga
+     *
+     * @param string $manga
+     *
+     * @return Barco
+     */
+    public function setManga($manga)
+    {
+        $this->manga = $manga;
+
+        return $this;
+    }
+
+    /**
+     * Get manga
+     *
+     * @return string
+     */
+    public function getManga()
+    {
+        return $this->manga;
+    }
+
+    /**
+     * Set eslora
+     *
+     * @param string $eslora
+     *
+     * @return Barco
+     */
+    public function setEslora($eslora)
+    {
+        $this->eslora= $eslora;
+
+        return $this;
+    }
+
+    /**
+     * Get eslora
+     *
+     * @return string
+     */
+    public function getEslora()
+    {
+        return $this->eslora;
+    }
+
+    /**
+     * Set combustible
+     *
+     * @param integer $combustible
+     *
+     * @return Barco
+     */
+    public function setCombustible($combustible)
+    {
+        $this->combustible = $combustible;
+
+        return $this;
+    }
+
+    /**
+     * Get combustible
+     *
+     * @return int
+     */
+    public function getCombustible()
+    {
+        return $this->combustible;
+    }
+
+    /**
+     * Set agua
+     *
+     * @param integer $agua
+     *
+     * @return Barco
+     */
+    public function setAgua($agua)
+    {
+        $this->agua = $agua;
+
+        return $this;
+    }
+
+    /**
+     * Get agua
+     *
+     * @return int
+     */
+    public function getAgua()
+    {
+        return $this->agua;
+    }
+
+    /**
+     * Set nombreCapitan
+     *
+     * @param string $nombreCapitan
+     *
+     * @return Barco
+     */
+    public function setNombreCapitan($nombreCapitan)
+    {
+        $this->nombreCapitan = $nombreCapitan;
+
+        return $this;
+    }
+
+    /**
+     * Get nombreCapitan
+     *
+     * @return string
+     */
+    public function getNombreCapitan()
+    {
+        return $this->nombreCapitan;
+    }
+
+    /**
+     * Set telefonoCapitan
+     *
+     * @param string $telefonoCapitan
+     *
+     * @return Barco
+     */
+    public function setTelefonoCapitan($telefonoCapitan)
+    {
+        $this->telefonoCapitan = $telefonoCapitan;
+
+        return $this;
+    }
+
+    /**
+     * Get telefonoCapitan
+     *
+     * @return string
+     */
+    public function getTelefonoCapitan()
+    {
+        return $this->telefonoCapitan;
+    }
+
+    /**
+     * Set correoCapitan
+     *
+     * @param string $correoCapitan
+     *
+     * @return Barco
+     */
+    public function setCorreoCapitan($correoCapitan)
+    {
+        $this->correoCapitan = $correoCapitan;
+
+        return $this;
+    }
+
+    /**
+     * Get correoCapitan
+     *
+     * @return string
+     */
+    public function getCorreoCapitan()
+    {
+        return $this->correoCapitan;
     }
 
     /**

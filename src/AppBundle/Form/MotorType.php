@@ -20,11 +20,6 @@ class MotorType extends AbstractType
                 'label' => 'Marca del motor'
             ])
             ->add('modelo')
-            ->add('calado')
-            ->add('manga')
-            ->add('eslora')
-            ->add('combustible')
-            ->add('agua')
             ->add('estatus',null,[
                 'label' => ' '
             ])
