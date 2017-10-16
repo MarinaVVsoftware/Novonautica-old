@@ -35,6 +35,12 @@ class ValorSistema
      */
     private $valor;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="unidad", type="string", length=255)
+     */
+    private $unidad;
 
     /**
      * Get id
@@ -92,5 +98,29 @@ class ValorSistema
     public function getValor()
     {
         return $this->valor;
+    }
+
+    /**
+     * Set unidad
+     *
+     * @param string $unidad
+     *
+     * @return ValorSistema
+     */
+    public function setUnidad($unidad)
+    {
+        $this->unidad = $unidad;
+
+        return $this;
+    }
+
+    /**
+     * Get unidad
+     *
+     * @return string
+     */
+    public function getUnidad()
+    {
+        return $this->unidad;
     }
 }

@@ -6,6 +6,7 @@
 {% set menuConta='' %}
 {% set menuReportes='' %}
 {% set menuUsuarios='' %}
+{% set menuAjustes='' %}
 
 {% set actCA='' %}
 {% set actCL='' %}
@@ -73,6 +74,9 @@
 {% endif %}
 {% if usuariosmenu is defined %}
     {% set menuUsuarios =' active' %}
+{% endif %}
+{% if ajustesmenu is defined %}
+    {% set menuAjustes=' active' %}
 {% endif %}
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
@@ -197,6 +201,13 @@
                     <hr>
                 </li>
             {% endif %}
+            <li class="{{ menuAjustes }}">
+                <a href="{{ path('ajustes_index') }}">
+                    <i class="fa fa-cog" aria-hidden="true"></i>
+                    <span>Ajustes</span>
+                </a>
+                <hr>
+            </li>
         </ul>
     </section>
     <!-- /.sidebar -->

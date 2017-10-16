@@ -543,7 +543,7 @@ class MarinaHumedaCotizacionController extends Controller
         ;
     }
     /**
-     * @Route("/agenda", name="marina-agenda") 
+     * @Route("/agenda", name="marina-agenda")
      */
     public function displayMarinaAgenda(Request $request)
     {
