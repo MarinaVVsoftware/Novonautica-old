@@ -104,7 +104,7 @@
                                             {% if mhservicio.estatus %}
                                                 <tr>
                                                     <td>{{ mhservicio.cantidad }}</td>
-                                                    <td>{{ mhservicio.servicio }}</td>
+                                                    <td>{{ mhservicio.marinahumedaservicio.nombre }}</td>
                                                     <td>{{ mhservicio.precio }}</td>
                                                     <td>{{ mhservicio.subtotal }}</td>
                                                     <td>{{ mhservicio.iva }}</td>
@@ -116,6 +116,13 @@
 
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9 col-sm-offset-1">
+                                    <div id="valiva" class="" data-valor="{{ marinaHumedaCotizacion.iva }}">
+                                        <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">

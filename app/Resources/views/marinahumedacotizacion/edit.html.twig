@@ -79,10 +79,10 @@
                                 {{ form_widget(edit_form.descuento) }}
 
                                 <label>Abastecimiento Agua</label>
-                                {{ form_widget(edit_form.mhcservicios.children.3.precio) }}
+                                {{ form_widget(edit_form.mhcservicios.children.2.precio) }}
 
                                 <label>Conexión a electricidad</label>
-                                {{ form_widget(edit_form.mhcservicios.children.4.precio) }}
+                                {{ form_widget(edit_form.mhcservicios.children.3.precio) }}
 
                             </div>
                             <div class="col-sm-7 col-sm-offset-1">
@@ -90,19 +90,19 @@
                                     <div class="col-sm-1">
                                         <div class="input-estatus">
                                                 <span class="cont-label-novo">
-                                                    {{ form_errors(edit_form.mhcservicios.children.2.estatus) }}
-                                                    {{ form_widget(edit_form.mhcservicios.children.2.estatus) }}
-                                                    {{ form_label(edit_form.mhcservicios.children.2.estatus) }}
+                                                    {{ form_errors(edit_form.mhcservicios.children.4.estatus) }}
+                                                    {{ form_widget(edit_form.mhcservicios.children.4.estatus) }}
+                                                    {{ form_label(edit_form.mhcservicios.children.4.estatus) }}
                                                 </span>
                                         </div>
                                     </div>
                                     <div class="col-sm-5">
                                         <label>Abastecimiento gasolina (LT):</label>
-                                        {{ form_widget(edit_form.mhcservicios.children.2.cantidad) }}
+                                        {{ form_widget(edit_form.mhcservicios.children.4.cantidad) }}
                                     </div>
                                     <div class="col-sm-5">
                                         <label>Gasolina precio por litro:</label>
-                                        {{ form_widget(edit_form.mhcservicios.children.2.precio) }}
+                                        {{ form_widget(edit_form.mhcservicios.children.4.precio) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -143,7 +143,7 @@
                         <div class="row">
                             <div class="col-sm-9 text-right">
                                 <span>Tipo de cambio:</span>
-                                <div id="tipocambio" class="">{{ marinaHumedaCotizacion.dolar }} MXN</div>
+                                <div id="tipocambio" class="" data-valor="{{ marinaHumedaCotizacion.dolar }}">{{ marinaHumedaCotizacion.dolar }} MXN</div>
                             </div>
                         </div>
                         <div class="row">
@@ -168,7 +168,7 @@
                                     <tbody>
                                     <tr>
                                         <td id="de_cantidad">{{ marinaHumedaCotizacion.mHCservicios.0.cantidad }}</td>
-                                        <td>{{ marinaHumedaCotizacion.mHCservicios.0.servicio }}</td>
+                                        <td>{{ marinaHumedaCotizacion.mHCservicios.0.marinahumedaservicio.nombre }}</td>
                                         <td id="de_precio">{{ marinaHumedaCotizacion.mHCservicios.0.precio }}</td>
                                         <td id="de_subtotal" data-valor="{{ marinaHumedaCotizacion.mHCservicios.0.subtotal }}">{{ marinaHumedaCotizacion.mHCservicios.0.subtotal }}</td>
                                         <td id="de_iva" data-valor="{{ marinaHumedaCotizacion.mHCservicios.0.iva }}">{{ marinaHumedaCotizacion.mHCservicios.0.iva }}</td>
@@ -177,43 +177,44 @@
                                     </tr>
                                     <tr>
                                         <td id="da_cantidad">{{ marinaHumedaCotizacion.mHCservicios.1.cantidad }}</td>
-                                        <td>{{ marinaHumedaCotizacion.mHCservicios.1.servicio }}</td>
+                                        <td>{{ marinaHumedaCotizacion.mHCservicios.1.marinahumedaservicio.nombre }}</td>
                                         <td id="da_precio">{{ marinaHumedaCotizacion.mHCservicios.1.precio }}</td>
                                         <td id="da_subtotal" data-valor="{{ marinaHumedaCotizacion.mHCservicios.1.subtotal }}">{{ marinaHumedaCotizacion.mHCservicios.1.subtotal }}</td>
                                         <td id="da_iva" data-valor="{{ marinaHumedaCotizacion.mHCservicios.1.iva }}">{{ marinaHumedaCotizacion.mHCservicios.1.iva }}</td>
                                         <td id="da_descuento" data-valor="{{ marinaHumedaCotizacion.mHCservicios.1.descuento }}">{{ marinaHumedaCotizacion.mHCservicios.1.descuento }}</td>
                                         <td id="da_total" data-valor="{{ marinaHumedaCotizacion.mHCservicios.1.total }}">{{ marinaHumedaCotizacion.mHCservicios.1.total }}</td>
                                     </tr>
+
+                                    <tr>
+                                        <td>{{ marinaHumedaCotizacion.mHCservicios.2.cantidad }}</td>
+                                        <td>{{ marinaHumedaCotizacion.mHCservicios.2.marinahumedaservicio.nombre }}</td>
+                                        <td id="a_precio">{{ marinaHumedaCotizacion.mHCservicios.2.precio }}</td>
+                                        <td id="a_subtotal" data-valor="{{ marinaHumedaCotizacion.mHCservicios.2.subtotal }}">{{ marinaHumedaCotizacion.mHCservicios.2.subtotal }}</td>
+                                        <td id="a_iva" data-valor="{{ marinaHumedaCotizacion.mHCservicios.2.iva }}">{{ marinaHumedaCotizacion.mHCservicios.2.iva }}</td>
+                                        <td id="a_descuento" data-valor="{{ marinaHumedaCotizacion.mHCservicios.2.descuento }}">{{ marinaHumedaCotizacion.mHCservicios.2.descuento }}</td>
+                                        <td id="a_total" data-valor="{{ marinaHumedaCotizacion.mHCservicios.2.total }}">{{ marinaHumedaCotizacion.mHCservicios.2.total }}</td>
+                                    </tr>
                                     <tr>
                                         <td>{{ marinaHumedaCotizacion.mHCservicios.3.cantidad }}</td>
-                                        <td>{{ marinaHumedaCotizacion.mHCservicios.3.servicio }}</td>
-                                        <td id="a_precio">{{ marinaHumedaCotizacion.mHCservicios.3.precio }}</td>
-                                        <td id="a_subtotal" data-valor="{{ marinaHumedaCotizacion.mHCservicios.3.subtotal }}">{{ marinaHumedaCotizacion.mHCservicios.3.subtotal }}</td>
-                                        <td id="a_iva" data-valor="{{ marinaHumedaCotizacion.mHCservicios.3.iva }}">{{ marinaHumedaCotizacion.mHCservicios.3.iva }}</td>
-                                        <td id="a_descuento" data-valor="{{ marinaHumedaCotizacion.mHCservicios.3.descuento }}">{{ marinaHumedaCotizacion.mHCservicios.3.descuento }}</td>
-                                        <td id="a_total" data-valor="{{ marinaHumedaCotizacion.mHCservicios.3.total }}">{{ marinaHumedaCotizacion.mHCservicios.3.total }}</td>
+                                        <td>{{ marinaHumedaCotizacion.mHCservicios.3.marinahumedaservicio.nombre }}</td>
+                                        <td id="e_precio">{{ marinaHumedaCotizacion.mHCservicios.3.precio }}</td>
+                                        <td id="e_subtotal" data-valor="{{ marinaHumedaCotizacion.mHCservicios.3.subtotal }}">{{ marinaHumedaCotizacion.mHCservicios.3.subtotal }}</td>
+                                        <td id="e_iva" data-valor="{{ marinaHumedaCotizacion.mHCservicios.3.iva }}">{{ marinaHumedaCotizacion.mHCservicios.3.iva }}</td>
+                                        <td id="e_descuento" data-valor="{{ marinaHumedaCotizacion.mHCservicios.3.descuento }}">{{ marinaHumedaCotizacion.mHCservicios.3.descuento }}</td>
+                                        <td id="e_total" data-valor="{{ marinaHumedaCotizacion.mHCservicios.3.total }}">{{ marinaHumedaCotizacion.mHCservicios.3.total }}</td>
                                     </tr>
-                                    <tr>
-                                        <td>{{ marinaHumedaCotizacion.mHCservicios.4.cantidad }}</td>
-                                        <td>{{ marinaHumedaCotizacion.mHCservicios.4.servicio }}</td>
-                                        <td id="e_precio">{{ marinaHumedaCotizacion.mHCservicios.4.precio }}</td>
-                                        <td id="e_subtotal" data-valor="{{ marinaHumedaCotizacion.mHCservicios.4.subtotal }}">{{ marinaHumedaCotizacion.mHCservicios.4.subtotal }}</td>
-                                        <td id="e_iva" data-valor="{{ marinaHumedaCotizacion.mHCservicios.4.iva }}">{{ marinaHumedaCotizacion.mHCservicios.4.iva }}</td>
-                                        <td id="e_descuento" data-valor="{{ marinaHumedaCotizacion.mHCservicios.4.descuento }}">{{ marinaHumedaCotizacion.mHCservicios.4.descuento }}</td>
-                                        <td id="e_total" data-valor="{{ marinaHumedaCotizacion.mHCservicios.4.total }}">{{ marinaHumedaCotizacion.mHCservicios.4.total }}</td>
-                                    </tr>
-                                    <tr id="cotizagasolina" class="{% if marinaHumedaCotizacion.mHCservicios.2.estatus == 0 %} hidden {% endif %}">
-                                        <td id="g_cantidad">{{ marinaHumedaCotizacion.mHCservicios.2.cantidad }}</td>
-                                        <td>{{ marinaHumedaCotizacion.mHCservicios.2.servicio }}</td>
-                                        <td id="g_precio">{{ marinaHumedaCotizacion.mHCservicios.2.precio }}</td>
-                                        <td id="g_subtotal" data-valor="{{ marinaHumedaCotizacion.mHCservicios.2.subtotal }}">{{ marinaHumedaCotizacion.mHCservicios.2.subtotal }}</td>
-                                        <td id="g_iva" data-valor="{{ marinaHumedaCotizacion.mHCservicios.2.iva }}">{{ marinaHumedaCotizacion.mHCservicios.2.iva }}</td>
-                                        <td id="g_descuento" data-valor="{{ marinaHumedaCotizacion.mHCservicios.2.descuento }}">{{ marinaHumedaCotizacion.mHCservicios.2.descuento }}</td>
-                                        <td id="g_total" data-valor="{{ marinaHumedaCotizacion.mHCservicios.2.total }}">{{ marinaHumedaCotizacion.mHCservicios.2.total }}</td>
+                                    <tr id="cotizagasolina" class="{% if marinaHumedaCotizacion.mHCservicios.4.estatus == 0 %} hidden {% endif %}">
+                                        <td id="g_cantidad">{{ marinaHumedaCotizacion.mHCservicios.4.cantidad }}</td>
+                                        <td>{{ marinaHumedaCotizacion.mHCservicios.4.marinahumedaservicio.nombre }}</td>
+                                        <td id="g_precio">{{ marinaHumedaCotizacion.mHCservicios.4.precio }}</td>
+                                        <td id="g_subtotal" data-valor="{{ marinaHumedaCotizacion.mHCservicios.4.subtotal }}">{{ marinaHumedaCotizacion.mHCservicios.4.subtotal }}</td>
+                                        <td id="g_iva" data-valor="{{ marinaHumedaCotizacion.mHCservicios.4.iva }}">{{ marinaHumedaCotizacion.mHCservicios.4.iva }}</td>
+                                        <td id="g_descuento" data-valor="{{ marinaHumedaCotizacion.mHCservicios.4.descuento }}">{{ marinaHumedaCotizacion.mHCservicios.4.descuento }}</td>
+                                        <td id="g_total" data-valor="{{ marinaHumedaCotizacion.mHCservicios.4.total }}">{{ marinaHumedaCotizacion.mHCservicios.4.total }}</td>
                                     </tr>
                                     <tr id="cotizadezasolve" class="{% if marinaHumedaCotizacion.mHCservicios.5.estatus == 0 %} hidden {% endif %}">
                                         <td>{{ marinaHumedaCotizacion.mHCservicios.5.cantidad }}</td>
-                                        <td>{{ marinaHumedaCotizacion.mHCservicios.5.servicio }}</td>
+                                        <td>{{ marinaHumedaCotizacion.mHCservicios.5.marinahumedaservicio.nombre }}</td>
                                         <td id="d_precio">{{ marinaHumedaCotizacion.mHCservicios.5.precio }}</td>
                                         <td id="d_subtotal" data-valor="{{ marinaHumedaCotizacion.mHCservicios.5.subtotal }}">{{ marinaHumedaCotizacion.mHCservicios.5.subtotal }}</td>
                                         <td id="d_iva" data-valor="{{ marinaHumedaCotizacion.mHCservicios.5.iva }}">{{ marinaHumedaCotizacion.mHCservicios.5.iva }}</td>
@@ -222,7 +223,7 @@
                                     </tr>
                                     <tr id="cotizalimpieza" class="{% if marinaHumedaCotizacion.mHCservicios.6.estatus == 0 %} hidden {% endif %}">
                                         <td>{{ marinaHumedaCotizacion.mHCservicios.6.cantidad }}</td>
-                                        <td>{{ marinaHumedaCotizacion.mHCservicios.6.servicio }}</td>
+                                        <td>{{ marinaHumedaCotizacion.mHCservicios.6.marinahumedaservicio.nombre }}</td>
                                         <td id="l_precio">{{ marinaHumedaCotizacion.mHCservicios.6.precio }}</td>
                                         <td id="l_subtotal" data-valor="{{ marinaHumedaCotizacion.mHCservicios.6.subtotal }}">{{ marinaHumedaCotizacion.mHCservicios.6.subtotal }}</td>
                                         <td id="l_iva" data-valor="{{ marinaHumedaCotizacion.mHCservicios.6.iva }}">{{ marinaHumedaCotizacion.mHCservicios.6.iva }}</td>
@@ -235,6 +236,13 @@
                             <div class="col-sm-3">
                                 <a class="btn btn-morado-claro">Visualizar</a>
                                 <input type="submit" value="Guardar" class="btn btn-azul"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <div id="valiva" class="" data-valor="{{ marinaHumedaCotizacion.iva }}">
+                                    <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -306,14 +314,14 @@
                     {#</div>#}
                 {#</div>#}
                 {{ form_widget(edit_form.mhcservicios.children.1.precio,{'attr':{'class':'hidden'}}) }}
+                {{ form_widget(edit_form.mhcservicios.children.2.cantidad,{'attr':{'class':'hidden'}}) }}
                 {{ form_widget(edit_form.mhcservicios.children.3.cantidad,{'attr':{'class':'hidden'}}) }}
-                {{ form_widget(edit_form.mhcservicios.children.4.cantidad,{'attr':{'class':'hidden'}}) }}
                 {{ form_widget(edit_form.mhcservicios.children.5.cantidad,{'attr':{'class':'hidden'}}) }}
                 {{ form_widget(edit_form.mhcservicios.children.6.cantidad,{'attr':{'class':'hidden'}}) }}
                 {{ form_widget(edit_form.mhcservicios.children.0.estatus,{'attr':{'class':'hidden'}}) }}
                 {{ form_widget(edit_form.mhcservicios.children.1.estatus,{'attr':{'class':'hidden'}}) }}
+                {{ form_widget(edit_form.mhcservicios.children.2.estatus,{'attr':{'class':'hidden'}}) }}
                 {{ form_widget(edit_form.mhcservicios.children.3.estatus,{'attr':{'class':'hidden'}}) }}
-                {{ form_widget(edit_form.mhcservicios.children.4.estatus,{'attr':{'class':'hidden'}}) }}
                 {{ form_end(edit_form) }}
                 <div class="row">
                     <div class="col-sm-12">

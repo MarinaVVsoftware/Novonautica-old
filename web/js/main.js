@@ -125,7 +125,7 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').keyup(function () {
 });
 
 //-- Agua --
-$('#appbundle_marinahumedacotizacion_mhcservicios_3_precio').keyup(function () {
+$('#appbundle_marinahumedacotizacion_mhcservicios_2_precio').keyup(function () {
     a_precio = $(this).val();
     $('#a_precio').html(a_precio);
     calculaSubtotales(a_cantidad,a_precio,$('#a_subtotal'),$('#a_iva'),$('#a_descuento'),$('#a_total'));
@@ -133,7 +133,7 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_3_precio').keyup(function () {
 });
 
 //-- Electricidad --
-$('#appbundle_marinahumedacotizacion_mhcservicios_4_precio').keyup(function () {
+$('#appbundle_marinahumedacotizacion_mhcservicios_3_precio').keyup(function () {
     e_precio = $(this).val();
     $('#e_precio').html(e_precio);
     calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
@@ -141,18 +141,18 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_4_precio').keyup(function () {
 });
 
 //-- Gasolina litros --
-$('#appbundle_marinahumedacotizacion_mhcservicios_2_cantidad').keyup(function () {
+$('#appbundle_marinahumedacotizacion_mhcservicios_4_cantidad').keyup(function () {
     g_cantidad = $(this).val();
-    g_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_2_precio').val();
+    g_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_4_precio').val();
     $('#g_cantidad').html(g_cantidad);
     calculaSubtotales(g_cantidad,g_precio,$('#g_subtotal'),$('#g_iva'),$('#g_descuento'),$('#g_total'));
     calculaTotales();
 });
 
 //-- Gasolina precio --
-$('#appbundle_marinahumedacotizacion_mhcservicios_2_precio').keyup(function () {
+$('#appbundle_marinahumedacotizacion_mhcservicios_4_precio').keyup(function () {
     g_precio = $(this).val();
-    g_cantidad= $('#appbundle_marinahumedacotizacion_mhcservicios_2_cantidad').val();
+    g_cantidad= $('#appbundle_marinahumedacotizacion_mhcservicios_4_cantidad').val();
     $('#g_precio').html(g_precio);
     calculaSubtotales(g_cantidad,g_precio,$('#g_subtotal'),$('#g_iva'),$('#g_descuento'),$('#g_total'));
     calculaTotales();
@@ -180,15 +180,15 @@ $('#appbundle_marinahumedacotizacion_descuento').keyup(function () {
     de_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').val();
     da_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_1_cantidad').val();
     precio_dia = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
-    a_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_3_precio').val();
-    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_4_precio').val();
+    a_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_2_precio').val();
+    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_3_precio').val();
     calculaSubtotales(de_cantidad,precio_dia,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
     calculaSubtotales(da_cantidad,precio_dia,$('#da_subtotal'),$('#da_iva'),$('#da_descuento'),$('#da_total'));
     calculaSubtotales(a_cantidad,a_precio,$('#a_subtotal'),$('#a_iva'),$('#a_descuento'),$('#a_total'));
     calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
 
-    g_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_2_cantidad').val();
-    g_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_2_precio').val();
+    g_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_4_cantidad').val();
+    g_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_4_precio').val();
     calculaSubtotales(g_cantidad,g_precio,$('#g_subtotal'),$('#g_iva'),$('#g_descuento'),$('#g_total'));
 
     d_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_5_precio').val();
@@ -203,7 +203,7 @@ $('#appbundle_marinahumedacotizacion_descuento').keyup(function () {
 
 
 function calculaSubtotales(cantidad,precio,tdsubtot,tdiva,tddesc,tdtot){
-    var iva = 0.16
+    var iva = ($('#valiva').data('valor'))/100;
     var descuento = $('#appbundle_marinahumedacotizacion_descuento').val();
     var subtotal = cantidad * precio;
     var ivatot = subtotal * iva;
@@ -237,7 +237,7 @@ function calculaTotales() {
     var l_descuento = 0;
     var l_total = 0;
 
-    if($('#appbundle_marinahumedacotizacion_mhcservicios_2_estatus').is(':checked')) {
+    if($('#appbundle_marinahumedacotizacion_mhcservicios_4_estatus').is(':checked')) {
         g_subtotal = $('#g_subtotal').data('valor');
         g_iva = $('#g_iva').data('valor');
         g_descuento = $('#g_descuento').data('valor');
@@ -323,8 +323,8 @@ function calculaTotales() {
 
 }
 
-$('#appbundle_marinahumedacotizacion_mhcservicios_2_estatus').on('click',function () {
-    if($('#appbundle_marinahumedacotizacion_mhcservicios_2_estatus').is(':checked')) {
+$('#appbundle_marinahumedacotizacion_mhcservicios_4_estatus').on('click',function () {
+    if($('#appbundle_marinahumedacotizacion_mhcservicios_4_estatus').is(':checked')) {
         $('#cotizagasolina').removeClass('hidden');
     } else {
         $('#cotizagasolina').addClass('hidden');

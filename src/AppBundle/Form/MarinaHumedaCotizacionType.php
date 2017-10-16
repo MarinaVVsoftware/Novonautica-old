@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 
 //use Doctrine\DBAL\Types\FloatType;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
+use Doctrine\DBAL\Types\IntegerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -17,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormInterface;
 use AppBundle\Entity\Cliente;
+use AppBundle\Entity\ValorSistema;
 
 class MarinaHumedaCotizacionType extends AbstractType
 {

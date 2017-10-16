@@ -1066,4 +1066,28 @@ class MarinaHumedaCotizacion
     {
         return $this->mhcservicios;
     }
+
+    /**
+     * Add mhcservicio
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function addMhcservicio(\AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio)
+    {
+        $this->mhcservicios[] = $mhcservicio;
+
+        return $this;
+    }
+
+    /**
+     * Remove mhcservicio
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio
+     */
+    public function removeMhcservicio(\AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio)
+    {
+        $this->mhcservicios->removeElement($mhcservicio);
+    }
 }

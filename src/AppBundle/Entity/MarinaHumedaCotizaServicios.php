@@ -21,12 +21,6 @@ class MarinaHumedaCotizaServicios
      */
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="servicio", type="string", length=255)
-     */
-    private $servicio;
 
     /**
      * @var float
@@ -85,6 +79,13 @@ class MarinaHumedaCotizaServicios
     private $marinahumedacotizacion;
 
     /**
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MarinaHumedaServicio")
+     * @ORM\JoinColumn(name="idservicio", referencedColumnName="id")
+     */
+    private $marinahumedaservicio;
+
+    /**
      * Get id
      *
      * @return int
@@ -92,30 +93,6 @@ class MarinaHumedaCotizaServicios
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set servicio
-     *
-     * @param string $servicio
-     *
-     * @return MarinaHumedaCotizaServicios
-     */
-    public function setServicio($servicio)
-    {
-        $this->servicio = $servicio;
-
-        return $this;
-    }
-
-    /**
-     * Get servicio
-     *
-     * @return string
-     */
-    public function getServicio()
-    {
-        return $this->servicio;
     }
 
     /**
@@ -309,5 +286,28 @@ class MarinaHumedaCotizaServicios
         return $this->marinahumedacotizacion;
     }
 
-}
+    /**
+     * Set marinahumedaservicio
+     *
+     * @param \AppBundle\Entity\MarinaHumedaServicio $marinahumedaservicio
+     *
+     * @return MarinaHumedaServicio
+     */
+    public function setMarinaHumedaServicio(\AppBundle\Entity\MarinaHumedaServicio $marinahumedaservicio = null)
+    {
+        $this->marinahumedaservicio = $marinahumedaservicio;
+        return $this;
+    }
 
+    /**
+     * Get marinahumedaservicio
+     *
+     * @return \AppBundle\Entity\MarinaHumedaServicio
+     */
+    public function getMarinaHumedaServicio()
+    {
+        return $this->marinahumedaservicio;
+    }
+
+
+}
