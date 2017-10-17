@@ -299,7 +299,7 @@ form > .btn-borrar:hover,btn-borrar:hover{
     border-right: 2px solid #292e41;
 }
 .panel-novo tbody tr:hover{
-    background: #3e4766;
+    /*background: #3e4766;*/
     cursor: pointer;
 }
 .panel-novo .panel-pestanias{
@@ -308,7 +308,8 @@ form > .btn-borrar:hover,btn-borrar:hover{
 .panel-novo .nav-tabs{
     border: none;
 }
-.panel-novo .nav-tabs>li>a {
+.panel-novo .nav-tabs>li>a,
+.fc-left>.fc-button-group>.fc-state-default{
     margin-right: 0;
     border: none;
     border-radius: 0;
@@ -321,7 +322,8 @@ form > .btn-borrar:hover,btn-borrar:hover{
     min-width: 180px;
     text-align: center;
 }
-.panel-novo .nav-tabs>li.active>a
+.panel-novo .nav-tabs>li.active>a,
+.fc-left>.fc-button-group>button.fc-state-active
 {
     color: #fff;
     /*background: #0097f6;*/
@@ -336,16 +338,28 @@ form > .btn-borrar:hover,btn-borrar:hover{
 .panel-novo .nav>li>a{
     padding: 10px 35px;
 }
-.panel .nav>.primero>a{
+.panel .nav>.primero>a,
+.fc-left>.fc-button-group>.fc-month-button
+{
     background: #292e41;
     -webkit-clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
     clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
 }
-.panel-novo .nav-tabs>li{
+.panel-novo .nav-tabs>li,
+.fc-left>.fc-button-group>.fc-state-default
+{
     margin-left: -34px;
 }
-.panel-novo .nav-tabs>li.primero{
+.panel-novo .nav-tabs>li.primero,
+.fc-left>.fc-button-group>.fc-month-button
+{
     margin-left: 0;
+}
+.fc-left>.fc-button-group>.fc-state-hover{
+    z-index: 0;
+}
+.fc-left>.fc-button-group>button:focus{
+    outline: none;
 }
 .panel-body .tab-content{
     padding: 20px 15px;
@@ -490,3 +504,20 @@ form > .btn-borrar:hover,btn-borrar:hover{
     background: #0097f6;
 }
 /*++++ fin calendario ++++*/
+
+/*+++++ calendario agenda +++++*/
+.fc-widget-header {
+     background: none;
+}
+.fc-state-default {
+    text-shadow: none;
+    box-shadow: none;
+}
+.fc-toolbar{
+    padding-top: 0px;
+}
+.fc-unthemed td.fc-today{
+    background: #3e4766
+}
+
+/*+++ fin calendario agenda +++++*/

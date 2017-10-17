@@ -352,125 +352,130 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_6_estatus').on('click',functio
 
 //-------- fin metodos marina humeda --------
 
-jQuery('#appbundle_marinahumedacotizacion_cliente').change(function(e)
-{
+$('#appbundle_marinahumedacotizacion_cliente').change(function(e) {
+    $("#info-cliente").empty();
+    $("#info-barco").empty();
     $.ajax({
         method: "GET",
         url: "../ajax/buscacliente",
         dataType: 'json',
         data: {'id':$(this).val()},
-        success: function(data)
-        {
-            if(data.hasOwnProperty("response") && data.response === "success")
-            {
-                if(data.hasOwnProperty("posts"))
-                {
+        success: function(data) {
+            if(data.hasOwnProperty("response") && data.response === "success") {
+                if(data.hasOwnProperty("posts")) {
                     //http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try/3710226
                     if (/^[\],:{}\s]*$/.test(data.posts.replace(/\\["\\\/bfnrtu]/g, '@').
                         replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-                        replace(/(?:^|:|,)(?:\s*\[)+/g, '')))
-                    {
-
+                        replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
                         var posts = JSON.parse(data.posts);
                         console.log(posts);
-                        if(posts.id > 0)
-                        {
+                        if(posts.id > 0) {
                             var html = "";
-                            html= "<label>Correo</label>"+
+                            html= "<label>Correo electrónico</label>"+
                                 "<div class='info-input'>"+posts.correo+"</div>"+
-                                "<label>Teléfono</label>"+
+                                "<label>Número de teléfono</label>"+
                                 "<div class='info-input'>"+posts.telefono+"</div>"+
                                 "<label>Dirección</label>"+
-                                "<div class='info-input'>"+posts.direccion+"</div>";
-
-                            //for(d in posts)
-                            //{
-                            //  html += "<p>" + JSON.stringify(posts[d]) + "</p>";
-                            //}
-
+                                "<div class='info-input'>"+posts.direccion+"</div>"+
+                                "<label>R.F.C.</label>"+
+                                "<div class='info-input'>"+posts.rfc+"</div>"+
+                                "<label>Razón social</label>"+
+                                "<div class='info-input'>"+posts.razonsocial+"</div>"+
+                                "<label>Dirección fiscal</label>"+
+                                "<div class='info-input'>"+posts.direccionfiscal+"</div>";
                             $("#info-cliente").append(html);
-
                         }
                     }
-                    else
-                    {
+                    else {
                         console.log("INVALID JSON STRING");
                     }
                 }
-                else
-                {
+                else {
                     console.log("POSTS NOT FOUND");
                 }
             }
         },
-        error: function(jqXHR, exception)
-        {
-            if(jqXHR.status === 405)
-            {
+        error: function(jqXHR, exception) {
+            if(jqXHR.status === 405) {
                 console.error("METHOD NOT ALLOWED!");
             }
         }
     });
 });
 
-jQuery('.busquedabarco').on('click',function(e)
-{
-    console.log('clickeado radio');
+$('.buscabarcomh').click(function(e) {
+    $("#info-barco").empty();
+    obtenIdBarco();
+});
+
+function obtenIdBarco(){
+    var idbarco = $( "input[type=radio]:checked" ).val();
+    buscaDatosBarco(idbarco);
+}
+function buscaDatosBarco(idbarco){
     $.ajax({
         method: "GET",
         url: "../ajax/buscabarco",
         dataType: 'json',
-        data: {'id':$(this).val()},
-        success: function(data)
-        {
-            if(data.hasOwnProperty("response") && data.response === "success")
-            {
-                if(data.hasOwnProperty("posts"))
-                {
+        data: {'id': idbarco},
+        success: function(data) {
+            if(data.hasOwnProperty("response") && data.response === "success") {
+                if(data.hasOwnProperty("posts")) {
                     //http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try/3710226
                     if (/^[\],:{}\s]*$/.test(data.posts.replace(/\\["\\\/bfnrtu]/g, '@').
                         replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-                        replace(/(?:^|:|,)(?:\s*\[)+/g, '')))
-                    {
-
+                        replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
                         var barcos = JSON.parse(data.posts);
                         console.log(barcos);
-                        if(barcos.id > 0)
-                        {
+                        if(barcos.id > 0) {
                             var html = "";
                             html= "<label>Marca</label>"+
                                 "<div class='info-input'>"+barcos.marca+"</div>"+
                                 "<label>Modelo</label>"+
                                 "<div class='info-input'>"+barcos.modelo+"</div>"+
-                                "<label>Año</label>"+
-                                "<div class='info-input'>"+barcos.anio+"</div>";
-
-                            //for(d in posts)
-                            //{
-                            //  html += "<p>" + JSON.stringify(posts[d]) + "</p>";
-                            //}
-
+                                "<label>Eslora</label>"+
+                                "<div class='info-input'>"+barcos.eslora+"</div>"+
+                                "<label>Manga</label>"+
+                                "<div class='info-input'>"+barcos.manga+"</div>"+
+                                "<label>Nombre del capitán</label>"+
+                                "<div class='info-input'>"+barcos.nombreCapitan+"</div>"+
+                                "<label>Teléfono del capitán</label>"+
+                                "<div class='info-input'>"+barcos.telefonoCapitan+"</div>"+
+                                "<label>Correo del capitán</label>"+
+                                "<div class='info-input'>"+barcos.correoCapitan+"</div>";
                             $("#info-barco").append(html);
-
                         }
                     }
-                    else
-                    {
+                    else {
                         console.log("INVALID JSON STRING");
                     }
                 }
-                else
-                {
+                else {
                     console.log("POSTS NOT FOUND");
                 }
             }
         },
-        error: function(jqXHR, exception)
-        {
-            if(jqXHR.status === 405)
-            {
+        error: function(jqXHR, exception) {
+            if(jqXHR.status === 405) {
                 console.error("METHOD NOT ALLOWED!");
             }
         }
     });
+}
+
+$('#calendario').fullCalendar({
+
+    customButtons: {
+        myCustomButton: {
+            text: 'custom!',
+            click: function() {
+                alert('clicked the custom button!');
+            }
+        }
+    },
+    header: {
+        left: 'month,agendaWeek,agendaDay',
+        center: 'prev,title,next',
+        right: 'today myCustomButton'
+    }
 });

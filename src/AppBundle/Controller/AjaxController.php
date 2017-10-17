@@ -31,9 +31,9 @@ class AjaxController extends Controller
 {
 
     /**
- * @Route("/buscacliente", name="ajax_busca_cliente")
- * @Method({"GET"})
- */
+    * @Route("/buscacliente", name="ajax_busca_cliente")
+    * @Method({"GET"})
+    */
     public function buscaClienteAction(Request $request)
     {
         if($request->isXmlHttpRequest())
@@ -42,7 +42,7 @@ class AjaxController extends Controller
             //$normalizers = array(new ObjectNormalizer());
 
             $normalizer = new ObjectNormalizer();
-            $normalizer->setCircularReferenceLimit(2);
+            $normalizer->setCircularReferenceLimit(1);
             // Add Circular reference handler
             $normalizer->setCircularReferenceHandler(function ($object) {
                 return $object->getId();
@@ -77,7 +77,7 @@ class AjaxController extends Controller
             //$normalizers = array(new ObjectNormalizer());
 
             $normalizer = new ObjectNormalizer();
-            $normalizer->setCircularReferenceLimit(2);
+            $normalizer->setCircularReferenceLimit(1);
             // Add Circular reference handler
             $normalizer->setCircularReferenceHandler(function ($object) {
                 return $object->getId();

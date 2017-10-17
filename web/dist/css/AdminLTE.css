@@ -4153,7 +4153,7 @@ table.text-center th {
   padding-left: 10px;
 }
 .fc-widget-header {
-  background: #fafafa;
+  /*background: #fafafa;*/
 }
 .fc-grid {
   width: 100%;
