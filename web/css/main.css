@@ -354,7 +354,8 @@ form > .btn-borrar:hover,btn-borrar:hover{
 .panel-body  form input[type="email"],
 .panel-body  form input[type="password"],
 .panel-body  form input[type="number"],
-.panel-body  form select{
+.panel-body  form select,
+.panel-body  form .info-input {
     background: #3e4766;
     border: none;
     border-radius: 17px;

@@ -65,6 +65,7 @@ class MarinaHumedaCotizacionType extends AbstractType
             $form->add('barco', EntityType::class, array(
                 'class' => 'AppBundle:Barco',
                 'placeholder' => '',
+                'attr' =>['class' =>'busquedabarco'],
                 'choices' => $barcos,
                 'expanded' => true,
                 'multiple' => false

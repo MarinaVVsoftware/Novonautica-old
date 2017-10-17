@@ -36,13 +36,18 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     {{ form_row(form.cliente) }}
+                                    <div id="info-cliente">
 
+                                    </div>
                                 </div>
                                 <div class="col-sm-3">
                                     {{ form_errors(form.barco) }}
                                     <div class="radio">
                                         {{ form_label(form.barco) }}
                                         {{ form_widget(form.barco) }}
+                                    </div>
+                                    <div id="info-barco">
+
                                     </div>
                                 </div>
                             </div>

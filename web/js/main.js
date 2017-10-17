@@ -349,3 +349,128 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_6_estatus').on('click',functio
     }
     calculaTotales();
 });
+
+//-------- fin metodos marina humeda --------
+
+jQuery('#appbundle_marinahumedacotizacion_cliente').change(function(e)
+{
+    $.ajax({
+        method: "GET",
+        url: "../ajax/buscacliente",
+        dataType: 'json',
+        data: {'id':$(this).val()},
+        success: function(data)
+        {
+            if(data.hasOwnProperty("response") && data.response === "success")
+            {
+                if(data.hasOwnProperty("posts"))
+                {
+                    //http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try/3710226
+                    if (/^[\],:{}\s]*$/.test(data.posts.replace(/\\["\\\/bfnrtu]/g, '@').
+                        replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+                        replace(/(?:^|:|,)(?:\s*\[)+/g, '')))
+                    {
+
+                        var posts = JSON.parse(data.posts);
+                        console.log(posts);
+                        if(posts.id > 0)
+                        {
+                            var html = "";
+                            html= "<label>Correo</label>"+
+                                "<div class='info-input'>"+posts.correo+"</div>"+
+                                "<label>Teléfono</label>"+
+                                "<div class='info-input'>"+posts.telefono+"</div>"+
+                                "<label>Dirección</label>"+
+                                "<div class='info-input'>"+posts.direccion+"</div>";
+
+                            //for(d in posts)
+                            //{
+                            //  html += "<p>" + JSON.stringify(posts[d]) + "</p>";
+                            //}
+
+                            $("#info-cliente").append(html);
+
+                        }
+                    }
+                    else
+                    {
+                        console.log("INVALID JSON STRING");
+                    }
+                }
+                else
+                {
+                    console.log("POSTS NOT FOUND");
+                }
+            }
+        },
+        error: function(jqXHR, exception)
+        {
+            if(jqXHR.status === 405)
+            {
+                console.error("METHOD NOT ALLOWED!");
+            }
+        }
+    });
+});
+
+jQuery('.busquedabarco').on('click',function(e)
+{
+    console.log('clickeado radio');
+    $.ajax({
+        method: "GET",
+        url: "../ajax/buscabarco",
+        dataType: 'json',
+        data: {'id':$(this).val()},
+        success: function(data)
+        {
+            if(data.hasOwnProperty("response") && data.response === "success")
+            {
+                if(data.hasOwnProperty("posts"))
+                {
+                    //http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try/3710226
+                    if (/^[\],:{}\s]*$/.test(data.posts.replace(/\\["\\\/bfnrtu]/g, '@').
+                        replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+                        replace(/(?:^|:|,)(?:\s*\[)+/g, '')))
+                    {
+
+                        var barcos = JSON.parse(data.posts);
+                        console.log(barcos);
+                        if(barcos.id > 0)
+                        {
+                            var html = "";
+                            html= "<label>Marca</label>"+
+                                "<div class='info-input'>"+barcos.marca+"</div>"+
+                                "<label>Modelo</label>"+
+                                "<div class='info-input'>"+barcos.modelo+"</div>"+
+                                "<label>Año</label>"+
+                                "<div class='info-input'>"+barcos.anio+"</div>";
+
+                            //for(d in posts)
+                            //{
+                            //  html += "<p>" + JSON.stringify(posts[d]) + "</p>";
+                            //}
+
+                            $("#info-barco").append(html);
+
+                        }
+                    }
+                    else
+                    {
+                        console.log("INVALID JSON STRING");
+                    }
+                }
+                else
+                {
+                    console.log("POSTS NOT FOUND");
+                }
+            }
+        },
+        error: function(jqXHR, exception)
+        {
+            if(jqXHR.status === 405)
+            {
+                console.error("METHOD NOT ALLOWED!");
+            }
+        }
+    });
+});
