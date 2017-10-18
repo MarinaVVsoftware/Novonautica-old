@@ -294,9 +294,9 @@ form > .btn-borrar:hover,btn-borrar:hover{
     border: 2px solid #1c1f29;
 }
 .panel-novo th, .panel-novo td {
-    border-left: 2px solid #292e41;
+    border-left: 2px solid #292e41 !important;
     border-bottom: 2px solid #292e41;
-    border-right: 2px solid #292e41;
+    border-right: 2px solid #292e41 !important;
 }
 .panel-novo tbody tr:hover{
     /*background: #3e4766;*/
@@ -519,5 +519,54 @@ form > .btn-borrar:hover,btn-borrar:hover{
 .fc-unthemed td.fc-today{
     background: #3e4766
 }
-
+.fc-center>div>button,
+.fc-center>div>h2 {
+    float: left;
+}
+.fc-center button{
+    background: none;
+    color: #0c97f4;
+    margin:0;
+    border:none;
+}
+.fc-center button:focus{
+    outline:none;
+}
+.fc-center button>span{
+    font-size:2rem;
+}
+.fc button .fc-icon {
+    margin: 0;
+    line-height: 2.5rem;
+}
+.fc-center button:hover{
+    background: none;
+}
+.fc-center .fc-prev-button{
+    padding: 0px;
+    margin-right: 1rem;
+}
+.fc-center .fc-next-button{
+    padding: 0px;
+    margin-left: 1rem;
+}
+.fc-toolbar .fc-center{
+    width: 100%;
+    padding-top: 2rem;
+}
+.fc-body thead{
+    background: none;
+}
+.fc-unthemed .fc-content,
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-list-heading td,
+.fc-unthemed .fc-list-view,
+.fc-unthemed .fc-popover,
+.fc-unthemed .fc-row,
+.fc-unthemed tbody,
+.fc-unthemed td,
+.fc-unthemed th,
+.fc-unthemed thead {
+    border-color: #282d40;
+}
 /*+++ fin calendario agenda +++++*/

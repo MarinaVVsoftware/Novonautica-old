@@ -467,15 +467,30 @@ $('#calendario').fullCalendar({
 
     customButtons: {
         myCustomButton: {
-            text: 'custom!',
+            text: '+ Nuevo Evento',
             click: function() {
-                alert('clicked the custom button!');
+                alert('agregar evento');
             }
         }
     },
     header: {
         left: 'month,agendaWeek,agendaDay',
         center: 'prev,title,next',
-        right: 'today myCustomButton'
-    }
+        right: '' //'today myCustomButton'
+    },
+    editable: true,
+    droppable: true,
+    events: [
+        {
+            title: 'Event1',
+            start: '2017-10-04'
+        },
+        {
+            title: 'Event2',
+            start: '2017-10-05'
+        }
+
+    ],
+    color: 'yellow',   // an option!
+    textColor: 'black' // an option!
 });
