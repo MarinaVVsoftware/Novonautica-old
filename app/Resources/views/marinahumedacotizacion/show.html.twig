@@ -63,6 +63,30 @@
                                             <th>Descuento %</th>
                                             <td>{{ marinaHumedaCotizacion.descuento }}%</td>
                                         </tr>
+                                        <tr>
+                                            <th>Estatus validación</th>
+                                            <td>
+                                                {% if marinaHumedaCotizacion.validamarina == 0 %}
+                                                    Pendiente validación de marina
+                                                {% elseif marinaHumedaCotizacion.validamarina == 1 %}
+                                                    Rechazado por marina
+                                                {% elseif marinaHumedaCotizacion.validamarina == 2 %}
+                                                    Aprobado por marina
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Estatus aceptación</th>
+                                            <td>
+                                                {% if marinaHumedaCotizacion.validacliente == 0 %}
+                                                    Pendiente aceptación del cliente
+                                                {% elseif marinaHumedaCotizacion.validacliente == 1 %}
+                                                    Rechazado por el cliente
+                                                {% elseif marinaHumedaCotizacion.validacliente == 2 %}
+                                                    Aprobado por el cliente
+                                                {% endif %}
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>

@@ -1,0 +1,62 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block title %}
+    Novonautiva | Eventos
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Eventos</h3>
+                </div>
+                <div class="panel-body">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Titulo</th>
+                            <th>Fechainicio</th>
+                            <th>Fechafin</th>
+                            <th>Horainicio</th>
+                            <th>Horafin</th>
+                            <th>Descripcion</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for evento in eventos %}
+                            <tr>
+                                <td><a href="{{ path('evento_show', { 'id': evento.id }) }}">{{ evento.id }}</a></td>
+                                <td>{{ evento.titulo }}</td>
+                                <td>{% if evento.fechainicio %}{{ evento.fechainicio|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>{% if evento.fechafin %}{{ evento.fechafin|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>{% if evento.horainicio %}{{ evento.horainicio|date('H:i:s') }}{% endif %}</td>
+                                <td>{% if evento.horafin %}{{ evento.horafin|date('H:i:s') }}{% endif %}</td>
+                                <td>{{ evento.descripcion }}</td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ path('evento_show', { 'id': evento.id }) }}">show</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('evento_edit', { 'id': evento.id }) }}">edit</a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <ul>
+                        <li>
+                            <a href="{{ path('evento_new') }}">Create a new evento</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

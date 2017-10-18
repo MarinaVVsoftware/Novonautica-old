@@ -284,7 +284,10 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setSubtotal($granSubtotal)
                 ->setIvatotal($granIva)
                 ->setDescuentototal($granDescuento)
-                ->setTotal($granTotal);
+                ->setTotal($granTotal)
+                ->setValidamarina(0)
+                ->setValidacliente(0)
+                ;
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
 

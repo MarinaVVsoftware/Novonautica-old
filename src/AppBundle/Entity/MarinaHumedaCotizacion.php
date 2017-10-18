@@ -86,6 +86,20 @@ class MarinaHumedaCotizacion
     private $total;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="validamarina", type="smallint")
+     */
+    private $validamarina;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="validacliente", type="smallint")
+     */
+    private $validacliente;
+
+    /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="mhcotizaciones")
      * @ORM\JoinColumn(name="idcliente", referencedColumnName="id")
@@ -985,6 +999,54 @@ class MarinaHumedaCotizacion
     public function getTotal()
     {
         return $this->total;
+    }
+
+    /**
+     * Set validamarina
+     *
+     * @param integer $validamarina
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setValidamarina($validamarina)
+    {
+        $this->validamarina = $validamarina;
+
+        return $this;
+    }
+
+    /**
+     * Get validamarina
+     *
+     * @return int
+     */
+    public function getValidamarina()
+    {
+        return $this->validamarina;
+    }
+
+    /**
+     * Set validacliente
+     *
+     * @param integer $validacliente
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setValidacliente($validacliente)
+    {
+        $this->validacliente = $validacliente;
+
+        return $this;
+    }
+
+    /**
+     * Get validacliente
+     *
+     * @return int
+     */
+    public function getValidacliente()
+    {
+        return $this->validacliente;
     }
 
     /**

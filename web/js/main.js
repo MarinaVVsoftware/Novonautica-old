@@ -403,15 +403,19 @@ $('#appbundle_marinahumedacotizacion_cliente').change(function(e) {
     });
 });
 
-$('.buscabarcomh').click(function(e) {
-    $("#info-barco").empty();
-    obtenIdBarco();
+var x = 1;
+$('.buscabarcomh').click(function () {
+        //console.log('click '+x);
+        if(x==2){
+            $("#info-barco").empty();
+            var idbarco = $( "input[type=radio]:checked" ).val();
+            buscaDatosBarco(idbarco);
+            x=1;
+        }else{
+            x++;
+        }
 });
 
-function obtenIdBarco(){
-    var idbarco = $( "input[type=radio]:checked" ).val();
-    buscaDatosBarco(idbarco);
-}
 function buscaDatosBarco(idbarco){
     $.ajax({
         method: "GET",
@@ -480,17 +484,24 @@ $('#calendario').fullCalendar({
     },
     editable: true,
     droppable: true,
-    events: [
+    // events: [
+    //     {
+    //         title: 'Event1',
+    //         start: '2017-10-04'
+    //     },
+    //     {
+    //         title: 'Event2',
+    //         start: '2017-10-05'
+    //     }
+    //
+    // ],
+    eventSources: [
         {
-            title: 'Event1',
-            start: '2017-10-04'
-        },
-        {
-            title: 'Event2',
-            start: '2017-10-05'
+            url: '../ajax/buscaeventos',
+            color: 'yellow',   // a non-ajax option
+            textColor: 'black' // a non-ajax option
+
         }
 
-    ],
-    color: 'yellow',   // an option!
-    textColor: 'black' // an option!
+    ]
 });

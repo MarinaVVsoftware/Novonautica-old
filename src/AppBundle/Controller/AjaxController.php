@@ -98,5 +98,40 @@ class AjaxController extends Controller
             return $response;
         }
     }
+
+    /**
+     * @Route("/buscaeventos", name="ajax_busca_eventos")
+     * @Method({"GET"})
+     */
+    public function buscaEventosAction(Request $request)
+    {
+        if($request->isXmlHttpRequest())
+        {
+            $encoders = array(new JsonEncoder());
+            $normalizers = array(new ObjectNormalizer());
+
+//            $normalizer = new ObjectNormalizer();
+//            $normalizer->setCircularReferenceLimit(1);
+//            // Add Circular reference handler
+//            $normalizer->setCircularReferenceHandler(function ($object) {
+//                return $object->getId();
+//            });
+//            $normalizers = array($normalizer);
+
+            $serializer = new Serializer($normalizers, $encoders);
+
+            $em = $this->getDoctrine()->getManager();
+            $eventos =  $em->getRepository('AppBundle:Evento')->findAll();
+
+            $response = new JsonResponse();
+            $response->setStatusCode(200);
+            $response->setData(array(
+                'response' => 'success',
+                'posts' => $serializer->serialize($eventos, 'json')
+            ));
+         return $response;
+        }
+    }
+
 }
 

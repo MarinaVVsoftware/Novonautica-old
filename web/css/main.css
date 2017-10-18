@@ -14,6 +14,9 @@ hr {
 a{
     color: #ffffff;
 }
+.align-middle{
+    vertical-align: middle !important;
+}
 /*++++ colores fondo ++++*/
 .fondo-azul{
     background-color: #0097f6;
@@ -369,6 +372,7 @@ form > .btn-borrar:hover,btn-borrar:hover{
 .panel-body  form input[type="password"],
 .panel-body  form input[type="number"],
 .panel-body  form select,
+.panel-body  form textarea,
 .panel-body  form .info-input {
     background: #3e4766;
     border: none;
@@ -376,7 +380,9 @@ form > .btn-borrar:hover,btn-borrar:hover{
     padding: 5px 15px;
     width: 100%;
 }
-.panel-body form input:focus,.panel-body form select:focus{
+.panel-body form input:focus,
+.panel-body form select:focus,
+.panel-body form textarea{
     outline: none;
 }
 .espacio-linea{
@@ -453,7 +459,7 @@ form > .btn-borrar:hover,btn-borrar:hover{
 }
 /* ---- fin temporal ----*/
 
-/*++++ calendario ++++*/
+/*++++ datepicker calendario ++++*/
 .panel-body  form .input-calendario{
     border: 1px solid #0097f6 !important;
     border-radius: 0px !important;
@@ -503,7 +509,7 @@ form > .btn-borrar:hover,btn-borrar:hover{
 .datepicker table tr td span.focused, .datepicker table tr td span:hover {
     background: #0097f6;
 }
-/*++++ fin calendario ++++*/
+/*++++ fin datepicker calendario ++++*/
 
 /*+++++ calendario agenda +++++*/
 .fc-widget-header {

@@ -25,6 +25,8 @@
                         <th>Iva Total</th>
                         <th>Descuento Total</th>
                         <th>Total</th>
+                        <th>Validación</th>
+                        <th>Aceptación</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
@@ -41,6 +43,24 @@
                             <td>{{ marinaHumedaCotizacion.ivatotal }}</td>
                             <td>{{ marinaHumedaCotizacion.descuentototal }}</td>
                             <td>{{ marinaHumedaCotizacion.total }}</td>
+                            <td class="align-middle">
+                                {% if marinaHumedaCotizacion.validamarina == 0 %}
+                                    <img src="{{ asset('img/status-pendiente-icon.svg') }}" class="center-block">
+                                {% elseif marinaHumedaCotizacion.validamarina == 1 %}
+                                    <img src="{{ asset('img/status-desaprovado-icon.svg') }}" class="center-block">
+                                {% elseif marinaHumedaCotizacion.validamarina == 2 %}
+                                    <img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if marinaHumedaCotizacion.validacliente == 0 %}
+                                    <img src="{{ asset('img/status-pendiente-icon.svg') }}" class="center-block">
+                                {% elseif marinaHumedaCotizacion.validacliente == 1 %}
+                                    <img src="{{ asset('img/status-desaprovado-icon.svg') }}" class="center-block">
+                                {% elseif marinaHumedaCotizacion.validacliente == 2 %}
+                                    <img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">
+                                {% endif %}
+                            </td>
                             <td>
                                 <a class="btn btn-morado-claro" href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">Detalle</a>
                                 <a class="btn btn-azul" href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">Editar</a>
