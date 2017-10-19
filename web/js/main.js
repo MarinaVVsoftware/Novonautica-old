@@ -1,3 +1,6 @@
+$(document).ready(function() {
+    $('#loading').hide();
+});
 
 jQuery('.add-another-motor').click(function (e) {
     e.preventDefault();
