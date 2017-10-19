@@ -82,7 +82,7 @@ class MarinaHumedaCotizacionController extends Controller
                     ->getRepository(ValorSistema::class)
                     ->find(2)
                     ->getValor();
-        dump($marinaHumedaCotizacion);
+
         $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

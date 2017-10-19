@@ -164,28 +164,28 @@
                 </ul>
                 <hr>
             </li>
-            <li class="{{ menuProductos }}">
+            <li class="{{ menuProductos }} only">
                 <a href="{{ path('productos') }}">
                     <i class="fa fa-th"></i>
                     <span>Productos</span>
                 </a>
                 <hr>
             </li>
-            <li class="{{ menuRH }}">
+            <li class="{{ menuRH }} only">
                 <a href="{{ path('recursos-humanos') }}">
                     <i class="fa fa-address-book-o"></i>
                     <span>Recursos Humanos</span>
                 </a>
                 <hr>
             </li>
-            <li class="{{ menuConta }}">
+            <li class="{{ menuConta }} only">
                 <a href="{{ path('contabilidad') }}">
                     <i class="fa fa-archive"></i>
                     <span>Contabilidad</span>
                 </a>
                 <hr>
             </li>
-            <li class="{{ menuReportes }}">
+            <li class="{{ menuReportes }} only">
                 <a href="{{ path('reportes') }}">
                     <i class="fa fa-file-text-o"></i>
                     <span>Reportes</span>
@@ -193,7 +193,7 @@
                 <hr>
             </li>
             {% if is_granted('ROLE_ADMIN') %}
-                <li class="{{ menuUsuarios }}">
+                <li class="{{ menuUsuarios }} only">
                     <a href="{{ path('usuario_index') }}">
                         <i class="fa fa-user-o"></i>
                         <span>Usuarios</span>
@@ -201,7 +201,7 @@
                     <hr>
                 </li>
             {% endif %}
-            <li class="{{ menuAjustes }}">
+            <li class="{{ menuAjustes }} only">
                 <a href="{{ path('ajustes_index') }}">
                     <i class="fa fa-cog" aria-hidden="true"></i>
                     <span>Ajustes</span>

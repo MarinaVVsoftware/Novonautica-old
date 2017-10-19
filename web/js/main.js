@@ -1,5 +1,11 @@
 $(document).ready(function() {
     $('#loading').hide();
+    $('.treeview ul a').on('click',function () {
+        $('#loading').show();
+    });
+    $('ul .only a').on('click',function (){
+        $('#loading').show();
+    });
 });
 
 jQuery('.add-another-motor').click(function (e) {

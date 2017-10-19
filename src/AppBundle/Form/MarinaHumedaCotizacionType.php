@@ -6,9 +6,12 @@ namespace AppBundle\Form;
 //use Doctrine\DBAL\Types\FloatType;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use Doctrine\DBAL\Types\IntegerType;
+use Doctrine\DBAL\Types\TextType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -57,6 +60,30 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'entry_type' => MarinaHumedaCotizaServiciosType::class,
                 'label' => false
             ])
+            ->add('validanovo', ChoiceType::class,[
+                'choices' =>[ 'Aceptar' => 2, 'Rechazar' => 1, 'Pendiente' => 0 ],
+                'expanded' => true,
+                'multiple' => false,
+                'choice_attr' => function($val, $key, $index) {
+                    return ['class' => 'opcion'.strtolower($key)];
+                },
+            ])
+            ->add('notasnovo',TextareaType::class,[
+                'label' => 'Observaciones',
+                'attr' => ['rows' => 7]
+            ])
+            ->add('validacliente', ChoiceType::class,[
+                'choices' =>[ 'Aceptar' => 2, 'Rechazar' => 1, 'Pendiente' => 0 ],
+                'expanded' => true,
+                'multiple' => false,
+                'choice_attr' => function($val, $key, $index) {
+                    return ['class' => 'opcion'.strtolower($key)];
+                },
+            ])
+            ->add('notascliente',TextareaType::class,[
+                'label' => 'Observaciones',
+                'attr' => ['rows' => 7]
+            ])
         ;
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
@@ -71,6 +98,33 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'multiple' => false
             ));
         };
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $cotizacion = $event->getData();
+            $form = $event->getForm();
+
+            if($cotizacion->getId()==null){ //cotización nueva
+                $form->remove('validanovo');
+                $form->remove('validacliente');
+                $form->remove('notasnovo');
+                $form->remove('notascliente');
+            }else{ //editando cotización
+                if($cotizacion->getValidanovo()==2) { //si es aprobado por marina
+                    if($cotizacion->getValidacliente()==2){
+                        $form->remove('validanovo');
+                        $form->remove('validacliente');
+                        $form->remove('notasnovo');
+                        $form->remove('notascliente');
+                    }else{
+                        $form->remove('validanovo');
+                        $form->remove('notasnovo');
+                    }
+                }else{
+                    $form->remove('validacliente');
+                    $form->remove('notascliente');
+                }
+            }
+        });
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,

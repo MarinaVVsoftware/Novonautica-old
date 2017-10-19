@@ -88,9 +88,9 @@ class MarinaHumedaCotizacion
     /**
      * @var int
      *
-     * @ORM\Column(name="validamarina", type="smallint")
+     * @ORM\Column(name="validanovo", type="smallint")
      */
-    private $validamarina;
+    private $validanovo;
 
     /**
      * @var int
@@ -98,6 +98,20 @@ class MarinaHumedaCotizacion
      * @ORM\Column(name="validacliente", type="smallint")
      */
     private $validacliente;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="notasnovo", type="text", nullable=true)
+     */
+    private $notasnovo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="notascliente", type="text", nullable=true)
+     */
+    private $notascliente;
 
     /**
      *
@@ -1002,27 +1016,27 @@ class MarinaHumedaCotizacion
     }
 
     /**
-     * Set validamarina
+     * Set validanovo
      *
-     * @param integer $validamarina
+     * @param integer $validanovo
      *
      * @return MarinaHumedaCotizacion
      */
-    public function setValidamarina($validamarina)
+    public function setValidanovo($validanovo)
     {
-        $this->validamarina = $validamarina;
+        $this->validanovo = $validanovo;
 
         return $this;
     }
 
     /**
-     * Get validamarina
+     * Get validanovo
      *
      * @return int
      */
-    public function getValidamarina()
+    public function getValidanovo()
     {
-        return $this->validamarina;
+        return $this->validanovo;
     }
 
     /**
@@ -1047,6 +1061,54 @@ class MarinaHumedaCotizacion
     public function getValidacliente()
     {
         return $this->validacliente;
+    }
+
+    /**
+     * Set notasnovo
+     *
+     * @param string $notasnovo
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setNotasnovo($notasnovo)
+    {
+        $this->notasnovo = $notasnovo;
+
+        return $this;
+    }
+
+    /**
+     * Get notasnovo
+     *
+     * @return string
+     */
+    public function getNotasnovo()
+    {
+        return $this->notasnovo;
+    }
+
+    /**
+     * Set notascliente
+     *
+     * @param string $notascliente
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setNotascliente($notascliente)
+    {
+        $this->notascliente = $notascliente;
+
+        return $this;
+    }
+
+    /**
+     * Get notascliente
+     *
+     * @return string
+     */
+    public function getNotascliente()
+    {
+        return $this->notascliente;
     }
 
     /**
