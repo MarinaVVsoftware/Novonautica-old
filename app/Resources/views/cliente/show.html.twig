@@ -243,26 +243,34 @@
                                     <table class="table text-center">
                                         <thead>
                                         <tr>
-                                            <th>Cantidad</th>
+                                            <th>Barco</th>
                                             <th>Servicio</th>
-                                            <th>Prec. Unid.</th>
+                                            <th>Fecha llegada</th>
+                                            <th>Fecha salida</th>
                                             <th>Sub-Total</th>
                                             <th>IVA</th>
                                             <th>Descuento</th>
                                             <th>Total</th>
+                                            <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         {% for cotizacion in cliente.mHcotizaciones %}
+                                            {% if cotizacion.validacliente == 2 %}
                                             <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td>{{ cotizacion.barco }}</td>
+                                                <td>Marina Humeda</td>
+                                                <td>{% if cotizacion.fechaLlegada %}{{ cotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
+                                                <td>{% if cotizacion.fechaSalida %}{{ cotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</td>
+                                                <td>{{ cotizacion.subtotal }}</td>
+                                                <td>{{ cotizacion.ivatotal }}</td>
+                                                <td>{{ cotizacion.descuentototal }}</td>
                                                 <td>{{ cotizacion.total }}</td>
+                                                <td>
+                                                    <a class="btn btn-morado-claro" href="{{ path('marina-humeda_show', { 'id': cotizacion.id }) }}">Detalle</a>
+                                                </td>
                                             </tr>
+                                            {% endif %}
                                         {% endfor %}
                                         </tbody>
                                     </table>

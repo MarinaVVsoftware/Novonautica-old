@@ -285,7 +285,7 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setIvatotal($granIva)
                 ->setDescuentototal($granDescuento)
                 ->setTotal($granTotal)
-                ->setValidamarina(0)
+                ->setValidanovo(0)
                 ->setValidacliente(0)
                 ;
             $em->persist($marinaHumedaCotizacion);
@@ -321,6 +321,54 @@ class MarinaHumedaCotizacionController extends Controller
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'delete_form' => $deleteForm->createView(),
             'marinacotizaciones' => 1
+        ));
+    }
+    /**
+     * Displays a form to edit an existing marinaHumedaCotizacion entity.
+     *
+     * @Route("/{id}/recotizar", name="marina-humeda_recotizar")
+     * @Method({"GET", "POST"})
+     */
+    public function recotizaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacionAnterior)
+    {
+        $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
+        $marinaDiasEstadia = new MarinaHumedaCotizaServicios();
+        $marinaDiasAdicionales = new MarinaHumedaCotizaServicios();
+        $marinaAgua = new MarinaHumedaCotizaServicios();
+        $marinaElectricidad = new MarinaHumedaCotizaServicios();
+        $marinaGasolina = new MarinaHumedaCotizaServicios();
+        $marinaDezasolve = new MarinaHumedaCotizaServicios();
+        $marinaLimpieza = new MarinaHumedaCotizaServicios();
+        $marinaHumedaCotizacion
+            ->addMarinaHumedaCotizaServicios($marinaDiasEstadia)
+            ->addMarinaHumedaCotizaServicios($marinaDiasAdicionales)
+            ->addMarinaHumedaCotizaServicios($marinaAgua)
+            ->addMarinaHumedaCotizaServicios($marinaElectricidad)
+            ->addMarinaHumedaCotizaServicios($marinaGasolina)
+            ->addMarinaHumedaCotizaServicios($marinaDezasolve)
+            ->addMarinaHumedaCotizaServicios($marinaLimpieza);
+        $dolar = $marinaHumedaCotizacionAnterior->getDolar();
+        $iva = $marinaHumedaCotizacionAnterior->getIva();
+
+        $marinaHumedaCotizacion
+            ->setCliente($marinaHumedaCotizacionAnterior->getCliente())
+            ->setBarco($marinaHumedaCotizacionAnterior->getBarco())
+            ->setFechaLlegada($marinaHumedaCotizacionAnterior->getFechaLlegada())
+            ->setFechaSalida($marinaHumedaCotizacionAnterior->getFechaSalida())
+            ->setDescuento($marinaHumedaCotizacionAnterior->getDescuento())
+
+        ;
+        $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+        }
+        return $this->render('marinahumedacotizacion/new.html.twig', array(
+            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+            'valdolar' => $dolar,
+            'valiva' => $iva,
+            'form' => $form->createView(),
+            'marinanuevacotizacion' => 1
         ));
     }
 

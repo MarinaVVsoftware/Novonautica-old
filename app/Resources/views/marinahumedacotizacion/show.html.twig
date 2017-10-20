@@ -66,12 +66,12 @@
                                         <tr>
                                             <th>Estatus validación</th>
                                             <td>
-                                                {% if marinaHumedaCotizacion.validamarina == 0 %}
-                                                    Pendiente validación de marina
-                                                {% elseif marinaHumedaCotizacion.validamarina == 1 %}
-                                                    Rechazado por marina
-                                                {% elseif marinaHumedaCotizacion.validamarina == 2 %}
-                                                    Aprobado por marina
+                                                {% if marinaHumedaCotizacion.validanovo == 0 %}
+                                                    Pendiente validación de Novonautica
+                                                {% elseif marinaHumedaCotizacion.validanovo == 1 %}
+                                                    Rechazado por Novonautica
+                                                {% elseif marinaHumedaCotizacion.validanovo == 2 %}
+                                                    Aprobado por Novonautica
                                                 {% endif %}
                                             </td>
                                         </tr>
@@ -218,7 +218,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-8">
+                        <div class="col-sm-12">
                             {{ form_start(delete_form) }}
                             <input type="submit" value="Borrar" class="btn btn-borrar pull-right">
                             {{ form_end(delete_form) }}

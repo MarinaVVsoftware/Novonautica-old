@@ -6,6 +6,9 @@ $(document).ready(function() {
     $('ul .only a').on('click',function (){
         $('#loading').show();
     });
+    $('.btn').on('click',function () {
+        $('#loading').show(); $('#loading').show();
+    });
 });
 
 jQuery('.add-another-motor').click(function (e) {

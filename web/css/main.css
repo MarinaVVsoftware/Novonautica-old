@@ -15,7 +15,7 @@ a{
     color: #ffffff;
 }
 .btn{
-    min-width: 150px;
+    min-width: 120px;
 }
 /*++++ colores fondo ++++*/
 .fondo-azul{
@@ -87,7 +87,14 @@ form > .btn-borrar:hover,btn-borrar:hover{
     background: #d40400;
     color: #fff;
 }
-
+.btn-naranja{
+    background-color: #FF6600;
+    color: #fff;
+}
+.btn-naranja:hover{
+    background-color: #ff960d;
+    color: #fff;
+}
 /*++ fin botones color ++*/
 
 /*+++++ check box estilo ++++++*/
