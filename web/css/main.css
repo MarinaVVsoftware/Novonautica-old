@@ -405,6 +405,9 @@ form > .btn-borrar:hover,btn-borrar:hover{
     padding: 5px 15px;
     width: 100%;
 }
+.panel-body form .info-input{
+    min-height: 30px;
+}
 .panel-body form input:focus,
 .panel-body form select:focus,
 .panel-body form textarea{

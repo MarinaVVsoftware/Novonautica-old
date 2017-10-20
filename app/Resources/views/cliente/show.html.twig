@@ -262,10 +262,10 @@
                                                 <td>Marina Humeda</td>
                                                 <td>{% if cotizacion.fechaLlegada %}{{ cotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
                                                 <td>{% if cotizacion.fechaSalida %}{{ cotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</td>
-                                                <td>{{ cotizacion.subtotal }}</td>
-                                                <td>{{ cotizacion.ivatotal }}</td>
-                                                <td>{{ cotizacion.descuentototal }}</td>
-                                                <td>{{ cotizacion.total }}</td>
+                                                <td>$ {{ cotizacion.subtotal|number_format(2,'.',',') }}</td>
+                                                <td>$ {{ cotizacion.ivatotal|number_format(2,'.',',') }}</td>
+                                                <td>$ {{ cotizacion.descuentototal|number_format(2,'.',',') }}</td>
+                                                <td>$ {{ cotizacion.total|number_format(2,'.',',') }}</td>
                                                 <td>
                                                     <a class="btn btn-morado-claro" href="{{ path('marina-humeda_show', { 'id': cotizacion.id }) }}">Detalle</a>
                                                 </td>

@@ -129,11 +129,11 @@
                                                 <tr>
                                                     <td>{{ mhservicio.cantidad }}</td>
                                                     <td>{{ mhservicio.marinahumedaservicio.nombre }}</td>
-                                                    <td>{{ mhservicio.precio }}</td>
-                                                    <td>{{ mhservicio.subtotal }}</td>
-                                                    <td>{{ mhservicio.iva }}</td>
-                                                    <td>{{ mhservicio.descuento }}</td>
-                                                    <td>{{ mhservicio.total }}</td>
+                                                    <td>$ {{ mhservicio.precio|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ mhservicio.subtotal|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ mhservicio.iva|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ mhservicio.descuento|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ mhservicio.total|number_format(2,'.',',') }}</td>
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}
@@ -158,7 +158,7 @@
                                 <div class="col-sm-5 col-sm-offset-5 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
-                                        $<span id="gransubtot">{{ marinaHumedaCotizacion.subtotal }}</span>
+                                        $ <span id="gransubtot">{{ marinaHumedaCotizacion.subtotal|number_format(2,'.',',') }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -172,7 +172,7 @@
                                 <div class="col-sm-5 col-sm-offset-5 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
-                                        $<span id="graniva">{{ marinaHumedaCotizacion.ivatotal }}</span>
+                                        $ <span id="graniva">{{ marinaHumedaCotizacion.ivatotal|number_format(2,'.',',') }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -186,7 +186,7 @@
                                 <div class="col-sm-5 col-sm-offset-5 text-right tipo-letra1">
                                     <p class="letra-azul">Descuento:</p>
                                     <p>
-                                        $<span id="grandescuento">{{ marinaHumedaCotizacion.descuentototal }}</span>
+                                        $ <span id="grandescuento">{{ marinaHumedaCotizacion.descuentototal|number_format(2,'.',',') }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -200,7 +200,7 @@
                                 <div class="col-sm-5 col-sm-offset-5 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
-                                        $<span id="grantot">{{ marinaHumedaCotizacion.total }}</span>
+                                        $ <span id="grantot">{{ marinaHumedaCotizacion.total|number_format(2,'.',',') }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
