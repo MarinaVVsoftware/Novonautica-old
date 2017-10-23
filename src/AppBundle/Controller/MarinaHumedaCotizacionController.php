@@ -287,6 +287,7 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setTotal($granTotal)
                 ->setValidanovo(0)
                 ->setValidacliente(0)
+                ->setEstatus(1)
                 ;
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
@@ -346,6 +347,7 @@ class MarinaHumedaCotizacionController extends Controller
             ->setTotal($marinaHumedaCotizacionAnterior->getTotal())
             ->setValidanovo(0)
             ->setValidacliente(0)
+            ->setEstatus(1)
             ;
         dump($marinaHumedaCotizacionAnterior);
 
@@ -607,6 +609,7 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setDescuentototal($granDescuento)
                 ->setTotal($granTotal)
             ;
+
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
 
@@ -830,6 +833,7 @@ class MarinaHumedaCotizacionController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($marinaHumedaCotizacion);
+
             $em->flush();
         }
 

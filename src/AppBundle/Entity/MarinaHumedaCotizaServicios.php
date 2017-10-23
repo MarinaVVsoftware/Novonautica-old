@@ -74,7 +74,7 @@ class MarinaHumedaCotizaServicios
     /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MarinaHumedaCotizacion", inversedBy="mhcservicios")
-     * @ORM\JoinColumn(name="idmhcotizacion", referencedColumnName="id")
+     * @ORM\JoinColumn(name="idmhcotizacion", referencedColumnName="id",onDelete="CASCADE")
      */
     private $marinahumedacotizacion;
 

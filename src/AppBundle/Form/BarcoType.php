@@ -7,6 +7,8 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -21,31 +23,50 @@ class BarcoType extends AbstractType
     {
         $builder
             ->add('nombre',TextType::class,[
-                'label' => 'Nombre de la embarcación'
+                'label' => 'Nombre de la embarcación',
+                'required' => false
             ])
-            ->add('marca')
-            ->add('modelo')
+            ->add('marca',TextType::class,[
+                'required' => false
+            ])
+            ->add('modelo',TextType::class,[
+                'required' => false
+            ])
             ->add('anio',IntegerType::class,[
-                'label' => 'Año'
+                'label' => 'Año',
+                'required' => false
             ])
-            ->add('calado')
-            ->add('manga')
-            ->add('eslora')
-            ->add('combustible')
-            ->add('agua')
+            ->add('calado',TextType::class,[
+                'required' => false
+            ])
+            ->add('manga',TextType::class,[
+                'required' => false
+            ])
+            ->add('eslora',TextType::class,[
+                'required' => false
+            ])
+            ->add('combustible',IntegerType::class,[
+                'required' => false
+            ])
+            ->add('agua',IntegerType::class,[
+                'required' => false
+            ])
             ->add('nombreCapitan',TextType::class,[
-                'label' => 'Nombre del capitán'
+                'label' => 'Nombre del capitán',
+                'required' => false
             ])
             ->add('telefonoCapitan',TextType::class,[
-                'label' => 'Teléfono del capitán'
+                'label' => 'Teléfono del capitán',
+                'required' => false
                 ])
             ->add('correoCapitan',TextType::class,[
-                'label' => 'Correo del capitán'
+                'label' => 'Correo del capitán',
+                'required' => false
             ])
             ->add('estatus',null,[
-                'label' => ' '
+                'label' => ' ',
+                'required' => false
             ])
-//            ->add('cliente')
             ->add('motores',CollectionType::class,[
                 'entry_type' => MotorType::class,
                 'label' => false,
@@ -55,6 +76,14 @@ class BarcoType extends AbstractType
                 'by_reference' => false
             ])
         ;
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $barco = $event->getData();
+            $form = $event->getForm();
+
+            if($barco->getId()==null){ //cotización nueva
+                $form->remove('estatus');
+            }
+        });
     }
     
     /**

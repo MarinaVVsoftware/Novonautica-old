@@ -47,11 +47,16 @@ class ClienteController extends Controller
         $cliente = new Cliente();
         $barco = new Barco();
         $motor = new Motor();
+
+        $cliente->setEstatus(true);
+        $barco->setEstatus(true);
+
         $cliente->addBarco($barco);
         $barco->addMotore($motor);
         $form = $this->createForm('AppBundle\Form\ClienteType', $cliente);
         $form->handleRequest($request);
 
+        dump($barco);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($cliente);

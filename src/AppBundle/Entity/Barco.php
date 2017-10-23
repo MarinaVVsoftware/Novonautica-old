@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Barco
@@ -24,6 +25,9 @@ class Barco
 
     /**
      * @var string
+     *  @Assert\NotBlank(
+     *     message="Nombre del barco no puede quedar vacío"
+     * )
      *
      * @ORM\Column(name="nombre", type="string", length=255)
      */
@@ -121,6 +125,7 @@ class Barco
     private $cliente;
 
     /**
+     *
      * @ORM\OneToMany(targetEntity="Motor", mappedBy="barco",cascade={"persist"})
      */
     private $motores;

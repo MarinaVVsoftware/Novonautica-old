@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Motor
@@ -23,6 +24,9 @@ class Motor
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Marca del motor no puede quedar vacío"
+     * )
      *
      * @ORM\Column(name="marca", type="string", length=100)
      */
@@ -34,13 +38,6 @@ class Motor
      * @ORM\Column(name="modelo", type="string", length=100, nullable=true)
      */
     private $modelo;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="estatus", type="boolean")
-     */
-    private $estatus;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="motores")
@@ -104,30 +101,6 @@ class Motor
     public function getModelo()
     {
         return $this->modelo;
-    }
-
-    /**
-     * Set estatus
-     *
-     * @param boolean $estatus
-     *
-     * @return Motor
-     */
-    public function setEstatus($estatus)
-    {
-        $this->estatus = $estatus;
-
-        return $this;
-    }
-
-    /**
-     * Get estatus
-     *
-     * @return bool
-     */
-    public function getEstatus()
-    {
-        return $this->estatus;
     }
 
     /**

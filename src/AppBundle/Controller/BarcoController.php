@@ -45,6 +45,7 @@ class BarcoController extends Controller
         $barco = new Barco();
         $motor = new Motor();
         $barco->addMotore($motor);
+        $barco->setEstatus(true);
         $form = $this->createForm('AppBundle\Form\BarcoType', $barco);
         $form->handleRequest($request);
 
@@ -152,7 +153,7 @@ class BarcoController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('barco_index');
+        return $this->redirectToRoute('cliente_index');
     }
 
     /**

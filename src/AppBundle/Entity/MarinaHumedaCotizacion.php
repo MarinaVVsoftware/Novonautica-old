@@ -114,16 +114,23 @@ class MarinaHumedaCotizacion
     private $notascliente;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="estatus", type="boolean")
+     */
+    private $estatus;
+
+    /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="mhcotizaciones")
-     * @ORM\JoinColumn(name="idcliente", referencedColumnName="id")
+     * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
      */
     private $cliente;
 
     /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="mhcotizaciones")
-     * @ORM\JoinColumn(name="idbarco", referencedColumnName="id")
+     * @ORM\JoinColumn(name="idbarco", referencedColumnName="id",onDelete="CASCADE")
      */
     private $barco;
 
@@ -1085,6 +1092,30 @@ class MarinaHumedaCotizacion
     public function getNotasnovo()
     {
         return $this->notasnovo;
+    }
+
+    /**
+     * Set estatus
+     *
+     * @param boolean $estatus
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setEstatus($estatus)
+    {
+        $this->estatus = $estatus;
+
+        return $this;
+    }
+
+    /**
+     * Get estatus
+     *
+     * @return bool
+     */
+    public function getEstatus()
+    {
+        return $this->estatus;
     }
 
     /**

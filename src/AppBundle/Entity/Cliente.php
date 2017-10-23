@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -25,7 +26,9 @@ class Cliente
 
     /**
      * @var string
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *     message="Nombre no puede quedar vacío"
+     * )
      *
      * @ORM\Column(name="nombre", type="string", length=255, unique=true)
      */
@@ -33,6 +36,9 @@ class Cliente
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Correo no puede quedar vacío"
+     * )
      * @Assert\Email(
      *     message = "El correo '{{ value }}' no es válido."
      * )
@@ -43,6 +49,9 @@ class Cliente
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Password no pude quedar vacío"
+     * )
      *
      * @ORM\Column(name="password", type="string", length=255)
      */
@@ -50,6 +59,10 @@ class Cliente
 
     /**
      * @var string
+     * @Assert\Length(
+     *      min = 10,
+     *      minMessage = "Error, número de teléfono no válido"
+     * )
      *
      * @ORM\Column(name="telefono", type="string", length=255, nullable=true)
      */
@@ -57,6 +70,13 @@ class Cliente
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Celular no pude quedar vacío"
+     * )
+     * @Assert\Length(
+     *      min = 10,
+     *      minMessage = "Error, número de celular no válido"
+     * )
      *
      * @ORM\Column(name="celular", type="string", length=255)
      */
@@ -113,6 +133,9 @@ class Cliente
 
     /**
      * @var string
+     * @Assert\Email(
+     *     message = "El correo de facturación '{{ value }}' no es válido."
+     * )
      *
      * @ORM\Column(name="correofacturacion", type="string", length=255, nullable=true)
      */
@@ -125,8 +148,14 @@ class Cliente
      */
     private $estatus;
 
+//* @Assert\Collection(
+//*     fields={
+//*         "nombre"  = @Assert\NotBlank()
+//*     },
+//*     allowExtraFields= true,
+//     *     missingFieldsMessage=" Agrege el nombre del barco para continuar"
+//    * )
     /**
-     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Barco", mappedBy="cliente",cascade={"persist"})
      */
     private $barcos;
