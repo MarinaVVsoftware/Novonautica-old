@@ -318,10 +318,15 @@ form > .btn-borrar:hover,btn-borrar:hover{
 .panel-novo > .panel-heading {
     background-color: #292e41;
 }
-
-.panel-novo > .panel-body {
+.panel-novo > .panel-body,
+.panel-novo > .panel-footer {
     background-color: #363c52;
+}
+.panel-novo > .panel-body{
     min-height: 400px;
+}
+.panel-novo > .panel-footer {
+    border-top: none;
 }
 .panel-novo thead{
     background-color: #292e41;

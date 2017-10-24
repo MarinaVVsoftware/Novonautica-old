@@ -54,7 +54,9 @@ class MarinaHumedaCotizacionType extends AbstractType
                            'readonly' => true],
                 'format' => 'dd-MM-yyyy'
             ])
-            ->add('descuento')
+            ->add('descuento',null,[
+                'empty_data' => 0
+            ])
 
             ->add('mhcservicios',CollectionType::class,[
                 'entry_type' => MarinaHumedaCotizaServiciosType::class,
@@ -88,7 +90,8 @@ class MarinaHumedaCotizacionType extends AbstractType
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();
-
+            dump($barcos);
+            
             $form->add('barco', EntityType::class, array(
                 'class' => 'AppBundle:Barco',
                 'placeholder' => '',
@@ -108,9 +111,16 @@ class MarinaHumedaCotizacionType extends AbstractType
                 $form->remove('validacliente');
                 $form->remove('notasnovo');
                 $form->remove('notascliente');
-            }else{ //editando cotización
-                if($cotizacion->getValidanovo()==2) { //si es aprobado por marina
-                    if($cotizacion->getValidacliente()==2){
+
+            }else{ //editando cotización, solo para validaciones
+                $form->remove('cliente');
+                $form->remove('fechaLlegada');
+                $form->remove('fechaSalida');
+                $form->remove('descuento');
+                $form->remove('mhcservicios');
+
+                if($cotizacion->getValidanovo()==2) { //si fue aprobado por marina
+                    if($cotizacion->getValidacliente()==2){ //si fue aprobado por el cliente
                         $form->remove('validanovo');
                         $form->remove('validacliente');
                         $form->remove('notasnovo');

@@ -14,7 +14,7 @@
                             <h3 class="panel-title">Editar Cliente</h3>
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-contorno-azul pull-right" href="{{ path('cliente_index') }}">
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('cliente_show',{ 'id': cliente.id }) }}">
                                 {#<i class="fa fa-arrow-left" aria-hidden="true"></i>#}
                                 Regresar
                             </a>
@@ -133,21 +133,37 @@
                             {#{% for barco in barcos %}#}
                                 {#<a href="{{ path('barco_edit',{'id':barco.id}) }}" class="btn btn-azul">{{ barco.nombre }}</a>#}
                             {#{% endfor %}#}
-                            <a href="{{ path('barco_new',{'cliente':cliente.id}) }}" class="btn btn-azul">+ Agregar Barco</a>
+                            <a href="{{ path('barco_new',{'cliente':cliente.id}) }}" class="btn btn-azul">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                Agregar Barco
+                            </a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <input type="submit" value="Guardar" class="btn btn-azul center-block"/>
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
                         </div>
                     </div>
 
                     {{ form_end(edit_form) }}
-
-                    <div class="row">
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <a class="btn btn-naranja pull-right" href="{{ path('cliente_show',{ 'id': cliente.id }) }}">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
                         <div class="col-sm-12">
                             {{ form_start(delete_form) }}
-                            <input type="submit" value="Borrar" class="btn btn-borrar pull-right">
+                            <button type="submit" class="btn btn-borrar pull-right">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                Borrar
+                            </button>
                             {{ form_end(delete_form) }}
                         </div>
                     </div>

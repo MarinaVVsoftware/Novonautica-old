@@ -623,12 +623,45 @@ class MarinaHumedaCotizacionController extends Controller
         ));
     }
 
+
     /**
      * Displays a form to edit an existing marinaHumedaCotizacion entity.
      *
      * @Route("/{id}/editar", name="marina-humeda_edit")
      * @Method({"GET", "POST"})
      */
+    public function editAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
+    {
+        $servicios = $marinaHumedaCotizacion->getMHCservicios();
+
+        $deleteForm = $this->createDeleteForm($marinaHumedaCotizacion);
+        $editForm = $this->createForm( 'AppBundle\Form\MarinaHumedaCotizacionType', $marinaHumedaCotizacion);
+        dump($servicios);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
+        }
+
+        return $this->render('marinahumedacotizacion/validar.html.twig', array(
+            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            'marinacotizaciones' => 1
+        ));
+    }
+
+/*
+para editar todos los campos
+    /**
+     * Displays a form to edit an existing marinaHumedaCotizacion entity.
+     *
+     * @Route("/{id}/editar", name="marina-humeda_edit")
+     * @Method({"GET", "POST"})
+     *7/
     public function editAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
         $servicios = $marinaHumedaCotizacion->getMHCservicios();
@@ -808,8 +841,8 @@ class MarinaHumedaCotizacionController extends Controller
 
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
-        }
+           return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
+       }
 
         return $this->render('marinahumedacotizacion/edit.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
@@ -818,7 +851,7 @@ class MarinaHumedaCotizacionController extends Controller
             'marinacotizaciones' => 1
         ));
     }
-
+*/
     /**
      * Deletes a marinaHumedaCotizacion entity.
      *

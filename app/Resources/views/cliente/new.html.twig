@@ -126,10 +126,21 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <input type="submit" value="Guardar" class="btn btn-azul pull-right"/>
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
                         </div>
                     </div>
                     {{ form_end(form) }}
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <a href="{{ path('cliente_index') }}" class="btn btn-naranja pull-right">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

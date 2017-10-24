@@ -214,16 +214,19 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-4">
-                            <a class="btn btn-azul" href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">Editar</a>
+                            <a class="btn btn-azul" href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                Editar
+                            </a>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            {{ form_start(delete_form) }}
-                            <input type="submit" value="Borrar" class="btn btn-borrar pull-right">
-                            {{ form_end(delete_form) }}
-                        </div>
-                    </div>
+                    {#<div class="row">#}
+                        {#<div class="col-sm-12">#}
+                            {#form_start(delete_form)#}
+                            {#<input type="submit" value="Borrar" class="btn btn-borrar pull-right">#}
+                            {#form_end(delete_form)#}
+                        {#</div>#}
+                    {#</div>#}
                 </div>
             </div>
         </section>

@@ -106,6 +106,10 @@ class Barco
     /**
      * @var string
      *
+     * @Assert\Email(
+     *     message = "El correo '{{ value }}' no es válido."
+     * )
+     *
      * @ORM\Column(name="correo_capitan", type="string", length=255, nullable=true)
      */
     private $correoCapitan;

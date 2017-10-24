@@ -19,6 +19,7 @@
                     </div>
                 </div>
                 <div class="panel-body panel-pestanias">
+                    {% form_theme form 'estructura/temaerror.html.twig' %}
                     {{ form_start(form) }}
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="primero active">
@@ -32,6 +33,12 @@
                         </li>
                     </ul>
                     <div class="tab-content">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                {{ form_errors(form.fechaLlegada) }}
+                                {{ form_errors(form.fechaSalida) }}
+                            </div>
+                        </div>
                         <div role="tabpanel" class="tab-pane active" id="generales">
                             <div class="row">
                                 <div class="col-sm-3">
@@ -60,14 +67,12 @@
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 {{ form_label(form.fechaLlegada) }}
-                                                {{ form_errors(form.fechaLlegada) }}
                                                 {{ form_widget(form.fechaLlegada) }}
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 {{ form_label(form.fechaSalida) }}
-                                                {{ form_errors(form.fechaSalida) }}
                                                 {{ form_widget(form.fechaSalida) }}
                                             </div>
                                         </div>
@@ -246,7 +251,10 @@
                                     {#</div>#}
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <input type="submit" value="Guardar" class="btn btn-azul"/>
+                                            <button type="submit" class="btn btn-azul">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                Guardar
+                                            </button>
                                         </div>
                                     </div>
 
@@ -334,6 +342,16 @@
                     {{ form_widget(form.mhcservicios.children.3.estatus,{'attr':{'class':'hidden'}}) }}
                     {{ form_end(form) }}
 
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="{{ path('marina-humeda_index') }}" class="btn btn-naranja pull-right">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

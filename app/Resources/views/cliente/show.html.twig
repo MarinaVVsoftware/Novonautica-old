@@ -115,8 +115,10 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <a class="btn btn-azul" href="{{ path('cliente_edit', { 'id': cliente.id }) }}">Editar
-                                        Todo</a>
+                                    <a class="btn btn-azul" href="{{ path('cliente_edit', { 'id': cliente.id }) }}">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        Editar Todo
+                                    </a>
                                 </div>
                                 {#<div class="col-sm-8">#}
                                 {#{{ form_start(delete_form) }}#}
@@ -231,8 +233,10 @@
                                 {% endfor %}
                                 <div class="row">
                                     <div class="col-sm-4">
-                                        <a href="{{ path('barco_edit',{'id':barco.id}) }}" class="btn btn-azul">Editar
-                                            Barco</a>
+                                        <a href="{{ path('barco_edit',{'id':barco.id}) }}" class="btn btn-azul">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            Editar Barco
+                                        </a>
                                     </div>
                                 </div>
                             </div>

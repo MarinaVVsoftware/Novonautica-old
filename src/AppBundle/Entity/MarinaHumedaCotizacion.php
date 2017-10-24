@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * MarinaHumedaCotizacion
@@ -24,6 +25,10 @@ class MarinaHumedaCotizacion
 
     /**
      * @var \DateTime
+     * @Assert\NotBlank(
+     *     message="Fecha de llegada no puede quedar vacío"
+     * )
+     * @Assert\Date()
      *
      * @ORM\Column(name="fecha_llegada", type="datetime")
      */
@@ -31,6 +36,10 @@ class MarinaHumedaCotizacion
 
     /**
      * @var \DateTime
+     * @Assert\NotBlank(
+     *     message="Fecha de salida no puede quedar vacío"
+     * )
+     * @Assert\Date()
      *
      * @ORM\Column(name="fecha_salida", type="datetime")
      */
