@@ -278,6 +278,7 @@ class MarinaHumedaCotizacionController extends Controller
             }
 
             //-------------------------------------------------
+            $fechaHoraActual = new \DateTime('now');
             $marinaHumedaCotizacion
                 ->setDolar($dolar)
                 ->setIva($iva)
@@ -288,6 +289,7 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setValidanovo(0)
                 ->setValidacliente(0)
                 ->setEstatus(1)
+                ->setFecharegistro($fechaHoraActual);
                 ;
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
@@ -603,11 +605,13 @@ class MarinaHumedaCotizacionController extends Controller
             }
 
             //-------------------------------------------------
+            $fechaHoraActual = new \DateTime('now');
             $marinaHumedaCotizacion
                 ->setSubtotal($granSubtotal)
                 ->setIvatotal($granIva)
                 ->setDescuentototal($granDescuento)
                 ->setTotal($granTotal)
+                ->setFecharegistro($fechaHoraActual)
             ;
 
             $em->persist($marinaHumedaCotizacion);
@@ -627,7 +631,7 @@ class MarinaHumedaCotizacionController extends Controller
     /**
      * Displays a form to edit an existing marinaHumedaCotizacion entity.
      *
-     * @Route("/{id}/editar", name="marina-humeda_edit")
+     * @Route("/{id}/validar", name="marina-humeda_validar")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
@@ -636,7 +640,7 @@ class MarinaHumedaCotizacionController extends Controller
 
         $deleteForm = $this->createDeleteForm($marinaHumedaCotizacion);
         $editForm = $this->createForm( 'AppBundle\Form\MarinaHumedaCotizacionType', $marinaHumedaCotizacion);
-        dump($servicios);
+
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {

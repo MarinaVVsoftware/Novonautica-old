@@ -9,7 +9,17 @@
         <section class="content">
             <div class="panel panel-novo">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ usuario.nombre }}</h3>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">{{ usuario.nombre }}</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="{{ path('usuario_index') }}" class="btn btn-contorno-azul pull-right">
+                                Regresar
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -51,17 +61,26 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-4">
-                            <a class="btn btn-morado-claro" href="{{ path('usuario_index') }}">Regresar</a>
-                            <a class="btn btn-azul" href="{{ path('usuario_edit', { 'id': usuario.id }) }}">Editar</a>
+                        <div class="col-sm-12">
+                            <a class="btn btn-azul pull-right" href="{{ path('usuario_edit', { 'id': usuario.id }) }}">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                Editar
+                            </a>
                         </div>
-                        <div class="col-sm-8">
-                            {{ form_start(delete_form) }}
-                            <input type="submit" value="Borrar" class="btn btn-borrar pull-right">
-                            {{ form_end(delete_form) }}
-                        </div>
+                        {#<div class="col-sm-8">#}
+                            {#{{ form_start(delete_form) }}#}
+                            {#<input type="submit" value="Borrar" class="btn btn-borrar pull-right">#}
+                            {#{{ form_end(delete_form) }}#}
+                        {#</div>#}
                     </div>
-
+                    {#<div class="row espacio-linea-arriba2">#}
+                        {#<div class="col-sm-12">#}
+                            {#<a class="btn btn-naranja pull-right" href="{{ path('usuario_index') }}">#}
+                                {#<i class="fa fa-ban" aria-hidden="true"></i>#}
+                                {#Cancelar#}
+                            {#</a>#}
+                        {#</div>#}
+                    {#</div>#}
                 </div>
             </div>
         </section>

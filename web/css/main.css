@@ -83,7 +83,7 @@ form > .btn-borrar,.btn-borrar{
     background: #8c0400;
     color: #fff;
 }
-form > .btn-borrar:hover,btn-borrar:hover{
+form > .btn-borrar:hover,.btn-borrar:hover{
     background: #d40400;
     color: #fff;
 }

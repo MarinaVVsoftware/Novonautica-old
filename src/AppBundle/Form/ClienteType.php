@@ -28,7 +28,7 @@ class ClienteType extends AbstractType
             ->add('correo',TextType::class,[
                 'required' => false
             ])
-            ->add('password',PasswordType::class,[
+            ->add('password',TextType::class,[
                 'required' => false
             ])
             ->add('telefono', TextType::class,[

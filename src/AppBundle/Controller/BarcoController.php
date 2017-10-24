@@ -52,6 +52,8 @@ class BarcoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $barco->setCliente($cliente);
+            $fechaHoraActual = new \DateTime('now');
+            $barco->setFecharegistro($fechaHoraActual);
             $em->persist($barco);
             $em->flush();
 

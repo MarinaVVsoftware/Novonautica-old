@@ -123,6 +123,13 @@ class MarinaHumedaCotizacion
     private $notascliente;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecharegistro", type="datetime", nullable=true)
+     */
+    private $fecharegistro;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="estatus", type="boolean")
@@ -1149,6 +1156,30 @@ class MarinaHumedaCotizacion
     public function getNotascliente()
     {
         return $this->notascliente;
+    }
+
+    /**
+     * Set fecharegistro
+     *
+     * @param \DateTime $fecharegistro
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setFecharegistro($fecharegistro)
+    {
+        $this->fecharegistro = $fecharegistro;
+
+        return $this;
+    }
+
+    /**
+     * Get fecharegistro
+     *
+     * @return \DateTime
+     */
+    public function getFecharegistro()
+    {
+        return $this->fecharegistro;
     }
 
     /**

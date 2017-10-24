@@ -10,7 +10,7 @@ parameters:
 
 framework:
     #esi: ~
-    #translator: { fallbacks: ['%locale%'] }
+    #translator: { fallbacks: ['%locale%'] }  #si se quita esta linea los mensajes de error del login quedan en ingles
     secret: '%secret%'
     router:
         resource: '%kernel.project_dir%/app/config/routing.yml'

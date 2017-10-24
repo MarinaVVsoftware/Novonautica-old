@@ -115,6 +115,13 @@ class Barco
     private $correoCapitan;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecharegistro", type="datetime", nullable=true)
+     */
+    private $fecharegistro;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="estatus", type="boolean")
@@ -445,6 +452,30 @@ class Barco
     public function getCorreoCapitan()
     {
         return $this->correoCapitan;
+    }
+
+    /**
+     * Set fecharegistro
+     *
+     * @param \DateTime $fecharegistro
+     *
+     * @return Barco
+     */
+    public function setFecharegistro($fecharegistro)
+    {
+        $this->fecharegistro = $fecharegistro;
+
+        return $this;
+    }
+
+    /**
+     * Get fecharegistro
+     *
+     * @return \DateTime
+     */
+    public function getFecharegistro()
+    {
+        return $this->fecharegistro;
     }
 
     /**

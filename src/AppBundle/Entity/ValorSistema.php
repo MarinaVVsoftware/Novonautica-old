@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * ValorSistema
@@ -30,6 +31,13 @@ class ValorSistema
 
     /**
      * @var float
+     * @Assert\NotBlank(
+     *     message="El valor no puede quedar vacío"
+     * )
+     * @Assert\Type(
+     *     type="float",
+     *     message="El valor {{ value }} no es válido"
+     * )
      *
      * @ORM\Column(name="valor", type="float")
      */

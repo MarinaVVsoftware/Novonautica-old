@@ -304,7 +304,10 @@
                                     {#</div>#}
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <input type="submit" value="Guardar" class="btn btn-azul"/>
+                                            <button type="submit" class="btn btn-azul">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                Guardar
+                                            </button>
                                         </div>
                                     </div>
 
@@ -392,6 +395,16 @@
                     {{ form_widget(form.mhcservicios.children.3.estatus,{'attr':{'class':'hidden'}}) }}
                     {{ form_end(form) }}
 
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="{{ path('marina-humeda_index') }}" class="btn btn-naranja pull-right">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

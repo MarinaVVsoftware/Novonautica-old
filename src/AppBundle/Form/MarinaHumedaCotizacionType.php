@@ -90,19 +90,19 @@ class MarinaHumedaCotizacionType extends AbstractType
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();
-            dump($barcos);
-            
-            $form->add('barco', EntityType::class, array(
-                'class' => 'AppBundle:Barco',
-                'placeholder' => '',
-                'attr' =>['class' =>'busquedabarco'],
-                'choices' => $barcos,
-                'expanded' => true,
-                'multiple' => false
-            ));
+
+                $form->add('barco', EntityType::class, array(
+                    'class' => 'AppBundle:Barco',
+                    'placeholder' => '',
+                    'attr' => ['class' => 'busquedabarco'],
+                    'choices' => $barcos,
+                    'expanded' => true,
+                    'multiple' => false
+                ));
+
         };
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use($formModifier) {
             $cotizacion = $event->getData();
             $form = $event->getForm();
 
@@ -111,7 +111,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                 $form->remove('validacliente');
                 $form->remove('notasnovo');
                 $form->remove('notascliente');
-
+                $formModifier($event->getForm(), $cotizacion->getCliente());
             }else{ //editando cotización, solo para validaciones
                 $form->remove('cliente');
                 $form->remove('fechaLlegada');
@@ -136,15 +136,15 @@ class MarinaHumedaCotizacionType extends AbstractType
             }
         });
 
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($formModifier) {
-                // this would be your entity, i.e. SportMeetup
-                $data = $event->getData();
-
-                $formModifier($event->getForm(), $data->getCliente());
-            }
-        );
+//        $builder->addEventListener(
+//            FormEvents::PRE_SET_DATA,
+//            function (FormEvent $event) use ($formModifier) {
+//                // this would be your entity, i.e. SportMeetup
+//                $data = $event->getData();
+//
+//                $formModifier($event->getForm(), $data->getCliente());
+//            }
+//        );
 
         $builder->get('cliente')->addEventListener(
             FormEvents::POST_SUBMIT,

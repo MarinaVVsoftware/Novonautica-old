@@ -56,9 +56,14 @@ class ClienteController extends Controller
         $form = $this->createForm('AppBundle\Form\ClienteType', $cliente);
         $form->handleRequest($request);
 
-        dump($barco);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            $fechaHoraActual = new \DateTime('now');
+            $barco->setFecharegistro($fechaHoraActual);
+            $cliente->setFecharegistro($fechaHoraActual);
+
             $em->persist($cliente);
             $em->flush();
 

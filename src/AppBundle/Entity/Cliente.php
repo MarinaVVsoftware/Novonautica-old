@@ -97,13 +97,6 @@ class Cliente
     private $fecharegistro;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="horaregistro", type="time", nullable=true)
-     */
-    private $horaregistro;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="empresa", type="string", length=255, nullable=true)
@@ -353,30 +346,6 @@ class Cliente
     public function getFecharegistro()
     {
         return $this->fecharegistro;
-    }
-
-    /**
-     * Set horaregistro
-     *
-     * @param \DateTime $horaregistro
-     *
-     * @return Cliente
-     */
-    public function setHoraregistro($horaregistro)
-    {
-        $this->horaregistro = $horaregistro;
-
-        return $this;
-    }
-
-    /**
-     * Get horaregistro
-     *
-     * @return \DateTime
-     */
-    public function getHoraregistro()
-    {
-        return $this->horaregistro;
     }
 
     /**

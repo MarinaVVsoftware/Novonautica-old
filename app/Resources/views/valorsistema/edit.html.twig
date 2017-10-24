@@ -20,14 +20,20 @@
 
             </div>
             <div class="panel-body">
+                {% form_theme edit_form 'estructura/temaerror.html.twig' %}
                 {{ form_start(edit_form) }}
+                <div class="row">
+                    <div class="col-sm-8">
+                        {{ form_errors(edit_form.valor) }}
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-2 col-sm-offset-1">
                         <label>Elemento: </label>
                         <p>{{ valorSistema.nombre }}</p>
                     </div>
                     <div class="col-sm-2">
-                        {{ form_errors(edit_form.valor) }}
+
                         {{ form_label(edit_form.valor) }}
                         <p>{{ form_widget(edit_form.valor) }}</p>
                     </div>
@@ -36,7 +42,10 @@
                         <p>{{ valorSistema.unidad }}</p>
                     </div>
                     <div class="col-sm-5">
-                        <input type="submit" value="Guardar" class="btn btn-azul" />
+                        <button type="submit" class="btn btn-azul" >
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                            Guardar
+                        </button>
                     </div>
                 </div>
                 {{ form_end(edit_form) }}
@@ -47,6 +56,16 @@
                         {#{{ form_end(delete_form) }}#}
                     {#</li>#}
                 {#</ul>#}
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a href="{{ path('ajustes_index') }}" class="btn btn-naranja pull-right">
+                            <i class="fa fa-ban" aria-hidden="true"></i>
+                            Cancelar
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

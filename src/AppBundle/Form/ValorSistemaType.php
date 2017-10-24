@@ -15,7 +15,8 @@ class ValorSistemaType extends AbstractType
     {
         $builder
             ->add('valor',null,[
-                'label' => 'Valor: '
+                'label' => 'Valor: ',
+                'required' => false
             ]);
     }
     

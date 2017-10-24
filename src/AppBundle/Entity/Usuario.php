@@ -4,12 +4,22 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Usuario
  *
  * @ORM\Table(name="usuario")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UsuarioRepository")
+ * @UniqueEntity(
+ *          fields = {"correo"},
+ *          message="El correo ya se encuentra en uso"
+ *)
+ * @UniqueEntity(
+ *          fields = {"username"},
+ *          message="El nombre de usuario ya se encuentra en uso"
+ *)
  */
 class Usuario implements AdvancedUserInterface, \Serializable
 {
@@ -24,25 +34,40 @@ class Usuario implements AdvancedUserInterface, \Serializable
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Nombre no puede quedar vacío"
+     * )
      *
-     * @ORM\Column(name="nombre", type="string", length=255, unique=true)
+     * @ORM\Column(name="nombre", type="string", length=255)
      */
     private $nombre;
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Correo no puede quedar vacío"
+     * )
+     * @Assert\Email(
+     *     message = "El correo '{{ value }}' no es válido."
+     * )
      *
      * @ORM\Column(name="correo", type="string", length=255, unique=true)
      */
     private $correo;
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Nombre de usuario no puede quedar vacío"
+     * )
      *
      * @ORM\Column(name="username", type="string", length=255, unique=true)
      */
     private $username;
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Contraseña no puede quedar vacío"
+     * )
      *
      * @ORM\Column(name="password", type="string", length=255, unique=true)
      */
@@ -54,6 +79,13 @@ class Usuario implements AdvancedUserInterface, \Serializable
      * @ORM\Column(name="estatus", type="boolean")
      */
     private $estatus;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecharegistro", type="datetime", nullable=true)
+     */
+    private $fecharegistro;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Rol", inversedBy="usuarios")
@@ -190,6 +222,29 @@ class Usuario implements AdvancedUserInterface, \Serializable
         return $this->estatus;
     }
 
+    /**
+     * Set fecharegistro
+     *
+     * @param \DateTime $fecharegistro
+     *
+     * @return Usuario
+     */
+    public function setFecharegistro($fecharegistro)
+    {
+        $this->fecharegistro = $fecharegistro;
+
+        return $this;
+    }
+
+    /**
+     * Get fecharegistro
+     *
+     * @return \DateTime
+     */
+    public function getFecharegistro()
+    {
+        return $this->fecharegistro;
+    }
 
     /**
      * Set rol

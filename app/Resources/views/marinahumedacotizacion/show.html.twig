@@ -213,10 +213,18 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-4">
-                            <a class="btn btn-azul" href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">
+                        <div class="col-sm-12">
+                            <a class="btn btn-azul pull-right" href="{{ path('marina-humeda_validar', { 'id': marinaHumedaCotizacion.id }) }}">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                Editar
+                                Validar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <a class="btn btn-naranja pull-right" href="{{ path('marina-humeda_recotizar', { 'id': marinaHumedaCotizacion.id }) }}">
+                                <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                Recotizar
                             </a>
                         </div>
                     </div>

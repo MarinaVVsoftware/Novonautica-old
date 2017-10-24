@@ -30,7 +30,10 @@
                                         <td>{{ valorSistema.valor }}</td>
                                         <td>{{ valorSistema.unidad }}</td>
                                         <td>
-                                            <a class="btn btn-azul" href="{{ path('ajustes_edit', { 'id': valorSistema.id }) }}">Editar</a>
+                                            <a class="btn btn-azul" href="{{ path('ajustes_edit', { 'id': valorSistema.id }) }}">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                Editar
+                                            </a>
                                         </td>
                                     </tr>
                                 {% endfor %}

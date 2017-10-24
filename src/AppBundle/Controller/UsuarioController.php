@@ -47,6 +47,8 @@ class UsuarioController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $fechaHoraActual = new \DateTime('now');
+            $usuario->setFecharegistro($fechaHoraActual);
             $em->persist($usuario);
             $em->flush();
 
@@ -90,7 +92,7 @@ class UsuarioController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('usuario_edit', array('id' => $usuario->getId()));
+            return $this->redirectToRoute('usuario_show', array('id' => $usuario->getId()));
         }
 
         return $this->render('usuario/edit.html.twig', array(

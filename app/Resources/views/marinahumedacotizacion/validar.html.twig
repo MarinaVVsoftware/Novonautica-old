@@ -1,7 +1,7 @@
 {% extends 'estructura/plantilla.twig' %}
 
 {% block title %}
-    Novonautica | Editar cotización Marina Humeda
+    Novonautica | Validar cotización Marina Humeda
 {% endblock %}
 
 {% block contwrapper %}
@@ -11,7 +11,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Marina Humeda Editar</h3>
+                            <h3 class="panel-title">Marina Humeda Validación</h3>
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_index') }}">Regresar</a>
@@ -55,10 +55,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <div class="radio buscabarcomh">
-                                        {{ form_label(edit_form.barco) }}
-                                        {{ form_widget(edit_form.barco) }}
-                                    </div>
+
                                     <div id="info-barco">
                                         <label>Barco</label>
                                         <div class='info-input'>{{ marinaHumedaCotizacion.barco.nombre }}</div>
@@ -83,7 +80,6 @@
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
                                 <div class="col-sm-3">
-
                                     <div class="input-daterange" id="rangoFehas">
                                         <div class="row">
                                             <div class="col-sm-12">
@@ -337,12 +333,18 @@
                                 <div class="col-sm-3">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <a class="btn btn-morado-claro">Visualizar</a>
+                                            <a class="btn btn-morado-claro">
+                                                <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                Visualizar
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12 espacio-linea-arriba2">
-                                            <input type="submit" value="Guardar" class="btn btn-azul"/>
+                                            <button type="submit" class="btn btn-azul">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                Guardar
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -459,13 +461,15 @@
                             {% endif %}
                         </div>
                     </div>
-
                     {{ form_end(edit_form) }}
+                </div>
+                <div class="panel-footer">
                     <div class="row">
                         <div class="col-sm-12">
-                            {{ form_start(delete_form) }}
-                            <input type="submit" value="Borrar" class="btn btn-borrar pull-right">
-                            {{ form_end(delete_form) }}
+                            <a href="{{ path('marina-humeda_show',{ 'id': marinaHumedaCotizacion.id }) }}" class="btn btn-naranja pull-right">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
                         </div>
                     </div>
                 </div>
