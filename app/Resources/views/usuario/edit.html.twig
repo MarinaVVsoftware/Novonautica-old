@@ -104,12 +104,11 @@
                     </div>
                     <div class="row espacio-linea-arriba2">
                         <div class="col-sm-6">
-                            {{ form_start(delete_form) }}
-                            <button type="submit" class="btn btn-borrar pull-right">
+                            <button type="button" class="btn btn-borrar pull-right" data-toggle="modal"
+                                    data-target="#modalBorrar">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                                 Borrar
                             </button>
-                            {{ form_end(delete_form) }}
                         </div>
                     </div>
 
@@ -118,4 +117,16 @@
             </div>
         </section>
     </div>
+{% endblock %}
+{% block modalborrar %}
+    {% embed 'estructura/modalborrar.twig' %}
+        {% block botonborra %}
+            {{ form_start(delete_form) }}
+            <button type="submit" class="btn btn-borrar">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                Borrar
+            </button>
+            {{ form_end(delete_form) }}
+        {% endblock %}
+    {% endembed %}
 {% endblock %}

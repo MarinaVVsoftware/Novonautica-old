@@ -366,7 +366,7 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_6_estatus').on('click',functio
 
 $('#appbundle_marinahumedacotizacion_cliente').change(function(e) {
     $("#info-cliente").empty();
-    $("#info-barco").empty();
+    $("#info-barco").empty(); 
     $.ajax({
         method: "GET",
         url: "../ajax/buscacliente",

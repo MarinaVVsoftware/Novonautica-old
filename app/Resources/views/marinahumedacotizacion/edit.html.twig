@@ -20,6 +20,7 @@
 
                 </div>
                 <div class="panel-body panel-pestanias">
+                    {% form_theme edit_form 'estructura/temaerror.html.twig' %}
                     {{ form_start(edit_form) }}
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="primero active">
@@ -33,17 +34,52 @@
                         </li>
                     </ul>
                     <div class="tab-content">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                {{ form_errors(edit_form.fechaLlegada) }}
+                                {{ form_errors(edit_form.fechaSalida) }}
+                            </div>
+                        </div>
                         <div role="tabpanel" class="tab-pane active" id="generales">
                             <div class="row">
                                 <div class="col-sm-3">
                                     {{ form_row(edit_form.cliente) }}
-
+                                    <div id="info-cliente">
+                                        <label>Correo electrónico</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.correo }}</div>
+                                        <label>Número de teléfono</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.telefono }}</div>
+                                        <label>Dirección</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.direccion }}</div>
+                                        <label>R.F.C.</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.rfc }}</div>
+                                        <label>Razón social</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.razonsocial }}</div>
+                                        <label>Dirección fiscal</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.direccionfiscal }}</div>
+                                    </div>
                                 </div>
                                 <div class="col-sm-3">
                                     {{ form_errors(edit_form.barco) }}
-                                    <div class="radio">
+                                    <div class="radio buscabarcomh">
                                         {{ form_label(edit_form.barco) }}
                                         {{ form_widget(edit_form.barco) }}
+                                    </div>
+                                    <div id="info-barco">
+                                        <label>Marca</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.marca }}</div>
+                                        <label>Modelo</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.modelo }}</div>
+                                        <label>Eslora</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.eslora }}</div>
+                                        <label>Manga</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.manga }}</div>
+                                        <label>Nombre del capitán</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.nombreCapitan }}</div>
+                                        <label>Teléfono del capitán</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.telefonoCapitan }}</div>
+                                        <label>Correo del capitán</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.correoCapitan }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -56,14 +92,12 @@
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 {{ form_label(edit_form.fechaLlegada) }}
-                                                {{ form_errors(edit_form.fechaLlegada) }}
                                                 {{ form_widget(edit_form.fechaLlegada) }}
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 {{ form_label(edit_form.fechaSalida) }}
-                                                {{ form_errors(edit_form.fechaSalida) }}
                                                 {{ form_widget(edit_form.fechaSalida) }}
                                             </div>
                                         </div>
@@ -400,13 +434,43 @@
                     {{ form_end(edit_form) }}
                     <div class="row">
                         <div class="col-sm-12">
-                            {{ form_start(delete_form) }}
-                            <input type="submit" value="Borrar" class="btn btn-borrar pull-right">
-                            {{ form_end(delete_form) }}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="{{ path('marina-humeda_show',{ 'id': marinaHumedaCotizacion.id }) }}" class="btn btn-naranja pull-right">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-borrar pull-right" data-toggle="modal"
+                                    data-target="#modalBorrar">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                Borrar
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block modalborrar %}
+    {% embed 'estructura/modalborrar.twig' %}
+        {% block botonborra %}
+            {{ form_start(delete_form) }}
+            <button type="submit" class="btn btn-borrar">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                Borrar
+            </button>
+            {{ form_end(delete_form) }}
+        {% endblock %}
+    {% endembed %}
 {% endblock %}

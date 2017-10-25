@@ -633,7 +633,7 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @Route("/{id}/validar", name="marina-humeda_validar")
      * @Method({"GET", "POST"})
-     */
+     **/
     public function editAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
         $servicios = $marinaHumedaCotizacion->getMHCservicios();
@@ -658,21 +658,21 @@ class MarinaHumedaCotizacionController extends Controller
         ));
     }
 
-/*
-para editar todos los campos
+
+//para editar todos los campos
     /**
      * Displays a form to edit an existing marinaHumedaCotizacion entity.
      *
      * @Route("/{id}/editar", name="marina-humeda_edit")
      * @Method({"GET", "POST"})
-     *7/
-    public function editAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
+     **/
+    public function editAllAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
         $servicios = $marinaHumedaCotizacion->getMHCservicios();
 
         $deleteForm = $this->createDeleteForm($marinaHumedaCotizacion);
-        $editForm = $this->createForm( 'AppBundle\Form\MarinaHumedaCotizacionType', $marinaHumedaCotizacion);
-        dump($servicios);
+        $editForm = $this->createForm( 'AppBundle\Form\MarinaHumedaCotizacionTodoType', $marinaHumedaCotizacion);
+
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -855,7 +855,7 @@ para editar todos los campos
             'marinacotizaciones' => 1
         ));
     }
-*/
+
     /**
      * Deletes a marinaHumedaCotizacion entity.
      *
