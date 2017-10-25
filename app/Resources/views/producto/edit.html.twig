@@ -1,7 +1,7 @@
 {% extends 'estructura/plantilla.twig' %}
 
 {% block title %}
-    Novonautiva | Editar Evento
+    Novonautiva | Usuarios
 {% endblock %}
 
 {% block contwrapper %}
@@ -11,68 +11,45 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Editar Evento</h3>
+                            <h3 class="panel-title">Editar Producto</h3>
                         </div>
                         <div class="col-sm-6">
-                            <a href="{{ path('marina-agenda') }}" class="btn btn-contorno-azul pull-right">Regresar</a>
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('producto_index') }}">Regresar</a>
                         </div>
                     </div>
-
                 </div>
                 <div class="panel-body">
                     {% form_theme edit_form 'estructura/temaerror.html.twig' %}
                     {{ form_start(edit_form) }}
                     <div class="row">
                         <div class="col-sm-6">
-                            {{ form_errors(edit_form.titulo) }}
-                            {{ form_errors(edit_form.fechainicio) }}
-                            {{ form_errors(edit_form.fechafin) }}
-                            {{ form_errors(edit_form.horainicio) }}
-                            {{ form_errors(edit_form.horafin) }}
+                            {{ form_errors(edit_form.nombre) }}
+                            {{ form_errors(edit_form.codigo) }}
                             {{ form_errors(edit_form.descripcion) }}
+                            {{ form_errors(edit_form.precio) }}
+                            {{ form_errors(edit_form.cantidad) }}
+                            {{ form_errors(edit_form.unidad) }}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
-                            {{ form_label(edit_form.titulo) }}
-                            {{ form_widget(edit_form.titulo) }}
-                        </div>
-                    </div>
-                    <div class="input-daterange" id="rangoFehas">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                {{ form_label(edit_form.fechainicio) }}
-                                {{ form_widget(edit_form.fechainicio) }}
-                            </div>
-                            <div class="col-sm-3">
-                                {{ form_label(edit_form.fechafin) }}
-                                {{ form_widget(edit_form.fechafin) }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p>
-                                {{ form_label(edit_form.horainicio) }}
-                            </p>
-                            <p>
-                                {{ form_widget(edit_form.horainicio) }}
-                            </p>
+                            {{ form_label(edit_form.nombre) }}
+                            {{ form_widget(edit_form.nombre) }}
 
-                        </div>
-                        <div class="col-sm-3">
-                            <p>
-                                {{ form_label(edit_form.horafin) }}
-                            </p>
-                            <p>
-                                {{ form_widget(edit_form.horafin) }}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
+                            {{ form_label(edit_form.codigo) }}
+                            {{ form_widget(edit_form.codigo) }}
+
                             {{ form_label(edit_form.descripcion) }}
                             {{ form_widget(edit_form.descripcion) }}
+
+                            {{ form_label(edit_form.precio) }}
+                            {{ form_widget(edit_form.precio) }}
+
+                            {{ form_label(edit_form.cantidad) }}
+                            {{ form_widget(edit_form.cantidad) }}
+
+                            {{ form_label(edit_form.unidad) }}
+                            {{ form_widget(edit_form.unidad) }}
                         </div>
                     </div>
                     <div class="row">
@@ -86,7 +63,7 @@
                     {{ form_end(edit_form) }}
                     <div class="row espacio-linea-arriba2">
                         <div class="col-sm-12">
-                            <a href="{{ path('marina-agenda') }}" class="btn btn-naranja pull-right">
+                            <a class="btn btn-naranja pull-right" href="{{ path('producto_index') }}">
                                 <i class="fa fa-ban" aria-hidden="true"></i>
                                 Cancelar
                             </a>
@@ -106,7 +83,6 @@
         </section>
     </div>
 {% endblock %}
-
 {% block modalborrar %}
     {% embed 'estructura/modalborrar.twig' %}
         {% block botonborra %}

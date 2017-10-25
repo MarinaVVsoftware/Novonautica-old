@@ -15,6 +15,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 class EventoController extends Controller
 {
     /**
+     * @Route("/agenda", name="marina-agenda")
+     */
+    public function displayMarinaAgenda(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $marinaEventos = $em->getRepository('AppBundle:Evento')->findAll();
+
+        return $this->render('evento/marina-agenda.twig', [
+            'marinaEventos' => $marinaEventos,
+            'marinaagenda' => 1
+        ]);
+    }
+    /**
      * Lists all evento entities.
      *
      * @Route("/", name="evento_index")
@@ -28,6 +41,7 @@ class EventoController extends Controller
 
         return $this->render('evento/index.html.twig', array(
             'eventos' => $eventos,
+            'marinaagenda' => 1
         ));
     }
 
@@ -54,13 +68,14 @@ class EventoController extends Controller
         return $this->render('evento/new.html.twig', array(
             'evento' => $evento,
             'form' => $form->createView(),
+            'marinaagenda' => 1
         ));
     }
 
     /**
+     * @Route("/{id}", name="evento_show")
      * Finds and displays a evento entity.
      *
-     * @Route("/{id}", name="evento_show")
      * @Method("GET")
      */
     public function showAction(Evento $evento)
@@ -70,6 +85,7 @@ class EventoController extends Controller
         return $this->render('evento/show.html.twig', array(
             'evento' => $evento,
             'delete_form' => $deleteForm->createView(),
+            'marinaagenda' => 1
         ));
     }
 
@@ -88,13 +104,14 @@ class EventoController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('evento_edit', array('id' => $evento->getId()));
+            return $this->redirectToRoute('evento_show', array('id' => $evento->getId()));
         }
 
         return $this->render('evento/edit.html.twig', array(
             'evento' => $evento,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'marinaagenda' => 1
         ));
     }
 

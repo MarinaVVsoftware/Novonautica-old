@@ -419,6 +419,15 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     padding: 5px 15px;
     width: 100%;
 }
+.panel-body  form input[type="time"]{
+    text-align: center;
+    color: #ffffff;
+    border: 1px solid #008CBA;
+    background: #363c52;
+}
+.panel-body form input[type="time"]::-webkit-inner-spin-button{
+    background: #363c52;
+}
 .panel-body form .info-input{
     min-height: 30px;
 }

@@ -19,26 +19,6 @@ class DefaultController extends Controller
         ]);
     }
 
-//    /**
-//     * @Route("/clientes/agregar", name="clientes-agregar")
-//     */
-//    public function displayNuevoCliente(Request $request)
-//    {
-//        return $this->render('cliente-agregar.twig', [
-//            'clienteagregar' => 1
-//        ]);
-//    }
-
-//    /**
-//     * @Route("/clientes/listado", name="clientes-lista")
-//     */
-//    public function displayListaCliente(Request $request)
-//    {
-//        return $this->render('cliente-listado.twig', [
-//            'clientelistado' => 1
-//        ]);
-//    }
-
     /**
      * @Route("/astillero/nueva-cotizacion", name="astillero-nueva-cotizacion")
      */
@@ -93,15 +73,7 @@ class DefaultController extends Controller
             'astilleroodt' => 1
         ]);
     }
-    /**
-     * @Route("/productos", name="productos")
-     */
-    public function displayProductos(Request $request)
-    {
-        return $this->render('productos.twig', [
-            'productos' => 1
-        ]);
-    }
+
     /**
      * @Route("/recursos-humanos", name="recursos-humanos")
      */

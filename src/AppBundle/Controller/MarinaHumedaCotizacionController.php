@@ -21,15 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 class MarinaHumedaCotizacionController extends Controller
 {
 
-    /**
-     * @Route("/agenda", name="marina-agenda")
-     */
-    public function displayMarinaAgenda(Request $request)
-    {
-        return $this->render('marina-agenda.twig', [
-            'marinaagenda' => 1
-        ]);
-    }
+
     /**
      * Lists all marinaHumedaCotizacion entities.
      *

@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Evento
@@ -23,6 +24,9 @@ class Evento
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Título no pude quedar vacío"
+     * )
      *
      * @ORM\Column(name="titulo", type="string", length=255)
      */
@@ -30,6 +34,10 @@ class Evento
 
     /**
      * @var \DateTime
+     * @Assert\NotBlank(
+     *     message="Fecha inicio no puede quedar vacío"
+     * )
+     * @Assert\Date()
      *
      * @ORM\Column(name="fechainicio", type="datetime")
      */
@@ -37,6 +45,10 @@ class Evento
 
     /**
      * @var \DateTime
+     * @Assert\NotBlank(
+     *     message="Fecha fin no puede quedar vacío"
+     * )
+     * @Assert\Date()
      *
      * @ORM\Column(name="fechafin", type="datetime", nullable=true)
      */
@@ -44,6 +56,10 @@ class Evento
 
     /**
      * @var \DateTime
+     * @Assert\NotBlank(
+     *     message="Hora inicio no puede quedar vacío"
+     * )
+     *  @Assert\Time()
      *
      * @ORM\Column(name="horainicio", type="time", nullable=true)
      */
@@ -51,6 +67,10 @@ class Evento
 
     /**
      * @var \DateTime
+     * @Assert\NotBlank(
+     *     message="Hora fin no puede quedar vacío"
+     * )
+     *  @Assert\Time()
      *
      * @ORM\Column(name="horafin", type="time", nullable=true)
      */

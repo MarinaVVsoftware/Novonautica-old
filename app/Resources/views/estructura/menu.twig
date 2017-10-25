@@ -60,7 +60,7 @@
     {% set menuAstillero = ' active menu-open' %}
     {% set actAO=' active' %}
 {% endif %}
-{% if productos is defined %}
+{% if productosMenu is defined %}
     {% set menuProductos=' active' %}
 {% endif %}
 {% if recursoshumanos is defined %}
@@ -165,7 +165,7 @@
                 <hr>
             </li>
             <li class="{{ menuProductos }} only">
-                <a href="{{ path('productos') }}">
+                <a href="{{ path('producto_index') }}">
                     <i class="fa fa-th"></i>
                     <span>Productos</span>
                 </a>
