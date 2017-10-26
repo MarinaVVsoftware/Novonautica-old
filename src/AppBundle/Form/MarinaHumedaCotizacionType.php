@@ -35,7 +35,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'class' => 'AppBundle:Cliente',
                 'label' => 'Cliente',
                 'placeholder' => 'Seleccionar...',
-                'attr' => ['class' => 'select-buscador'],
+                'attr' => ['class' => 'select-buscador selectclientebuscar'],
 
             ])
             ->add('fechaLlegada',DateType::class,[

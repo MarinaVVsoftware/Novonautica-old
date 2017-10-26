@@ -44,6 +44,7 @@ $('.lista-motores').on('click','.remove-motor',function(e) {
     return false;
 });
 
+//--- select dependiente para marina humeda cotización ---
 var elcliente = $('#appbundle_marinahumedacotizacion_cliente');
 elcliente.change(function() {
     // ... retrieve the corresponding form.
@@ -65,8 +66,37 @@ elcliente.change(function() {
             // barco field now displays the appropriate barcos.
         }
     });
-
 });
+//--- fin select dependiente para marina humeda cotización ---
+
+//--- select dependiente para astillero cotización ---
+var elclienteastillero = $('#appbundle_astillerocotizacion_cliente');
+elclienteastillero.change(function() {
+
+    // ... retrieve the corresponding form.
+    var form = $(this).closest('form');
+    // Simulate form data, but only include the selected elcliente value.
+    var data = {};
+    data[elclienteastillero.attr('name')] = elclienteastillero.val();
+    // Submit data via AJAX to the form's action path.
+    console.log(elclienteastillero.val());
+    $.ajax({
+        url : form.attr('action'),
+        type: form.attr('method'),
+        data : data,
+        success: function(html) {
+            // Replace current position field ...
+            $('#appbundle_astillerocotizacion_barco').replaceWith(
+                // ... with the returned one from the AJAX response.
+                $(html).find('#appbundle_astillerocotizacion_barco')
+            );
+            // barco field now displays the appropriate barcos.
+        }
+    });
+});
+
+//--- fin select dependiente para astillero cotización ---
+
 $(document).ready(function() {
     $('.select-buscador').select2();
     $.fn.datepicker.dates['es'] = {
@@ -364,9 +394,11 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_6_estatus').on('click',functio
 
 //-------- fin metodos marina humeda --------
 
-$('#appbundle_marinahumedacotizacion_cliente').change(function(e) {
+$('.selectclientebuscar').change(function(e) {
+    $('#loading').show();
+    $("#info-barco").empty();
     $("#info-cliente").empty();
-    $("#info-barco").empty(); 
+    console.log('buscando cliente');
     $.ajax({
         method: "GET",
         url: "../ajax/buscacliente",
@@ -406,17 +438,23 @@ $('#appbundle_marinahumedacotizacion_cliente').change(function(e) {
                     console.log("POSTS NOT FOUND");
                 }
             }
+            $('#loading').hide();
         },
         error: function(jqXHR, exception) {
             if(jqXHR.status === 405) {
                 console.error("METHOD NOT ALLOWED!");
             }
+            $('#loading').hide();
         }
+    }).fail(function () {
+        $('#loading').hide();
+        console.log('fallo ajax');
     });
 });
 
 var x = 1;
 $('.buscabarcomh').click(function () {
+    $('#loading').show();
         //console.log('click '+x);
         if(x==2){
             $("#info-barco").empty();
@@ -470,12 +508,17 @@ function buscaDatosBarco(idbarco){
                     console.log("POSTS NOT FOUND");
                 }
             }
+            $('#loading').hide();
         },
         error: function(jqXHR, exception) {
             if(jqXHR.status === 405) {
                 console.error("METHOD NOT ALLOWED!");
             }
+            $('#loading').hide();
         }
+    }).fail(function () {
+        $('#loading').hide();
+        console.log('fallo ajax');
     });
 }
 

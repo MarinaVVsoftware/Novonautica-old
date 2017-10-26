@@ -146,9 +146,15 @@ class Barco
      */
     private $mhcotizaciones;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizacion", mappedBy="barco")
+     */
+    private $astillerocotizaciones;
+
     public function __construct() {
         $this->motores = new ArrayCollection();
         $this->mhcotizaciones = new ArrayCollection();
+        $this->astillerocotizaciones = new ArrayCollection();
     }
 
     public function __toString()
@@ -597,29 +603,63 @@ class Barco
         return $this->mhcotizaciones;
     }
 
-//    /**
-//     * Add mhcotizacione
-//     *
-//     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
-//     *
-//     * @return Barco
-//     */
-//    public function addMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
-//    {
-//        $this->mhcotizaciones[] = $mhcotizacione;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Remove mhcotizacione
-//     *
-//     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
-//     */
-//    public function removeMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
-//    {
-//        $this->mhcotizaciones->removeElement($mhcotizacione);
-//    }
+    /**
+     * Add mhcotizacione
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+     *
+     * @return Barco
+     */
+    public function addMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+    {
+        $this->mhcotizaciones[] = $mhcotizacione;
+
+        return $this;
+    }
+
+    /**
+     * Remove mhcotizacione
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+     */
+    public function removeMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+    {
+        $this->mhcotizaciones->removeElement($mhcotizacione);
+    }
 
 
+
+    /**
+     * Add astillerocotizacione
+     *
+     * @param \AppBundle\Entity\AstilleroCotizacion $astillerocotizacione
+     *
+     * @return Barco
+     */
+    public function addAstillerocotizacione(\AppBundle\Entity\AstilleroCotizacion $astillerocotizacione)
+    {
+        $this->astillerocotizaciones[] = $astillerocotizacione;
+
+        return $this;
+    }
+
+    /**
+     * Remove astillerocotizacione
+     *
+     * @param \AppBundle\Entity\AstilleroCotizacion $astillerocotizacione
+     */
+    public function removeAstillerocotizacione(\AppBundle\Entity\AstilleroCotizacion $astillerocotizacione)
+    {
+        $this->astillerocotizaciones->removeElement($astillerocotizacione);
+    }
+
+    /**
+     * Get astillerocotizaciones
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAstillerocotizaciones()
+    {
+        return $this->astillerocotizaciones;
+    }
 }

@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Astillerocotizacion</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ astilleroCotizacion.id }}</td>
+            </tr>
+            <tr>
+                <th>Fechallegada</th>
+                <td>{% if astilleroCotizacion.fechaLlegada %}{{ astilleroCotizacion.fechaLlegada|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Fechasalida</th>
+                <td>{% if astilleroCotizacion.fechaSalida %}{{ astilleroCotizacion.fechaSalida|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Dolar</th>
+                <td>{{ astilleroCotizacion.dolar }}</td>
+            </tr>
+            <tr>
+                <th>Iva</th>
+                <td>{{ astilleroCotizacion.iva }}</td>
+            </tr>
+            <tr>
+                <th>Subtotal</th>
+                <td>{{ astilleroCotizacion.subtotal }}</td>
+            </tr>
+            <tr>
+                <th>Ivatotal</th>
+                <td>{{ astilleroCotizacion.ivatotal }}</td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <td>{{ astilleroCotizacion.total }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{% if astilleroCotizacion.fecharegistro %}{{ astilleroCotizacion.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('astillero_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('astillero_edit', { 'id': astilleroCotizacion.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

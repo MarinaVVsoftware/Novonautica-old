@@ -282,7 +282,7 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setValidacliente(0)
                 ->setEstatus(1)
                 ->setFecharegistro($fechaHoraActual);
-                ;
+
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
 

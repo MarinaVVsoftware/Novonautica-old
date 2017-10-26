@@ -239,4 +239,3 @@ class Producto
         return $this->unidad;
     }
 }
-

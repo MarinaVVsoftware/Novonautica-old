@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Astillerocotizacions list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fechallegada</th>
+                <th>Fechasalida</th>
+                <th>Dolar</th>
+                <th>Iva</th>
+                <th>Subtotal</th>
+                <th>Ivatotal</th>
+                <th>Total</th>
+                <th>Fecharegistro</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for astilleroCotizacion in astilleroCotizacions %}
+            <tr>
+                <td><a href="{{ path('astillero_show', { 'id': astilleroCotizacion.id }) }}">{{ astilleroCotizacion.id }}</a></td>
+                <td>{% if astilleroCotizacion.fechaLlegada %}{{ astilleroCotizacion.fechaLlegada|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if astilleroCotizacion.fechaSalida %}{{ astilleroCotizacion.fechaSalida|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ astilleroCotizacion.dolar }}</td>
+                <td>{{ astilleroCotizacion.iva }}</td>
+                <td>{{ astilleroCotizacion.subtotal }}</td>
+                <td>{{ astilleroCotizacion.ivatotal }}</td>
+                <td>{{ astilleroCotizacion.total }}</td>
+                <td>{% if astilleroCotizacion.fecharegistro %}{{ astilleroCotizacion.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('astillero_show', { 'id': astilleroCotizacion.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('astillero_edit', { 'id': astilleroCotizacion.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('astillero_new') }}">Create a new astilleroCotizacion</a>
+        </li>
+    </ul>
+{% endblock %}

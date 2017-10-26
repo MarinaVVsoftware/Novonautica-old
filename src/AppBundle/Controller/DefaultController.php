@@ -19,15 +19,15 @@ class DefaultController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/astillero/nueva-cotizacion", name="astillero-nueva-cotizacion")
-     */
-    public function displayAstilleroNuevaCotizacion(Request $request)
-    {
-        return $this->render('astillero-nueva-cotizacion.twig', [
-            'astilleronuevacotizacion' => 1
-        ]);
-    }
+//    /**
+//     * @Route("/astillero/nueva-cotizacion", name="astillero-nueva-cotizacion")
+//     */
+//    public function displayAstilleroNuevaCotizacion(Request $request)
+//    {
+//        return $this->render('astillero-nueva-cotizacion.twig', [
+//            'astilleronuevacotizacion' => 1
+//        ]);
+//    }
     /**
      * @Route("/astillero/cotizaciones", name="astillero-cotizaciones")
      */

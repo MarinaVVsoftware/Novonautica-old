@@ -39,7 +39,7 @@ class AjaxController extends Controller
         if($request->isXmlHttpRequest())
         {
             $encoders = array(new JsonEncoder());
-            //$normalizers = array(new ObjectNormalizer());
+//            $normalizers = array(new ObjectNormalizer());
 
             $normalizer = new ObjectNormalizer();
             $normalizer->setCircularReferenceLimit(1);
@@ -62,6 +62,8 @@ class AjaxController extends Controller
                 'posts' => $serializer->serialize($clientes, 'json')
             ));
             return $response;
+        }else{
+            return 'no';
         }
     }
 

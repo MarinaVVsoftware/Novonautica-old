@@ -1,0 +1,106 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block title %}
+    Novonautica | Nueva cotización
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">Nueva Cotización</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('astillero_index') }}">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body panel-pestanias">
+                    {% form_theme form 'estructura/temaerror.html.twig' %}
+                    {{ form_start(form) }}
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="primero active">
+                            <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios Generales</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Servicios</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                {{ form_errors(form.fechaLlegada) }}
+                                {{ form_errors(form.fechaSalida) }}
+                                {{ form_errors(form.barco) }}
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane active" id="generales">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_row(form.cliente) }}
+                                    <div id="info-cliente">
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="radio buscabarcomh">
+                                        {{ form_label(form.barco) }}
+                                        {{ form_widget(form.barco) }}
+                                    </div>
+                                    <div id="info-barco">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="servicios">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="input-daterange" id="rangoFehas">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                {{ form_label(form.fechaLlegada) }}
+                                                {{ form_widget(form.fechaLlegada) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                {{ form_label(form.fechaSalida) }}
+                                                {{ form_widget(form.fechaSalida) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{ form_widget(form) }}
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="total">
+                            <button type="submit" class="btn btn-azul">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="{{ path('astillero_index') }}" class="btn btn-naranja pull-right">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

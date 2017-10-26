@@ -238,4 +238,3 @@ class Evento
         return $this->descripcion;
     }
 }
-
