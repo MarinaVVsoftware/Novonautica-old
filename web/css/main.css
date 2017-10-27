@@ -43,14 +43,14 @@ a{
     color: #0097f6;
 }
 /*++ fin colores letra ++++*/
+
+/*++++ tamaño letra +++++*/
 .tipo-letra1{
     font-size: 2rem;
 }
 .tipo-letra2{
     font-size: 1.5rem;
 }
-/*++++ tamaño letra +++++*/
-
 /*+++ fin tamaño letra ++++*/
 
 /*++++ botones color ++++*/
@@ -343,6 +343,19 @@ form > .btn-borrar:hover,.btn-borrar:hover{
 .panel-novo tbody tr:hover{
     /*background: #3e4766;*/
     cursor: pointer;
+}
+.panel-novo tbody td input[type="text"]{
+    background: none;
+    padding: 0px;
+    border-radius: 0;
+    text-align: center;
+}
+.panel-novo tbody td .btn{
+    min-width: auto;
+}
+.panel-novo tbody .servicio-agregado>td{
+    padding: 0 !important;
+    vertical-align: middle;
 }
 .panel-novo .panel-pestanias{
     padding-top: 0;

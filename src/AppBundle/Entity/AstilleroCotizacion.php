@@ -401,6 +401,7 @@ class AstilleroCotizacion
      */
     public function addAcservicio(\AppBundle\Entity\AstilleroCotizaServicio $acservicio)
     {
+        $acservicio ->setAstillerocotizacion($this);
         $this->acservicios[] = $acservicio;
 
         return $this;

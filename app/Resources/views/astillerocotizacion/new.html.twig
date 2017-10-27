@@ -27,7 +27,8 @@
                             <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
                         </li>
                         <li role="presentation">
-                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios Generales</a>
+                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios
+                                Generales</a>
                         </li>
                         <li role="presentation">
                             <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Servicios</a>
@@ -39,6 +40,7 @@
                                 {{ form_errors(form.fechaLlegada) }}
                                 {{ form_errors(form.fechaSalida) }}
                                 {{ form_errors(form.barco) }}
+                                {{ form_errors(form.diasEstadia) }}
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane active" id="generales">
@@ -79,15 +81,310 @@
                                     </div>
                                 </div>
                             </div>
-                            {{ form_widget(form) }}
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_label(form.diasEstadia) }}
+                                    {{ form_widget(form.diasEstadia) }}
+                                </div>
+                            </div>
+                            <div class="row espacio-linea">
+                                <div class="col-sm-7">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Uso de grua</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Número de pies</label>
+
+                                        {{ form_widget(form.acservicios.children.0.cantidad) }}
+
+                                    {{ dump(form.acservicios) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Precio por pie</label>
+                                    {{ form_widget(form.acservicios.children.0.precio) }}
+                                </div>
+                            </div>
+                            <div class="row espacio-linea">
+                                <div class="col-sm-7">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Uso de suelo</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Precio por día</label>
+                                    {{ form_widget(form.acservicios.children.1.precio) }}
+                                </div>
+                            </div>
+                            <div class="row espacio-linea">
+                                <div class="col-sm-7">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Uso de rampa (precio)</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <div class="input-estatus">
+                                        <span class="cont-label-novo">
+                                            {{ form_errors(form.acservicios.children.2.estatus) }}
+                                            {{ form_widget(form.acservicios.children.2.estatus) }}
+                                            {{ form_label(form.acservicios.children.2.estatus) }}
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Precio</label>
+                                    {{ form_widget(form.acservicios.children.2.precio) }}
+                                </div>
+                            </div>
+                            <div class="row espacio-linea">
+                                <div class="col-sm-7">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Uso de karcher</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <div class="input-estatus">
+                                        <span class="cont-label-novo">
+                                            {{ form_errors(form.acservicios.children.3.estatus) }}
+                                            {{ form_widget(form.acservicios.children.3.estatus) }}
+                                            {{ form_label(form.acservicios.children.3.estatus) }}
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Precio</label>
+                                    {{ form_widget(form.acservicios.children.3.precio) }}
+                                </div>
+                            </div>
+                            <div class="row espacio-linea">
+                                <div class="col-sm-7">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Sacar varada y botadura</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <div class="input-estatus">
+                                        <span class="cont-label-novo">
+                                            {{ form_errors(form.acservicios.children.4.estatus) }}
+                                            {{ form_widget(form.acservicios.children.4.estatus) }}
+                                            {{ form_label(form.acservicios.children.4.estatus) }}
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Número de pies</label>
+                                    {{ form_widget(form.acservicios.children.4.cantidad) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Precio por pie</label>
+                                    {{ form_widget(form.acservicios.children.4.precio) }}
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="total">
-                            <button type="submit" class="btn btn-azul">
-                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                Guardar
-                            </button>
+                            <div class="row">
+                                <div class="col-sm-9 text-right">
+                                    <span>Tipo de cambio:</span>
+                                    <div id="valdolar" class="" data-valor="{{ valdolar }}">{{ valdolar }} MXN</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <small>Precios en USD</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <table id="mh_nuevacotizacion" class="table text-center">
+                                        <thead>
+                                        <tr>
+                                            <th>Cantidad</th>
+                                            <th>Servicio</th>
+                                            <th>Prec. Unid.</th>
+                                            <th>Sub-Total</th>
+                                            <th>IVA</th>
+                                            <th>Total</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="servicio-fields-list0"
+                                               class="lista-servicios"
+                                               data-prototype="
+                                         {% filter escape %}
+                                            {{ include('astillerocotizacion/coleccion-servicio.twig', { 'form': form.acservicios.vars.prototype }) }}
+                                            {#{{ form_widget(form.acservicios.vars.prototype) }}#}
+                                         {% endfilter %}
+                                        ">
+                                        <tr>
+                                            <td id="grua_cantidad">0</td>
+                                            <td>Uso de grua</td>
+                                            <td id="grua_precio">$ 0.00</td>
+                                            <td id="grua_subtotal" data-valor="0">$ 0.00</td>
+                                            <td id="grua_iva" data-valor="0">$ 0.00</td>
+                                            <td id="grua_total" data-valor="0">$ 0.00</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td id="suelo_cantidad">0</td>
+                                            <td>Uso de suelo</td>
+                                            <td id="suelo_precio">$ 0.00</td>
+                                            <td id="suelo_subtotal" data-valor="0">$ 0.00</td>
+                                            <td id="suelo_iva" data-valor="0">$ 0.00</td>
+                                            <td id="suelo_total" data-valor="0">$ 0.00</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr class="hidden">
+                                            <td>1</td>
+                                            <td>Uso de rampa</td>
+                                            <td id="rampa_precio">$ 0.00</td>
+                                            <td id="rampa_subtotal" data-valor="0">$ 0.00</td>
+                                            <td id="rampa_iva" data-valor="0">$ 0.00</td>
+                                            <td id="rampa_total" data-valor="0">$ 0.00</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr class="hidden">
+                                            <td>1</td>
+                                            <td>Uso de karcher</td>
+                                            <td id="karcher_precio">$ 0.00</td>
+                                            <td id="karcher_subtotal" data-valor="0">$ 0.00</td>
+                                            <td id="karcher_iva" data-valor="0">$ 0.00</td>
+                                            <td id="karcher_total" data-valor="0">$ 0.00</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr class="hidden">
+                                            <td id="varada_cantidad">0</td>
+                                            <td>Sacar varada y boadura</td>
+                                            <td id="varada_precio">$ 0.00</td>
+                                            <td id="varada_subtotal" data-valor="0">$ 0.00</td>
+                                            <td id="varada_iva" data-valor="0">$ 0.00</td>
+                                            <td id="varada_total" data-valor="0">$ 0.00</td>
+                                            <td></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-sm-3">
+                                    {#<div class="row">#}
+                                    {#<div class="col-sm-12">#}
+                                    {#<a class="btn btn-morado-claro">Visualizar</a>#}
+                                    {#</div>#}
+                                    {#</div>#}
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <button type="submit" class="btn btn-azul">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                Guardar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div id="valiva" class="" data-valor="{{ valiva }}">
+                                        <small>IVA: {{ valiva }} %</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row espacio-linea">
+                                <div class="col-sm-9">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a href="#" id="" class="add-another-servicio btn btn-contorno-azul" data-cantidad="{{ form.acservicios|length }}" data-idlista="0">
+                                        + Agregar servicio
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $ <span id="gransubtot">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $ <span id="graniva">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $ <span id="grantot">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
+                    {{ form_widget(form.acservicios.children.0.estatus,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.acservicios.children.1.estatus,{'attr':{'class':'hidden'}}) }}
+
+                    {{ form_widget(form.acservicios.children.1.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.acservicios.children.2.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.acservicios.children.3.cantidad,{'attr':{'class':'hidden'}}) }}
                     {{ form_end(form) }}
                 </div>
                 <div class="panel-footer">

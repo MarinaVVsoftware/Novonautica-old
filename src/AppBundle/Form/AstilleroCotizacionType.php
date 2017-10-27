@@ -44,8 +44,16 @@ class AstilleroCotizacionType extends AbstractType
                     'readonly' => true],
                 'format' => 'dd-MM-yyyy'
             ])
+            ->add('diasEstadia',null,[
+                'label'=>'Días Estadia'
+            ])
             ->add('acservicios',CollectionType::class,[
-
+                'entry_type' => AstilleroCotizaServicioType::class,
+                'label' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'by_reference' => false
             ])
         ;
 

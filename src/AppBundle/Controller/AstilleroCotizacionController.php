@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\AstilleroCotizacion;
+use AppBundle\Entity\AstilleroCotizaServicio;
+use AppBundle\Entity\AstilleroServicio;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -42,7 +44,19 @@ class AstilleroCotizacionController extends Controller
      */
     public function newAction(Request $request)
     {
-        $astilleroCotizacion = new Astillerocotizacion();
+        $astilleroCotizacion = new AstilleroCotizacion();
+        $astilleroGrua = new AstilleroCotizaServicio();
+        $astilleroSuelo = new AstilleroCotizaServicio();
+        $astilleroRampa = new AstilleroCotizaServicio();
+        $astilleroKarcher = new AstilleroCotizaServicio();
+        $astilleroVarada = new AstilleroCotizaServicio();
+
+        $astilleroCotizacion
+            ->addAcservicio($astilleroGrua)
+            ->addAcservicio($astilleroSuelo)
+            ->addAcservicio($astilleroRampa)
+            ->addAcservicio($astilleroKarcher)
+            ->addAcservicio($astilleroVarada);
 
         $dolar = $this->getDoctrine()
             ->getRepository(ValorSistema::class)
@@ -55,14 +69,135 @@ class AstilleroCotizacionController extends Controller
 
         $form = $this->createForm('AppBundle\Form\AstilleroCotizacionType', $astilleroCotizacion);
         $form->handleRequest($request);
+        dump($astilleroCotizacion);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
+            $granSubtotal = 0;
+            $granIva = 0;
+            $granTotal = 0;
+
+            // Uso de grua
+            $servicio = $this->getDoctrine()
+                            ->getRepository(AstilleroServicio::class)
+                            ->find(1);
+            $cantidad = $astilleroGrua->getCantidad();
+            $precio = $astilleroGrua->getPrecio();
+            $subTotal = $cantidad * $precio;
+            $ivaTot = ($subTotal * $iva)/100;
+            $total = $subTotal + $ivaTot;
+
+            $astilleroGrua
+                ->setAstilleroservicio($servicio)
+                ->setEstatus(1)
+                ->setSubtotal($subTotal)
+                ->setIva($ivaTot)
+                ->setTotal($total)
+            ;
+            $granSubtotal+=$subTotal;
+            $granIva+=$ivaTot;
+            $granTotal+=$total;
+
+            // Uso de suelo
+            $servicio = $this->getDoctrine()
+                ->getRepository(AstilleroServicio::class)
+                ->find(2);
+            $cantidad = $astilleroCotizacion->getDiasEstadia();
+            $precio = $astilleroSuelo->getPrecio();
+            $subTotal = $cantidad * $precio;
+            $ivaTot = ($subTotal * $iva)/100;
+            $total = $subTotal + $ivaTot;
+
+            $astilleroSuelo
+                ->setAstilleroservicio($servicio)
+                ->setEstatus(1)
+                ->setCantidad($cantidad)
+                ->setSubtotal($subTotal)
+                ->setIva($ivaTot)
+                ->setTotal($total)
+            ;
+            $granSubtotal+=$subTotal;
+            $granIva+=$ivaTot;
+            $granTotal+=$total;
+
+            // Uso de rampa
+            $servicio = $this->getDoctrine()
+                ->getRepository(AstilleroServicio::class)
+                ->find(3);
+            $cantidad = 1;
+            $precio = $astilleroRampa->getPrecio();
+            $subTotal = $cantidad * $precio;
+            $ivaTot = ($subTotal * $iva)/100;
+            $total = $subTotal + $ivaTot;
+
+            $astilleroRampa
+                ->setAstilleroservicio($servicio)
+                ->setCantidad($cantidad)
+                ->setSubtotal($subTotal)
+                ->setIva($ivaTot)
+                ->setTotal($total)
+            ;
+            if($astilleroRampa->getEstatus()){
+                $granSubtotal+=$subTotal;
+                $granIva+=$ivaTot;
+                $granTotal+=$total;
+            }
+
+            // Uso de karcher
+            $servicio = $this->getDoctrine()
+                ->getRepository(AstilleroServicio::class)
+                ->find(4);
+            $cantidad =1;
+            $precio = $astilleroKarcher->getPrecio();
+            $subTotal = $cantidad * $precio;
+            $ivaTot = ($subTotal * $iva)/100;
+            $total = $subTotal + $ivaTot;
+
+            $astilleroKarcher
+                ->setAstilleroservicio($servicio)
+                ->setCantidad($cantidad)
+                ->setSubtotal($subTotal)
+                ->setIva($ivaTot)
+                ->setTotal($total)
+            ;
+            if($astilleroKarcher->getEstatus()){
+                $granSubtotal+=$subTotal;
+                $granIva+=$ivaTot;
+                $granTotal+=$total;
+            }
+
+            // sacar varada y botadura
+            $servicio = $this->getDoctrine()
+                ->getRepository(AstilleroServicio::class)
+                ->find(5);
+            $cantidad = $astilleroVarada->getCantidad();
+            $precio = $astilleroVarada->getPrecio();
+            $subTotal = $cantidad * $precio;
+            $ivaTot = ($subTotal * $iva)/100;
+            $total = $subTotal + $ivaTot;
+
+            $astilleroVarada
+                ->setAstilleroservicio($servicio)
+                ->setSubtotal($subTotal)
+                ->setIva($ivaTot)
+                ->setTotal($total)
+            ;
+            if($astilleroVarada->getEstatus()){
+                $granSubtotal+=$subTotal;
+                $granIva+=$ivaTot;
+                $granTotal+=$total;
+            }
+
+
+            //------------------------------------------------
             $fechaHoraActual = new \DateTime('now');
             $astilleroCotizacion
                 ->setDolar($dolar)
                 ->setIva($iva)
+                ->setSubtotal($granSubtotal)
+                ->setIvatotal($granIva)
+                ->setTotal($granTotal)
                 ->setFecharegistro($fechaHoraActual);
 
             $em->persist($astilleroCotizacion);
@@ -73,6 +208,8 @@ class AstilleroCotizacionController extends Controller
 
         return $this->render('astillerocotizacion/new.html.twig', array(
             'astilleroCotizacion' => $astilleroCotizacion,
+            'valdolar' => $dolar,
+            'valiva' => $iva,
             'form' => $form->createView(),
             'astilleronuevacotizacion' => 1
         ));
