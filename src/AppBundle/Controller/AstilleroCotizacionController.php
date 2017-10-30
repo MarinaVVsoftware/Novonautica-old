@@ -90,6 +90,7 @@ class AstilleroCotizacionController extends Controller
 
             $astilleroGrua
                 ->setAstilleroservicio($servicio)
+                ->setServicio(null)
                 ->setEstatus(1)
                 ->setSubtotal($subTotal)
                 ->setIva($ivaTot)
@@ -111,6 +112,7 @@ class AstilleroCotizacionController extends Controller
 
             $astilleroSuelo
                 ->setAstilleroservicio($servicio)
+                ->setServicio(null)
                 ->setEstatus(1)
                 ->setCantidad($cantidad)
                 ->setSubtotal($subTotal)
@@ -133,6 +135,7 @@ class AstilleroCotizacionController extends Controller
 
             $astilleroRampa
                 ->setAstilleroservicio($servicio)
+                ->setServicio(null)
                 ->setCantidad($cantidad)
                 ->setSubtotal($subTotal)
                 ->setIva($ivaTot)
@@ -156,6 +159,7 @@ class AstilleroCotizacionController extends Controller
 
             $astilleroKarcher
                 ->setAstilleroservicio($servicio)
+                ->setServicio(null)
                 ->setCantidad($cantidad)
                 ->setSubtotal($subTotal)
                 ->setIva($ivaTot)
@@ -179,6 +183,7 @@ class AstilleroCotizacionController extends Controller
 
             $astilleroVarada
                 ->setAstilleroservicio($servicio)
+                ->setServicio(null)
                 ->setSubtotal($subTotal)
                 ->setIva($ivaTot)
                 ->setTotal($total)
@@ -189,6 +194,27 @@ class AstilleroCotizacionController extends Controller
                 $granTotal+=$total;
             }
 
+            foreach ($astilleroCotizacion->getAcservicios() as $servAst){
+              if($servAst->getAstilleroservicio()==null){
+
+                  $cantidad = $servAst->getCantidad();
+                  $precio = $servAst->getPrecio();
+                  $subTotal = $cantidad * $precio;
+                  $ivaTot = ($subTotal * $iva)/100;
+                  $total = $subTotal + $ivaTot;
+
+
+                  $servAst
+                      ->setSubtotal($subTotal)
+                      ->setIva($ivaTot)
+                      ->setTotal($total)
+                      ->setEstatus(true);
+
+                  $granSubtotal+=$subTotal;
+                  $granIva+=$ivaTot;
+                  $granTotal+=$total;
+              }
+            }
 
             //------------------------------------------------
             $fechaHoraActual = new \DateTime('now');
@@ -228,6 +254,7 @@ class AstilleroCotizacionController extends Controller
         return $this->render('astillerocotizacion/show.html.twig', array(
             'astilleroCotizacion' => $astilleroCotizacion,
             'delete_form' => $deleteForm->createView(),
+            'astillerocotizaciones' => 1
         ));
     }
 

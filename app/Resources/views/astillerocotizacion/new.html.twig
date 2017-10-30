@@ -103,14 +103,15 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <label>Número de pies</label>
-
-                                        {{ form_widget(form.acservicios.children.0.cantidad) }}
-
-                                    {{ dump(form.acservicios) }}
+                                    {% if form.acservicios.0.cantidad is defined %}
+                                        {{ form_widget(form.acservicios.0.cantidad) }}
+                                    {% endif %}
                                 </div>
                                 <div class="col-sm-3">
                                     <label>Precio por pie</label>
-                                    {{ form_widget(form.acservicios.children.0.precio) }}
+                                    {% if form.acservicios.0.precio is defined %}
+                                        {{ form_widget(form.acservicios.0.precio) }}
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="row espacio-linea">
@@ -129,7 +130,9 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <label>Precio por día</label>
-                                    {{ form_widget(form.acservicios.children.1.precio) }}
+                                    {% if form.acservicios.1.precio is defined %}
+                                        {{ form_widget(form.acservicios.1.precio) }}
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="row espacio-linea">
@@ -146,15 +149,20 @@
                                 <div class="col-sm-1">
                                     <div class="input-estatus">
                                         <span class="cont-label-novo">
-                                            {{ form_errors(form.acservicios.children.2.estatus) }}
-                                            {{ form_widget(form.acservicios.children.2.estatus) }}
-                                            {{ form_label(form.acservicios.children.2.estatus) }}
+                                             {% if form.acservicios.2.estatus is defined %}
+                                                 {{ form_errors(form.acservicios.2.estatus) }}
+                                                 {{ form_widget(form.acservicios.2.estatus) }}
+                                                 {{ form_label(form.acservicios.2.estatus) }}
+                                             {% endif %}
                                          </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <label>Precio</label>
-                                    {{ form_widget(form.acservicios.children.2.precio) }}
+                                    {% if form.acservicios.2.precio is defined %}
+                                        {{ form_widget(form.acservicios.2.precio) }}
+                                    {% endif %}
+
                                 </div>
                             </div>
                             <div class="row espacio-linea">
@@ -171,15 +179,19 @@
                                 <div class="col-sm-1">
                                     <div class="input-estatus">
                                         <span class="cont-label-novo">
-                                            {{ form_errors(form.acservicios.children.3.estatus) }}
-                                            {{ form_widget(form.acservicios.children.3.estatus) }}
-                                            {{ form_label(form.acservicios.children.3.estatus) }}
+                                             {% if form.acservicios.3.estatus is defined %}
+                                                 {{ form_errors(form.acservicios.3.estatus) }}
+                                                 {{ form_widget(form.acservicios.3.estatus) }}
+                                                 {{ form_label(form.acservicios.3.estatus) }}
+                                             {% endif %}
                                          </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <label>Precio</label>
-                                    {{ form_widget(form.acservicios.children.3.precio) }}
+                                    {% if form.acservicios.3.precio is defined %}
+                                        {{ form_widget(form.acservicios.3.precio) }}
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="row espacio-linea">
@@ -196,19 +208,26 @@
                                 <div class="col-sm-1">
                                     <div class="input-estatus">
                                         <span class="cont-label-novo">
-                                            {{ form_errors(form.acservicios.children.4.estatus) }}
-                                            {{ form_widget(form.acservicios.children.4.estatus) }}
-                                            {{ form_label(form.acservicios.children.4.estatus) }}
+                                              {% if form.acservicios.4.estatus is defined %}
+                                                  {{ form_errors(form.acservicios.4.estatus) }}
+                                                  {{ form_widget(form.acservicios.4.estatus) }}
+                                                  {{ form_label(form.acservicios.4.estatus) }}
+                                              {% endif %}
                                          </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <label>Número de pies</label>
-                                    {{ form_widget(form.acservicios.children.4.cantidad) }}
+                                    {% if form.acservicios.4.cantidad is defined %}
+                                        {{ form_widget(form.acservicios.4.cantidad) }}
+                                    {% endif %}
+
                                 </div>
                                 <div class="col-sm-3">
                                     <label>Precio por pie</label>
-                                    {{ form_widget(form.acservicios.children.4.precio) }}
+                                    {% if form.acservicios.4.precio is defined %}
+                                        {{ form_widget(form.acservicios.4.precio) }}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -226,7 +245,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <table id="mh_nuevacotizacion" class="table text-center">
+                                    <table id="a_nuevacotizacion" class="table text-center">
                                         <thead>
                                         <tr>
                                             <th>Cantidad</th>
@@ -379,12 +398,36 @@
 
                         </div>
                     </div>
-                    {{ form_widget(form.acservicios.children.0.estatus,{'attr':{'class':'hidden'}}) }}
-                    {{ form_widget(form.acservicios.children.1.estatus,{'attr':{'class':'hidden'}}) }}
-
-                    {{ form_widget(form.acservicios.children.1.cantidad,{'attr':{'class':'hidden'}}) }}
-                    {{ form_widget(form.acservicios.children.2.cantidad,{'attr':{'class':'hidden'}}) }}
-                    {{ form_widget(form.acservicios.children.3.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {% if form.acservicios.0.estatus is defined %}
+                        {{ form_widget(form.acservicios.0.estatus,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.1.estatus is defined %}
+                        {{ form_widget(form.acservicios.1.estatus,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.1.cantidad is defined %}
+                        {{ form_widget(form.acservicios.1.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.2.cantidad is defined %}
+                        {{ form_widget(form.acservicios.2.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.3.cantidad is defined %}
+                        {{ form_widget(form.acservicios.3.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.0.servicio is defined %}
+                        {{ form_widget(form.acservicios.0.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.1.servicio is defined %}
+                        {{ form_widget(form.acservicios.1.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.2.servicio is defined %}
+                        {{ form_widget(form.acservicios.2.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.3.servicio is defined %}
+                        {{ form_widget(form.acservicios.3.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.4.servicio is defined %}
+                        {{ form_widget(form.acservicios.4.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
                     {{ form_end(form) }}
                 </div>
                 <div class="panel-footer">

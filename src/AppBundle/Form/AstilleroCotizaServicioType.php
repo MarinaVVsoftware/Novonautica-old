@@ -23,6 +23,7 @@ class AstilleroCotizaServicioType extends AbstractType
         $builder
             //->add('servicio')
             ->add('cantidad')
+            ->add('servicio')
             ->add('precio')
             ->add('estatus', null,[
                 'label' => ' '

@@ -42,6 +42,16 @@ class MarinaHumedaCotizacionController extends Controller
     }
 
     /**
+     * @Route("/administracion", name="marina-administracion")
+     */
+    public function displayMarinaAdministracion(Request $request)
+    {
+        return $this->render('marina-administracion.twig', [
+            'marinaadministracion' => 1
+        ]);
+    }
+
+    /**
      * Creates a new marinaHumedaCotizacion entity.
      *
      * @Route("/nueva-cotizacion", name="marina-humeda_new")
@@ -895,14 +905,6 @@ class MarinaHumedaCotizacionController extends Controller
             'marinaagenda' => 1
         ]);
     }
-    /**
-     * @Route("/administracion", name="marina-administracion")
-     */
-    public function displayMarinaAdministracion(Request $request)
-    {
-        return $this->render('marina-administracion.twig', [
-            'marinaadministracion' => 1
-        ]);
-    }
+
 
 }

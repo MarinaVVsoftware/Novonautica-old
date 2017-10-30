@@ -22,6 +22,13 @@ class AstilleroCotizaServicio
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="servicio", type="string", length=255, nullable=true)
+     */
+    private $servicio;
+
+    /**
      * @var float
      *
      * @ORM\Column(name="cantidad", type="float", nullable=true)
@@ -85,6 +92,30 @@ class AstilleroCotizaServicio
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set servicio
+     *
+     * @param string $servicio
+     *
+     * @return AstilleroCotizaServicio
+     */
+    public function setServicio($servicio)
+    {
+        $this->servicio = $servicio;
+
+        return $this;
+    }
+
+    /**
+     * Get servicio
+     *
+     * @return string
+     */
+    public function getServicio()
+    {
+        return $this->servicio;
     }
 
     /**

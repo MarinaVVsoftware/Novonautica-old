@@ -1,60 +1,198 @@
-{% extends 'base.html.twig' %}
+{% extends 'estructura/plantilla.twig' %}
 
-{% block body %}
-    <h1>Astillerocotizacion</h1>
+{% block title %}
+    Novonautica | Cotizacion Astillero
+{% endblock %}
 
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ astilleroCotizacion.id }}</td>
-            </tr>
-            <tr>
-                <th>Fechallegada</th>
-                <td>{% if astilleroCotizacion.fechaLlegada %}{{ astilleroCotizacion.fechaLlegada|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Fechasalida</th>
-                <td>{% if astilleroCotizacion.fechaSalida %}{{ astilleroCotizacion.fechaSalida|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Dolar</th>
-                <td>{{ astilleroCotizacion.dolar }}</td>
-            </tr>
-            <tr>
-                <th>Iva</th>
-                <td>{{ astilleroCotizacion.iva }}</td>
-            </tr>
-            <tr>
-                <th>Subtotal</th>
-                <td>{{ astilleroCotizacion.subtotal }}</td>
-            </tr>
-            <tr>
-                <th>Ivatotal</th>
-                <td>{{ astilleroCotizacion.ivatotal }}</td>
-            </tr>
-            <tr>
-                <th>Total</th>
-                <td>{{ astilleroCotizacion.total }}</td>
-            </tr>
-            <tr>
-                <th>Fecharegistro</th>
-                <td>{% if astilleroCotizacion.fecharegistro %}{{ astilleroCotizacion.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-        </tbody>
-    </table>
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">Cotización Astillero</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('astillero_index') }}">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body panel-pestanias">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="primero active">
+                            <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="generales">
+                            <div class="row">
+                                <div class="col-sm-10 col-sm-offset-1">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <th>Id</th>
+                                            <td>{{ astilleroCotizacion.id }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Cliente</th>
+                                            <td>{{ astilleroCotizacion.cliente }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Barco</th>
+                                            <td>{{ astilleroCotizacion.barco }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Fecha llegada</th>
+                                            <td>{% if astilleroCotizacion.fechaLlegada %}{{ astilleroCotizacion.fechaLlegada|date('Y-m-d') }}{% endif %}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Fecha salida</th>
+                                            <td>{% if astilleroCotizacion.fechaSalida %}{{ astilleroCotizacion.fechaSalida|date('Y-m-d') }}{% endif %}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Dolar</th>
+                                            <td>{{ astilleroCotizacion.dolar|number_format(2,'.',',') }} MXN</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Iva</th>
+                                            <td>{{ astilleroCotizacion.iva }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Fecharegistro</th>
+                                            <td>{% if astilleroCotizacion.fecharegistro %}{{ astilleroCotizacion.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="servicios">
+                            <div class="row">
+                                <div class="col-sm-10 text-right">
+                                    <span>Tipo de cambio:</span>
+                                    <div id="tipocambio" class="">{{ astilleroCotizacion.dolar }} MXN</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9 col-sm-offset-1">
+                                    <small>Precios en USD</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9 col-sm-offset-1">
+                                    <table id="a_nuevacotizacion" class="table text-center">
+                                        <thead>
+                                        <tr>
+                                            <th>Cantidad</th>
+                                            <th>Servicio</th>
+                                            <th>Prec. Unid.</th>
+                                            <th>Sub-Total</th>
+                                            <th>IVA</th>
+                                            <th>Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for servicio in astilleroCotizacion.acservicios %}
+                                            {% if servicio.estatus %}
+                                                <tr>
+                                                    <td>{{ servicio.cantidad }}</td>
+                                                    {% if servicio.astilleroservicio.nombre is defined %}
+                                                        <td>{{ servicio.astilleroservicio.nombre }}</td>
+                                                    {% else %}
+                                                        <td>{{ servicio.servicio}}</td>
+                                                    {% endif %}
+                                                    <td>$ {{ servicio.precio|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ servicio.subtotal|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ servicio.iva|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ servicio.total|number_format(2,'.',',') }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9 col-sm-offset-1">
+                                    <div id="valiva" class="" data-valor="{{ astilleroCotizacion.iva }}">
+                                        <small>IVA: {{ astilleroCotizacion.iva }} %</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-6">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-5 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $ <span id="gransubtot">{{ astilleroCotizacion.subtotal|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-6">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-5 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $ <span id="graniva">{{ astilleroCotizacion.ivatotal|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-6">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-5 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $ <span id="grantot">{{ astilleroCotizacion.total|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-6">
+                                    <hr>
+                                </div>
+                            </div>
 
-    <ul>
-        <li>
-            <a href="{{ path('astillero_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('astillero_edit', { 'id': astilleroCotizacion.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {#<a class="btn btn-azul"#}
+                               {#href="{{ path('astillero_edit', { 'id': astilleroCotizacion.id }) }}">#}
+                                {#<i class="fa fa-pencil-square-o" aria-hidden="true"></i>#}
+                                {#Editar#}
+                            {#</a>#}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 {% endblock %}

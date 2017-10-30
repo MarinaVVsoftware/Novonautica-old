@@ -1,53 +1,51 @@
-{% extends 'base.html.twig' %}
+{% extends 'estructura/plantilla.twig' %}
 
-{% block body %}
-    <h1>Astillerocotizacions list</h1>
+{% block title %}
+    Novonautica | Cotizaciones Astillero
+{% endblock %}
 
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Fechallegada</th>
-                <th>Fechasalida</th>
-                <th>Dolar</th>
-                <th>Iva</th>
-                <th>Subtotal</th>
-                <th>Ivatotal</th>
-                <th>Total</th>
-                <th>Fecharegistro</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for astilleroCotizacion in astilleroCotizacions %}
-            <tr>
-                <td><a href="{{ path('astillero_show', { 'id': astilleroCotizacion.id }) }}">{{ astilleroCotizacion.id }}</a></td>
-                <td>{% if astilleroCotizacion.fechaLlegada %}{{ astilleroCotizacion.fechaLlegada|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if astilleroCotizacion.fechaSalida %}{{ astilleroCotizacion.fechaSalida|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ astilleroCotizacion.dolar }}</td>
-                <td>{{ astilleroCotizacion.iva }}</td>
-                <td>{{ astilleroCotizacion.subtotal }}</td>
-                <td>{{ astilleroCotizacion.ivatotal }}</td>
-                <td>{{ astilleroCotizacion.total }}</td>
-                <td>{% if astilleroCotizacion.fecharegistro %}{{ astilleroCotizacion.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('astillero_show', { 'id': astilleroCotizacion.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('astillero_edit', { 'id': astilleroCotizacion.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Astillero Cotizaciones</h3>
+                </div>
+                <div class="panel-body">
 
-    <ul>
-        <li>
-            <a href="{{ path('astillero_new') }}">Create a new astilleroCotizacion</a>
-        </li>
-    </ul>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Fecha llegada</th>
+                            <th>Fecha salida</th>
+                            <th>Subtotal</th>
+                            <th>Ivatotal</th>
+                            <th>Total</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for astilleroCotizacion in astilleroCotizacions %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('astillero_show', { 'id': astilleroCotizacion.id }) }}">{{ astilleroCotizacion.id }}</a>
+                                </td>
+                                <td>{% if astilleroCotizacion.fechaLlegada %}{{ astilleroCotizacion.fechaLlegada|date('Y-m-d') }}{% endif %}</td>
+                                <td>{% if astilleroCotizacion.fechaSalida %}{{ astilleroCotizacion.fechaSalida|date('Y-m-d') }}{% endif %}</td>
+                                <td>{{ astilleroCotizacion.subtotal }}</td>
+                                <td>{{ astilleroCotizacion.ivatotal }}</td>
+                                <td>{{ astilleroCotizacion.total }}</td>
+                                <td>
+                                    <a class="btn btn-morado-claro" href="{{ path('astillero_show', { 'id': astilleroCotizacion.id }) }}">Detalle</a>
+                                    {#<a class="btn btn-azul" href="{{ path('astillero_edit', { 'id': astilleroCotizacion.id }) }}">Editar</a>#}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
 {% endblock %}

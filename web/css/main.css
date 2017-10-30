@@ -731,4 +731,16 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     .ventanaborrar .modal-content{
         background: #363c52;
     }
+    .ventanainfomapa .modal-content .modal-header{
+        background: #3e4766;
+    }
+    .ventanainfomapa .modal-content .modal-body,
+    .ventanainfomapa .modal-footer{
+        border-top: 0px !important;
+        background: #292e41;
+    }
 /*++ Fin Modal borrar ++*/
+
+.barcoespacio:hover,text:hover{
+    cursor: pointer;
+}

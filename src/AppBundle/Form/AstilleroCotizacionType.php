@@ -77,7 +77,6 @@ class AstilleroCotizacionType extends AbstractType
             function (FormEvent $event) use ($formModifier) {
                 // this would be your entity, i.e. SportMeetup
                 $data = $event->getData();
-
                 $formModifier($event->getForm(), $data->getCliente());
             }
         );
@@ -87,8 +86,8 @@ class AstilleroCotizacionType extends AbstractType
             function (FormEvent $event) use ($formModifier) {
                 // It's important here to fetch $event->getForm()->getData(), as
                 // $event->getData() will get you the client data (that is, the ID)
-                $cliente = $event->getForm()->getData();
 
+                $cliente = $event->getForm()->getData();
                 // since we've added the listener to the child, we'll have to pass on
                 // the parent to the callback functions!
                 $formModifier($event->getForm()->getParent(), $cliente);

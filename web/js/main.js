@@ -9,6 +9,10 @@ $(document).ready(function() {
     // $('.btn').on('click',function () {
     //     $('#loading').show(); $('#loading').show();
     // });
+    $('.barcoespacio').on('click',function(){
+        $('#infobarco').html('Barco: '+$(this).attr('id'));
+        $('#modalinfobarco').modal('toggle');
+    });
 });
 
 jQuery('.add-another-motor').click(function (e) {
