@@ -69,7 +69,6 @@ class AstilleroCotizacionController extends Controller
 
         $form = $this->createForm('AppBundle\Form\AstilleroCotizacionType', $astilleroCotizacion);
         $form->handleRequest($request);
-        dump($astilleroCotizacion);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
