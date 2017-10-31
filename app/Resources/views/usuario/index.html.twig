@@ -13,39 +13,41 @@
                     <h3 class="panel-title">Usuarios</h3>
                 </div>
                 <div class="panel-body">
-                    <table class="table text-center">
-                        <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Nombre</th>
-                            <th>Correo</th>
-                            <th>Nombre Usuario</th>
-                            {#<th>Password</th>#}
-                            <th>Estatus</th>
-                            <th>Nivel</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for usuario in usuarios %}
+                    <div class="table-responsive scroll-novo">
+                        <table class="table text-center">
+                            <thead>
                             <tr>
-                                {#<td><a href="{{ path('usuario_show', { 'id': usuario.id }) }}">{{ usuario.id }}</a></td>#}
-                                <td>{{ usuario.id }}</td>
-                                <td>{{ usuario.nombre }}</td>
-                                <td>{{ usuario.correo }}</td>
-                                <td>{{ usuario.username }}</td>
-                                {#<td>{{ usuario.password }}</td>#}
-                                <td>{% if usuario.estatus %}Activado{% else %}Desactivado{% endif %}</td>
-                                <td>{{ usuario.rol }}</td>
-                                <td>
-                                    <a class="btn btn-morado-claro"
-                                       href="{{ path('usuario_show', { 'id': usuario.id }) }}">Ver</a>
-                                    <a class="btn btn-azul" href="{{ path('usuario_edit', { 'id': usuario.id }) }}">Editar</a>
-                                </td>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Nombre Usuario</th>
+                                {#<th>Password</th>#}
+                                <th>Estatus</th>
+                                <th>Nivel</th>
+                                <th>Acciones</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            {% for usuario in usuarios %}
+                                <tr>
+                                    {#<td><a href="{{ path('usuario_show', { 'id': usuario.id }) }}">{{ usuario.id }}</a></td>#}
+                                    <td>{{ usuario.id }}</td>
+                                    <td>{{ usuario.nombre }}</td>
+                                    <td>{{ usuario.correo }}</td>
+                                    <td>{{ usuario.username }}</td>
+                                    {#<td>{{ usuario.password }}</td>#}
+                                    <td>{% if usuario.estatus %}Activado{% else %}Desactivado{% endif %}</td>
+                                    <td>{{ usuario.rol }}</td>
+                                    <td>
+                                        <a class="btn btn-morado-claro"
+                                           href="{{ path('usuario_show', { 'id': usuario.id }) }}">Ver</a>
+                                        <a class="btn btn-azul" href="{{ path('usuario_edit', { 'id': usuario.id }) }}">Editar</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                     <a class="btn btn-azul" href="{{ path('usuario_new') }}">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Agregar Nuevo Usuario

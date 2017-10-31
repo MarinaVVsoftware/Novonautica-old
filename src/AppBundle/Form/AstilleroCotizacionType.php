@@ -53,6 +53,7 @@ class AstilleroCotizacionType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
+                'attr' => ['prototype2' => ' '],
                 'by_reference' => false
             ])
         ;

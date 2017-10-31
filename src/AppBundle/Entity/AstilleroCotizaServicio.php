@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -83,6 +84,13 @@ class AstilleroCotizaServicio
      * @ORM\JoinColumn(name="idservicio", referencedColumnName="id")
      */
     private $astilleroservicio;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Producto")
+     * @ORM\JoinColumn(name="idproducto", referencedColumnName="id")
+     */
+    private $producto;
+
 
     /**
      * Get id
@@ -308,5 +316,30 @@ class AstilleroCotizaServicio
     public function getAstilleroservicio()
     {
         return $this->astilleroservicio;
+    }
+
+
+    /**
+     * Set producto
+     *
+     * @param \AppBundle\Entity\Producto $producto
+     *
+     * @return AstilleroCotizaServicio
+     */
+    public function setProducto(\AppBundle\Entity\Producto $producto = null)
+    {
+        $this->producto = $producto;
+
+        return $this;
+    }
+
+    /**
+     * Get producto
+     *
+     * @return \AppBundle\Entity\Producto
+     */
+    public function getProducto()
+    {
+        return $this->producto;
     }
 }

@@ -88,7 +88,7 @@ class ClienteController extends Controller
     {
         $deleteForm = $this->createDeleteForm($cliente);
         //$barcos = $cliente->getBarcos();
-        dump($cliente);
+       
         return $this->render('cliente/show.html.twig', array(
             'cliente' => $cliente,
             'delete_form' => $deleteForm->createView(),

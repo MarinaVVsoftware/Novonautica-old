@@ -168,6 +168,8 @@
 }
 .skin-novo .content-wrapper{
     background: #5a626f;
+    height: 0;
+    overflow: auto;
 }
 .skin-novo .treeview-menu{
     padding-left: 0px;
@@ -194,4 +196,25 @@
     padding: 15px;
     color: #fff;
     border:none;
+}
+
+.content-wrapper::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+
+    background-color: #59616e;
+    border: 1px solid #353b51;
+}
+
+.content-wrapper::-webkit-scrollbar
+{
+    width: 14px;
+    background-color: #353b51;
+}
+
+.content-wrapper::-webkit-scrollbar-thumb
+{
+
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #1b1e28;
 }
