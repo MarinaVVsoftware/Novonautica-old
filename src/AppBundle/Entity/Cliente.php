@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -25,7 +26,9 @@ class Cliente
 
     /**
      * @var string
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *     message="Nombre no puede quedar vacío"
+     * )
      *
      * @ORM\Column(name="nombre", type="string", length=255, unique=true)
      */
@@ -33,6 +36,9 @@ class Cliente
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Correo no puede quedar vacío"
+     * )
      * @Assert\Email(
      *     message = "El correo '{{ value }}' no es válido."
      * )
@@ -43,6 +49,9 @@ class Cliente
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Password no pude quedar vacío"
+     * )
      *
      * @ORM\Column(name="password", type="string", length=255)
      */
@@ -50,6 +59,10 @@ class Cliente
 
     /**
      * @var string
+     * @Assert\Length(
+     *      min = 10,
+     *      minMessage = "Error, número de teléfono no válido"
+     * )
      *
      * @ORM\Column(name="telefono", type="string", length=255, nullable=true)
      */
@@ -57,6 +70,13 @@ class Cliente
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Celular no pude quedar vacío"
+     * )
+     * @Assert\Length(
+     *      min = 10,
+     *      minMessage = "Error, número de celular no válido"
+     * )
      *
      * @ORM\Column(name="celular", type="string", length=255)
      */
@@ -75,13 +95,6 @@ class Cliente
      * @ORM\Column(name="fecharegistro", type="datetime", nullable=true)
      */
     private $fecharegistro;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="horaregistro", type="time", nullable=true)
-     */
-    private $horaregistro;
 
     /**
      * @var string
@@ -113,6 +126,9 @@ class Cliente
 
     /**
      * @var string
+     * @Assert\Email(
+     *     message = "El correo de facturación '{{ value }}' no es válido."
+     * )
      *
      * @ORM\Column(name="correofacturacion", type="string", length=255, nullable=true)
      */
@@ -125,14 +141,36 @@ class Cliente
      */
     private $estatus;
 
+//* @Assert\Collection(
+//*     fields={
+//*         "nombre"  = @Assert\NotBlank()
+//*     },
+//*     allowExtraFields= true,
+//     *     missingFieldsMessage=" Agrege el nombre del barco para continuar"
+//    * )
     /**
-     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Barco", mappedBy="cliente",cascade={"persist"})
      */
     private $barcos;
 
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaCotizacion", mappedBy="cliente")
+     */
+    private $mhcotizaciones;
+
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizacion", mappedBy="cliente")
+     */
+    private $astillerocotizaciones;
+
+
     public function __construct() {
         $this->barcos = new ArrayCollection();
+        $this->mhcotizaciones = new ArrayCollection();
+        $this->mhcservicios = new ArrayCollection();
+        $this->astillerocotizaciones = new ArrayCollection();
     }
     public function __toString()
     {
@@ -318,30 +356,6 @@ class Cliente
     }
 
     /**
-     * Set horaregistro
-     *
-     * @param \DateTime $horaregistro
-     *
-     * @return Cliente
-     */
-    public function setHoraregistro($horaregistro)
-    {
-        $this->horaregistro = $horaregistro;
-
-        return $this;
-    }
-
-    /**
-     * Get horaregistro
-     *
-     * @return \DateTime
-     */
-    public function getHoraregistro()
-    {
-        return $this->horaregistro;
-    }
-
-    /**
      * Set empresa
      *
      * @param string $empresa
@@ -520,5 +534,99 @@ class Cliente
     public function getBarcos()
     {
         return $this->barcos;
+    }
+
+    /**
+     * Add marinahumedacotizacion
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion
+     *
+     * @return Cliente
+     */
+    public function addMarinaHumedaCotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion)
+    {
+        $marinahumedacotizacion->setCliente($this);
+        $this->mhcotizaciones[] = $marinahumedacotizacion;
+        return $this;
+    }
+
+    /**
+     * Remove marinahumedacotizacion
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion
+     */
+    public function removeMarinaHumedaCotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion)
+    {
+        $this->mhcotizaciones->removeElement($marinahumedacotizacion);
+    }
+
+    /**
+     * Get mhcotizaciones
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMHcotizaciones()
+    {
+        return $this->mhcotizaciones;
+    }
+
+    /**
+     * Add mhcotizacione
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+     *
+     * @return Cliente
+     */
+    public function addMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+    {
+        $this->mhcotizaciones[] = $mhcotizacione;
+
+        return $this;
+    }
+
+    /**
+     * Remove mhcotizacione
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+     */
+    public function removeMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+    {
+        $this->mhcotizaciones->removeElement($mhcotizacione);
+    }
+
+
+
+    /**
+     * Add astillerocotizacione
+     *
+     * @param \AppBundle\Entity\AstilleroCotizacion $astillerocotizacione
+     *
+     * @return Cliente
+     */
+    public function addAstillerocotizacione(\AppBundle\Entity\AstilleroCotizacion $astillerocotizacione)
+    {
+        $this->astillerocotizaciones[] = $astillerocotizacione;
+
+        return $this;
+    }
+
+    /**
+     * Remove astillerocotizacione
+     *
+     * @param \AppBundle\Entity\AstilleroCotizacion $astillerocotizacione
+     */
+    public function removeAstillerocotizacione(\AppBundle\Entity\AstilleroCotizacion $astillerocotizacione)
+    {
+        $this->astillerocotizaciones->removeElement($astillerocotizacione);
+    }
+
+    /**
+     * Get astillerocotizaciones
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAstillerocotizaciones()
+    {
+        return $this->astillerocotizaciones;
     }
 }

@@ -12,14 +12,37 @@
                     <h3 class="panel-title">Nuevo Cliente</h3>
                 </div>
                 <div class="panel-body">
+                    {% form_theme form 'estructura/temaerror.html.twig' %}
                     {{ form_start(form) }}
                     <div class="row">
+                        <div class="col-sm-6">
+                            {{ form_errors(form.nombre) }}
+                            {{ form_errors(form.correo) }}
+                            {{ form_errors(form.password) }}
+                            {{ form_errors(form.telefono) }}
+                            {{ form_errors(form.celular) }}
+                            {{ form_errors(form.correofacturacion) }}
+                            {{ form_errors(form.barcos.children[0].nombre) }}
+                            {{ form_errors(form) }}
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-5">
-                            {{ form_row(form.nombre) }}
-                            {{ form_row(form.correo) }}
-                            {{ form_row(form.password) }}
-                            {{ form_row(form.telefono) }}
-                            {{ form_row(form.celular) }}
+                            {{ form_label(form.nombre) }}
+                            {{ form_widget(form.nombre) }}
+
+                            {{ form_label(form.correo) }}
+                            {{ form_widget(form.correo) }}
+
+                            {{ form_label(form.password) }}
+                            {{ form_widget(form.password) }}
+
+                            {{ form_label(form.telefono) }}
+                            {{ form_widget(form.telefono) }}
+
+                            {{ form_label(form.celular) }}
+                            {{ form_widget(form.celular) }}
+
                             {{ form_row(form.direccion) }}
                         </div>
                         <div class="col-sm-5">
@@ -27,16 +50,18 @@
                             {{ form_row(form.razonsocial) }}
                             {{ form_row(form.rfc) }}
                             {{ form_row(form.direccionfiscal) }}
-                            {{ form_row(form.correofacturacion) }}
 
-                            <div class="input-estatus">
-                                Estatus Cliente
-                                <span class="cont-label-novo">
-                                {{ form_errors(form.estatus) }}
-                                    {{ form_widget(form.estatus,{'attr': {'checked': 'true'}}) }}
-                                    {{ form_label(form.estatus) }}
-                                </span>
-                            </div>
+                            {{ form_label(form.correofacturacion) }}
+                            {{ form_widget(form.correofacturacion) }}
+
+                            {#<div class="input-estatus">#}
+                                {#Estatus Cliente#}
+                                {#<span class="cont-label-novo">#}
+                                {#{{ form_errors(form.estatus) }}#}
+                                    {#{{ form_widget(form.estatus,{'attr': {'checked': 'true'}}) }}#}
+                                    {#{{ form_label(form.estatus) }}#}
+                                {#</span>#}
+                            {#</div>#}
                         </div>
                     </div>
                     <div class="row">
@@ -46,22 +71,30 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-5">
-                            {{ form_row(form.barcos.children[0].nombre) }}
+                            {{ form_label(form.barcos.children[0].nombre) }}
+                            {{ form_widget(form.barcos.children[0].nombre) }}
+
                             {{ form_row(form.barcos.children[0].marca) }}
-
-                            <div class="input-estatus">
-                                Estatus Barco
-                                <span class="cont-label-novo">
-                                    {{ form_errors(form.barcos.children[0].estatus) }}
-                                    {{ form_widget(form.barcos.children[0].estatus,{'attr':{'checked':'true'}}) }}
-                                    {{ form_label(form.barcos.children[0].estatus) }}
-                                </span>
-                            </div>
-
-                        </div>
-                        <div class="col-sm-5">
                             {{ form_row(form.barcos.children[0].modelo) }}
                             {{ form_row(form.barcos.children[0].anio) }}
+                            {{ form_row(form.barcos.children[0].calado) }}
+                            {{ form_row(form.barcos.children[0].manga) }}
+                            {#<div class="input-estatus">#}
+                                {#Estatus Barco#}
+                                {#<span class="cont-label-novo">#}
+                                    {#{{ form_errors(form.barcos.children[0].estatus) }}#}
+                                    {#{{ form_widget(form.barcos.children[0].estatus,{'attr':{'checked':'true'}}) }}#}
+                                    {#{{ form_label(form.barcos.children[0].estatus) }}#}
+                                {#</span>#}
+                            {#</div>#}
+                        </div>
+                        <div class="col-sm-5">
+                            {{ form_row(form.barcos.children[0].eslora) }}
+                            {{ form_row(form.barcos.children[0].combustible) }}
+                            {{ form_row(form.barcos.children[0].agua) }}
+                            {{ form_row(form.barcos.children[0].nombreCapitan) }}
+                            {{ form_row(form.barcos.children[0].telefonoCapitan) }}
+                            {{ form_row(form.barcos.children[0].correoCapitan) }}
                         </div>
                     </div>
                     <div class="row">
@@ -69,7 +102,6 @@
                             <hr>
                         </div>
                     </div>
-
                     <div id="motor-fields-list0"
                          class="lista-motores"
                          data-prototype="
@@ -94,10 +126,21 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <input type="submit" value="Guardar" class="btn btn-azul pull-right"/>
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
                         </div>
                     </div>
                     {{ form_end(form) }}
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <a href="{{ path('cliente_index') }}" class="btn btn-naranja pull-right">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

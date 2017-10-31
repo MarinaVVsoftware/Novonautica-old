@@ -14,7 +14,8 @@
                             <h3 class="panel-title">Editar Cliente</h3>
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-contorno-azul pull-right" href="{{ path('cliente_index') }}">
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('cliente_show',{ 'id': cliente.id }) }}">
                                 {#<i class="fa fa-arrow-left" aria-hidden="true"></i>#}
                                 Regresar
                             </a>
@@ -22,6 +23,7 @@
                     </div>
                 </div>
                 <div class="panel-body panel-pestanias">
+                    {% form_theme edit_form 'estructura/temaerror.html.twig' %}
                     {{ form_start(edit_form) }}
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="primero active">
@@ -29,19 +31,40 @@
                         </li>
                         {% for barco in barcos %}
                             <li role="presentation">
-                                <a href="#{{ barco.id }}" aria-controls="{{ barco.id }}" role="tab" data-toggle="tab">{{ barco }}</a>
+                                <a href="#{{ barco.id }}" aria-controls="{{ barco.id }}" role="tab"
+                                   data-toggle="tab">{{ barco }}</a>
                             </li>
                         {% endfor %}
                     </ul>
                     <div class="tab-content">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                {{ form_errors(edit_form.nombre) }}
+                                {{ form_errors(edit_form.correo) }}
+                                {{ form_errors(edit_form.password) }}
+                                {{ form_errors(edit_form.telefono) }}
+                                {{ form_errors(edit_form.celular) }}
+                                {{ form_errors(edit_form.correofacturacion) }}
+                            </div>
+                        </div>
                         <div role="tabpanel" class="tab-pane active" id="cliente">
                             <div class="row">
                                 <div class="col-sm-5">
-                                    {{ form_row(edit_form.nombre) }}
-                                    {{ form_row(edit_form.correo) }}
-                                    {{ form_row(edit_form.password) }}
-                                    {{ form_row(edit_form.telefono) }}
-                                    {{ form_row(edit_form.celular) }}
+                                    {{ form_label(edit_form.nombre) }}
+                                    {{ form_widget(edit_form.nombre) }}
+
+                                    {{ form_label(edit_form.correo) }}
+                                    {{ form_widget(edit_form.correo) }}
+
+                                    {{ form_label(edit_form.password) }}
+                                    {{ form_widget(edit_form.password) }}
+
+                                    {{ form_label(edit_form.telefono) }}
+                                    {{ form_widget(edit_form.telefono) }}
+
+                                    {{ form_label(edit_form.celular) }}
+                                    {{ form_widget(edit_form.celular) }}
+
                                     {{ form_row(edit_form.direccion) }}
                                 </div>
                                 <div class="col-sm-5">
@@ -49,7 +72,8 @@
                                     {{ form_row(edit_form.razonsocial) }}
                                     {{ form_row(edit_form.rfc) }}
                                     {{ form_row(edit_form.direccionfiscal) }}
-                                    {{ form_row(edit_form.correofacturacion) }}
+                                    {{ form_label(edit_form.correofacturacion) }}
+                                    {{ form_widget(edit_form.correofacturacion) }}
                                     <div class="input-estatus">
                                         Estatus
                                         <span class="cont-label-novo">
@@ -69,81 +93,123 @@
 
 
                         {% for i,barco in barcos %}
-                        <div role="tabpanel" class="tab-pane" id="{{ barco.id }}">
-                            <div class="row">
-                                <div class="col-sm-5">
-                                    {{ form_row(edit_form.barcos[i].nombre) }}
-                                    {{ form_row(edit_form.barcos[i].marca) }}
-                                    <div class="input-estatus">
-                                        Estatus
-                                        <span class="cont-label-novo">
+                            <div role="tabpanel" class="tab-pane" id="{{ barco.id }}">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        {{ form_row(edit_form.barcos[i].nombre) }}
+                                        {{ form_row(edit_form.barcos[i].marca) }}
+                                        {{ form_row(edit_form.barcos[i].modelo) }}
+                                        {{ form_row(edit_form.barcos[i].anio) }}
+                                        {{ form_row(edit_form.barcos[i].calado) }}
+                                        {{ form_row(edit_form.barcos[i].manga) }}
+
+                                        <div class="input-estatus">
+                                            Estatus
+                                            <span class="cont-label-novo">
                                             {{ form_errors(edit_form.barcos[i].estatus) }}
-                                            {{ form_widget(edit_form.barcos[i].estatus) }}
-                                            {{ form_label(edit_form.barcos[i].estatus) }}
+                                                {{ form_widget(edit_form.barcos[i].estatus) }}
+                                                {{ form_label(edit_form.barcos[i].estatus) }}
                                         </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        {{ form_row(edit_form.barcos[i].eslora) }}
+                                        {{ form_row(edit_form.barcos[i].combustible) }}
+                                        {{ form_row(edit_form.barcos[i].agua) }}
+                                        {{ form_row(edit_form.barcos[i].nombreCapitan) }}
+                                        {{ form_row(edit_form.barcos[i].telefonoCapitan) }}
+                                        {{ form_row(edit_form.barcos[i].correoCapitan) }}
                                     </div>
                                 </div>
-                                <div class="col-sm-5">
-                                    {{ form_row(edit_form.barcos[i].modelo) }}
-                                    {{ form_row(edit_form.barcos[i].anio) }}
+                                <div class="row">
+                                    <div class="col-sm-12 espacio-linea">
+                                        <hr>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12 espacio-linea">
-                                    <hr>
-                                </div>
-                            </div>
-                            <div id="motor-fields-list{{ barco.id }}"
-                                 class="lista-motores"
-                                 data-prototype="
+                                <div id="motor-fields-list{{ barco.id }}"
+                                     class="lista-motores"
+                                     data-prototype="
                                                 {% filter escape %}
                                                     {{ include('motor/form-cliente.twig', { 'form': edit_form.barcos[i].motores.vars.prototype }) }}
                                                     {#{{ form_widget(edit_form.barcos[i].motores.vars.prototype)|e('html_attr') }}#}
                                                 {% endfilter %}
                                                 ">
-                                {% for motorField in edit_form.barcos[i].motores %}
-                                    {% form_theme motorField 'motor/form-cliente.twig' %}
-                                    <div class="row">
-                                        {{ form_widget(motorField) }}
+                                    {% for motorField in edit_form.barcos[i].motores %}
+                                        {% form_theme motorField 'motor/form-cliente.twig' %}
+                                        <div class="row">
+                                            {{ form_widget(motorField) }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <a href="#" id="" class="add-another-motor letra-azul"
+                                           data-cantidad="{{ edit_form.barcos[i].motores|length }}"
+                                           data-idlista="{{ barco.id }}">
+                                            + Agregar Motor
+                                        </a>
                                     </div>
-                                {% endfor %}
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <a href="#" id="" class="add-another-motor letra-azul" data-cantidad="{{ edit_form.barcos[i].motores|length }}" data-idlista="{{ barco.id }}">
-                                        + Agregar Motor
-                                    </a>
                                 </div>
                             </div>
-                        </div>
                         {% endfor %}
                     </div>
 
                     <div class="row">
                         <div class="col-sm-12">
                             {#{% for barco in barcos %}#}
-                                {#<a href="{{ path('barco_edit',{'id':barco.id}) }}" class="btn btn-azul">{{ barco.nombre }}</a>#}
+                            {#<a href="{{ path('barco_edit',{'id':barco.id}) }}" class="btn btn-azul">{{ barco.nombre }}</a>#}
                             {#{% endfor %}#}
-                            <a href="{{ path('barco_new',{'cliente':cliente.id}) }}" class="btn btn-azul">+ Agregar Barco</a>
+                            <a href="{{ path('barco_new',{'cliente':cliente.id}) }}" class="btn btn-azul">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                Agregar Barco
+                            </a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <input type="submit" value="Guardar" class="btn btn-azul center-block"/>
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
                         </div>
                     </div>
 
                     {{ form_end(edit_form) }}
-
-                    <div class="row">
+                    <div class="row espacio-linea-arriba2">
                         <div class="col-sm-12">
-                            {{ form_start(delete_form) }}
-                            <input type="submit" value="Borrar" class="btn btn-borrar pull-right">
-                            {{ form_end(delete_form) }}
+                            <a class="btn btn-naranja pull-right"
+                               href="{{ path('cliente_show',{ 'id': cliente.id }) }}">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-borrar pull-right" data-toggle="modal"
+                                    data-target="#modalBorrar">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                Borrar
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </div>
+
+
+{% endblock %}
+
+{% block modalborrar %}
+    {% embed 'estructura/modalborrar.twig' %}
+        {% block botonborra %}
+            {{ form_start(delete_form) }}
+            <button type="submit" class="btn btn-borrar">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                Borrar
+            </button>
+            {{ form_end(delete_form) }}
+        {% endblock %}
+    {% endembed %}
 {% endblock %}

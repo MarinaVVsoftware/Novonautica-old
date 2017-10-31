@@ -1,0 +1,76 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block title %}
+    Novonautiva | Detalle Evento
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">Detalle del evento</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="{{ path('marina-agenda') }}" class="btn btn-contorno-azul pull-right">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th>Id</th>
+                                    <td>{{ evento.id }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Titulo</th>
+                                    <td>{{ evento.titulo }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Fechainicio</th>
+                                    <td>{% if evento.fechainicio %}{{ evento.fechainicio|date('Y-m-d') }}{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Fechafin</th>
+                                    <td>{% if evento.fechafin %}{{ evento.fechafin|date('Y-m-d') }}{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Horainicio</th>
+                                    <td>{% if evento.horainicio %}{{ evento.horainicio|date('H:i:s') }}{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Horafin</th>
+                                    <td>{% if evento.horafin %}{{ evento.horafin|date('H:i:s') }}{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Descripcion</th>
+                                    <td>{{ evento.descripcion }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="{{ path('evento_edit', { 'id': evento.id }) }}" class="btn btn-azul">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                Editar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

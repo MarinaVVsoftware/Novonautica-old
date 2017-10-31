@@ -45,12 +45,15 @@ class BarcoController extends Controller
         $barco = new Barco();
         $motor = new Motor();
         $barco->addMotore($motor);
+        $barco->setEstatus(true);
         $form = $this->createForm('AppBundle\Form\BarcoType', $barco);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $barco->setCliente($cliente);
+            $fechaHoraActual = new \DateTime('now');
+            $barco->setFecharegistro($fechaHoraActual);
             $em->persist($barco);
             $em->flush();
 
@@ -152,7 +155,7 @@ class BarcoController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('barco_index');
+        return $this->redirectToRoute('cliente_index');
     }
 
     /**

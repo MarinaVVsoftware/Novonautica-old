@@ -23,17 +23,23 @@
 
                 </div>
                 <div class="panel-body">
-                    {#<div class="row">#}
-                        {#<div class="col-sm-12">#}
-                            {#<p><strong>Cliente: {{ cliente }}</strong></p>#}
-                        {#</div>#}
-                    {#</div>#}
+                    {% form_theme edit_form 'estructura/temaerror.html.twig' %}
                     {{ form_start(edit_form) }}
                     <div class="row">
+                        <div class="col-sm-6">
+                            {{ form_errors(edit_form.nombre) }}
+                            {{ form_errors(edit_form.correoCapitan) }}
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-5">
-                            {{ form_row(edit_form.nombre) }}
+                            {{ form_label(edit_form.nombre) }}
+                            {{ form_widget(edit_form.nombre) }}
                             {{ form_row(edit_form.marca) }}
-
+                            {{ form_row(edit_form.modelo) }}
+                            {{ form_row(edit_form.anio) }}
+                            {{ form_row(edit_form.calado) }}
+                            {{ form_row(edit_form.manga) }}
                             <div class="input-estatus">
                                 Estatus Barco
                                 <span class="cont-label-novo">
@@ -45,8 +51,13 @@
 
                         </div>
                         <div class="col-sm-5">
-                            {{ form_row(edit_form.modelo) }}
-                            {{ form_row(edit_form.anio) }}
+                            {{ form_row(edit_form.eslora) }}
+                            {{ form_row(edit_form.combustible) }}
+                            {{ form_row(edit_form.agua) }}
+                            {{ form_row(edit_form.nombreCapitan) }}
+                            {{ form_row(edit_form.telefonoCapitan) }}
+                            {{ form_label(edit_form.correoCapitan) }}
+                            {{ form_widget(edit_form.correoCapitan) }}
                         </div>
                     </div>
                     <div class="row">
@@ -79,23 +90,44 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <input type="submit" class="btn btn-azul center-block" value="Guardar"/>
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
                         </div>
                     </div>
                     {{ form_end(edit_form) }}
-                    <div class="row">
+                    <div class="row espacio-linea-arriba2">
                         <div class="col-sm-12">
-                            {#<a href="{{ path('barco_index') }}" class="btn btn-morado-claro">#}
-                                {#<i class="fa fa-arrow-left" aria-hidden="true"></i>#}
-                                {#Regresar#}
-                            {#</a>#}
-                            {{ form_start(delete_form) }}
-                            <input type="submit" value="Borrar" class="btn btn-borrar pull-right">
-                            {{ form_end(delete_form) }}
+                            <a href="{{ path('cliente_show',{'id':cliente.id}) }}" class="btn btn-naranja pull-right">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row  espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-borrar pull-right" data-toggle="modal"
+                                    data-target="#modalBorrar">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                Borrar
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
+{% block modalborrar %}
+    {% embed 'estructura/modalborrar.twig' %}
+        {% block botonborra %}
+            {{ form_start(delete_form) }}
+            <button type="submit" class="btn btn-borrar">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                Borrar
+            </button>
+            {{ form_end(delete_form) }}
+        {% endblock %}
+    {% endembed %}
 {% endblock %}

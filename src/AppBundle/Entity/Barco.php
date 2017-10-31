@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Barco
@@ -24,6 +25,9 @@ class Barco
 
     /**
      * @var string
+     *  @Assert\NotBlank(
+     *     message="Nombre del barco no puede quedar vacío"
+     * )
      *
      * @ORM\Column(name="nombre", type="string", length=255)
      */
@@ -51,6 +55,73 @@ class Barco
     private $anio;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="calado", type="string", length=100, nullable=true)
+     */
+    private $calado;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="manga", type="string", length=100, nullable=true)
+     */
+    private $manga;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="eslora", type="string", length=100, nullable=true)
+     */
+    private $eslora;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="combustible", type="integer", nullable=true)
+     */
+    private $combustible;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="agua", type="integer", nullable=true)
+     */
+    private $agua;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_capitan", type="string", length=255, nullable=true)
+     */
+    private $nombreCapitan;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="telefono_capitan", type="string", length=255, nullable=true)
+     */
+    private $telefonoCapitan;
+
+    /**
+     * @var string
+     *
+     * @Assert\Email(
+     *     message = "El correo '{{ value }}' no es válido."
+     * )
+     *
+     * @ORM\Column(name="correo_capitan", type="string", length=255, nullable=true)
+     */
+    private $correoCapitan;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecharegistro", type="datetime", nullable=true)
+     */
+    private $fecharegistro;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="estatus", type="boolean")
@@ -65,12 +136,25 @@ class Barco
     private $cliente;
 
     /**
+     *
      * @ORM\OneToMany(targetEntity="Motor", mappedBy="barco",cascade={"persist"})
      */
     private $motores;
 
+    /**
+     * @ORM\OneToMany(targetEntity="MarinaHumedaCotizacion", mappedBy="barco")
+     */
+    private $mhcotizaciones;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizacion", mappedBy="barco")
+     */
+    private $astillerocotizaciones;
+
     public function __construct() {
         $this->motores = new ArrayCollection();
+        $this->mhcotizaciones = new ArrayCollection();
+        $this->astillerocotizaciones = new ArrayCollection();
     }
 
     public function __toString()
@@ -185,6 +269,222 @@ class Barco
     }
 
     /**
+     * Set calado
+     *
+     * @param string $calado
+     *
+     * @return Barco
+     */
+    public function setCalado($calado)
+    {
+        $this->calado = $calado;
+
+        return $this;
+    }
+
+    /**
+     * Get calado
+     *
+     * @return string
+     */
+    public function getCalado()
+    {
+        return $this->calado;
+    }
+
+    /**
+     * Set manga
+     *
+     * @param string $manga
+     *
+     * @return Barco
+     */
+    public function setManga($manga)
+    {
+        $this->manga = $manga;
+
+        return $this;
+    }
+
+    /**
+     * Get manga
+     *
+     * @return string
+     */
+    public function getManga()
+    {
+        return $this->manga;
+    }
+
+    /**
+     * Set eslora
+     *
+     * @param string $eslora
+     *
+     * @return Barco
+     */
+    public function setEslora($eslora)
+    {
+        $this->eslora= $eslora;
+
+        return $this;
+    }
+
+    /**
+     * Get eslora
+     *
+     * @return string
+     */
+    public function getEslora()
+    {
+        return $this->eslora;
+    }
+
+    /**
+     * Set combustible
+     *
+     * @param integer $combustible
+     *
+     * @return Barco
+     */
+    public function setCombustible($combustible)
+    {
+        $this->combustible = $combustible;
+
+        return $this;
+    }
+
+    /**
+     * Get combustible
+     *
+     * @return int
+     */
+    public function getCombustible()
+    {
+        return $this->combustible;
+    }
+
+    /**
+     * Set agua
+     *
+     * @param integer $agua
+     *
+     * @return Barco
+     */
+    public function setAgua($agua)
+    {
+        $this->agua = $agua;
+
+        return $this;
+    }
+
+    /**
+     * Get agua
+     *
+     * @return int
+     */
+    public function getAgua()
+    {
+        return $this->agua;
+    }
+
+    /**
+     * Set nombreCapitan
+     *
+     * @param string $nombreCapitan
+     *
+     * @return Barco
+     */
+    public function setNombreCapitan($nombreCapitan)
+    {
+        $this->nombreCapitan = $nombreCapitan;
+
+        return $this;
+    }
+
+    /**
+     * Get nombreCapitan
+     *
+     * @return string
+     */
+    public function getNombreCapitan()
+    {
+        return $this->nombreCapitan;
+    }
+
+    /**
+     * Set telefonoCapitan
+     *
+     * @param string $telefonoCapitan
+     *
+     * @return Barco
+     */
+    public function setTelefonoCapitan($telefonoCapitan)
+    {
+        $this->telefonoCapitan = $telefonoCapitan;
+
+        return $this;
+    }
+
+    /**
+     * Get telefonoCapitan
+     *
+     * @return string
+     */
+    public function getTelefonoCapitan()
+    {
+        return $this->telefonoCapitan;
+    }
+
+    /**
+     * Set correoCapitan
+     *
+     * @param string $correoCapitan
+     *
+     * @return Barco
+     */
+    public function setCorreoCapitan($correoCapitan)
+    {
+        $this->correoCapitan = $correoCapitan;
+
+        return $this;
+    }
+
+    /**
+     * Get correoCapitan
+     *
+     * @return string
+     */
+    public function getCorreoCapitan()
+    {
+        return $this->correoCapitan;
+    }
+
+    /**
+     * Set fecharegistro
+     *
+     * @param \DateTime $fecharegistro
+     *
+     * @return Barco
+     */
+    public function setFecharegistro($fecharegistro)
+    {
+        $this->fecharegistro = $fecharegistro;
+
+        return $this;
+    }
+
+    /**
+     * Get fecharegistro
+     *
+     * @return \DateTime
+     */
+    public function getFecharegistro()
+    {
+        return $this->fecharegistro;
+    }
+
+    /**
      * Set estatus
      *
      * @param boolean $estatus
@@ -206,16 +506,6 @@ class Barco
     public function getEstatus()
     {
         return $this->estatus;
-    }
-
-    /**
-     * Get motores
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getMotores()
-    {
-        return $this->motores;
     }
 
     /**
@@ -242,6 +532,16 @@ class Barco
     }
 
     /**
+     * Get motores
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMotores()
+    {
+        return $this->motores;
+    }
+
+    /**
      * Add motore
      *
      * @param \AppBundle\Entity\Motor $motore
@@ -265,5 +565,101 @@ class Barco
     public function removeMotore(\AppBundle\Entity\Motor $motore)
     {
         $this->motores->removeElement($motore);
+    }
+
+
+
+    /**
+     * Add marinahumedacotizacion
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion
+     *
+     * @return Barco
+     */
+    public function addMarinaHumedaCotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion)
+    {
+        $marinahumedacotizacion->setBarco($this);
+        $this->mhcotizaciones[] = $marinahumedacotizacion;
+        return $this;
+    }
+
+    /**
+     * Remove marinahumedacotizacion
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion
+     */
+    public function removeMarinaHumedaCotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion)
+    {
+        $this->mhcotizaciones->removeElement($marinahumedacotizacion);
+    }
+
+    /**
+     * Get mhcotizaciones
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMHcotizaciones()
+    {
+        return $this->mhcotizaciones;
+    }
+
+    /**
+     * Add mhcotizacione
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+     *
+     * @return Barco
+     */
+    public function addMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+    {
+        $this->mhcotizaciones[] = $mhcotizacione;
+
+        return $this;
+    }
+
+    /**
+     * Remove mhcotizacione
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+     */
+    public function removeMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+    {
+        $this->mhcotizaciones->removeElement($mhcotizacione);
+    }
+
+
+
+    /**
+     * Add astillerocotizacione
+     *
+     * @param \AppBundle\Entity\AstilleroCotizacion $astillerocotizacione
+     *
+     * @return Barco
+     */
+    public function addAstillerocotizacione(\AppBundle\Entity\AstilleroCotizacion $astillerocotizacione)
+    {
+        $this->astillerocotizaciones[] = $astillerocotizacione;
+
+        return $this;
+    }
+
+    /**
+     * Remove astillerocotizacione
+     *
+     * @param \AppBundle\Entity\AstilleroCotizacion $astillerocotizacione
+     */
+    public function removeAstillerocotizacione(\AppBundle\Entity\AstilleroCotizacion $astillerocotizacione)
+    {
+        $this->astillerocotizaciones->removeElement($astillerocotizacione);
+    }
+
+    /**
+     * Get astillerocotizaciones
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAstillerocotizaciones()
+    {
+        return $this->astillerocotizaciones;
     }
 }

@@ -1,0 +1,359 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block title %}
+    Novonautiva | Nueva cotización
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">Nueva Cotización</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_index') }}">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body panel-pestanias">
+                    {% form_theme form 'estructura/temaerror.html.twig' %}
+                    {{ form_start(form) }}
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="primero active">
+                            <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Total</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                {{ form_errors(form.fechaLlegada) }}
+                                {{ form_errors(form.fechaSalida) }}
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane active" id="generales">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_row(form.cliente) }}
+                                    <div id="info-cliente">
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    {{ form_errors(form.barco) }}
+                                    <div class="radio buscabarcomh">
+                                        {{ form_label(form.barco) }}
+                                        {{ form_widget(form.barco) }}
+                                    </div>
+                                    <div id="info-barco">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="servicios">
+                            <div class="row">
+                                <div class="col-sm-3">
+
+                                    <div class="input-daterange" id="rangoFehas">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                {{ form_label(form.fechaLlegada) }}
+                                                {{ form_widget(form.fechaLlegada) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                {{ form_label(form.fechaSalida) }}
+                                                {{ form_widget(form.fechaSalida) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <label>Días Estadía:</label>
+                                    {{ form_widget(form.mhcservicios.children.0.cantidad) }}
+                                    <label>Días Adicionales:</label>
+                                    {{ form_widget(form.mhcservicios.children.1.cantidad) }}
+                                    <label>Precio por día</label>
+                                    {{ form_widget(form.mhcservicios.children.0.precio) }}
+
+                                    <label>Descuento(%)</label>
+                                    {{ form_widget(form.descuento,{'value':0}) }}
+
+                                    <label>Abastecimiento Agua</label>
+                                    {{ form_widget(form.mhcservicios.children.2.precio,{'value':0}) }}
+
+                                    <label>Conexión a electricidad</label>
+                                    {{ form_widget(form.mhcservicios.children.3.precio,{'value':0}) }}
+
+                                </div>
+                                <div class="col-sm-7 col-sm-offset-1">
+                                    <div class="row">
+                                        <div class="col-sm-1">
+                                            <div class="input-estatus">
+                                                <span class="cont-label-novo">
+                                                    {{ form_errors(form.mhcservicios.children.4.estatus) }}
+                                                    {{ form_widget(form.mhcservicios.children.4.estatus) }}
+                                                    {#{{ form_widget(form.mhcservicios.children.2.estatus,{'attr':{'checked':'false'}}) }}#}
+                                                    {{ form_label(form.mhcservicios.children.4.estatus) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label>Abastecimiento gasolina (LT):</label>
+                                            {{ form_widget(form.mhcservicios.children.4.cantidad) }}
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label>Gasolina precio por litro:</label>
+                                            {{ form_widget(form.mhcservicios.children.4.precio) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-1">
+                                            <div class="input-estatus">
+                                                <span class="cont-label-novo">
+                                                    {{ form_errors(form.mhcservicios.children.5.estatus) }}
+                                                    {{ form_widget(form.mhcservicios.children.5.estatus) }}
+                                                    {{ form_label(form.mhcservicios.children.5.estatus) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label>Dezasolve</label>
+                                            {{ form_widget(form.mhcservicios.children.5.precio) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-1">
+                                            <div class="input-estatus">
+                                                <span class="cont-label-novo">
+                                                    {{ form_errors(form.mhcservicios.children.6.estatus) }}
+                                                    {{ form_widget(form.mhcservicios.children.6.estatus) }}
+                                                    {{ form_label(form.mhcservicios.children.6.estatus) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label>Limpieza de locación</label>
+                                            {{ form_widget(form.mhcservicios.children.6.precio) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="total">
+                            <div class="row">
+                                <div class="col-sm-9 text-right">
+                                    <span>Tipo de cambio:</span>
+                                    <div id="valdolar" class="" data-valor="{{ valdolar }}">{{ valdolar }} MXN</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <small>Precios en USD</small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <table id="mh_nuevacotizacion" class="table text-center">
+                                        <thead>
+                                            <tr>
+                                                <th>Cantidad</th>
+                                                <th>Servicio</th>
+                                                <th>Prec. Unid.</th>
+                                                <th>Sub-Total</th>
+                                                <th>IVA</th>
+                                                <th>Descuento</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td id="de_cantidad">0</td>
+                                                <td>Días estancia</td>
+                                                <td id="de_precio">$ 0.00</td>
+                                                <td id="de_subtotal" data-valor="0">$ 0.00</td>
+                                                <td id="de_iva" data-valor="0">$ 0.00</td>
+                                                <td id="de_descuento" data-valor="0">$ 0.00</td>
+                                                <td id="de_total" data-valor="0">$ 0.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="da_cantidad">0</td>
+                                                <td>Dias Adicionales</td>
+                                                <td id="da_precio">$ 0.00</td>
+                                                <td id="da_subtotal" data-valor="0">$ 0.00</td>
+                                                <td id="da_iva" data-valor="0">$ 0.00</td>
+                                                <td id="da_descuento" data-valor="0">$ 0.00</td>
+                                                <td id="da_total" data-valor="0">$ 0.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Abastecimiento de agua</td>
+                                                <td id="a_precio">$ 0.00</td>
+                                                <td id="a_subtotal" data-valor="0">$ 0.00</td>
+                                                <td id="a_iva" data-valor="0">$ 0.00</td>
+                                                <td id="a_descuento" data-valor="0">$ 0.00</td>
+                                                <td id="a_total" data-valor="0">$ 0.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Conexión a electricidad</td>
+                                                <td id="e_precio">$ 0.00</td>
+                                                <td id="e_subtotal" data-valor="0">$ 0.00</td>
+                                                <td id="e_iva" data-valor="0">$ 0.00</td>
+                                                <td id="e_descuento" data-valor="0">$ 0.00</td>
+                                                <td id="e_total" data-valor="0">$ 0.00</td>
+                                            </tr>
+                                            <tr id="cotizagasolina" class="hidden">
+                                                <td id="g_cantidad">0</td>
+                                                <td>Abastecimiento de gasolina</td>
+                                                <td id="g_precio">$ 0.00</td>
+                                                <td id="g_subtotal" data-valor="0">$ 0.00</td>
+                                                <td id="g_iva" data-valor="0">$ 0.00</td>
+                                                <td id="g_descuento" data-valor="0">$ 0.00</td>
+                                                <td id="g_total" data-valor="0">$ 0.00</td>
+                                            </tr>
+                                            <tr id="cotizadezasolve" class="hidden">
+                                                <td>1</td>
+                                                <td>Dezasolve</td>
+                                                <td id="d_precio">$ 0.00</td>
+                                                <td id="d_subtotal" data-valor="0">$ 0.00</td>
+                                                <td id="d_iva" data-valor="0">$ 0.00</td>
+                                                <td id="d_descuento" data-valor="0">$ 0.00</td>
+                                                <td id="d_total" data-valor="0">$ 0.00</td>
+                                            </tr>
+                                            <tr id="cotizalimpieza" class="hidden">
+                                                <td>1</td>
+                                                <td>Limpieza de locación</td>
+                                                <td id="l_precio">$ 0.00</td>
+                                                <td id="l_subtotal" data-valor="0">$ 0.00</td>
+                                                <td id="l_iva" data-valor="0">$ 0.00</td>
+                                                <td id="l_descuento" data-valor="0">$ 0.00</td>
+                                                <td id="l_total" data-valor="0">$ 0.00</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-sm-3">
+                                    {#<div class="row">#}
+                                        {#<div class="col-sm-12">#}
+                                            {#<a class="btn btn-morado-claro">Visualizar</a>#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <button type="submit" class="btn btn-azul">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                Guardar
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div id="valiva" class="" data-valor="{{ valiva }}">
+                                        <small>IVA: {{ valiva }} %</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $ <span id="gransubtot">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $ <span id="graniva">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Descuento:</p>
+                                    <p>
+                                        $ <span id="grandecuento">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $ <span id="grantot">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{ form_widget(form.mhcservicios.children.1.precio,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.2.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.3.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.5.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.6.cantidad,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.0.estatus,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.1.estatus,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.2.estatus,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.mhcservicios.children.3.estatus,{'attr':{'class':'hidden'}}) }}
+                    {{ form_end(form) }}
+
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="{{ path('marina-humeda_index') }}" class="btn btn-naranja pull-right">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
