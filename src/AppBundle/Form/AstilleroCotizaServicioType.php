@@ -9,8 +9,13 @@
 namespace AppBundle\Form;
 
 
+use AppBundle\Entity\AstilleroCotizacion;
+use AppBundle\Entity\AstilleroCotizaServicio;
+use AppBundle\Entity\Producto;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AstilleroCotizaServicioType extends AbstractType
@@ -28,11 +33,24 @@ class AstilleroCotizaServicioType extends AbstractType
             ->add('estatus', null,[
                 'label' => ' '
             ])
-            //->add('iva')
-            //->add('descuento')
-            //->add('total')
         ;
+
+        $formModifier = function (FormInterface $form, AstilleroCotizaServicio $astilleroCotizaServicio = null) {
+            $productos = null === $astilleroCotizaServicio ? array() : $astilleroCotizaServicio->getProductos();
+
+            $form->add('productos',EntityType::class,[
+                'class' => 'AppBundle:Producto',
+                'label' => ' ',
+                'placeholder' => 'Seleccionar...',
+                'attr' => ['class' => 'select-buscador'],
+                'choices' => $productos,
+            ]);
+
+        };
+
     }
+
+
 
     /**
      * {@inheritdoc}

@@ -57,6 +57,7 @@ jQuery('.add-another-servicio').click(function (e) {
     //var motorListOtros = jQuery('.lista-motores'+lista);
     // grab the prototype template
     var newWidget = $(servicioListPrimero).data('prototype');
+
     // replace the "__name__" used in the id and name of the prototype
     // with a number that's unique to your emails
     // end name attribute looks like name="contact[emails][2]"
@@ -131,6 +132,35 @@ elclienteastillero.change(function() {
 });
 
 //--- fin select dependiente para astillero cotización ---
+
+//---- aparecer form collection con select de productos ----
+$('.add-producto').click(function (e) {
+    e.preventDefault();
+    // var elementoMotor = document.getElementsByClassName(this);
+    var totServicios = $('.add-another-servicio').data('cantidad');
+    var lista = $('.add-another-servicio').data('idlista');
+    var servicioListPrimero = jQuery('#servicio-fields-list'+lista);
+    //var motorListOtros = jQuery('.lista-motores'+lista);
+    // grab the prototype template
+    var newWidget = $(servicioListPrimero).data('prototype2');
+   
+    // replace the "__name__" used in the id and name of the prototype
+    // with a number that's unique to your emails
+    // end name attribute looks like name="contact[emails][2]"
+    newWidget = newWidget.replace(/__name__/g, totServicios);
+    totServicios++;
+    $('.add-another-servicio').data('cantidad', totServicios);
+    // create a new list element and add it to the list
+    var newLi = jQuery('<tr class="servicio-agregado"></tr>').html(newWidget);
+    newLi.appendTo(servicioListPrimero);
+
+    // also add a remove button, just for this example
+    //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
+
+    newLi.before(newLi);
+});
+//-- fin aparecer form collection con select de productos ---
+
 
 $(document).ready(function() {
     $('.select-buscador').select2();
@@ -489,13 +519,14 @@ $('.selectclientebuscar').change(function(e) {
 
 var x = 1;
 $('.buscabarcomh').click(function () {
-    $('#loading').show();
-        //console.log('click '+x);
         if(x==2){
-            $("#info-barco").empty();
-            var idbarco = $( "input[type=radio]:checked" ).val();
-            buscaDatosBarco(idbarco);
-            x=1;
+            if( $( "input[type=radio]:checked" ).val() != null){
+                $('#loading').show();
+                $("#info-barco").empty();
+                var idbarco = $( "input[type=radio]:checked" ).val();
+                buscaDatosBarco(idbarco);
+                x=1;
+            }
         }else{
             x++;
         }

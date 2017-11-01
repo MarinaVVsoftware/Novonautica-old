@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -83,6 +84,17 @@ class AstilleroCotizaServicio
      * @ORM\JoinColumn(name="idservicio", referencedColumnName="id")
      */
     private $astilleroservicio;
+
+    /**
+     * Many cotizaciones have Many Productos.
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Producto", inversedBy="acservicios")
+     * @ORM\JoinTable(name="astillero_cotizaciones_productos")
+     */
+    private $productos;
+
+    public function __construct() {
+        $this->productos = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -308,5 +320,39 @@ class AstilleroCotizaServicio
     public function getAstilleroservicio()
     {
         return $this->astilleroservicio;
+    }
+
+    /**
+     * Add producto
+     *
+     * @param \AppBundle\Entity\Producto $producto
+     *
+     * @return AstilleroCotizaServicio
+     */
+    public function addProducto(\AppBundle\Entity\Producto $producto)
+    {
+        $this->productos[] = $producto;
+
+        return $this;
+    }
+
+    /**
+     * Remove producto
+     *
+     * @param \AppBundle\Entity\Producto $producto
+     */
+    public function removeProducto(\AppBundle\Entity\Producto $producto)
+    {
+        $this->productos->removeElement($producto);
+    }
+
+    /**
+     * Get productos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProductos()
+    {
+        return $this->productos;
     }
 }

@@ -1,0 +1,16 @@
+{% block form_widget %}
+    {% spaceless %}
+        <td>{{ form_widget(form.cantidad) }}</td>
+        <td>{{ form_widget(form.servicio) }}</td>
+        <td>{{ form_widget(form.precio) }}</td>
+        <td>$ 0.00</td>
+        <td>$ 0.00</td>
+        <td>$ 0.00</td>
+        <td>
+            <a href="#" class="remove-servicio btn btn-naranja">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </a>
+        </td>
+    {% endspaceless %}
+        {#{{ form_widget(form.servicio,{'attr':{'class':'hidden'}}) }}#}
+{% endblock %}
