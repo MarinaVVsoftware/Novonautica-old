@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -85,18 +84,9 @@ class Producto
      */
     private $unidad;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\AstilleroCotizaServicio", mappedBy="productos")
-     */
-    private $acservicios;
-
-    public function __construct() {
-        $this->acservicios = new ArrayCollection();
-    }
-
     public function __toString()
     {
-        return $this->nombre;
+        return $this->codigo.' - '.$this->nombre;
     }
 
     /**
@@ -253,37 +243,4 @@ class Producto
         return $this->unidad;
     }
 
-    /**
-     * Add acservicio
-     *
-     * @param \AppBundle\Entity\AstilleroCotizaServicio $acservicio
-     *
-     * @return Producto
-     */
-    public function addAcservicio(\AppBundle\Entity\AstilleroCotizaServicio $acservicio)
-    {
-        $this->acservicios[] = $acservicio;
-
-        return $this;
-    }
-
-    /**
-     * Remove acservicio
-     *
-     * @param \AppBundle\Entity\AstilleroCotizaServicio $acservicio
-     */
-    public function removeAcservicio(\AppBundle\Entity\AstilleroCotizaServicio $acservicio)
-    {
-        $this->acservicios->removeElement($acservicio);
-    }
-
-    /**
-     * Get acservicios
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getAcservicios()
-    {
-        return $this->acservicios;
-    }
 }

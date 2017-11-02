@@ -86,15 +86,11 @@ class AstilleroCotizaServicio
     private $astilleroservicio;
 
     /**
-     * Many cotizaciones have Many Productos.
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Producto", inversedBy="acservicios")
-     * @ORM\JoinTable(name="astillero_cotizaciones_productos")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Producto")
+     * @ORM\JoinColumn(name="idproducto", referencedColumnName="id")
      */
-    private $productos;
+    private $producto;
 
-    public function __construct() {
-        $this->productos = new ArrayCollection();
-    }
 
     /**
      * Get id
@@ -322,37 +318,28 @@ class AstilleroCotizaServicio
         return $this->astilleroservicio;
     }
 
+
     /**
-     * Add producto
+     * Set producto
      *
      * @param \AppBundle\Entity\Producto $producto
      *
      * @return AstilleroCotizaServicio
      */
-    public function addProducto(\AppBundle\Entity\Producto $producto)
+    public function setProducto(\AppBundle\Entity\Producto $producto = null)
     {
-        $this->productos[] = $producto;
+        $this->producto = $producto;
 
         return $this;
     }
 
     /**
-     * Remove producto
+     * Get producto
      *
-     * @param \AppBundle\Entity\Producto $producto
+     * @return \AppBundle\Entity\Producto
      */
-    public function removeProducto(\AppBundle\Entity\Producto $producto)
+    public function getProducto()
     {
-        $this->productos->removeElement($producto);
-    }
-
-    /**
-     * Get productos
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getProductos()
-    {
-        return $this->productos;
+        return $this->producto;
     }
 }

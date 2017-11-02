@@ -33,20 +33,16 @@ class AstilleroCotizaServicioType extends AbstractType
             ->add('estatus', null,[
                 'label' => ' '
             ])
-        ;
-
-        $formModifier = function (FormInterface $form, AstilleroCotizaServicio $astilleroCotizaServicio = null) {
-            $productos = null === $astilleroCotizaServicio ? array() : $astilleroCotizaServicio->getProductos();
-
-            $form->add('productos',EntityType::class,[
+            ->add('producto',EntityType::class,[
                 'class' => 'AppBundle:Producto',
                 'label' => ' ',
                 'placeholder' => 'Seleccionar...',
-                'attr' => ['class' => 'select-buscador'],
-                'choices' => $productos,
-            ]);
+                'attr' => ['class' => 'select-busca-producto'],
+                'required'=>false,
 
-        };
+            ])
+        ;
+
 
     }
 

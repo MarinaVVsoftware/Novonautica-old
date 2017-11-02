@@ -480,59 +480,6 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     }
 }
 
-/* ---- temporal ----*/
-.etiqueta-evento{
-    color: #ffffff;
-    text-align: left;
-    margin-right: -8px;
-    margin-left: -8px;
-    margin-bottom: 4px;
-    padding: 4px;
-}
-.panel-novo .calendario tbody tr:hover{
-    background: none;
-    cursor: none;
-}
-.calendario tbody td:hover{
-    background: #3e4766;
-    cursor: pointer;
-}
-#mnsmas {
-    height: 20px;
-    padding-top: 0px;
-    background: transparent;
-    color: #008CBA;
-    border: 1px solid #008CBA;
-}
-#hrs {
-    text-align: center;
-    width: 90px;
-    height: 20px;
-    padding-top: 0px;
-    color: white;
-    font-size: 0.90em;
-    border: 1px solid #008CBA;
-    margin-left: -4px;
-    margin-right: -4px;
-}
-#mnsmas {
-    height: 20px;
-    padding-top: 0px;
-    background: transparent;
-    color: #008CBA;
-    border: 1px solid #008CBA;
-}
-.margenboton {
-    margin-right: 30px;
-}
-.padingleft {
-    padding-left: 25px;
-}
-.estatus-personal{
-    width: 24px;
-}
-/* ---- fin temporal ----*/
-
 /*++++ datepicker calendario ++++*/
 .panel-body  form .input-calendario{
     border: 1px solid #0097f6 !important;
@@ -742,10 +689,7 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     }
 /*++ Fin Modal borrar ++*/
 
-.barcoespacio:hover,text:hover{
-    cursor: pointer;
-}
-
+/*++ Scroll admin +++*/
 .scroll-novo::-webkit-scrollbar-track
 {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
@@ -765,3 +709,67 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: #282d40;
 }
+/*++ fin Scroll admin +++*/
+
+.barcoespacio:hover,text:hover{
+    cursor: pointer;
+}
+.select2-container{
+    width: 100% !important;
+}
+td .select2-container--default .select2-selection--single {
+    border-radius: 0 !important;
+}
+
+/* ---- temporal ----*/
+.etiqueta-evento{
+    color: #ffffff;
+    text-align: left;
+    margin-right: -8px;
+    margin-left: -8px;
+    margin-bottom: 4px;
+    padding: 4px;
+}
+.panel-novo .calendario tbody tr:hover{
+    background: none;
+    cursor: none;
+}
+.calendario tbody td:hover{
+    background: #3e4766;
+    cursor: pointer;
+}
+#mnsmas {
+    height: 20px;
+    padding-top: 0px;
+    background: transparent;
+    color: #008CBA;
+    border: 1px solid #008CBA;
+}
+#hrs {
+    text-align: center;
+    width: 90px;
+    height: 20px;
+    padding-top: 0px;
+    color: white;
+    font-size: 0.90em;
+    border: 1px solid #008CBA;
+    margin-left: -4px;
+    margin-right: -4px;
+}
+#mnsmas {
+    height: 20px;
+    padding-top: 0px;
+    background: transparent;
+    color: #008CBA;
+    border: 1px solid #008CBA;
+}
+.margenboton {
+    margin-right: 30px;
+}
+.padingleft {
+    padding-left: 25px;
+}
+.estatus-personal{
+    width: 24px;
+}
+/* ---- fin temporal ----*/

@@ -264,18 +264,14 @@
                                                         {{ include('astillerocotizacion/coleccion-servicio.twig', { 'form': form.acservicios.vars.prototype }) }}
                                                         {#{{ form_widget(form.acservicios.vars.prototype) }}#}
                                                     {% endfilter %}"
-                                               data-prototype2="
-                                                    {% filter escape %}
-                                                        {{ include('astillerocotizacion/coleccion-producto.twig', { 'form': form.acservicios.vars.prototype }) }}
-                                                    {% endfilter %}"
                                         >
                                         <tr>
                                             <td id="grua_cantidad">0</td>
                                             <td>Uso de grua</td>
                                             <td id="grua_precio">$ 0.00</td>
-                                            <td id="grua_subtotal" data-valor="0">$ 0.00</td>
-                                            <td id="grua_iva" data-valor="0">$ 0.00</td>
-                                            <td id="grua_total" data-valor="0">$ 0.00</td>
+                                            <td id="grua_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
+                                            <td id="grua_iva" class="valoriva" data-valor="0">$ 0.00</td>
+                                            <td id="grua_total" class="valortotal" data-valor="0">$ 0.00</td>
                                             <td></td>
                                         </tr>
                                         <tr>
@@ -287,7 +283,7 @@
                                             <td id="suelo_total" data-valor="0">$ 0.00</td>
                                             <td></td>
                                         </tr>
-                                        <tr class="hidden">
+                                        <tr id="cotizarampa" class="hidden">
                                             <td>1</td>
                                             <td>Uso de rampa</td>
                                             <td id="rampa_precio">$ 0.00</td>
@@ -296,7 +292,7 @@
                                             <td id="rampa_total" data-valor="0">$ 0.00</td>
                                             <td></td>
                                         </tr>
-                                        <tr class="hidden">
+                                        <tr id="cotizakarcher" class="hidden">
                                             <td>1</td>
                                             <td>Uso de karcher</td>
                                             <td id="karcher_precio">$ 0.00</td>
@@ -305,7 +301,7 @@
                                             <td id="karcher_total" data-valor="0">$ 0.00</td>
                                             <td></td>
                                         </tr>
-                                        <tr class="hidden">
+                                        <tr id="cotizavarada" class="hidden">
                                             <td id="varada_cantidad">0</td>
                                             <td>Sacar varada y boadura</td>
                                             <td id="varada_precio">$ 0.00</td>
@@ -435,21 +431,21 @@
                     {% if form.acservicios.4.servicio is defined %}
                         {{ form_widget(form.acservicios.4.servicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-                    {#{% if form.acservicios.0.productos is defined %}#}
-                        {#{{ form_widget(form.acservicios.0.productos,{'attr':{'class':'hidden'}}) }}#}
-                    {#{% endif %}#}
-                    {#{% if form.acservicios.1.productos is defined %}#}
-                        {#{{ form_widget(form.acservicios.1.productos,{'attr':{'class':'hidden'}}) }}#}
-                    {#{% endif %}#}
-                    {#{% if form.acservicios.2.productos is defined %}#}
-                        {#{{ form_widget(form.acservicios.2.productos,{'attr':{'class':'hidden'}}) }}#}
-                    {#{% endif %}#}
-                    {#{% if form.acservicios.3.productos is defined %}#}
-                        {#{{ form_widget(form.acservicios.3.productos,{'attr':{'class':'hidden'}}) }}#}
-                    {#{% endif %}#}
-                    {#{% if form.acservicios.4.productos is defined %}#}
-                        {#{{ form_widget(form.acservicios.4.productos,{'attr':{'class':'hidden'}}) }}#}
-                    {#{% endif %}#}
+                    {% if form.acservicios.0.producto is defined %}
+                        {{ form_widget(form.acservicios.0.producto,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.1.producto is defined %}
+                        {{ form_widget(form.acservicios.1.producto,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.2.producto is defined %}
+                        {{ form_widget(form.acservicios.2.producto,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.3.producto is defined %}
+                        {{ form_widget(form.acservicios.3.producto,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.4.producto is defined %}
+                        {{ form_widget(form.acservicios.4.producto,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
                     {{ form_end(form) }}
                 </div>
                 <div class="panel-footer">

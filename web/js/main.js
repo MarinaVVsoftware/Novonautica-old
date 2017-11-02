@@ -12,7 +12,25 @@ $(document).ready(function() {
     $('.barcoespacio').on('click',function(){
         $('#infobarco').html('Barco: '+$(this).attr('id'));
         $('#modalinfobarco').modal('toggle');
-    }); 
+    });
+    $('.select-buscador').select2();
+    $.fn.datepicker.dates['es'] = {
+        days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+        daysShort: ["Dom", "Lun", "Mar", "Mi", "Ju", "Vi", "Sab"],
+        daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+        months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+        today: "Hoy",
+        clear: "Quitar",
+        // format: "dd-mm-yyyy",
+        titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+        weekStart: 0
+    };
+    $('.input-daterange').datepicker({
+        format: 'dd-mm-yyyy',
+        language: "es",
+        orientation: "bottom auto",
+    });
 });
 
 jQuery('.add-another-motor').click(function (e) {
@@ -62,6 +80,7 @@ jQuery('.add-another-servicio').click(function (e) {
     // with a number that's unique to your emails
     // end name attribute looks like name="contact[emails][2]"
     newWidget = newWidget.replace(/__name__/g, totServicios);
+    newWidget = newWidget.replace('td-producto','hide');
     totServicios++;
     $(this).data('cantidad', totServicios);
     // create a new list element and add it to the list
@@ -72,6 +91,7 @@ jQuery('.add-another-servicio').click(function (e) {
     //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
 
     newLi.before(newLi);
+
 });
 $('.lista-servicios').on('click','.remove-servicio',function(e) {
     e.preventDefault();
@@ -142,46 +162,29 @@ $('.add-producto').click(function (e) {
     var servicioListPrimero = jQuery('#servicio-fields-list'+lista);
     //var motorListOtros = jQuery('.lista-motores'+lista);
     // grab the prototype template
-    var newWidget = $(servicioListPrimero).data('prototype2');
-   
+    var newWidget = $(servicioListPrimero).data('prototype');
+
+
+
     // replace the "__name__" used in the id and name of the prototype
     // with a number that's unique to your emails
     // end name attribute looks like name="contact[emails][2]"
     newWidget = newWidget.replace(/__name__/g, totServicios);
+    newWidget = newWidget.replace('td-servicio','hide');
     totServicios++;
     $('.add-another-servicio').data('cantidad', totServicios);
     // create a new list element and add it to the list
     var newLi = jQuery('<tr class="servicio-agregado"></tr>').html(newWidget);
-    newLi.appendTo(servicioListPrimero);
 
+    newLi.appendTo(servicioListPrimero);
+    $('.select-buscador').select2();
     // also add a remove button, just for this example
     //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
 
     newLi.before(newLi);
+    $('.select-busca-producto').select2();
 });
 //-- fin aparecer form collection con select de productos ---
-
-
-$(document).ready(function() {
-    $('.select-buscador').select2();
-    $.fn.datepicker.dates['es'] = {
-        days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
-        daysShort: ["Dom", "Lun", "Mar", "Mi", "Ju", "Vi", "Sab"],
-        daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-        months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-        monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-        today: "Hoy",
-        clear: "Quitar",
-        // format: "dd-mm-yyyy",
-        titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
-        weekStart: 0
-    };
-    $('.input-daterange').datepicker({
-        format: 'dd-mm-yyyy',
-        language: "es",
-        orientation: "bottom auto",
-    });
-});
 
 //--- para marina humeda nueva cotización ---
 
@@ -588,3 +591,66 @@ function buscaDatosBarco(idbarco){
     });
 }
 
+//--- para astillero nueva cotización ---
+var grua_cantidad = 0;
+var grua_precio = 0;
+
+//-- Uso de grua --
+$('#appbundle_astillerocotizacion_acservicios_0_cantidad').keyup(function () {
+    grua_cantidad = $(this).val();
+    grua_precio = $('#appbundle_astillerocotizacion_acservicios_0_precio').val();
+    $('#grua_cantidad').html(grua_cantidad);
+    calculaSubtotalesAstillero(grua_cantidad,grua_precio,$('#grua_subtotal'),$('#grua_iva'),$('#grua_total'));
+    //calculaTotales();
+});
+$('#appbundle_astillerocotizacion_acservicios_0_precio').keyup(function () {
+    grua_cantidad = $('#appbundle_astillerocotizacion_acservicios_0_cantidad').val();
+    grua_precio = $(this).val();
+    $('#grua_precio').html('$ '+grua_precio);
+    calculaSubtotalesAstillero(grua_cantidad,grua_precio,$('#grua_subtotal'),$('#grua_iva'),$('#grua_total'));
+});
+
+
+
+$('#appbundle_astillerocotizacion_acservicios_2_estatus').on('click',function () {
+    if($('#appbundle_astillerocotizacion_acservicios_2_estatus').is(':checked')) {
+        $('#cotizarampa').removeClass('hidden');
+    } else {
+        $('#cotizarampa').addClass('hidden');
+    }
+    //calculaTotales();
+});
+
+$('#appbundle_astillerocotizacion_acservicios_3_estatus').on('click',function () {
+    if($('#appbundle_astillerocotizacion_acservicios_3_estatus').is(':checked')) {
+        $('#cotizakarcher').removeClass('hidden');
+    } else {
+        $('#cotizakarcher').addClass('hidden');
+    }
+    //calculaTotales();
+});
+
+$('#appbundle_astillerocotizacion_acservicios_4_estatus').on('click',function () {
+    if($('#appbundle_astillerocotizacion_acservicios_4_estatus').is(':checked')) {
+        $('#cotizavarada').removeClass('hidden');
+    } else {
+        $('#cotizavarada').addClass('hidden');
+    }
+    //calculaTotales();
+});
+
+function calculaSubtotalesAstillero(cantidad,precio,tdsubtot,tdiva,tdtot){
+    var iva = ($('#valiva').data('valor'))/100;
+    var subtotal = cantidad * precio;
+    var ivatot = subtotal * iva;
+    var desctot = (subtotal*descuento)/100;
+    var total = (subtotal + ivatot).toFixed(2);
+
+    tdsubtot.html('$ '+(subtotal).toFixed(2));
+    tdiva.html('$ '+(ivatot).toFixed(2));
+    tdtot.html('$ '+total);
+
+    tdsubtot.data('valor',subtotal);
+    tdiva.data('valor',ivatot);
+    tdtot.data('valor',total);
+}
