@@ -69,7 +69,6 @@ class AstilleroCotizacionController extends Controller
 
         $form = $this->createForm('AppBundle\Form\AstilleroCotizacionType', $astilleroCotizacion);
         $form->handleRequest($request);
-        dump($astilleroCotizacion);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -91,6 +90,7 @@ class AstilleroCotizacionController extends Controller
             $astilleroGrua
                 ->setAstilleroservicio($servicio)
                 ->setServicio(null)
+                ->setProducto(null)
                 ->setEstatus(1)
                 ->setSubtotal($subTotal)
                 ->setIva($ivaTot)
@@ -113,6 +113,7 @@ class AstilleroCotizacionController extends Controller
             $astilleroSuelo
                 ->setAstilleroservicio($servicio)
                 ->setServicio(null)
+                ->setProducto(null)
                 ->setEstatus(1)
                 ->setCantidad($cantidad)
                 ->setSubtotal($subTotal)
@@ -136,6 +137,7 @@ class AstilleroCotizacionController extends Controller
             $astilleroRampa
                 ->setAstilleroservicio($servicio)
                 ->setServicio(null)
+                ->setProducto(null)
                 ->setCantidad($cantidad)
                 ->setSubtotal($subTotal)
                 ->setIva($ivaTot)
@@ -160,6 +162,7 @@ class AstilleroCotizacionController extends Controller
             $astilleroKarcher
                 ->setAstilleroservicio($servicio)
                 ->setServicio(null)
+                ->setProducto(null)
                 ->setCantidad($cantidad)
                 ->setSubtotal($subTotal)
                 ->setIva($ivaTot)
@@ -184,6 +187,7 @@ class AstilleroCotizacionController extends Controller
             $astilleroVarada
                 ->setAstilleroservicio($servicio)
                 ->setServicio(null)
+                ->setProducto(null)
                 ->setSubtotal($subTotal)
                 ->setIva($ivaTot)
                 ->setTotal($total)

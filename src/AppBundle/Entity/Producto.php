@@ -84,6 +84,10 @@ class Producto
      */
     private $unidad;
 
+    public function __toString()
+    {
+        return $this->codigo.' - '.$this->nombre;
+    }
 
     /**
      * Get id
@@ -238,4 +242,5 @@ class Producto
     {
         return $this->unidad;
     }
+
 }

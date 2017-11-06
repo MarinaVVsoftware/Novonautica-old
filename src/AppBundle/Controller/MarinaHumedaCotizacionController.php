@@ -353,7 +353,7 @@ class MarinaHumedaCotizacionController extends Controller
             ->setValidacliente(0)
             ->setEstatus(1)
             ;
-        dump($marinaHumedaCotizacionAnterior);
+
 
         $servicios = $marinaHumedaCotizacionAnterior->getMHCservicios();
 
