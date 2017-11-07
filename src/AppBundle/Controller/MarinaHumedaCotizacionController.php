@@ -61,21 +61,12 @@ class MarinaHumedaCotizacionController extends Controller
     {
         $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
         $marinaDiasEstadia = new MarinaHumedaCotizaServicios();
-        $marinaDiasAdicionales = new MarinaHumedaCotizaServicios();
-        $marinaAgua = new MarinaHumedaCotizaServicios();
         $marinaElectricidad = new MarinaHumedaCotizaServicios();
-        $marinaGasolina = new MarinaHumedaCotizaServicios();
-        $marinaDezasolve = new MarinaHumedaCotizaServicios();
-        $marinaLimpieza = new MarinaHumedaCotizaServicios();
+
 
         $marinaHumedaCotizacion
             ->addMarinaHumedaCotizaServicios($marinaDiasEstadia)
-            ->addMarinaHumedaCotizaServicios($marinaDiasAdicionales)
-            ->addMarinaHumedaCotizaServicios($marinaAgua)
-            ->addMarinaHumedaCotizaServicios($marinaElectricidad)
-            ->addMarinaHumedaCotizaServicios($marinaGasolina)
-            ->addMarinaHumedaCotizaServicios($marinaDezasolve)
-            ->addMarinaHumedaCotizaServicios($marinaLimpieza);
+            ->addMarinaHumedaCotizaServicios($marinaElectricidad);
         $dolar = $this->getDoctrine()
                       ->getRepository(ValorSistema::class)
                       ->find(1)
@@ -100,7 +91,15 @@ class MarinaHumedaCotizacionController extends Controller
             $servicio = $this->getDoctrine()
                             ->getRepository(MarinaHumedaServicio::class)
                             ->find(1);
-            $cantidad = $marinaDiasEstadia->getCantidad();
+            $llegada = $marinaHumedaCotizacion->getFechaLlegada();
+            $salida = $marinaHumedaCotizacion->getFechaSalida();
+
+            $diferenciaDias = date_diff($llegada, $salida);
+
+            //dump($diferenciaDias);
+            //dump($diferenciaDias->days);
+
+            $cantidad = ($diferenciaDias->days)+1;
             $precio = $marinaDiasEstadia->getPrecio();
 
             $subTotal = $cantidad * $precio;
@@ -109,57 +108,6 @@ class MarinaHumedaCotizacionController extends Controller
             $total = $subTotal - $descuentoTot + $ivaTot;
 
             $marinaDiasEstadia
-                ->setMarinaHumedaServicio($servicio)
-                ->setEstatus(1)
-                ->setSubtotal($subTotal)
-                ->setDescuento($descuentoTot)
-                ->setIva($ivaTot)
-                ->setTotal($total);
-
-            $granSubtotal+=$subTotal;
-            $granIva+=$ivaTot;
-            $granDescuento+=$descuentoTot;
-            $granTotal+=$total;
-
-            // Días Adicionales
-            $servicio = $this->getDoctrine()
-                ->getRepository(MarinaHumedaServicio::class)
-                ->find(2);
-            $cantidad = $marinaDiasAdicionales->getCantidad();
-            //$precio = $marinaHCS->getPrecio();
-
-            $subTotal = $cantidad * $precio;
-            $descuentoTot = ($subTotal * $descuento) / 100;
-            $ivaTot = ($subTotal * $iva)/100;
-            $total = $subTotal - $descuentoTot + $ivaTot;
-
-            $marinaDiasAdicionales
-                ->setMarinaHumedaServicio($servicio)
-                ->setEstatus(1)
-                ->setPrecio($precio)
-                ->setSubtotal($subTotal)
-                ->setDescuento($descuentoTot)
-                ->setIva($ivaTot)
-                ->setTotal($total);
-
-            $granSubtotal+=$subTotal;
-            $granIva+=$ivaTot;
-            $granDescuento+=$descuentoTot;
-            $granTotal+=$total;
-
-            // Abastecimiento de agua
-            $servicio = $this->getDoctrine()
-                ->getRepository(MarinaHumedaServicio::class)
-                ->find(3);
-            $cantidad = 1;
-            $precio = $marinaAgua->getPrecio();
-
-            $subTotal = $cantidad * $precio;
-            $descuentoTot = ($subTotal * $descuento) / 100;
-            $ivaTot = ($subTotal * $iva)/100;
-            $total = $subTotal - $descuentoTot + $ivaTot;
-
-            $marinaAgua
                 ->setMarinaHumedaServicio($servicio)
                 ->setEstatus(1)
                 ->setCantidad($cantidad)
@@ -176,8 +124,8 @@ class MarinaHumedaCotizacionController extends Controller
             // Conexión a electricidad
             $servicio = $this->getDoctrine()
                 ->getRepository(MarinaHumedaServicio::class)
-                ->find(4);
-            $cantidad = 1;
+                ->find(2);
+            $cantidad = $marinaElectricidad->getCantidad();
             $precio = $marinaElectricidad->getPrecio();
 
             $subTotal = $cantidad * $precio;
@@ -188,7 +136,6 @@ class MarinaHumedaCotizacionController extends Controller
             $marinaElectricidad
                 ->setMarinaHumedaServicio($servicio)
                 ->setEstatus(1)
-                ->setCantidad($cantidad)
                 ->setSubtotal($subTotal)
                 ->setDescuento($descuentoTot)
                 ->setIva($ivaTot)
@@ -198,86 +145,6 @@ class MarinaHumedaCotizacionController extends Controller
             $granIva+=$ivaTot;
             $granDescuento+=$descuentoTot;
             $granTotal+=$total;
-
-            // Abastecimiento de gasolina
-            $servicio = $this->getDoctrine()
-                ->getRepository(MarinaHumedaServicio::class)
-                ->find(5);
-            $cantidad = $marinaGasolina->getCantidad();
-            $precio = $marinaGasolina->getPrecio();
-
-            $subTotal = $cantidad * $precio;
-            $descuentoTot = ($subTotal * $descuento) / 100;
-            $ivaTot = ($subTotal * $iva)/100;
-            $total = $subTotal - $descuentoTot + $ivaTot;
-
-            $marinaGasolina
-                ->setMarinaHumedaServicio($servicio)
-                ->setSubtotal($subTotal)
-                ->setDescuento($descuentoTot)
-                ->setIva($ivaTot)
-                ->setTotal($total);
-
-            if($marinaGasolina->getEstatus() == 1){
-                $granSubtotal+=$subTotal;
-                $granIva+=$ivaTot;
-                $granDescuento+=$descuentoTot;
-                $granTotal+=$total;
-            }
-
-            // Dezasolve
-            $servicio = $this->getDoctrine()
-                ->getRepository(MarinaHumedaServicio::class)
-                ->find(6);
-            $cantidad = 1;
-            $precio = $marinaDezasolve->getPrecio();
-
-            $subTotal = $cantidad * $precio;
-            $descuentoTot = ($subTotal * $descuento) / 100;
-            $ivaTot = ($subTotal * $iva)/100;
-            $total = $subTotal - $descuentoTot + $ivaTot;
-
-            $marinaDezasolve
-                ->setMarinaHumedaServicio($servicio)
-                ->setCantidad($cantidad)
-                ->setSubtotal($subTotal)
-                ->setDescuento($descuentoTot)
-                ->setIva($ivaTot)
-                ->setTotal($total);
-
-            if($marinaDezasolve->getEstatus() == 1){
-                $granSubtotal+=$subTotal;
-                $granIva+=$ivaTot;
-                $granDescuento+=$descuentoTot;
-                $granTotal+=$total;
-            }
-
-            // Limpieza de locación
-            $servicio = $this->getDoctrine()
-                ->getRepository(MarinaHumedaServicio::class)
-                ->find(7);
-            $cantidad = 1;
-            $precio = $marinaLimpieza->getPrecio();
-
-            $subTotal = $cantidad * $precio;
-            $descuentoTot = ($subTotal * $descuento) / 100;
-            $ivaTot = ($subTotal * $iva)/100;
-            $total = $subTotal - $descuentoTot + $ivaTot;
-
-            $marinaLimpieza
-               ->setMarinaHumedaServicio($servicio)
-                ->setCantidad($cantidad)
-                ->setSubtotal($subTotal)
-                ->setDescuento($descuentoTot)
-                ->setIva($ivaTot)
-                ->setTotal($total);
-
-            if($marinaLimpieza->getEstatus() == 1){
-                $granSubtotal+=$subTotal;
-                $granIva+=$ivaTot;
-                $granDescuento+=$descuentoTot;
-                $granTotal+=$total;
-            }
 
             //-------------------------------------------------
             $fechaHoraActual = new \DateTime('now');

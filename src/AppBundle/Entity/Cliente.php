@@ -49,16 +49,6 @@ class Cliente
 
     /**
      * @var string
-     * @Assert\NotBlank(
-     *     message="Password no pude quedar vacío"
-     * )
-     *
-     * @ORM\Column(name="password", type="string", length=255)
-     */
-    private $password;
-
-    /**
-     * @var string
      * @Assert\Length(
      *      min = 10,
      *      minMessage = "Error, número de teléfono no válido"
@@ -233,30 +223,6 @@ class Cliente
     public function getCorreo()
     {
         return $this->correo;
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return Cliente
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Get password
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
     }
 
     /**

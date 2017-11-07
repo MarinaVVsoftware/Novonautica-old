@@ -36,13 +36,6 @@ class Barco
     /**
      * @var string
      *
-     * @ORM\Column(name="marca", type="string", length=100, nullable=true)
-     */
-    private $marca;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="modelo", type="string", length=100, nullable=true)
      */
     private $modelo;
@@ -76,18 +69,29 @@ class Barco
     private $eslora;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="combustible", type="integer", nullable=true)
+     * @ORM\Column(name="nombre_responsable", type="string", length=255, nullable=true)
      */
-    private $combustible;
+    private $nombreResponsable;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="agua", type="integer", nullable=true)
+     * @ORM\Column(name="telefono_responsable", type="string", length=255, nullable=true)
      */
-    private $agua;
+    private $telefonoResponsable;
+
+    /**
+     * @var string
+     *
+     * @Assert\Email(
+     *     message = "El correo '{{ value }}' no es válido."
+     * )
+     *
+     * @ORM\Column(name="correo_responsable", type="string", length=255, nullable=true)
+     */
+    private $correoResponsable;
 
     /**
      * @var string
@@ -194,30 +198,6 @@ class Barco
     public function getNombre()
     {
         return $this->nombre;
-    }
-
-    /**
-     * Set marca
-     *
-     * @param string $marca
-     *
-     * @return Barco
-     */
-    public function setMarca($marca)
-    {
-        $this->marca = $marca;
-
-        return $this;
-    }
-
-    /**
-     * Get marca
-     *
-     * @return string
-     */
-    public function getMarca()
-    {
-        return $this->marca;
     }
 
     /**
@@ -341,51 +321,51 @@ class Barco
     }
 
     /**
-     * Set combustible
-     *
-     * @param integer $combustible
-     *
-     * @return Barco
+     * @return string
      */
-    public function setCombustible($combustible)
+    public function getNombreResponsable()
     {
-        $this->combustible = $combustible;
-
-        return $this;
+        return $this->nombreResponsable;
     }
 
     /**
-     * Get combustible
-     *
-     * @return int
+     * @param string $nombreResponsable
      */
-    public function getCombustible()
+    public function setNombreResponsable($nombreResponsable)
     {
-        return $this->combustible;
+        $this->nombreResponsable = $nombreResponsable;
     }
 
     /**
-     * Set agua
-     *
-     * @param integer $agua
-     *
-     * @return Barco
+     * @return string
      */
-    public function setAgua($agua)
+    public function getTelefonoResponsable()
     {
-        $this->agua = $agua;
-
-        return $this;
+        return $this->telefonoResponsable;
     }
 
     /**
-     * Get agua
-     *
-     * @return int
+     * @param string $telefonoResponsable
      */
-    public function getAgua()
+    public function setTelefonoResponsable($telefonoResponsable)
     {
-        return $this->agua;
+        $this->telefonoResponsable = $telefonoResponsable;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCorreoResponsable()
+    {
+        return $this->correoResponsable;
+    }
+
+    /**
+     * @param string $correoResponsable
+     */
+    public function setCorreoResponsable($correoResponsable)
+    {
+        $this->correoResponsable = $correoResponsable;
     }
 
     /**
@@ -662,4 +642,5 @@ class Barco
     {
         return $this->astillerocotizaciones;
     }
+
 }

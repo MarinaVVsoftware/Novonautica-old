@@ -38,7 +38,7 @@ class DefaultController extends Controller
         ]);
     }
     /**
-     * @Route("/astillero/aceptaciones", name="astillero-aceptaciones")
+     * @Route("/astill/aceptaciones", name="astillero-aceptaciones")
      */
     public function displayAstilleroAceptaciones(Request $request)
     {
@@ -47,7 +47,7 @@ class DefaultController extends Controller
         ]);
     }
     /**
-     * @Route("/astillero/odt", name="astillero-odt")
+     * @Route("/astill/odt", name="astillero-odt")
      */
     public function displayAstilleroODT(Request $request)
     {
