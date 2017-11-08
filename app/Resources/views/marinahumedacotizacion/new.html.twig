@@ -80,19 +80,27 @@
                                     <label>Descuento(%)</label>
                                     {{ form_widget(form.descuento,{'value':0}) }}
                                 </div>
-                                <div class="col-sm-3">
-                                    <label>Días Estadía:</label>
-                                    {{ form_widget(form.mhcservicios.children.0.cantidad,{'disabled':'disabled'}) }}
-
-                                    <label>Precio por día:</label>
-                                    {{ form_widget(form.mhcservicios.children.0.precio) }}
-                                </div>
-                                <div class="col-sm-3">
-                                    <label>Conexión a electricidad:</label>
-                                    {{ form_widget(form.mhcservicios.children.1.cantidad) }}
-
-                                    <label>Precio electricidad:</label>
-                                    {{ form_widget(form.mhcservicios.children.1.precio) }}
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>Días Estadía:</label>
+                                            {{ form_widget(form.mhcservicios.children.0.cantidad,{'disabled':'disabled'}) }}
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Precio por día:</label>
+                                            {{ form_widget(form.mhcservicios.children.0.precio) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>Conexión a electricidad (Amperaje):</label>
+                                            {{ form_widget(form.mhcservicios.children.1.cantidad) }}
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Precio electricidad:</label>
+                                            {{ form_widget(form.mhcservicios.children.1.precio) }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -273,7 +281,7 @@
                             //http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try/3710226
                             if (/^[\],:{}\s]*$/.test(data.posts.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
                                 var posts = JSON.parse(data.posts);
-                                console.log(posts);
+                                //console.log(posts);
                                 if (posts.id > 0) {
                                     var html = "";
                                     html = "<label>Correo electrónico</label>" +
@@ -289,6 +297,7 @@
                                         "<label>Dirección fiscal</label>" +
                                         "<div class='info-input'>" + posts.direccionfiscal + "</div>";
                                     $("#info-cliente").append(html);
+
                                 }
                             }
                             else {
@@ -342,13 +351,13 @@
                                 replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
                                 replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
                                 var barcos = JSON.parse(data.posts);
-                                console.log(barcos);
+                                //console.log(barcos);
                                 if(barcos.id > 0) {
                                     var html = "";
                                     html= "<label>Modelo</label>"+
                                         "<div class='info-input'>"+barcos.modelo+"</div>"+
                                         "<label>Eslora</label>"+
-                                        "<div id='barcopies' class='info-input' data-valor='barcos.eslora'>"+barcos.eslora+"</div>"+
+                                        "<div id='barcopies' class='info-input' data-valor='"+barcos.eslora+"'>"+barcos.eslora+"</div>"+
                                         "<label>Manga</label>"+
                                         "<div class='info-input'>"+barcos.manga+"</div>"+
                                         "<label>Nombre del capitán</label>"+
@@ -358,8 +367,12 @@
                                         "<label>Correo del capitán</label>"+
                                         "<div class='info-input'>"+barcos.correoCapitan+"</div>";
                                     $("#info-barco").append(html);
+                                    $("#de_eslora").data('valor',barcos.eslora);
+                                    $("#e_eslora").data('valor',barcos.eslora);
                                     $("#de_eslora").html(barcos.eslora);
                                     $("#e_eslora").html(barcos.eslora);
+                                    recalculaSubtotalesYtotal();
+
                                 }
                             }
                             else {

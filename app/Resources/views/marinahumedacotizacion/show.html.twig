@@ -52,6 +52,10 @@
                                             <td>{{ marinaHumedaCotizacion.barco }}</td>
                                         </tr>
                                         <tr>
+                                            <th>Eslora</th>
+                                            <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
+                                        </tr>
+                                        <tr>
                                             <th>Fecha llegada</th>
                                             <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
                                         </tr>
@@ -115,6 +119,7 @@
                                         <thead>
                                         <tr>
                                             <th>Cantidad</th>
+                                            <th>Eslora</th>
                                             <th>Servicio</th>
                                             <th>Prec. Unid.</th>
                                             <th>Sub-Total</th>
@@ -128,6 +133,7 @@
                                             {% if mhservicio.estatus %}
                                                 <tr>
                                                     <td>{{ mhservicio.cantidad }}</td>
+                                                    <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
                                                     <td>{{ mhservicio.marinahumedaservicio.nombre }}</td>
                                                     <td>$ {{ mhservicio.precio|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ mhservicio.subtotal|number_format(2,'.',',') }}</td>

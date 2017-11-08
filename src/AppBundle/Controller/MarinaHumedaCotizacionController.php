@@ -86,6 +86,7 @@ class MarinaHumedaCotizacionController extends Controller
             $granDescuento=0;
             $granTotal = 0;
             $descuento = $marinaHumedaCotizacion->getDescuento();
+            $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
 
             // Días Estadía
             $servicio = $this->getDoctrine()
@@ -102,7 +103,7 @@ class MarinaHumedaCotizacionController extends Controller
             $cantidad = ($diferenciaDias->days)+1;
             $precio = $marinaDiasEstadia->getPrecio();
 
-            $subTotal = $cantidad * $precio;
+            $subTotal = $cantidad * $precio * $eslora;
             $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = ($subTotal * $iva)/100;
             $total = $subTotal - $descuentoTot + $ivaTot;
@@ -128,7 +129,7 @@ class MarinaHumedaCotizacionController extends Controller
             $cantidad = $marinaElectricidad->getCantidad();
             $precio = $marinaElectricidad->getPrecio();
 
-            $subTotal = $cantidad * $precio;
+            $subTotal = $cantidad * $precio * $eslora;
             $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = ($subTotal * $iva)/100;
             $total = $subTotal - $descuentoTot + $ivaTot;

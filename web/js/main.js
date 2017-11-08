@@ -262,25 +262,26 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_1_precio').keyup(function () {
 
 //-- Descuento --
 $('#appbundle_marinahumedacotizacion_descuento').keyup(function () {
-    descuento = $(this).val();
+    //descuento = $(this).val();
+    recalculaSubtotalesYtotal();
+});
+
+function recalculaSubtotalesYtotal() {
 
     de_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').val();
     de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
-    $('#de_cantidad').html(de_cantidad);
+    //$('#de_cantidad').html(de_cantidad);
     calculaSubtotales(de_cantidad,de_precio,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
-    calculaTotales();
 
     e_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_1_cantidad').val();
     e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precio').val();
     calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
 
     calculaTotales();
-});
-
-
+}
 
 function calculaSubtotales(cantidad,precio,tdsubtot,tdiva,tddesc,tdtot){
-    var eslora = 1;
+    var eslora = 0;
         if($('#info-barco>#barcopies').data('valor')){
             eslora = $('#info-barco>#barcopies').data('valor');
         }
