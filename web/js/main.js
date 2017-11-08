@@ -235,7 +235,7 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on( "change", function() {
 });
 
 //-- Días estadía --
-$('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').keyup(function () {
+$('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change',function () {
     de_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').val();
     de_precio = $(this).val();
     $('#de_precio').html('$ '+de_precio);
@@ -246,13 +246,13 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').keyup(function () {
 //-- Electricidad --
 $('#appbundle_marinahumedacotizacion_mhcservicios_1_cantidad').keyup(function () {
     e_cantidad = $(this).val();
-    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precio').val();
+    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val();
     $('#e_cantidad').html(e_cantidad);
     calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
     calculaTotales();
 });
 
-$('#appbundle_marinahumedacotizacion_mhcservicios_1_precio').keyup(function () {
+$('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').on('change',function () {
     e_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_1_cantidad').val();
     e_precio = $(this).val();
     $('#e_precio').html('$ '+e_precio);
@@ -274,7 +274,7 @@ function recalculaSubtotalesYtotal() {
     calculaSubtotales(de_cantidad,de_precio,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
 
     e_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_1_cantidad').val();
-    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precio').val();
+    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val();
     calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
 
     calculaTotales();

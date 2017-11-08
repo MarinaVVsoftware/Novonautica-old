@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Entity\MarinaHumedaServicio;
+use AppBundle\Entity\MarinaHumedaTarifa;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Form\MarinaHumedaCotizacionType;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -101,7 +102,7 @@ class MarinaHumedaCotizacionController extends Controller
             //dump($diferenciaDias->days);
 
             $cantidad = ($diferenciaDias->days)+1;
-            $precio = $marinaDiasEstadia->getPrecio();
+            $precio = $marinaDiasEstadia->getPrecio()->getCosto();
 
             $subTotal = $cantidad * $precio * $eslora;
             $descuentoTot = ($subTotal * $descuento) / 100;
@@ -112,6 +113,7 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setMarinaHumedaServicio($servicio)
                 ->setEstatus(1)
                 ->setCantidad($cantidad)
+                ->setPrecio($precio)
                 ->setSubtotal($subTotal)
                 ->setDescuento($descuentoTot)
                 ->setIva($ivaTot)
@@ -127,7 +129,7 @@ class MarinaHumedaCotizacionController extends Controller
                 ->getRepository(MarinaHumedaServicio::class)
                 ->find(2);
             $cantidad = $marinaElectricidad->getCantidad();
-            $precio = $marinaElectricidad->getPrecio();
+            $precio = $marinaElectricidad->getPrecioAux()->getCosto();
 
             $subTotal = $cantidad * $precio * $eslora;
             $descuentoTot = ($subTotal * $descuento) / 100;
@@ -137,6 +139,7 @@ class MarinaHumedaCotizacionController extends Controller
             $marinaElectricidad
                 ->setMarinaHumedaServicio($servicio)
                 ->setEstatus(1)
+                ->setPrecio($precio)
                 ->setSubtotal($subTotal)
                 ->setDescuento($descuentoTot)
                 ->setIva($ivaTot)
@@ -174,7 +177,7 @@ class MarinaHumedaCotizacionController extends Controller
             'valdolar' => $dolar,
             'valiva' => $iva,
             'form' => $form->createView(),
-            'marinanuevacotizacion' => 1
+            'marinanuevacotizacion' => 1,
         ));
 
 

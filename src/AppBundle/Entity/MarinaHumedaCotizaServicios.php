@@ -36,6 +36,8 @@ class MarinaHumedaCotizaServicios
      */
     private $precio;
 
+    private $precioaux;
+
     /**
      * @var float
      *
@@ -141,6 +143,30 @@ class MarinaHumedaCotizaServicios
     public function getPrecio()
     {
         return $this->precio;
+    }
+
+    /**
+     * Set precioaux
+     *
+     * @param float $precioaux
+     *
+     * @return MarinaHumedaCotizaServicios
+     */
+    public function setPrecioAux($precioaux)
+    {
+        $this->precioaux = $precioaux;
+
+        return $this;
+    }
+
+    /**
+     * Get precioaux
+     *
+     * @return float
+     */
+    public function getPrecioAux()
+    {
+        return $this->precioaux;
     }
 
     /**
