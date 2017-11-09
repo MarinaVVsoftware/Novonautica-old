@@ -44,7 +44,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
                            'readonly' => true],
-                'format' => 'dd-MM-yyyy'
+                'format' => 'yyyy-MM-dd'
             ])
             ->add('fechaSalida',DateType::class,[
                 'label' => 'Fecha Salida',
@@ -52,7 +52,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
                            'readonly' => true],
-                'format' => 'dd-MM-yyyy'
+                'format' => 'yyyy-MM-dd'
             ])
             ->add('descuento',null,[
                 'empty_data' => 0

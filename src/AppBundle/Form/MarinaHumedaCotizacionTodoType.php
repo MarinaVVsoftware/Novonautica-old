@@ -42,7 +42,7 @@ class MarinaHumedaCotizacionTodoType extends AbstractType
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
                     'readonly' => true],
-                'format' => 'dd-MM-yyyy'
+                'format' => 'yyyy-MM-dd'
             ])
             ->add('fechaSalida',DateType::class,[
                 'label' => 'Fecha Salida',
@@ -50,7 +50,7 @@ class MarinaHumedaCotizacionTodoType extends AbstractType
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
                     'readonly' => true],
-                'format' => 'dd-MM-yyyy'
+                'format' => 'yyyy-MM-dd'
             ])
             ->add('descuento',null,[
                 'empty_data' => 0
@@ -70,7 +70,8 @@ class MarinaHumedaCotizacionTodoType extends AbstractType
             ])
             ->add('notasnovo',TextareaType::class,[
                 'label' => 'Observaciones',
-                'attr' => ['rows' => 7]
+                'attr' => ['rows' => 7],
+                'required' => false
             ])
             ->add('validacliente', ChoiceType::class,[
                 'choices' =>[ 'Aceptar' => 2, 'Rechazar' => 1, 'Pendiente' => 0 ],
@@ -82,7 +83,8 @@ class MarinaHumedaCotizacionTodoType extends AbstractType
             ])
             ->add('notascliente',TextareaType::class,[
                 'label' => 'Observaciones',
-                'attr' => ['rows' => 7]
+                'attr' => ['rows' => 7],
+                'required' => false
             ])
         ;
 

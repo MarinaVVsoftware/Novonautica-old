@@ -1,0 +1,44 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block title %}
+    Novonautiva | ver servicio Marina Humeda
+{% endblock %}
+
+{% block contwrapper %}
+    <h1>Marinahumedaservicio</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ marinaHumedaServicio.id }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ marinaHumedaServicio.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Unidad</th>
+                <td>{{ marinaHumedaServicio.unidad }}</td>
+            </tr>
+            <tr>
+                <th>Precio</th>
+                <td>{{ marinaHumedaServicio.precio }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('marina-humeda-servicio_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('marina-humeda-servicio_edit', { 'id': marinaHumedaServicio.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

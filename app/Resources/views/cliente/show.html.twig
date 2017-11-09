@@ -62,10 +62,6 @@
                                             <td>{{ cliente.correo }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Password</th>
-                                            <td>{{ cliente.password }}</td>
-                                        </tr>
-                                        <tr>
                                             <th>Teléfono</th>
                                             <td>{{ cliente.telefono }}</td>
                                         </tr>
@@ -101,10 +97,10 @@
                                             <th>Correo Facturacion</th>
                                             <td>{{ cliente.correofacturacion }}</td>
                                         </tr>
-                                        <tr>
-                                            <th>Estatus</th>
-                                            <td>{% if cliente.estatus %}Activado{% else %}Desactivado{% endif %}</td>
-                                        </tr>
+                                        {#<tr>#}
+                                            {#<th>Estatus</th>#}
+                                            {#<td>{% if cliente.estatus %}Activado{% else %}Desactivado{% endif %}</td>#}
+                                        {#</tr>#}
                                         </tbody>
                                     </table>
                                 </div>
@@ -144,10 +140,6 @@
                                                 <td>{{ barco.nombre }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Marca</th>
-                                                <td>{{ barco.marca }}</td>
-                                            </tr>
-                                            <tr>
                                                 <th>Modelo</th>
                                                 <td>{{ barco.modelo }}</td>
                                             </tr>
@@ -168,15 +160,19 @@
                                                 <td>{{ barco.eslora }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Combustible (lts)</th>
-                                                <td>{{ barco.combustible }}</td>
+                                                <th>Nombre del responsable</th>
+                                                <td>{{ barco.nombreResponsable }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Agua (lts)</th>
-                                                <td>{{ barco.agua }}</td>
+                                                <th>Teléfono del responsable</th>
+                                                <td>{{ barco.telefonoResponsable }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Nombre dek capitán</th>
+                                                <th>Correo del responsable</th>
+                                                <td>{{ barco.correoResponsable }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nombre del capitán</th>
                                                 <td>{{ barco.nombreCapitan }}</td>
                                             </tr>
                                             <tr>
@@ -187,10 +183,10 @@
                                                 <th>Correo del capitán</th>
                                                 <td>{{ barco.correoCapitan }}</td>
                                             </tr>
-                                            <tr>
-                                                <th>Estatus</th>
-                                                <td>{% if barco.estatus %}Activado{% else %}Desactivado{% endif %}</td>
-                                            </tr>
+                                            {#<tr>#}
+                                                {#<th>Estatus</th>#}
+                                                {#<td>{% if barco.estatus %}Activado{% else %}Desactivado{% endif %}</td>#}
+                                            {#</tr>#}
                                             </tbody>
                                         </table>
                                     </div>
