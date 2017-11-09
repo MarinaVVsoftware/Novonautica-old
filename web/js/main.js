@@ -33,6 +33,20 @@ $(document).ready(function() {
         autoclose: true
     });
 
+//---- seleccionar choice al recotizar------
+    var diasestadiaprecio =  $('#de_precio').data('valor');
+    var electricidadprecio = $('#e_precio').data('valor');
+    $( "#appbundle_marinahumedacotizacion_mhcservicios_0_precio>option" ).each(function( ) {
+        if($(this).val()==diasestadiaprecio){
+            $(this).attr("selected","selected");
+        }
+    });
+    $( "#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux>option" ).each(function( ) {
+        if($(this).val()==electricidadprecio){
+            $(this).attr("selected","selected");
+        }
+    });
+//-- fin seleccionar choice al recotizar----
 
 });
 
@@ -397,7 +411,7 @@ function calculaTotales() {
 //     calculaTotales();
 // });
 
-//-------- fin metodos marina humeda --------
+//-------- fin metodos marina humeda cotizacion --------
 
 
 //--- para astillero nueva cotización ---

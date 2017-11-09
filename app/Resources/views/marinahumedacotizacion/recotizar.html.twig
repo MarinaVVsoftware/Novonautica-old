@@ -38,6 +38,7 @@
                         <div role="tabpanel" class="tab-pane active" id="generales">
                             <div class="row">
                                 <div class="col-sm-3">
+                                    {% form_theme form 'estructura/temaerror.html.twig' %}
                                     {{ form_row(form.cliente) }}
                                     <div id="info-cliente">
                                         <label>Correo electrónico</label>
@@ -107,10 +108,10 @@
 
                                         <div class="col-sm-6">
                                             <label>Precio por día:</label>
-                                            {{ form_widget(form.mhcservicios.children.0.precio) }}
+                                            {{ form_widget(form.mhcservicios.children.0.precio,{'selected':marinaHumedaCotizacion.mhcservicios.0.precio}) }}
                                         </div>
                                     </div>
-                                    {{ dump(form.mhcservicios.children) }}
+
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <label>Conexión a electricidad (Amperaje):</label>
@@ -160,7 +161,9 @@
                                             <td id="de_cantidad">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</td>
                                             <td id="de_eslora">{{ marinaHumedaCotizacion.barco.eslora }}</td>
                                             <td>Días estancia</td>
-                                            <td id="de_precio">$ {{ marinaHumedaCotizacion.mhcservicios.0.precio|number_format(2,'.',',') }}</td>
+                                            <td id="de_precio" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.precio }}">
+                                                $ {{ marinaHumedaCotizacion.mhcservicios.0.precio|number_format(2,'.',',') }}
+                                            </td>
                                             <td id="de_subtotal" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.subtotal|number_format(2,'.',',') }}">
                                                 $ {{ marinaHumedaCotizacion.mhcservicios.0.subtotal|number_format(2,'.',',') }}
                                             </td>
@@ -178,7 +181,9 @@
                                             <td id="e_cantidad">{{ marinaHumedaCotizacion.mhcservicios.1.cantidad }}</td>
                                             <td id="e_eslora">{{ marinaHumedaCotizacion.barco.eslora }}</td>
                                             <td>Conexión a electricidad</td>
-                                            <td id="e_precio">$ {{ marinaHumedaCotizacion.mhcservicios.1.precio|number_format(2,'.',',') }}</td>
+                                            <td id="e_precio" data-valor="{{ marinaHumedaCotizacion.mhcservicios.1.precio }}">
+                                                $ {{ marinaHumedaCotizacion.mhcservicios.1.precio|number_format(2,'.',',') }}
+                                            </td>
                                             <td id="e_subtotal" data-valor="{{ marinaHumedaCotizacion.mhcservicios.1.subtotal|number_format(2,'.',',') }}">
                                                 $ {{ marinaHumedaCotizacion.mhcservicios.1.subtotal|number_format(2,'.',',') }}
                                             </td>
@@ -295,7 +300,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr> 
+                                        <tr>
                                             <td id="de_cantidad_mxn">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</td>
                                             <td id="de_eslora_mxn">{{ marinaHumedaCotizacion.barco.eslora }}</td>
                                             <td>Días estancia</td>

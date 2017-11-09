@@ -3,7 +3,7 @@
 {% block title %}
     Novonautica | Editar cotización Marina Humeda
 {% endblock %}
-
+{#
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -461,6 +461,494 @@
         </section>
     </div>
 {% endblock %}
+#}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">Editar cotización</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_index') }}">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body panel-pestanias">
+                    {% form_theme edit_form 'estructura/temaerror.html.twig' %}
+                    {{ form_start(edit_form) }}
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="primero active">
+                            <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Total (USD)</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="generales">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_row(edit_form.cliente) }}
+                                    <div id="info-cliente">
+                                        <label>Correo electrónico</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.correo }}</div>
+                                        <label>Número de teléfono</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.telefono }}</div>
+                                        <label>Dirección</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.direccion }}</div>
+                                        <label>R.F.C.</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.rfc }}</div>
+                                        <label>Razón social</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.razonsocial }}</div>
+                                        <label>Dirección fiscal</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.direccionfiscal }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    {{ form_errors(edit_form.barco) }}
+                                    <div class="radio buscabarcomh">
+                                        {{ form_label(edit_form.barco) }}
+                                        {{ form_widget(edit_form.barco) }}
+                                    </div>
+                                    <div id="info-barco">
+                                        <label>Modelo</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.modelo }}</div>
+                                        <label>Eslora</label>
+                                        <div id='barcopies' class='info-input' data-valor="{{ marinaHumedaCotizacion.barco.eslora }}">{{ marinaHumedaCotizacion.barco.eslora }}</div>
+                                        <label>Manga</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.manga }}</div>
+                                        <label>Nombre del capitán</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.nombreCapitan }}</div>
+                                        <label>Teléfono del capitán</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.telefonoCapitan }}</div>
+                                        <label>Correo del capitán</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.correoCapitan }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="servicios">
+                            <div class="row">
+                                <div class="col-sm-3">
+
+                                    <div class="input-daterange" id="rangoFehas">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                {{ form_label(edit_form.fechaLlegada) }}
+                                                {{ form_widget(edit_form.fechaLlegada) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                {{ form_label(edit_form.fechaSalida) }}
+                                                {{ form_widget(edit_form.fechaSalida) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <label>Descuento(%)</label>
+                                    {{ form_widget(edit_form.descuento) }}
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>Días Estadía:</label>
+                                            {{ form_widget(edit_form.mhcservicios.children.0.cantidad,{'disabled':'disabled'}) }}
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <label>Precio por día:</label>
+                                            {{ form_widget(edit_form.mhcservicios.children.0.precio,{'selected':marinaHumedaCotizacion.mhcservicios.0.precio}) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>Conexión a electricidad (Amperaje):</label>
+                                            {{ form_widget(edit_form.mhcservicios.children.1.cantidad) }}
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Precio electricidad:</label>
+                                            {{ form_widget(edit_form.mhcservicios.children.1.precioAux) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="total">
+                            <div class="row">
+                                <div class="col-sm-9 text-right">
+                                    <span>Tipo de cambio:</span>
+                                    <div id="valdolar" class=""
+                                         data-valor="{{ marinaHumedaCotizacion.dolar }}">{{ marinaHumedaCotizacion.dolar }}
+                                        MXN
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <small>Precios en USD</small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <table id="mh_nuevacotizacion" class="table text-center">
+                                        <thead>
+                                        <tr>
+                                            <th>Cantidad</th>
+                                            <th>Eslora (pies)</th>
+                                            <th>Servicio</th>
+                                            <th>Prec. Unid.</th>
+                                            <th>Sub-Total</th>
+                                            <th>IVA</th>
+                                            <th>Descuento</th>
+                                            <th>Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td id="de_cantidad">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</td>
+                                            <td id="de_eslora">{{ marinaHumedaCotizacion.barco.eslora }}</td>
+                                            <td>Días estancia</td>
+                                            <td id="de_precio" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.precio }}">
+                                                $ {{ marinaHumedaCotizacion.mhcservicios.0.precio|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="de_subtotal" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.subtotal|number_format(2,'.',',') }}">
+                                                $ {{ marinaHumedaCotizacion.mhcservicios.0.subtotal|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="de_iva" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.iva|number_format(2,'.',',') }}">
+                                                $ {{ marinaHumedaCotizacion.mhcservicios.0.iva|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="de_descuento" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.descuento|number_format(2,'.',',') }}">
+                                                $ {{ marinaHumedaCotizacion.mhcservicios.0.descuento|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="de_total" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.total|number_format(2,'.',',') }}">
+                                                $ {{ marinaHumedaCotizacion.mhcservicios.0.total|number_format(2,'.',',') }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td id="e_cantidad">{{ marinaHumedaCotizacion.mhcservicios.1.cantidad }}</td>
+                                            <td id="e_eslora">{{ marinaHumedaCotizacion.barco.eslora }}</td>
+                                            <td>Conexión a electricidad</td>
+                                            <td id="e_precio" data-valor="{{ marinaHumedaCotizacion.mhcservicios.1.precio }}">
+                                                $ {{ marinaHumedaCotizacion.mhcservicios.1.precio|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="e_subtotal" data-valor="{{ marinaHumedaCotizacion.mhcservicios.1.subtotal|number_format(2,'.',',') }}">
+                                                $ {{ marinaHumedaCotizacion.mhcservicios.1.subtotal|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="e_iva" data-valor="{{ marinaHumedaCotizacion.mhcservicios.1.iva|number_format(2,'.',',') }}">
+                                                $ {{ marinaHumedaCotizacion.mhcservicios.1.iva|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="e_descuento" data-valor="{{ marinaHumedaCotizacion.mhcservicios.1.descuento|number_format(2,'.',',') }}">
+                                                $ {{ marinaHumedaCotizacion.mhcservicios.1.descuento|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="e_total" data-valor="{{ marinaHumedaCotizacion.mhcservicios.1.total|number_format(2,'.',',') }}">
+                                                $ {{ marinaHumedaCotizacion.mhcservicios.1.total|number_format(2,'.',',') }}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div id="valiva" class="" data-valor="{{ marinaHumedaCotizacion.iva }}">
+                                        <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $ <span id="gransubtot">{{ marinaHumedaCotizacion.subtotal|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $ <span id="graniva">{{ marinaHumedaCotizacion.ivatotal|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Descuento:</p>
+                                    <p>
+                                        $ <span id="grandecuento">{{ marinaHumedaCotizacion.descuentototal|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $ <span id="grantot">{{ marinaHumedaCotizacion.total|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="totalmxn">
+                            <div class="row">
+                                <div class="col-sm-9 text-right">
+                                    <span>Tipo de cambio:</span>
+                                    <div id="" class="" >{{ marinaHumedaCotizacion.dolar }} MXN</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <small>Precios en MXN</small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <table id="" class="table text-center">
+                                        <thead>
+                                        <tr>
+                                            <th>Cantidad</th>
+                                            <th>Eslora (pies)</th>
+                                            <th>Servicio</th>
+                                            <th>Prec. Unid.</th>
+                                            <th>Sub-Total</th>
+                                            <th>IVA</th>
+                                            <th>Descuento</th>
+                                            <th>Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td id="de_cantidad_mxn">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</td>
+                                            <td id="de_eslora_mxn">{{ marinaHumedaCotizacion.barco.eslora }}</td>
+                                            <td>Días estancia</td>
+                                            <td id="de_precio_mxn">$ {{ (marinaHumedaCotizacion.mhcservicios.0.precio * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
+                                            <td id="de_subtotal_mxn" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.0.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}">
+                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="de_iva_mxn" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.0.iva * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}">
+                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.iva * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="de_descuento_mxn" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.0.descuento * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}">
+                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.descuento * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="de_total_mxn" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.0.total * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}">
+                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.total * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td id="e_cantidad_mxn">{{ marinaHumedaCotizacion.mhcservicios.1.cantidad }}</td>
+                                            <td id="e_eslora_mxn">{{ marinaHumedaCotizacion.barco.eslora }}</td>
+                                            <td>Conexión a electricidad</td>
+                                            <td id="e_precio_mxn">$ {{ (marinaHumedaCotizacion.mhcservicios.1.precio * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
+                                            <td id="e_subtotal_mxn" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.1.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}">
+                                                $ {{ (marinaHumedaCotizacion.mhcservicios.1.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="e_iva_mxn" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.1.iva * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}">
+                                                $ {{ (marinaHumedaCotizacion.mhcservicios.1.iva * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="e_descuento_mxn" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.1.descuento * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}">
+                                                $ {{ (marinaHumedaCotizacion.mhcservicios.1.descuento * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}
+                                            </td>
+                                            <td id="e_total_mxn" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.1.total * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}">
+                                                $ {{ (marinaHumedaCotizacion.mhcservicios.1.total * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-sm-3">
+                                    {#<div class="row">#}
+                                    {#<div class="col-sm-12">#}
+                                    {#<a class="btn btn-morado-claro">Visualizar</a>#}
+                                    {#</div>#}
+                                    {#</div>#}
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <button type="submit" class="btn btn-azul">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                Guardar
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div id="" class="">
+                                        <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $ <span id="gransubtot_mxn">{{ (marinaHumedaCotizacion.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $ <span id="graniva_mxn">{{ (marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Descuento:</p>
+                                    <p>
+                                        $ <span id="grandecuento_mxn">{{ (marinaHumedaCotizacion.descuentototal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $ <span id="grantot_mxn">{{ (marinaHumedaCotizacion.total * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 espacio-linea">
+                                    <label>Validación Novonautica</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="middle">
+                                        {{ form_widget(edit_form.validanovo) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 espacio-linea-arriba2">
+                                    {{ form_row(edit_form.notasnovo) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 espacio-linea">
+                                    <label>Validación Cliente</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="middle">
+                                        {{ form_widget(edit_form.validacliente) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 espacio-linea-arriba2">
+                                    {{ form_row(edit_form.notascliente) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{ form_widget(edit_form.mhcservicios.children.0.precioAux,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(edit_form.mhcservicios.children.1.precio,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(edit_form.mhcservicios.children.0.estatus,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(edit_form.mhcservicios.children.1.estatus,{'attr':{'class':'hidden'}}) }}
+                    {{ form_end(edit_form) }}
+
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="{{ path('marina-humeda_show',{ 'id': marinaHumedaCotizacion.id }) }}" class="btn btn-naranja pull-right">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-borrar pull-right" data-toggle="modal"
+                                    data-target="#modalBorrar">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                Borrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
 
 {% block modals %}
     {% embed 'estructura/modalborrar.twig' %}
@@ -473,4 +961,146 @@
             {{ form_end(delete_form) }}
         {% endblock %}
     {% endembed %}
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $('.selectclientebuscar').change(function (e) {
+            $('#loading').show();
+            $("#info-barco").empty();
+            $("#info-cliente").empty();
+            console.log('buscando cliente');
+            $.ajax({
+                method: "GET",
+                url: "{{ path('ajax_busca_cliente') }}",
+                dataType: 'json',
+                data: {'id': $(this).val()},
+                success: function (data) {
+                    if (data.hasOwnProperty("response") && data.response === "success") {
+                        if (data.hasOwnProperty("posts")) {
+                            //http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try/3710226
+                            if (/^[\],:{}\s]*$/.test(data.posts.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+                                var posts = JSON.parse(data.posts);
+                                //console.log(posts);
+                                if (posts.id > 0) {
+                                    var html = "";
+                                    html = "<label>Correo electrónico</label>" +
+                                        "<div class='info-input'>" + posts.correo + "</div>" +
+                                        "<label>Número de teléfono</label>" +
+                                        "<div class='info-input'>" + posts.telefono + "</div>" +
+                                        "<label>Dirección</label>" +
+                                        "<div class='info-input'>" + posts.direccion + "</div>" +
+                                        "<label>R.F.C.</label>" +
+                                        "<div class='info-input'>" + posts.rfc + "</div>" +
+                                        "<label>Razón social</label>" +
+                                        "<div class='info-input'>" + posts.razonsocial + "</div>" +
+                                        "<label>Dirección fiscal</label>" +
+                                        "<div class='info-input'>" + posts.direccionfiscal + "</div>";
+                                    $("#info-cliente").append(html);
+
+                                }
+                            }
+                            else {
+                                console.log("INVALID JSON STRING");
+                            }
+                        }
+                        else {
+                            console.log("POSTS NOT FOUND");
+                        }
+                    }
+                    $('#loading').hide();
+                },
+                error: function (jqXHR, exception) {
+                    if (jqXHR.status === 405) {
+                        console.error("METHOD NOT ALLOWED!");
+                    }
+                    $('#loading').hide();
+                }
+            }).fail(function () {
+                $('#loading').hide();
+                console.log('fallo ajax');
+            });
+        });
+
+        var x = 1;
+        $('.buscabarcomh').click(function () {
+            if (x == 2) {
+                if ($("input[type=radio]:checked").val() != null) {
+                    $('#loading').show();
+                    $("#info-barco").empty();
+                    var idbarco = $("input[type=radio]:checked").val();
+                    buscaDatosBarco(idbarco);
+                    x = 1;
+                }
+            } else {
+                x++;
+            }
+        });
+
+        function buscaDatosBarco(idbarco){
+            $.ajax({
+                method: "GET",
+                url: "{{ path('ajax_busca_barco') }}",
+                dataType: 'json',
+                data: {'id': idbarco},
+                success: function(data) {
+                    if(data.hasOwnProperty("response") && data.response === "success") {
+                        if(data.hasOwnProperty("posts")) {
+                            //http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try/3710226
+                            if (/^[\],:{}\s]*$/.test(data.posts.replace(/\\["\\\/bfnrtu]/g, '@').
+                                replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+                                replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+                                var barcos = JSON.parse(data.posts);
+                                //console.log(barcos);
+                                if(barcos.id > 0) {
+                                    var html = "";
+                                    html= "<label>Modelo</label>"+
+                                        "<div class='info-input'>"+barcos.modelo+"</div>"+
+                                        "<label>Eslora</label>"+
+                                        "<div id='barcopies' class='info-input' data-valor='"+barcos.eslora+"'>"+barcos.eslora+"</div>"+
+                                        "<label>Manga</label>"+
+                                        "<div class='info-input'>"+barcos.manga+"</div>"+
+                                        "<label>Nombre del capitán</label>"+
+                                        "<div class='info-input'>"+barcos.nombreCapitan+"</div>"+
+                                        "<label>Teléfono del capitán</label>"+
+                                        "<div class='info-input'>"+barcos.telefonoCapitan+"</div>"+
+                                        "<label>Correo del capitán</label>"+
+                                        "<div class='info-input'>"+barcos.correoCapitan+"</div>";
+                                    $("#info-barco").append(html);
+                                    $("#de_eslora").data('valor',barcos.eslora);
+                                    $("#e_eslora").data('valor',barcos.eslora);
+                                    $("#de_eslora").html(barcos.eslora);
+                                    $("#e_eslora").html(barcos.eslora);
+
+                                    $("#de_eslora_mxn").html(barcos.eslora);
+                                    $("#e_eslora_mxn").html(barcos.eslora);
+
+                                    recalculaSubtotalesYtotal();
+
+
+
+                                }
+                            }
+                            else {
+                                console.log("INVALID JSON STRING");
+                            }
+                        }
+                        else {
+                            console.log("POSTS NOT FOUND");
+                        }
+                    }
+                    $('#loading').hide();
+                },
+                error: function(jqXHR, exception) {
+                    if(jqXHR.status === 405) {
+                        console.error("METHOD NOT ALLOWED!");
+                    }
+                    $('#loading').hide();
+                }
+            }).fail(function () {
+                $('#loading').hide();
+                console.log('fallo ajax');
+            });
+        }
+    </script>
 {% endblock %}
