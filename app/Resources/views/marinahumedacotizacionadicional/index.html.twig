@@ -1,0 +1,70 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block title %}
+    Novonautiva | Servicios Adicionales
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+
+                <div class="panel-heading">
+                    <h3 class="panel-title">Servicios Adicionales</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table text-center">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Descuento</th>
+                            <th>Dolar</th>
+                            <th>Iva</th>
+                            <th>Subtotal</th>
+                            <th>Ivatotal</th>
+                            <th>Descuentototal</th>
+                            <th>Total</th>
+                            <th>Fecharegistro</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for marinaHumedaCotizacionAdicional in marinaHumedaCotizacionAdicionals %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('marina-humeda-cotizacion-adicional_show', { 'id': marinaHumedaCotizacionAdicional.id }) }}">{{ marinaHumedaCotizacionAdicional.id }}</a>
+                                </td>
+                                <td>{{ marinaHumedaCotizacionAdicional.descuento }}</td>
+                                <td>{{ marinaHumedaCotizacionAdicional.dolar }}</td>
+                                <td>{{ marinaHumedaCotizacionAdicional.iva }}</td>
+                                <td>{{ marinaHumedaCotizacionAdicional.subtotal }}</td>
+                                <td>{{ marinaHumedaCotizacionAdicional.ivatotal }}</td>
+                                <td>{{ marinaHumedaCotizacionAdicional.descuentototal }}</td>
+                                <td>{{ marinaHumedaCotizacionAdicional.total }}</td>
+                                <td>{% if marinaHumedaCotizacionAdicional.fecharegistro %}{{ marinaHumedaCotizacionAdicional.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ path('marina-humeda-cotizacion-adicional_show', { 'id': marinaHumedaCotizacionAdicional.id }) }}">show</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('marina-humeda-cotizacion-adicional_edit', { 'id': marinaHumedaCotizacionAdicional.id }) }}">edit</a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <ul>
+                        <li>
+                            <a href="{{ path('marina-humeda-cotizacion-adicional_new') }}">Create a new
+                                marinaHumedaCotizacionAdicional</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

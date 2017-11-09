@@ -49,16 +49,6 @@ class Cliente
 
     /**
      * @var string
-     * @Assert\NotBlank(
-     *     message="Password no pude quedar vacío"
-     * )
-     *
-     * @ORM\Column(name="password", type="string", length=255)
-     */
-    private $password;
-
-    /**
-     * @var string
      * @Assert\Length(
      *      min = 10,
      *      minMessage = "Error, número de teléfono no válido"
@@ -161,6 +151,12 @@ class Cliente
 
     /**
      *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaCotizacionAdicional", mappedBy="cliente")
+     */
+    private $mhcotizacionesadicionales;
+
+    /**
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizacion", mappedBy="cliente")
      */
     private $astillerocotizaciones;
@@ -169,7 +165,8 @@ class Cliente
     public function __construct() {
         $this->barcos = new ArrayCollection();
         $this->mhcotizaciones = new ArrayCollection();
-        $this->mhcservicios = new ArrayCollection();
+        $this->mhcotizacionesadicionales = new ArrayCollection();
+        //$this->mhcservicios = new ArrayCollection();
         $this->astillerocotizaciones = new ArrayCollection();
     }
     public function __toString()
@@ -233,30 +230,6 @@ class Cliente
     public function getCorreo()
     {
         return $this->correo;
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return Cliente
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Get password
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
     }
 
     /**
@@ -628,5 +601,39 @@ class Cliente
     public function getAstillerocotizaciones()
     {
         return $this->astillerocotizaciones;
+    }
+
+    /**
+     * Add mhcotizacionesadicionale
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale
+     *
+     * @return Cliente
+     */
+    public function addMhcotizacionesadicionale(\AppBundle\Entity\MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale)
+    {
+        $this->mhcotizacionesadicionales[] = $mhcotizacionesadicionale;
+
+        return $this;
+    }
+
+    /**
+     * Remove mhcotizacionesadicionale
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale
+     */
+    public function removeMhcotizacionesadicionale(\AppBundle\Entity\MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale)
+    {
+        $this->mhcotizacionesadicionales->removeElement($mhcotizacionesadicionale);
+    }
+
+    /**
+     * Get mhcotizacionesadicionales
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMhcotizacionesadicionales()
+    {
+        return $this->mhcotizacionesadicionales;
     }
 }

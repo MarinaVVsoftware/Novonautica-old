@@ -28,9 +28,6 @@ class ClienteType extends AbstractType
             ->add('correo',TextType::class,[
                 'required' => false
             ])
-            ->add('password',TextType::class,[
-                'required' => false
-            ])
             ->add('telefono', TextType::class,[
                 'label'=>'Teléfono',
                 'required' => false
@@ -61,23 +58,23 @@ class ClienteType extends AbstractType
                 'label'=>'Correo Facturación',
                 'required' => false
             ])
-            ->add('estatus',null,[
-                'label'=>' ',
-                'required' => false
-            ])
+//            ->add('estatus',null,[
+//                'label'=>' ',
+//                'required' => false
+//            ])
             ->add('barcos',CollectionType::class,[
                 'entry_type' => BarcoType::class,
                 'label' => false
             ])
         ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $cliente = $event->getData();
-            $form = $event->getForm();
-
-            if($cliente->getId()==null){ //cotización nueva
-                $form->remove('estatus');
-            }
-        });
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $cliente = $event->getData();
+//            $form = $event->getForm();
+//
+//            if($cliente->getId()==null){ //cotización nueva
+//                $form->remove('estatus');
+//            }
+//        });
     }
     
     /**

@@ -26,9 +26,6 @@ class BarcoType extends AbstractType
                 'label' => 'Nombre de la embarcación',
                 'required' => false
             ])
-            ->add('marca',TextType::class,[
-                'required' => false
-            ])
             ->add('modelo',TextType::class,[
                 'required' => false
             ])
@@ -45,10 +42,16 @@ class BarcoType extends AbstractType
             ->add('eslora',TextType::class,[
                 'required' => false
             ])
-            ->add('combustible',IntegerType::class,[
+            ->add('nombreResponsable',TextType::class,[
+                'label' => 'Nombre del responsable',
                 'required' => false
             ])
-            ->add('agua',IntegerType::class,[
+            ->add('telefonoResponsable',TextType::class,[
+                'label' => 'Teléfono del responsable',
+                'required' => false
+            ])
+            ->add('correoResponsable',TextType::class,[
+                'label' => 'Correo del responsable',
                 'required' => false
             ])
             ->add('nombreCapitan',TextType::class,[
@@ -63,10 +66,10 @@ class BarcoType extends AbstractType
                 'label' => 'Correo del capitán',
                 'required' => false
             ])
-            ->add('estatus',null,[
-                'label' => ' ',
-                'required' => false
-            ])
+//            ->add('estatus',null,[
+//                'label' => ' ',
+//                'required' => false
+//            ])
             ->add('motores',CollectionType::class,[
                 'entry_type' => MotorType::class,
                 'label' => false,
@@ -76,14 +79,14 @@ class BarcoType extends AbstractType
                 'by_reference' => false
             ])
         ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $barco = $event->getData();
-            $form = $event->getForm();
-
-            if($barco->getId()==null){ //cotización nueva
-                $form->remove('estatus');
-            }
-        });
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $barco = $event->getData();
+//            $form = $event->getForm();
+//
+//            if($barco->getId()==null){ //cotización nueva
+//                $form->remove('estatus');
+//            }
+//        });
     }
     
     /**

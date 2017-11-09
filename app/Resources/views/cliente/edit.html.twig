@@ -41,7 +41,6 @@
                             <div class="col-sm-6">
                                 {{ form_errors(edit_form.nombre) }}
                                 {{ form_errors(edit_form.correo) }}
-                                {{ form_errors(edit_form.password) }}
                                 {{ form_errors(edit_form.telefono) }}
                                 {{ form_errors(edit_form.celular) }}
                                 {{ form_errors(edit_form.correofacturacion) }}
@@ -55,9 +54,6 @@
 
                                     {{ form_label(edit_form.correo) }}
                                     {{ form_widget(edit_form.correo) }}
-
-                                    {{ form_label(edit_form.password) }}
-                                    {{ form_widget(edit_form.password) }}
 
                                     {{ form_label(edit_form.telefono) }}
                                     {{ form_widget(edit_form.telefono) }}
@@ -74,14 +70,14 @@
                                     {{ form_row(edit_form.direccionfiscal) }}
                                     {{ form_label(edit_form.correofacturacion) }}
                                     {{ form_widget(edit_form.correofacturacion) }}
-                                    <div class="input-estatus">
-                                        Estatus
-                                        <span class="cont-label-novo">
-                                            {{ form_errors(edit_form.estatus) }}
-                                            {{ form_widget(edit_form.estatus) }}
-                                            {{ form_label(edit_form.estatus) }}
-                                        </span>
-                                    </div>
+                                    {#<div class="input-estatus">#}
+                                        {#Estatus#}
+                                        {#<span class="cont-label-novo">#}
+                                            {#{{ form_errors(edit_form.estatus) }}#}
+                                            {#{{ form_widget(edit_form.estatus) }}#}
+                                            {#{{ form_label(edit_form.estatus) }}#}
+                                        {#</span>#}
+                                    {#</div>#}
                                 </div>
                             </div>
                             <div class="row">
@@ -97,25 +93,26 @@
                                 <div class="row">
                                     <div class="col-sm-5">
                                         {{ form_row(edit_form.barcos[i].nombre) }}
-                                        {{ form_row(edit_form.barcos[i].marca) }}
                                         {{ form_row(edit_form.barcos[i].modelo) }}
                                         {{ form_row(edit_form.barcos[i].anio) }}
+                                        {{ form_row(edit_form.barcos[i].eslora) }}
                                         {{ form_row(edit_form.barcos[i].calado) }}
                                         {{ form_row(edit_form.barcos[i].manga) }}
 
-                                        <div class="input-estatus">
-                                            Estatus
-                                            <span class="cont-label-novo">
-                                            {{ form_errors(edit_form.barcos[i].estatus) }}
-                                                {{ form_widget(edit_form.barcos[i].estatus) }}
-                                                {{ form_label(edit_form.barcos[i].estatus) }}
-                                        </span>
-                                        </div>
+                                        {#<div class="input-estatus">#}
+                                            {#Estatus#}
+                                            {#<span class="cont-label-novo">#}
+                                            {#{{ form_errors(edit_form.barcos[i].estatus) }}#}
+                                                {#{{ form_widget(edit_form.barcos[i].estatus) }}#}
+                                                {#{{ form_label(edit_form.barcos[i].estatus) }}#}
+                                        {#</span>#}
+                                        {#</div>#}
                                     </div>
                                     <div class="col-sm-5">
-                                        {{ form_row(edit_form.barcos[i].eslora) }}
-                                        {{ form_row(edit_form.barcos[i].combustible) }}
-                                        {{ form_row(edit_form.barcos[i].agua) }}
+                                        {{ form_row(edit_form.barcos[i].nombreResponsable) }}
+                                        {{ form_row(edit_form.barcos[i].telefonoResponsable) }}
+                                        {{ form_row(edit_form.barcos[i].correoResponsable) }}
+
                                         {{ form_row(edit_form.barcos[i].nombreCapitan) }}
                                         {{ form_row(edit_form.barcos[i].telefonoCapitan) }}
                                         {{ form_row(edit_form.barcos[i].correoCapitan) }}

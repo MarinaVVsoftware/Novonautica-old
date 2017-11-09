@@ -9,10 +9,14 @@
 namespace AppBundle\Form;
 
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use AppBundle\Entity\MarinaHumedaTarifa;
 
 class MarinaHumedaCotizaServiciosType extends AbstractType
 {
@@ -24,7 +28,30 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
         $builder
             //->add('servicio')
             ->add('cantidad')
-            ->add('precio')
+            ->add('precio',EntityType::class,[
+                'class' => 'AppBundle:MarinaHumedaTarifa',
+                'label' => 'Precio',
+                'placeholder' => '0',
+                'required' => false,
+                'choice_value' => 'costo',
+                'query_builder' => function(EntityRepository $er){
+                    return $er->createQueryBuilder('t')
+                        ->andWhere('t.tipo = 1')
+                        ;
+                }
+            ])
+            ->add('precioAux',EntityType::class,[
+                'class' => 'AppBundle:MarinaHumedaTarifa',
+                'label' => 'Precio',
+                'placeholder' => '0',
+                'required' => false,
+                'choice_value' => 'costo',
+                'query_builder' => function(EntityRepository $er){
+                    return $er->createQueryBuilder('t')
+                        ->andWhere('t.tipo = 2')
+                        ;
+                }
+            ])
             ->add('estatus', null,[
                 'label' => ' '
             ])

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Marinahumedatarifa</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ marinaHumedaTarifa.id }}</td>
+            </tr>
+            <tr>
+                <th>Tipo</th>
+                <td>{{ marinaHumedaTarifa.tipo }}</td>
+            </tr>
+            <tr>
+                <th>Costo</th>
+                <td>{{ marinaHumedaTarifa.costo }}</td>
+            </tr>
+            <tr>
+                <th>Pies</th>
+                <td>{{ marinaHumedaTarifa.pies }}</td>
+            </tr>
+            <tr>
+                <th>Descripcion</th>
+                <td>{{ marinaHumedaTarifa.descripcion }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('marinahumeda-tarifas_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('marinahumeda-tarifas_edit', { 'id': marinaHumedaTarifa.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

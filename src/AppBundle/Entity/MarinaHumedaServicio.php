@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * MarinaHumedaServicio
@@ -23,11 +24,33 @@ class MarinaHumedaServicio
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Nombre no puede quedar vacío"
+     * )
      *
      * @ORM\Column(name="nombre", type="string", length=255)
      */
     private $nombre;
 
+    /**
+     * @var string
+     * @Assert\NotBlank(
+     *     message="Unidad no puede quedar vacío"
+     * )
+     *
+     * @ORM\Column(name="unidad", type="string", length=10)
+     */
+    private $unidad;
+
+    /**
+     * @var float
+     * @Assert\NotBlank(
+     *     message="Precio no puede quedar vacío"
+     * )
+     *
+     * @ORM\Column(name="precio", type="float", nullable=true)
+     */
+    private $precio;
 
     /**
      * Get id
@@ -61,5 +84,53 @@ class MarinaHumedaServicio
     public function getNombre()
     {
         return $this->nombre;
+    }
+
+    /**
+     * Set unidad
+     *
+     * @param string $unidad
+     *
+     * @return MarinaHumedaServicio
+     */
+    public function setUnidad($unidad)
+    {
+        $this->unidad = $unidad;
+
+        return $this;
+    }
+
+    /**
+     * Get unidad
+     *
+     * @return string
+     */
+    public function getUnidad()
+    {
+        return $this->unidad;
+    }
+
+    /**
+     * Set precio
+     *
+     * @param float $precio
+     *
+     * @return MarinaHumedaServicio
+     */
+    public function setPrecio($precio)
+    {
+        $this->precio = $precio;
+
+        return $this;
+    }
+
+    /**
+     * Get precio
+     *
+     * @return float
+     */
+    public function getPrecio()
+    {
+        return $this->precio;
     }
 }
