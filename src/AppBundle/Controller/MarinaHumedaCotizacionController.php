@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 
 /**
  * Marinahumedacotizacion controller.
@@ -50,6 +51,25 @@ class MarinaHumedaCotizacionController extends Controller
         return $this->render('marina-administracion.twig', [
             'marinaadministracion' => 1
         ]);
+    }
+
+    /**
+     * @Route("/cotizacion-pdf", name="marina-pdf")
+     */
+    public function displayMarinaPDF(Request $request)
+    {
+        $html = $this->renderView('marinahumedacotizacion/cotizacionpdf.html.twig', [
+            //'title' => 'Booking-' . $booking->getOrderId() . '.pdf',
+            'title' => 'Cotizacion-00000.pdf'
+        ]);
+        return new PdfResponse(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            'Cotizacion-00000.pdf', 'application/pdf', 'inline'
+        );
+
+//        return $this->render('marinahumedacotizacion/cotizacionpdf.html.twig', [
+//            'marinaadministracion' => 1
+//        ]);
     }
 
     /**
