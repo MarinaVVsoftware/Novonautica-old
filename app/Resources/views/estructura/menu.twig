@@ -1,5 +1,7 @@
 {% set menuClientes='' %}
 {% set menuMarina='' %}
+{% set submenuMarinaCotizacion='' %}
+{% set submenuMarinaAdicional='' %}
 {% set menuAstillero='' %}
 {% set menuProductos='' %}
 {% set menuRH='' %}
@@ -14,6 +16,7 @@
 {% set actMA='' %}
 {% set actMN='' %}
 {% set actMC='' %}
+{% set actMCA='' %}
 {% set actMT='' %}
 {% set actMS='' %}
 {% set actAN='' %}
@@ -40,18 +43,27 @@
 {% endif %}
 {% if marinanuevacotizacion is defined %}
     {% set menuMarina=' active menu-open' %}
+    {% set submenuMarinaCotizacion=' active' %}
     {% set actMN=' active' %}
 {% endif %}
 {% if marinacotizaciones is defined %}
     {% set menuMarina=' active menu-open' %}
+    {% set submenuMarinaCotizacion=' active' %}
     {% set actMC=' active' %}
 {% endif %}
 {% if marinatarifamenu is defined %}
     {% set menuMarina=' active menu-open' %}
+    {% set submenuMarinaCotizacion=' active' %}
     {% set actMT=' active' %}
+{% endif %}
+{% if menumarinaadicional is defined %}
+    {% set menuMarina=' active menu-open' %}
+    {% set submenuMarinaAdicional=' active' %}
+    {% set actMCA=' active' %}
 {% endif %}
 {% if marinaserviciomenu is defined %}
     {% set menuMarina=' active menu-open' %}
+    {% set submenuMarinaAdicional=' active' %}
     {% set actMS=' active' %}
 {% endif %}
 {% if astilleronuevacotizacion is defined %}
@@ -105,12 +117,12 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="{{ actCA }}">
-                        <a href="{{ path('cliente_new') }}">
+                        <a href="{{ path('cliente_new') }}" class="loadpage">
                             <i class="fa fa-minus"></i> Agregar
                         </a>
                     </li>
                     <li class="{{ actCL }}">
-                        <a href="{{ path('cliente_index') }}">
+                        <a href="{{ path('cliente_index') }}" class="loadpage">
                             <i class="fa fa-minus"></i> Listado
                         </a>
                     </li>
@@ -127,35 +139,51 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="{{ actMAg }}">
-                        <a href="{{ path('marina-agenda') }}">
+                        <a href="{{ path('marina-agenda') }}" class="loadpage">
                             <i class="fa fa-minus"></i> Agenda
                         </a>
                     </li>
                     <li class="{{ actMA }}">
-                        <a href="{{ path('marina-administracion') }}">
+                        <a href="{{ path('marina-administracion') }}" class="loadpage">
                             <i class="fa fa-minus"></i> Administración
                         </a>
                     </li>
-                    <li class="{{ actMN }}">
-                        <a href="{{ path('marina-humeda_new') }}">
-                            <i class="fa fa-minus"></i> Nueva cotización
-                        </a>
+                    <li class="treeview {{ submenuMarinaCotizacion }}">
+                        <a href="#"><i class="fa fa-minus"></i>Cotizaciones</a>
+                        <ul class="treeview-menu">
+                            <li class="{{ actMC }}">
+                                <a href="{{ path('marina-humeda_index') }}" class="loadpage">
+                                    <i class="fa fa-circle-o"></i>Listado
+                                </a>
+                            </li>
+                            <li class="{{ actMN }}">
+                                <a href="{{ path('marina-humeda_new') }}" class="loadpage">
+                                    <i class="fa fa-circle-o"></i> Nuevo
+                                </a>
+                            </li>
+                            <li class="{{ actMT }}">
+                                <a href="{{ path('marinahumeda-tarifas_index') }}" class="loadpage">
+                                    <i class="fa fa-circle-o"></i> Tarifas
+                                </a>
+                            </li>
+                        </ul>
                     </li>
-                    <li class="{{ actMC }}">
-                        <a href="{{ path('marina-humeda_index') }}">
-                            <i class="fa fa-minus"></i> Cotizaciones
-                        </a>
+                    <li class="treeview {{ submenuMarinaAdicional }}">
+                        <a href="#"><i class="fa fa-minus"></i>Servicios Adicionales</a>
+                        <ul class="treeview-menu">
+                            <li class="{{ actMCA }}">
+                                <a href="{{ path('marina-humeda-cotizacion-adicional_index') }}" class="loadpage">
+                                    <i class="fa fa-circle-o"></i> Listado
+                                </a>
+                            </li>
+                            <li class="{{ actMS }}">
+                                <a href="{{ path('marina-humeda-servicio_index') }}" class="loadpage">
+                                    <i class="fa fa-circle-o"></i> Catálogo
+                                </a>
+                            </li>
+                        </ul>
                     </li>
-                    <li class="{{ actMT }}">
-                        <a href="{{ path('marinahumeda-tarifas_index') }}">
-                            <i class="fa fa-minus"></i> Tarifas
-                        </a>
-                    </li>
-                    <li class="{{ actMS }}">
-                        <a href="{{ path('marina-humeda-servicio_index') }}">
-                            <i class="fa fa-minus"></i> Servicios Adicionales
-                        </a>
-                    </li>
+
                 </ul>
                 <hr>
             </li>
@@ -169,60 +197,66 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="{{ actAN }}">
-                        <a href="{{ path('astillero_new') }}"><i class="fa fa-minus"></i> Nueva cotización
+                        <a href="{{ path('astillero_new') }}" class="loadpage">
+                            <i class="fa fa-minus"></i> Nueva cotización
                         </a>
                     </li>
                     <li class="{{ actAC }}">
-                        <a href="{{ path('astillero_index') }}"><i class="fa fa-minus"></i> Cotizaciones</a>
+                        <a href="{{ path('astillero_index') }}" class="loadpage">
+                            <i class="fa fa-minus"></i> Cotizaciones</a>
                     </li>
                     <li class="{{ actAA }}">
-                        <a href="{{ path('astillero-aceptaciones') }}"><i class="fa fa-minus"></i> Aceptaciones</a>
+                        <a href="{{ path('astillero-aceptaciones') }}" class="loadpage">
+                            <i class="fa fa-minus"></i> Aceptaciones
+                        </a>
                     </li>
                     <li class="{{ actAO }}">
-                        <a href="{{ path('astillero-odt') }}"><i class="fa fa-minus"></i> ODT</a>
+                        <a href="{{ path('astillero-odt') }}" class="loadpage">
+                            <i class="fa fa-minus"></i> ODT
+                        </a>
                     </li>
                 </ul>
                 <hr>
             </li>
-            <li class="{{ menuProductos }} only">
-                <a href="{{ path('producto_index') }}">
+            <li class="{{ menuProductos }}">
+                <a href="{{ path('producto_index') }}" class="loadpage">
                     <i class="fa fa-th"></i>
                     <span>Productos</span>
                 </a>
                 <hr>
             </li>
-            <li class="{{ menuRH }} only">
-                <a href="{{ path('recursos-humanos') }}">
+            <li class="{{ menuRH }}">
+                <a href="{{ path('recursos-humanos') }}" class="loadpage">
                     <i class="fa fa-address-book-o"></i>
                     <span>Recursos Humanos</span>
                 </a>
                 <hr>
             </li>
-            <li class="{{ menuConta }} only">
-                <a href="{{ path('contabilidad') }}">
+            <li class="{{ menuConta }}">
+                <a href="{{ path('contabilidad') }}" class="loadpage">
                     <i class="fa fa-archive"></i>
                     <span>Contabilidad</span>
                 </a>
                 <hr>
             </li>
-            <li class="{{ menuReportes }} only">
-                <a href="{{ path('reportes') }}">
+            <li class="{{ menuReportes }}">
+                <a href="{{ path('reportes') }}" class="loadpage">
                     <i class="fa fa-file-text-o"></i>
                     <span>Reportes</span>
                 </a>
                 <hr>
             </li>
             {% if is_granted('ROLE_ADMIN') %}
-                <li class="{{ menuUsuarios }} only">
-                    <a href="{{ path('usuario_index') }}">
+                <li class="{{ menuUsuarios }}">
+                    <a href="{{ path('usuario_index') }}" class="loadpage">
                         <i class="fa fa-user-o"></i>
                         <span>Usuarios</span>
                     </a>
                     <hr>
                 </li>
             {% endif %}
-            <li class="{{ menuAjustes }} only">
-                <a href="{{ path('ajustes_index') }}">
+            <li class="{{ menuAjustes }}">
+                <a href="{{ path('ajustes_index') }}" class="loadpage">
                     <i class="fa fa-cog" aria-hidden="true"></i>
                     <span>Ajustes</span>
                 </a>

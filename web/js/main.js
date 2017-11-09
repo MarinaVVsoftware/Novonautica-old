@@ -1,9 +1,9 @@
 $(document).ready(function() {
     $('#loading').hide();
-    $('.treeview ul a').on('click',function () {
-        $('#loading').show();
-    });
-    $('ul .only a').on('click',function (){
+    // $('.treeview ul a').on('click',function () {
+    //     $('#loading').show();
+    // });
+    $('.loadpage').on('click',function (){
         $('#loading').show();
     });
     // $('.btn').on('click',function () {

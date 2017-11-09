@@ -293,5 +293,52 @@ class MarinaHumedaCotizacionAdicional
     {
         return $this->fecharegistro;
     }
-}
 
+    /**
+     * Set cliente
+     *
+     * @param \AppBundle\Entity\Cliente $cliente
+     *
+     * @return MarinaHumedaCotizacionAdicional
+     */
+    public function setCliente(\AppBundle\Entity\Cliente $cliente = null)
+    {
+        $this->cliente = $cliente;
+
+        return $this;
+    }
+
+    /**
+     * Get cliente
+     *
+     * @return \AppBundle\Entity\Cliente
+     */
+    public function getCliente()
+    {
+        return $this->cliente;
+    }
+
+    /**
+     * Set barco
+     *
+     * @param \AppBundle\Entity\Barco $barco
+     *
+     * @return MarinaHumedaCotizacionAdicional
+     */
+    public function setBarco(\AppBundle\Entity\Barco $barco = null)
+    {
+        $this->barco = $barco;
+
+        return $this;
+    }
+
+    /**
+     * Get barco
+     *
+     * @return \AppBundle\Entity\Barco
+     */
+    public function getBarco()
+    {
+        return $this->barco;
+    }
+}

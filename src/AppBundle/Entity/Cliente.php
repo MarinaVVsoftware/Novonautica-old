@@ -602,4 +602,38 @@ class Cliente
     {
         return $this->astillerocotizaciones;
     }
+
+    /**
+     * Add mhcotizacionesadicionale
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale
+     *
+     * @return Cliente
+     */
+    public function addMhcotizacionesadicionale(\AppBundle\Entity\MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale)
+    {
+        $this->mhcotizacionesadicionales[] = $mhcotizacionesadicionale;
+
+        return $this;
+    }
+
+    /**
+     * Remove mhcotizacionesadicionale
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale
+     */
+    public function removeMhcotizacionesadicionale(\AppBundle\Entity\MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale)
+    {
+        $this->mhcotizacionesadicionales->removeElement($mhcotizacionesadicionale);
+    }
+
+    /**
+     * Get mhcotizacionesadicionales
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMhcotizacionesadicionales()
+    {
+        return $this->mhcotizacionesadicionales;
+    }
 }

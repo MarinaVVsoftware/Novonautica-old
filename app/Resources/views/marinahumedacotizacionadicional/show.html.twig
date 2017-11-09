@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Marinahumedacotizacionadicional</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ marinaHumedaCotizacionAdicional.id }}</td>
+            </tr>
+            <tr>
+                <th>Descuento</th>
+                <td>{{ marinaHumedaCotizacionAdicional.descuento }}</td>
+            </tr>
+            <tr>
+                <th>Dolar</th>
+                <td>{{ marinaHumedaCotizacionAdicional.dolar }}</td>
+            </tr>
+            <tr>
+                <th>Iva</th>
+                <td>{{ marinaHumedaCotizacionAdicional.iva }}</td>
+            </tr>
+            <tr>
+                <th>Subtotal</th>
+                <td>{{ marinaHumedaCotizacionAdicional.subtotal }}</td>
+            </tr>
+            <tr>
+                <th>Ivatotal</th>
+                <td>{{ marinaHumedaCotizacionAdicional.ivatotal }}</td>
+            </tr>
+            <tr>
+                <th>Descuentototal</th>
+                <td>{{ marinaHumedaCotizacionAdicional.descuentototal }}</td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <td>{{ marinaHumedaCotizacionAdicional.total }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{% if marinaHumedaCotizacionAdicional.fecharegistro %}{{ marinaHumedaCotizacionAdicional.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('marina-humeda-cotizacion-adicional_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('marina-humeda-cotizacion-adicional_edit', { 'id': marinaHumedaCotizacionAdicional.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

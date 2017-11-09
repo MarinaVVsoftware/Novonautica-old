@@ -160,4 +160,3 @@ class MarinaHumedaTarifa
         return $this->descripcion;
     }
 }
-
