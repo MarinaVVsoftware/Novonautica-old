@@ -14,6 +14,7 @@
 {% set actMA='' %}
 {% set actMN='' %}
 {% set actMC='' %}
+{% set actMT='' %}
 {% set actAN='' %}
 {% set actAC='' %}
 {% set actAA='' %}
@@ -43,6 +44,10 @@
 {% if marinacotizaciones is defined %}
     {% set menuMarina=' active menu-open' %}
     {% set actMC=' active' %}
+{% endif %}
+{% if marinatarifamenu is defined %}
+    {% set menuMarina=' active menu-open' %}
+    {% set actMT=' active' %}
 {% endif %}
 {% if astilleronuevacotizacion is defined %}
     {% set menuAstillero = ' active menu-open' %}
@@ -136,7 +141,7 @@
                             <i class="fa fa-minus"></i> Cotizaciones
                         </a>
                     </li>
-                    <li>
+                    <li class="{{ actMT }}">
                         <a href="{{ path('marinahumeda-tarifas_index') }}">
                             <i class="fa fa-minus"></i> Tarifas
                         </a>

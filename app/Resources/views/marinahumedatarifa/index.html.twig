@@ -29,7 +29,7 @@
                                     <a href="{{ path('marinahumeda-tarifas_show', { 'id': marinaHumedaTarifa.id }) }}">{{ marinaHumedaTarifa.id }}</a>
                                 </td>
                                 <td>{% if marinaHumedaTarifa.tipo == 1 %}Amarre{% else %}Electricidad{% endif %}</td>
-                                <td>{{ marinaHumedaTarifa.costo }}</td>
+                                <td>${{ marinaHumedaTarifa.costo|number_format(2,'.',',') }}</td>
                                 <td>{{ marinaHumedaTarifa.descripcion }}</td>
                                 <td>
                                     <a class="btn btn-azul" href="{{ path('marinahumeda-tarifas_edit', { 'id': marinaHumedaTarifa.id }) }}">

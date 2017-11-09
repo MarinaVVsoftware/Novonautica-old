@@ -202,9 +202,12 @@ function  diasEntreFechas (inicio,fin) {
 
 var de_cantidad = 0;
 var de_precio = 0;
+var de_precio_mxn = 0;
 var e_cantidad = 0;
 var e_precio = 0;
+var e_precio_mxn = 0;
 var descuento = 0;
+var dolar = $('#valdolar').data('valor');
 
 $('#appbundle_marinahumedacotizacion_fechaLlegada').on( "change", function() {
     var llegada = $(this).val();
@@ -212,11 +215,16 @@ $('#appbundle_marinahumedacotizacion_fechaLlegada').on( "change", function() {
 
     de_cantidad =  diasEntreFechas(llegada,salida);
     de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
+    de_precio_mxn = de_precio * dolar;
 
     $('#de_cantidad').html(de_cantidad);
+    $('#de_cantidad_mxn').html(de_cantidad);
+
     appbundle_marinahumedacotizacion_mhcservicios_0_cantidad.value = de_cantidad;
 
     calculaSubtotales(de_cantidad,de_precio,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
+    calculaSubtotales(de_cantidad,de_precio_mxn,$('#de_subtotal_mxn'),$('#de_iva_mxn'),$('#de_descuento_mxn'),$('#de_total_mxn'));
+
     calculaTotales();
 });
 
@@ -225,12 +233,16 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on( "change", function() {
     var salida = $(this).val();
 
     de_cantidad =  diasEntreFechas(llegada,salida);
-    precio_dia = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
+    de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
+    de_precio_mxn = de_precio * dolar;
 
     $('#de_cantidad').html(de_cantidad);
+    $('#de_cantidad_mxn').html(de_cantidad);
+
     appbundle_marinahumedacotizacion_mhcservicios_0_cantidad.value = de_cantidad;
 
     calculaSubtotales(de_cantidad,de_precio,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
+    calculaSubtotales(de_cantidad,de_precio_mxn,$('#de_subtotal_mxn'),$('#de_iva_mxn'),$('#de_descuento_mxn'),$('#de_total_mxn'));
     calculaTotales();
 });
 
@@ -238,8 +250,12 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on( "change", function() {
 $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change',function () {
     de_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').val();
     de_precio = $(this).val();
+    de_precio_mxn = (de_precio * dolar).toFixed(2);
+
     $('#de_precio').html('$ '+de_precio);
+    $('#de_precio_mxn').html('$ '+de_precio_mxn);
     calculaSubtotales(de_cantidad,de_precio,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
+    calculaSubtotales(de_cantidad,de_precio_mxn,$('#de_subtotal_mxn'),$('#de_iva_mxn'),$('#de_descuento_mxn'),$('#de_total_mxn'));
     calculaTotales();
 });
 
@@ -247,16 +263,26 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change',functio
 $('#appbundle_marinahumedacotizacion_mhcservicios_1_cantidad').keyup(function () {
     e_cantidad = $(this).val();
     e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val();
+    e_precio_mxn = (e_precio * dolar).toFixed(2);
+
     $('#e_cantidad').html(e_cantidad);
+    $('#e_cantidad_mxn').html(e_cantidad);
+
     calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
+    calculaSubtotales(e_cantidad,e_precio_mxn,$('#e_subtotal_mxn'),$('#e_iva_mxn'),$('#e_descuento_mxn'),$('#e_total_mxn'));
     calculaTotales();
 });
 
 $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').on('change',function () {
     e_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_1_cantidad').val();
     e_precio = $(this).val();
+    e_precio_mxn = (e_precio * dolar).toFixed(2);
+
     $('#e_precio').html('$ '+e_precio);
+    $('#e_precio_mxn').html('$ '+e_precio_mxn);
+
     calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
+    calculaSubtotales(e_cantidad,e_precio_mxn,$('#e_subtotal_mxn'),$('#e_iva_mxn'),$('#e_descuento_mxn'),$('#e_total_mxn'));
     calculaTotales();
 });
 
@@ -270,12 +296,16 @@ function recalculaSubtotalesYtotal() {
 
     de_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').val();
     de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
+    de_precio_mxn = de_precio * dolar;
     //$('#de_cantidad').html(de_cantidad);
     calculaSubtotales(de_cantidad,de_precio,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
+    calculaSubtotales(de_cantidad,de_precio_mxn,$('#de_subtotal_mxn'),$('#de_iva_mxn'),$('#de_descuento_mxn'),$('#de_total_mxn'));
 
     e_cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_1_cantidad').val();
     e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val();
+    e_precio_mxn = e_precio * dolar;
     calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
+    calculaSubtotales(e_cantidad,e_precio_mxn,$('#e_subtotal_mxn'),$('#e_iva_mxn'),$('#e_descuento_mxn'),$('#e_total_mxn'));
 
     calculaTotales();
 }
@@ -330,6 +360,14 @@ function calculaTotales() {
     $('#grandecuento').html(grandescuento);
     $('#grantot').html(grantotal);
 
+    var gransubtotalmxn = (gransubtotal * dolar).toFixed(2);
+    var granivamxn = (graniva * dolar).toFixed(2);
+    var grandescuentomxn = (grandescuento * dolar).toFixed(2);
+    var grantotalmxn = (grantotal * dolar).toFixed(2);
+    $('#gransubtot_mxn').html(gransubtotalmxn);
+    $('#graniva_mxn').html(granivamxn);
+    $('#grandecuento_mxn').html(grandescuentomxn);
+    $('#grantot_mxn').html(grantotalmxn);
 }
 
 // $('#appbundle_marinahumedacotizacion_mhcservicios_4_estatus').on('click',function () {

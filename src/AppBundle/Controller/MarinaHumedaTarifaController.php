@@ -28,13 +28,14 @@ class MarinaHumedaTarifaController extends Controller
 
         return $this->render('marinahumedatarifa/index.html.twig', array(
             'marinaHumedaTarifas' => $marinaHumedaTarifas,
+            'marinatarifamenu' => 1
         ));
     }
 
     /**
      * Creates a new marinaHumedaTarifa entity.
      *
-     * @Route("/new", name="marinahumeda-tarifas_new")
+     * @Route("/nuevo", name="marinahumeda-tarifas_new")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -54,6 +55,7 @@ class MarinaHumedaTarifaController extends Controller
         return $this->render('marinahumedatarifa/new.html.twig', array(
             'marinaHumedaTarifa' => $marinaHumedaTarifa,
             'form' => $form->createView(),
+            'marinatarifamenu' => 1
         ));
     }
 
@@ -76,7 +78,7 @@ class MarinaHumedaTarifaController extends Controller
     /**
      * Displays a form to edit an existing marinaHumedaTarifa entity.
      *
-     * @Route("/{id}/edit", name="marinahumeda-tarifas_edit")
+     * @Route("/{id}/editar", name="marinahumeda-tarifas_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, MarinaHumedaTarifa $marinaHumedaTarifa)
@@ -95,6 +97,7 @@ class MarinaHumedaTarifaController extends Controller
             'marinaHumedaTarifa' => $marinaHumedaTarifa,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'marinatarifamenu' => 1
         ));
     }
 
