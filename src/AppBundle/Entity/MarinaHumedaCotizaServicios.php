@@ -21,6 +21,12 @@ class MarinaHumedaCotizaServicios
      */
     private $id;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="tipo", type="integer")
+     */
+    private $tipo;
 
     /**
      * @var float
@@ -80,12 +86,12 @@ class MarinaHumedaCotizaServicios
      */
     private $marinahumedacotizacion;
 
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MarinaHumedaServicio")
-     * @ORM\JoinColumn(name="idservicio", referencedColumnName="id")
-     */
-    private $marinahumedaservicio;
+//    /**
+//     *
+//     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MarinaHumedaServicio")
+//     * @ORM\JoinColumn(name="idservicio", referencedColumnName="id")
+//     */
+//    private $marinahumedaservicio;
 
     /**
      * Get id
@@ -96,6 +102,31 @@ class MarinaHumedaCotizaServicios
     {
         return $this->id;
     }
+
+    /**
+     * set tipo
+     *
+     * @param int $tipo
+     *
+     *  @return MarinaHumedaCotizaServicios
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return int
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
 
     /**
      * Set cantidad
@@ -312,28 +343,30 @@ class MarinaHumedaCotizaServicios
         return $this->marinahumedacotizacion;
     }
 
-    /**
-     * Set marinahumedaservicio
-     *
-     * @param \AppBundle\Entity\MarinaHumedaServicio $marinahumedaservicio
-     *
-     * @return MarinaHumedaServicio
-     */
-    public function setMarinaHumedaServicio(\AppBundle\Entity\MarinaHumedaServicio $marinahumedaservicio = null)
-    {
-        $this->marinahumedaservicio = $marinahumedaservicio;
-        return $this;
-    }
 
-    /**
-     * Get marinahumedaservicio
-     *
-     * @return \AppBundle\Entity\MarinaHumedaServicio
-     */
-    public function getMarinaHumedaServicio()
-    {
-        return $this->marinahumedaservicio;
-    }
+
+//    /**
+//     * Set marinahumedaservicio
+//     *
+//     * @param \AppBundle\Entity\MarinaHumedaServicio $marinahumedaservicio
+//     *
+//     * @return MarinaHumedaServicio
+//     */
+//    public function setMarinaHumedaServicio(\AppBundle\Entity\MarinaHumedaServicio $marinahumedaservicio = null)
+//    {
+//        $this->marinahumedaservicio = $marinahumedaservicio;
+//        return $this;
+//    }
+//
+//    /**
+//     * Get marinahumedaservicio
+//     *
+//     * @return \AppBundle\Entity\MarinaHumedaServicio
+//     */
+//    public function getMarinaHumedaServicio()
+//    {
+//        return $this->marinahumedaservicio;
+//    }
 
 
 }

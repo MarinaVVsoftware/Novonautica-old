@@ -90,9 +90,10 @@ class MarinaHumedaCotizacionController extends Controller
             $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
 
             // Días Estadía
-            $servicio = $this->getDoctrine()
-                            ->getRepository(MarinaHumedaServicio::class)
-                            ->find(1);
+//            $servicio = $this->getDoctrine()
+//                            ->getRepository(MarinaHumedaServicio::class)
+//                            ->find(1);
+            $tiposervicio = 1;
             $llegada = $marinaHumedaCotizacion->getFechaLlegada();
             $salida = $marinaHumedaCotizacion->getFechaSalida();
 
@@ -110,7 +111,7 @@ class MarinaHumedaCotizacionController extends Controller
             $total = $subTotal - $descuentoTot + $ivaTot;
 
             $marinaDiasEstadia
-                ->setMarinaHumedaServicio($servicio)
+                ->setTipo($tiposervicio)
                 ->setEstatus(1)
                 ->setCantidad($cantidad)
                 ->setPrecio($precio)
@@ -125,9 +126,10 @@ class MarinaHumedaCotizacionController extends Controller
             $granTotal+=$total;
 
             // Conexión a electricidad
-            $servicio = $this->getDoctrine()
-                ->getRepository(MarinaHumedaServicio::class)
-                ->find(2);
+//            $servicio = $this->getDoctrine()
+//                ->getRepository(MarinaHumedaServicio::class)
+//                ->find(2);
+            $tiposervicio = 2;
             $cantidad = $marinaElectricidad->getCantidad();
             $precio = $marinaElectricidad->getPrecioAux()->getCosto();
 
@@ -137,7 +139,7 @@ class MarinaHumedaCotizacionController extends Controller
             $total = $subTotal - $descuentoTot + $ivaTot;
 
             $marinaElectricidad
-                ->setMarinaHumedaServicio($servicio)
+                ->setTipo($tiposervicio)
                 ->setEstatus(1)
                 ->setPrecio($precio)
                 ->setSubtotal($subTotal)
@@ -230,7 +232,7 @@ class MarinaHumedaCotizacionController extends Controller
 
         $marinaDiasEstadia = new MarinaHumedaCotizaServicios();
         $marinaDiasEstadia
-            ->setMarinaHumedaServicio($servicios[0]->getMarinaHumedaServicio())
+            ->setTipo($servicios[0]->getTipo())
             ->setCantidad($servicios[0]->getCantidad())
             ->setPrecio($servicios[0]->getPrecio())
             ->setSubtotal($servicios[0]->getSubtotal())
@@ -242,7 +244,7 @@ class MarinaHumedaCotizacionController extends Controller
 
         $marinaElectricidad = new MarinaHumedaCotizaServicios();
         $marinaElectricidad
-            ->setMarinaHumedaServicio($servicios[1]->getMarinaHumedaServicio())
+            ->setTipo($servicios[1]->getTipo())
             ->setCantidad($servicios[1]->getCantidad())
             ->setPrecio($servicios[1]->getPrecio())
             ->setSubtotal($servicios[1]->getSubtotal())

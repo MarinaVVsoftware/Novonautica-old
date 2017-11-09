@@ -15,6 +15,7 @@
 {% set actMN='' %}
 {% set actMC='' %}
 {% set actMT='' %}
+{% set actMS='' %}
 {% set actAN='' %}
 {% set actAC='' %}
 {% set actAA='' %}
@@ -48,6 +49,10 @@
 {% if marinatarifamenu is defined %}
     {% set menuMarina=' active menu-open' %}
     {% set actMT=' active' %}
+{% endif %}
+{% if marinaserviciomenu is defined %}
+    {% set menuMarina=' active menu-open' %}
+    {% set actMS=' active' %}
 {% endif %}
 {% if astilleronuevacotizacion is defined %}
     {% set menuAstillero = ' active menu-open' %}
@@ -144,6 +149,11 @@
                     <li class="{{ actMT }}">
                         <a href="{{ path('marinahumeda-tarifas_index') }}">
                             <i class="fa fa-minus"></i> Tarifas
+                        </a>
+                    </li>
+                    <li class="{{ actMS }}">
+                        <a href="{{ path('marina-humeda-servicio_index') }}">
+                            <i class="fa fa-minus"></i> Servicios Adicionales
                         </a>
                     </li>
                 </ul>

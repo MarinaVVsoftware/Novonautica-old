@@ -151,6 +151,11 @@ class Barco
     private $mhcotizaciones;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaCotizacionAdicional", mappedBy="barco")
+     */
+    private $mhcotizacionesadicionales;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizacion", mappedBy="barco")
      */
     private $astillerocotizaciones;
@@ -158,6 +163,7 @@ class Barco
     public function __construct() {
         $this->motores = new ArrayCollection();
         $this->mhcotizaciones = new ArrayCollection();
+        $this->mhcotizacionesadicionales = new ArrayCollection();
         $this->astillerocotizaciones = new ArrayCollection();
     }
 
