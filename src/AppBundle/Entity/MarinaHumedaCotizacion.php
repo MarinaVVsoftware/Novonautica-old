@@ -137,6 +137,20 @@ class MarinaHumedaCotizacion
     private $estatus;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="folio", type="integer", length=255)
+     */
+    private $folio;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="foliorecotiza", type="integer", length=255)
+     */
+    private $foliorecotiza;
+
+    /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="mhcotizaciones")
      * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
@@ -487,6 +501,54 @@ class MarinaHumedaCotizacion
     }
 
     /**
+     * set folio
+     *
+     * @param integer $folio
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setFolio($folio)
+    {
+        $this->folio = $folio;
+
+        return $this;
+    }
+
+    /**
+     * Get folio
+     *
+     * @return int
+     */
+    public function getFolio()
+    {
+        return $this->folio;
+    }
+
+    /**
+     * set foliorecotiza
+     *
+     * @param integer $foliorecotiza
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setFoliorecotiza($foliorecotiza)
+    {
+        $this->foliorecotiza = $foliorecotiza;
+
+        return $this;
+    }
+
+    /**
+     * Get foliorecotiza
+     *
+     * @return int
+     */
+    public function getFoliorecotiza()
+    {
+        return $this->foliorecotiza;
+    }
+
+    /**
      * Set notascliente
      *
      * @param string $notascliente
@@ -637,4 +699,8 @@ class MarinaHumedaCotizacion
     {
         $this->mhcservicios->removeElement($mhcservicio);
     }
+
+
+
+
 }

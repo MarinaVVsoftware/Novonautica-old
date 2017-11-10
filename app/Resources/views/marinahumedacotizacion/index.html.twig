@@ -16,7 +16,7 @@
                         <table class="table text-center">
                             <thead>
                             <tr>
-                                <th>Id</th>
+                                <th>Folio</th>
                                 <th>Cliente</th>
                                 <th>Barco</th>
                                 <th>Fecha llegada</th>
@@ -35,7 +35,11 @@
                             {% for marinaHumedaCotizacion in marinaHumedaCotizacions %}
                                 <tr>
                                     <td>
-                                        <a href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">{{ marinaHumedaCotizacion.id }}</a>
+                                        {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
+                                            {{ marinaHumedaCotizacion.folio }}
+                                        {% else %}
+                                            {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
+                                        {% endif %}
                                     </td>
                                     <td>{{ marinaHumedaCotizacion.cliente }}</td>
                                     <td>{{ marinaHumedaCotizacion.barco }}</td>
@@ -67,16 +71,23 @@
                                         {% elseif marinaHumedaCotizacion.validacliente == 2 %}
                                             <img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">
                                         {% endif %}
+
                                     </td>
                                     <td>
                                         <a class="btn btn-morado-claro"
                                            href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">Detalle</a>
-                                        <a class="btn btn-azul"
-                                           href="{{ path('marina-humeda_validar', { 'id': marinaHumedaCotizacion.id }) }}">Validar</a>
-                                        <a class="btn btn-naranja"
-                                           href="{{ path('marina-humeda_recotizar', { 'id': marinaHumedaCotizacion.id }) }}">Recotizar</a>
-                                        <a class="btn btn-azul"
-                                           href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">Editar</a>
+                                        {% if marinaHumedaCotizacion.validanovo == 0 or
+                                             (marinaHumedaCotizacion.validanovo == 2 and  marinaHumedaCotizacion.validacliente == 0)
+                                        %}
+                                            <a class="btn btn-azul" href="{{ path('marina-humeda_validar', { 'id': marinaHumedaCotizacion.id }) }}">Validar</a>
+                                        {% endif %}
+                                        {% if (marinaHumedaCotizacion.validanovo == 1 or
+                                              marinaHumedaCotizacion.validacliente == 1) and
+                                              marinaHumedaCotizacion.estatus == 1
+                                        %}
+                                            <a class="btn btn-naranja" href="{{ path('marina-humeda_recotizar', { 'id': marinaHumedaCotizacion.id }) }}">Recotizar</a>
+                                        {% endif %}
+                                        {# <a class="btn btn-azul" href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">Editar</a> #}
                                     </td>
                                 </tr>
                             {% endfor %}

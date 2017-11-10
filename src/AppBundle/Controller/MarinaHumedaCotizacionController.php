@@ -13,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Marinahumedacotizacion controller.
@@ -50,6 +52,23 @@ class MarinaHumedaCotizacionController extends Controller
         return $this->render('marina-administracion.twig', [
             'marinaadministracion' => 1
         ]);
+    }
+
+    /**
+     * @Route("/cotizacion-pdf/{id}", name="marina-pdf")
+     * @Method("GET")
+     *
+     */
+    public function displayMarinaPDF(Request $request,MarinaHumedaCotizacion $mhc)
+    {
+        $html = $this->renderView('marinahumedacotizacion/cotizacionpdf.html.twig', [
+            'title' => 'Cotizacion-'.$mhc->getFolio().'.pdf',
+            'marinaHumedaCotizacion' => $mhc
+        ]);
+        return new PdfResponse(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            'Cotizacion-'.$mhc->getFolio().'-'.$mhc->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
+        );
     }
 
     /**
@@ -153,7 +172,14 @@ class MarinaHumedaCotizacionController extends Controller
             $granTotal+=$total;
 
             //-------------------------------------------------
+
             $fechaHoraActual = new \DateTime('now');
+            $foliobase = $this->getDoctrine()
+                                ->getRepository(ValorSistema::class)
+                                ->find(3)
+                                ->getValor();
+            $folionuevo = $foliobase + 1;
+
             $marinaHumedaCotizacion
                 ->setDolar($dolar)
                 ->setIva($iva)
@@ -164,7 +190,13 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setValidanovo(0)
                 ->setValidacliente(0)
                 ->setEstatus(1)
-                ->setFecharegistro($fechaHoraActual);
+                ->setFecharegistro($fechaHoraActual)
+                ->setFolio($folionuevo)
+                ->setFoliorecotiza(0);
+            $folioactualiza = $this->getDoctrine()
+                                    ->getRepository(ValorSistema::class)
+                                    ->find(3)
+                                    ->setValor($folionuevo);
 
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
@@ -209,7 +241,17 @@ class MarinaHumedaCotizacionController extends Controller
      */
     public function recotizaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacionAnterior)
     {
+        if ($marinaHumedaCotizacionAnterior->getEstatus() == 0 ||
+            $marinaHumedaCotizacionAnterior->getValidacliente() ==2 ||
+            $marinaHumedaCotizacionAnterior->getValidanovo() == 0 ||
+            ($marinaHumedaCotizacionAnterior->getValidanovo() == 2 && $marinaHumedaCotizacionAnterior->getValidacliente() ==0)
+            ) {
+            throw new NotFoundHttpException();
+        }
+
         $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
+        $foliorecotizado = $marinaHumedaCotizacionAnterior->getFoliorecotiza()+1;
+
         $marinaHumedaCotizacion
             ->setCliente($marinaHumedaCotizacionAnterior->getCliente())
             ->setBarco($marinaHumedaCotizacionAnterior->getBarco())
@@ -224,7 +266,8 @@ class MarinaHumedaCotizacionController extends Controller
             ->setTotal($marinaHumedaCotizacionAnterior->getTotal())
             ->setValidanovo(0)
             ->setValidacliente(0)
-            ->setEstatus(1)
+            ->setFolio($marinaHumedaCotizacionAnterior->getFolio())
+            ->setFoliorecotiza($foliorecotizado)
             ;
 
 
@@ -337,8 +380,10 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setValidacliente(0)
                 ->setEstatus(1)
                 ->setFecharegistro($fechaHoraActual);
-
+            $marinaHumedaCotizacionAnterior
+                ->setEstatus(0);
             $em->persist($marinaHumedaCotizacion);
+            $em->persist($marinaHumedaCotizacionAnterior);
             $em->flush();
 
             return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
@@ -360,6 +405,13 @@ class MarinaHumedaCotizacionController extends Controller
      **/
     public function editAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
+        if ($marinaHumedaCotizacion->getEstatus() == 0 ||
+            $marinaHumedaCotizacion->getValidanovo() == 1 ||
+            $marinaHumedaCotizacion->getValidacliente() ==1 ||
+            $marinaHumedaCotizacion->getValidacliente() ==2) {
+            throw new NotFoundHttpException();
+        }
+
         $servicios = $marinaHumedaCotizacion->getMHCservicios();
 
         $deleteForm = $this->createDeleteForm($marinaHumedaCotizacion);
