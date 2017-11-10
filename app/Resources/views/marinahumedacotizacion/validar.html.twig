@@ -12,6 +12,13 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <h3 class="panel-title">Marina Humeda Validación</h3>
+                            <span>
+                                {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
+                                    {{ marinaHumedaCotizacion.folio }}
+                                {% else %}
+                                    {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
+                                {% endif %}
+                            </span>
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_index') }}">Regresar</a>

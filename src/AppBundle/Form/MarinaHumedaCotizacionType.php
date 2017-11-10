@@ -72,7 +72,8 @@ class MarinaHumedaCotizacionType extends AbstractType
             ])
             ->add('notasnovo',TextareaType::class,[
                 'label' => 'Observaciones',
-                'attr' => ['rows' => 7]
+                'attr' => ['rows' => 7],
+                'required' => false
             ])
             ->add('validacliente', ChoiceType::class,[
                 'choices' =>[ 'Aceptar' => 2, 'Rechazar' => 1, 'Pendiente' => 0 ],
@@ -84,7 +85,8 @@ class MarinaHumedaCotizacionType extends AbstractType
             ])
             ->add('notascliente',TextareaType::class,[
                 'label' => 'Observaciones',
-                'attr' => ['rows' => 7]
+                'attr' => ['rows' => 7],
+                'required' => false
             ])
         ;
 
