@@ -43,8 +43,14 @@
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <th>Id</th>
-                                            <td>{{ marinaHumedaCotizacion.id }}</td>
+                                            <th>Folio</th>
+                                            <td>
+                                                {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
+                                                    {{ marinaHumedaCotizacion.folio }}
+                                                {% else %}
+                                                    {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
+                                                {% endif %}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th>Cliente</th>
@@ -344,12 +350,15 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <a target="_blank" class="btn btn-contorno-azul pull-right" href="{{ path('marina-pdf') }}">
-                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            <a target="_blank" class="btn btn-morado-claro pull-right" href="{{ path('marina-pdf',{'id': marinaHumedaCotizacion.id }) }}">
+                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                 Ver
                             </a>
                         </div>
                     </div>
+                    {% if marinaHumedaCotizacion.validanovo == 0 or
+                    (marinaHumedaCotizacion.validanovo == 2 and  marinaHumedaCotizacion.validacliente == 0)
+                    %}
                     <div class="row espacio-linea-arriba2">
                         <div class="col-sm-12">
                             <a class="btn btn-azul pull-right" href="{{ path('marina-humeda_validar', { 'id': marinaHumedaCotizacion.id }) }}">
@@ -358,6 +367,11 @@
                             </a>
                         </div>
                     </div>
+                    {% endif %}
+                    {% if (marinaHumedaCotizacion.validanovo == 1 or
+                    marinaHumedaCotizacion.validacliente == 1) and
+                    marinaHumedaCotizacion.estatus == 1
+                    %}
                     <div class="row espacio-linea-arriba2">
                         <div class="col-sm-12">
                             <a class="btn btn-naranja pull-right" href="{{ path('marina-humeda_recotizar', { 'id': marinaHumedaCotizacion.id }) }}">
@@ -366,6 +380,7 @@
                             </a>
                         </div>
                     </div>
+                    {% endif %}
                     {#<div class="row">#}
                         {#<div class="col-sm-12">#}
                             {#form_start(delete_form)#}

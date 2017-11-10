@@ -124,6 +124,21 @@ class Cliente
      */
     private $correofacturacion;
 
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="montomonedero", type="float", nullable=true)
+     */
+    private $montomonedero;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="notamonedero", type="text", nullable=true)
+     */
+    private $notamonedero;
+
     /**
      * @var bool
      *
@@ -142,6 +157,11 @@ class Cliente
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Barco", mappedBy="cliente",cascade={"persist"})
      */
     private $barcos;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MonederoMovimiento", mappedBy="cliente")
+     */
+    private $monederomovimientos;
 
     /**
      *
@@ -164,6 +184,7 @@ class Cliente
 
     public function __construct() {
         $this->barcos = new ArrayCollection();
+        $this->monederomovimientos = new ArrayCollection();
         $this->mhcotizaciones = new ArrayCollection();
         $this->mhcotizacionesadicionales = new ArrayCollection();
         //$this->mhcservicios = new ArrayCollection();
@@ -449,6 +470,56 @@ class Cliente
     }
 
     /**
+     * set montomonedero
+     *
+     * @param float $montomonedero
+     *
+     * @return Cliente
+     */
+    public function setMontomonedero($montomonedero)
+    {
+        $this->montomonedero = $montomonedero;
+
+        return $this;
+    }
+
+    /**
+     * Get montomonedero
+     *
+     * @return float
+     *
+     */
+    public function getMontomonedero()
+    {
+        return $this->montomonedero;
+    }
+
+    /**
+     * set notamonedero
+     *
+     * @param string $notamonedero
+     *
+     * @return Cliente
+     */
+    public function setNotamonedero($notamonedero)
+    {
+        $this->notamonedero = $notamonedero;
+
+        return $this;
+    }
+
+    /**
+     * Get notamonedero
+     *
+     * @return string
+     *
+     */
+    public function getNotamonedero()
+    {
+        return $this->notamonedero;
+    }
+
+    /**
      * Set estatus
      *
      * @param boolean $estatus
@@ -635,5 +706,43 @@ class Cliente
     public function getMhcotizacionesadicionales()
     {
         return $this->mhcotizacionesadicionales;
+    }
+
+
+
+
+
+    /**
+     * Add monederomovimiento
+     *
+     * @param \AppBundle\Entity\MonederoMovimiento $monederomovimiento
+     *
+     * @return Cliente
+     */
+    public function addMonederomovimiento(\AppBundle\Entity\MonederoMovimiento $monederomovimiento)
+    {
+        $this->monederomovimientos[] = $monederomovimiento;
+
+        return $this;
+    }
+
+    /**
+     * Remove monederomovimiento
+     *
+     * @param \AppBundle\Entity\MonederoMovimiento $monederomovimiento
+     */
+    public function removeMonederomovimiento(\AppBundle\Entity\MonederoMovimiento $monederomovimiento)
+    {
+        $this->monederomovimientos->removeElement($monederomovimiento);
+    }
+
+    /**
+     * Get monederomovimientos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMonederomovimientos()
+    {
+        return $this->monederomovimientos;
     }
 }
