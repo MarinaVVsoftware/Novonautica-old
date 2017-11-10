@@ -135,9 +135,9 @@ class Cliente
     /**
      * @var string
      *
-     * @ORM\Column(name="notamonedero", type="text", nullable=true)
+     * @ORM\Column(name="password", type="text")
      */
-    private $notamonedero;
+    private $password;
 
     /**
      * @var bool
@@ -495,28 +495,28 @@ class Cliente
     }
 
     /**
-     * set notamonedero
+     * set password
      *
-     * @param string $notamonedero
+     * @param string $password
      *
      * @return Cliente
      */
-    public function setNotamonedero($notamonedero)
+    public function setPassword($password)
     {
-        $this->notamonedero = $notamonedero;
+        $this->password = $password;
 
         return $this;
     }
 
     /**
-     * Get notamonedero
+     * Get password
      *
      * @return string
      *
      */
-    public function getNotamonedero()
+    public function getPassword()
     {
-        return $this->notamonedero;
+        return $this->password;
     }
 
     /**

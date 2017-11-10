@@ -42,7 +42,7 @@ class ClienteController extends Controller
      * @Route("/nuevo", name="cliente_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request,\Swift_Mailer $mailer)
     {
         $cliente = new Cliente();
         $barco = new Barco();
@@ -61,11 +61,34 @@ class ClienteController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             $fechaHoraActual = new \DateTime('now');
+
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < 8; $i++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+
             $barco->setFecharegistro($fechaHoraActual);
-            $cliente->setFecharegistro($fechaHoraActual);
+            $cliente->setFecharegistro($fechaHoraActual)
+                    ->setPassword($randomString);
 
             $em->persist($cliente);
             $em->flush();
+
+            // Enviar correo de confirmacion
+            $message = (new \Swift_Message('¡Has sido dado de alta en NovoNautica!'))
+                ->setFrom('noresponder@novonautica.com')
+                ->setTo($cliente->getCorreo())
+                ->setBcc('admin@novonautica.com')
+                ->setBody(
+                    $this->renderView(':cliente:correo.alta.twig', [
+                        'correo' => $cliente->getCorreo(),
+                        'password' => $randomString
+                    ]),
+                    'text/html'
+                );
+            $mailer->send($message);
 
             return $this->redirectToRoute('cliente_show', array('id' => $cliente->getId()));
 
