@@ -54,7 +54,8 @@ security:
             security: true
             anonymous: true
     access_control:
-        - { path: /logout, roles: ROLE_ADMIN }
+        - { path: /marina-humeda/confirma/.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /logout, roles: [ROLE_ADMIN,ROLE_MARINA,ROLE_ASTILLERO] }
         - { path: /inicio, roles: [ROLE_ADMIN,ROLE_MARINA,ROLE_ASTILLERO] }
         - { path: /clientes, roles: ROLE_ADMIN }
         - { path: /marina, roles: [ROLE_ADMIN,ROLE_MARINA] }
@@ -64,5 +65,3 @@ security:
         - { path: /contabilidad, roles: ROLE_ADMIN }
         - { path: /reportes, roles: ROLE_ADMIN }
         - { path: /usuario, roles: ROLE_ADMIN }
-#        - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: /.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -154,14 +154,14 @@ class MarinaHumedaCotizacion
     /**
      * @var string
      *
-     * @ORM\Column(name="tokenacepta", type="string", length=100, nullable=true)
+     * @ORM\Column(name="tokenacepta", type="string", length=110, nullable=true)
      */
     private $tokenacepta;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="tokenrechaza", type="string", length=100, nullable=true)
+     * @ORM\Column(name="tokenrechaza", type="string", length=110, nullable=true)
      */
     private $tokenrechaza;
 
@@ -192,24 +192,6 @@ class MarinaHumedaCotizacion
 //    {
 //        return $this->;
 //    }
-
-    /**
-     * Generate a token
-     *
-     * @return string (100 characters)
-     */
-    function generaToken()
-    {
-        $length = 100;
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $token = '';
-
-        for ($i = 0; $i < $length; $i++) {
-            $token .= $characters[mt_rand(0, strlen($characters) - 1)];
-        }
-        return $token;
-
-    }
 
     /**
      * Get id

@@ -71,14 +71,11 @@
                                         {% elseif marinaHumedaCotizacion.validacliente == 2 %}
                                             <img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">
                                         {% endif %}
-
                                     </td>
                                     <td>
                                         <a class="btn btn-morado-claro"
                                            href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">Detalle</a>
-                                        {% if marinaHumedaCotizacion.validanovo == 0 or
-                                             (marinaHumedaCotizacion.validanovo == 2 and  marinaHumedaCotizacion.validacliente == 0)
-                                        %}
+                                        {% if marinaHumedaCotizacion.validanovo == 0 %}
                                             <a class="btn btn-azul" href="{{ path('marina-humeda_validar', { 'id': marinaHumedaCotizacion.id }) }}">Validar</a>
                                         {% endif %}
                                         {% if (marinaHumedaCotizacion.validanovo == 1 or

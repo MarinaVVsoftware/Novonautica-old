@@ -128,9 +128,9 @@ class Cliente
     /**
      * @var float
      *
-     * @ORM\Column(name="montomonedero", type="float", nullable=true)
+     * @ORM\Column(name="monederomarinahumeda", type="float", nullable=true)
      */
-    private $montomonedero;
+    private $monederomarinahumeda;
 
     /**
      * @var string
@@ -470,28 +470,28 @@ class Cliente
     }
 
     /**
-     * set montomonedero
+     * set monederomarinahumeda
      *
-     * @param float $montomonedero
+     * @param float $monederomarinahumeda
      *
      * @return Cliente
      */
-    public function setMontomonedero($montomonedero)
+    public function setMonederomarinahumeda($monederomarinahumeda)
     {
-        $this->montomonedero = $montomonedero;
+        $this->monederomarinahumeda = $monederomarinahumeda;
 
         return $this;
     }
 
     /**
-     * Get montomonedero
+     * Get monederomarinahumeda
      *
      * @return float
      *
      */
-    public function getMontomonedero()
+    public function getMonederomarinahumeda()
     {
-        return $this->montomonedero;
+        return $this->monederomarinahumeda;
     }
 
     /**

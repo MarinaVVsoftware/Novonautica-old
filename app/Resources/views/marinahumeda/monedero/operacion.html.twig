@@ -15,7 +15,7 @@
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right"
-                               href="{{ path('monedero_index') }}">
+                               href="{{ path('mh_monedero_index') }}">
                                 Regresar
                             </a>
                         </div>
@@ -30,7 +30,7 @@
                             <label>Cliente</label>
                             <div class='info-input'> {{ monederoMovimiento.cliente }}</div>
                             <label>Monto actual</label>
-                            <div class='info-input'> $ {{ monederoMovimiento.cliente.montoMonedero|number_format(2,'.',',') }}</div>
+                            <div class='info-input'> $ {{ monederoMovimiento.cliente.monederomarinahumeda|number_format(2,'.',',') }}</div>
                             {{ form_widget(form) }}
                         </div>
                     </div>

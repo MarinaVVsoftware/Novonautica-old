@@ -57,6 +57,14 @@ class MonederoMovimiento
     private $resultante;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="tipo", type="integer")
+     */
+    private $tipo;
+
+
+    /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="monederomovimientos")
      * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
@@ -191,6 +199,30 @@ class MonederoMovimiento
     public function getResultante()
     {
         return $this->resultante;
+    }
+
+    /**
+     * Set tipo
+     *
+     * @param integer $tipo
+     *
+     * @return MonederoMovimiento
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return int
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
     }
 
     /**
