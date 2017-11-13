@@ -128,16 +128,16 @@ class Cliente
     /**
      * @var float
      *
-     * @ORM\Column(name="montomonedero", type="float", nullable=true)
+     * @ORM\Column(name="monederomarinahumeda", type="float", nullable=true)
      */
-    private $montomonedero;
+    private $monederomarinahumeda;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="notamonedero", type="text", nullable=true)
+     * @ORM\Column(name="password", type="text")
      */
-    private $notamonedero;
+    private $password;
 
     /**
      * @var bool
@@ -470,53 +470,53 @@ class Cliente
     }
 
     /**
-     * set montomonedero
+     * set monederomarinahumeda
      *
-     * @param float $montomonedero
+     * @param float $monederomarinahumeda
      *
      * @return Cliente
      */
-    public function setMontomonedero($montomonedero)
+    public function setMonederomarinahumeda($monederomarinahumeda)
     {
-        $this->montomonedero = $montomonedero;
+        $this->monederomarinahumeda = $monederomarinahumeda;
 
         return $this;
     }
 
     /**
-     * Get montomonedero
+     * Get monederomarinahumeda
      *
      * @return float
      *
      */
-    public function getMontomonedero()
+    public function getMonederomarinahumeda()
     {
-        return $this->montomonedero;
+        return $this->monederomarinahumeda;
     }
 
     /**
-     * set notamonedero
+     * set password
      *
-     * @param string $notamonedero
+     * @param string $password
      *
      * @return Cliente
      */
-    public function setNotamonedero($notamonedero)
+    public function setPassword($password)
     {
-        $this->notamonedero = $notamonedero;
+        $this->password = $password;
 
         return $this;
     }
 
     /**
-     * Get notamonedero
+     * Get password
      *
      * @return string
      *
      */
-    public function getNotamonedero()
+    public function getPassword()
     {
-        return $this->notamonedero;
+        return $this->password;
     }
 
     /**

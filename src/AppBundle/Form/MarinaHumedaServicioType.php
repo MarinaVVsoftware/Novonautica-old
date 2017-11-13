@@ -24,7 +24,8 @@ class MarinaHumedaServicioType extends AbstractType
                 'required'=>false
             ])
             ->add('precio',TextType::class,[
-                'required'=>false
+                'required'=>false,
+                'attr' => ['class' => 'esdecimal']
             ]);
     }
     

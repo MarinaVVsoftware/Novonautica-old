@@ -34,13 +34,16 @@ class BarcoType extends AbstractType
                 'required' => false
             ])
             ->add('calado',TextType::class,[
-                'required' => false
+                'required' => false,
+                'attr' => ['class' => 'esdecimal']
             ])
             ->add('manga',TextType::class,[
-                'required' => false
+                'required' => false,
+                'attr' => ['class' => 'esdecimal']
             ])
             ->add('eslora',TextType::class,[
-                'required' => false
+                'required' => false,
+                'attr' => ['class' => 'esdecimal']
             ])
             ->add('nombreResponsable',TextType::class,[
                 'label' => 'Nombre del responsable',

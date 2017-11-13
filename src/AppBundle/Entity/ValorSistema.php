@@ -51,6 +51,24 @@ class ValorSistema
     private $unidad;
 
     /**
+     * Generate a token
+     *
+     * @return string (100 characters)
+     */
+    function generaToken($length)
+    {
+        //$length = 100;
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $token = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $token .= $characters[mt_rand(0, strlen($characters) - 1)];
+        }
+        return $token;
+
+    }
+
+    /**
      * Get id
      *
      * @return int

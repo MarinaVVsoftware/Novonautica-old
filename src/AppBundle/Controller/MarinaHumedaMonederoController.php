@@ -18,14 +18,14 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Monedero controller.
  *
- * @Route("monedero")
+ * @Route("marina-humeda-monedero")
  */
-class MonederoController extends Controller
+class MarinaHumedaMonederoController extends Controller
 {
     /**
      * Lists all cliente entities.
      *
-     * @Route("/", name="monedero_index")
+     * @Route("/", name="mh_monedero_index")
      * @Method("GET")
      */
     public function indexAction()
@@ -34,32 +34,31 @@ class MonederoController extends Controller
 
         $clientes = $em->getRepository('AppBundle:Cliente')->findAll();
 
-        return $this->render('monedero/index.html.twig', array(
+        return $this->render('marinahumeda/monedero/index.html.twig', array(
             'clientes' => $clientes,
-            'monederoMenu' => 1
+            'monederoMenuMh' => 1
         ));
     }
 
     /**
      * Finds and displays a marinaHumedaCotizacion entity.
      *
-     * @Route("/{id}", name="monedero_ver")
+     * @Route("/{id}", name="mh_monedero_ver")
      * @Method("GET")
      */
     public function showAction(Cliente $cliente)
     {
 
-        return $this->render('monedero/show.html.twig', array(
+        return $this->render('marinahumeda/monedero/show.html.twig', array(
             'cliente' => $cliente,
-            'monederoMenu' => 1
+            'monederoMenuMh' => 1
         ));
     }
 
 
     /**
-     * Displays a form to edit an existing cliente entity.
      *
-     * @Route("/{id}/editar", name="monedero_edit")
+     * @Route("/{id}/editar", name="mh_monedero_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Cliente $cliente)
@@ -70,18 +69,18 @@ class MonederoController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('monedero_index');
+            return $this->redirectToRoute('mh_monedero_index');
         }
-        return $this->render('monedero/edit.html.twig', array(
+        return $this->render('marinahumeda/monedero/edit.html.twig', array(
             'cliente' => $cliente,
             'edit_form' => $editForm->createView(),
-            'monederoMenu' => 1,
+            'monederoMenuMh' => 1,
         ));
     }
 
     /**
      *
-     * @Route("/{id}/operacion", name="monedero_operacion")
+     * @Route("/{id}/operacion", name="mh_monedero_operacion")
      * @Method({"GET", "POST"})
      */
     public function movimientoAction(Request $request,Cliente $cliente)
@@ -96,7 +95,7 @@ class MonederoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $montoTotal = 0;
-            $montoActual = $cliente->getMontomonedero();
+            $montoActual = $cliente->getMonederomarinahumeda();
             $montoProcesar = $monederoMovimiento->getMonto();
             $operacion = $monederoMovimiento->getOperacion();
 
@@ -113,20 +112,21 @@ class MonederoController extends Controller
             $fechaHoraActual = new \DateTime('now');
             $monederoMovimiento
                 ->setFecha($fechaHoraActual)
-                ->setResultante($montoTotal);
-            $cliente->setMontomonedero($montoTotal);
+                ->setResultante($montoTotal)
+                ->setTipo(1);
+            $cliente->setMonederomarinahumeda($montoTotal);
 
             $em->persist($monederoMovimiento);
             $em->persist($cliente);
             $em->flush();
 
 
-            return $this->redirectToRoute('monedero_index');
+            return $this->redirectToRoute('mh_monedero_index');
         }
-        return $this->render('monedero/operacion.html.twig', array(
+        return $this->render('marinahumeda/monedero/operacion.html.twig', array(
             'monederoMovimiento' => $monederoMovimiento,
             'form' => $form->createView(),
-            'monederoMenu' => 1,
+            'monederoMenuMh' => 1,
         ));
     }
 

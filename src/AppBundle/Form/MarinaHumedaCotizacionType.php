@@ -55,7 +55,8 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'format' => 'yyyy-MM-dd'
             ])
             ->add('descuento',null,[
-                'empty_data' => 0
+                'empty_data' => 0,
+                'attr' => ['class' => 'esdecimal']
             ])
 
             ->add('mhcservicios',CollectionType::class,[
@@ -121,20 +122,22 @@ class MarinaHumedaCotizacionType extends AbstractType
                 $form->remove('descuento');
                 $form->remove('mhcservicios');
 
-                if($cotizacion->getValidanovo()==2) { //si fue aprobado por marina
-                    if($cotizacion->getValidacliente()==2){ //si fue aprobado por el cliente
-                        $form->remove('validanovo');
-                        $form->remove('validacliente');
-                        $form->remove('notasnovo');
-                        $form->remove('notascliente');
-                    }else{
-                        $form->remove('validanovo');
-                        $form->remove('notasnovo');
-                    }
-                }else{
-                    $form->remove('validacliente');
-                    $form->remove('notascliente');
-                }
+                $form->remove('validacliente');
+                $form->remove('notascliente');
+                //if($cotizacion->getValidanovo()==2) { //si fue aprobado por marina
+                //    if($cotizacion->getValidacliente()==2){ //si fue aprobado por el cliente
+                //        $form->remove('validanovo');
+                //       $form->remove('validacliente');
+                //        $form->remove('notasnovo');
+                //        $form->remove('notascliente');
+                //    }else{
+                //        $form->remove('validanovo');
+                //        $form->remove('notasnovo');
+                //    }
+                //}else{
+                //    $form->remove('validacliente');
+                //    $form->remove('notascliente');
+                //}
             }
         });
 

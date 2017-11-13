@@ -34,7 +34,8 @@ class MonederoType extends AbstractType
             ])
             ->add('monto', TextType::class, [
                 'label' => 'Monto a procesar',
-                'required' => false
+                'required' => false,
+                'attr' => ['class' => 'esdecimal']
             ])
             ->add('descripcion', TextareaType::class, [
                 'label' => 'Descripción',

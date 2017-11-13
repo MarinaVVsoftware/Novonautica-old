@@ -26,7 +26,7 @@ class MarinaHumedaServicioController extends Controller
 
         $marinaHumedaServicios = $em->getRepository('AppBundle:MarinaHumedaServicio')->findAll();
 
-        return $this->render('marinahumedaservicio/index.html.twig', array(
+        return $this->render('marinahumeda/servicio/index.html.twig', array(
             'marinaHumedaServicios' => $marinaHumedaServicios,
             'marinaserviciomenu' => 1
         ));
@@ -52,7 +52,7 @@ class MarinaHumedaServicioController extends Controller
             return $this->redirectToRoute('marina-humeda-servicio_index');
         }
 
-        return $this->render('marinahumedaservicio/new.html.twig', array(
+        return $this->render('marinahumeda/servicio/new.html.twig', array(
             'marinaHumedaServicio' => $marinaHumedaServicio,
             'form' => $form->createView(),
             'marinaserviciomenu' => 1
@@ -69,7 +69,7 @@ class MarinaHumedaServicioController extends Controller
     {
         $deleteForm = $this->createDeleteForm($marinaHumedaServicio);
 
-        return $this->render('marinahumedaservicio/show.html.twig', array(
+        return $this->render('marinahumeda/servicio/show.html.twig', array(
             'marinaHumedaServicio' => $marinaHumedaServicio,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -93,7 +93,7 @@ class MarinaHumedaServicioController extends Controller
             return $this->redirectToRoute('marina-humeda-servicio_index');
         }
 
-        return $this->render('marinahumedaservicio/edit.html.twig', array(
+        return $this->render('marinahumeda/servicio/edit.html.twig', array(
             'marinaHumedaServicio' => $marinaHumedaServicio,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

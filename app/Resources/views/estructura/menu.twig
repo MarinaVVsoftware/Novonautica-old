@@ -3,7 +3,6 @@
 {% set submenuMarinaCotizacion='' %}
 {% set submenuMarinaAdicional='' %}
 {% set menuAstillero='' %}
-{% set menuMonedero='' %}
 {% set menuProductos='' %}
 {% set menuRH='' %}
 {% set menuConta='' %}
@@ -20,6 +19,7 @@
 {% set actMCA='' %}
 {% set actMT='' %}
 {% set actMS='' %}
+{% set actMMon='' %}
 {% set actAN='' %}
 {% set actAC='' %}
 {% set actAA='' %}
@@ -67,6 +67,10 @@
     {% set submenuMarinaAdicional=' active' %}
     {% set actMS=' active' %}
 {% endif %}
+{% if monederoMenuMh is defined %}
+    {% set menuMarina=' active menu-open' %}
+    {% set actMMon=' active' %}
+{% endif %}
 {% if astilleronuevacotizacion is defined %}
     {% set menuAstillero = ' active menu-open' %}
     {% set actAN = ' active' %}
@@ -82,9 +86,6 @@
 {% if astilleroodt is defined %}
     {% set menuAstillero = ' active menu-open' %}
     {% set actAO=' active' %}
-{% endif %}
-{% if monederoMenu is defined %}
-    {% set menuMonedero=' active' %}
 {% endif %}
 {% if productosMenu is defined %}
     {% set menuProductos=' active' %}
@@ -187,7 +188,12 @@
                             </li>
                         </ul>
                     </li>
-
+                    <li class="{{ actMMon }}">
+                        <a href="{{ path('mh_monedero_index') }}" class="loadpage">
+                            <i class="fa fa-minus"></i>
+                            <span>Monedero</span>
+                        </a>
+                    </li>
                 </ul>
                 <hr>
             </li>
@@ -220,13 +226,6 @@
                         </a>
                     </li>
                 </ul>
-                <hr>
-            </li>
-            <li class="{{ menuMonedero }}">
-                <a href="{{ path('monedero_index') }}" class="loadpage">
-                    <i class="fa fa-credit-card" aria-hidden="true"></i>
-                    <span>Monedero</span>
-                </a>
                 <hr>
             </li>
             <li class="{{ menuProductos }}">
