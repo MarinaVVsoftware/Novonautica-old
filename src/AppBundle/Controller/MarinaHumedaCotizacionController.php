@@ -74,7 +74,7 @@ class MarinaHumedaCotizacionController extends Controller
 
     /**
      * @Route("/confirma/{token}", name="respuesta-cliente")
-     * @Method({"GET", "POST"})
+     * @Method({"GET"})
      *
      */
     public function repuestaCliente($token)

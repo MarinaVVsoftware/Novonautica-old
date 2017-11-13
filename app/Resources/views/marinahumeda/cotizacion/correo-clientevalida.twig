@@ -302,12 +302,12 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <a href="{{ path('respuesta-cliente',{'token':tokenAcepta }) }}">Aceptar</a>
+            <a href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ path('respuesta-cliente',{'token':tokenAcepta }) }}">Aceptar</a>
             <br>
             <br>
             <br>
             <br>
-            <a href="{{ path('respuesta-cliente',{'token':tokenRechaza }) }}">Rechazar</a>
+            <a href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ path('respuesta-cliente',{'token':tokenRechaza }) }}">Rechazar</a>
         </div>
     </div>
 </div>
