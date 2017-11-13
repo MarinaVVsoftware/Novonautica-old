@@ -24,8 +24,7 @@
                             <th>Ivatotal</th>
                             <th>Descuentototal</th>
                             <th>Total</th>
-                            <th>Fecharegistro</th>
-                            <th>Actions</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -41,14 +40,13 @@
                                 <td>{{ marinaHumedaCotizacionAdicional.ivatotal }}</td>
                                 <td>{{ marinaHumedaCotizacionAdicional.descuentototal }}</td>
                                 <td>{{ marinaHumedaCotizacionAdicional.total }}</td>
-                                <td>{% if marinaHumedaCotizacionAdicional.fecharegistro %}{{ marinaHumedaCotizacionAdicional.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
                                 <td>
                                     <ul>
                                         <li>
-                                            <a href="{{ path('marina-humeda-cotizacion-adicional_show', { 'id': marinaHumedaCotizacionAdicional.id }) }}">show</a>
+                                            <a class="btn btn-morado" href="{{ path('marina-humeda-cotizacion-adicional_show', { 'id': marinaHumedaCotizacionAdicional.id }) }}">Ver</a>
                                         </li>
                                         <li>
-                                            <a href="{{ path('marina-humeda-cotizacion-adicional_edit', { 'id': marinaHumedaCotizacionAdicional.id }) }}">edit</a>
+                                            <a class="btn btn-azul" href="{{ path('marina-humeda-cotizacion-adicional_edit', { 'id': marinaHumedaCotizacionAdicional.id }) }}">Editar</a>
                                         </li>
                                     </ul>
                                 </td>
@@ -59,8 +57,7 @@
 
                     <ul>
                         <li>
-                            <a href="{{ path('marina-humeda-cotizacion-adicional_new') }}">Create a new
-                                marinaHumedaCotizacionAdicional</a>
+                            <a class="btn btn-azul" href="{{ path('marina-humeda-cotizacion-adicional_new') }}">Agregar</a>
                         </li>
                     </ul>
                 </div>

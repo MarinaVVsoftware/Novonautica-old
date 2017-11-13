@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+
 /**
  * Marinahumedacotizacion controller.
  *
@@ -37,7 +38,7 @@ class MarinaHumedaCotizacionController extends Controller
 
         $marinaHumedaCotizacions = $em->getRepository('AppBundle:MarinaHumedaCotizacion')->findAll();
 
-        return $this->render('marinahumedacotizacion/index.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/index.html.twig', array(
             'marinaHumedaCotizacions' => $marinaHumedaCotizacions,
             'marinacotizaciones' => 1
 
@@ -49,7 +50,7 @@ class MarinaHumedaCotizacionController extends Controller
      */
     public function displayMarinaAdministracion(Request $request)
     {
-        return $this->render('marina-administracion.twig', [
+        return $this->render('marinahumeda/marina-administracion.twig', [
             'marinaadministracion' => 1
         ]);
     }
@@ -61,7 +62,7 @@ class MarinaHumedaCotizacionController extends Controller
      */
     public function displayMarinaPDF(Request $request,MarinaHumedaCotizacion $mhc)
     {
-        $html = $this->renderView('marinahumedacotizacion/cotizacionpdf.html.twig', [
+        $html = $this->renderView('marinahumeda/cotizacion/cotizacionpdf.html.twig', [
             'title' => 'Cotizacion-'.$mhc->getFolio().'.pdf',
             'marinaHumedaCotizacion' => $mhc
         ]);
@@ -70,6 +71,55 @@ class MarinaHumedaCotizacionController extends Controller
             'Cotizacion-'.$mhc->getFolio().'-'.$mhc->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
         );
     }
+
+    /**
+     * @Route("/confirma/{token}", name="respuesta-cliente")
+     * @Method({"GET"})
+     *
+     */
+    public function repuestaCliente($token)
+    {
+        $mensaje = '';
+        $em = $this->getDoctrine()->getManager();
+
+        $cotizacionAceptar = $em->getRepository(MarinaHumedaCotizacion::class)
+                                ->findOneBy(['tokenacepta'=>$token]);
+
+        if($cotizacionAceptar){
+            if($cotizacionAceptar->getValidacliente() == 0){
+                $cotizacionAceptar->setValidacliente(2);
+                $em->persist($cotizacionAceptar);
+                $em->flush();
+                $mensaje = 'Cotización Aceptada';
+            }else{
+                $mensaje = 'Error! Cotización ya respondida';
+            }
+        }else{
+            $cotizacionRechazar = $em->getRepository(MarinaHumedaCotizacion::class)
+                                    ->findOneBy(['tokenrechaza'=>$token]);
+            if($cotizacionRechazar){
+                if($cotizacionRechazar->getValidacliente() == 0) {
+                    $cotizacionRechazar->setValidacliente(1);
+                    $em->persist($cotizacionRechazar);
+                    $em->flush();
+                    $mensaje = 'Cotización Rechazada';
+                }else{
+                    $mensaje = 'Error! Cotización ya respondida';
+                }
+            }else{
+                throw new NotFoundHttpException();
+            }
+        }
+
+
+
+
+        return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', array(
+            'mensaje' => $mensaje
+        ));
+
+    }
+
 
     /**
      * Creates a new marinaHumedaCotizacion entity.
@@ -206,7 +256,7 @@ class MarinaHumedaCotizacionController extends Controller
 
         }
 
-        return $this->render('marinahumedacotizacion/new.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/new.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'valdolar' => $dolar,
             'valiva' => $iva,
@@ -227,7 +277,7 @@ class MarinaHumedaCotizacionController extends Controller
     {
         $deleteForm = $this->createDeleteForm($marinaHumedaCotizacion);
 
-        return $this->render('marinahumedacotizacion/show.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/show.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'delete_form' => $deleteForm->createView(),
             'marinacotizaciones' => 1
@@ -389,7 +439,7 @@ class MarinaHumedaCotizacionController extends Controller
             return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
 
         }
-        return $this->render('marinahumedacotizacion/recotizar.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/recotizar.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'form' => $form->createView(),
             'marinanuevacotizacion' => 1
@@ -403,14 +453,19 @@ class MarinaHumedaCotizacionController extends Controller
      * @Route("/{id}/validar", name="marina-humeda_validar")
      * @Method({"GET", "POST"})
      **/
-    public function editAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
+    public function validaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion,\Swift_Mailer $mailer)
     {
         if ($marinaHumedaCotizacion->getEstatus() == 0 ||
             $marinaHumedaCotizacion->getValidanovo() == 1 ||
-            $marinaHumedaCotizacion->getValidacliente() ==1 ||
-            $marinaHumedaCotizacion->getValidacliente() ==2) {
+            $marinaHumedaCotizacion->getValidanovo() == 2
+        //    $marinaHumedaCotizacion->getValidacliente() ==1 ||
+        //    $marinaHumedaCotizacion->getValidacliente() ==2
+        ) {
             throw new NotFoundHttpException();
         }
+
+
+        $valorSistema = new ValorSistema();
 
         $servicios = $marinaHumedaCotizacion->getMHCservicios();
 
@@ -421,12 +476,39 @@ class MarinaHumedaCotizacionController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
+            if($marinaHumedaCotizacion->getValidanovo()==2){
+                $tokenAcepta = $valorSistema->generaToken(100);
+                $tokenRechaza = $valorSistema->generaToken(100);
+                $marinaHumedaCotizacion
+                    ->setTokenacepta($tokenAcepta)
+                    ->setTokenrechaza($tokenRechaza);
+
+                // Enviar correo de confirmacion
+                $message = (new \Swift_Message('¡Cotizacion de servicios!'))
+                    ->setFrom('noresponder@novonautica.com')
+                    ->setTo($marinaHumedaCotizacion->getCliente()->getCorreo())
+                    ->setBcc('admin@novonautica.com')
+                    ->setBody(
+                        $this->renderView('marinahumeda/cotizacion/correo-clientevalida.twig', [
+                            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+                            'tokenAcepta' => $tokenAcepta,
+                            'tokenRechaza' => $tokenRechaza
+                        ]),
+                        'text/html'
+                    );
+
+                $mailer->send($message);
+
+            }
+
             $this->getDoctrine()->getManager()->flush();
+
+
 
             return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
         }
 
-        return $this->render('marinahumedacotizacion/validar.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/validar.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -534,7 +616,7 @@ class MarinaHumedaCotizacionController extends Controller
 
         }
 
-        return $this->render('marinahumedacotizacion/edit.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/edit.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

@@ -26,7 +26,7 @@ class MarinaHumedaTarifaController extends Controller
 
         $marinaHumedaTarifas = $em->getRepository('AppBundle:MarinaHumedaTarifa')->findAll();
 
-        return $this->render('marinahumedatarifa/index.html.twig', array(
+        return $this->render('marinahumeda/tarifa/index.html.twig', array(
             'marinaHumedaTarifas' => $marinaHumedaTarifas,
             'marinatarifamenu' => 1
         ));
@@ -52,7 +52,7 @@ class MarinaHumedaTarifaController extends Controller
             return $this->redirectToRoute('marinahumeda-tarifas_index');
         }
 
-        return $this->render('marinahumedatarifa/new.html.twig', array(
+        return $this->render('marinahumeda/tarifa/new.html.twig', array(
             'marinaHumedaTarifa' => $marinaHumedaTarifa,
             'form' => $form->createView(),
             'marinatarifamenu' => 1
@@ -69,7 +69,7 @@ class MarinaHumedaTarifaController extends Controller
     {
         $deleteForm = $this->createDeleteForm($marinaHumedaTarifa);
 
-        return $this->render('marinahumedatarifa/show.html.twig', array(
+        return $this->render('marinahumeda/tarifa/show.html.twig', array(
             'marinaHumedaTarifa' => $marinaHumedaTarifa,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -93,7 +93,7 @@ class MarinaHumedaTarifaController extends Controller
             return $this->redirectToRoute('marinahumeda-tarifas_index');
         }
 
-        return $this->render('marinahumedatarifa/edit.html.twig', array(
+        return $this->render('marinahumeda/tarifa/edit.html.twig', array(
             'marinaHumedaTarifa' => $marinaHumedaTarifa,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

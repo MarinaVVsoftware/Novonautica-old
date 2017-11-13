@@ -47,9 +47,43 @@ $(document).ready(function() {
         }
     });
 //-- fin seleccionar choice al recotizar----
-
+    $( ".esnumero" ).keypress(function() {
+        return isNumberKey(event);
+    });
+    $( ".esdecimal" ).keypress(function() {
+        return esNumeroDecimal(event,this);
+    });
 });
 
+function isNumberKey(evt) {
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    return true;
+}
+function esNumeroDecimal(e, field) {
+    key = e.keyCode ? e.keyCode : e.which
+    // backspace
+    if (key == 8)
+        return true
+    // 0-9
+    if (key > 47 && key < 58) {
+        if (field.value == "")
+            return true
+        regexp = /.[0-9]{23}$/
+        return !(regexp.test(field.value))
+    }
+    // .
+    if (key == 46) {
+        if (field.value == "")
+            return false
+        regexp = /^[0-9]+$/
+        return regexp.test(field.value)
+    }
+    // other key
+    return false
+
+}
 
 jQuery('.add-another-motor').click(function (e) {
     e.preventDefault();

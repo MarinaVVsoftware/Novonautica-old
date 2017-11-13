@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 /**
  * MarinaHumedaCotizacion
  *
@@ -137,18 +138,32 @@ class MarinaHumedaCotizacion
     private $estatus;
 
     /**
-     * @var string
+     * @var int
      *
      * @ORM\Column(name="folio", type="integer", length=255)
      */
     private $folio;
 
     /**
-     * @var string
+     * @var int
      *
      * @ORM\Column(name="foliorecotiza", type="integer", length=255)
      */
     private $foliorecotiza;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tokenacepta", type="string", length=110, nullable=true)
+     */
+    private $tokenacepta;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tokenrechaza", type="string", length=110, nullable=true)
+     */
+    private $tokenrechaza;
 
     /**
      *
@@ -570,6 +585,56 @@ class MarinaHumedaCotizacion
     public function getNotascliente()
     {
         return $this->notascliente;
+    }
+
+    /**
+     * Set tokenacepta
+     *
+     * @param string $tokenacepta
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setTokenacepta($tokenacepta)
+    {
+        $this->tokenacepta = $tokenacepta;
+
+        return $this;
+    }
+
+    /**
+     * Get tokenacepta
+     *
+     * @return string
+     *
+     */
+    public function getTokenacepta()
+    {
+        return $this->tokenacepta;
+    }
+
+    /**
+     * Set tokenrechaza
+     *
+     * @param string $tokenrechaza
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setTokenrechaza($tokenrechaza)
+    {
+        $this->tokenrechaza = $tokenrechaza;
+
+        return $this;
+    }
+
+    /**
+     * Get tokenrechaza
+     *
+     * @return string
+     *
+     */
+    public function getTokenrechaza()
+    {
+        return $this->tokenrechaza;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class MarinaHumedaCotizacionAdicionalType extends AbstractType
 {
@@ -13,7 +14,18 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('descuento')->add('dolar')->add('iva')->add('subtotal')->add('ivatotal')->add('descuentototal')->add('total')->add('fecharegistro')->add('cliente')->add('barco');
+        $builder
+            ->add('cliente',EntityType::class,[
+                'class' => 'AppBundle:Cliente',
+                'label' => 'Cliente',
+                'placeholder' => 'Seleccionar...',
+                'attr' => ['class' => 'select-buscador selectclientebuscar'],
+
+            ])
+            ->add('barco')
+            ->add('descuento')
+
+            ;
     }
     
     /**

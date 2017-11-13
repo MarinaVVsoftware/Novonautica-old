@@ -1,7 +1,7 @@
 {% extends 'estructura/plantilla.twig' %}
 
 {% block title %}
-    Novonautiva | Monederos Clientes
+    Novonautiva | Monederos Clientes Marina Humeda
 {% endblock %}
 
 {% block contwrapper %}
@@ -29,11 +29,11 @@
                                     <tr>
                                         <td>{{ cliente.id }}</td>
                                         <td>{{ cliente.nombre }}</td>
-                                        <td>$ {{ cliente.montomonedero|number_format(2,'.',',') }}</td>
+                                        <td>$ {{ cliente.monederomarinahumeda|number_format(2,'.',',') }}</td>
                                         <td>
-                                            <a class="btn btn-morado-claro" href="{{ path('monedero_ver', { 'id': cliente.id }) }}">Detalle</a>
+                                            <a class="btn btn-morado-claro" href="{{ path('mh_monedero_ver', { 'id': cliente.id }) }}">Detalle</a>
                                             <a class="btn btn-azul"
-                                               href="{{ path('monedero_operacion', { 'id': cliente.id }) }}">Movimiento</a>
+                                               href="{{ path('mh_monedero_operacion', { 'id': cliente.id }) }}">Operación</a>
                                         </td>
                                     </tr>
                                 {% endfor %}
