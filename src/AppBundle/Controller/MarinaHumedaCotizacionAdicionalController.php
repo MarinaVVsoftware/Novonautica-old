@@ -26,7 +26,7 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
 
         $marinaHumedaCotizacionAdicionals = $em->getRepository('AppBundle:MarinaHumedaCotizacionAdicional')->findAll();
 
-        return $this->render('marinahumedacotizacionadicional/index.html.twig', array(
+        return $this->render('marinahumeda/cotizacionadicional/index.html.twig', array(
             'marinaHumedaCotizacionAdicionals' => $marinaHumedaCotizacionAdicionals,
             'menumarinaadicional' => 1
         ));
@@ -52,7 +52,7 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
             return $this->redirectToRoute('marina-humeda-cotizacion-adicional_show', array('id' => $marinaHumedaCotizacionAdicional->getId()));
         }
 
-        return $this->render('marinahumedacotizacionadicional/new.html.twig', array(
+        return $this->render('marinahumeda/cotizacionadicional/new.html.twig', array(
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
             'form' => $form->createView(),
             'menumarinaadicional' => 1
@@ -69,7 +69,7 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
     {
         $deleteForm = $this->createDeleteForm($marinaHumedaCotizacionAdicional);
 
-        return $this->render('marinahumedacotizacionadicional/show.html.twig', array(
+        return $this->render('marinahumeda/cotizacionadicional/show.html.twig', array(
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -93,7 +93,7 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
             return $this->redirectToRoute('marina-humeda-cotizacion-adicional_edit', array('id' => $marinaHumedaCotizacionAdicional->getId()));
         }
 
-        return $this->render('marinahumedacotizacionadicional/edit.html.twig', array(
+        return $this->render('marinahumeda/cotizacionadicional/edit.html.twig', array(
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

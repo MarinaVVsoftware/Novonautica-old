@@ -38,7 +38,7 @@ class MarinaHumedaCotizacionController extends Controller
 
         $marinaHumedaCotizacions = $em->getRepository('AppBundle:MarinaHumedaCotizacion')->findAll();
 
-        return $this->render('marinahumedacotizacion/index.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/index.html.twig', array(
             'marinaHumedaCotizacions' => $marinaHumedaCotizacions,
             'marinacotizaciones' => 1
 
@@ -50,7 +50,7 @@ class MarinaHumedaCotizacionController extends Controller
      */
     public function displayMarinaAdministracion(Request $request)
     {
-        return $this->render('marina-administracion.twig', [
+        return $this->render('marinahumeda/marina-administracion.twig', [
             'marinaadministracion' => 1
         ]);
     }
@@ -62,7 +62,7 @@ class MarinaHumedaCotizacionController extends Controller
      */
     public function displayMarinaPDF(Request $request,MarinaHumedaCotizacion $mhc)
     {
-        $html = $this->renderView('marinahumedacotizacion/cotizacionpdf.html.twig', [
+        $html = $this->renderView('marinahumeda/cotizacion/cotizacionpdf.html.twig', [
             'title' => 'Cotizacion-'.$mhc->getFolio().'.pdf',
             'marinaHumedaCotizacion' => $mhc
         ]);
@@ -114,7 +114,7 @@ class MarinaHumedaCotizacionController extends Controller
 
 
 
-        return $this->render('marinahumedacotizacion/respuesta-cliente.twig', array(
+        return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', array(
             'mensaje' => $mensaje
         ));
 
@@ -256,7 +256,7 @@ class MarinaHumedaCotizacionController extends Controller
 
         }
 
-        return $this->render('marinahumedacotizacion/new.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/new.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'valdolar' => $dolar,
             'valiva' => $iva,
@@ -277,7 +277,7 @@ class MarinaHumedaCotizacionController extends Controller
     {
         $deleteForm = $this->createDeleteForm($marinaHumedaCotizacion);
 
-        return $this->render('marinahumedacotizacion/show.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/show.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'delete_form' => $deleteForm->createView(),
             'marinacotizaciones' => 1
@@ -439,7 +439,7 @@ class MarinaHumedaCotizacionController extends Controller
             return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
 
         }
-        return $this->render('marinahumedacotizacion/recotizar.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/recotizar.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'form' => $form->createView(),
             'marinanuevacotizacion' => 1
@@ -489,7 +489,7 @@ class MarinaHumedaCotizacionController extends Controller
                     ->setTo($marinaHumedaCotizacion->getCliente()->getCorreo())
                     ->setBcc('admin@novonautica.com')
                     ->setBody(
-                        $this->renderView('marinahumedacotizacion/correo-clientevalida.twig', [
+                        $this->renderView('marinahumeda/cotizacion/correo-clientevalida.twig', [
                             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
                             'tokenAcepta' => $tokenAcepta,
                             'tokenRechaza' => $tokenRechaza
@@ -508,7 +508,7 @@ class MarinaHumedaCotizacionController extends Controller
             return $this->redirectToRoute('marina-humeda_show', array('id' => $marinaHumedaCotizacion->getId()));
         }
 
-        return $this->render('marinahumedacotizacion/validar.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/validar.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -616,7 +616,7 @@ class MarinaHumedaCotizacionController extends Controller
 
         }
 
-        return $this->render('marinahumedacotizacion/edit.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/edit.html.twig', array(
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

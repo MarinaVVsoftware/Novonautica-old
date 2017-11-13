@@ -53,7 +53,8 @@ class MarinaHumedaCotizacionTodoType extends AbstractType
                 'format' => 'yyyy-MM-dd'
             ])
             ->add('descuento',null,[
-                'empty_data' => 0
+                'empty_data' => 0,
+                'attr' => ['class' => 'esdecimal']
             ])
 
             ->add('mhcservicios',CollectionType::class,[

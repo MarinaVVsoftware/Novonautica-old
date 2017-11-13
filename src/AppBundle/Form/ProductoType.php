@@ -33,9 +33,11 @@ class ProductoType extends AbstractType
             ])
             ->add('precio',TextType::class,[
                 'required' => false,
+                'attr' => ['class' => 'esdecimal']
             ])
             ->add('cantidad',TextType::class,[
-                'required' => false
+                'required' => false,
+                'attr' => ['class' => 'esdecimal']
             ])
             ->add('unidad',TextType::class,[
                 'required' => false

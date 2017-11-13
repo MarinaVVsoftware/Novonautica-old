@@ -27,7 +27,8 @@ class MarinaHumedaTarifaType extends AbstractType
             ])
             ->add('costo',null,[
                 'label' => 'Costo por día (USD)',
-                'required' => false
+                'required' => false,
+                'attr' => ['class' => 'esdecimal']
             ])
 
             ->add('descripcion',TextType::class,[
