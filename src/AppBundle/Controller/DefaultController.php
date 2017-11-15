@@ -10,7 +10,7 @@ class DefaultController extends Controller
 {
 
     /**
-     * @Route("/inicio", name="incio")
+     * @Route("/", name="inicio")
      */
     public function displayAdminIndex(Request $request)
     {

@@ -1,2 +1,4 @@
-# novonautica
-Novonautica administration system con base symfony 3.4
+# Novonautica
+
+Para generar contraseñas a traves de la consola
+> security:encode-password

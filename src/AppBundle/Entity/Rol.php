@@ -2,10 +2,9 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-//use Symfony\Component\Security\Core\Role\RoleInterface;
-
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Rol
@@ -13,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="rol")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RolRepository")
  */
-class Rol //Implements RoleInterface
+class Rol
 {
     /**
      * @var int
@@ -27,37 +26,34 @@ class Rol //Implements RoleInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="role", type="string", length=255)
+     * @ORM\Column(name="nombre", type="string", length=20)
      */
-    private $role;
+    private $nombre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="descripcion", type="string", length=255, nullable=true)
+     * @ORM\Column(name="rol", type="string", length=30)
      */
-    private $descripcion;
+    private $rol;
 
     /**
-     * @var bool
+     * @var int
      *
-     * @ORM\Column(name="estatus", type="boolean")
+     * @ORM\Column(name="status", type="smallint")
      */
-    private $estatus;
-
-    public function __toString()
-    {
-        return $this->descripcion;
-    }
+    private $status;
 
     /**
-     * @ORM\OneToMany(targetEntity="Usuario", mappedBy="rol")
+     * @var Usuario
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Usuario", mappedBy="rol")
      */
-    private $usuarios;
+    private $users;
 
     public function __construct()
     {
-        $this->usuarios = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -71,133 +67,100 @@ class Rol //Implements RoleInterface
     }
 
     /**
-     * Set role
+     * Set nombre
      *
-     * @param string $role
+     * @param string $nombre
      *
      * @return Rol
      */
-    public function setRole($role)
+    public function setNombre($nombre)
     {
-        $this->role = $role;
+        $this->nombre = $nombre;
 
         return $this;
     }
 
     /**
-     * Get role
-     *
-     * @return string
-     *
-     */
-    public function getRole()
-    {
-        return $this->role;
-    }
-
-    /**
-     * Set descripcion
-     *
-     * @param string $descripcion
-     *
-     * @return Rol
-     */
-    public function setDescripcion($descripcion)
-    {
-        $this->descripcion = $descripcion;
-
-        return $this;
-    }
-
-    /**
-     * Get descripcion
+     * Get nombre
      *
      * @return string
      */
-    public function getDescripcion()
+    public function getNombre()
     {
-        return $this->descripcion;
+        return $this->nombre;
     }
 
     /**
-     * Set estatus
+     * Set rol
      *
-     * @param boolean $estatus
+     * @param string $rol
      *
      * @return Rol
      */
-    public function setEstatus($estatus)
+    public function setRol($rol)
     {
-        $this->estatus = $estatus;
+        $this->rol = $rol;
 
         return $this;
     }
 
     /**
-     * Get estatus
+     * Get rol
      *
-     * @return bool
+     * @return string
      */
-    public function getEstatus()
+    public function getRol()
     {
-        return $this->estatus;
+        return $this->rol;
     }
 
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
 
+    /**
+     * @param int $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
 
     /**
      * Add user
      *
-     * @param \AppBundle\Entity\Usuario $usuario
+     * @param Usuario $user
      *
      * @return Rol
      */
-    public function addUser(\AppBundle\Entity\Usuario $usuario)
+    public function addUser(Usuario $user)
     {
-        $this->usuarios[] = $usuario;
+        $this->users[] = $user;
+
         return $this;
     }
+
     /**
      * Remove user
      *
-     * @param \AppBundle\Entity\Usuario $usuario
+     * @param Usuario $user
      */
-    public function removeUser(\AppBundle\Entity\Usuario $usuario)
+    public function removeUser(Usuario $user)
     {
-        $this->usuarios->removeElement($usuario);
+        $this->users->removeElement($user);
     }
 
     /**
-     * Get usuarios
+     * Get users
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getUsuarios()
+    public function getUsers()
     {
-        return $this->usuarios;
-    }
-
-    /**
-     * Add usuario
-     *
-     * @param \AppBundle\Entity\Usuario $usuario
-     *
-     * @return Rol
-     */
-    public function addUsuario(\AppBundle\Entity\Usuario $usuario)
-    {
-        $this->usuarios[] = $usuario;
-
-        return $this;
-    }
-
-    /**
-     * Remove usuario
-     *
-     * @param \AppBundle\Entity\Usuario $usuario
-     */
-    public function removeUsuario(\AppBundle\Entity\Usuario $usuario)
-    {
-        $this->usuarios->removeElement($usuario);
+        return $this->users;
     }
 }

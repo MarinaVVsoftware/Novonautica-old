@@ -1,67 +1,59 @@
-# To get started with security, check out the documentation:
-# https://symfony.com/doc/current/security.html
 security:
-
-    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
-#    providers:
-#        in_memory:
-#            memory: ~
-#
-#    firewalls:
-        # disables authentication for assets and the profiler, adapt it according to your needs
-#        dev:
-#            pattern: ^/(_(profiler|wdt)|css|images|js)/
-#            security: false
-#
-#        main:
-#            anonymous: ~
-            # activate different ways to authenticate
-
-            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-            #http_basic: ~
-
-            # https://symfony.com/doc/current/security/form_login_setup.html
-            #form_login: ~
     encoders:
-#        Symfony\Component\Security\Core\User\User: plaintext
-        Symfony\Component\Security\Core\User\User: bcrypt
         AppBundle\Entity\Usuario: bcrypt
-    role_hierarchy:
-        ROLE_ADMIN: [ROLE_USER]
+
     providers:
-        chain_provider:
-            chain:
-                providers: [in_memory, user_db]
-#                providers: [in_memory]
-        in_memory:
-            memory:
-                users:
-                    admin: {password: $2y$13$PtyUxnCzEXe3PN06SdGXRu9N8.rQMZx.vLoCaC0S56g6rOPs4kM/y, roles: ROLE_ADMIN} #password: adminpass
-        user_db:
-            entity: { class: AppBundle\Entity\Usuario, property: correo } #con que campo se va a loguear
-#    role_hierarchy:
-#            ROLE_ADMIN: [ROLE_MARINA, ROLE_ASTILLERO]
+        Usuario:
+            entity:
+                class: AppBundle:Usuario
+                property: correo
+
     firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
         main:
-            pattern: /.*
+            pattern: .*
+            methods: [GET, POST]
+            provider: Usuario
             form_login:
-                login_path: /
-                check_path: /
-                default_target_path: /inicio
+                check_path: login
+                login_path: login
+
+                # Login correctamente
+                always_use_default_target_path: false
+                default_target_path: inicio
+                target_path_parameter: _target_path
+                use_referer: false
+
+                # Login erroneo
+                failure_path: login
+                failure_forward: false
+                failure_path_parameter: _failure_path
+
+                # Parametros para formulario de login
+                username_parameter: _correo
+                password_parameter: _password
+
+                # Protección csrf
+                csrf_token_generator: security.csrf.token_manager
+
+                # Solo permite login a traves del metodo post
+                post_only: true
+
+                # Guarda la sesion para evitar doble login
+                require_previous_session: true
+
             logout:
-                path:   /logout
-                target: /
-            security: true
-            anonymous: true
+                path: logout
+                target: login
+                invalidate_session: false
+
+#            security: true
+            anonymous: ~
+
     access_control:
-        - { path: /marina-humeda/confirma/.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: /logout, roles: [ROLE_ADMIN,ROLE_MARINA,ROLE_ASTILLERO] }
-        - { path: /inicio, roles: [ROLE_ADMIN,ROLE_MARINA,ROLE_ASTILLERO] }
-        - { path: /clientes, roles: ROLE_ADMIN }
-        - { path: /marina, roles: [ROLE_ADMIN,ROLE_MARINA] }
-        - { path: /astillero, roles: [ROLE_ADMIN,ROLE_MARINA,ROLE_ASTILLERO] }
-        - { path: /productos, roles: ROLE_ADMIN }
-        - { path: /recursos-humanos, roles: [ROLE_ADMIN,ROLE_MARINA,ROLE_ASTILLERO] }
-        - { path: /contabilidad, roles: ROLE_ADMIN }
-        - { path: /reportes, roles: ROLE_ADMIN }
-        - { path: /usuario, roles: ROLE_ADMIN }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/.*, roles: IS_AUTHENTICATED_FULLY }

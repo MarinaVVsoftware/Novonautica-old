@@ -4,22 +4,12 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Usuario
  *
  * @ORM\Table(name="usuario")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UsuarioRepository")
- * @UniqueEntity(
- *          fields = {"correo"},
- *          message="El correo ya se encuentra en uso"
- *)
- * @UniqueEntity(
- *          fields = {"username"},
- *          message="El nombre de usuario ya se encuentra en uso"
- *)
  */
 class Usuario implements AdvancedUserInterface, \Serializable
 {
@@ -34,64 +24,50 @@ class Usuario implements AdvancedUserInterface, \Serializable
 
     /**
      * @var string
-     * @Assert\NotBlank(
-     *     message="Nombre no puede quedar vacío"
-     * )
      *
-     * @ORM\Column(name="nombre", type="string", length=255)
+     * @ORM\Column(name="nombre", type="string", length=100)
      */
     private $nombre;
 
     /**
      * @var string
-     * @Assert\NotBlank(
-     *     message="Correo no puede quedar vacío"
-     * )
-     * @Assert\Email(
-     *     message = "El correo '{{ value }}' no es válido."
-     * )
      *
-     * @ORM\Column(name="correo", type="string", length=255, unique=true)
+     * @ORM\Column(name="correo", type="string", length=50, unique=true)
      */
     private $correo;
+
     /**
      * @var string
-     * @Assert\NotBlank(
-     *     message="Nombre de usuario no puede quedar vacío"
-     * )
      *
-     * @ORM\Column(name="username", type="string", length=255, unique=true)
-     */
-    private $username;
-    /**
-     * @var string
-     * @Assert\NotBlank(
-     *     message="Contraseña no puede quedar vacío"
-     * )
-     *
-     * @ORM\Column(name="password", type="string", length=255, unique=true)
+     * @ORM\Column(name="password", type="string", length=64)
      */
     private $password;
 
     /**
-     * @var bool
+     * @var \DateTime
      *
-     * @ORM\Column(name="estatus", type="boolean")
+     * @ORM\Column(name="registro", type="datetime")
+     */
+    private $registro;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="estatus", type="smallint")
      */
     private $estatus;
 
     /**
-     * @var \DateTime
+     * @var Rol
      *
-     * @ORM\Column(name="fecharegistro", type="datetime", nullable=true)
-     */
-    private $fecharegistro;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Rol", inversedBy="usuarios")
-     * @ORM\JoinColumn(name="idrol", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Rol", inversedBy="users")
      */
     private $rol;
+
+    public function __construct()
+    {
+        $this->estatus = 1;
+    }
 
     /**
      * Get id
@@ -126,29 +102,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
     {
         return $this->nombre;
     }
-    /**
-     * Set username
-     *
-     * @param string $username
-     *
-     * @return Usuario
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
 
-        return $this;
-    }
-
-    /**
-     * Get username
-     *
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
     /**
      * Set correo
      *
@@ -182,8 +136,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
      */
     public function setPassword($password)
     {
-//        $this->password = $password;
-        $this->password = password_hash($password, PASSWORD_BCRYPT);
+        $this->password = $password;
 
         return $this;
     }
@@ -199,9 +152,33 @@ class Usuario implements AdvancedUserInterface, \Serializable
     }
 
     /**
+     * Set registro
+     *
+     * @param \DateTime $registro
+     *
+     * @return Usuario
+     */
+    public function setRegistro($registro)
+    {
+        $this->registro = $registro;
+
+        return $this;
+    }
+
+    /**
+     * Get registro
+     *
+     * @return \DateTime
+     */
+    public function getRegistro()
+    {
+        return $this->registro;
+    }
+
+    /**
      * Set estatus
      *
-     * @param boolean $estatus
+     * @param integer $estatus
      *
      * @return Usuario
      */
@@ -215,7 +192,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
     /**
      * Get estatus
      *
-     * @return bool
+     * @return int
      */
     public function getEstatus()
     {
@@ -223,105 +200,129 @@ class Usuario implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set fecharegistro
-     *
-     * @param \DateTime $fecharegistro
-     *
-     * @return Usuario
-     */
-    public function setFecharegistro($fecharegistro)
-    {
-        $this->fecharegistro = $fecharegistro;
-
-        return $this;
-    }
-
-    /**
-     * Get fecharegistro
-     *
-     * @return \DateTime
-     */
-    public function getFecharegistro()
-    {
-        return $this->fecharegistro;
-    }
-
-    /**
      * Set rol
      *
-     * @param \AppBundle\Entity\Rol $rol
+     * @param Rol $rol
      *
      * @return Usuario
      */
-    public function setRol(\AppBundle\Entity\Rol $rol = null)
+    public function setRol(Rol $rol = null)
     {
         $this->rol = $rol;
+
         return $this;
     }
 
     /**
      * Get rol
      *
-     * @return \AppBundle\Entity\Rol
+     * @return Rol
      */
     public function getRol()
     {
         return $this->rol;
     }
 
-
+    /**
+     * Checa si la cuenta del usuario ya expiro
+     *
+     * @return bool true if the user's account is non expired, false otherwise
+     *
+     * @see AccountExpiredException
+     */
     public function isAccountNonExpired()
     {
         return true;
     }
 
+    /**
+     * Checa si la cuenta del usuario esta bloqueada
+     *
+     * @return bool true if the user is not locked, false otherwise
+     *
+     * @see LockedException
+     */
     public function isAccountNonLocked()
     {
         return true;
     }
 
+    /**
+     * Checa si el password del usuario expiró
+     *
+     * @return bool true if the user's credentials are non expired, false otherwise
+     *
+     * @see CredentialsExpiredException
+     */
     public function isCredentialsNonExpired()
     {
         return true;
     }
 
+    /**
+     * Checa si el usuario esta activo
+     *
+     * @return bool true if the user is enabled, false otherwise
+     *
+     * @see DisabledException
+     */
     public function isEnabled()
     {
-        return $this->estatus;
+        return $this->estatus === 0 ? false : true;
     }
 
-    // serialize and unserialize must be updated - see below
+    /**
+     * Serializacion del usuario
+     */
     public function serialize()
     {
-        return serialize(array(
-
-            $this->id
-        ));
+        return serialize([
+            $this->id,
+            $this->nombre,
+            $this->correo,
+            $this->password,
+            $this->estatus
+        ]);
     }
+
+    /**
+     * Deserializacion del usuario
+     *
+     * @param string $serialized
+     */
     public function unserialize($serialized)
     {
-        list (
-
-            $this->id
+        list(
+            $this->id,
+            $this->nombre,
+            $this->correo,
+            $this->password,
+            $this->estatus
             ) = unserialize($serialized);
+    }
+
+    public function getUsername()
+    {
+        return $this->nombre;
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    /**
+     * @return Rol|array
+     */
+    public function getRoles()
+    {
+        return [
+            'ROLE_USER',
+            'ROLE_ADMIN'
+        ];
     }
 
     public function eraseCredentials()
     {
     }
-    public function getSalt()
-    {
-        // you *may* need a real salt depending on your encoder
-        // see section on salt below
-        return null;
-    }
-
-
-    public function getRoles()
-    {
-        //return array('ROLE_ASTILLERO');
-        //return array($this->rol);
-        return [$this->getRol()->getRole()];
-    }
-
 }

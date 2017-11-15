@@ -4,6 +4,11 @@
     Novonautiva | Agenda
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bower_components/fullcalendar/dist/fullcalendar.min.css') }}">
+{% endblock %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -14,7 +19,8 @@
                             <h3 class="panel-title">Agenda</h3>
                         </div>
                         <div class="col-sm-6">
-                            <a href="{{ path('evento_new') }}" class="btn btn-contorno-azul pull-right">+ Nuevo evento</a>
+                            <a href="{{ path('evento_new') }}" class="btn btn-contorno-azul pull-right">+ Nuevo
+                                evento</a>
                         </div>
                     </div>
                 </div>
@@ -26,36 +32,32 @@
     </div>
 {% endblock %}
 {% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('bower_components/fullcalendar/dist/fullcalendar.js') }}"></script>
+    <script src="{{ asset('bower_components/fullcalendar/dist/locale/es.js') }}"></script>
     <script>
-        $('#calendario').fullCalendar({
-
-            customButtons: {
-                myCustomButton: {
-                    text: '+ Nuevo Evento',
-                    click: function() {
-                        alert('agregar evento');
-                    }
-                }
-            },
-            header: {
-                left: 'month,agendaWeek,agendaDay',
-                center: 'prev,title,next',
-                right: '' //'today myCustomButton'
-            },
-            editable: false,
-            droppable: true,
-             events: [
-                 {% for evento in marinaEventos %}
-                 {
-                     title: "{{ evento.titulo }} {{ evento.descripcion }}",
-                     start: "{{ evento.fechainicio|date('Y-m-d') }} {{ evento.horainicio|date('H:i:s') }}",
-                     end: "{{ evento.fechafin|date('Y-m-d') }} {{ evento.horafin|date('H:i:s') }}",
-                     url: "{{ path('evento_show', { 'id': evento.id }) }}"
-                 },
-                 {% endfor %}
-             ]
-//            color: 'blue',   // a non-ajax option
-//            textColor: 'white'
-        });
+      $('#calendario').fullCalendar({
+        header: {
+          left: 'month,agendaWeek,agendaDay',
+          center: 'prev,title,next',
+          right: ''
+        },
+        editable: false,
+        droppable: true,
+        height: 600,
+        locale: 'es',
+        events: [
+            {% for evento in marinaEventos %}
+          {
+            title: "{{ evento.titulo }} {{ evento.descripcion }}",
+            start: "{{ evento.fechainicio|date('Y-m-d') }} {{ evento.horainicio|date('H:i:s') }}",
+            end: "{{ evento.fechafin|date('Y-m-d') }} {{ evento.horafin|date('H:i:s') }}",
+            url: "{{ path('evento_show', { 'id': evento.id }) }}"
+          },
+            {% endfor %}
+        ]
+      });
     </script>
 {% endblock %}
