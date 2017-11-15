@@ -37,6 +37,9 @@ a{
 .fondo-blanco{
     background-color: #ffffff !important;
 }
+.fondo-morado{
+    background-color: #292e41;
+}
 /*++ fin colores fondo +++*/
 
 /*++++ colores letra +++++*/
@@ -51,6 +54,9 @@ a{
 }
 .tipo-letra2{
     font-size: 1.5rem;
+}
+.tipo-letra3{
+    font-size: 6rem;
 }
 /*+++ fin tamaño letra ++++*/
 
@@ -457,6 +463,9 @@ form > .btn-borrar:hover,.btn-borrar:hover{
 .espacio-linea-arriba2{
     padding-top: 2rem;
 }
+.espacio-linea-arriba5{
+    padding-top: 5rem;
+}
 .espacio-linea-abajo2{
     padding-bottom: 2rem;
 }
@@ -773,3 +782,11 @@ td .select2-container--default .select2-selection--single {
     width: 24px;
 }
 /* ---- fin temporal ----*/
+
+.fondo-error{
+    background: url("../img/Novonautica-error-03.svg") no-repeat center;
+}
+.contenido-error{
+    padding-top: 8%;
+    padding-bottom: 2%;
+}

@@ -27,9 +27,9 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
     {
         $builder
             //->add('servicio')
-            ->add('cantidad',null,[
-                'attr' => ['class' => 'esdecimal']
-            ])
+//            ->add('cantidad',null,[
+//                'attr' => ['class' => 'esdecimal']
+//            ])
             ->add('precio',EntityType::class,[
                 'class' => 'AppBundle:MarinaHumedaTarifa',
                 'label' => 'Precio',
@@ -54,9 +54,9 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
                         ;
                 }
             ])
-            ->add('estatus', null,[
-                'label' => ' '
-            ])
+//            ->add('estatus', null,[
+//                'label' => ' '
+//            ])
             //->add('iva')
             //->add('descuento')
             //->add('total')

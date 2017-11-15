@@ -88,7 +88,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <label>Días Estadía:</label>
-                                            {{ form_widget(form.mhcservicios.children.0.cantidad,{'disabled':'disabled'}) }}
+                                            <div id="dias_estadia_cantidad" class='info-input' data-valor="0">0</div>
                                         </div>
 
                                         <div class="col-sm-6">
@@ -97,11 +97,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6">
-                                            <label>Conexión a electricidad (Amperaje):</label>
-                                            {{ form_widget(form.mhcservicios.children.1.cantidad) }}
-                                        </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-6 col-sm-offset-6">
                                             <label>Precio electricidad:</label>
                                             {{ form_widget(form.mhcservicios.children.1.precioAux) }}
                                         </div>
@@ -285,11 +281,6 @@
                                     </table>
                                 </div>
                                 <div class="col-sm-3">
-                                    {#<div class="row">#}
-                                    {#<div class="col-sm-12">#}
-                                    {#<a class="btn btn-morado-claro">Visualizar</a>#}
-                                    {#</div>#}
-                                    {#</div>#}
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <button type="submit" class="btn btn-azul">
@@ -373,10 +364,7 @@
                     </div>
                     {{ form_widget(form.mhcservicios.children.0.precioAux,{'attr':{'class':'hidden'}}) }}
                     {{ form_widget(form.mhcservicios.children.1.precio,{'attr':{'class':'hidden'}}) }}
-                    {{ form_widget(form.mhcservicios.children.0.estatus,{'attr':{'class':'hidden'}}) }}
-                    {{ form_widget(form.mhcservicios.children.1.estatus,{'attr':{'class':'hidden'}}) }}
                     {{ form_end(form) }}
-
                 </div>
                 <div class="panel-footer">
                     <div class="row">
