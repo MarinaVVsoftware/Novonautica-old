@@ -3,6 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\MarinaHumedaCotizacionAdicional;
+use AppBundle\Entity\MarinaHumedaCotizaServicios;
+use AppBundle\Entity\ValorSistema;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -47,12 +50,51 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
      */
     public function newAction(Request $request)
     {
-        $marinaHumedaCotizacionAdicional = new Marinahumedacotizacionadicional();
+        $marinaHumedaCotizacionAdicional = new MarinaHumedaCotizacionAdicional();
+        $dolarBase = $this->getDoctrine()
+            ->getRepository(ValorSistema::class)
+            ->find(1)
+            ->getValor();
+        $iva = $this->getDoctrine()
+            ->getRepository(ValorSistema::class)
+            ->find(2)
+            ->getValor();
+
+
         $form = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionAdicionalType', $marinaHumedaCotizacionAdicional);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $granSubtotal = 0;
+            $granIvatotal = 0;
+            $granTotal = 0;
+
+            foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $servicio){
+                $cantidad = $servicio->getCantidad();
+                $precio = $servicio->getMarinahumedaservicio()->getPrecio();
+                $subtotal = $cantidad * $precio;
+                $ivatotal = ($subtotal * $iva)/100;
+                $total = $subtotal + $ivatotal;
+
+                $servicio
+                    ->setPrecio($precio)
+                    ->setSubtotal($subtotal)
+                    ->setIva($ivatotal)
+                    ->setTotal($total)
+                    ->setEstatus(true);
+
+                $granSubtotal+=$subtotal;
+                $granIvatotal+=$ivatotal;
+                $granTotal+=$total;
+            }
+
+            $marinaHumedaCotizacionAdicional
+                ->setIva($iva)
+                ->setSubtotal($granSubtotal)
+                ->setIvatotal($granIvatotal)
+                ->setTotal($granTotal);
+
             $em->persist($marinaHumedaCotizacionAdicional);
             $em->flush();
 
@@ -62,6 +104,8 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
         return $this->render('marinahumeda/cotizacionadicional/new.html.twig', [
             'title' => 'Nuevo Servicio',
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
+            'valdolar' => $dolarBase,
+            'valiva' => $iva,
             'form' => $form->createView(),
         ]);
     }
@@ -100,14 +144,61 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
      */
     public function editAction(Request $request, MarinaHumedaCotizacionAdicional $marinaHumedaCotizacionAdicional)
     {
+        $originalServicios = new ArrayCollection();
+
+        foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $serv){
+            $originalServicios->add($serv);
+        }
         $deleteForm = $this->createDeleteForm($marinaHumedaCotizacionAdicional);
         $editForm = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionAdicionalType', $marinaHumedaCotizacionAdicional);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $em = $this->getDoctrine()->getManager();
 
-            return $this->redirectToRoute('marina-humeda-cotizacion-adicional_edit', ['id' => $marinaHumedaCotizacionAdicional->getId()]);
+            foreach ($originalServicios as $serv){
+                if (false === $marinaHumedaCotizacionAdicional->getMhcservicios()->contains($serv)) {
+                    // remove the Task from the Tag
+                    $serv->getMhcservicios()->removeMhcservicio($serv);
+
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    //$motor->setBarco(null);
+
+                    $em->persist($serv);
+
+                    // if you wanted to delete the Tag entirely, you can also do that
+                    $em->remove($serv);
+                }
+            }
+
+            $iva = $marinaHumedaCotizacionAdicional->getIva();
+            $granSubtotal = 0;
+            $granIvatotal = 0;
+            $granTotal = 0;
+
+
+            foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $servicio){
+                $cantidad = $servicio->getCantidad();
+                $precio = $servicio->getMarinahumedaservicio()->getPrecio();
+                $subtotal = $cantidad * $precio;
+                $ivatotal = ($subtotal * $iva)/100;
+                $total = $subtotal + $ivatotal;
+
+                $servicio
+                    ->setPrecio($precio)
+                    ->setSubtotal($subtotal)
+                    ->setIva($ivatotal)
+                    ->setTotal($total)
+                    ->setEstatus(true);
+
+                $granSubtotal+=$subtotal;
+                $granIvatotal+=$ivatotal;
+                $granTotal+=$total;
+            }
+            $em->persist($marinaHumedaCotizacionAdicional);
+            $em->flush();
+
+            return $this->redirectToRoute('marina-humeda-cotizacion-adicional_show', array('id' => $marinaHumedaCotizacionAdicional->getId()));
         }
 
         return $this->render('marinahumeda/cotizacionadicional/edit.html.twig', [

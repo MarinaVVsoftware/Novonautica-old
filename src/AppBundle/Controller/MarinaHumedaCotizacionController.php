@@ -56,18 +56,24 @@ class MarinaHumedaCotizacionController extends Controller
         $marinaDiasEstadia = new MarinaHumedaCotizaServicios();
         $marinaElectricidad = new MarinaHumedaCotizaServicios();
 
+        $dolarBase = $this->getDoctrine()
+            ->getRepository(ValorSistema::class)
+            ->find(1)
+            ->getValor();
+        $iva = $this->getDoctrine()
+            ->getRepository(ValorSistema::class)
+            ->find(2)
+            ->getValor();
+        $mensaje = $this->getDoctrine()
+            ->getRepository(ValorSistema::class)
+            ->find(4)
+            ->getDescripcion();
 
         $marinaHumedaCotizacion
             ->addMarinaHumedaCotizaServicios($marinaDiasEstadia)
-            ->addMarinaHumedaCotizaServicios($marinaElectricidad);
-        $dolar = $this->getDoctrine()
-                      ->getRepository(ValorSistema::class)
-                      ->find(1)
-                      ->getValor();
-        $iva = $this->getDoctrine()
-                    ->getRepository(ValorSistema::class)
-                    ->find(2)
-                    ->getValor();
+            ->addMarinaHumedaCotizaServicios($marinaElectricidad)
+            ->setMensaje($mensaje);
+
 
         $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
@@ -80,24 +86,17 @@ class MarinaHumedaCotizacionController extends Controller
             $granTotal = 0;
             $descuento = $marinaHumedaCotizacion->getDescuento();
             $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
+            $dolar = $marinaHumedaCotizacion->getDolar();
 
-            // Días Estadía
-//            $servicio = $this->getDoctrine()
-//                            ->getRepository(MarinaHumedaServicio::class)
-//                            ->find(1);
-            $tiposervicio = 1;
             $llegada = $marinaHumedaCotizacion->getFechaLlegada();
             $salida = $marinaHumedaCotizacion->getFechaSalida();
-
             $diferenciaDias = date_diff($llegada, $salida);
+            $cantidadDias = ($diferenciaDias->days);
 
-            //dump($diferenciaDias);
-            //dump($diferenciaDias->days);
-
-            $cantidad = ($diferenciaDias->days)+1;
+            // Días Estadía
+            $tiposervicio = 1;
             $precio = $marinaDiasEstadia->getPrecio()->getCosto();
-
-            $subTotal = $cantidad * $precio * $eslora;
+            $subTotal = $cantidadDias * $precio * $eslora;
             $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = ($subTotal * $iva)/100;
             $total = $subTotal - $descuentoTot + $ivaTot;
@@ -105,7 +104,7 @@ class MarinaHumedaCotizacionController extends Controller
             $marinaDiasEstadia
                 ->setTipo($tiposervicio)
                 ->setEstatus(1)
-                ->setCantidad($cantidad)
+                ->setCantidad($cantidadDias)
                 ->setPrecio($precio)
                 ->setSubtotal($subTotal)
                 ->setDescuento($descuentoTot)
@@ -118,14 +117,9 @@ class MarinaHumedaCotizacionController extends Controller
             $granTotal+=$total;
 
             // Conexión a electricidad
-//            $servicio = $this->getDoctrine()
-//                ->getRepository(MarinaHumedaServicio::class)
-//                ->find(2);
             $tiposervicio = 2;
-            $cantidad = $marinaElectricidad->getCantidad();
             $precio = $marinaElectricidad->getPrecioAux()->getCosto();
-
-            $subTotal = $cantidad * $precio * $eslora;
+            $subTotal = $cantidadDias * $precio * $eslora;
             $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = ($subTotal * $iva)/100;
             $total = $subTotal - $descuentoTot + $ivaTot;
@@ -133,6 +127,7 @@ class MarinaHumedaCotizacionController extends Controller
             $marinaElectricidad
                 ->setTipo($tiposervicio)
                 ->setEstatus(1)
+                ->setCantidad($cantidadDias)
                 ->setPrecio($precio)
                 ->setSubtotal($subTotal)
                 ->setDescuento($descuentoTot)
@@ -154,7 +149,6 @@ class MarinaHumedaCotizacionController extends Controller
             $folionuevo = $foliobase + 1;
 
             $marinaHumedaCotizacion
-                ->setDolar($dolar)
                 ->setIva($iva)
                 ->setSubtotal($granSubtotal)
                 ->setIvatotal($granIva)
@@ -182,7 +176,7 @@ class MarinaHumedaCotizacionController extends Controller
         return $this->render('marinahumeda/cotizacion/new.html.twig', [
             'title' => 'Nueva cotización',
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
-            'valdolar' => $dolar,
+            'valdolar' => $dolarBase,
             'valiva' => $iva,
             'form' => $form->createView()
         ]);
@@ -299,10 +293,12 @@ class MarinaHumedaCotizacionController extends Controller
 
         $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
         $foliorecotizado = $marinaHumedaCotizacionAnterior->getFoliorecotiza()+1;
+        $cliente = $marinaHumedaCotizacionAnterior->getCliente();
+        $barco = $marinaHumedaCotizacionAnterior->getBarco();
 
         $marinaHumedaCotizacion
-            ->setCliente($marinaHumedaCotizacionAnterior->getCliente())
-            ->setBarco($marinaHumedaCotizacionAnterior->getBarco())
+            ->setCliente($cliente)
+            ->setBarco($barco)
             ->setFechaLlegada($marinaHumedaCotizacionAnterior->getFechaLlegada())
             ->setFechaSalida($marinaHumedaCotizacionAnterior->getFechaSalida())
             ->setDescuento($marinaHumedaCotizacionAnterior->getDescuento())
@@ -316,6 +312,7 @@ class MarinaHumedaCotizacionController extends Controller
             ->setValidacliente(0)
             ->setFolio($marinaHumedaCotizacionAnterior->getFolio())
             ->setFoliorecotiza($foliorecotizado)
+            ->setMensaje($marinaHumedaCotizacionAnterior->getMensaje())
             ;
 
 
@@ -418,6 +415,8 @@ class MarinaHumedaCotizacionController extends Controller
             //-------------------------------------------------
             $fechaHoraActual = new \DateTime('now');
             $marinaHumedaCotizacion
+                ->setCliente($cliente)
+                ->setBarco($barco)
                 ->setDolar($dolar)
                 ->setIva($iva)
                 ->setSubtotal($granSubtotal)
