@@ -17,7 +17,7 @@
                         <table class="table text-center">
                             <thead>
                             <tr>
-                                <th>Id</th>
+                                <th>Num.</th>
                                 <th>Nombre</th>
                                 <th>Correo</th>
                                 <th>Teléfono</th>
@@ -30,15 +30,16 @@
                                 <th>RFC</th>
                                 <th>Dirección Fiscal</th>
                                 <th>Correo Facturación</th>
-                                <th>Estatus</th>
+                                {#<th>Estatus</th>#}
                                 <th>Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
+                            {% set i=0 %}
                             {% for cliente in clientes %}
+                                {% set i=i+1 %}
                                 <tr>
-                                    <td><a href="{{ path('cliente_show', { 'id': cliente.id }) }}">{{ cliente.id }}</a>
-                                    </td>
+                                    <td>{{ i }}</td>
                                     <td>{{ cliente.nombre }}</td>
                                     <td>{{ cliente.correo }}</td>
                                     <td>{{ cliente.telefono }}</td>
@@ -51,7 +52,7 @@
                                     <td>{{ cliente.rfc }}</td>
                                     <td>{{ cliente.direccionfiscal }}</td>
                                     <td>{{ cliente.correofacturacion }}</td>
-                                    <td>{% if cliente.estatus %}Activado{% else %}Desactivado{% endif %}</td>
+                                    {#<td>{% if cliente.estatus %}Activado{% else %}Desactivado{% endif %}</td>#}
                                     <td>
                                         <a class="btn btn-morado-claro"
                                            href="{{ path('cliente_show', { 'id': cliente.id }) }}">Detalle</a>

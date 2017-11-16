@@ -34,6 +34,9 @@
                         <li role="presentation">
                             <a href="#totalmxn" aria-controls="total" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
+                        <li role="presentation">
+                            <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div class="row">
@@ -82,6 +85,8 @@
                                     </div>
                                     <label>Descuento(%)</label>
                                     {{ form_widget(form.descuento,{'value':0}) }}
+                                    <label>Dolar</label>
+                                    {{ form_widget(form.dolar,{'value':valdolar}) }}
                                 </div>
 
                                 <div class="col-sm-6">
@@ -109,7 +114,7 @@
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="valdolar" class="" data-valor="{{ valdolar }}">{{ valdolar }} MXN</div>
+                                    <div id="" class="valdolar">{{ valdolar }} MXN</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -232,7 +237,7 @@
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="" class="" >{{ valdolar }} MXN</div>
+                                    <div id="" class="valdolar" >{{ valdolar }} MXN</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -280,17 +285,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-sm-3">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <button type="submit" class="btn btn-azul">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                Guardar
-                                            </button>
-                                        </div>
-                                    </div>
 
-                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
@@ -361,21 +356,34 @@
                                 </div>
                             </div>
                         </div>
+                        <div role="tabpanel" class="tab-pane" id="correo">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    {{ form_row(form.mensaje) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="submit" class="btn btn-azul">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     {{ form_widget(form.mhcservicios.children.0.precioAux,{'attr':{'class':'hidden'}}) }}
                     {{ form_widget(form.mhcservicios.children.1.precio,{'attr':{'class':'hidden'}}) }}
                     {{ form_end(form) }}
                 </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <a href="{{ path('marina-humeda_index') }}" class="btn btn-naranja pull-right">
-                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                Cancelar
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                {#<div class="panel-footer">#}
+                    {#<div class="row">#}
+                        {#<div class="col-sm-12">#}
+                            {#<a href="{{ path('marina-humeda_index') }}" class="btn btn-naranja pull-right">#}
+                                {#<i class="fa fa-ban" aria-hidden="true"></i>#}
+                                {#Cancelar#}
+                            {#</a>#}
+                        {#</div>#}
+                    {#</div>#}
+                {#</div>#}
             </div>
         </section>
     </div>

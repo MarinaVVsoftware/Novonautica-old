@@ -42,7 +42,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for movmon in cliente.monederomovimientos %}
+                                {% for movmon in cliente.monederomovimientos|reverse %}
                                     {% if movmon.tipo == 1 %}
                                     <tr>
                                         <td>{% if movmon.fecha %}{{ movmon.fecha|date('d-m-Y') }}{% endif %}</td>

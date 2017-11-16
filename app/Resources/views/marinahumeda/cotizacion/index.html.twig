@@ -32,7 +32,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for marinaHumedaCotizacion in marinaHumedaCotizacions %}
+                            {% for marinaHumedaCotizacion in marinaHumedaCotizacions|reverse %}
                                 <tr>
                                     <td>
                                         {% if marinaHumedaCotizacion.foliorecotiza == 0 %}

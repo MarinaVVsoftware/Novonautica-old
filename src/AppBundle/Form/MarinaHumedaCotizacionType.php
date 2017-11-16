@@ -56,15 +56,25 @@ class MarinaHumedaCotizacionType extends AbstractType
             ])
             ->add('descuento',null,[
                 'empty_data' => 0,
-                'attr' => ['class' => 'esdecimal']
+                'attr' => ['class' => 'esdecimal',
+                            'autocomplete'=>'off']
             ])
-
+            ->add('dolar',null,[
+                'empty_data' => 0,
+                'attr' => ['class' => 'esdecimal',
+                            'autocomplete'=>'off']
+            ])
+            ->add('mensaje',TextareaType::class,[
+                'label' => 'Mensaje en el correo:',
+                'attr' => ['rows' => 7],
+                'required' => false,
+            ])
             ->add('mhcservicios',CollectionType::class,[
                 'entry_type' => MarinaHumedaCotizaServiciosType::class,
                 'label' => false
             ])
             ->add('validanovo', ChoiceType::class,[
-                'choices' =>[ 'Aceptar' => 2, 'Rechazar' => 1, 'Pendiente' => 0 ],
+                'choices' =>[ 'Aceptar' => 2, 'Rechazar' => 1 ],
                 'expanded' => true,
                 'multiple' => false,
                 'choice_attr' => function($val, $key, $index) {
@@ -110,34 +120,23 @@ class MarinaHumedaCotizacionType extends AbstractType
             $form = $event->getForm();
 
             if($cotizacion->getId()==null){ //cotización nueva
-                $form->remove('validanovo');
-                $form->remove('validacliente');
-                $form->remove('notasnovo');
-                $form->remove('notascliente');
+                $form
+                    ->remove('validanovo')
+                    ->remove('validacliente')
+                    ->remove('notasnovo')
+                    ->remove('notascliente');
                 $formModifier($event->getForm(), $cotizacion->getCliente());
             }else{ //editando cotización, solo para validaciones
-                $form->remove('cliente');
-                $form->remove('fechaLlegada');
-                $form->remove('fechaSalida');
-                $form->remove('descuento');
-                $form->remove('mhcservicios');
-
-                $form->remove('validacliente');
-                $form->remove('notascliente');
-                //if($cotizacion->getValidanovo()==2) { //si fue aprobado por marina
-                //    if($cotizacion->getValidacliente()==2){ //si fue aprobado por el cliente
-                //        $form->remove('validanovo');
-                //       $form->remove('validacliente');
-                //        $form->remove('notasnovo');
-                //        $form->remove('notascliente');
-                //    }else{
-                //        $form->remove('validanovo');
-                //        $form->remove('notasnovo');
-                //    }
-                //}else{
-                //    $form->remove('validacliente');
-                //    $form->remove('notascliente');
-                //}
+                $form
+//                    ->remove('cliente')
+//                    ->remove('barco')
+                    ->remove('fechaLlegada')
+                    ->remove('fechaSalida')
+                    ->remove('descuento')
+                    ->remove('dolar')
+                    ->remove('mhcservicios')
+                    ->remove('validacliente')
+                    ->remove('notascliente');
             }
         });
 

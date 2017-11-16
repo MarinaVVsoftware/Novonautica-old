@@ -86,12 +86,19 @@ class MarinaHumedaCotizaServicios
      */
     private $marinahumedacotizacion;
 
-//    /**
-//     *
-//     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MarinaHumedaServicio")
-//     * @ORM\JoinColumn(name="idservicio", referencedColumnName="id")
-//     */
-//    private $marinahumedaservicio;
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MarinaHumedaCotizacionAdicional", inversedBy="mhcservicios")
+     * @ORM\JoinColumn(name="idmhcotizacionadicional", referencedColumnName="id",onDelete="CASCADE")
+     */
+    private $marinahumedacotizacionadicional;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MarinaHumedaServicio")
+     * @ORM\JoinColumn(name="idservicio", referencedColumnName="id")
+     */
+    private $marinahumedaservicio;
 
     /**
      * Get id
@@ -343,30 +350,51 @@ class MarinaHumedaCotizaServicios
         return $this->marinahumedacotizacion;
     }
 
+    /**
+     * Set marinahumedacotizacionadicional
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacionAdicional $marinahumedacotizacionadicional
+     *
+     * @return MarinaHumedaCotizaServicios
+     */
+    public function setMarinahumedacotizacionadicional(\AppBundle\Entity\MarinaHumedaCotizacionAdicional $marinahumedacotizacionadicional = null)
+    {
+        $this->marinahumedacotizacionadicional = $marinahumedacotizacionadicional;
 
+        return $this;
+    }
 
-//    /**
-//     * Set marinahumedaservicio
-//     *
-//     * @param \AppBundle\Entity\MarinaHumedaServicio $marinahumedaservicio
-//     *
-//     * @return MarinaHumedaServicio
-//     */
-//    public function setMarinaHumedaServicio(\AppBundle\Entity\MarinaHumedaServicio $marinahumedaservicio = null)
-//    {
-//        $this->marinahumedaservicio = $marinahumedaservicio;
-//        return $this;
-//    }
-//
-//    /**
-//     * Get marinahumedaservicio
-//     *
-//     * @return \AppBundle\Entity\MarinaHumedaServicio
-//     */
-//    public function getMarinaHumedaServicio()
-//    {
-//        return $this->marinahumedaservicio;
-//    }
+    /**
+     * Get marinahumedacotizacionadicional
+     *
+     * @return \AppBundle\Entity\MarinaHumedaCotizacionAdicional
+     */
+    public function getMarinahumedacotizacionadicional()
+    {
+        return $this->marinahumedacotizacionadicional;
+    }
 
+    /**
+     * Set marinahumedaservicio
+     *
+     * @param \AppBundle\Entity\MarinaHumedaServicio $marinahumedaservicio
+     *
+     * @return MarinaHumedaCotizaServicios
+     */
+    public function setMarinahumedaservicio(\AppBundle\Entity\MarinaHumedaServicio $marinahumedaservicio = null)
+    {
+        $this->marinahumedaservicio = $marinahumedaservicio;
 
+        return $this;
+    }
+
+    /**
+     * Get marinahumedaservicio
+     *
+     * @return \AppBundle\Entity\MarinaHumedaServicio
+     */
+    public function getMarinahumedaservicio()
+    {
+        return $this->marinahumedaservicio;
+    }
 }

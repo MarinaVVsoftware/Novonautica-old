@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * MarinaHumedaCotizacionAdicional
@@ -91,6 +92,19 @@ class MarinaHumedaCotizacionAdicional
      */
     private $barco;
 
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaCotizaServicios", mappedBy="marinahumedacotizacionadicional",cascade={"persist"})
+     */
+    private $mhcservicios;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->mhcservicios = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -340,5 +354,40 @@ class MarinaHumedaCotizacionAdicional
     public function getBarco()
     {
         return $this->barco;
+    }
+
+
+    /**
+     * Add mhcservicio
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio
+     *
+     * @return MarinaHumedaCotizacionAdicional
+     */
+    public function addMhcservicio(\AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio)
+    {
+        $this->mhcservicios[] = $mhcservicio;
+
+        return $this;
+    }
+
+    /**
+     * Remove mhcservicio
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio
+     */
+    public function removeMhcservicio(\AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio)
+    {
+        $this->mhcservicios->removeElement($mhcservicio);
+    }
+
+    /**
+     * Get mhcservicios
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMhcservicios()
+    {
+        return $this->mhcservicios;
     }
 }

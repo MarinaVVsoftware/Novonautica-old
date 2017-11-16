@@ -40,8 +40,10 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     {% form_theme form 'estructura/temaerror.html.twig' %}
-                                    {{ form_row(form.cliente) }}
+
                                     <div id="info-cliente">
+                                        <label>Cliente</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente }}</div>
                                         <label>Correo electrónico</label>
                                         <div class='info-input'>{{ marinaHumedaCotizacion.cliente.correo }}</div>
                                         <label>Número de teléfono</label>
@@ -57,12 +59,9 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    {{ form_errors(form.barco) }}
-                                    <div class="radio buscabarcomh">
-                                        {{ form_label(form.barco) }}
-                                        {{ form_widget(form.barco) }}
-                                    </div>
                                     <div id="info-barco">
+                                        <label>Barco</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco }}</div>
                                         <label>Modelo</label>
                                         <div class='info-input'>{{ marinaHumedaCotizacion.barco.modelo }}</div>
                                         <label>Eslora</label>
@@ -99,12 +98,14 @@
                                     </div>
                                     <label>Descuento(%)</label>
                                     {{ form_widget(form.descuento) }}
+                                    <label>Dolar</label>
+                                    {{ form_widget(form.dolar) }}
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <label>Días Estadía:</label>
-                                            {{ form_widget(form.mhcservicios.children.0.cantidad,{'disabled':'disabled'}) }}
+                                            <div id="dias_estadia_cantidad" class='info-input' data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</div>
                                         </div>
 
                                         <div class="col-sm-6">
@@ -114,11 +115,7 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-sm-6">
-                                            <label>Conexión a electricidad (Amperaje):</label>
-                                            {{ form_widget(form.mhcservicios.children.1.cantidad) }}
-                                        </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-6 col-sm-offset-6">
                                             <label>Precio electricidad:</label>
                                             {{ form_widget(form.mhcservicios.children.1.precioAux) }}
                                         </div>
@@ -130,8 +127,7 @@
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="valdolar" class=""
-                                         data-valor="{{ marinaHumedaCotizacion.dolar }}">{{ marinaHumedaCotizacion.dolar }}
+                                    <div id="" class="valdolar">{{ marinaHumedaCotizacion.dolar }}
                                         MXN
                                     </div>
                                 </div>
@@ -276,7 +272,9 @@
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="" class="" >{{ marinaHumedaCotizacion.dolar }} MXN</div>
+                                    <div id="" class="valdolar">{{ marinaHumedaCotizacion.dolar }}
+                                        MXN
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -427,11 +425,10 @@
                             </div>
                         </div>
                     </div>
-
+                    {{ form_widget(form.cliente,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.barco,{'attr':{'class':'hidden'}}) }}
                     {{ form_widget(form.mhcservicios.children.0.precioAux,{'attr':{'class':'hidden'}}) }}
                     {{ form_widget(form.mhcservicios.children.1.precio,{'attr':{'class':'hidden'}}) }}
-                    {{ form_widget(form.mhcservicios.children.0.estatus,{'attr':{'class':'hidden'}}) }}
-                    {{ form_widget(form.mhcservicios.children.1.estatus,{'attr':{'class':'hidden'}}) }}
                     {{ form_end(form) }}
 
                 </div>
