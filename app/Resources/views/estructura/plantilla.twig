@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{% block title %}Novonautica{% endblock %}</title>
+    <title>{{ title is defined ? title ~ ' | ' : '' }} Novonautica</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta name="theme-color" content="#292e41"/>
@@ -34,7 +34,8 @@
 </div>
 <div class="wrapper">
     {% include 'estructura/encabezado.twig' %}
-    {% include 'estructura/menu.twig' %}
+    {#{% include 'estructura/menu.twig' %}#}
+    {{ render(controller('AppBundle:Sidebar:create')) }}
     {% block contwrapper %}{% endblock %}
     {% block modals %}{% endblock %}
 

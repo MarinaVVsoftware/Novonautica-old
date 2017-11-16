@@ -8,18 +8,20 @@ use AppBundle\Entity\AstilleroServicio;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\ValorSistema;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Astillerocotizacion controller.
  *
- * @Route("astillero")
+ * @Route("/astillero")
  */
 class AstilleroCotizacionController extends Controller
 {
     /**
-     * Lists all astilleroCotizacion entities.
+     * Enlista todas las cotizaciones de astillero
      *
      * @Route("/", name="astillero_index")
      * @Method("GET")
@@ -30,17 +32,21 @@ class AstilleroCotizacionController extends Controller
 
         $astilleroCotizacions = $em->getRepository('AppBundle:AstilleroCotizacion')->findAll();
 
-        return $this->render('astillerocotizacion/index.html.twig', array(
+        return $this->render('astillerocotizacion/index.html.twig', [
+            'title' => 'Cotizaciones',
             'astilleroCotizacions' => $astilleroCotizacions,
-            'astillerocotizaciones' => 1
-        ));
+        ]);
     }
 
     /**
-     * Creates a new astilleroCotizacion entity.
+     * Crea una nueva cotizacion de astillero
      *
-     * @Route("/nueva-cotizacion", name="astillero_new")
+     * @Route("/nueva", name="astillero_new")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
@@ -233,20 +239,20 @@ class AstilleroCotizacionController extends Controller
             $em->persist($astilleroCotizacion);
             $em->flush();
 
-            return $this->redirectToRoute('astillero_show', array('id' => $astilleroCotizacion->getId()));
+            return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
         }
 
-        return $this->render('astillerocotizacion/new.html.twig', array(
+        return $this->render('astillerocotizacion/new.html.twig', [
+            'title' => 'Nueva cotización',
             'astilleroCotizacion' => $astilleroCotizacion,
             'valdolar' => $dolar,
             'valiva' => $iva,
-            'form' => $form->createView(),
-            'astilleronuevacotizacion' => 1
-        ));
+            'form' => $form->createView()
+        ]);
     }
 
     /**
-     * Finds and displays a astilleroCotizacion entity.
+     * Muestra una cotizacion de astillero
      *
      * @Route("/{id}", name="astillero_show")
      * @Method("GET")
@@ -255,15 +261,15 @@ class AstilleroCotizacionController extends Controller
     {
         $deleteForm = $this->createDeleteForm($astilleroCotizacion);
 
-        return $this->render('astillerocotizacion/show.html.twig', array(
+        return $this->render('astillerocotizacion/show.html.twig', [
+            'title' => 'Cotización',
             'astilleroCotizacion' => $astilleroCotizacion,
             'delete_form' => $deleteForm->createView(),
-            'astillerocotizaciones' => 1
-        ));
+        ]);
     }
 
     /**
-     * Displays a form to edit an existing astilleroCotizacion entity.
+     * Editar una cotizacion
      *
      * @Route("/{id}/edit", name="astillero_edit")
      * @Method({"GET", "POST"})
@@ -277,18 +283,19 @@ class AstilleroCotizacionController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('astillero_edit', array('id' => $astilleroCotizacion->getId()));
+            return $this->redirectToRoute('astillero_edit', ['id' => $astilleroCotizacion->getId()]);
         }
 
-        return $this->render('astillerocotizacion/edit.html.twig', array(
+        return $this->render('astillerocotizacion/edit.html.twig', [
+            'title' => 'Editar cotizacion',
             'astilleroCotizacion' => $astilleroCotizacion,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
-     * Deletes a astilleroCotizacion entity.
+     * Elimina una cotizacion
      *
      * @Route("/{id}", name="astillero_delete")
      * @Method("DELETE")

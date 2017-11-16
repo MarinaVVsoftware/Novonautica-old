@@ -19,42 +19,24 @@ class DefaultController extends Controller
         ]);
     }
 
-//    /**
-//     * @Route("/astillero/nueva-cotizacion", name="astillero-nueva-cotizacion")
-//     */
-//    public function displayAstilleroNuevaCotizacion(Request $request)
-//    {
-//        return $this->render('astillero-nueva-cotizacion.twig', [
-//            'astilleronuevacotizacion' => 1
-//        ]);
-//    }
     /**
-     * @Route("/astillero/cotizaciones", name="astillero-cotizaciones")
+     * @Route("/astillero/aceptaciones", name="astillero-aceptaciones")
      */
-    public function displayAstilleroCotizaciones(Request $request)
-    {
-        return $this->render('astillero-cotizaciones.twig', [
-            'astillerocotizaciones' => 1
-        ]);
-    }
-    /**
-     * @Route("/astill/aceptaciones", name="astillero-aceptaciones")
-     */
-    public function displayAstilleroAceptaciones(Request $request)
+    public function displayAstilleroAceptaciones()
     {
         return $this->render('astillero-aceptaciones.twig', [
-            'astilleroaceptaciones' => 1
+            'title' => 'Aceptaciones'
         ]);
     }
+
     /**
-     * @Route("/astill/odt", name="astillero-odt")
+     * @Route("/astillero/odt", name="astillero-odt")
      */
     public function displayAstilleroODT(Request $request)
     {
-        return $this->render('astillero-odt.twig', [
-            'astilleroodt' => 1
-        ]);
+        return $this->render('astillero-odt.twig');
     }
+
     /**
      * @Route("/astillero/odt/asigna-dias", name="astillero-odt-dias")
      */
@@ -64,6 +46,7 @@ class DefaultController extends Controller
             'astilleroodt' => 1
         ]);
     }
+
     /**
      * @Route("/astillero/odt/asigna-horas", name="astillero-odt-horas")
      */
@@ -83,6 +66,7 @@ class DefaultController extends Controller
             'recursoshumanos' => 1
         ]);
     }
+
     /**
      * @Route("/contabilidad", name="contabilidad")
      */
@@ -92,6 +76,7 @@ class DefaultController extends Controller
             'contabilidad' => 1
         ]);
     }
+
     /**
      * @Route("/reportes", name="reportes")
      */

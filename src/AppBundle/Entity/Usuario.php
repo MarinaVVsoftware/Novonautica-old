@@ -57,13 +57,6 @@ class Usuario implements AdvancedUserInterface, \Serializable
      */
     private $estatus;
 
-    /**
-     * @var Rol
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Rol", inversedBy="users")
-     */
-    private $rol;
-
     public function __construct()
     {
         $this->estatus = 1;
@@ -200,30 +193,6 @@ class Usuario implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set rol
-     *
-     * @param Rol $rol
-     *
-     * @return Usuario
-     */
-    public function setRol(Rol $rol = null)
-    {
-        $this->rol = $rol;
-
-        return $this;
-    }
-
-    /**
-     * Get rol
-     *
-     * @return Rol
-     */
-    public function getRol()
-    {
-        return $this->rol;
-    }
-
-    /**
      * Checa si la cuenta del usuario ya expiro
      *
      * @return bool true if the user's account is non expired, false otherwise
@@ -312,13 +281,12 @@ class Usuario implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @return Rol|array
+     * @return array
      */
     public function getRoles()
     {
         return [
-            'ROLE_USER',
-            'ROLE_ADMIN'
+            'ROLE_USER'
         ];
     }
 
