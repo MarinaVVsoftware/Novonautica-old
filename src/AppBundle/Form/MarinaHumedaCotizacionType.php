@@ -5,8 +5,10 @@ namespace AppBundle\Form;
 
 //use Doctrine\DBAL\Types\FloatType;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
+use AppBundle\Entity\Slip;
 use Doctrine\DBAL\Types\IntegerType;
 use Doctrine\DBAL\Types\TextType;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -31,125 +33,124 @@ class MarinaHumedaCotizacionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('cliente',EntityType::class,[
+            ->add('cliente', EntityType::class, [
                 'class' => 'AppBundle:Cliente',
                 'label' => 'Cliente',
                 'placeholder' => 'Seleccionar...',
                 'attr' => ['class' => 'select-buscador selectclientebuscar'],
 
             ])
-            ->add('fechaLlegada',DateType::class,[
+            ->add('fechaLlegada', DateType::class, [
                 'label' => 'Fecha llegada',
                 'widget' => 'single_text',
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
-                           'readonly' => true],
+                    'readonly' => true],
                 'format' => 'yyyy-MM-dd'
             ])
-            ->add('fechaSalida',DateType::class,[
+            ->add('fechaSalida', DateType::class, [
                 'label' => 'Fecha Salida',
                 'widget' => 'single_text',
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
-                           'readonly' => true],
+                    'readonly' => true],
                 'format' => 'yyyy-MM-dd'
             ])
-            ->add('descuento',null,[
+            ->add('descuento', null, [
                 'empty_data' => 0,
-                'attr' => ['class' => 'esdecimal']
+                'attr' => ['class' => 'esdecimal',
+                    'autocomplete' => 'off']
             ])
-
-            ->add('mhcservicios',CollectionType::class,[
+            ->add('dolar', null, [
+                'empty_data' => 0,
+                'attr' => ['class' => 'esdecimal',
+                    'autocomplete' => 'off']
+            ])
+            ->add('mensaje', TextareaType::class, [
+                'label' => 'Mensaje en el correo:',
+                'attr' => ['rows' => 7, 'class' => 'editorwy'],
+                'required' => false,
+            ])
+            ->add('mhcservicios', CollectionType::class, [
                 'entry_type' => MarinaHumedaCotizaServiciosType::class,
                 'label' => false
             ])
-            ->add('validanovo', ChoiceType::class,[
-                'choices' =>[ 'Aceptar' => 2, 'Rechazar' => 1, 'Pendiente' => 0 ],
+            ->add('validanovo', ChoiceType::class, [
+                'choices' => ['Aceptar' => 2, 'Rechazar' => 1],
                 'expanded' => true,
                 'multiple' => false,
-                'choice_attr' => function($val, $key, $index) {
-                    return ['class' => 'opcion'.strtolower($key)];
+                'choice_attr' => function ($val, $key, $index) {
+                    return ['class' => 'opcion' . strtolower($key)];
                 },
             ])
-            ->add('notasnovo',TextareaType::class,[
+            ->add('notasnovo', TextareaType::class, [
                 'label' => 'Observaciones',
                 'attr' => ['rows' => 7],
                 'required' => false
             ])
-            ->add('validacliente', ChoiceType::class,[
-                'choices' =>[ 'Aceptar' => 2, 'Rechazar' => 1, 'Pendiente' => 0 ],
+            ->add('validacliente', ChoiceType::class, [
+                'choices' => ['Aceptar' => 2, 'Rechazar' => 1, 'Pendiente' => 0],
                 'expanded' => true,
                 'multiple' => false,
-                'choice_attr' => function($val, $key, $index) {
-                    return ['class' => 'opcion'.strtolower($key)];
+                'choice_attr' => function ($val, $key, $index) {
+                    return ['class' => 'opcion' . strtolower($key)];
                 },
             ])
-            ->add('notascliente',TextareaType::class,[
+            ->add('notascliente', TextareaType::class, [
                 'label' => 'Observaciones',
                 'attr' => ['rows' => 7],
                 'required' => false
             ])
-        ;
+            ->add('slip', EntityType::class, [
+                'class' => 'AppBundle:Slip',
+                'label' => 'Slip',
+                'placeholder' => 'Seleccionar...',
+                'choice_attr' => function ($slip) {
+                    /** @var Slip $slip */
+                    return ['data-feet' => $slip->getPies()];
+                }
+            ]);
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();
 
-                $form->add('barco', EntityType::class, array(
-                    'class' => 'AppBundle:Barco',
-                    'placeholder' => '',
-                    'attr' => ['class' => 'busquedabarco'],
-                    'choices' => $barcos,
-                    'expanded' => true,
-                    'multiple' => false
-                ));
+            $form->add('barco', EntityType::class, array(
+                'class' => 'AppBundle:Barco',
+                'placeholder' => '',
+                'attr' => ['class' => 'busquedabarco'],
+                'choices' => $barcos,
+                'expanded' => true,
+                'multiple' => false
+            ));
 
         };
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use($formModifier) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($formModifier) {
             $cotizacion = $event->getData();
             $form = $event->getForm();
 
-            if($cotizacion->getId()==null){ //cotización nueva
-                $form->remove('validanovo');
-                $form->remove('validacliente');
-                $form->remove('notasnovo');
-                $form->remove('notascliente');
+            if ($cotizacion->getId() == null) { //cotización nueva
+                $form
+                    ->remove('validanovo')
+                    ->remove('validacliente')
+                    ->remove('notasnovo')
+                    ->remove('notascliente');
                 $formModifier($event->getForm(), $cotizacion->getCliente());
-            }else{ //editando cotización, solo para validaciones
-                $form->remove('cliente');
-                $form->remove('fechaLlegada');
-                $form->remove('fechaSalida');
-                $form->remove('descuento');
-                $form->remove('mhcservicios');
-
-                $form->remove('validacliente');
-                $form->remove('notascliente');
-                //if($cotizacion->getValidanovo()==2) { //si fue aprobado por marina
-                //    if($cotizacion->getValidacliente()==2){ //si fue aprobado por el cliente
-                //        $form->remove('validanovo');
-                //       $form->remove('validacliente');
-                //        $form->remove('notasnovo');
-                //        $form->remove('notascliente');
-                //    }else{
-                //        $form->remove('validanovo');
-                //        $form->remove('notasnovo');
-                //    }
-                //}else{
-                //    $form->remove('validacliente');
-                //    $form->remove('notascliente');
-                //}
+            } else { //editando cotización, solo para validaciones
+                $form
+                    ->remove('cliente')
+//                    ->remove('barco')
+                    ->remove('fechaLlegada')
+                    ->remove('fechaSalida')
+                    ->remove('descuento')
+                    ->remove('dolar')
+                    ->remove('mensaje')
+                    ->remove('mhcservicios')
+                    ->remove('validacliente')
+                    ->remove('notascliente')
+                    ->remove('slip');
             }
         });
-
-//        $builder->addEventListener(
-//            FormEvents::PRE_SET_DATA,
-//            function (FormEvent $event) use ($formModifier) {
-//                // this would be your entity, i.e. SportMeetup
-//                $data = $event->getData();
-//
-//                $formModifier($event->getForm(), $data->getCliente());
-//            }
-//        );
 
         $builder->get('cliente')->addEventListener(
             FormEvents::POST_SUBMIT,
@@ -163,31 +164,8 @@ class MarinaHumedaCotizacionType extends AbstractType
                 $formModifier($event->getForm()->getParent(), $cliente);
             }
         );
-
-//        $builder->addEventListener(
-//            FormEvents::PRE_SET_DATA,
-//            function (FormEvent $event) {
-//                $form = $event->getForm();
-//
-//                // this would be your entity, i.e. SportMeetup
-//                $data = $event->getData();
-//                dump($form);
-//                dump($data);
-//                $cliente = $data->getCliente();
-//
-//                $barcos = null === $cliente ? array() : $cliente->getBarcos();
-//
-//                $form->add('barco', EntityType::class, array(
-//                    'class' => 'AppBundle:Barco',
-//                    'label' => 'Barcos',
-//                    'choices' => $barcos,
-//                ));
-//            }
-//        );
-
-
     }
-    
+
     /**
      * {@inheritdoc}
      */

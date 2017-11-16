@@ -51,6 +51,13 @@ class ValorSistema
     private $unidad;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="text", nullable=true)
+     */
+    private $descripcion;
+
+    /**
      * Generate a token
      *
      * @return string (100 characters)
@@ -148,5 +155,21 @@ class ValorSistema
     public function getUnidad()
     {
         return $this->unidad;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * @param string $descripcion
+     */
+    public function setDescripcion($descripcion)
+    {
+        $this->descripcion = $descripcion;
     }
 }

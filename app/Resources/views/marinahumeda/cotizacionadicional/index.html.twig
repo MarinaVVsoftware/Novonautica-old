@@ -13,53 +13,45 @@
                     <h3 class="panel-title">Servicios Adicionales</h3>
                 </div>
                 <div class="panel-body">
-                    <table class="table text-center">
-                        <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Descuento</th>
-                            <th>Dolar</th>
-                            <th>Iva</th>
-                            <th>Subtotal</th>
-                            <th>Ivatotal</th>
-                            <th>Descuentototal</th>
-                            <th>Total</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for marinaHumedaCotizacionAdicional in marinaHumedaCotizacionAdicionals %}
+                    <div class="table-responsive scroll-novo">
+                        <table class="table text-center">
+                            <thead>
                             <tr>
-                                <td>
-                                    <a href="{{ path('marina-humeda-cotizacion-adicional_show', { 'id': marinaHumedaCotizacionAdicional.id }) }}">{{ marinaHumedaCotizacionAdicional.id }}</a>
-                                </td>
-                                <td>{{ marinaHumedaCotizacionAdicional.descuento }}</td>
-                                <td>{{ marinaHumedaCotizacionAdicional.dolar }}</td>
-                                <td>{{ marinaHumedaCotizacionAdicional.iva }}</td>
-                                <td>{{ marinaHumedaCotizacionAdicional.subtotal }}</td>
-                                <td>{{ marinaHumedaCotizacionAdicional.ivatotal }}</td>
-                                <td>{{ marinaHumedaCotizacionAdicional.descuentototal }}</td>
-                                <td>{{ marinaHumedaCotizacionAdicional.total }}</td>
-                                <td>
-                                    <ul>
-                                        <li>
-                                            <a class="btn btn-morado" href="{{ path('marina-humeda-cotizacion-adicional_show', { 'id': marinaHumedaCotizacionAdicional.id }) }}">Ver</a>
-                                        </li>
-                                        <li>
-                                            <a class="btn btn-azul" href="{{ path('marina-humeda-cotizacion-adicional_edit', { 'id': marinaHumedaCotizacionAdicional.id }) }}">Editar</a>
-                                        </li>
-                                    </ul>
-                                </td>
+                                <th>Num.</th>
+                                <th>Cliente</th>
+                                <th>Barco</th>
+                                <th>Dolar</th>
+                                <th>Iva</th>
+                                <th>Subtotal</th>
+                                <th>Iva total</th>
+                                <th>Total</th>
+                                <th></th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-
-                    <ul>
-                        <li>
-                            <a class="btn btn-azul" href="{{ path('marina-humeda-cotizacion-adicional_new') }}">Agregar</a>
-                        </li>
-                    </ul>
+                            </thead>
+                            <tbody>
+                            {% set i=0 %}
+                            {% for marinaHumedaCotizacionAdicional in marinaHumedaCotizacionAdicionals|reverse %}
+                                {% set i=i+1 %}
+                                <tr>
+                                    <td>{{ i }}</td>
+                                    <td>{{ marinaHumedaCotizacionAdicional.cliente }}</td>
+                                    <td>{{ marinaHumedaCotizacionAdicional.barco }}</td>
+                                    <td>${{ marinaHumedaCotizacionAdicional.dolar|number_format(2,'.',',') }}</td>
+                                    <td>{{ marinaHumedaCotizacionAdicional.iva }}%</td>
+                                    <td>${{ marinaHumedaCotizacionAdicional.subtotal|number_format(2,'.',',') }}</td>
+                                    <td>${{ marinaHumedaCotizacionAdicional.ivatotal|number_format(2,'.',',') }}</td>
+                                    <td>${{ marinaHumedaCotizacionAdicional.total|number_format(2,'.',',') }}</td>
+                                    <td>
+                                        <a class="btn btn-morado-claro"
+                                           href="{{ path('marina-humeda-cotizacion-adicional_show', { 'id': marinaHumedaCotizacionAdicional.id }) }}">Detalle</a>
+                                        <a class="btn btn-azul"
+                                           href="{{ path('marina-humeda-cotizacion-adicional_edit', { 'id': marinaHumedaCotizacionAdicional.id }) }}">Editar</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>

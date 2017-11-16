@@ -96,6 +96,14 @@ class MarinaHumedaCotizacion
     private $total;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="mensaje", type="text", nullable=true)
+     */
+    private $mensaje;
+
+
+    /**
      * @var int
      *
      * @ORM\Column(name="validanovo", type="smallint")
@@ -122,6 +130,14 @@ class MarinaHumedaCotizacion
      * @ORM\Column(name="notascliente", type="text", nullable=true)
      */
     private $notascliente;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombrevalidanovo", type="string", length=255, nullable=true)
+     */
+    private $nombrevalidanovo;
+
 
     /**
      * @var \DateTime
@@ -181,9 +197,22 @@ class MarinaHumedaCotizacion
 
     /**
      *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Slip", inversedBy="mhcotizaciones")
+     * @ORM\JoinColumn(name="idslip", referencedColumnName="id",onDelete="CASCADE")
+     */
+    private $slip;
+
+    /**
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaCotizaServicios", mappedBy="marinahumedacotizacion",cascade={"persist"})
      */
     private $mhcservicios;
+
+    /**
+     *
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Pago", mappedBy="mhcotizacion")
+     */
+    private $pago;
 
     public function __construct() {
         $this->mhcservicios = new ArrayCollection();
@@ -492,6 +521,22 @@ class MarinaHumedaCotizacion
     }
 
     /**
+     * @param string $nombrevalidanovo
+     */
+    public function setNombrevalidanovo($nombrevalidanovo)
+    {
+        $this->nombrevalidanovo = $nombrevalidanovo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNombrevalidanovo()
+    {
+        return $this->nombrevalidanovo;
+    }
+
+    /**
      * Set estatus
      *
      * @param boolean $estatus
@@ -765,7 +810,70 @@ class MarinaHumedaCotizacion
         $this->mhcservicios->removeElement($mhcservicio);
     }
 
+    /**
+     * @return string
+     */
+    public function getMensaje()
+    {
+        return $this->mensaje;
+    }
+
+    /**
+     * @param string $mensaje
+     */
+    public function setMensaje($mensaje)
+    {
+        $this->mensaje = $mensaje;
+    }
 
 
 
+    /**
+     * Set slip
+     *
+     * @param \AppBundle\Entity\Slip $slip
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setSlip(\AppBundle\Entity\Slip $slip = null)
+    {
+        $this->slip = $slip;
+
+        return $this;
+    }
+
+    /**
+     * Get slip
+     *
+     * @return \AppBundle\Entity\Slip
+     */
+    public function getSlip()
+    {
+        return $this->slip;
+    }
+
+
+    /**
+     * Set pago
+     *
+     * @param \AppBundle\Entity\Pago $pago
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setPago(\AppBundle\Entity\Pago $pago = null)
+    {
+        $this->pago = $pago;
+
+        return $this;
+    }
+
+    /**
+     * Get pago
+     *
+     * @return \AppBundle\Entity\Pago
+     */
+    public function getPago()
+    {
+        return $this->pago;
+    }
 }

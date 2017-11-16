@@ -15,7 +15,7 @@
                     <table class="table text-center">
                         <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>Num</th>
                             <th>Tipo</th>
                             <th>Costo</th>
                             <th>Descripción</th>
@@ -23,9 +23,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for marinaHumedaTarifa in marinaHumedaTarifas %}
+                        {% set i=0 %}
+                        {% for marinaHumedaTarifa in marinaHumedaTarifas|reverse %}
+                            {% set i=i+1 %}
                             <tr>
-                                <td>{{ marinaHumedaTarifa.id }}</td>
+                                <td>{{ i }}</td>
                                 <td>{% if marinaHumedaTarifa.tipo == 1 %}Amarre{% else %}Electricidad{% endif %}</td>
                                 <td>${{ marinaHumedaTarifa.costo|number_format(2,'.',',') }}</td>
                                 <td>{{ marinaHumedaTarifa.descripcion }}</td>

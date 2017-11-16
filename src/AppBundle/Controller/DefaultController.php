@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Entity\MarinaHumedaCotizacion;
 
 class DefaultController extends Controller
 {
@@ -19,42 +20,54 @@ class DefaultController extends Controller
         ]);
     }
 
-//    /**
-//     * @Route("/astillero/nueva-cotizacion", name="astillero-nueva-cotizacion")
-//     */
-//    public function displayAstilleroNuevaCotizacion(Request $request)
-//    {
-//        return $this->render('astillero-nueva-cotizacion.twig', [
-//            'astilleronuevacotizacion' => 1
-//        ]);
-//    }
     /**
-     * @Route("/astillero/cotizaciones", name="astillero-cotizaciones")
+     * Genera el pdf de una cotizacion en base a su id
+     *
+     * @Route("/{id}/mhc-pdf", name="marinahc-pdf")
+     * @param MarinaHumedaCotizacion $mhc
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function displayAstilleroCotizaciones(Request $request)
+    public function displayMarinaPDF(MarinaHumedaCotizacion $mhc)
     {
-        return $this->render('astillero-cotizaciones.twig', [
-            'astillerocotizaciones' => 1
+        return $this->render('marinahumeda/cotizacion/cotizacionpdf.html.twig', [
+            'marinaHumedaCotizacion' => $mhc
         ]);
     }
+
     /**
-     * @Route("/astill/aceptaciones", name="astillero-aceptaciones")
+     * Displays a form to edit an existing marinaHumedaCotizacion entity.
+     *
+     * @Route("/{id}/correovalidacion", name="marina-humeda_validaras")
+
+     **/
+    public function validaAction(Request $request, MarinaHumedaCotizacion $mhc)
+    {
+        return $this->render('marinahumeda/cotizacion/correo-clientevalida.twig', [
+            'marinaHumedaCotizacion' => $mhc,
+            'tokenAcepta' => 'asdas',
+            'tokenRechaza' => 'otro'
+        ]);
+    }
+
+    /**
+     * @Route("/astillero/aceptaciones", name="astillero-aceptaciones")
      */
-    public function displayAstilleroAceptaciones(Request $request)
+    public function displayAstilleroAceptaciones()
     {
         return $this->render('astillero-aceptaciones.twig', [
-            'astilleroaceptaciones' => 1
+            'title' => 'Aceptaciones'
         ]);
     }
+
     /**
-     * @Route("/astill/odt", name="astillero-odt")
+     * @Route("/astillero/odt", name="astillero-odt")
      */
     public function displayAstilleroODT(Request $request)
     {
-        return $this->render('astillero-odt.twig', [
-            'astilleroodt' => 1
-        ]);
+        return $this->render('astillero-odt.twig');
     }
+
     /**
      * @Route("/astillero/odt/asigna-dias", name="astillero-odt-dias")
      */
@@ -64,6 +77,7 @@ class DefaultController extends Controller
             'astilleroodt' => 1
         ]);
     }
+
     /**
      * @Route("/astillero/odt/asigna-horas", name="astillero-odt-horas")
      */
@@ -83,6 +97,7 @@ class DefaultController extends Controller
             'recursoshumanos' => 1
         ]);
     }
+
     /**
      * @Route("/contabilidad", name="contabilidad")
      */
@@ -92,6 +107,7 @@ class DefaultController extends Controller
             'contabilidad' => 1
         ]);
     }
+
     /**
      * @Route("/reportes", name="reportes")
      */
@@ -101,4 +117,6 @@ class DefaultController extends Controller
             'reportes' => 1
         ]);
     }
+
+
 }

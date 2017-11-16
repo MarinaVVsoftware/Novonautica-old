@@ -1,7 +1,7 @@
 {% extends 'estructura/plantilla.twig' %}
 
 {% block title %}
-    Novonautica | Validar cotización Marina Humeda
+    Novonautica | Validar cotización Marina Húmeda
 {% endblock %}
 
 {% block contwrapper %}
@@ -11,7 +11,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Marina Humeda Validación</h3>
+                            <h3 class="panel-title">Marina Húmeda Validación</h3>
                             <span>
                                 {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
                                     {{ marinaHumedaCotizacion.folio }}
@@ -29,7 +29,7 @@
                 <div class="panel-body panel-pestanias">
                     {{ form_start(edit_form) }}
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="primero active">
+                        <li role="presentation" class="primero">
                             <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
                         </li>
                         <li role="presentation">
@@ -41,9 +41,12 @@
                         <li role="presentation">
                             <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
+                        <li role="presentation" class="active">
+                            <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="generales">
+                        <div role="tabpanel" class="tab-pane" id="generales">
                             <div class="row">
                                 <div class="col-sm-3">
 
@@ -104,6 +107,10 @@
                                     </div>
                                     <label>Descuento(%)</label>
                                     <div class='info-input'>{{ marinaHumedaCotizacion.descuento }}</div>
+                                    <label>Dolar</label>
+                                    <div class='info-input'>{{ marinaHumedaCotizacion.dolar|number_format(2,'.',',') }}</div>
+                                    <label>Slip</label>
+                                    <div class='info-input'>{{ marinaHumedaCotizacion.slip }}</div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="row">
@@ -135,7 +142,7 @@
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
                                     <div id="tipocambio" class=""
-                                         data-valor="{{ marinaHumedaCotizacion.dolar }}">{{ marinaHumedaCotizacion.dolar }}
+                                         data-valor="{{ marinaHumedaCotizacion.dolar }}">{{ marinaHumedaCotizacion.dolar|number_format(2,'.',',') }}
                                         MXN
                                     </div>
                                 </div>
@@ -166,7 +173,7 @@
                                                 <tr>
                                                     <td>{{ mhservicio.cantidad }}</td>
                                                     <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexió a electricidad {% endif %}</td>
+                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
                                                     <td>$ {{ mhservicio.precio|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ mhservicio.subtotal|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ mhservicio.iva|number_format(2,'.',',') }}</td>
@@ -256,7 +263,7 @@
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
                                     <div id="" class=""
-                                         data-valor="{{ marinaHumedaCotizacion.dolar }}">{{ marinaHumedaCotizacion.dolar }}
+                                         data-valor="{{ marinaHumedaCotizacion.dolar }}">{{ marinaHumedaCotizacion.dolar|number_format(2,'.',',') }}
                                         MXN
                                     </div>
                                 </div>
@@ -287,7 +294,7 @@
                                                 <tr>
                                                     <td>{{ mhservicio.cantidad }}</td>
                                                     <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexió a electricidad {% endif %}</td>
+                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
                                                     <td>$ {{ (mhservicio.precio * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ (mhservicio.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ (mhservicio.iva * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
@@ -300,24 +307,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-sm-3">
-                                    {#<div class="row">
-                                        <div class="col-sm-12">
-                                            <a class="btn btn-morado-claro">
-                                                <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                                Visualizar
-                                            </a>
-                                        </div>
-                                    </div>#}
-                                    <div class="row">
-                                        <div class="col-sm-12 espacio-linea-arriba2">
-                                            <button type="submit" class="btn btn-azul">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                Guardar
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
@@ -391,6 +381,9 @@
                                     <hr>
                                 </div>
                             </div>
+
+                        </div>
+                        <div role="tabpanel" class="tab-pane active" id="correo">
                             {% if edit_form.validanovo is defined %}
                                 <div class="row">
                                     <div class="col-sm-12 espacio-linea">
@@ -398,14 +391,20 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-6">
                                         <div class="middle">
                                             {{ form_widget(edit_form.validanovo) }}
                                         </div>
                                     </div>
+                                    <div class="col-sm-2">
+                                        <button type="submit" class="btn btn-azul pull-right">
+                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                            Guardar
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-6 espacio-linea-arriba2">
+                                    <div class="col-sm-8 espacio-linea-arriba2">
                                         {{ form_row(edit_form.notasnovo) }}
                                     </div>
                                 </div>
@@ -424,25 +423,31 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-6 espacio-linea-arriba2">
+                                    <div class="col-sm-8 espacio-linea-arriba2">
                                         {{ form_row(edit_form.notascliente) }}
                                     </div>
                                 </div>
                             {% endif %}
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <label>Mensaje en el correo:</label>
+                                    <div class="info-input">{{ marinaHumedaCotizacion.mensaje|raw }}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     {{ form_end(edit_form) }}
                 </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <a href="{{ path('marina-humeda_show',{ 'id': marinaHumedaCotizacion.id }) }}" class="btn btn-naranja pull-right">
-                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                Cancelar
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                {#<div class="panel-footer">#}
+                    {#<div class="row">#}
+                        {#<div class="col-sm-12">#}
+                            {#<a href="{{ path('marina-humeda_show',{ 'id': marinaHumedaCotizacion.id }) }}" class="btn btn-naranja pull-right">#}
+                                {#<i class="fa fa-ban" aria-hidden="true"></i>#}
+                                {#Cancelar#}
+                            {#</a>#}
+                        {#</div>#}
+                    {#</div>#}
+                {#</div>#}
             </div>
         </section>
     </div>

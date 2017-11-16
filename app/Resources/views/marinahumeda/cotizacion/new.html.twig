@@ -34,6 +34,9 @@
                         <li role="presentation">
                             <a href="#totalmxn" aria-controls="total" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
+                        <li role="presentation">
+                            <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div class="row">
@@ -82,13 +85,17 @@
                                     </div>
                                     <label>Descuento(%)</label>
                                     {{ form_widget(form.descuento,{'value':0}) }}
+                                    <label>Dolar</label>
+                                    {{ form_widget(form.dolar,{'value':valdolar}) }}
+                                    <label>Slip</label>
+                                    {{ form_widget(form.slip) }}
                                 </div>
 
                                 <div class="col-sm-6">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <label>Días Estadía:</label>
-                                            {{ form_widget(form.mhcservicios.children.0.cantidad,{'disabled':'disabled'}) }}
+                                            <div id="dias_estadia_cantidad" class='info-input' data-valor="0">0</div>
                                         </div>
 
                                         <div class="col-sm-6">
@@ -97,11 +104,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6">
-                                            <label>Conexión a electricidad (Amperaje):</label>
-                                            {{ form_widget(form.mhcservicios.children.1.cantidad) }}
-                                        </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-6 col-sm-offset-6">
                                             <label>Precio electricidad:</label>
                                             {{ form_widget(form.mhcservicios.children.1.precioAux) }}
                                         </div>
@@ -113,7 +116,7 @@
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="valdolar" class="" data-valor="{{ valdolar }}">{{ valdolar }} MXN</div>
+                                    <div id="" class="valdolar">{{ valdolar }} MXN</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -236,7 +239,7 @@
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="" class="">{{ valdolar }} MXN</div>
+                                    <div id="" class="valdolar">{{ valdolar }} MXN</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -284,22 +287,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-sm-3">
-                                    {#<div class="row">#}
-                                    {#<div class="col-sm-12">#}
-                                    {#<a class="btn btn-morado-claro">Visualizar</a>#}
-                                    {#</div>#}
-                                    {#</div>#}
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <button type="submit" class="btn btn-azul">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                Guardar
-                                            </button>
-                                        </div>
-                                    </div>
 
-                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
@@ -370,24 +358,34 @@
                                 </div>
                             </div>
                         </div>
+                        <div role="tabpanel" class="tab-pane" id="correo">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    {{ form_row(form.mensaje) }}
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-azul">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     {{ form_widget(form.mhcservicios.children.0.precioAux,{'attr':{'class':'hidden'}}) }}
                     {{ form_widget(form.mhcservicios.children.1.precio,{'attr':{'class':'hidden'}}) }}
-                    {{ form_widget(form.mhcservicios.children.0.estatus,{'attr':{'class':'hidden'}}) }}
-                    {{ form_widget(form.mhcservicios.children.1.estatus,{'attr':{'class':'hidden'}}) }}
                     {{ form_end(form) }}
-
                 </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <a href="{{ path('marina-humeda_index') }}" class="btn btn-naranja pull-right">
-                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                Cancelar
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                {#<div class="panel-footer">#}
+                {#<div class="row">#}
+                {#<div class="col-sm-12">#}
+                {#<a href="{{ path('marina-humeda_index') }}" class="btn btn-naranja pull-right">#}
+                {#<i class="fa fa-ban" aria-hidden="true"></i>#}
+                {#Cancelar#}
+                {#</a>#}
+                {#</div>#}
+                {#</div>#}
+                {#</div>#}
             </div>
         </section>
     </div>
@@ -396,135 +394,88 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-      $('.selectclientebuscar').change(function (e) {
-        $('#loading').show();
-        $("#info-barco").empty();
-        $("#info-cliente").empty();
-        console.log('buscando cliente');
-        $.ajax({
-          method: "GET",
-          url: "{{ path('ajax_busca_cliente') }}",
-          dataType: 'json',
-          data: {'id': $(this).val()},
-          success: function (data) {
-            if (data.hasOwnProperty("response") && data.response === "success") {
-              if (data.hasOwnProperty("posts")) {
-                //http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try/3710226
-                if (/^[\],:{}\s]*$/.test(data.posts.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-                  var posts = JSON.parse(data.posts);
-                  //console.log(posts);
-                  if (posts.id > 0) {
-                    var html = "";
-                    html = "<label>Correo electrónico</label>" +
-                        "<div class='info-input'>" + posts.correo + "</div>" +
-                        "<label>Número de teléfono</label>" +
-                        "<div class='info-input'>" + posts.telefono + "</div>" +
-                        "<label>Dirección</label>" +
-                        "<div class='info-input'>" + posts.direccion + "</div>" +
-                        "<label>R.F.C.</label>" +
-                        "<div class='info-input'>" + posts.rfc + "</div>" +
-                        "<label>Razón social</label>" +
-                        "<div class='info-input'>" + posts.razonsocial + "</div>" +
-                        "<label>Dirección fiscal</label>" +
-                        "<div class='info-input'>" + posts.direccionfiscal + "</div>";
-                    $("#info-cliente").append(html);
+      (function ($) {
+        $('.selectclientebuscar').change(function (e) {
+          $('#loading').show();
+          $("#info-barco").empty();
+          $("#info-cliente").empty();
 
-                  }
-                }
-                else {
-                  console.log("INVALID JSON STRING");
-                }
+          var url = "{{ path('ajax_busca_cliente_todo',{'id':'iddelcliente','_format':'json'}) }}";
+          url = url.replace("iddelcliente", $(this).val());
+          $.ajax({
+            method: "GET",
+            url: url,
+            dataType: 'json',
+            success: function (cliente) {
+              JSON.stringify(cliente);
+              var html = "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
+                  "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
+                  "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>" +
+                  "<label>R.F.C.</label>" + "<div class='info-input'>" + cliente.rfc + "</div>" +
+                  "<label>Razón social</label>" + "<div class='info-input'>" + cliente.razonsocial + "</div>" +
+                  "<label>Dirección fiscal</label>" + "<div class='info-input'>" + cliente.direccionfiscal + "</div>";
+              $("#info-cliente").append(html);
+
+              $('#loading').hide();
+            },
+            error: function (jqXHR, exception) {
+              if (jqXHR.status === 405) {
+                console.error("METHOD NOT ALLOWED!");
               }
-              else {
-                console.log("POSTS NOT FOUND");
-              }
+              $('#loading').hide();
             }
+          }).fail(function () {
             $('#loading').hide();
-          },
-          error: function (jqXHR, exception) {
-            if (jqXHR.status === 405) {
-              console.error("METHOD NOT ALLOWED!");
-            }
-            $('#loading').hide();
-          }
-        }).fail(function () {
-          $('#loading').hide();
-          console.log('fallo ajax');
+          });
         });
-      });
 
-      var x = 1;
-      $('.buscabarcomh').click(function () {
-        if (x == 2) {
-          if ($("input[type=radio]:checked").val() != null) {
-            $('#loading').show();
-            $("#info-barco").empty();
-            var idbarco = $("input[type=radio]:checked").val();
-            buscaDatosBarco(idbarco);
-            x = 1;
+        var x = 1;
+        $('.buscabarcomh').click(function () {
+          if (x == 2) {
+            if ($("input[type=radio]:checked").val() != null) {
+              $('#loading').show();
+              $("#info-barco").empty();
+              var idbarco = $("input[type=radio]:checked").val();
+              buscaDatosBarco(idbarco);
+              x = 1;
+            }
+          } else {
+            x++;
           }
-        } else {
-          x++;
+        });
+
+        function buscaDatosBarco(idbarco) {
+          $.ajax({
+            method: "GET",
+            url: `{{ app.request.baseUrl }}/ajax/buscabarcotodo/${idbarco}.json`,
+            dataType: 'json',
+            success: function (barco) {
+              JSON.stringify(barco);
+              var html = "<label>Modelo</label>" + "<div class='info-input'>" + barco.modelo + "</div>" +
+                  "<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>" +
+                  "<label>Manga</label>" + "<div class='info-input'>" + barco.manga + "</div>" +
+                  "<label>Nombre del capitán</label>" + "<div class='info-input'>" + barco.nombreCapitan + "</div>" +
+                  "<label>Teléfono del capitán</label>" + "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
+                  "<label>Correo del capitán</label>" + "<div class='info-input'>" + barco.correoCapitan + "</div>";
+              $("#info-barco").append(html);
+              $("#de_eslora").data('valor', barco.eslora);
+              $("#e_eslora").data('valor', barco.eslora);
+              $("#de_eslora").html(barco.eslora);
+              $("#e_eslora").html(barco.eslora);
+              $("#de_eslora_mxn").html(barco.eslora);
+              $("#e_eslora_mxn").html(barco.eslora);
+              recalculaSubtotalesYtotal();
+
+              // Filtrado de opcions de slip por tamaño de eslora
+              const slipOptions = [...document.querySelectorAll('#appbundle_marinahumedacotizacion_slip > option')]
+                  .filter((slip) => barco.eslora >= Number(slip.dataset.feet)
+                      ? slip.style.display = 'none'
+                      : slip.style.display = 'block');
+            },
+            complete: () => { $("#loading").hide(); }
+          })
         }
-      });
 
-      function buscaDatosBarco(idbarco) {
-        $.ajax({
-          method: "GET",
-          url: "{{ path('ajax_busca_barco') }}",
-          dataType: 'json',
-          data: {'id': idbarco},
-          success: function (data) {
-            if (data.hasOwnProperty("response") && data.response === "success") {
-              if (data.hasOwnProperty("posts")) {
-                //http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try/3710226
-                if (/^[\],:{}\s]*$/.test(data.posts.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-                  var barcos = JSON.parse(data.posts);
-                  //console.log(barcos);
-                  if (barcos.id > 0) {
-                    var html = "";
-                    html = "<label>Modelo</label>" +
-                        "<div class='info-input'>" + barcos.modelo + "</div>" +
-                        "<label>Eslora</label>" +
-                        "<div id='barcopies' class='info-input' data-valor='" + barcos.eslora + "'>" + barcos.eslora + "</div>" +
-                        "<label>Manga</label>" +
-                        "<div class='info-input'>" + barcos.manga + "</div>" +
-                        "<label>Nombre del capitán</label>" +
-                        "<div class='info-input'>" + barcos.nombreCapitan + "</div>" +
-                        "<label>Teléfono del capitán</label>" +
-                        "<div class='info-input'>" + barcos.telefonoCapitan + "</div>" +
-                        "<label>Correo del capitán</label>" +
-                        "<div class='info-input'>" + barcos.correoCapitan + "</div>";
-                    $("#info-barco").append(html);
-                    $("#de_eslora").data('valor', barcos.eslora);
-                    $("#e_eslora").data('valor', barcos.eslora);
-                    $("#de_eslora").html(barcos.eslora);
-                    $("#e_eslora").html(barcos.eslora);
-                    $("#de_eslora_mxn").html(barcos.eslora);
-                    $("#e_eslora_mxn").html(barcos.eslora);
-                    recalculaSubtotalesYtotal();
-                  }
-                }
-                else {
-                  console.log("INVALID JSON STRING");
-                }
-              }
-              else {
-                console.log("POSTS NOT FOUND");
-              }
-            }
-            $('#loading').hide();
-          },
-          error: function (jqXHR, exception) {
-            if (jqXHR.status === 405) {
-              console.error("METHOD NOT ALLOWED!");
-            }
-            $('#loading').hide();
-          }
-        }).fail(function () {
-          $('#loading').hide();
-          console.log('fallo ajax');
-        });
-      }
+      })(jQuery);
     </script>
 {% endblock %}

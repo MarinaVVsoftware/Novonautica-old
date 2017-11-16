@@ -1,21 +1,259 @@
-{% extends 'base.html.twig' %}
+{% extends 'estructura/plantilla.twig' %}
 
-{% block body %}
-    <h1>Marinahumedacotizacionadicional edit</h1>
+{% block title %}
+    Novonautica | Editar Servicio Marina Húmeda
+{% endblock %}
 
-    {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
-    {{ form_end(edit_form) }}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">Editar Servicio Adicional Marina Húmeda</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('marina-humeda-cotizacion-adicional_index') }}">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body panel-pestanias">
+                    {% form_theme edit_form 'estructura/temaerror.html.twig' %}
+                    {{ form_start(edit_form) }}
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="primero active">
+                            <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a>
+                        </li>
+                        {#
+                        <li role="presentation">
+                            <a href="#totalusd" aria-controls="total" role="tab" data-toggle="tab">Total (USD)</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#totalmxn" aria-controls="total" role="tab" data-toggle="tab">Total (MXN)</a>
+                        </li>
+                        #}
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="generales">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div id="info-cliente">
+                                        <label>Cliente</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.nombre }}</div>
+                                        <label>Correo electrónico</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.correo }}</div>
+                                        <label>Número de teléfono</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.telefono }}</div>
+                                        <label>Dirección</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.direccion }}</div>
+                                        <label>R.F.C.</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.rfc }}</div>
+                                        <label>Razón social</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.razonsocial }}</div>
+                                        <label>Dirección fiscal</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.direccionfiscal }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div id="info-barco">
+                                        <label>Barco</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.barco.nombre }}</div>
+                                        <label>Modelo</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.barco.modelo }}</div>
+                                        <label>Eslora</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.barco.eslora }}</div>
+                                        <label>Manga</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.barco.manga }}</div>
+                                        <label>Nombre del responsable</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.barco.nombreResponsable }}</div>
+                                        <label>Teléfono del responsable</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.barco.telefonoResponsable }}</div>
+                                        <label>Correo del responsable</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.barco.correoResponsable }}</div>
+                                        <label>Nombre del capitán</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.barco.nombreCapitan }}</div>
+                                        <label>Teléfono del capitán</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.barco.telefonoCapitan }}</div>
+                                        <label>Correo del capitán</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.barco.correoCapitan }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="servicios">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Dolar:</label>
+                                    {{ form_widget(edit_form.dolar) }}
+                                </div>
+                                <div class="col-sm-9">
+                                    <button type="submit" class="btn btn-azul pull-right">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div id="valorsistemaiva" class="text-right" data-valor="{{ valiva }}">
+                                        <small>IVA: {{ valiva }} %</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9 espacio-linea-arriba2">
+                                    <table id="servicioAdicional" class="table text-center">
+                                        <thead>
+                                        <tr>
+                                            <th class="col-sm-1">Cantidad</th>
+                                            <th class="col-sm-2">Servicio</th>
+                                            <th class="col-sm-1">Unidad</th>
+                                            <th class="col-sm-1">Prec. Unid.</th>
+                                            <th class="col-sm-1">Sub-Total</th>
+                                            <th class="col-sm-1">IVA</th>
+                                            <th class="col-sm-1">Total</th>
+                                            <th class="col-sm-1"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="servicio-adicional-fields-list0"
+                                               class="lista-servicios-adicionales"
+                                               data-prototype="
+                                                    {% filter escape %}
+                                                        {{ include('marinahumeda/cotizacionadicional/coleccion-servicio-adicional.twig', { 'form': edit_form.mhcservicios.vars.prototype }) }}
+                                                    {% endfilter %}"
+                                        >
+                                        {% for i,servicio in edit_form.mhcservicios %}
+                                            {% form_theme servicio 'marinahumeda/cotizacionadicional/coleccion-servicio-adicional.twig' %}
+                                            <tr class="servicio-agregado">
+                                                <td class="valorcantidad" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].cantidad}}">
+                                                    {{ form_widget(servicio.cantidad) }}
+                                                </td>
+                                                <td class="td-servicio">
+                                                    {{ form_widget(servicio.marinahumedaservicio) }}
+                                                </td>
+                                                <td class="valorunidad">
+                                                    {{ marinaHumedaCotizacionAdicional.mhcservicios[i].marinahumedaservicio.unidad }}
+                                                </td>
+                                                <td class="valorprecio" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].precio }}">
+                                                   $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].precio|number_format(2,'.',',') }}
+                                                </td>
+                                                <td class="valorsubtotal" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].subtotal }}">
+                                                   $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].subtotal|number_format(2,'.',',') }}
+                                                </td>
+                                                <td class="valoriva" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].iva }}">
+                                                   $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].iva|number_format(2,'.',',') }}
+                                                </td>
+                                                <td class="valortotal" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].total }}">
+                                                   $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].total|number_format(2,'.',',') }}
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="remove-servicio-adicional btn btn-naranja">
+                                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                                    </a>
+                                                </td>
 
-    <ul>
-        <li>
-            <a href="{{ path('marina-humeda-cotizacion-adicional_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a href="#" id="" class="add-another-servicio-adicional btn btn-contorno-azul" data-cantidad="{{ edit_form.mhcservicios|length }}" data-idlista="0">
+                                        + Agregar servicio
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $ <span id="gransubtot">{{ marinaHumedaCotizacionAdicional.subtotal|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $ <span id="graniva">{{ marinaHumedaCotizacionAdicional.ivatotal|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $ <span id="grantot">{{ marinaHumedaCotizacionAdicional.total|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="totalusd">
+
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="totalmxn">
+
+                        </div>
+                    </div>
+                    {{ form_end(edit_form) }}
+                </div>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+
+
+
+        $('#servicioAdicional>tbody').change('.select-busca-producto',function (e) {
+            //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
+            var idservicio = $('.select-busca-producto:focus option:selected' ).val();
+            if(idservicio > 0){
+                var url = "{{ path('ajax_busca_producto',{'id':'iddelserivicio','_format':'json'}) }}";
+                url = url.replace("iddelserivicio", idservicio);
+                $.ajax({
+                    method: "GET",
+                    url: url,
+                    dataType: 'json',
+                    success: function(datos) {
+                        JSON.stringify(datos);
+                        var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
+                        fila.children('.valorprecio').html('$ '+datos.precio);
+                        fila.children('.valorprecio').data('valor',datos.precio);
+                        fila.children('.valorunidad').html(datos.unidad);
+                        calculaSubtotalesAdicionales(fila);
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}

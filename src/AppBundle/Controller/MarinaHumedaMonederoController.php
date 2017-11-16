@@ -13,17 +13,19 @@ use AppBundle\Entity\MonederoMovimiento;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Monedero controller.
  *
- * @Route("marina-humeda-monedero")
+ * @Route("/marina/monedero")
  */
 class MarinaHumedaMonederoController extends Controller
 {
     /**
-     * Lists all cliente entities.
+     * Lista de todos los monederos
      *
      * @Route("/", name="mh_monedero_index")
      * @Method("GET")
@@ -34,32 +36,36 @@ class MarinaHumedaMonederoController extends Controller
 
         $clientes = $em->getRepository('AppBundle:Cliente')->findAll();
 
-        return $this->render('marinahumeda/monedero/index.html.twig', array(
+        return $this->render('marinahumeda/monedero/index.html.twig', [
+            'title' => 'Monedero',
             'clientes' => $clientes,
-            'monederoMenuMh' => 1
-        ));
+        ]);
     }
 
     /**
-     * Finds and displays a marinaHumedaCotizacion entity.
+     * Muestra un monedero en especifico
      *
      * @Route("/{id}", name="mh_monedero_ver")
      * @Method("GET")
      */
     public function showAction(Cliente $cliente)
     {
-
-        return $this->render('marinahumeda/monedero/show.html.twig', array(
+        return $this->render('marinahumeda/monedero/show.html.twig', [
             'cliente' => $cliente,
-            'monederoMenuMh' => 1
-        ));
+        ]);
     }
 
 
     /**
+     * Edita un monedero
      *
      * @Route("/{id}/editar", name="mh_monedero_edit")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param Cliente $cliente
+     *
+     * @return RedirectResponse|Response
      */
     public function editAction(Request $request, Cliente $cliente)
     {
@@ -79,11 +85,15 @@ class MarinaHumedaMonederoController extends Controller
     }
 
     /**
-     *
      * @Route("/{id}/operacion", name="mh_monedero_operacion")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param Cliente $cliente
+     *
+     * @return RedirectResponse|Response
      */
-    public function movimientoAction(Request $request,Cliente $cliente)
+    public function movimientoAction(Request $request, Cliente $cliente)
     {
         $monederoMovimiento = new MonederoMovimiento();
 

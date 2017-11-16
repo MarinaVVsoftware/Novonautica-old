@@ -1,7 +1,7 @@
 {% extends 'estructura/plantilla.twig' %}
 
 {% block title %}
-    Novonautica | Cotizaciones Marina Humeda
+    Novonautica | Cotizaciones Marina Húmeda
 {% endblock %}
 
 {% block contwrapper %}
@@ -9,7 +9,7 @@
         <section class="content">
             <div class="panel panel-novo">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Marina Humeda Cotizaciones</h3>
+                    <h3 class="panel-title">Marina Húmeda Cotizaciones</h3>
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive scroll-novo">
@@ -21,6 +21,7 @@
                                 <th>Barco</th>
                                 <th>Fecha llegada</th>
                                 <th>Fecha salida</th>
+                                <th>Slip</th>
                                 <th>Descuento(%)</th>
                                 <th>Subtotal</th>
                                 <th>Iva Total</th>
@@ -28,11 +29,12 @@
                                 <th>Total</th>
                                 <th>Validación</th>
                                 <th>Aceptación</th>
+                                <th>Pago</th>
                                 <th>Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for marinaHumedaCotizacion in marinaHumedaCotizacions %}
+                            {% for marinaHumedaCotizacion in marinaHumedaCotizacions|sort|reverse %}
                                 <tr>
                                     <td>
                                         {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
@@ -45,6 +47,7 @@
                                     <td>{{ marinaHumedaCotizacion.barco }}</td>
                                     <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
                                     <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</td>
+                                    <td>{{ marinaHumedaCotizacion.slip }}</td>
                                     <td>{{ marinaHumedaCotizacion.descuento }}%</td>
                                     <td>${{ marinaHumedaCotizacion.subtotal|number_format(2,'.',',') }}</td>
                                     <td>${{ marinaHumedaCotizacion.ivatotal|number_format(2,'.',',') }}</td>
@@ -53,23 +56,38 @@
                                     <td class="align-middle">
                                         {% if marinaHumedaCotizacion.validanovo == 0 %}
                                             <img src="{{ asset('img/status-pendiente-icon.svg') }}"
-                                                 class="center-block">
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Pendiente">
                                         {% elseif marinaHumedaCotizacion.validanovo == 1 %}
                                             <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                                 class="center-block">
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Rechazado">
                                         {% elseif marinaHumedaCotizacion.validanovo == 2 %}
-                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">
+                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
                                         {% endif %}
                                     </td>
                                     <td class="align-middle">
                                         {% if marinaHumedaCotizacion.validacliente == 0 %}
                                             <img src="{{ asset('img/status-pendiente-icon.svg') }}"
-                                                 class="center-block">
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Pendiente">
                                         {% elseif marinaHumedaCotizacion.validacliente == 1 %}
                                             <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                                 class="center-block">
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Rechazado">
                                         {% elseif marinaHumedaCotizacion.validacliente == 2 %}
-                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">
+                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle">
+                                        {% if marinaHumedaCotizacion.validacliente == 2 %}
+
+                                            {% if marinaHumedaCotizacion.pago.estatuspago is defined and marinaHumedaCotizacion.pago.estatuspago == 1 %}
+                                                <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                    class="center-block" data-toggle="tooltip" data-placement="left" title="Pagado">
+                                            {% else %}
+                                                <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                                     class="center-block" data-toggle="tooltip" data-placement="left" title="No pagado">
+                                            {% endif %}
+
                                         {% endif %}
                                     </td>
                                     <td>
@@ -84,7 +102,9 @@
                                         %}
                                             <a class="btn btn-naranja" href="{{ path('marina-humeda_recotizar', { 'id': marinaHumedaCotizacion.id }) }}">Recotizar</a>
                                         {% endif %}
-                                        {# <a class="btn btn-azul" href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">Editar</a> #}
+                                        {% if marinaHumedaCotizacion.validacliente == 2 %}
+                                            <a class="btn btn-verde" href="{{ path('marina-humeda_registra_pago',{'id': marinaHumedaCotizacion.id}) }}">Registrar Pago</a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
