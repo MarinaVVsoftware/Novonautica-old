@@ -128,12 +128,13 @@ class MarinaHumedaCotizacionType extends AbstractType
                 $formModifier($event->getForm(), $cotizacion->getCliente());
             }else{ //editando cotización, solo para validaciones
                 $form
-//                    ->remove('cliente')
+                    ->remove('cliente')
 //                    ->remove('barco')
                     ->remove('fechaLlegada')
                     ->remove('fechaSalida')
                     ->remove('descuento')
                     ->remove('dolar')
+                    ->remove('mensaje')
                     ->remove('mhcservicios')
                     ->remove('validacliente')
                     ->remove('notascliente');
@@ -163,26 +164,7 @@ class MarinaHumedaCotizacionType extends AbstractType
             }
         );
 
-//        $builder->addEventListener(
-//            FormEvents::PRE_SET_DATA,
-//            function (FormEvent $event) {
-//                $form = $event->getForm();
-//
-//                // this would be your entity, i.e. SportMeetup
-//                $data = $event->getData();
-//                dump($form);
-//                dump($data);
-//                $cliente = $data->getCliente();
-//
-//                $barcos = null === $cliente ? array() : $cliente->getBarcos();
-//
-//                $form->add('barco', EntityType::class, array(
-//                    'class' => 'AppBundle:Barco',
-//                    'label' => 'Barcos',
-//                    'choices' => $barcos,
-//                ));
-//            }
-//        );
+
 
 
     }

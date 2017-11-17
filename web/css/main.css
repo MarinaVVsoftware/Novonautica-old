@@ -432,7 +432,8 @@ form > .btn-borrar:hover,.btn-borrar:hover{
 .panel-body  form input[type="number"],
 .panel-body  form select,
 .panel-body  form textarea,
-.panel-body  form .info-input {
+.panel-body  form .info-input,
+.info-input{
     background: #3e4766;
     border: none;
     border-radius: 17px;

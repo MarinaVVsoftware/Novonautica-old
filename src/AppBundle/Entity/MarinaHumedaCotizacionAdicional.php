@@ -360,12 +360,13 @@ class MarinaHumedaCotizacionAdicional
     /**
      * Add mhcservicio
      *
-     * @param \AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio
+     * @param \AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicios
      *
      * @return MarinaHumedaCotizacionAdicional
      */
     public function addMhcservicio(\AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio)
     {
+        //$mhcservicio ->setMarinaHumedaCotizacion($this);
         $this->mhcservicios[] = $mhcservicio;
 
         return $this;

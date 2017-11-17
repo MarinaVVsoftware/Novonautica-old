@@ -34,6 +34,9 @@
                         <li role="presentation">
                             <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
+                        <li role="presentation">
+                            <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="generales">
@@ -338,22 +341,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-sm-3">
-                                    {#<div class="row">#}
-                                    {#<div class="col-sm-12">#}
-                                    {#<a class="btn btn-morado-claro">Visualizar</a>#}
-                                    {#</div>#}
-                                    {#</div>#}
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <button type="submit" class="btn btn-azul">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                Guardar
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
@@ -421,6 +408,19 @@
                             <div class="row">
                                 <div class="col-sm-4 col-sm-offset-5">
                                     <hr>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="correo">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    {{ form_row(form.mensaje) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="submit" class="btn btn-azul">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
                                 </div>
                             </div>
                         </div>

@@ -85,7 +85,7 @@ function esNumeroDecimal(e, field) {
     return false
 
 }
-
+//collectio al agregar motores a un barco
 jQuery('.add-another-motor').click(function (e) {
     e.preventDefault();
     // var elementoMotor = document.getElementsByClassName(this);
@@ -119,6 +119,7 @@ $('.lista-motores').on('click','.remove-motor',function(e) {
     return false;
 });
 
+//collectio al agregar servicios en cotización astillero
 jQuery('.add-another-servicio').click(function (e) {
     e.preventDefault();
     // var elementoMotor = document.getElementsByClassName(this);
@@ -153,6 +154,43 @@ $('.lista-servicios').on('click','.remove-servicio',function(e) {
 
     return false;
 });
+
+//collectio al agregar servicios adicionales marina humeda
+jQuery('.add-another-servicio-adicional').click(function (e) {
+    e.preventDefault();
+    // var elementoMotor = document.getElementsByClassName(this);
+    var totServicios = $(this).data('cantidad');
+    var lista = $(this).data('idlista');
+    var servicioListPrimero = jQuery('#servicio-adicional-fields-list'+lista);
+    //var motorListOtros = jQuery('.lista-motores'+lista);
+    // grab the prototype template
+    var newWidget = $(servicioListPrimero).data('prototype');
+
+    // replace the "__name__" used in the id and name of the prototype
+    // with a number that's unique to your emails
+    // end name attribute looks like name="contact[emails][2]"
+    newWidget = newWidget.replace(/__name__/g, totServicios);
+    newWidget = newWidget.replace('td-producto','hide');
+    totServicios++;
+    $(this).data('cantidad', totServicios);
+    // create a new list element and add it to the list
+    var newLi = jQuery('<tr class="servicio-agregado"></tr>').html(newWidget);
+    newLi.appendTo(servicioListPrimero);
+
+    // also add a remove button, just for this example
+    //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
+
+    newLi.before(newLi);
+
+});
+$('.lista-servicios-adicionales').on('click','.remove-servicio-adicional',function(e) {
+    e.preventDefault();
+    //console.log('quitar motor');
+    $(this).parent().parent().remove();
+
+    return false;
+});
+
 //--- select dependiente para marina humeda cotización ---
 var elcliente = $('#appbundle_marinahumedacotizacion_cliente');
 elcliente.change(function() {
@@ -177,6 +215,31 @@ elcliente.change(function() {
     });
 });
 //--- fin select dependiente para marina humeda cotización ---
+
+//--- select dependiente para marina humeda cotización adicional ---
+var elcliente = $('#appbundle_marinahumedacotizacionadicional_cliente');
+elcliente.change(function() {
+    // ... retrieve the corresponding form.
+    var form = $(this).closest('form');
+    // Simulate form data, but only include the selected elcliente value.
+    var data = {};
+    data[elcliente.attr('name')] = elcliente.val();
+    // Submit data via AJAX to the form's action path.
+    $.ajax({
+        url : form.attr('action'),
+        type: form.attr('method'),
+        data : data,
+        success: function(html) {
+            // Replace current position field ...
+            $('#appbundle_marinahumedacotizacionadicional_barco').replaceWith(
+                // ... with the returned one from the AJAX response.
+                $(html).find('#appbundle_marinahumedacotizacionadicional_barco')
+            );
+            // barco field now displays the appropriate barcos.
+        }
+    });
+});
+//--- fin select dependiente para marina humeda cotización adicional ---
 
 //--- select dependiente para astillero cotización ---
 var elclienteastillero = $('#appbundle_astillerocotizacion_cliente');

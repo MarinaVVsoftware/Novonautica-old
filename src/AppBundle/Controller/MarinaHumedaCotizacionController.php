@@ -314,6 +314,7 @@ class MarinaHumedaCotizacionController extends Controller
             ->setValidacliente(0)
             ->setFolio($marinaHumedaCotizacionAnterior->getFolio())
             ->setFoliorecotiza($foliorecotizado)
+            ->setMensaje($marinaHumedaCotizacionAnterior->getMensaje())
             ;
 
 

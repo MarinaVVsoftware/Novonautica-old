@@ -41,6 +41,9 @@
                         <li role="presentation">
                             <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
+                        <li role="presentation">
+                            <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="generales">
@@ -254,51 +257,6 @@
 
                         </div>
                         <div role="tabpanel" class="tab-pane" id="totalmxn">
-                            {% if edit_form.validanovo is defined %}
-                                <div class="row">
-                                    <div class="col-sm-12 espacio-linea">
-                                        <label>Validación Novonautica</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <div class="middle">
-                                            {{ form_widget(edit_form.validanovo) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <button type="submit" class="btn btn-azul pull-right">
-                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                            Guardar
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6 espacio-linea-arriba2">
-                                        {{ form_row(edit_form.notasnovo) }}
-                                    </div>
-                                </div>
-                            {% endif %}
-                            {% if edit_form.validacliente is defined %}
-                                <div class="row">
-                                    <div class="col-sm-12 espacio-linea">
-                                        <label>Validación Cliente</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="middle">
-                                            {{ form_widget(edit_form.validacliente) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6 espacio-linea-arriba2">
-                                        {{ form_row(edit_form.notascliente) }}
-                                    </div>
-                                </div>
-                            {% endif %}
-
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
@@ -422,6 +380,58 @@
                                 </div>
                             </div>
 
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="correo">
+                            {% if edit_form.validanovo is defined %}
+                                <div class="row">
+                                    <div class="col-sm-12 espacio-linea">
+                                        <label>Validación Novonautica</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="middle">
+                                            {{ form_widget(edit_form.validanovo) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button type="submit" class="btn btn-azul pull-right">
+                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                            Guardar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8 espacio-linea-arriba2">
+                                        {{ form_row(edit_form.notasnovo) }}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if edit_form.validacliente is defined %}
+                                <div class="row">
+                                    <div class="col-sm-12 espacio-linea">
+                                        <label>Validación Cliente</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="middle">
+                                            {{ form_widget(edit_form.validacliente) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8 espacio-linea-arriba2">
+                                        {{ form_row(edit_form.notascliente) }}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <label>Mensaje en el correo:</label>
+                                    <div class="info-input">{{ marinaHumedaCotizacion.mensaje }}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     {{ form_end(edit_form) }}

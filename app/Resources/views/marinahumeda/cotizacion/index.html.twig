@@ -53,23 +53,25 @@
                                     <td class="align-middle">
                                         {% if marinaHumedaCotizacion.validanovo == 0 %}
                                             <img src="{{ asset('img/status-pendiente-icon.svg') }}"
-                                                 class="center-block">
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Pendiente">
                                         {% elseif marinaHumedaCotizacion.validanovo == 1 %}
                                             <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                                 class="center-block">
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Rechazado">
                                         {% elseif marinaHumedaCotizacion.validanovo == 2 %}
-                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">
+                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
                                         {% endif %}
                                     </td>
                                     <td class="align-middle">
                                         {% if marinaHumedaCotizacion.validacliente == 0 %}
                                             <img src="{{ asset('img/status-pendiente-icon.svg') }}"
-                                                 class="center-block">
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Pendiente">
                                         {% elseif marinaHumedaCotizacion.validacliente == 1 %}
                                             <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                                 class="center-block">
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Rechazado">
                                         {% elseif marinaHumedaCotizacion.validacliente == 2 %}
-                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">
+                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
                                         {% endif %}
                                     </td>
                                     <td>
