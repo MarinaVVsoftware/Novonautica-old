@@ -5,8 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Usuario;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Usuario controller.
@@ -28,7 +27,6 @@ class UsuarioController extends Controller
         $usuarios = $em->getRepository('AppBundle:Usuario')->findAll();
 
         return $this->render('usuario/index.html.twig', array(
-            'usuariosmenu' => 1,
             'usuarios' => $usuarios,
         ));
     }
@@ -36,7 +34,7 @@ class UsuarioController extends Controller
     /**
      * Creates a new usuario entity.
      *
-     * @Route("/nuevo", name="usuario_new")
+     * @Route("/new", name="usuario_new")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -47,8 +45,6 @@ class UsuarioController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $fechaHoraActual = new \DateTime('now');
-            $usuario->setFecharegistro($fechaHoraActual);
             $em->persist($usuario);
             $em->flush();
 
@@ -80,7 +76,7 @@ class UsuarioController extends Controller
     /**
      * Displays a form to edit an existing usuario entity.
      *
-     * @Route("/{id}/editar", name="usuario_edit")
+     * @Route("/{id}/edit", name="usuario_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Usuario $usuario)
@@ -92,7 +88,7 @@ class UsuarioController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('usuario_show', array('id' => $usuario->getId()));
+            return $this->redirectToRoute('usuario_edit', array('id' => $usuario->getId()));
         }
 
         return $this->render('usuario/edit.html.twig', array(

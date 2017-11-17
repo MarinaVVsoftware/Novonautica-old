@@ -1,3 +1,4 @@
+*~
 /.web-server-pid
 /app/config/parameters.yml
 /build/
@@ -16,4 +17,5 @@
 /vendor/
 /web/bundles/
 .idea/
+.DS_store
 /node_modules

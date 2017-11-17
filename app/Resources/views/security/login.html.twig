@@ -6,7 +6,7 @@
     <title>Bienvenido</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <meta name="theme-color" content="#292e41" />
+    <meta name="theme-color" content="#292e41"/>
     <link rel="icon" href="{{ asset('img/favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
@@ -21,36 +21,28 @@
                 </div>
                 <div class="panel-body">
                     {% if error %}
-                        <div class="row">
-                            <div class="col-md-offset-3 col-md-6">
-                                <div class="alert alert-warning alert-dismissible" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                                aria-hidden="true">&times;</span></button>
-                                    <p class="text-center">{{ error.messageKey|trans(error.messageData, 'security','es') }}</p>
-                                </div>
-                            </div>
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            {{ error.message|replace({'Bad credentials.' : 'Email o password invalidos'}) }}
                         </div>
                     {% endif %}
                     <div class="row">
                         <div class="col-sm-8 col-sm-offset-2">
                             <form action="{{ path('login') }}" method="post" class="form-horizontal">
                                 <div class="form-group">
-                                    <label class="control-label">Usuario</label>
-                                    <input type="text" id="username" class="form-control text-center fondo-blanco" name="_username"
+                                    <label for="correo">Usuario</label>
+                                    <input type="text" id="correo" class="form-control text-center fondo-blanco"
+                                           name="_correo"
                                            value="{{ last_username }}"/>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label">Contraseña</label>
-                                    <input type="password" id="password" class="form-control text-center fondo-blanco" name="_password"/>
+                                    <label for="password">Contraseña</label>
+                                    <input type="password" id="password" class="form-control text-center fondo-blanco"
+                                           name="_password"/>
                                 </div>
-                                <div class="form-group">
-
-                                    <button type="submit" class="btn boton-login">
-                                        <span>Entrar</span>
-                                    </button>
-
-                                </div>
-
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                <button type="submit" class="btn boton-login">Entrar</button>
                             </form>
                         </div>
                     </div>

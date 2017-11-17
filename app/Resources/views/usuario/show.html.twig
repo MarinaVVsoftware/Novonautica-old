@@ -1,88 +1,48 @@
-{% extends 'estructura/plantilla.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}
-    Novonautiva | Usuarios ver
-{% endblock %}
+{% block body %}
+    <h1>Usuario</h1>
 
-{% block contwrapper %}
-    <div class="content-wrapper">
-        <section class="content">
-            <div class="panel panel-novo">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <h3 class="panel-title">{{ usuario.nombre }}</h3>
-                        </div>
-                        <div class="col-sm-6">
-                            <a href="{{ path('usuario_index') }}" class="btn btn-contorno-azul pull-right">
-                                Regresar
-                            </a>
-                        </div>
-                    </div>
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ usuario.id }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ usuario.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Correo</th>
+                <td>{{ usuario.correo }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ usuario.password }}</td>
+            </tr>
+            <tr>
+                <th>Registro</th>
+                <td>{% if usuario.registro %}{{ usuario.registro|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Estatus</th>
+                <td>{{ usuario.estatus }}</td>
+            </tr>
+        </tbody>
+    </table>
 
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <th>Id</th>
-                                    <td>{{ usuario.id }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <td>{{ usuario.nombre }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Correo</th>
-                                    <td>{{ usuario.correo }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Nombre de Usuario</th>
-                                    <td>{{ usuario.username }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Estatus</th>
-                                    <td>{% if usuario.estatus %}Activado{% else %}Desactivado{% endif %}</td>
-                                </tr>
-                                <tr>
-                                    <th>Nivel</th>
-                                    <td>{{ usuario.rol }}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <a class="btn btn-azul" href="{{ path('usuario_edit', { 'id': usuario.id }) }}">
-                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                Editar
-                            </a>
-                        </div>
-                        {#<div class="col-sm-8">#}
-                            {#{{ form_start(delete_form) }}#}
-                            {#<input type="submit" value="Borrar" class="btn btn-borrar pull-right">#}
-                            {#{{ form_end(delete_form) }}#}
-                        {#</div>#}
-                    </div>
-                    {#<div class="row espacio-linea-arriba2">#}
-                        {#<div class="col-sm-12">#}
-                            {#<a class="btn btn-naranja pull-right" href="{{ path('usuario_index') }}">#}
-                                {#<i class="fa fa-ban" aria-hidden="true"></i>#}
-                                {#Cancelar#}
-                            {#</a>#}
-                        {#</div>#}
-                    {#</div>#}
-                </div>
-            </div>
-        </section>
-    </div>
+    <ul>
+        <li>
+            <a href="{{ path('usuario_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('usuario_edit', { 'id': usuario.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
 {% endblock %}

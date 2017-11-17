@@ -30,10 +30,11 @@ class ClienteController extends Controller
 
         $clientes = $em->getRepository('AppBundle:Cliente')->findAll();
 
-        return $this->render('cliente/index.html.twig', array(
+        return $this->render('cliente/index.html.twig', [
+            'title' => 'Clientes',
             'clientes' => $clientes,
             'clientelistado' => 1
-        ));
+        ]);
     }
 
     /**
@@ -90,15 +91,15 @@ class ClienteController extends Controller
                 );
             $mailer->send($message);
 
-            return $this->redirectToRoute('cliente_show', array('id' => $cliente->getId()));
+            return $this->redirectToRoute('cliente_show', ['id' => $cliente->getId()]);
 
         }
 
-        return $this->render('cliente/new.html.twig', array(
+        return $this->render('cliente/new.html.twig', [
+            'title' => 'Nuevo cliente',
             'cliente' => $cliente,
             'form' => $form->createView(),
-            'clienteagregar' => 1
-        ));
+        ]);
     }
 
     /**
@@ -112,11 +113,11 @@ class ClienteController extends Controller
         $deleteForm = $this->createDeleteForm($cliente);
         //$barcos = $cliente->getBarcos();
        
-        return $this->render('cliente/show.html.twig', array(
+        return $this->render('cliente/show.html.twig', [
+            'title' => 'Cliente',
             'cliente' => $cliente,
-            'delete_form' => $deleteForm->createView(),
-            'clientelistado' => 1,
-        ));
+            'delete_form' => $deleteForm->createView()
+        ]);
     }
 
     /**
@@ -178,16 +179,16 @@ class ClienteController extends Controller
             $em->flush();
 
             // redirect back to some edit page
-            return $this->redirectToRoute('cliente_show', array('id' => $cliente->getId()));
+            return $this->redirectToRoute('cliente_show', ['id' => $cliente->getId()]);
 
         }
-        return $this->render('cliente/edit.html.twig', array(
+        return $this->render('cliente/edit.html.twig', [
+            'title' => 'Editar cliente',
             'cliente' => $cliente,
             'barcos' => $barcos,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'clientelistado' => 1,
-        ));
+        ]);
     }
 
     /**

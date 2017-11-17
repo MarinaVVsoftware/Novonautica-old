@@ -10,12 +10,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 /**
  * Evento controller.
  *
- * @Route("evento")
+ * @Route("/evento")
  */
 class EventoController extends Controller
 {
     /**
-     * @Route("/agenda", name="marina-agenda")
+     * @Route("/", name="marina-agenda")
      */
     public function displayMarinaAgenda(Request $request)
     {
@@ -27,10 +27,11 @@ class EventoController extends Controller
             'marinaagenda' => 1
         ]);
     }
+
     /**
      * Lists all evento entities.
      *
-     * @Route("/", name="evento_index")
+     * @Route()
      * @Method("GET")
      */
     public function indexAction()

@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 /**
  * Marinahumedatarifa controller.
  *
- * @Route("marina-humeda-tarifas")
+ * @Route("/marina/cotizacion/tarifas")
  */
 class MarinaHumedaTarifaController extends Controller
 {
@@ -26,16 +26,16 @@ class MarinaHumedaTarifaController extends Controller
 
         $marinaHumedaTarifas = $em->getRepository('AppBundle:MarinaHumedaTarifa')->findAll();
 
-        return $this->render('marinahumeda/tarifa/index.html.twig', array(
-            'marinaHumedaTarifas' => $marinaHumedaTarifas,
-            'marinatarifamenu' => 1
-        ));
+        return $this->render('marinahumeda/tarifa/index.html.twig', [
+            'title' => 'Tarifas',
+            'marinaHumedaTarifas' => $marinaHumedaTarifas
+        ]);
     }
 
     /**
      * Creates a new marinaHumedaTarifa entity.
      *
-     * @Route("/nuevo", name="marinahumeda-tarifas_new")
+     * @Route("/nueva", name="marinahumeda-tarifas_new")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -52,11 +52,11 @@ class MarinaHumedaTarifaController extends Controller
             return $this->redirectToRoute('marinahumeda-tarifas_index');
         }
 
-        return $this->render('marinahumeda/tarifa/new.html.twig', array(
+        return $this->render('marinahumeda/tarifa/new.html.twig', [
+            'title' => 'Nueva tarifa',
             'marinaHumedaTarifa' => $marinaHumedaTarifa,
-            'form' => $form->createView(),
-            'marinatarifamenu' => 1
-        ));
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -69,10 +69,11 @@ class MarinaHumedaTarifaController extends Controller
     {
         $deleteForm = $this->createDeleteForm($marinaHumedaTarifa);
 
-        return $this->render('marinahumeda/tarifa/show.html.twig', array(
+        return $this->render('marinahumeda/tarifa/show.html.twig', [
+            'title' => 'Tarifa',
             'marinaHumedaTarifa' => $marinaHumedaTarifa,
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -93,12 +94,12 @@ class MarinaHumedaTarifaController extends Controller
             return $this->redirectToRoute('marinahumeda-tarifas_index');
         }
 
-        return $this->render('marinahumeda/tarifa/edit.html.twig', array(
+        return $this->render('marinahumeda/tarifa/edit.html.twig', [
+            'title' => 'Editar tarifa',
             'marinaHumedaTarifa' => $marinaHumedaTarifa,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            'marinatarifamenu' => 1
-        ));
+            'delete_form' => $deleteForm->createView()
+        ]);
     }
 
     /**
