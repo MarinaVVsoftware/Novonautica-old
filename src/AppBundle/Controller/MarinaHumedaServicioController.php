@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 /**
  * Marinahumedaservicio controller.
  *
- * @Route("marina-humeda-servicio")
+ * @Route("/marina/servicios-adicionales/catalogo")
  */
 class MarinaHumedaServicioController extends Controller
 {
@@ -26,10 +26,10 @@ class MarinaHumedaServicioController extends Controller
 
         $marinaHumedaServicios = $em->getRepository('AppBundle:MarinaHumedaServicio')->findAll();
 
-        return $this->render('marinahumeda/servicio/index.html.twig', array(
+        return $this->render('marinahumeda/servicio/index.html.twig', [
+            'title' => 'Catálogo',
             'marinaHumedaServicios' => $marinaHumedaServicios,
-            'marinaserviciomenu' => 1
-        ));
+        ]);
     }
 
     /**
@@ -52,11 +52,11 @@ class MarinaHumedaServicioController extends Controller
             return $this->redirectToRoute('marina-humeda-servicio_index');
         }
 
-        return $this->render('marinahumeda/servicio/new.html.twig', array(
+        return $this->render('marinahumeda/servicio/new.html.twig', [
+            'title' => 'Nuevo servicio',
             'marinaHumedaServicio' => $marinaHumedaServicio,
             'form' => $form->createView(),
-            'marinaserviciomenu' => 1
-        ));
+        ]);
     }
 
     /**
@@ -69,10 +69,11 @@ class MarinaHumedaServicioController extends Controller
     {
         $deleteForm = $this->createDeleteForm($marinaHumedaServicio);
 
-        return $this->render('marinahumeda/servicio/show.html.twig', array(
+        return $this->render('marinahumeda/servicio/show.html.twig', [
+            'title' => 'Catálogo',
             'marinaHumedaServicio' => $marinaHumedaServicio,
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -93,12 +94,12 @@ class MarinaHumedaServicioController extends Controller
             return $this->redirectToRoute('marina-humeda-servicio_index');
         }
 
-        return $this->render('marinahumeda/servicio/edit.html.twig', array(
+        return $this->render('marinahumeda/servicio/edit.html.twig', [
+            'title' => 'Editar servicio',
             'marinaHumedaServicio' => $marinaHumedaServicio,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'marinaserviciomenu' => 1
-        ));
+        ]);
     }
 
     /**

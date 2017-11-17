@@ -43,7 +43,8 @@ class SidebarController extends Controller
                 'icon' => 'ship',
                 'path' => $this->generateUrl('marina-administracion'),
                 'submenu' => [
-                    ['name' => 'Administracion', 'path' => $this->generateUrl('marina-administracion')],
+                    ['name' => 'Slip', 'path' => $this->generateUrl('marina-administracion')],
+                    ['name' => 'Monedero', 'path' => $this->generateUrl('mh_monedero_index')],
                     [
                         'name' => 'Cotizaciones',
                         'path' => $this->generateUrl('marina-humeda_index'),
@@ -52,16 +53,41 @@ class SidebarController extends Controller
                             ['name' => 'Nuevo', 'path' => $this->generateUrl('marina-humeda_new')],
                             ['name' => 'Tarifas', 'path' => $this->generateUrl('marinahumeda-tarifas_index')],
                         ]
-                    ]
+                    ],
+                    [
+                        'name' => 'Servicios adicionales',
+                        'path' => $this->generateUrl('marina-humeda-cotizacion-adicional_index'),
+                        'submenu' => [
+                            ['name' => 'Listado', 'path' => $this->generateUrl('marina-humeda-cotizacion-adicional_index')],
+                            ['name' => 'Catálogo', 'path' => $this->generateUrl('marina-humeda-servicio_index')]
+                        ]
+                    ],
                 ]
             ],
-
+            [
+                'name' => 'Astillero',
+                'icon' => 'anchor',
+                'path' => $this->generateUrl('astillero_index'),
+                'submenu' => [
+                    ['name' => 'Nueva cotización', 'path' => $this->generateUrl('astillero_new')],
+                    ['name' => 'Cotizaciones', 'path' => $this->generateUrl('astillero_index')],
+                    ['name' => 'Aceptaciones', 'path' => $this->generateUrl('astillero-aceptaciones')],
+                    ['name' => 'ODT', 'path' => $this->generateUrl('astillero-odt')],
+                ]
+            ],
+            [ 'name' => 'Eventos', 'icon' => 'address-book', 'path' => $this->generateUrl('marina-agenda') ],
+            [ 'name' => 'Productos', 'icon' => 'th', 'path' => $this->generateUrl('producto_index') ],
+            [ 'name' => 'Recursos Humanos', 'icon' => 'address-book-o', 'path' => $this->generateUrl('recursos-humanos') ],
+            [ 'name' => 'Contabilidad', 'icon' => 'archive', 'path' => $this->generateUrl('contabilidad') ],
+            [ 'name' => 'Reportes', 'icon' => 'file-text-o', 'path' => $this->generateUrl('reportes') ],
         ]);
     }
 
     private function admin()
     {
         $this->add([
+            ['name' => 'Usuarios', 'icon' => 'user-o', 'path' => $this->generateUrl('usuario_index')],
+            ['name' => 'Ajustes', 'icon' => 'cog', 'path' => $this->generateUrl('ajustes_index')],
         ]);
     }
 

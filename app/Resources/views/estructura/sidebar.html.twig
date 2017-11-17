@@ -40,9 +40,12 @@
 
     <ul class="treeview-menu">
         {% for menu in menus %}
-            <li class="{{ menu.submenu is defined ? 'treeview ' }}{{ menu.path|split('/')|slice(start, 1) == current_path|split('/')|slice(start, 1) ? 'active' }}">
+            <li class="
+                {{ menu.submenu is defined ? 'treeview ' }}
+                {{ menu.path|split('/')|slice(start, 1) == current_path|split('/')|slice(start, 1) ? 'active' }}
+            ">
                 <a href="{{ menu.path }}">
-                    <i class="fa fa-circle-o"></i> {{ menu.name }}
+                    <i class="fa fa-{{ start % 2 ? 'minus' : 'circle-o' }}"></i> {{ menu.name }}
                     {% if menu.submenu is defined %}
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     {% endif %}
@@ -63,11 +66,16 @@
         <ul class="sidebar-menu" data-widget="tree">
             {% for menu in menus %}
                 {% set start = 4 %}
-                <li class="{{ menu.submenu is defined ? 'treeview ' }}{{ menu.path|split('/')|slice(4, 1) == current_path|split('/')|slice(4, 1) ? 'active ' }}">
+                <li class="
+                    {{ menu.submenu is defined ? 'treeview ' }}
+                    {{ menu.path|split('/')|slice(start, 1) == current_path|split('/')|slice(start, 1) ? 'active ' }}
+                ">
                     <a href="{{ menu.path }}">
                         <i class="fa fa-{{ menu.icon|default('asterisk') }}"></i>
                         <span>{{ menu.name }}</span>
-                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        {% if menu.submenu is defined %}
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        {% endif %}
                     </a>
                     {% if menu.submenu is defined %}
                         {{ macros.submenu(menu.submenu, current_path, start + 1) }}
