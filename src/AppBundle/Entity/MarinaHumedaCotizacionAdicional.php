@@ -101,8 +101,7 @@ class MarinaHumedaCotizacionAdicional
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->mhcservicios = new ArrayCollection();
     }
 
@@ -366,7 +365,7 @@ class MarinaHumedaCotizacionAdicional
      */
     public function addMhcservicio(\AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio)
     {
-        //$mhcservicio ->setMarinaHumedaCotizacion($this);
+        $mhcservicio ->setMarinahumedacotizacionadicional($this);
         $this->mhcservicios[] = $mhcservicio;
 
         return $this;

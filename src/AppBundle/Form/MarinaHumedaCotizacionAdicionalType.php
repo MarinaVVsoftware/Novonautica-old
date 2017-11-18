@@ -3,7 +3,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Cliente;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class MarinaHumedaCotizacionAdicionalType extends AbstractType
 {
@@ -28,8 +29,12 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
                 'attr' => ['class' => 'select-buscador selectclientebuscar'],
 
             ])
+            ->add('dolar',TextType::class,[
+                'attr' => ['class' => 'esdecimal',
+                    'autocomplete'=>'off']
+            ])
             ->add('mhcservicios',CollectionType::class,[
-                'entry_type' => AstilleroCotizaServicioType::class,
+                'entry_type' => MarinaHumedaCotizaServiciosAdicionalesType::class,
                 'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -37,6 +42,7 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
                 'by_reference' => false
             ])
         ;
+
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();
 

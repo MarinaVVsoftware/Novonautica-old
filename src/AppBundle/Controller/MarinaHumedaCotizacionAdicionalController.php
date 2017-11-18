@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\MarinaHumedaCotizacionAdicional;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
+use AppBundle\Entity\ValorSistema;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
@@ -42,11 +43,50 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
     public function newAction(Request $request)
     {
         $marinaHumedaCotizacionAdicional = new MarinaHumedaCotizacionAdicional();
+        $dolarBase = $this->getDoctrine()
+            ->getRepository(ValorSistema::class)
+            ->find(1)
+            ->getValor();
+        $iva = $this->getDoctrine()
+            ->getRepository(ValorSistema::class)
+            ->find(2)
+            ->getValor();
+
+
         $form = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionAdicionalType', $marinaHumedaCotizacionAdicional);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $granSubtotal = 0;
+            $granIvatotal = 0;
+            $granTotal = 0;
+
+            foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $servicio){
+                $cantidad = $servicio->getCantidad();
+                $precio = $servicio->getMarinahumedaservicio()->getPrecio();
+                $subtotal = $cantidad * $precio;
+                $ivatotal = ($subtotal * $iva)/100;
+                $total = $subtotal + $ivatotal;
+
+                $servicio
+                    ->setPrecio($precio)
+                    ->setSubtotal($subtotal)
+                    ->setIva($ivatotal)
+                    ->setTotal($total)
+                    ->setEstatus(true);
+
+                $granSubtotal+=$subtotal;
+                $granIvatotal+=$ivatotal;
+                $granTotal+=$total;
+            }
+
+            $marinaHumedaCotizacionAdicional
+                ->setIva($iva)
+                ->setSubtotal($granSubtotal)
+                ->setIvatotal($granIvatotal)
+                ->setTotal($granTotal);
+
             $em->persist($marinaHumedaCotizacionAdicional);
             $em->flush();
 
@@ -55,6 +95,8 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
 
         return $this->render('marinahumeda/cotizacionadicional/new.html.twig', array(
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
+            'valdolar' => $dolarBase,
+            'valiva' => $iva,
             'form' => $form->createView(),
             'menumarinaadicional' => 1
         ));

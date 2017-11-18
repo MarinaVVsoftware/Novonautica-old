@@ -24,7 +24,7 @@ class MarinaHumedaCotizaServicios
     /**
      * @var int
      *
-     * @ORM\Column(name="tipo", type="integer")
+     * @ORM\Column(name="tipo", type="integer", nullable=true)
      */
     private $tipo;
 

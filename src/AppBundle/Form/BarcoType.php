@@ -82,6 +82,7 @@ class BarcoType extends AbstractType
                 'by_reference' => false
             ])
         ;
+
 //        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 //            $barco = $event->getData();
 //            $form = $event->getForm();

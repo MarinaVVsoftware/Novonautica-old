@@ -181,7 +181,7 @@ jQuery('.add-another-servicio-adicional').click(function (e) {
     //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
 
     newLi.before(newLi);
-
+    $('.select-busca-producto').select2();
 });
 $('.lista-servicios-adicionales').on('click','.remove-servicio-adicional',function(e) {
     e.preventDefault();
