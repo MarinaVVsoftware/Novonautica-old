@@ -37,6 +37,9 @@ a{
 .fondo-blanco{
     background-color: #ffffff !important;
 }
+.fondo-morado{
+    background-color: #292e41;
+}
 /*++ fin colores fondo +++*/
 
 /*++++ colores letra +++++*/
@@ -51,6 +54,9 @@ a{
 }
 .tipo-letra2{
     font-size: 1.5rem;
+}
+.tipo-letra3{
+    font-size: 6rem;
 }
 /*+++ fin tamaño letra ++++*/
 
@@ -426,7 +432,8 @@ form > .btn-borrar:hover,.btn-borrar:hover{
 .panel-body  form input[type="number"],
 .panel-body  form select,
 .panel-body  form textarea,
-.panel-body  form .info-input {
+.panel-body  form .info-input,
+.info-input{
     background: #3e4766;
     border: none;
     border-radius: 17px;
@@ -450,12 +457,31 @@ form > .btn-borrar:hover,.btn-borrar:hover{
 .panel-body form textarea{
     outline: none;
 }
+.panel-body  form textarea{
+    resize: none;
+}
+.panel-body  form textarea::-webkit-scrollbar {
+    width: 14px;
+    background-color: #353b51;
+}
+.panel-body  form textarea::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #292e41;
+}
+.panel-body  form textarea::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #59616e;
+    border: 1px solid #353b51;
+}
 .espacio-linea{
     padding-top: 3rem;
     padding-bottom: 3rem;
 }
 .espacio-linea-arriba2{
     padding-top: 2rem;
+}
+.espacio-linea-arriba5{
+    padding-top: 5rem;
 }
 .espacio-linea-abajo2{
     padding-bottom: 2rem;
@@ -773,3 +799,11 @@ td .select2-container--default .select2-selection--single {
     width: 24px;
 }
 /* ---- fin temporal ----*/
+
+.fondo-error{
+    background: url("../img/Novonautica-error-03.svg") no-repeat center;
+}
+.contenido-error{
+    padding-top: 8%;
+    padding-bottom: 2%;
+}

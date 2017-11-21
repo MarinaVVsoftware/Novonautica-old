@@ -11,7 +11,14 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Cotización Marina Humeda</h3>
+                            <h3 class="panel-title">Cotización Marina Húmeda</h3>
+                            <span>
+                                 {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
+                                     {{ marinaHumedaCotizacion.folio }}
+                                 {% else %}
+                                     {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
+                                 {% endif %}
+                            </span>
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_index') }}">Regresar</a>
@@ -28,6 +35,9 @@
                         </li>
                         <li role="presentation">
                             <a href="#totalesmxn" aria-controls="totalesmxn" role="tab" data-toggle="tab">Totales (MXN)</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -344,6 +354,14 @@
                             <div class="row">
                                 <div class="col-sm-4 col-sm-offset-6">
                                     <hr>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="correo">
+                            <div class="row">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <label>Mensaje en el correo:</label>
+                                    <div class="info-input">{{ marinaHumedaCotizacion.mensaje }}</div>
                                 </div>
                             </div>
                         </div>
