@@ -1,42 +1,6 @@
-{#
-<aside class="main-sidebar">
-    <section class="sidebar clearfix">
-        <ul class="sidebar-menu" data-widget="tree">
-            {% for menu in menus %}
-                {% if menu.submenu is defined %}
-                    <li class="treeview {{ menu.path in current_path ? 'menu-open' : '' }}">
-                        <a href="#">
-                            <i class="fa fa-{{ menu.icon|default('asterisk') }}"></i>
-                            <span>{{ menu.name }}</span>
-                        </a>
-                        <ul class="treeview-menu" {{ menu.path in current_path ? 'style="display: block;"' : '' }}>
-                            {% for submenu in menu.submenu %}
-                                <li class="{{ submenu.path == current_path ? 'active' : '' }}">
-                                    <a href="{{ submenu.path }}">
-                                        <i class="fa fa-{{ submenu.icon|default('minus') }}"></i>
-                                        {{ submenu.name }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <hr>
-                {% else %}
-                    <li class="{{ menu.path in current_path ? 'active' : '' }}">
-                        <a href="{{ menu.path }}">
-                            <i class="fa fa-{{ menu.icon|default('asterisk') }}"></i>
-                            <span>{{ menu.name }}</span>
-                        </a>
-                    </li>
-                    <hr>
-                {% endif %}
-            {% endfor %}
-        </ul>
-    </section>
-</aside>#}
-
 {% macro submenu(menus, current_path, start) %}
     {% import _self as macros %}
+    {% set start = start + 1 %}
 
     <ul class="treeview-menu">
         {% for menu in menus %}
@@ -73,8 +37,7 @@
                         {% endif %}
                     </a>
                     {% if menu.submenu is defined %}
-                        {% set start = 1 %}
-                        {{ macros.submenu(menu.submenu, current_path, start) }}
+                        {{ macros.submenu(menu.submenu, current_path, 0) }}
                     {% endif %}
                 </li>
                 <hr>
