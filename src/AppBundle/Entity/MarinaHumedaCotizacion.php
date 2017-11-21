@@ -96,6 +96,14 @@ class MarinaHumedaCotizacion
     private $total;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="mensaje", type="text", nullable=true)
+     */
+    private $mensaje;
+
+
+    /**
      * @var int
      *
      * @ORM\Column(name="validanovo", type="smallint")
@@ -765,7 +773,21 @@ class MarinaHumedaCotizacion
         $this->mhcservicios->removeElement($mhcservicio);
     }
 
+    /**
+     * @return string
+     */
+    public function getMensaje()
+    {
+        return $this->mensaje;
+    }
 
+    /**
+     * @param string $mensaje
+     */
+    public function setMensaje($mensaje)
+    {
+        $this->mensaje = $mensaje;
+    }
 
 
 }
