@@ -112,10 +112,10 @@
                                                     {% endfilter %}"
                                         >
                                         {% for servicio in edit_form.mhcservicios %}
-                                            <tr>
                                             {% form_theme servicio 'marinahumeda/cotizacionadicional/coleccion-servicio-adicional.twig' %}
+                                            <tr class="servicio-agregado">
                                                 <td class="valorcantidad">{{ form_widget(servicio.cantidad) }}</td>
-                                                <td class="td-servicio">{{ form_widget(servicio.marinahumedaservicio) }}</td>
+                                                <td class="td-servicio">{{ form_widget(servicio.marinahumedaservicio,{'attr':{'class':'select-buscador'}}) }}</td>
                                                 <td class="valorprecio" data-valor="0"></td>
                                                 <td class="valorsubtotal" data-valor="0"></td>
                                                 <td class="valoriva" data-valor="0"></td>

@@ -59,6 +59,7 @@ class SidebarController extends Controller
                         'path' => $this->generateUrl('marina-humeda-cotizacion-adicional_index'),
                         'submenu' => [
                             ['name' => 'Listado', 'path' => $this->generateUrl('marina-humeda-cotizacion-adicional_index')],
+                            ['name' => 'Nuevo', 'path' => $this->generateUrl('marina-humeda-cotizacion-adicional_new')],
                             ['name' => 'Catálogo', 'path' => $this->generateUrl('marina-humeda-servicio_index')]
                         ]
                     ],
