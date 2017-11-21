@@ -86,8 +86,8 @@ class SidebarController extends Controller
     private function admin()
     {
         $this->add([
-            ['name' => 'Usuarios', 'icon' => 'user-o', 'path' => $this->generateUrl('usuario_index')],
-            ['name' => 'Ajustes', 'icon' => 'cog', 'path' => $this->generateUrl('ajustes_index')],
+//            ['name' => 'Usuarios', 'icon' => 'user-o', 'path' => $this->generateUrl('usuario_index')],
+//            ['name' => 'Ajustes', 'icon' => 'cog', 'path' => $this->generateUrl('ajustes_index')],
         ]);
     }
 
