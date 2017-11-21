@@ -36,7 +36,7 @@
                             </thead>
                             <tbody>
                             {% set i=0 %}
-                            {% for cliente in clientes %}
+                            {% for cliente in clientes|reverse %}
                                 {% set i=i+1 %}
                                 <tr>
                                     <td>{{ i }}</td>
