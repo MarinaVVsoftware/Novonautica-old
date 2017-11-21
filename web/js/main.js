@@ -192,13 +192,13 @@ $('.lista-servicios-adicionales').on('click','.remove-servicio-adicional',functi
 });
 
 //--- select dependiente para marina humeda cotización ---
-var elcliente = $('#appbundle_marinahumedacotizacion_cliente');
-elcliente.change(function() {
+var elclientemh = $('#appbundle_marinahumedacotizacion_cliente');
+elclientemh.change(function() {
     // ... retrieve the corresponding form.
     var form = $(this).closest('form');
     // Simulate form data, but only include the selected elcliente value.
     var data = {};
-    data[elcliente.attr('name')] = elcliente.val();
+    data[elclientemh.attr('name')] = elclientemh.val();
     // Submit data via AJAX to the form's action path.
     $.ajax({
         url : form.attr('action'),

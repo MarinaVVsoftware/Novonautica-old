@@ -158,15 +158,8 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
 
             foreach ($originalServicios as $serv){
                 if (false === $marinaHumedaCotizacionAdicional->getMhcservicios()->contains($serv)) {
-                    // remove the Task from the Tag
-                    $serv->getMhcservicios()->removeMhcservicio($serv);
-
-                    // if it was a many-to-one relationship, remove the relationship like this
-                    //$motor->setBarco(null);
-
+                    //$serv->getMhcservicios()->removeMhcservicio($serv);
                     $em->persist($serv);
-
-                    // if you wanted to delete the Tag entirely, you can also do that
                     $em->remove($serv);
                 }
             }
@@ -175,8 +168,6 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
             $granSubtotal = 0;
             $granIvatotal = 0;
             $granTotal = 0;
-
-
             foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $servicio){
                 $cantidad = $servicio->getCantidad();
                 $precio = $servicio->getMarinahumedaservicio()->getPrecio();
@@ -195,6 +186,11 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
                 $granIvatotal+=$ivatotal;
                 $granTotal+=$total;
             }
+            $marinaHumedaCotizacionAdicional
+                ->setIva($iva)
+                ->setSubtotal($granSubtotal)
+                ->setIvatotal($granIvatotal)
+                ->setTotal($granTotal);
             $em->persist($marinaHumedaCotizacionAdicional);
             $em->flush();
 
