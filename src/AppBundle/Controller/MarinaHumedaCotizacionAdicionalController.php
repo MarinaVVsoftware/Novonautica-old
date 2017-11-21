@@ -5,17 +5,20 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\MarinaHumedaCotizacionAdicional;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Marinahumedacotizacionadicional controller.
  *
- * @Route("marina-humeda-cotizacion-adicional")
+ * @Route("/marina/servicios-adicionales")
  */
 class MarinaHumedaCotizacionAdicionalController extends Controller
 {
     /**
-     * Lists all marinaHumedaCotizacionAdicional entities.
+     * Muestra todos los servicios adicinales de marina humeda
      *
      * @Route("/", name="marina-humeda-cotizacion-adicional_index")
      * @Method("GET")
@@ -26,17 +29,21 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
 
         $marinaHumedaCotizacionAdicionals = $em->getRepository('AppBundle:MarinaHumedaCotizacionAdicional')->findAll();
 
-        return $this->render('marinahumeda/cotizacionadicional/index.html.twig', array(
+        return $this->render('marinahumeda/cotizacionadicional/index.html.twig', [
+            'title' => 'Servicios adicionales',
             'marinaHumedaCotizacionAdicionals' => $marinaHumedaCotizacionAdicionals,
-            'menumarinaadicional' => 1
-        ));
+        ]);
     }
 
     /**
-     * Creates a new marinaHumedaCotizacionAdicional entity.
+     * Crea un nuevo servicio adicional de marina humeda
      *
      * @Route("/nuevo", name="marina-humeda-cotizacion-adicional_new")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
@@ -49,37 +56,47 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
             $em->persist($marinaHumedaCotizacionAdicional);
             $em->flush();
 
-            return $this->redirectToRoute('marina-humeda-cotizacion-adicional_show', array('id' => $marinaHumedaCotizacionAdicional->getId()));
+            return $this->redirectToRoute('marina-humeda-cotizacion-adicional_show', ['id' => $marinaHumedaCotizacionAdicional->getId()]);
         }
 
-        return $this->render('marinahumeda/cotizacionadicional/new.html.twig', array(
+        return $this->render('marinahumeda/cotizacionadicional/new.html.twig', [
+            'title' => 'Nuevo Servicio',
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
             'form' => $form->createView(),
-            'menumarinaadicional' => 1
-        ));
+        ]);
     }
 
     /**
-     * Finds and displays a marinaHumedaCotizacionAdicional entity.
+     * Muestra un servicio adicional en especificio
      *
      * @Route("/{id}", name="marina-humeda-cotizacion-adicional_show")
      * @Method("GET")
+     *
+     * @param MarinaHumedaCotizacionAdicional $marinaHumedaCotizacionAdicional
+     *
+     * @return Response
      */
     public function showAction(MarinaHumedaCotizacionAdicional $marinaHumedaCotizacionAdicional)
     {
         $deleteForm = $this->createDeleteForm($marinaHumedaCotizacionAdicional);
 
-        return $this->render('marinahumeda/cotizacionadicional/show.html.twig', array(
+        return $this->render('marinahumeda/cotizacionadicional/show.html.twig', [
+            'title' => 'Servicio adicional',
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
-     * Displays a form to edit an existing marinaHumedaCotizacionAdicional entity.
+     * Edita un servicio adicional en especifico
      *
      * @Route("/{id}/editar", name="marina-humeda-cotizacion-adicional_edit")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param MarinaHumedaCotizacionAdicional $marinaHumedaCotizacionAdicional
+     *
+     * @return RedirectResponse|Response
      */
     public function editAction(Request $request, MarinaHumedaCotizacionAdicional $marinaHumedaCotizacionAdicional)
     {
@@ -90,19 +107,19 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('marina-humeda-cotizacion-adicional_edit', array('id' => $marinaHumedaCotizacionAdicional->getId()));
+            return $this->redirectToRoute('marina-humeda-cotizacion-adicional_edit', ['id' => $marinaHumedaCotizacionAdicional->getId()]);
         }
 
-        return $this->render('marinahumeda/cotizacionadicional/edit.html.twig', array(
+        return $this->render('marinahumeda/cotizacionadicional/edit.html.twig', [
+            'title' => 'Editar servicio adicional',
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'menumarinaadicional' => 1
-        ));
+        ]);
     }
 
     /**
-     * Deletes a marinaHumedaCotizacionAdicional entity.
+     * Elimina un servicio adicional
      *
      * @Route("/{id}", name="marina-humeda-cotizacion-adicional_delete")
      * @Method("DELETE")
@@ -122,7 +139,7 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
     }
 
     /**
-     * Creates a form to delete a marinaHumedaCotizacionAdicional entity.
+     * Crea un formulario para eliminar una entidad
      *
      * @param MarinaHumedaCotizacionAdicional $marinaHumedaCotizacionAdicional The marinaHumedaCotizacionAdicional entity
      *

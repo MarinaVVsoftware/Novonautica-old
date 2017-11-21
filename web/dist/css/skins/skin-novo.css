@@ -7,19 +7,24 @@
     -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
 }
+
 .skin-novo .main-header .navbar-toggle {
     color: #fff;
 }
+
 .skin-novo .main-header .navbar-brand {
     color: #333;
     border-right: 1px solid #eee;
 }
+
 .skin-novo .main-header .navbar {
     background-color: #292e41;
 }
+
 .skin-novo .main-header .navbar .nav > li > a {
     color: #ffffff;
 }
+
 .skin-novo .main-header .navbar .nav > li > a:hover,
 .skin-novo .main-header .navbar .nav > li > a:active,
 .skin-novo .main-header .navbar .nav > li > a:focus,
@@ -31,38 +36,47 @@
     background: #363c52;
     color: #ffffff;
 }
+
 .skin-novo .main-header .navbar .sidebar-toggle {
     color: #5a626f;
 }
+
 .skin-novo .main-header .navbar .sidebar-toggle:hover {
     color: #999999;
     /*background: #0097f6;*/
     background: #363c52;
 }
+
 .skin-novo .main-header .navbar > .sidebar-toggle {
     color: #5a626f;
     /*border-right: 1px solid;*/
 }
+
 .skin-novo .main-header .navbar .navbar-nav > li > a {
     border-right: 1px solid #eee;
 }
+
 .skin-novo .main-header .navbar .navbar-custom-menu .navbar-nav > li > a,
 .skin-novo .main-header .navbar .navbar-right > li > a {
     /*border-left: 1px solid #eee;*/
     border-right-width: 0;
 }
+
 .skin-novo .main-header > .logo {
     background-color: #292e41;
     color: #333333;
     border-bottom: 0 solid transparent;
     /*border-right: 1px solid #eee;*/
 }
+
 .skin-novo .main-header > .logo:hover {
     background-color: #292e41;
 }
+
 .skin-novo .main-header > .logo > .logo-mini {
     padding-top: 1rem;
 }
+
 @media (max-width: 767px) {
     .skin-novo .main-header > .logo {
         background-color: #222222;
@@ -70,66 +84,82 @@
         border-bottom: 0 solid transparent;
         border-right: none;
     }
+
     .skin-novo .main-header > .logo:hover {
         background-color: #1f1f1f;
     }
 }
+
 .skin-novo .main-header li.user-header {
     background-color: #222;
 }
+
 .skin-novo .content-header {
     background: transparent;
     box-shadow: none;
 }
+
 .skin-novo .wrapper,
 .skin-novo .main-sidebar,
 .skin-novo .left-side {
     background-color: #363c52;
 }
+
 .skin-novo .user-panel > .info,
 .skin-novo .user-panel > .info > a {
     color: #fff;
 }
+
 .skin-novo .sidebar-menu > li.header {
     color: #4b646f;
     background: #1a2226;
 }
+
 .skin-novo .sidebar-menu > li > a {
     border-left: 3px solid transparent;
 }
+
 .skin-novo .sidebar-menu > li:hover > a,
-/*.skin-novo .sidebar-menu > li.active > a,*/
+.skin-novo .sidebar-menu > li.active > a,
 .skin-novo .sidebar-menu > li.menu-open > a {
     color: #ffffff;
     background: #363c52;
     border-left: 3px solid #0097f6;
 }
+
 .skin-novo .sidebar-menu > li.active > a {
     border-left-color: #0097f6;
 }
+
 .skin-novo .sidebar-menu > li > .treeview-menu {
     /*margin: 0 1px;*/
     background: #363c52;
 }
+
 .skin-novo .sidebar a {
     color: #b8c7ce;
 }
+
 .skin-novo .sidebar a:hover {
     text-decoration: none;
 }
+
 .skin-novo .sidebar-menu .treeview-menu > li > a {
     color: #0097f6;
 }
+
 .skin-novo .sidebar-menu .treeview-menu > li.active > a,
 .skin-novo .sidebar-menu .treeview-menu > li > a:hover {
     color: #ffffff;
     background: #0097f6;
 }
+
 .skin-novo .sidebar-form {
     border-radius: 3px;
     border: 1px solid #374850;
     margin: 10px 10px;
 }
+
 .skin-novo .sidebar-form input[type="text"],
 .skin-novo .sidebar-form .btn {
     box-shadow: none;
@@ -137,6 +167,7 @@
     border: 1px solid transparent;
     height: 35px;
 }
+
 .skin-novo .sidebar-form input[type="text"] {
     color: #666;
     border-top-left-radius: 2px;
@@ -144,14 +175,17 @@
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 2px;
 }
+
 .skin-novo .sidebar-form input[type="text"]:focus,
 .skin-novo .sidebar-form input[type="text"]:focus + .input-group-btn .btn {
     background-color: #fff;
     color: #666;
 }
+
 .skin-novo .sidebar-form input[type="text"]:focus + .input-group-btn .btn {
     border-left-color: #fff;
 }
+
 .skin-novo .sidebar-form .btn {
     color: #999;
     border-top-left-radius: 0;
@@ -159,62 +193,74 @@
     border-bottom-right-radius: 2px;
     border-bottom-left-radius: 0;
 }
+
 .skin-novo .pace .pace-progress {
     background: #222;
 }
+
 .skin-novo .pace .pace-activity {
     border-top-color: #222;
     border-left-color: #222;
 }
-.skin-novo .content-wrapper{
+
+.skin-novo .content-wrapper {
     background: #5a626f;
     height: 0;
     overflow: auto;
 }
-.skin-novo .treeview-menu{
-    padding-left: 0px;
+
+.skin-novo .treeview-menu {
+    padding-left: 0;
 }
+
 .skin-novo .control-sidebar-dark,
-.skin-novo .control-sidebar-dark+.control-sidebar-bg {
-    background: #363c52;
-}
-.skin-novo .control-sidebar-dark .nav-tabs.control-sidebar-tabs>li.active>a {
+.skin-novo .control-sidebar-dark + .control-sidebar-bg {
     background: #363c52;
 }
 
-.skin-novo .main-header{
+.skin-novo .control-sidebar-dark .nav-tabs.control-sidebar-tabs > li.active > a {
+    background: #363c52;
+}
+
+.skin-novo .main-header {
     max-height: 140px;
     background: #292e41;
 }
 
-.skin-novo .main-header{
+.skin-novo .main-header {
     box-shadow: 0 4px 8px #191919;
 }
 
-.skin-novo .main-footer{
+.skin-novo .main-footer {
     background: #292e41;
     padding: 15px;
     color: #fff;
-    border:none;
+    border: none;
 }
 
-.content-wrapper::-webkit-scrollbar-track
-{
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+.skin-novo li.treeview.active.menu-open > a:first-of-type {
+    background: transparent;
+    border-left: 3px solid #0097f6;
+}
+
+.skin-novo li.treeview > ul.treeview-menu > li.treeview > ul.treeview-menu > li {
+    text-indent: 5px;
+}
+
+.content-wrapper::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 
     background-color: #59616e;
     border: 1px solid #353b51;
 }
 
-.content-wrapper::-webkit-scrollbar
-{
+.content-wrapper::-webkit-scrollbar {
     width: 14px;
     background-color: #353b51;
 }
 
-.content-wrapper::-webkit-scrollbar-thumb
-{
+.content-wrapper::-webkit-scrollbar-thumb {
 
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     background-color: #1b1e28;
 }
