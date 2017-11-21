@@ -52,6 +52,11 @@ class MarinaHumedaServicio
      */
     private $precio;
 
+    public function __toString()
+    {
+        return $this->nombre;
+    }
+
     /**
      * Get id
      *
