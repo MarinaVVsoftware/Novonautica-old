@@ -21,6 +21,7 @@
                                 <th>Barco</th>
                                 <th>Fecha llegada</th>
                                 <th>Fecha salida</th>
+                                <th>Slip</th>
                                 <th>Descuento(%)</th>
                                 <th>Subtotal</th>
                                 <th>Iva Total</th>
@@ -45,6 +46,7 @@
                                     <td>{{ marinaHumedaCotizacion.barco }}</td>
                                     <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
                                     <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</td>
+                                    <td>{{ marinaHumedaCotizacion.slip }}</td>
                                     <td>{{ marinaHumedaCotizacion.descuento }}%</td>
                                     <td>${{ marinaHumedaCotizacion.subtotal|number_format(2,'.',',') }}</td>
                                     <td>${{ marinaHumedaCotizacion.ivatotal|number_format(2,'.',',') }}</td>

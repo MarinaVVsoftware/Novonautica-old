@@ -32,12 +32,14 @@
                         <li role="presentation">
                             <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a>
                         </li>
+                        {#
                         <li role="presentation">
                             <a href="#totalusd" aria-controls="total" role="tab" data-toggle="tab">Total (USD)</a>
                         </li>
                         <li role="presentation">
                             <a href="#totalmxn" aria-controls="total" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
+                        #}
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="generales">
@@ -66,6 +68,9 @@
                                     <label>Dolar:</label>
                                     {{ form_widget(form.dolar,{'value':valdolar}) }}
                                 </div>
+                                <div class="col-sm-9">
+                                    <button type="submit" class="btn btn-azul pull-right">Guardar</button>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-9 espacio-linea-arriba2">
@@ -91,6 +96,7 @@
                                         </tbody>
                                     </table>
                                 </div>
+
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
@@ -103,7 +109,7 @@
                         <div role="tabpanel" class="tab-pane" id="totalusd">
                         </div>
                         <div role="tabpanel" class="tab-pane" id="totalmxn">
-                            <button type="submit" class="btn btn-azul">Guardar</button>
+
                         </div>
                     </div>
                     {{ form_end(form) }}

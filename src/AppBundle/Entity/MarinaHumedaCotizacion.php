@@ -189,9 +189,17 @@ class MarinaHumedaCotizacion
 
     /**
      *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Slip", inversedBy="mhcotizaciones")
+     * @ORM\JoinColumn(name="idslip", referencedColumnName="id",onDelete="CASCADE")
+     */
+    private $slip;
+
+    /**
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaCotizaServicios", mappedBy="marinahumedacotizacion",cascade={"persist"})
      */
     private $mhcservicios;
+
 
     public function __construct() {
         $this->mhcservicios = new ArrayCollection();
@@ -790,4 +798,28 @@ class MarinaHumedaCotizacion
     }
 
 
+
+    /**
+     * Set slip
+     *
+     * @param \AppBundle\Entity\Slip $slip
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setSlip(\AppBundle\Entity\Slip $slip = null)
+    {
+        $this->slip = $slip;
+
+        return $this;
+    }
+
+    /**
+     * Get slip
+     *
+     * @return \AppBundle\Entity\Slip
+     */
+    public function getSlip()
+    {
+        return $this->slip;
+    }
 }
