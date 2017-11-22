@@ -1,0 +1,330 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
+{% endblock %}
+
+{% form_theme form 'embarcacion/form-themes/_embarcacion.html.twig' %}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                {{ embarcacion.nombre is empty ? 'Embarcaciones' : embarcacion.nombre }}
+                            </h3>
+                        </div>
+                        <div class="panel-body panel-pestanias">
+                            {{ form_start(form) }}
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="primero active">
+                                    <a href="#especificaciones" data-toggle="tab">Generales</a>
+                                </li>
+                                <li>
+                                    <a href="#imagenes" data-toggle="tab">Imagenes & Video</a>
+                                </li>
+                                <li>
+                                    <a href="#layout" data-toggle="tab">Brochure & Layout</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="especificaciones">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{ form_row(form.nombre) }}
+                                            {{ form_row(form.precio) }}
+                                            {{ form_row(form.pais) }}
+                                            {{ form_row(form.construccion) }}
+                                            <div id="prefabricado">
+                                                {{ form_row(form.marca) }}
+                                                {{ form_row(form.modelo) }}
+                                            </div>
+                                            <div id="custom" style="display: none">
+                                                {{ form_row(form.builder) }}
+                                                {{ form_row(form.interiorDesigner) }}
+                                                {{ form_row(form.exteriorDesigner) }}
+                                            </div>
+                                            {{ form_row(form.ano) }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form_row(form.longitud) }}
+                                            {{ form_row(form.eslora) }}
+                                            {{ form_row(form.manga) }}
+                                            {{ form_row(form.calado) }}
+                                            {{ form_row(form.peso) }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form_row(form.capacidadCombustible) }}
+                                            {{ form_row(form.capacidadAgua) }}
+                                            {{ form_row(form.capacidadDeposito) }}
+                                            {{ form_row(form.cabinas) }}
+                                            {{ form_row(form.pasajerosDormidos) }}
+                                            {{ form_row(form.generador) }}
+                                        </div>
+                                        <hr style="width: 100%; margin: 10px 0 !important;">
+                                        <div class="col-md-6">
+                                            {{ form_row(form.motores) }}
+                                            <a href="#" id="add-motor">+ Agregar motor</a>
+                                        </div>
+                                        <hr style="width: 100%; margin: 10px 0 !important;">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    {{ form_row(form.descripcion) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="imagenes">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{ form_row(form.video) }}
+                                            {{ form_row(form.imagenes) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div id="boat-img" class="dropzone">
+                                                <div class="dz-message imagenes-message">
+                                                    Puedes arrastrar tus imagenes aquí.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="layout">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {{ form_row(form.brochureFile) }}
+                                            {{ form_row(form.layouts) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div id="boat-layout" class="dropzone">
+                                                <div class="dz-message imagenes-message">
+                                                    Puedes arrastrar los layouts aquí.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-azul pull-right">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/dropzone.js') }}"></script>
+    <script type="text/javascript">
+      (function () {
+        const construccionInput = document.querySelector('#appbundle_embarcacion_construccion');
+        const prefabricadoContainer = document.querySelector('#prefabricado');
+        const customContainer = document.querySelector('#custom');
+        const marcaInput = document.querySelector('#appbundle_embarcacion_marca');
+        const modeloInput = document.querySelector('#appbundle_embarcacion_modelo');
+        const tabContent = document.querySelector('.tab-content');
+        const firstError = tabContent.querySelector('.has-error');
+
+        fetchModelos();
+        getConstruccion();
+
+        marcaInput.addEventListener('change', fetchModelos);
+        construccionInput.addEventListener('change', getConstruccion);
+
+        if (firstError) {
+          const tabPanes = tabContent.querySelectorAll('.tab-pane');
+          const tabPane = firstError.parentNode.parentNode.parentNode;
+          const tabPaneId = tabPane.getAttribute('id');
+          const tabs = document.querySelectorAll('.nav-tabs > li');
+          const tab = document.querySelector(`[href="#${tabPaneId}"]`).parentNode;
+
+          tabs.forEach(elem => elem.classList.remove('active'));
+          tabPanes.forEach(elem => elem.classList.remove('active'));
+          tab.classList.add('active');
+          tabPane.classList.add('active')
+        }
+
+        function getConstruccion() {
+          if (construccionInput.value === 'custom') {
+            prefabricadoContainer.style.display = 'none';
+            customContainer.style.display = 'block';
+          } else {
+            customContainer.style.display = 'none';
+            prefabricadoContainer.style.display = 'block';
+          }
+        }
+
+        function fetchModelos() {
+          fetch(`{{ app.request.baseUrl }}/embarcacion/marca/${marcaInput.value}/modelos.json`, {credentials: 'include'})
+              .then(response => response.status === 200 ? response.json() : response.status)
+              .then(marca => {
+                modeloInput.innerHTML = marca.modelos.length
+                    ? marca.modelos.map(modelo => `<option value="${modelo.id}">${modelo.nombre}</option>`).join('')
+                    : `<option>No hay modelos</option>`;
+              });
+        }
+      })();
+
+      (function ($) {
+        const motorContainer = document.querySelector('#appbundle_embarcacion_motores');
+        const addMotor = document.querySelector('#add-motor');
+        let motorCount = '{{ form.motores|length }}';
+
+        addMotor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const motorPrototype = motorContainer.dataset.prototype.replace(/__name__/g, motorCount);
+          const tempContainer = document.createElement('div');
+          tempContainer.innerHTML = motorPrototype;
+          const motorFormGroup = tempContainer.firstChild;
+          motorContainer.appendChild(motorFormGroup);
+          motorCount++;
+        });
+
+        $(document).on('click', '.remove-motor', function (e) {
+          e.preventDefault();
+          // if (motorContainer.children.length < 2) return; // Siempre deben agregar al menos un motor?
+          const that = this;
+          that.parentNode.parentNode.remove(that.parentNode)
+        })
+
+      })(jQuery);
+
+      (function ($) {
+        const embarcacionForm = document.querySelector('[name="appbundle_embarcacion"]');
+        const imgContainer = document.querySelector('#appbundle_embarcacion_imagenes');
+        const layoutContainer = document.querySelector('#appbundle_embarcacion_layouts');
+        let imgCount = '{{ form.imagenes|length }}';
+        let layoutCount = '{{ form.layouts|length }}';
+
+        embarcacionForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (!imagenes.getQueuedFiles().length && !layouts.getQueuedFiles().length) {
+            this.submit();
+          } else {
+            if (imagenes.getQueuedFiles().length) {
+              imagenes.processQueue();
+              if (layouts.getQueuedFiles().length) {
+                layouts.processQueue();
+                layouts.on('queuecomplete', () => {
+                  this.submit();
+                });
+              } else {
+                imagenes.on('queuecomplete', () => {
+                  this.submit();
+                });
+              }
+            }
+          }
+        });
+
+        let dropzoneParameters = {
+          url: '{{ oneup_uploader_endpoint('embarcacion') }}',
+          acceptedFiles: 'image/*',
+          maxFilesize: 2,
+          dictFileTooBig: 'La imagen es demasiado pesada el tamaño maximo es de 1MiB',
+          addRemoveLinks: true,
+          parallelUploads: 1,
+          autoProcessQueue: false,
+        };
+
+        Dropzone.autoDiscover = false;
+        const imagenes = new Dropzone('#boat-img', {
+          ...dropzoneParameters,
+          init: function () {
+            this
+                .on('success', function (file, response) {
+                  const imgPrototype = imgContainer.dataset.prototype.replace(/__name__/g, imgCount);
+                  dropzoneSuccess(imgContainer, imgPrototype, 1, file, response);
+                  imgCount++;
+                  imagenes.processQueue();
+                })
+                .on('removedfile', function (file) {
+                  let imgInputContainer = imgContainer.querySelector(`input[value="${file.name}"]`);
+                  if (imgInputContainer) {
+                    $(imgInputContainer.parentNode).remove();
+                  }
+                });
+          }
+        });
+
+        const layouts = new Dropzone('#boat-layout', {
+          ...dropzoneParameters,
+          init: function () {
+            this
+                .on('success', function (file, response) {
+                  const layoutPrototype = layoutContainer.dataset.prototype.replace(/__name__/g, layoutCount);
+                  dropzoneSuccess(layoutContainer, layoutPrototype, 2, file, response);
+                  layoutCount++;
+                  layouts.processQueue();
+                })
+                .on('removedfile', function (file) {
+                  let layoutInputContainer = layoutContainer.querySelector(`input[value="${file.name}"]`);
+                  if (layoutInputContainer) {
+                    $(layoutInputContainer.parentNode).remove();
+                  }
+                });
+          }
+        });
+
+          {% for imagen in embarcacion.imagenes %}
+        emitThumbnail(imagenes, {
+          name: '{{ imagen.basename }}',
+          size: {{ imagen.size }},
+          dataURL: '{{ app.request.basePath }}/uploads/embarcacion/{{ imagen.basename }}'
+        });
+          {% endfor %}
+
+          {% for layout in embarcacion.layouts %}
+        emitThumbnail(layouts, {
+          name: '{{ layout.basename }}',
+          size: {{ layout.size }},
+          dataURL: '{{ app.request.basePath }}/uploads/embarcacion/{{ layout.basename }}'
+        });
+          {% endfor %}
+
+        function dropzoneSuccess(contenedor, prototipo, tipo, archivo, respuesta) {
+          let divContainer = document.createElement('div');
+          divContainer.innerHTML = prototipo;
+          let imgInput = divContainer.querySelector('[name*="[basename]"]');
+          let sizeInput = divContainer.querySelector('[name*="[size]"]');
+          imgInput.dataset.uuid = archivo.upload.uuid;
+          imgInput.value = respuesta.baseFileName;
+          sizeInput.value = archivo.size;
+          contenedor.appendChild(divContainer.firstChild);
+        }
+
+        function emitThumbnail(dz, thumb) {
+          dz.files.push(thumb);
+          dz.emit('addedfile', thumb);
+          dz.createThumbnailFromUrl(thumb,
+              dz.options.thumbnailWidth, dz.options.thumbnailHeight,
+              dz.options.thumbnailMethod, true, function (thumbnail) {
+                dz.emit('thumbnail', thumb, thumbnail);
+              });
+          dz.emit('complete', thumb);
+        }
+      })(jQuery);
+    </script>
+{% endblock %}
