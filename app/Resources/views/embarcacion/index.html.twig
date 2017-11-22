@@ -1,0 +1,55 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Embarcaciones</h3>
+                        </div>
+                        <div class="panel-body no-padding">
+                            <div class="table-responsive">
+                                <table class="table table-novo">
+                                    <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                        <th>Longitud</th>
+                                        <th>Eslora</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for embarcacion in embarcacions %}
+                                        <tr>
+                                            <td>{{ embarcacion.nombre }}</td>
+                                            <td>{{ embarcacion.precio }}</td>
+                                            <td>{{ embarcacion.longitud }}</td>
+                                            <td>{{ embarcacion.eslora }}</td>
+                                            <td>
+                                                <ul>
+                                                    <li>
+                                                        <a href="{{ path('embarcacion_show', { 'id': embarcacion.id }) }}">show</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ path('embarcacion_edit', { 'id': embarcacion.id }) }}">edit</a>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

@@ -19,10 +19,11 @@ class SidebarController extends Controller
     {
         $this->user();
         $this->admin();
+        $requestStack = $this->get('request_stack')->getMasterRequest();
 
         return $this->render(':estructura:sidebar.html.twig', [
             'menus' => $this->paths,
-            'current_path' => $this->get('request_stack')->getMasterRequest()->getRequestUri()
+            'current_path' => $requestStack->getBaseUrl() . $requestStack->getPathInfo()
         ]);
     }
 
@@ -73,6 +74,16 @@ class SidebarController extends Controller
                     ['name' => 'Cotizaciones', 'path' => $this->generateUrl('astillero_index')],
                     ['name' => 'Aceptaciones', 'path' => $this->generateUrl('astillero-aceptaciones')],
                     ['name' => 'ODT', 'path' => $this->generateUrl('astillero-odt')],
+                ]
+            ],
+            [
+                'name' => 'Ocean Deal',
+                'path' => $this->generateUrl('embarcacion_index'),
+                'submenu' => [
+                    ['name' => 'Embarcaciones', 'path' => $this->generateUrl('embarcacion_index')],
+                    ['name' => 'Nueva embarcación', 'path' => $this->generateUrl('embarcacion_new')],
+                    ['name' => 'Marcas', 'path' => $this->generateUrl('embarcacion_marca_new')],
+                    ['name' => 'Modelos', 'path' => $this->generateUrl('embarcacion_modelo')]
                 ]
             ],
             [ 'name' => 'Eventos', 'icon' => 'address-book', 'path' => $this->generateUrl('marina-agenda') ],

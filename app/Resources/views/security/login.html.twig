@@ -33,12 +33,14 @@
                                 <div class="form-group">
                                     <label for="correo">Usuario</label>
                                     <input type="text" id="correo" class="form-control text-center fondo-blanco"
+                                           style="color: #000"
                                            name="_correo"
                                            value="{{ last_username }}"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="password">Contraseña</label>
                                     <input type="password" id="password" class="form-control text-center fondo-blanco"
+                                           style="color: #000"
                                            name="_password"/>
                                 </div>
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">

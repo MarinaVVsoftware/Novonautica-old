@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Embarcacion</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ embarcacion.id }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ embarcacion.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Precio</th>
+                <td>{{ embarcacion.precio }}</td>
+            </tr>
+            <tr>
+                <th>Fabricante</th>
+                <td>{{ embarcacion.fabricante }}</td>
+            </tr>
+            <tr>
+                <th>Ano</th>
+                <td>{{ embarcacion.ano }}</td>
+            </tr>
+            <tr>
+                <th>Longitud</th>
+                <td>{{ embarcacion.longitud }}</td>
+            </tr>
+            <tr>
+                <th>Eslora</th>
+                <td>{{ embarcacion.eslora }}</td>
+            </tr>
+            <tr>
+                <th>Manga</th>
+                <td>{{ embarcacion.manga }}</td>
+            </tr>
+            <tr>
+                <th>Calado</th>
+                <td>{{ embarcacion.calado }}</td>
+            </tr>
+            <tr>
+                <th>Peso</th>
+                <td>{{ embarcacion.peso }}</td>
+            </tr>
+            <tr>
+                <th>Capacidadcombustible</th>
+                <td>{{ embarcacion.capacidadCombustible }}</td>
+            </tr>
+            <tr>
+                <th>Capacidadagua</th>
+                <td>{{ embarcacion.capacidadAgua }}</td>
+            </tr>
+            <tr>
+                <th>Capacidaddeposito</th>
+                <td>{{ embarcacion.capacidadDeposito }}</td>
+            </tr>
+            <tr>
+                <th>Cabinas</th>
+                <td>{{ embarcacion.cabinas }}</td>
+            </tr>
+            <tr>
+                <th>Pasajerosdormidos</th>
+                <td>{{ embarcacion.pasajerosDormidos }}</td>
+            </tr>
+            <tr>
+                <th>Generador</th>
+                <td>{{ embarcacion.generador }}</td>
+            </tr>
+            <tr>
+                <th>Descripcion</th>
+                <td>{{ embarcacion.descripcion }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('embarcacion_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('embarcacion_edit', { 'id': embarcacion.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}
