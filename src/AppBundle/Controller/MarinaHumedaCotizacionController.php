@@ -236,7 +236,6 @@ class MarinaHumedaCotizacionController extends Controller
      */
     public function repuestaCliente($token)
     {
-        $mensaje = '';
         $em = $this->getDoctrine()->getManager();
 
         $cotizacionAceptar = $em->getRepository(MarinaHumedaCotizacion::class)
@@ -244,24 +243,48 @@ class MarinaHumedaCotizacionController extends Controller
 
         if($cotizacionAceptar){
             if($cotizacionAceptar->getValidacliente() == 0){
-                $cotizacionAceptar->setValidacliente(2);
-                $em->persist($cotizacionAceptar);
-                $em->flush();
-                $mensaje = 'Cotización Aceptada';
+                //$cotizacionAceptar->setValidacliente(2);
+                //$em->persist($cotizacionAceptar);
+                //$em->flush();
+
+                if($cotizacionAceptar->getFoliorecotiza()==0){
+                    $folio = $cotizacionAceptar->getFolio();
+                }else{
+                    $folio = $cotizacionAceptar->getFolio().'-'.$cotizacionAceptar->getFoliorecotiza();
+                }
+                $mensaje1 = '¡Enhorabuena!';
+                $mensaje2 = 'La cotización '.$folio.' ha sido aprobada.';
+                $mensaje3 = 'Para seguir adelante con su servicio es requerido el pago de los servicios que serán proporcionados. A continuación seleccione un método de pago.';
+                $suformulario = 1;
             }else{
-                $mensaje = 'Error! Cotización ya respondida';
+                $mensaje1 = '¡Error!';
+                $mensaje2 = 'Cotización ya respondida';
+                $mensaje3 = '';
+                $suformulario = 0;
             }
         }else{
             $cotizacionRechazar = $em->getRepository(MarinaHumedaCotizacion::class)
                 ->findOneBy(['tokenrechaza'=>$token]);
             if($cotizacionRechazar){
                 if($cotizacionRechazar->getValidacliente() == 0) {
-                    $cotizacionRechazar->setValidacliente(1);
-                    $em->persist($cotizacionRechazar);
-                    $em->flush();
-                    $mensaje = 'Cotización Rechazada';
+                    //$cotizacionRechazar->setValidacliente(1);
+                    //$em->persist($cotizacionRechazar);
+                    //$em->flush();
+
+                    if($cotizacionRechazar->getFoliorecotiza()==0){
+                        $folio = $cotizacionRechazar->getFolio();
+                    }else{
+                        $folio = $cotizacionRechazar->getFolio().'-'.$cotizacionRechazar->getFoliorecotiza();
+                    }
+                    $mensaje1 = '¡Oh-oh!';
+                    $mensaje2 = 'La cotización '.$folio.' no ha sido aprobada.';
+                    $mensaje3 = 'Nos gustaría saber su opinión o comentarios del motivo de su rechazo.';
+                    $suformulario = 2;
                 }else{
-                    $mensaje = 'Error! Cotización ya respondida';
+                    $mensaje1 = '¡Error!';
+                    $mensaje2 = 'Cotización ya respondida';
+                    $mensaje3 = '';
+                    $suformulario = 0;
                 }
             }else{
                 throw new NotFoundHttpException();
@@ -270,7 +293,10 @@ class MarinaHumedaCotizacionController extends Controller
 
 
         return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', [
-            'mensaje' => $mensaje
+            'mensaje1' => $mensaje1,
+            'mensaje2' => $mensaje2,
+            'mensaje3' => $mensaje3,
+            'suformulario' => $suformulario
         ]);
 
     }
@@ -301,6 +327,7 @@ class MarinaHumedaCotizacionController extends Controller
             ->setBarco($barco)
             ->setFechaLlegada($marinaHumedaCotizacionAnterior->getFechaLlegada())
             ->setFechaSalida($marinaHumedaCotizacionAnterior->getFechaSalida())
+            ->setSlip($marinaHumedaCotizacionAnterior->getSlip())
             ->setDescuento($marinaHumedaCotizacionAnterior->getDescuento())
             ->setDolar($marinaHumedaCotizacionAnterior->getDolar())
             ->setIva($marinaHumedaCotizacionAnterior->getIva())
