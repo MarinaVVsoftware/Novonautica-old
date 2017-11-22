@@ -1,0 +1,207 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
+{% endblock %}
+
+{% form_theme form ':embarcacion/form-themes:imagenes.html.twig' %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Embarcaciones</h3>
+                        </div>
+                        <div class="panel-body panel-pestanias">
+                            {{ form_start(form) }}
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="primero active">
+                                    <a href="#especificaciones" data-toggle="tab">Generales</a>
+                                </li>
+                                <li>
+                                    <a href="#imagenes" data-toggle="tab">Imagenes & Video</a>
+                                </li>
+                                <li>
+                                    <a href="#layout" data-toggle="tab">Brochure & Layout</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="especificaciones">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{ form_row(form.nombre) }}
+                                            {{ form_row(form.precio) }}
+                                            {{ form_row(form.construccion) }}
+                                            <div id="prefabricado">
+                                                {{ form_row(form.marca) }}
+                                                {{ form_row(form.modelo) }}
+                                            </div>
+                                            <div id="custom" style="display: none">
+                                                {{ form_row(form.builder) }}
+                                                {{ form_row(form.interiorDesigner) }}
+                                                {{ form_row(form.exteriorDesigner) }}
+                                            </div>
+                                            {{ form_row(form.ano) }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form_row(form.longitud) }}
+                                            {{ form_row(form.eslora) }}
+                                            {{ form_row(form.manga) }}
+                                            {{ form_row(form.calado) }}
+                                            {{ form_row(form.peso) }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form_row(form.capacidadCombustible) }}
+                                            {{ form_row(form.capacidadAgua) }}
+                                            {{ form_row(form.capacidadDeposito) }}
+                                            {{ form_row(form.cabinas) }}
+                                            {{ form_row(form.pasajerosDormidos) }}
+                                            {{ form_row(form.generador) }}
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    {{ form_row(form.descripcion) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="imagenes">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{ form_row(form.video) }}
+                                            {{ form_row(form.imagenes) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div id="boat-img" class="dropzone">
+                                                <div class="dz-default dz-message">
+                                                    Puedes arrastrar tus imagenes aquí.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="layout">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-azul pull-right">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/dropzone.js') }}"></script>
+    <script type="text/javascript">
+      (function () {
+        const construccionForm = document.querySelector('[name="appbundle_embarcacion"]');
+        const construccionInput = document.querySelector('#appbundle_embarcacion_construccion');
+        const prefabricadoContainer = document.querySelector('#prefabricado');
+        const customContainer = document.querySelector('#custom');
+        const marcaInput = document.querySelector('#appbundle_embarcacion_marca');
+        const modeloInput = document.querySelector('#appbundle_embarcacion_modelo');
+        const tabContent = document.querySelector('.tab-content');
+        const firstError = tabContent.querySelector('.has-error');
+
+        fetchModelos();
+        getConstruccion();
+
+        marcaInput.addEventListener('change', fetchModelos);
+        construccionInput.addEventListener('change', getConstruccion);
+
+        if (firstError) {
+          const tabPanes = tabContent.querySelectorAll('.tab-pane');
+          const tabPane = firstError.parentNode.parentNode.parentNode;
+          const tabPaneId = tabPane.getAttribute('id');
+          const tabs = document.querySelectorAll('.nav-tabs > li');
+          const tab = document.querySelector(`[href="#${tabPaneId}"]`).parentNode;
+
+          tabs.forEach(elem => elem.classList.remove('active'));
+          tabPanes.forEach(elem => elem.classList.remove('active'));
+          tab.classList.add('active');
+          tabPane.classList.add('active')
+        }
+
+        function getConstruccion() {
+          if (construccionInput.value === 'custom') {
+            prefabricadoContainer.style.display = 'none';
+            customContainer.style.display = 'block';
+          } else {
+            customContainer.style.display = 'none';
+            prefabricadoContainer.style.display = 'block';
+          }
+        }
+
+        function fetchModelos() {
+          fetch(`{{ app.request.baseUrl }}/embarcacion/marca/${marcaInput.value}/modelos.json`, {credentials: 'include'})
+              .then(response => response.status === 200 ? response.json() : response.status)
+              .then(marca => {
+                modeloInput.innerHTML = marca.modelos.length
+                    ? marca.modelos.map(modelo => `<option value="${modelo.id}">${modelo.nombre}</option>`).join('')
+                    : `<option>No hay modelos</option>`;
+              });
+        }
+
+        let imgCount = '{{ form.imagenes|length }}';
+
+        Dropzone.autoDiscover = false;
+        const boatImg = new Dropzone('#boat-img', {
+          url: '{{ oneup_uploader_endpoint('embarcacion') }}',
+          acceptedFiles: 'image/*',
+          maxFilesize: 2,
+          autoProcessQueue: false,
+          dictFileTooBig: 'La imagen es demasiado pesada el tamaño maximo es de 1MiB',
+          parallelUploads: 1,
+          uploadMultiple: true,
+          addRemoveLinks: true,
+          init: function () {
+            this
+                .on('success', function (file, response) {
+                  const imgContainer = document.querySelector('#appbundle_embarcacion_imagenes');
+                  let imgPrototype = imgContainer.dataset.prototype.replace(/__name__/g, imgCount);
+                  let divContainer = document.createElement('div');
+                  divContainer.style.display = 'none';
+                  divContainer.innerHTML = imgPrototype;
+                  let imgInput = divContainer.querySelector('input');
+                  imgInput.value = response.baseFileName;
+
+                  imgContainer.appendChild(divContainer);
+
+                  imgCount++;
+                  boatImg.options.autoProcessQueue = true;
+                })
+          }
+        });
+
+        construccionForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          boatImg.processQueue();
+          boatImg.on('queuecomplete', () => {
+            this.submit()
+          })
+        })
+      })();
+    </script>
+{% endblock %}
