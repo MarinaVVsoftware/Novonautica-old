@@ -1,0 +1,75 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Embarcaciones</h3>
+                        </div>
+                        <div class="panel-body panel-pestanias">
+                            {{ form_start(form) }}
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="primero active">
+                                    <a href="#especificaciones" data-toggle="tab">Generales</a>
+                                </li>
+                                <li>
+                                    <a href="#imagenes" data-toggle="tab">Imagenes & Video</a>
+                                </li>
+                                <li>
+                                    <a href="#layout" data-toggle="tab">Brochure & Layout</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="especificaciones">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{ form_row(form.nombre) }}
+                                            {{ form_row(form.precio) }}
+                                            {{ form_row(form.construccion) }}
+                                            <div class="row">
+                                                <div id="prefabricado" class="col-md-6">
+                                                    {{ form_row(form.marca) }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                </div>
+                                            </div>
+                                            {{ form_row(form.ano) }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form_row(form.longitud) }}
+                                            {{ form_row(form.eslora) }}
+                                            {{ form_row(form.manga) }}
+                                            {{ form_row(form.calado) }}
+                                            {{ form_row(form.peso) }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form_row(form.capacidadCombustible) }}
+                                            {{ form_row(form.capacidadAgua) }}
+                                            {{ form_row(form.capacidadDeposito) }}
+                                            {{ form_row(form.cabinas) }}
+                                            {{ form_row(form.pasajerosDormidos) }}
+                                            {{ form_row(form.generador) }}
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form_row(form.descripcion) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="imagenes">
+                                </div>
+                                <div class="tab-pane" id="layout">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
