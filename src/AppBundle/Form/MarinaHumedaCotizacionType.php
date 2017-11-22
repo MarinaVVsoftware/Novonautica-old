@@ -99,6 +99,12 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'attr' => ['rows' => 7],
                 'required' => false
             ])
+            ->add('slip',EntityType::class,[
+                'class' => 'AppBundle:Slip',
+                'label' => 'Slip',
+                'placeholder' => 'Seleccionar...',
+
+            ])
         ;
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
@@ -137,7 +143,8 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('mensaje')
                     ->remove('mhcservicios')
                     ->remove('validacliente')
-                    ->remove('notascliente');
+                    ->remove('notascliente')
+                    ->remove('slip');
             }
         });
 
