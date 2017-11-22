@@ -1,0 +1,51 @@
+{% extends 'estructura/plantilla-otros.twig' %}
+
+{% block title %} Novonautica | Gracias {% endblock %}
+{% block stylesheets %}
+    <style type="text/css">
+        .fondo-bicolor-arriba {
+            background: url("{{ absolute_url(asset('img/imagencorreo-02.jpg')) }}") no-repeat;
+            background-size: cover;
+        }
+        .imagenlogo {
+            padding: 10px;
+        }
+        .pad-arriba-1 {
+            padding-top: 20px;
+        }
+
+        .pad-abajo-1 {
+            padding-bottom: 20px;
+        }
+        .letra-azul {
+            color: #458fce;
+        }
+
+        .fondo-gris {
+            background: #d4d4d4;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row fondo-bicolor-arriba">
+            <div class="col-sm-3 ">
+                <img src="{{ asset('img/logo.png')  }}" class="img-responsive imagenlogo">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-sm-offset-6">
+                <img src="{{ asset('img/cotizacion-03.png') }}" class="img-responsive imagenlogo">
+            </div>
+        </div>
+        <div class="row fondo-gris pad-arriba-1 pad-abajo-1">
+            <div class="col-sm-12 text-center">
+                <p class="letra-azul"><strong>Gracias por su respuesta</strong></p>
+
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}
