@@ -69,12 +69,22 @@
                                     {{ form_widget(form.dolar,{'value':valdolar}) }}
                                 </div>
                                 <div class="col-sm-9">
-                                    <button type="submit" class="btn btn-azul pull-right">Guardar</button>
+                                    <button type="submit" class="btn btn-azul pull-right">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div id="valorsistemaiva" class="text-right" data-valor="{{ valiva }}">
+                                        <small>IVA: {{ valiva }} %</small>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-9 espacio-linea-arriba2">
-                                    <table class="table text-center">
+                                    <table id="servicioAdicional" class="table text-center">
                                         <thead>
                                         <tr>
                                             <th class="col-sm-1">Cantidad</th>
@@ -105,6 +115,49 @@
                                     </a>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $ <span id="gransubtot">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $ <span id="graniva">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $ <span id="grantot">00.00</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+
                         </div>
                         <div role="tabpanel" class="tab-pane" id="totalusd">
                         </div>
@@ -256,5 +309,27 @@
                 console.log('fallo ajax');
             });
         }
+
+
+        $('#servicioAdicional>tbody').change('.select-busca-producto',function (e) {
+                    //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
+            var idservicio = $('.select-busca-producto:focus option:selected' ).val();
+            if(idservicio > 0){
+                var url = "{{ path('ajax_busca_producto',{'id':'iddelserivicio','_format':'json'}) }}";
+                url = url.replace("iddelserivicio", idservicio);
+                $.ajax({
+                    method: "GET",
+                    url: url,
+                    dataType: 'json',
+                    success: function(datos) {
+                        JSON.stringify(datos);
+                        var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
+                        fila.children('.valorprecio').html('$ '+datos.precio);
+                        fila.children('.valorprecio').data('valor',datos.precio);
+                        calculaSubtotalesAdicionales(fila);
+                    }
+                });
+            }
+        });
     </script>
 {% endblock %}
