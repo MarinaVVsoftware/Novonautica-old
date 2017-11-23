@@ -6,7 +6,10 @@ use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Entity\MarinaHumedaServicio;
 use AppBundle\Entity\MarinaHumedaTarifa;
+use AppBundle\Entity\Pago;
 use AppBundle\Entity\ValorSistema;
+use AppBundle\Form\MarinaHumedaCotizacionAceptadaType;
+use AppBundle\Form\MarinaHumedaCotizacionRechazadaType;
 use AppBundle\Form\MarinaHumedaCotizacionType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -41,6 +44,18 @@ class MarinaHumedaCotizacionController extends Controller
         return $this->render('marinahumeda/cotizacion/index.html.twig', [
             'title' => 'Cotizaciones',
             'marinaHumedaCotizacions' => $marinaHumedaCotizacions,
+        ]);
+    }
+
+    /**
+     * Enlista todas las cotizaciones
+     *
+     * @Route("/gracias", name="marina-humeda_gracias")
+     * @Method("GET")
+     */
+    public function graciasAction()
+    {
+        return $this->render('marinahumeda/cotizacion/gracias.twig', [
         ]);
     }
 
@@ -228,48 +243,63 @@ class MarinaHumedaCotizacionController extends Controller
      * Confirma la respuesta de un cliente a una cotizacion
      *
      * @Route("/{token}/confirma", name="respuesta-cliente")
-     * @Method({"GET"})
+     * @Method({"GET", "POST"})
      *
      * @param $token
      *
      * @return Response
      */
-    public function repuestaCliente($token)
+    public function repuestaCliente(Request $request, $token)
     {
+
         $em = $this->getDoctrine()->getManager();
 
         $cotizacionAceptar = $em->getRepository(MarinaHumedaCotizacion::class)
             ->findOneBy(['tokenacepta'=>$token]);
 
         if($cotizacionAceptar){
-            if($cotizacionAceptar->getValidacliente() == 0){
-                //$cotizacionAceptar->setValidacliente(2);
-                //$em->persist($cotizacionAceptar);
-                //$em->flush();
+//            if($cotizacionAceptar->getValidacliente() == 0){
+
+                $cotizacionAceptar->setValidacliente(2);
+                $em->persist($cotizacionAceptar);
+                $em->flush();
 
                 if($cotizacionAceptar->getFoliorecotiza()==0){
                     $folio = $cotizacionAceptar->getFolio();
                 }else{
                     $folio = $cotizacionAceptar->getFolio().'-'.$cotizacionAceptar->getFoliorecotiza();
                 }
+
                 $mensaje1 = '¡Enhorabuena!';
                 $mensaje2 = 'La cotización '.$folio.' ha sido aprobada.';
                 $mensaje3 = 'Para seguir adelante con su servicio es requerido el pago de los servicios que serán proporcionados. A continuación seleccione un método de pago.';
                 $suformulario = 1;
-            }else{
-                $mensaje1 = '¡Error!';
-                $mensaje2 = 'Cotización ya respondida';
-                $mensaje3 = '';
-                $suformulario = 0;
+            $pago = new Pago();
+            $pago->setMhcotizacion($cotizacionAceptar);
+
+            $editForm = $this->createForm(MarinaHumedaCotizacionAceptadaType::class, $pago);
+            $editForm ->handleRequest($request);
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+                $fechaHoraActual = new \DateTime('now');
+                $pago->setFecharegistro($fechaHoraActual);
+                $em->persist($pago);
+                $em->flush();
+
+                return $this->redirectToRoute('marina-humeda_gracias');
             }
+//            }else{
+//                throw new NotFoundHttpException();
+//            }
         }else{
             $cotizacionRechazar = $em->getRepository(MarinaHumedaCotizacion::class)
                 ->findOneBy(['tokenrechaza'=>$token]);
             if($cotizacionRechazar){
-                if($cotizacionRechazar->getValidacliente() == 0) {
-                    //$cotizacionRechazar->setValidacliente(1);
-                    //$em->persist($cotizacionRechazar);
-                    //$em->flush();
+                if($cotizacionRechazar->getNotascliente() == null) { //si aun no escribe comentario puede pasar
+
+                    $cotizacionRechazar->setValidacliente(1);
+                    $em->persist($cotizacionRechazar);
+                    $em->flush();
 
                     if($cotizacionRechazar->getFoliorecotiza()==0){
                         $folio = $cotizacionRechazar->getFolio();
@@ -280,11 +310,17 @@ class MarinaHumedaCotizacionController extends Controller
                     $mensaje2 = 'La cotización '.$folio.' no ha sido aprobada.';
                     $mensaje3 = 'Nos gustaría saber su opinión o comentarios del motivo de su rechazo.';
                     $suformulario = 2;
+
+                    $editForm = $this->createForm(MarinaHumedaCotizacionRechazadaType::class, $cotizacionRechazar);
+                    $editForm ->handleRequest($request);
+                    if ($editForm->isSubmitted() && $editForm->isValid()) {
+                        $em->flush();
+
+                        return $this->redirectToRoute('marina-humeda_gracias');
+                    }
+
                 }else{
-                    $mensaje1 = '¡Error!';
-                    $mensaje2 = 'Cotización ya respondida';
-                    $mensaje3 = '';
-                    $suformulario = 0;
+                    throw new NotFoundHttpException();
                 }
             }else{
                 throw new NotFoundHttpException();
@@ -296,7 +332,8 @@ class MarinaHumedaCotizacionController extends Controller
             'mensaje1' => $mensaje1,
             'mensaje2' => $mensaje2,
             'mensaje3' => $mensaje3,
-            'suformulario' => $suformulario
+            'suformulario' => $suformulario,
+            'form' => $editForm->createView()
         ]);
 
     }
@@ -377,8 +414,8 @@ class MarinaHumedaCotizacionController extends Controller
 
         $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
+
             $em = $this->getDoctrine()->getManager();
 
             $granSubtotal = 0;
@@ -488,7 +525,6 @@ class MarinaHumedaCotizacionController extends Controller
             throw new NotFoundHttpException();
         }
 
-
         $valorSistema = new ValorSistema();
 
         $servicios = $marinaHumedaCotizacion->getMHCservicios();
@@ -505,7 +541,8 @@ class MarinaHumedaCotizacionController extends Controller
                 $tokenRechaza = $valorSistema->generaToken(100);
                 $marinaHumedaCotizacion
                     ->setTokenacepta($tokenAcepta)
-                    ->setTokenrechaza($tokenRechaza);
+                    ->setTokenrechaza($tokenRechaza)
+                    ->setNombrevalidanovo($this->getUser()->getNombre());
 
                 // Enviar correo de confirmacion
                 $message = (new \Swift_Message('¡Cotizacion de servicios!'))

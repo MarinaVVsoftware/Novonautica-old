@@ -132,6 +132,14 @@ class MarinaHumedaCotizacion
     private $notascliente;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="nombrevalidanovo", type="string", length=255, nullable=true)
+     */
+    private $nombrevalidanovo;
+
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="fecharegistro", type="datetime", nullable=true)
@@ -200,6 +208,11 @@ class MarinaHumedaCotizacion
      */
     private $mhcservicios;
 
+    /**
+     *
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Pago", mappedBy="mhcotizacion")
+     */
+    private $pago;
 
     public function __construct() {
         $this->mhcservicios = new ArrayCollection();
@@ -505,6 +518,22 @@ class MarinaHumedaCotizacion
     public function getNotasnovo()
     {
         return $this->notasnovo;
+    }
+
+    /**
+     * @param string $nombrevalidanovo
+     */
+    public function setNombrevalidanovo($nombrevalidanovo)
+    {
+        $this->nombrevalidanovo = $nombrevalidanovo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNombrevalidanovo()
+    {
+        return $this->nombrevalidanovo;
     }
 
     /**
@@ -821,5 +850,30 @@ class MarinaHumedaCotizacion
     public function getSlip()
     {
         return $this->slip;
+    }
+
+
+    /**
+     * Set pago
+     *
+     * @param \AppBundle\Entity\Pago $pago
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setPago(\AppBundle\Entity\Pago $pago = null)
+    {
+        $this->pago = $pago;
+
+        return $this;
+    }
+
+    /**
+     * Get pago
+     *
+     * @return \AppBundle\Entity\Pago
+     */
+    public function getPago()
+    {
+        return $this->pago;
     }
 }
