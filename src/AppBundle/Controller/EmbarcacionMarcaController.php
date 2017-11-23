@@ -6,8 +6,15 @@ use AppBundle\Entity\EmbarcacionMarca;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\ExpressionLanguage\Tests\Node\Obj;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Embarcacionmarca controller.
@@ -60,6 +67,20 @@ class EmbarcacionMarcaController extends Controller
             'page' => $page,
             'pages' => $paginacion['pages']
         ]);
+    }
+
+    /**
+     * @Route("/{id}/modelos.{_format}", name="embarcacion_marca_modelos_ajax", defaults={"_format" = "json"})
+     */
+    public function ajaxModelosAction(Request $request, EmbarcacionMarca $marca)
+    {
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+        $normalizer->setIgnoredAttributes(['marca']);
+
+        $modelos = $serializer->serialize($marca, $request->getRequestFormat());
+
+        return new Response($modelos);
     }
 
     /**

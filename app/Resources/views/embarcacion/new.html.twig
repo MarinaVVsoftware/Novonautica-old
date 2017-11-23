@@ -23,18 +23,20 @@
                                 </li>
                             </ul>
                             <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="especificaciones">
+                                <div class="tab-pane active" id="especificaciones">
                                     <div class="row">
                                         <div class="col-md-4">
                                             {{ form_row(form.nombre) }}
                                             {{ form_row(form.precio) }}
                                             {{ form_row(form.construccion) }}
-                                            <div class="row">
-                                                <div id="prefabricado" class="col-md-6">
-                                                    {{ form_row(form.marca) }}
-                                                </div>
-                                                <div class="col-md-6">
-                                                </div>
+                                            <div id="prefabricado">
+                                                {{ form_row(form.marca) }}
+                                                {{ form_row(form.modelo) }}
+                                            </div>
+                                            <div id="custom" style="display: none">
+                                                {{ form_row(form.builder) }}
+                                                {{ form_row(form.interiorDesigner) }}
+                                                {{ form_row(form.exteriorDesigner) }}
                                             </div>
                                             {{ form_row(form.ano) }}
                                         </div>
@@ -53,18 +55,35 @@
                                             {{ form_row(form.pasajerosDormidos) }}
                                             {{ form_row(form.generador) }}
                                         </div>
-                                        <div class="col-md-8">
-                                            {{ form_row(form.descripcion) }}
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    {{ form_row(form.descripcion) }}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="imagenes">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{ form_row(form.video) }}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane" id="layout">
                                 </div>
                             </div>
                         </div>
                         <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-azul pull-right">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         {{ form_end(form) }}
                     </div>
@@ -72,4 +91,59 @@
             </div>
         </section>
     </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+      (function () {
+        const construccionInput = document.querySelector('#appbundle_embarcacion_construccion');
+        const prefabricadoContainer = document.querySelector('#prefabricado');
+        const customContainer = document.querySelector('#custom');
+        const marcaInput = document.querySelector('#appbundle_embarcacion_marca');
+        const modeloInput = document.querySelector('#appbundle_embarcacion_modelo');
+        const tabContent = document.querySelector('.tab-content');
+        const firstError = tabContent.querySelector('.has-error');
+
+        fetchModelos();
+        getConstruccion();
+
+        marcaInput.addEventListener('change', fetchModelos);
+        construccionInput.addEventListener('change', getConstruccion);
+
+        if (firstError) {
+          const tabPanes = tabContent.querySelectorAll('.tab-pane');
+          const tabPane = firstError.parentNode.parentNode.parentNode;
+          const tabPaneId = tabPane.getAttribute('id');
+          const tabs = document.querySelectorAll('.nav-tabs > li');
+          const tab = document.querySelector(`[href="#${tabPaneId}"]`).parentNode;
+
+          tabs.forEach(elem => elem.classList.remove('active'));
+          tabPanes.forEach(elem => elem.classList.remove('active'));
+          tab.classList.add('active');
+          tabPane.classList.add('active')
+        }
+
+        function getConstruccion() {
+          if (construccionInput.value === 'custom') {
+            prefabricadoContainer.style.display = 'none';
+            customContainer.style.display = 'block';
+          } else {
+            customContainer.style.display = 'none';
+            prefabricadoContainer.style.display = 'block';
+          }
+        }
+
+        function fetchModelos() {
+          fetch(`{{ app.request.baseUrl }}/embarcacion/marca/${marcaInput.value}/modelos.json`, {credentials: 'include'})
+              .then(response => response.status === 200 ? response.json() : response.status)
+              .then(marca => {
+                modeloInput.innerHTML = marca.modelos.length
+                    ? marca.modelos.map(modelo => `<option value="${modelo.id}">${modelo.nombre}</option>`).join('')
+                    : `<option>No hay modelos</option>`;
+              });
+        }
+      })();
+    </script>
 {% endblock %}

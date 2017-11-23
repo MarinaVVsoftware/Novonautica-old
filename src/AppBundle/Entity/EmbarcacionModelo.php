@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -36,8 +38,16 @@ class EmbarcacionModelo
      * @Assert\NotNull(message="Elige una opción")
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EmbarcacionMarca", inversedBy="modelos")
+     *
+     * @MaxDepth(1)
+     * @Groups({"marca"})
      */
     private $marca;
+
+    public function __toString()
+    {
+        return $this->nombre;
+    }
 
     /**
      * Get id
