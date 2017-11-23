@@ -45,10 +45,11 @@ class EmbarcacionController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($embarcacion);
-            $em->flush();
+//            $em->persist($embarcacion);
+//            $em->flush();
 
-            return $this->redirectToRoute('embarcacion_show', array('id' => $embarcacion->getId()));
+//            return $this->redirectToRoute('embarcacion_show');
+            dump($embarcacion);
         }
 
         return $this->render('embarcacion/new.html.twig', array(

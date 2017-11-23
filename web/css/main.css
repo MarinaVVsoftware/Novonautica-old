@@ -499,6 +499,14 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     color: #fff;
 }
 
+.input-group .input-group-addon {
+    border-top-left-radius: 17px;
+    border-bottom-left-radius: 17px;
+    background-color: #3e4766;
+    border: none;
+    color: #fff;
+}
+
 .panel-body form input[type="time"] {
     text-align: center;
     color: #ffffff;

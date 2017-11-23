@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Embarcacion
@@ -138,11 +140,46 @@ class Embarcacion
     private $descripcion;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="builder", type="string", length=50, nullable=true)
+     */
+    private $builder;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="interior_designer", type="string", length=50, nullable=true)
+     */
+    private $interiorDesigner;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="exterior_designer", type="string", length=50, nullable=true)
+     */
+    private $exteriorDesigner;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="video", type="string", nullable=true)
+     */
+    private $video;
+
+    /**
      * @var EmbarcacionMarca
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EmbarcacionMarca")
      */
     private $marca;
+
+    /**
+     * @var EmbarcacionModelo
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EmbarcacionModelo")
+     */
+    private $modelo;
 
     /**
      * Get id
@@ -531,6 +568,54 @@ class Embarcacion
     }
 
     /**
+     * @return string
+     */
+    public function getBuilder()
+    {
+        return $this->builder;
+    }
+
+    /**
+     * @param string $builder
+     */
+    public function setBuilder($builder)
+    {
+        $this->builder = $builder;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInteriorDesigner()
+    {
+        return $this->interiorDesigner;
+    }
+
+    /**
+     * @param string $interiorDesigner
+     */
+    public function setInteriorDesigner($interiorDesigner)
+    {
+        $this->interiorDesigner = $interiorDesigner;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExteriorDesigner()
+    {
+        return $this->exteriorDesigner;
+    }
+
+    /**
+     * @param string $exteriorDesigner
+     */
+    public function setExteriorDesigner($exteriorDesigner)
+    {
+        $this->exteriorDesigner = $exteriorDesigner;
+    }
+
+    /**
      * @return EmbarcacionMarca
      */
     public function getMarca()
@@ -544,5 +629,74 @@ class Embarcacion
     public function setMarca($marca)
     {
         $this->marca = $marca;
+    }
+
+    /**
+     * @return EmbarcacionModelo
+     */
+    public function getModelo()
+    {
+        return $this->modelo;
+    }
+
+    /**
+     * @param EmbarcacionModelo $modelo
+     */
+    public function setModelo($modelo)
+    {
+        $this->modelo = $modelo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVideo()
+    {
+        return $this->video;
+    }
+
+    /**
+     * @param string $video
+     */
+    public function setVideo($video)
+    {
+        $this->video = $video;
+    }
+
+    /**
+     * @Assert\Callback()
+     *
+     * @param ExecutionContextInterface $context
+     */
+    public function validateConstruccion(ExecutionContextInterface $context)
+    {
+        if ($this->getConstruccion() === 'custom') {
+            if (!$this->getBuilder()) {
+                $context->buildViolation('No dejes este dato vacio.')
+                    ->atPath('builder')
+                    ->addViolation();
+            }
+            if (!$this->getInteriorDesigner()) {
+                $context->buildViolation('No dejes este dato vacio.')
+                    ->atPath('interiorDesigner')
+                    ->addViolation();
+            }
+            if (!$this->getExteriorDesigner()) {
+                $context->buildViolation('No dejes este dato vacio.')
+                    ->atPath('exteriorDesigner')
+                    ->addViolation();
+            }
+        } else {
+            if (!$this->getMarca()) {
+                $context->buildViolation('Por favor elige un valor.')
+                    ->atPath('marca')
+                    ->addViolation();
+            }
+            if (!$this->getModelo()) {
+                $context->buildViolation('Por favor elige un valor.')
+                    ->atPath('modelo')
+                    ->addViolation();
+            }
+        }
     }
 }

@@ -2,12 +2,19 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Embarcacion;
+use AppBundle\Entity\EmbarcacionMarca;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class EmbarcacionType extends AbstractType
 {
@@ -18,11 +25,15 @@ class EmbarcacionType extends AbstractType
     {
         $builder
             ->add('nombre')
-            ->add('precio')
+            ->add('precio', MoneyType::class, [
+                'label' => 'Precio (USD)',
+                'currency' => 'USD',
+                'grouping' => true
+            ])
             ->add('construccion', ChoiceType::class, [
                 'choices' => [
-                    'Prefabricado' => 0,
-                    'Custom' => 1
+                    'Prefabricado' => 'prefabricado',
+                    'Custom' => 'custom',
                 ]
             ])
             ->add('marca', EntityType::class, [
@@ -31,6 +42,9 @@ class EmbarcacionType extends AbstractType
             ->add('ano', TextType::class, [
                 'label' => 'Año'
             ])
+            ->add('builder')
+            ->add('interiorDesigner')
+            ->add('exteriorDesigner')
             ->add('longitud')
             ->add('eslora')
             ->add('manga')
@@ -42,11 +56,48 @@ class EmbarcacionType extends AbstractType
             ->add('cabinas')
             ->add('pasajerosDormidos')
             ->add('generador')
-            ->add('descripcion');
+            ->add('descripcion')
+            ->add('video');
 
+        $formModifier = function (FormInterface $form, EmbarcacionMarca $marca = null) {
+            $modelos = $marca ? $marca->getModelos() : [];
 
+            $form->add('modelo', EntityType::class, [
+                'class' => 'AppBundle\Entity\EmbarcacionModelo',
+                'choices' => $modelos
+            ]);
+        };
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use ($formModifier) {
+                /** @var Embarcacion $embarcacion */
+                $embarcacion = $event->getData();
+                $formModifier($event->getForm(), $embarcacion->getMarca());
+            });
+
+        $builder->addEventListener(FormEvents::SUBMIT,
+            function (FormEvent $event) {
+                $form = $event->getForm();
+                /** @var Embarcacion $embarcacion */
+                $embarcacion = $event->getData();
+
+                if ($embarcacion->getConstruccion() === 'custom') {
+                    $embarcacion->setMarca(null);
+                    $embarcacion->setModelo(null);
+                } else {
+                    $embarcacion->setBuilder(null);
+                    $embarcacion->setInteriorDesigner(null);
+                    $embarcacion->setExteriorDesigner(null);
+                }
+            });
+
+        $builder->get('marca')->addEventListener(FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($formModifier) {
+                $marca = $event->getForm()->getData();
+                $formModifier($event->getForm()->getParent(), $marca);
+            });
     }
-    
+
     /**
      * {@inheritdoc}
      */
