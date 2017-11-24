@@ -236,6 +236,7 @@
                                             <th>IVA</th>
                                             <th>Descuento</th>
                                             <th>Total</th>
+                                            <th>Estatus pago</th>
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -258,6 +259,15 @@
                                                 <td>$ {{ cotizacion.ivatotal|number_format(2,'.',',') }}</td>
                                                 <td>$ {{ cotizacion.descuentototal|number_format(2,'.',',') }}</td>
                                                 <td>$ {{ cotizacion.total|number_format(2,'.',',') }}</td>
+                                                <td>
+                                                    {% if cotizacion.pago.estatuspago == 1 %}
+                                                        <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Pagado">
+                                                    {% else %}
+                                                        <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                                             class="center-block" data-toggle="tooltip" data-placement="left" title="No pagado">
+                                                    {% endif %}
+                                                </td>
                                                 <td>
                                                     <a class="btn btn-morado-claro" href="{{ path('marina-humeda_show', { 'id': cotizacion.id }) }}">Detalle</a>
                                                 </td>

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Cuentabancarium</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ cuentaBancarium.id }}</td>
+            </tr>
+            <tr>
+                <th>Banco</th>
+                <td>{{ cuentaBancarium.banco }}</td>
+            </tr>
+            <tr>
+                <th>Clabe</th>
+                <td>{{ cuentaBancarium.clabe }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('cuenta-bancaria_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('cuenta-bancaria_edit', { 'id': cuentaBancarium.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

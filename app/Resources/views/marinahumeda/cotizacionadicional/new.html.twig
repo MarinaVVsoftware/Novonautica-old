@@ -89,6 +89,7 @@
                                         <tr>
                                             <th class="col-sm-1">Cantidad</th>
                                             <th class="col-sm-2">Servicio</th>
+                                            <th class="col-sm-1">Unidad</th>
                                             <th class="col-sm-1">Prec. Unid.</th>
                                             <th class="col-sm-1">Sub-Total</th>
                                             <th class="col-sm-1">IVA</th>
@@ -180,44 +181,23 @@
             $("#info-barco").empty();
             $("#info-cliente").empty();
             console.log('buscando cliente');
+
+            var url = "{{ path('ajax_busca_cliente_todo',{'id':'iddelcliente','_format':'json'}) }}";
+            url = url.replace("iddelcliente", $(this).val());
             $.ajax({
                 method: "GET",
-                url: "{{ path('ajax_busca_cliente') }}",
+                url: url,
                 dataType: 'json',
-                data: {'id': $(this).val()},
-                success: function (data) {
-                    if (data.hasOwnProperty("response") && data.response === "success") {
-                        if (data.hasOwnProperty("posts")) {
-                            //http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try/3710226
-                            if (/^[\],:{}\s]*$/.test(data.posts.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-                                var posts = JSON.parse(data.posts);
-                                //console.log(posts);
-                                if (posts.id > 0) {
-                                    var html = "";
-                                    html = "<label>Correo electrónico</label>" +
-                                        "<div class='info-input'>" + posts.correo + "</div>" +
-                                        "<label>Número de teléfono</label>" +
-                                        "<div class='info-input'>" + posts.telefono + "</div>" +
-                                        "<label>Dirección</label>" +
-                                        "<div class='info-input'>" + posts.direccion + "</div>" +
-                                        "<label>R.F.C.</label>" +
-                                        "<div class='info-input'>" + posts.rfc + "</div>" +
-                                        "<label>Razón social</label>" +
-                                        "<div class='info-input'>" + posts.razonsocial + "</div>" +
-                                        "<label>Dirección fiscal</label>" +
-                                        "<div class='info-input'>" + posts.direccionfiscal + "</div>";
-                                    $("#info-cliente").append(html);
+                success: function (cliente) {
+                    JSON.stringify(cliente);
+                    var html = "<label>Correo electrónico</label>"+ "<div class='info-input'>" + cliente.correo + "</div>"+
+                        "<label>Número de teléfono</label>"+ "<div class='info-input'>" + cliente.telefono + "</div>"+
+                        "<label>Dirección</label>"+ "<div class='info-input'>" + cliente.direccion + "</div>"+
+                        "<label>R.F.C.</label>"+ "<div class='info-input'>" + cliente.rfc + "</div>"+
+                        "<label>Razón social</label>"+ "<div class='info-input'>" + cliente.razonsocial + "</div>"+
+                        "<label>Dirección fiscal</label>"+ "<div class='info-input'>" + cliente.direccionfiscal + "</div>";
+                    $("#info-cliente").append(html);
 
-                                }
-                            }
-                            else {
-                                console.log("INVALID JSON STRING");
-                            }
-                        }
-                        else {
-                            console.log("POSTS NOT FOUND");
-                        }
-                    }
                     $('#loading').hide();
                 },
                 error: function (jqXHR, exception) {
@@ -246,56 +226,22 @@
                 x++;
             }
         });
-
         function buscaDatosBarco(idbarco){
+            var url = "{{ path('ajax_busca_barco_todo',{'id':'iddelbarco','_format':'json'}) }}";
+            url = url.replace("iddelbarco", idbarco);
             $.ajax({
                 method: "GET",
-                url: "{{ path('ajax_busca_barco') }}",
+                url: url,
                 dataType: 'json',
-                data: {'id': idbarco},
-                success: function(data) {
-                    if(data.hasOwnProperty("response") && data.response === "success") {
-                        if(data.hasOwnProperty("posts")) {
-                            //http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try/3710226
-                            if (/^[\],:{}\s]*$/.test(data.posts.replace(/\\["\\\/bfnrtu]/g, '@').
-                                replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-                                replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-                                var barcos = JSON.parse(data.posts);
-                                //console.log(barcos);
-                                if(barcos.id > 0) {
-                                    var html = "";
-                                    html= "<label>Modelo</label>"+
-                                        "<div class='info-input'>"+barcos.modelo+"</div>"+
-                                        "<label>Eslora</label>"+
-                                        "<div id='barcopies' class='info-input' data-valor='"+barcos.eslora+"'>"+barcos.eslora+"</div>"+
-                                        "<label>Manga</label>"+
-                                        "<div class='info-input'>"+barcos.manga+"</div>"+
-                                        "<label>Nombre del capitán</label>"+
-                                        "<div class='info-input'>"+barcos.nombreCapitan+"</div>"+
-                                        "<label>Teléfono del capitán</label>"+
-                                        "<div class='info-input'>"+barcos.telefonoCapitan+"</div>"+
-                                        "<label>Correo del capitán</label>"+
-                                        "<div class='info-input'>"+barcos.correoCapitan+"</div>";
-                                    $("#info-barco").append(html);
-//                                    $("#de_eslora").data('valor',barcos.eslora);
-//                                    $("#e_eslora").data('valor',barcos.eslora);
-//                                    $("#de_eslora").html(barcos.eslora);
-//                                    $("#e_eslora").html(barcos.eslora);
-//
-//                                    $("#de_eslora_mxn").html(barcos.eslora);
-//                                    $("#e_eslora_mxn").html(barcos.eslora);
-//
-//                                    recalculaSubtotalesYtotal();
-                                }
-                            }
-                            else {
-                                console.log("INVALID JSON STRING");
-                            }
-                        }
-                        else {
-                            console.log("POSTS NOT FOUND");
-                        }
-                    }
+                success: function(barco) {
+                    JSON.stringify(barco);
+                    var html = "<label>Modelo</label>"+"<div class='info-input'>"+barco.modelo+"</div>"+
+                        "<label>Eslora</label>"+"<div class='info-input'>"+barco.eslora+"</div>"+
+                        "<label>Manga</label>"+"<div class='info-input'>"+barco.manga+"</div>"+
+                        "<label>Nombre del capitán</label>"+"<div class='info-input'>"+barco.nombreCapitan+"</div>"+
+                        "<label>Teléfono del capitán</label>"+"<div class='info-input'>"+barco.telefonoCapitan+"</div>"+
+                        "<label>Correo del capitán</label>"+"<div class='info-input'>"+barco.correoCapitan+"</div>";
+                    $("#info-barco").append(html);
                     $('#loading').hide();
                 },
                 error: function(jqXHR, exception) {
@@ -309,7 +255,6 @@
                 console.log('fallo ajax');
             });
         }
-
 
         $('#servicioAdicional>tbody').change('.select-busca-producto',function (e) {
                     //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
@@ -326,6 +271,7 @@
                         var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
                         fila.children('.valorprecio').html('$ '+datos.precio);
                         fila.children('.valorprecio').data('valor',datos.precio);
+                        fila.children('.valorunidad').html(datos.unidad);
                         calculaSubtotalesAdicionales(fila);
                     }
                 });

@@ -89,6 +89,15 @@ class SidebarController extends Controller
         $this->add([
 //            ['name' => 'Usuarios', 'icon' => 'user-o', 'path' => $this->generateUrl('usuario_index')],
 //            ['name' => 'Ajustes', 'icon' => 'cog', 'path' => $this->generateUrl('ajustes_index')],
+            [
+                'name' => 'Ajustes',
+                'icon' => 'cog',
+                'path' => $this->generateUrl('ajustes_index'),
+                'submenu' => [
+                    ['name' => 'Valores', 'path' => $this->generateUrl('ajustes_index')],
+                    ['name' => 'Cuenatas banco', 'path' => $this->generateUrl('cuenta-bancaria_index')],
+                ]
+            ]
         ]);
     }
 
