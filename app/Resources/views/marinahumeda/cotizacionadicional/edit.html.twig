@@ -112,6 +112,7 @@
                                         <tr>
                                             <th class="col-sm-1">Cantidad</th>
                                             <th class="col-sm-2">Servicio</th>
+                                            <th class="col-sm-1">Unidad</th>
                                             <th class="col-sm-1">Prec. Unid.</th>
                                             <th class="col-sm-1">Sub-Total</th>
                                             <th class="col-sm-1">IVA</th>
@@ -134,6 +135,9 @@
                                                 </td>
                                                 <td class="td-servicio">
                                                     {{ form_widget(servicio.marinahumedaservicio) }}
+                                                </td>
+                                                <td class="valorunidad">
+                                                    {{ marinaHumedaCotizacionAdicional.mhcservicios[i].marinahumedaservicio.unidad }}
                                                 </td>
                                                 <td class="valorprecio" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].precio }}">
                                                    $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].precio|number_format(2,'.',',') }}
@@ -222,4 +226,31 @@
         </section>
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('#servicioAdicional>tbody').change('.select-busca-producto',function (e) {
+            //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
+            var idservicio = $('.select-busca-producto:focus option:selected' ).val();
+            if(idservicio > 0){
+                var url = "{{ path('ajax_busca_producto',{'id':'iddelserivicio','_format':'json'}) }}";
+                url = url.replace("iddelserivicio", idservicio);
+                $.ajax({
+                    method: "GET",
+                    url: url,
+                    dataType: 'json',
+                    success: function(datos) {
+                        JSON.stringify(datos);
+                        var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
+                        fila.children('.valorprecio').html('$ '+datos.precio);
+                        fila.children('.valorprecio').data('valor',datos.precio);
+                        fila.children('.valorunidad').html(datos.unidad);
+                        calculaSubtotalesAdicionales(fila);
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}
