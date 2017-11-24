@@ -181,13 +181,13 @@ jQuery('.add-another-servicio-adicional').click(function (e) {
     //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
 
     newLi.before(newLi);
-    $('.select-busca-producto').select2();
+    //$('.select-busca-producto').select2();
 });
 $('.lista-servicios-adicionales').on('click','.remove-servicio-adicional',function(e) {
     e.preventDefault();
     //console.log('quitar motor');
     $(this).parent().parent().remove();
-
+    calculaTotalesAdicionales();
     return false;
 });
 
@@ -298,7 +298,7 @@ $('.add-producto').click(function (e) {
     //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
 
     newLi.before(newLi);
-    $('.select-busca-producto').select2();
+    //$('.select-busca-producto').select2();
 });
 //-- fin aparecer form collection con select de productos ---
 
@@ -544,6 +544,55 @@ function calculaTotales() {
 // });
 
 //-------- fin metodos marina humeda cotizacion --------
+
+//---- para marina humeda servicio adicional -----------
+$('#servicioAdicional').on('keyup','input',function () {
+    //var cantidadAd = $(this).val();
+    $(this).parent().data('valor',$(this).val());
+
+    var fila = $(this).parent().parent();
+
+    calculaSubtotalesAdicionales(fila);
+    //console.log('escribe cantidad ' +fila.children('.valorcantidad').data('valor'));
+
+})
+
+function calculaSubtotalesAdicionales(fila) {
+    var iva = $('#valorsistemaiva').data('valor');
+    var cantidadAd = fila.children('.valorcantidad').data('valor');
+    var precioAd = fila.children('.valorprecio').data('valor');
+    var subtotalAd = cantidadAd * precioAd;
+    var ivaAd = (subtotalAd * iva)/100
+    var totalAd = subtotalAd + ivaAd;
+
+    fila.children('.valorsubtotal').html('$ '+parseFloat(subtotalAd).toFixed(2));
+    fila.children('.valorsubtotal').data('valor',subtotalAd);
+
+    fila.children('.valoriva').html('$ '+parseFloat(ivaAd).toFixed(2));
+    fila.children('.valoriva').data('valor',ivaAd);
+
+    fila.children('.valortotal').html('$ '+parseFloat(totalAd).toFixed(2));
+    fila.children('.valortotal').data('valor',totalAd);
+    calculaTotalesAdicionales();
+}
+function calculaTotalesAdicionales() {
+    var granSubtotalAd = 0;
+    var granIvaAd = 0;
+    var granTotalAd = 0;
+
+    $( "#servicioAdicional tbody tr" ).each(function() {
+        granSubtotalAd+=$(this).children('.valorsubtotal').data('valor');
+        granIvaAd+=$(this).children('.valoriva').data('valor');
+        granTotalAd+=$(this).children('.valortotal').data('valor');
+    });
+
+    $('#gransubtot').html(parseFloat(granSubtotalAd).toFixed(2));
+    $('#graniva').html(parseFloat(granIvaAd).toFixed(2));
+    $('#grantot').html(parseFloat(granTotalAd).toFixed(2));
+
+}
+
+//---- fin marina humeda servicio adicional -----------
 
 
 //--- para astillero nueva cotización ---

@@ -92,12 +92,22 @@
                                     {{ form_widget(edit_form.dolar) }}
                                 </div>
                                 <div class="col-sm-9">
-                                    <button type="submit" class="btn btn-azul pull-right">Guardar</button>
+                                    <button type="submit" class="btn btn-azul pull-right">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div id="valorsistemaiva" class="text-right" data-valor="{{ valiva }}">
+                                        <small>IVA: {{ valiva }} %</small>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-9 espacio-linea-arriba2">
-                                    <table class="table text-center">
+                                    <table id="servicioAdicional" class="table text-center">
                                         <thead>
                                         <tr>
                                             <th class="col-sm-1">Cantidad</th>
@@ -116,20 +126,33 @@
                                                         {{ include('marinahumeda/cotizacionadicional/coleccion-servicio-adicional.twig', { 'form': edit_form.mhcservicios.vars.prototype }) }}
                                                     {% endfilter %}"
                                         >
-                                        {% for servicio in edit_form.mhcservicios %}
+                                        {% for i,servicio in edit_form.mhcservicios %}
                                             {% form_theme servicio 'marinahumeda/cotizacionadicional/coleccion-servicio-adicional.twig' %}
                                             <tr class="servicio-agregado">
-                                                <td class="valorcantidad">{{ form_widget(servicio.cantidad) }}</td>
-                                                <td class="td-servicio">{{ form_widget(servicio.marinahumedaservicio,{'attr':{'class':'select-buscador'}}) }}</td>
-                                                <td class="valorprecio" data-valor="0"></td>
-                                                <td class="valorsubtotal" data-valor="0"></td>
-                                                <td class="valoriva" data-valor="0"></td>
-                                                <td class="valortotal" data-valor="0"></td>
+                                                <td class="valorcantidad" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].cantidad}}">
+                                                    {{ form_widget(servicio.cantidad) }}
+                                                </td>
+                                                <td class="td-servicio">
+                                                    {{ form_widget(servicio.marinahumedaservicio) }}
+                                                </td>
+                                                <td class="valorprecio" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].precio }}">
+                                                   $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].precio|number_format(2,'.',',') }}
+                                                </td>
+                                                <td class="valorsubtotal" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].subtotal }}">
+                                                   $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].subtotal|number_format(2,'.',',') }}
+                                                </td>
+                                                <td class="valoriva" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].iva }}">
+                                                   $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].iva|number_format(2,'.',',') }}
+                                                </td>
+                                                <td class="valortotal" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].total }}">
+                                                   $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].total|number_format(2,'.',',') }}
+                                                </td>
                                                 <td>
                                                     <a href="#" class="remove-servicio-adicional btn btn-naranja">
                                                         <i class="fa fa-times" aria-hidden="true"></i>
                                                     </a>
                                                 </td>
+
                                             </tr>
                                         {% endfor %}
                                         </tbody>
@@ -143,6 +166,48 @@
                                     </a>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $ <span id="gransubtot">{{ marinaHumedaCotizacionAdicional.subtotal|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $ <span id="graniva">{{ marinaHumedaCotizacionAdicional.ivatotal|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $ <span id="grantot">{{ marinaHumedaCotizacionAdicional.total|number_format(2,'.',',') }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="totalusd">
 
@@ -151,8 +216,6 @@
 
                         </div>
                     </div>
-
-
                     {{ form_end(edit_form) }}
                 </div>
             </div>

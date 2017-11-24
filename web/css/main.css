@@ -439,6 +439,7 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     border-radius: 17px;
     padding: 5px 15px;
     width: 100%;
+    min-height: 25px;
 }
 .panel-body  form input[type="time"]{
     text-align: center;
