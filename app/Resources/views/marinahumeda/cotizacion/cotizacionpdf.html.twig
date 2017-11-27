@@ -176,7 +176,7 @@
                         <tr>
                             <td>{{ mhservicio.cantidad }}</td>
                             <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                            <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexió a electricidad {% endif %}</td>
+                            <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
                             <td>$ {{ mhservicio.precio|number_format(2,'.',',') }}</td>
                             <td>$ {{ mhservicio.subtotal|number_format(2,'.',',') }}</td>
                             <td>$ {{ mhservicio.iva|number_format(2,'.',',') }}</td>
@@ -241,7 +241,7 @@
                         <tr>
                             <td>{{ mhservicio.cantidad }}</td>
                             <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                            <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexió a electricidad {% endif %}</td>
+                            <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
                             <td>$ {{ (mhservicio.precio * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                             <td>$ {{ (mhservicio.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                             <td>$ {{ (mhservicio.iva * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>

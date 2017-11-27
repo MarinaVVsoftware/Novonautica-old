@@ -148,16 +148,6 @@ class MarinaHumedaCotizacionType extends AbstractType
             }
         });
 
-//        $builder->addEventListener(
-//            FormEvents::PRE_SET_DATA,
-//            function (FormEvent $event) use ($formModifier) {
-//                // this would be your entity, i.e. SportMeetup
-//                $data = $event->getData();
-//
-//                $formModifier($event->getForm(), $data->getCliente());
-//            }
-//        );
-
         $builder->get('cliente')->addEventListener(
             FormEvents::POST_SUBMIT,
             function (FormEvent $event) use ($formModifier) {

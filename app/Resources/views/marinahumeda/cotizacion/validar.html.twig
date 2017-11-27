@@ -29,7 +29,7 @@
                 <div class="panel-body panel-pestanias">
                     {{ form_start(edit_form) }}
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="primero active">
+                        <li role="presentation" class="primero">
                             <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
                         </li>
                         <li role="presentation">
@@ -41,12 +41,12 @@
                         <li role="presentation">
                             <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
-                        <li role="presentation">
+                        <li role="presentation" class="active">
                             <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="generales">
+                        <div role="tabpanel" class="tab-pane" id="generales">
                             <div class="row">
                                 <div class="col-sm-3">
 
@@ -173,7 +173,7 @@
                                                 <tr>
                                                     <td>{{ mhservicio.cantidad }}</td>
                                                     <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexió a electricidad {% endif %}</td>
+                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
                                                     <td>$ {{ mhservicio.precio|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ mhservicio.subtotal|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ mhservicio.iva|number_format(2,'.',',') }}</td>
@@ -294,7 +294,7 @@
                                                 <tr>
                                                     <td>{{ mhservicio.cantidad }}</td>
                                                     <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexió a electricidad {% endif %}</td>
+                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
                                                     <td>$ {{ (mhservicio.precio * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ (mhservicio.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ (mhservicio.iva * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
@@ -383,7 +383,7 @@
                             </div>
 
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="correo">
+                        <div role="tabpanel" class="tab-pane active" id="correo">
                             {% if edit_form.validanovo is defined %}
                                 <div class="row">
                                     <div class="col-sm-12 espacio-linea">

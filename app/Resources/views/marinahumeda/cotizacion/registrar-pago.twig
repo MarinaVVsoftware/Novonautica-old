@@ -1,7 +1,6 @@
 {% extends 'estructura/plantilla.twig' %}
 
 {% block title %}
-    Novonautiva | Nueva cotización
 {% endblock %}
 
 {% block contwrapper %}
@@ -11,56 +10,84 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Nueva Cotización</h3>
+                            <h3 class="panel-title">Marina Húmeda Registrar Pago</h3>
+                            <span>
+                                {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
+                                    {{ marinaHumedaCotizacion.folio }}
+                                {% else %}
+                                    {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
+                                {% endif %}
+                            </span>
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_index') }}">Regresar</a>
                         </div>
                     </div>
+
                 </div>
                 <div class="panel-body panel-pestanias">
-                    {% form_theme form 'estructura/temaerror.html.twig' %}
-                    {{ form_start(form) }}
+
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="primero active">
+                        <li role="presentation" class="primero">
                             <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
                         </li>
                         <li role="presentation">
                             <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a>
                         </li>
                         <li role="presentation">
-                            <a href="#totalusd" aria-controls="total" role="tab" data-toggle="tab">Total (USD)</a>
+                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Total (USD)</a>
                         </li>
                         <li role="presentation">
-                            <a href="#totalmxn" aria-controls="total" role="tab" data-toggle="tab">Total (MXN)</a>
+                            <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
-                        <li role="presentation">
-                            <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
+                        {% if marinaHumedaCotizacion.pago %}
+                            <li role="presentation">
+                                <a href="#pago" aria-controls="pago" role="tab" data-toggle="tab">Pago</a>
+                            </li>
+                        {% endif %}
+                        <li role="presentation" class="active">
+                            <a href="#registrapago" aria-controls="registrapago" role="tab" data-toggle="tab">Registrar Pago</a>
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                {{ form_errors(form.fechaLlegada) }}
-                                {{ form_errors(form.fechaSalida) }}
-                            </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane active" id="generales">
+                        <div role="tabpanel" class="tab-pane" id="generales">
                             <div class="row">
                                 <div class="col-sm-3">
-                                    {{ form_row(form.cliente) }}
-                                    <div id="info-cliente">
 
+                                    <div id="info-cliente">
+                                        <label>Cliente</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.nombre }}</div>
+                                        <label>Correo electrónico</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.correo }}</div>
+                                        <label>Número de teléfono</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.telefono }}</div>
+                                        <label>Dirección</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.direccion }}</div>
+                                        <label>R.F.C.</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.rfc }}</div>
+                                        <label>Razón social</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.razonsocial }}</div>
+                                        <label>Dirección fiscal</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.direccionfiscal }}</div>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    {{ form_errors(form.barco) }}
-                                    <div class="radio buscabarcomh">
-                                        {{ form_label(form.barco) }}
-                                        {{ form_widget(form.barco) }}
-                                    </div>
-                                    <div id="info-barco">
 
+                                    <div id="info-barco">
+                                        <label>Barco</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.nombre }}</div>
+                                        <label>Modelo</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.modelo }}</div>
+                                        <label>Eslora</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.eslora }}</div>
+                                        <label>Manga</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.manga }}</div>
+                                        <label>Nombre del capitán</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.nombreCapitan }}</div>
+                                        <label>Teléfono del capitán</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.telefonoCapitan }}</div>
+                                        <label>Correo del capitán</label>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.correoCapitan }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -68,55 +95,60 @@
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
                                 <div class="col-sm-3">
-
                                     <div class="input-daterange" id="rangoFehas">
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                {{ form_label(form.fechaLlegada) }}
-                                                {{ form_widget(form.fechaLlegada) }}
+                                                <label>Fecha de llegada</label>
+                                                <div class='info-input'>{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}</div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                {{ form_label(form.fechaSalida) }}
-                                                {{ form_widget(form.fechaSalida) }}
+                                                <label>Fecha de salida</label>
+                                                <div class='info-input'>{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}</div>
                                             </div>
                                         </div>
                                     </div>
                                     <label>Descuento(%)</label>
-                                    {{ form_widget(form.descuento,{'value':0}) }}
+                                    <div class='info-input'>{{ marinaHumedaCotizacion.descuento }}</div>
                                     <label>Dolar</label>
-                                    {{ form_widget(form.dolar,{'value':valdolar}) }}
+                                    <div class='info-input'>{{ marinaHumedaCotizacion.dolar|number_format(2,'.',',') }}</div>
                                     <label>Slip</label>
-                                    {{ form_widget(form.slip) }}
+                                    <div class='info-input'>{{ marinaHumedaCotizacion.slip }}</div>
                                 </div>
-
                                 <div class="col-sm-6">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <label>Días Estadía:</label>
-                                            <div id="dias_estadia_cantidad" class='info-input' data-valor="0">0</div>
+                                            <div class='info-input'>{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</div>
                                         </div>
 
                                         <div class="col-sm-6">
                                             <label>Precio por día:</label>
-                                            {{ form_widget(form.mhcservicios.children.0.precio) }}
+                                            <div class='info-input'>{{ marinaHumedaCotizacion.mhcservicios.0.precio }}</div>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6 col-sm-offset-6">
+                                        <div class="col-sm-6">
+                                            <label>Conexión a electricidad (Amperaje):</label>
+                                            <div class='info-input'>{{ marinaHumedaCotizacion.mhcservicios.1.cantidad }}</div>
+                                        </div>
+                                        <div class="col-sm-6">
                                             <label>Precio electricidad:</label>
-                                            {{ form_widget(form.mhcservicios.children.1.precioAux) }}
+                                            <div class='info-input'>{{ marinaHumedaCotizacion.mhcservicios.1.precio }}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="totalusd">
+                        <div role="tabpanel" class="tab-pane" id="total">
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="" class="valdolar">{{ valdolar }} MXN</div>
+                                    <div id="tipocambio" class=""
+                                         data-valor="{{ marinaHumedaCotizacion.dolar }}">{{ marinaHumedaCotizacion.dolar|number_format(2,'.',',') }}
+                                        MXN
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -124,7 +156,6 @@
                                     <small>Precios en USD</small>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-sm-9">
                                     <table id="mh_nuevacotizacion" class="table text-center">
@@ -141,35 +172,29 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td id="de_cantidad">0</td>
-                                            <td id="de_eslora">0</td>
-                                            <td>Días estancia</td>
-                                            <td id="de_precio">$ 0.00</td>
-                                            <td id="de_subtotal" data-valor="0">$ 0.00</td>
-                                            <td id="de_iva" data-valor="0">$ 0.00</td>
-                                            <td id="de_descuento" data-valor="0">$ 0.00</td>
-                                            <td id="de_total" data-valor="0">$ 0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td id="e_cantidad">0</td>
-                                            <td id="e_eslora">0</td>
-                                            <td>Conexión a electricidad</td>
-                                            <td id="e_precio">$ 0.00</td>
-                                            <td id="e_subtotal" data-valor="0">$ 0.00</td>
-                                            <td id="e_iva" data-valor="0">$ 0.00</td>
-                                            <td id="e_descuento" data-valor="0">$ 0.00</td>
-                                            <td id="e_total" data-valor="0">$ 0.00</td>
-                                        </tr>
+                                        {% for mhservicio in marinaHumedaCotizacion.mhcservicios  %}
+                                            {% if mhservicio.estatus %}
+                                                <tr>
+                                                    <td>{{ mhservicio.cantidad }}</td>
+                                                    <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
+                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
+                                                    <td>$ {{ mhservicio.precio|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ mhservicio.subtotal|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ mhservicio.iva|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ mhservicio.descuento|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ mhservicio.total|number_format(2,'.',',') }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+
                                         </tbody>
                                     </table>
                                 </div>
-
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <div id="valiva" class="" data-valor="{{ valiva }}">
-                                        <small>IVA: {{ valiva }} %</small>
+                                    <div id="valiva" class="" data-valor="{{ marinaHumedaCotizacion.iva }}">
+                                        <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
                                     </div>
                                 </div>
                             </div>
@@ -182,7 +207,8 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
-                                        $ <span id="gransubtot">00.00</span>
+                                        $
+                                        <span id="gransubtot">{{ marinaHumedaCotizacion.subtotal|number_format(2,'.',',') }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -196,7 +222,8 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
-                                        $ <span id="graniva">00.00</span>
+                                        $
+                                        <span id="graniva">{{ marinaHumedaCotizacion.ivatotal|number_format(2,'.',',') }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -210,7 +237,8 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Descuento:</p>
                                     <p>
-                                        $ <span id="grandecuento">00.00</span>
+                                        $
+                                        <span id="grandecuento">{{ marinaHumedaCotizacion.descuentototal|number_format(2,'.',',') }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -224,22 +252,24 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
-                                        $ <span id="grantot">00.00</span>
+                                        $
+                                        <span id="grantot">{{ marinaHumedaCotizacion.total|number_format(2,'.',',') }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
-                                    <hr>
-                                </div>
-                            </div>
+
+
+
                         </div>
                         <div role="tabpanel" class="tab-pane" id="totalmxn">
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="" class="valdolar" >{{ valdolar }} MXN</div>
+                                    <div id="" class=""
+                                         data-valor="{{ marinaHumedaCotizacion.dolar }}">{{ marinaHumedaCotizacion.dolar|number_format(2,'.',',') }}
+                                        MXN
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -247,7 +277,6 @@
                                     <small>Precios en MXN</small>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-sm-9">
                                     <table id="" class="table text-center">
@@ -264,26 +293,21 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td id="de_cantidad_mxn">0</td>
-                                            <td id="de_eslora_mxn">0</td>
-                                            <td>Días estancia</td>
-                                            <td id="de_precio_mxn">$ 0.00</td>
-                                            <td id="de_subtotal_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="de_iva_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="de_descuento_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="de_total_mxn" data-valor="0">$ 0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td id="e_cantidad_mxn">0</td>
-                                            <td id="e_eslora_mxn">0</td>
-                                            <td>Conexión a electricidad</td>
-                                            <td id="e_precio_mxn">$ 0.00</td>
-                                            <td id="e_subtotal_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="e_iva_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="e_descuento_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="e_total_mxn" data-valor="0">$ 0.00</td>
-                                        </tr>
+                                        {% for mhservicio in marinaHumedaCotizacion.mhcservicios  %}
+                                            {% if mhservicio.estatus %}
+                                                <tr>
+                                                    <td>{{ mhservicio.cantidad }}</td>
+                                                    <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
+                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
+                                                    <td>$ {{ (mhservicio.precio * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ (mhservicio.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ (mhservicio.iva * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ (mhservicio.descuento * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ (mhservicio.total * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -291,8 +315,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <div id="" class="">
-                                        <small>IVA: {{ valiva }} %</small>
+                                    <div id="" class="" data-valor="{{ marinaHumedaCotizacion.iva }}">
+                                        <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
                                     </div>
                                 </div>
                             </div>
@@ -305,7 +329,8 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
-                                        $ <span id="gransubtot_mxn">00.00</span>
+                                        $
+                                        <span id="gransubtot">{{ (marinaHumedaCotizacion.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -319,7 +344,8 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
-                                        $ <span id="graniva_mxn">00.00</span>
+                                        $
+                                        <span id="graniva">{{ (marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -333,7 +359,8 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Descuento:</p>
                                     <p>
-                                        $ <span id="grandecuento_mxn">00.00</span>
+                                        $
+                                        <span id="grandecuento">{{ (marinaHumedaCotizacion.descuentototal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -347,7 +374,8 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
-                                        $ <span id="grantot_mxn">00.00</span>
+                                        $
+                                        <span id="grantot">{{ (marinaHumedaCotizacion.total * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -357,130 +385,59 @@
                                     <hr>
                                 </div>
                             </div>
+
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="correo">
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    {{ form_row(form.mensaje) }}
+                        {% if marinaHumedaCotizacion.pago %}
+                            <div role="tabpanel" class="tab-pane" id="pago">
+                                <div class="row">
+                                    <div class="col-sm-4 col-sm-offset-2">
+                                        <label>Método de pago</label>
+                                        <div class="info-input">
+                                            {{ marinaHumedaCotizacion.pago.metodopago  }}
+                                        </div>
+                                        <label>Fecha de pago</label>
+                                        <div class="info-input">
+                                            {% if marinaHumedaCotizacion.pago.fechapago  %}{{ marinaHumedaCotizacion.pago.fechapago|date('d-m-Y') }}{% endif %}
+                                        </div>
+                                        <label>Fecha de registro</label>
+                                        <div class="info-input">
+                                            {% if marinaHumedaCotizacion.pago.fecharegistro %}{{ marinaHumedaCotizacion.pago.fecharegistro|date('d-m-Y H:i:s') }}{% endif %}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <button type="submit" class="btn btn-azul">
+                            </div>
+                        {% endif %}
+                        <div role="tabpanel" class="tab-pane active" id="registrapago">
+                            {{ form_start(edit_form) }}
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    {{ form_errors(edit_form.estatuspago) }}
+                                    <div class="radio">
+                                        {{ form_label(edit_form.estatuspago) }}
+                                        {{ form_widget(edit_form.estatuspago) }}
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5">
+                                    <button type="submit" class="btn btn-azul pull-right">
                                         <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                         Guardar
                                     </button>
                                 </div>
                             </div>
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-3">
+                                    {{ form_row(edit_form.fecharealpago) }}
+                                </div>
+                            </div>
+                            {{ form_end(edit_form) }}
                         </div>
                     </div>
-                    {{ form_widget(form.mhcservicios.children.0.precioAux,{'attr':{'class':'hidden'}}) }}
-                    {{ form_widget(form.mhcservicios.children.1.precio,{'attr':{'class':'hidden'}}) }}
-                    {{ form_end(form) }}
                 </div>
-                {#<div class="panel-footer">#}
-                    {#<div class="row">#}
-                        {#<div class="col-sm-12">#}
-                            {#<a href="{{ path('marina-humeda_index') }}" class="btn btn-naranja pull-right">#}
-                                {#<i class="fa fa-ban" aria-hidden="true"></i>#}
-                                {#Cancelar#}
-                            {#</a>#}
-                        {#</div>#}
-                    {#</div>#}
-                {#</div>#}
             </div>
         </section>
     </div>
 {% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript">
-        $('.selectclientebuscar').change(function (e) {
-            $('#loading').show();
-            $("#info-barco").empty();
-            $("#info-cliente").empty();
-            console.log('buscando cliente');
-
-            var url = "{{ path('ajax_busca_cliente_todo',{'id':'iddelcliente','_format':'json'}) }}";
-            url = url.replace("iddelcliente", $(this).val());
-            $.ajax({
-                method: "GET",
-                url: url,
-                dataType: 'json',
-                success: function (cliente) {
-                    JSON.stringify(cliente);
-                    var html = "<label>Correo electrónico</label>"+ "<div class='info-input'>" + cliente.correo + "</div>"+
-                               "<label>Número de teléfono</label>"+ "<div class='info-input'>" + cliente.telefono + "</div>"+
-                               "<label>Dirección</label>"+ "<div class='info-input'>" + cliente.direccion + "</div>"+
-                               "<label>R.F.C.</label>"+ "<div class='info-input'>" + cliente.rfc + "</div>"+
-                               "<label>Razón social</label>"+ "<div class='info-input'>" + cliente.razonsocial + "</div>"+
-                               "<label>Dirección fiscal</label>"+ "<div class='info-input'>" + cliente.direccionfiscal + "</div>";
-                    $("#info-cliente").append(html);
-
-                    $('#loading').hide();
-                },
-                error: function (jqXHR, exception) {
-                    if (jqXHR.status === 405) {
-                        console.error("METHOD NOT ALLOWED!");
-                    }
-                    $('#loading').hide();
-                }
-            }).fail(function () {
-                $('#loading').hide();
-                console.log('fallo ajax');
-            });
-        });
-
-        var x = 1;
-        $('.buscabarcomh').click(function () {
-            if (x == 2) {
-                if ($("input[type=radio]:checked").val() != null) {
-                    $('#loading').show();
-                    $("#info-barco").empty();
-                    var idbarco = $("input[type=radio]:checked").val();
-                    buscaDatosBarco(idbarco);
-                    x = 1;
-                }
-            } else {
-                x++;
-            }
-        });
-
-        function buscaDatosBarco(idbarco){
-            var url = "{{ path('ajax_busca_barco_todo',{'id':'iddelbarco','_format':'json'}) }}";
-            url = url.replace("iddelbarco", idbarco);
-            $.ajax({
-                method: "GET",
-                url: url,
-                dataType: 'json',
-                success: function(barco) {
-                    JSON.stringify(barco);
-                    var html = "<label>Modelo</label>"+"<div class='info-input'>"+barco.modelo+"</div>"+
-                               "<label>Eslora</label>"+"<div class='info-input'>"+barco.eslora+"</div>"+
-                               "<label>Manga</label>"+"<div class='info-input'>"+barco.manga+"</div>"+
-                               "<label>Nombre del capitán</label>"+"<div class='info-input'>"+barco.nombreCapitan+"</div>"+
-                               "<label>Teléfono del capitán</label>"+"<div class='info-input'>"+barco.telefonoCapitan+"</div>"+
-                               "<label>Correo del capitán</label>"+"<div class='info-input'>"+barco.correoCapitan+"</div>";
-                    $("#info-barco").append(html);
-                    $("#de_eslora").data('valor',barco.eslora);
-                    $("#e_eslora").data('valor',barco.eslora);
-                    $("#de_eslora").html(barco.eslora);
-                    $("#e_eslora").html(barco.eslora);
-                    $("#de_eslora_mxn").html(barco.eslora);
-                    $("#e_eslora_mxn").html(barco.eslora);
-                    recalculaSubtotalesYtotal();
-
-                    $('#loading').hide();
-                },
-                error: function(jqXHR, exception) {
-                    if(jqXHR.status === 405) {
-                        console.error("METHOD NOT ALLOWED!");
-                    }
-                    $('#loading').hide();
-                }
-            }).fail(function () {
-                $('#loading').hide();
-                console.log('fallo ajax');
-            });
-        }
-    </script>
 {% endblock %}

@@ -102,6 +102,15 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     background-color: #ff960d;
     color: #fff;
 }
+.btn-verde{
+    background-color: #009933;
+    color: #fff;
+}
+.btn-verde:hover{
+    background-color: #00bb38;
+    color: #fff;
+}
+
 /*++ fin botones color ++*/
 
 /*++++ mensajes sistema ++++*/

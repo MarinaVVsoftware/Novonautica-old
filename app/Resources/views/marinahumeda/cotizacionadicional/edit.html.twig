@@ -231,6 +231,9 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
+
+
+
         $('#servicioAdicional>tbody').change('.select-busca-producto',function (e) {
             //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
             var idservicio = $('.select-busca-producto:focus option:selected' ).val();

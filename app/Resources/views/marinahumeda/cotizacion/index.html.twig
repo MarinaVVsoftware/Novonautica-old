@@ -29,6 +29,7 @@
                                 <th>Total</th>
                                 <th>Validación</th>
                                 <th>Aceptación</th>
+                                <th>Pago</th>
                                 <th>Acciones</th>
                             </tr>
                             </thead>
@@ -76,6 +77,17 @@
                                                  class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
                                         {% endif %}
                                     </td>
+                                    <td class="align-middle">
+                                        {% if marinaHumedaCotizacion.validacliente == 2 %}
+                                            {% if marinaHumedaCotizacion.estatuspago == 1 %}
+                                                <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                    class="center-block" data-toggle="tooltip" data-placement="left" title="Pagado">
+                                            {% else %}
+                                                <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                                     class="center-block" data-toggle="tooltip" data-placement="left" title="No pagado">
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         <a class="btn btn-morado-claro"
                                            href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">Detalle</a>
@@ -88,7 +100,9 @@
                                         %}
                                             <a class="btn btn-naranja" href="{{ path('marina-humeda_recotizar', { 'id': marinaHumedaCotizacion.id }) }}">Recotizar</a>
                                         {% endif %}
-                                        {# <a class="btn btn-azul" href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">Editar</a> #}
+                                        {% if marinaHumedaCotizacion.validacliente == 2 %}
+                                            <a class="btn btn-verde" href="{{ path('marina-humeda_registra_pago',{'id': marinaHumedaCotizacion.id}) }}">Registrar Pago</a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

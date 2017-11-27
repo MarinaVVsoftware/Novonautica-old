@@ -33,7 +33,11 @@ $(document).ready(function() {
         autoclose: true,
         startDate: "0d"
     });
-
+    $('.datepicker-solo').datepicker({
+        autoclose: true,
+        format: 'yyyy-mm-dd',
+        orientation: "bottom auto",
+    });
 //---- seleccionar choice al recotizar------
     var diasestadiaprecio =  $('#de_precio').data('valor');
     var electricidadprecio = $('#e_precio').data('valor');

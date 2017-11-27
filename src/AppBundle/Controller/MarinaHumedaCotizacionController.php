@@ -425,14 +425,14 @@ class MarinaHumedaCotizacionController extends Controller
             $descuento = $marinaHumedaCotizacion->getDescuento();
             $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
 
-            // Días Estadía
-
             $llegada = $marinaHumedaCotizacion->getFechaLlegada();
             $salida = $marinaHumedaCotizacion->getFechaSalida();
 
             $diferenciaDias = date_diff($llegada, $salida);
 
-            $cantidad = ($diferenciaDias->days)+1;
+            $cantidad = ($diferenciaDias->days);
+
+            // Días Estadía
             $precio = $marinaDiasEstadia->getPrecio()->getCosto();
 
             $subTotal = $cantidad * $precio * $eslora;
@@ -455,7 +455,7 @@ class MarinaHumedaCotizacionController extends Controller
             $granTotal+=$total;
 
             // Conexión a electricidad
-            $cantidad = $marinaElectricidad->getCantidad();
+            //$cantidad = $marinaElectricidad->getCantidad();
             $precio = $marinaElectricidad->getPrecioAux()->getCosto();
 
             $subTotal = $cantidad * $precio * $eslora;
@@ -465,6 +465,7 @@ class MarinaHumedaCotizacionController extends Controller
 
             $marinaElectricidad
                 ->setEstatus(1)
+                ->setCantidad($cantidad)
                 ->setPrecio($precio)
                 ->setSubtotal($subTotal)
                 ->setDescuento($descuentoTot)
@@ -577,6 +578,32 @@ class MarinaHumedaCotizacionController extends Controller
         ]);
     }
 
+    /**
+     *
+     * @Route("/{id}/registra-pago", name="marina-humeda_registra_pago")
+     * @Method({"GET", "POST"})
+     **/
+    public function registraPagoAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
+    {
+        if ($marinaHumedaCotizacion->getEstatus() == 0 ||
+                $marinaHumedaCotizacion->getValidacliente() != 2
+        ) {
+            throw new NotFoundHttpException();
+        }
+
+        $editForm = $this->createForm( 'AppBundle\Form\MarinaHumedaRegistraPagoType', $marinaHumedaCotizacion);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
+        }
+        return $this->render('marinahumeda/cotizacion/registrar-pago.twig', [
+            'title' => 'Registrar Pago',
+            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+            'edit_form' => $editForm->createView()
+        ]);
+    }
 
     /**
      * Deletes a marinaHumedaCotizacion entity.

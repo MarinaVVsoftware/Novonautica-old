@@ -182,6 +182,20 @@ class MarinaHumedaCotizacion
     private $tokenrechaza;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="estatuspago", type="smallint", nullable=true)
+     */
+    private $estatuspago;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecharealpago", type="datetime", nullable=true)
+     */
+    private $fecharealpago;
+
+    /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="mhcotizaciones")
      * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
@@ -704,6 +718,38 @@ class MarinaHumedaCotizacion
     public function getFecharegistro()
     {
         return $this->fecharegistro;
+    }
+
+    /**
+     * @param int $estatuspago
+     */
+    public function setEstatuspago($estatuspago)
+    {
+        $this->estatuspago = $estatuspago;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEstatuspago()
+    {
+        return $this->estatuspago;
+    }
+
+    /**
+     * @param \DateTime $fecharealpago
+     */
+    public function setFecharealpago($fecharealpago)
+    {
+        $this->fecharealpago = $fecharealpago;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFecharealpago()
+    {
+        return $this->fecharealpago;
     }
 
     /**
