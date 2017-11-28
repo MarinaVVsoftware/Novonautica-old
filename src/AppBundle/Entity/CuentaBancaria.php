@@ -35,6 +35,24 @@ class CuentaBancaria
      */
     private $clabe;
 
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="Pago", mappedBy="cuentabancaria",cascade={"persist"})
+     */
+    private $pagos;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->pagos = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function __toString()
+    {
+     return $this->banco." ".$this->clabe;
+    }
 
     /**
      * Get id
@@ -93,5 +111,38 @@ class CuentaBancaria
     {
         return $this->clabe;
     }
-}
 
+    /**
+     * Add pago
+     *
+     * @param \AppBundle\Entity\Pago $pago
+     *
+     * @return CuentaBancaria
+     */
+    public function addPago(\AppBundle\Entity\Pago $pago)
+    {
+        $this->pagos[] = $pago;
+
+        return $this;
+    }
+
+    /**
+     * Remove pago
+     *
+     * @param \AppBundle\Entity\Pago $pago
+     */
+    public function removePago(\AppBundle\Entity\Pago $pago)
+    {
+        $this->pagos->removeElement($pago);
+    }
+
+    /**
+     * Get pagos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPagos()
+    {
+        return $this->pagos;
+    }
+}

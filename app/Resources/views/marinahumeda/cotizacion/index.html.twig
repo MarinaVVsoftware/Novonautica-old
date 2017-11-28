@@ -34,7 +34,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for marinaHumedaCotizacion in marinaHumedaCotizacions|reverse %}
+                            {% for marinaHumedaCotizacion in marinaHumedaCotizacions|sort|reverse %}
                                 <tr>
                                     <td>
                                         {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
@@ -79,13 +79,15 @@
                                     </td>
                                     <td class="align-middle">
                                         {% if marinaHumedaCotizacion.validacliente == 2 %}
-                                            {% if marinaHumedaCotizacion.estatuspago == 1 %}
+
+                                            {% if marinaHumedaCotizacion.pago.estatuspago is defined and marinaHumedaCotizacion.pago.estatuspago == 1 %}
                                                 <img src="{{ asset('img/status-aprobado-icon.svg') }}"
                                                     class="center-block" data-toggle="tooltip" data-placement="left" title="Pagado">
                                             {% else %}
                                                 <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
                                                      class="center-block" data-toggle="tooltip" data-placement="left" title="No pagado">
                                             {% endif %}
+
                                         {% endif %}
                                     </td>
                                     <td>

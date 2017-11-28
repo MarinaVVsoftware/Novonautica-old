@@ -590,8 +590,8 @@ class MarinaHumedaCotizacionController extends Controller
         ) {
             throw new NotFoundHttpException();
         }
-
-        $editForm = $this->createForm( 'AppBundle\Form\MarinaHumedaRegistraPagoType', $marinaHumedaCotizacion);
+        $pago = $marinaHumedaCotizacion->getPago();
+        $editForm = $this->createForm( 'AppBundle\Form\PagoType', $pago);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -601,6 +601,7 @@ class MarinaHumedaCotizacionController extends Controller
         return $this->render('marinahumeda/cotizacion/registrar-pago.twig', [
             'title' => 'Registrar Pago',
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+            'pago' => $pago,
             'edit_form' => $editForm->createView()
         ]);
     }

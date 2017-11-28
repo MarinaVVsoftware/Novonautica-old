@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class ValorSistemaType extends AbstractType
 {
@@ -17,7 +18,13 @@ class ValorSistemaType extends AbstractType
             ->add('valor',null,[
                 'label' => 'Valor: ',
                 'required' => false
-            ]);
+            ])
+            ->add('descripcion',TextareaType::class,[
+                'label' => 'Descripción',
+                'attr' => ['rows' => 7,'class' => 'editorwy'],
+                'required' => false
+            ])
+        ;
     }
     
     /**

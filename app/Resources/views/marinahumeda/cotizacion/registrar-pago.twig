@@ -410,7 +410,7 @@
                         <div role="tabpanel" class="tab-pane active" id="registrapago">
                             {{ form_start(edit_form) }}
                             <div class="row">
-                                <div class="col-sm-5">
+                                <div class="col-sm-5 col-sm-offset-2">
                                     {{ form_errors(edit_form.estatuspago) }}
                                     <div class="radio">
                                         {{ form_label(edit_form.estatuspago) }}
@@ -426,8 +426,13 @@
                                 </div>
                             </div>
                             <div class="row espacio-linea-arriba2">
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 col-sm-offset-2">
                                     {{ form_row(edit_form.fecharealpago) }}
+                                </div>
+                            </div>
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-3 col-sm-offset-2">
+                                    {{ form_row(edit_form.cuentabancaria) }}
                                 </div>
                             </div>
                             {{ form_end(edit_form) }}

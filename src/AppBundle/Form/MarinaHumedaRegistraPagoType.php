@@ -14,6 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class MarinaHumedaRegistraPagoType extends AbstractType
 {
@@ -24,20 +25,9 @@ class MarinaHumedaRegistraPagoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('estatuspago', ChoiceType::class,[
-                'choices' =>[ 'Pagado' => 1, 'No Pagado' => 0 ],
-                'expanded' => true,
-                'multiple' => false,
-                'label' => ' ',
-
-            ])
-            ->add('fecharealpago',DateType::class,[
-                'label' => 'Fecha real del pago',
-                'widget' => 'single_text',
-                'html5' => false,
-                'attr' => ['class' => 'datepicker-solo input-calendario',
-                    'readonly' => true],
-                'format' => 'yyyy-MM-dd'
+            ->add('pago',EntityType::class,[
+                'class' => 'AppBundle:Pago',
+                'data_class' => 'AppBundle:Pago'
             ])
         ;
     }

@@ -34,12 +34,12 @@ class CuentaBancariaController extends Controller
     /**
      * Creates a new cuentaBancarium entity.
      *
-     * @Route("/new", name="cuenta-bancaria_new")
+     * @Route("/nuevo", name="cuenta-bancaria_new")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
     {
-        $cuentaBancarium = new Cuentabancarium();
+        $cuentaBancarium = new Cuentabancaria();
         $form = $this->createForm('AppBundle\Form\CuentaBancariaType', $cuentaBancarium);
         $form->handleRequest($request);
 
@@ -48,7 +48,7 @@ class CuentaBancariaController extends Controller
             $em->persist($cuentaBancarium);
             $em->flush();
 
-            return $this->redirectToRoute('cuenta-bancaria_show', array('id' => $cuentaBancarium->getId()));
+            return $this->redirectToRoute('cuenta-bancaria_index');
         }
 
         return $this->render('cuentabancaria/new.html.twig', array(
@@ -76,7 +76,7 @@ class CuentaBancariaController extends Controller
     /**
      * Displays a form to edit an existing cuentaBancarium entity.
      *
-     * @Route("/{id}/edit", name="cuenta-bancaria_edit")
+     * @Route("/{id}/editar", name="cuenta-bancaria_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, CuentaBancaria $cuentaBancarium)
@@ -88,7 +88,7 @@ class CuentaBancariaController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('cuenta-bancaria_edit', array('id' => $cuentaBancarium->getId()));
+            return $this->redirectToRoute('cuenta-bancaria_index');
         }
 
         return $this->render('cuentabancaria/edit.html.twig', array(

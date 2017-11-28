@@ -124,7 +124,7 @@
                                             <tr>
                                                 <th>Estatus Pago</th>
                                                 <td>
-                                                    {% if marinaHumedaCotizacion.estatuspago == 1 %}
+                                                    {% if marinaHumedaCotizacion.pago.estatuspago == 1 %}
                                                         Pagado
                                                     {% else %}
                                                         No pagado
@@ -384,7 +384,7 @@
                             <div class="row">
                                 <div class="col-sm-8 col-sm-offset-2">
                                     <label>Mensaje en el correo:</label>
-                                    <div class="info-input">{{ marinaHumedaCotizacion.mensaje }}</div>
+                                    <div class="info-input">{{ marinaHumedaCotizacion.mensaje|raw  }}</div>
                                 </div>
                             </div>
                         </div>
@@ -403,6 +403,27 @@
                                     <label>Fecha de registro</label>
                                     <div class="info-input">
                                         {% if marinaHumedaCotizacion.pago.fecharegistro %}{{ marinaHumedaCotizacion.pago.fecharegistro|date('d-m-Y H:i:s') }}{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row espacio-linea ">
+                                <div class="col-sm-8">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <label>Fecha real de pago</label>
+                                    <div class="info-input">
+                                        {% if marinaHumedaCotizacion.pago.fecharealpago  %}{{ marinaHumedaCotizacion.pago.fecharealpago|date('d-m-Y') }}{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <label>Cuenta bancaria</label>
+                                    <div class="info-input">
+                                        {{ marinaHumedaCotizacion.pago.cuentabancaria }}
                                     </div>
                                 </div>
                             </div>

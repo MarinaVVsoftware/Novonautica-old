@@ -66,7 +66,7 @@ class MarinaHumedaCotizacionType extends AbstractType
             ])
             ->add('mensaje',TextareaType::class,[
                 'label' => 'Mensaje en el correo:',
-                'attr' => ['rows' => 7],
+                'attr' => ['rows' => 7,'class' => 'editorwy'],
                 'required' => false,
             ])
             ->add('mhcservicios',CollectionType::class,[
