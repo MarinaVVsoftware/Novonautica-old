@@ -119,6 +119,20 @@
                                                 {% endif %}
                                             </td>
                                         </tr>
+
+                                        {% if marinaHumedaCotizacion.validacliente == 2 %}
+                                            <tr>
+                                                <th>Estatus Pago</th>
+                                                <td>
+                                                    {% if marinaHumedaCotizacion.pago.estatuspago == 1 %}
+                                                        Pagado
+                                                    {% else %}
+                                                        No pagado
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -162,7 +176,7 @@
                                                 <tr>
                                                     <td>{{ mhservicio.cantidad }}</td>
                                                     <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexió a electricidad {% endif %}</td>
+                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
                                                     <td>$ {{ mhservicio.precio|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ mhservicio.subtotal|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ mhservicio.iva|number_format(2,'.',',') }}</td>
@@ -283,7 +297,7 @@
                                                 <tr>
                                                     <td>{{ mhservicio.cantidad }}</td>
                                                     <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexió a electricidad {% endif %}</td>
+                                                    <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
                                                     <td>$ {{ (mhservicio.precio * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ (mhservicio.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                                                     <td>$ {{ (mhservicio.iva * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
@@ -370,7 +384,7 @@
                             <div class="row">
                                 <div class="col-sm-8 col-sm-offset-2">
                                     <label>Mensaje en el correo:</label>
-                                    <div class="info-input">{{ marinaHumedaCotizacion.mensaje }}</div>
+                                    <div class="info-input">{{ marinaHumedaCotizacion.mensaje|raw  }}</div>
                                 </div>
                             </div>
                         </div>
@@ -389,6 +403,27 @@
                                     <label>Fecha de registro</label>
                                     <div class="info-input">
                                         {% if marinaHumedaCotizacion.pago.fecharegistro %}{{ marinaHumedaCotizacion.pago.fecharegistro|date('d-m-Y H:i:s') }}{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row espacio-linea ">
+                                <div class="col-sm-8">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <label>Fecha real de pago</label>
+                                    <div class="info-input">
+                                        {% if marinaHumedaCotizacion.pago.fecharealpago  %}{{ marinaHumedaCotizacion.pago.fecharealpago|date('d-m-Y') }}{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <label>Cuenta bancaria</label>
+                                    <div class="info-input">
+                                        {{ marinaHumedaCotizacion.pago.cuentabancaria }}
                                     </div>
                                 </div>
                             </div>
