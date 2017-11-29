@@ -41,8 +41,6 @@ class EmbarcacionController extends Controller
     public function newAction(Request $request)
     {
         $embarcacion = new Embarcacion();
-        $imagen = new EmbarcacionImagen();
-        $embarcacion->addImagenes($imagen);
         $form = $this->createForm('AppBundle\Form\EmbarcacionType', $embarcacion);
         $form->handleRequest($request);
 
