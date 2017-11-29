@@ -469,9 +469,9 @@ function recalculaSubtotalesYtotal() {
 
 function calculaSubtotales(cantidad,precio,tdsubtot,tdiva,tddesc,tdtot){
     var eslora = 0;
-        if($('#info-barco>#barcopies').data('valor')){
-            eslora = $('#info-barco>#barcopies').data('valor');
-        }
+    if ($('#de_eslora').data('valor')) {
+      eslora = $('#de_eslora').data('valor');
+    }
     var iva = ($('#valiva').data('valor'))/100;
     var descuento = $('#appbundle_marinahumedacotizacion_descuento').val();
     var subtotal = cantidad * precio * eslora;
