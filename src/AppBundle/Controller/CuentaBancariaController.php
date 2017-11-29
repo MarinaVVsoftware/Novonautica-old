@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 /**
  * Cuentabancarium controller.
  *
- * @Route("ajustes/cuenta-bancaria")
+ * @Route("ajustes/cuentas-bancarias")
  */
 class CuentaBancariaController extends Controller
 {
