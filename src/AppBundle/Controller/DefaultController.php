@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Entity\MarinaHumedaCotizacion;
 
 class DefaultController extends Controller
 {
@@ -16,6 +17,36 @@ class DefaultController extends Controller
     {
         // replace this example code with whatever you need
         return $this->render('inicio.twig', [
+        ]);
+    }
+
+    /**
+     * Genera el pdf de una cotizacion en base a su id
+     *
+     * @Route("/{id}/mhc-pdf", name="marinahc-pdf")
+     * @param MarinaHumedaCotizacion $mhc
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function displayMarinaPDF(MarinaHumedaCotizacion $mhc)
+    {
+        return $this->render('marinahumeda/cotizacion/cotizacionpdf.html.twig', [
+            'marinaHumedaCotizacion' => $mhc
+        ]);
+    }
+
+    /**
+     * Displays a form to edit an existing marinaHumedaCotizacion entity.
+     *
+     * @Route("/{id}/correovalidacion", name="marina-humeda_validaras")
+
+     **/
+    public function validaAction(Request $request, MarinaHumedaCotizacion $mhc)
+    {
+        return $this->render('marinahumeda/cotizacion/correo-clientevalida.twig', [
+            'marinaHumedaCotizacion' => $mhc,
+            'tokenAcepta' => 'asdas',
+            'tokenRechaza' => 'otro'
         ]);
     }
 

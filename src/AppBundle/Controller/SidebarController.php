@@ -59,6 +59,7 @@ class SidebarController extends Controller
                         'path' => $this->generateUrl('marina-humeda-cotizacion-adicional_index'),
                         'submenu' => [
                             ['name' => 'Listado', 'path' => $this->generateUrl('marina-humeda-cotizacion-adicional_index')],
+                            ['name' => 'Nuevo', 'path' => $this->generateUrl('marina-humeda-cotizacion-adicional_new')],
                             ['name' => 'Catálogo', 'path' => $this->generateUrl('marina-humeda-servicio_index')]
                         ]
                     ],
@@ -88,6 +89,15 @@ class SidebarController extends Controller
         $this->add([
 //            ['name' => 'Usuarios', 'icon' => 'user-o', 'path' => $this->generateUrl('usuario_index')],
 //            ['name' => 'Ajustes', 'icon' => 'cog', 'path' => $this->generateUrl('ajustes_index')],
+            [
+                'name' => 'Ajustes',
+                'icon' => 'cog',
+                'path' => $this->generateUrl('ajustes_index'),
+                'submenu' => [
+                    ['name' => 'Valores', 'path' => $this->generateUrl('ajustes_index')],
+                    ['name' => 'Cuenatas banco', 'path' => $this->generateUrl('cuenta-bancaria_index')],
+                ]
+            ]
         ]);
     }
 

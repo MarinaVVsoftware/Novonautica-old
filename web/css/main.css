@@ -102,6 +102,15 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     background-color: #ff960d;
     color: #fff;
 }
+.btn-verde{
+    background-color: #009933;
+    color: #fff;
+}
+.btn-verde:hover{
+    background-color: #00bb38;
+    color: #fff;
+}
+
 /*++ fin botones color ++*/
 
 /*++++ mensajes sistema ++++*/
@@ -439,6 +448,7 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     border-radius: 17px;
     padding: 5px 15px;
     width: 100%;
+    min-height: 25px;
 }
 .panel-body  form input[type="time"]{
     text-align: center;
@@ -464,7 +474,8 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     width: 14px;
     background-color: #353b51;
 }
-.panel-body  form textarea::-webkit-scrollbar-thumb {
+.panel-body  form textarea::-webkit-scrollbar-thumb,
+body.wysihtml5-editor::-webkit-scrollbar-thumb {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: #292e41;
 }
@@ -807,3 +818,14 @@ td .select2-container--default .select2-selection--single {
     padding-top: 8%;
     padding-bottom: 2%;
 }
+
+/*----- editor texto wysihtml5------*/
+.wysihtml5-toolbar .btn{
+    background: #292e41;
+    color: #ffffff;
+}
+ul.wysihtml5-toolbar a.btn.wysihtml5-command-active {
+    background-color: #0097f6;
+    color: #ffffff;
+}
+/*---fin editor texto wysihtml5------*/

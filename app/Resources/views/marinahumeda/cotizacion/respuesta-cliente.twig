@@ -1,2 +1,192 @@
-Respuesta del cliente:
-{{ mensaje }}
+{% extends 'estructura/plantilla-otros.twig' %}
+
+{% block title %} Novonautica | Respuesata {% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet"
+          href="{{ asset('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
+        <style type="text/css">
+            @import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            * {
+                font-family: 'Montserrat', sans-serif;
+            }
+
+            body {
+                color: #666666;
+                width: 100% !important;
+                height: 100%;
+                font-size: 16px;
+            }
+
+            .texto1 {
+                font-size: 20px;
+            }
+
+            .texto2 {
+                font-size: 14px;
+            }
+
+            .letra-blanca {
+                color: #ffffff;
+            }
+
+            .letra-azul {
+                color: #458fce;
+            }
+
+            .fondo-gris {
+                background: #d4d4d4;
+            }
+
+            .fondo-blanco {
+                background: #ffffff;
+            }
+
+            .fondo-azul {
+                background: #458fce;
+            }
+
+            .fondo-bicolor-arriba {
+                background: url("{{ absolute_url(asset('img/imagencorreo-02.jpg')) }}") no-repeat;
+                background-size: cover;
+            }
+
+            .fondo-bicolor-abajo {
+                background: url("{{ absolute_url(asset('img/cotizacion-02.jpg')) }}") no-repeat;
+                background-size: cover;
+            }
+
+            .pad-izq-0 {
+                padding-left: 0px;
+            }
+
+            .pad-der-0 {
+                padding-right: 0px;
+            }
+
+            .imagenlogo {
+
+                padding: 10px;
+            }
+
+            .fila-titulo {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            .cuadro-terminos {
+                border: 1px solid #458fce;
+            }
+
+            .pad-arriba-1 {
+                padding-top: 20px;
+            }
+
+            .pad-abajo-1 {
+                padding-bottom: 20px;
+            }
+
+            .pad-arriba-2 {
+                padding-top: 15px;
+            }
+            .datepicker{
+                border: 1px solid #aaa;
+                border-radius: 0px;
+                padding: 2px;
+            }
+        </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row fondo-bicolor-arriba">
+            <div class="col-sm-3 ">
+                <img src="{{ absolute_url(asset('img/logo.png') ) }}" class="img-responsive imagenlogo">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-sm-offset-6">
+                <img src="{{ absolute_url(asset('img/cotizacion-03.png') ) }}" class="img-responsive imagenlogo">
+            </div>
+            <div class="col-sm-4">
+                <p class="texto2">
+                    <strong>MARINA V&V</strong><br>
+                    Calle Vialidad Paseo Mujeres Mza 1 L-1<br>
+                    Isla Mujeres. Quintana Roo.<br>
+                    C.P. 77400<br>
+                    (999)-000-0000<br>
+                    info@tucompañia.com
+                </p>
+            </div>
+        </div>
+        <div class="row fondo-gris pad-arriba-1 pad-abajo-1">
+            <div class="col-sm-12">
+                <p class="letra-azul"><strong>{{ mensaje1 }}</strong></p>
+                <p><strong>{{ mensaje2 }}</strong></p>
+                <p>{{ mensaje3 }}</p>
+            </div>
+        </div>
+        {% form_theme form 'estructura/temaerror.html.twig' %}
+        {{ form_start(form) }}
+        {% if suformulario == 1 %}
+            <div class="row pad-arriba-1">
+                <div class="col-sm-6">
+                    {{ form_errors(form.metodopago) }}
+                    {{ form_label(form.metodopago) }}<br>
+                    {{ form_widget(form.metodopago) }}
+                </div>
+            </div>
+            <div class="row pad-arriba-1">
+                <div class="col-sm-6">
+                    {{ form_errors(form.fechapago) }}
+                    {{ form_label(form.fechapago) }}<br>
+                    {{ form_widget(form.fechapago) }}
+                </div>
+            </div>
+        <div class="row pad-arriba-1">
+            <div class="col-sm-6">
+                <button type="submit" class="btn letra-blanca fondo-azul">Aceptar</button>
+            </div>
+        </div>
+        {% elseif suformulario == 2 %}
+            <div class="row pad-arriba-1">
+                <div class="col-sm-6">
+                    {{ form_errors(form.notascliente) }}
+                    {{ form_label(form.notascliente) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    {{ form_widget(form.notascliente) }}
+                </div>
+            </div>
+            <div class="row pad-arriba-1">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn letra-blanca fondo-azul">Enviar</button>
+                </div>
+            </div>
+        {% endif %}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <!-- jQuery 3 -->
+    <script src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="{{ asset('bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+
+    <script type="text/javascript">
+        $('.datepicker').datepicker({
+            autoclose: true,
+            format: 'yyyy-mm-dd',
+        });
+    </script>
+{% endblock %}

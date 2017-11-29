@@ -2,16 +2,23 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\AppBundle;
 use AppBundle\Entity\MarinaHumedaCotizacionAdicional;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
+use AppBundle\Entity\MarinaHumedaServicio;
 use AppBundle\Entity\ValorSistema;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Marinahumedacotizacionadicional controller.
@@ -37,6 +44,8 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
             'marinaHumedaCotizacionAdicionals' => $marinaHumedaCotizacionAdicionals,
         ]);
     }
+
+
 
     /**
      * Crea un nuevo servicio adicional de marina humeda
@@ -144,6 +153,7 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
      */
     public function editAction(Request $request, MarinaHumedaCotizacionAdicional $marinaHumedaCotizacionAdicional)
     {
+        $iva = $marinaHumedaCotizacionAdicional->getIva();
         $originalServicios = new ArrayCollection();
 
         foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $serv){
@@ -158,25 +168,15 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
 
             foreach ($originalServicios as $serv){
                 if (false === $marinaHumedaCotizacionAdicional->getMhcservicios()->contains($serv)) {
-                    // remove the Task from the Tag
-                    $serv->getMhcservicios()->removeMhcservicio($serv);
-
-                    // if it was a many-to-one relationship, remove the relationship like this
-                    //$motor->setBarco(null);
-
+                    //$serv->getMhcservicios()->removeMhcservicio($serv);
                     $em->persist($serv);
-
-                    // if you wanted to delete the Tag entirely, you can also do that
                     $em->remove($serv);
                 }
             }
-
-            $iva = $marinaHumedaCotizacionAdicional->getIva();
+            ;
             $granSubtotal = 0;
             $granIvatotal = 0;
             $granTotal = 0;
-
-
             foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $servicio){
                 $cantidad = $servicio->getCantidad();
                 $precio = $servicio->getMarinahumedaservicio()->getPrecio();
@@ -195,6 +195,11 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
                 $granIvatotal+=$ivatotal;
                 $granTotal+=$total;
             }
+            $marinaHumedaCotizacionAdicional
+                ->setIva($iva)
+                ->setSubtotal($granSubtotal)
+                ->setIvatotal($granIvatotal)
+                ->setTotal($granTotal);
             $em->persist($marinaHumedaCotizacionAdicional);
             $em->flush();
 
@@ -206,7 +211,20 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'valiva' => $iva
         ]);
+    }
+    /**
+     * @Route("/buscarservicio/{id}.{_format}", name="ajax_busca_producto", defaults={"_format"="JSON"})
+     *
+     */
+    public function buscarAction(Request $request,MarinaHumedaServicio $marinaHumedaServicio){
+
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+
+        $serializer = new Serializer($normalizers, $encoders);
+        return new Response($marinaHumedaServicio = $serializer->serialize($marinaHumedaServicio,$request->getRequestFormat()));
     }
 
     /**
@@ -244,4 +262,5 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
             ->getForm()
         ;
     }
+
 }

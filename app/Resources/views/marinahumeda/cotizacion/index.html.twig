@@ -21,6 +21,7 @@
                                 <th>Barco</th>
                                 <th>Fecha llegada</th>
                                 <th>Fecha salida</th>
+                                <th>Slip</th>
                                 <th>Descuento(%)</th>
                                 <th>Subtotal</th>
                                 <th>Iva Total</th>
@@ -28,11 +29,12 @@
                                 <th>Total</th>
                                 <th>Validación</th>
                                 <th>Aceptación</th>
+                                <th>Pago</th>
                                 <th>Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for marinaHumedaCotizacion in marinaHumedaCotizacions|reverse %}
+                            {% for marinaHumedaCotizacion in marinaHumedaCotizacions|sort|reverse %}
                                 <tr>
                                     <td>
                                         {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
@@ -45,6 +47,7 @@
                                     <td>{{ marinaHumedaCotizacion.barco }}</td>
                                     <td>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
                                     <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</td>
+                                    <td>{{ marinaHumedaCotizacion.slip }}</td>
                                     <td>{{ marinaHumedaCotizacion.descuento }}%</td>
                                     <td>${{ marinaHumedaCotizacion.subtotal|number_format(2,'.',',') }}</td>
                                     <td>${{ marinaHumedaCotizacion.ivatotal|number_format(2,'.',',') }}</td>
@@ -74,6 +77,19 @@
                                                  class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
                                         {% endif %}
                                     </td>
+                                    <td class="align-middle">
+                                        {% if marinaHumedaCotizacion.validacliente == 2 %}
+
+                                            {% if marinaHumedaCotizacion.pago.estatuspago is defined and marinaHumedaCotizacion.pago.estatuspago == 1 %}
+                                                <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                    class="center-block" data-toggle="tooltip" data-placement="left" title="Pagado">
+                                            {% else %}
+                                                <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                                     class="center-block" data-toggle="tooltip" data-placement="left" title="No pagado">
+                                            {% endif %}
+
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         <a class="btn btn-morado-claro"
                                            href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">Detalle</a>
@@ -86,7 +102,9 @@
                                         %}
                                             <a class="btn btn-naranja" href="{{ path('marina-humeda_recotizar', { 'id': marinaHumedaCotizacion.id }) }}">Recotizar</a>
                                         {% endif %}
-                                        {# <a class="btn btn-azul" href="{{ path('marina-humeda_edit', { 'id': marinaHumedaCotizacion.id }) }}">Editar</a> #}
+                                        {% if marinaHumedaCotizacion.validacliente == 2 %}
+                                            <a class="btn btn-verde" href="{{ path('marina-humeda_registra_pago',{'id': marinaHumedaCotizacion.id}) }}">Registrar Pago</a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

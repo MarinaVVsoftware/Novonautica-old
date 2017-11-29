@@ -98,6 +98,7 @@
                                     <tr>
                                         <th>Cantidad</th>
                                         <th>Servicio</th>
+                                        <th>Unidad</th>
                                         <th>Prec. Unid.</th>
                                         <th>Sub-Total</th>
                                         <th>IVA</th>
@@ -109,6 +110,7 @@
                                             <tr>
                                                 <td>{{ servicio.cantidad }}</td>
                                                 <td>{{ servicio.marinahumedaservicio }}</td>
+                                                <td>{{ servicio.marinahumedaservicio.unidad }}</td>
                                                 <td>$ {{ servicio.precio|number_format(2,'.',',') }}</td>
                                                 <td>$ {{ servicio.subtotal|number_format(2,'.',',') }}</td>
                                                 <td>$ {{ servicio.iva|number_format(2,'.',',') }}</td>
@@ -195,6 +197,7 @@
                                     <tr>
                                         <th>Cantidad</th>
                                         <th>Servicio</th>
+                                        <th>Unidad</th>
                                         <th>Prec. Unid.</th>
                                         <th>Sub-Total</th>
                                         <th>IVA</th>
@@ -206,11 +209,13 @@
                                         <tr>
                                             <td>{{ servicio.cantidad }}</td>
                                             <td>{{ servicio.marinahumedaservicio }}</td>
+                                            <td>{{ servicio.marinahumedaservicio.unidad }}</td>
                                             <td>$ {{ (servicio.precio * marinaHumedaCotizacionAdicional.dolar)|number_format(2,'.',',') }}</td>
                                             <td>$ {{ (servicio.subtotal * marinaHumedaCotizacionAdicional.dolar)|number_format(2,'.',',') }}</td>
                                             <td>$ {{ (servicio.iva * marinaHumedaCotizacionAdicional.dolar)|number_format(2,'.',',') }}</td>
                                             <td>$ {{ (servicio.total * marinaHumedaCotizacionAdicional.dolar)|number_format(2,'.',',') }}</td>
                                         </tr>
+
                                     {% endfor %}
                                     </tbody>
                                 </table>

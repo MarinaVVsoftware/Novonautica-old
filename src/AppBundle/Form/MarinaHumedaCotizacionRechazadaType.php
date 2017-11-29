@@ -1,39 +1,42 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Luiz
+ * Date: 22/11/2017
+ * Time: 12:26 PM
+ */
 
 namespace AppBundle\Form;
+
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
-class ValorSistemaType extends AbstractType
+class MarinaHumedaCotizacionRechazadaType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
-            ->add('valor',null,[
-                'label' => 'Valor: ',
-                'required' => false
-            ])
-            ->add('descripcion',TextareaType::class,[
-                'label' => 'Descripción',
-                'attr' => ['rows' => 7,'class' => 'editorwy'],
-                'required' => false
-            ])
-        ;
+            ->add('notascliente',TextareaType::class,[
+            'label' => 'Comentarios',
+            'attr' => ['rows' => 7],
+            'required' => false
+        ]);
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\ValorSistema'
+            'data_class' => 'AppBundle\Entity\MarinaHumedaCotizacion'
         ));
     }
 
@@ -42,7 +45,7 @@ class ValorSistemaType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'appbundle_valorsistema';
+        return 'appbundle_marinahumedacotizacion';
     }
 
 

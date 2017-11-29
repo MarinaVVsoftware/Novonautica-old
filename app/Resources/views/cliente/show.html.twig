@@ -227,6 +227,7 @@
                                     <table class="table text-center">
                                         <thead>
                                         <tr>
+                                            <th>Folio</th>
                                             <th>Barco</th>
                                             <th>Servicio</th>
                                             <th>Fecha llegada</th>
@@ -235,6 +236,7 @@
                                             <th>IVA</th>
                                             <th>Descuento</th>
                                             <th>Total</th>
+                                            <th>Estatus pago</th>
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -242,6 +244,13 @@
                                         {% for cotizacion in cliente.mHcotizaciones %}
                                             {% if cotizacion.validacliente == 2 %}
                                             <tr>
+                                                <td>
+                                                    {% if cotizacion.foliorecotiza == 0 %}
+                                                        {{ cotizacion.folio }}
+                                                    {% else %}
+                                                        {{ cotizacion.folio }}-{{ cotizacion.foliorecotiza }}
+                                                    {% endif %}
+                                                </td>
                                                 <td>{{ cotizacion.barco }}</td>
                                                 <td>Marina Humeda</td>
                                                 <td>{% if cotizacion.fechaLlegada %}{{ cotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
@@ -250,6 +259,15 @@
                                                 <td>$ {{ cotizacion.ivatotal|number_format(2,'.',',') }}</td>
                                                 <td>$ {{ cotizacion.descuentototal|number_format(2,'.',',') }}</td>
                                                 <td>$ {{ cotizacion.total|number_format(2,'.',',') }}</td>
+                                                <td>
+                                                    {% if cotizacion.pago.estatuspago == 1 %}
+                                                        <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Pagado">
+                                                    {% else %}
+                                                        <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                                             class="center-block" data-toggle="tooltip" data-placement="left" title="No pagado">
+                                                    {% endif %}
+                                                </td>
                                                 <td>
                                                     <a class="btn btn-morado-claro" href="{{ path('marina-humeda_show', { 'id': cotizacion.id }) }}">Detalle</a>
                                                 </td>
