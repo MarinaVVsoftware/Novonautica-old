@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -180,6 +181,21 @@ class Embarcacion
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EmbarcacionModelo")
      */
     private $modelo;
+
+    /**
+     * @var EmbarcacionImagen
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\EmbarcacionImagen", mappedBy="embarcacion")
+     */
+    private $imagenes;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->imagenes = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -698,5 +714,39 @@ class Embarcacion
                     ->addViolation();
             }
         }
+    }
+
+    /**
+     * Add imagene
+     *
+     * @param EmbarcacionImagen $imagen
+     *
+     * @return Embarcacion
+     */
+    public function addImagenes(EmbarcacionImagen $imagen)
+    {
+        $this->imagenes[] = $imagen;
+
+        return $this;
+    }
+
+    /**
+     * Remove imagene
+     *
+     * @param EmbarcacionImagen $imagen
+     */
+    public function removeImagenes(EmbarcacionImagen $imagen)
+    {
+        $this->imagenes->removeElement($imagen);
+    }
+
+    /**
+     * Get imagenes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImagenes()
+    {
+        return $this->imagenes;
     }
 }

@@ -1,5 +1,12 @@
 {% extends 'estructura/plantilla.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
+{% endblock %}
+
+{% form_theme form ':embarcacion/form-themes:imagenes.html.twig' %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -68,6 +75,16 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             {{ form_row(form.video) }}
+                                            {{ form_row(form.imagenes) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div id="boat-img" class="dropzone">
+                                                <div class="dz-default dz-message">
+                                                    Puedes arrastrar tus imagenes aquí.
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -96,8 +113,10 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/dropzone.js') }}"></script>
     <script type="text/javascript">
       (function () {
+        const construccionForm = document.querySelector('[name="appbundle_embarcacion"]');
         const construccionInput = document.querySelector('#appbundle_embarcacion_construccion');
         const prefabricadoContainer = document.querySelector('#prefabricado');
         const customContainer = document.querySelector('#custom');
@@ -144,6 +163,45 @@
                     : `<option>No hay modelos</option>`;
               });
         }
+
+        let imgCount = '{{ form.imagenes|length }}';
+
+        Dropzone.autoDiscover = false;
+        const boatImg = new Dropzone('#boat-img', {
+          url: '{{ oneup_uploader_endpoint('embarcacion') }}',
+          acceptedFiles: 'image/*',
+          maxFilesize: 2,
+          autoProcessQueue: false,
+          dictFileTooBig: 'La imagen es demasiado pesada el tamaño maximo es de 1MiB',
+          parallelUploads: 1,
+          uploadMultiple: true,
+          addRemoveLinks: true,
+          init: function () {
+            this
+                .on('success', function (file, response) {
+                  const imgContainer = document.querySelector('#appbundle_embarcacion_imagenes');
+                  let imgPrototype = imgContainer.dataset.prototype.replace(/__name__/g, imgCount);
+                  let divContainer = document.createElement('div');
+                  divContainer.style.display = 'none';
+                  divContainer.innerHTML = imgPrototype;
+                  let imgInput = divContainer.querySelector('input');
+                  imgInput.value = response.baseFileName;
+
+                  imgContainer.appendChild(divContainer);
+
+                  imgCount++;
+                  boatImg.options.autoProcessQueue = true;
+                })
+          }
+        });
+
+        construccionForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          boatImg.processQueue();
+          boatImg.on('queuecomplete', () => {
+            this.submit()
+          })
+        })
       })();
     </script>
 {% endblock %}

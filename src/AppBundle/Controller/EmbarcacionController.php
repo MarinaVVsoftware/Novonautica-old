@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Embarcacion;
+use AppBundle\Entity\EmbarcacionImagen;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +41,8 @@ class EmbarcacionController extends Controller
     public function newAction(Request $request)
     {
         $embarcacion = new Embarcacion();
+        $imagen = new EmbarcacionImagen();
+        $embarcacion->addImagenes($imagen);
         $form = $this->createForm('AppBundle\Form\EmbarcacionType', $embarcacion);
         $form->handleRequest($request);
 

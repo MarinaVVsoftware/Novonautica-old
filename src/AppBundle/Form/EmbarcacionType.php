@@ -3,10 +3,14 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Embarcacion;
+use AppBundle\Entity\EmbarcacionImagen;
 use AppBundle\Entity\EmbarcacionMarca;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -57,7 +61,13 @@ class EmbarcacionType extends AbstractType
             ->add('pasajerosDormidos')
             ->add('generador')
             ->add('descripcion')
-            ->add('video');
+            ->add('video')
+            ->add('imagenes', CollectionType::class, [
+                'label' => 'Imagenes',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true
+            ]);
 
         $formModifier = function (FormInterface $form, EmbarcacionMarca $marca = null) {
             $modelos = $marca ? $marca->getModelos() : [];
