@@ -42,11 +42,6 @@ class EmbarcacionImagen
      */
     private $embarcacion;
 
-    public function __toString()
-    {
-        return $this->getBasename();
-    }
-
     /**
      * Get id
      *

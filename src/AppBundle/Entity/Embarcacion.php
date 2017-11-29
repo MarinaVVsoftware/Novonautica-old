@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -185,7 +186,7 @@ class Embarcacion
     /**
      * @var EmbarcacionImagen
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\EmbarcacionImagen", mappedBy="embarcacion")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\EmbarcacionImagen", mappedBy="embarcacion", cascade={"persist"})
      */
     private $imagenes;
 
@@ -719,13 +720,13 @@ class Embarcacion
     /**
      * Add imagene
      *
-     * @param EmbarcacionImagen $imagen
+     * @param EmbarcacionImagen $imagene
      *
      * @return Embarcacion
      */
-    public function addImagenes(EmbarcacionImagen $imagen)
+    public function addImagene(EmbarcacionImagen $imagene)
     {
-        $this->imagenes[] = $imagen;
+        $this->imagenes[] = $imagene;
 
         return $this;
     }
@@ -733,17 +734,17 @@ class Embarcacion
     /**
      * Remove imagene
      *
-     * @param EmbarcacionImagen $imagen
+     * @param EmbarcacionImagen $imagene
      */
-    public function removeImagenes(EmbarcacionImagen $imagen)
+    public function removeImagene(EmbarcacionImagen $imagene)
     {
-        $this->imagenes->removeElement($imagen);
+        $this->imagenes->removeElement($imagene);
     }
 
     /**
      * Get imagenes
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getImagenes()
     {
