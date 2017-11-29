@@ -33,7 +33,19 @@ $(document).ready(function() {
         autoclose: true,
         startDate: "0d"
     });
-
+    $('.datepicker-solo').datepicker({
+        autoclose: true,
+        format: 'yyyy-mm-dd',
+        orientation: "bottom auto",
+    });
+    $('.editorwy').wysihtml5({
+        toolbar:{
+            "image": false,
+            "color": false,
+            "link": false,
+            "html": false,
+        }
+    });
 //---- seleccionar choice al recotizar------
     var diasestadiaprecio =  $('#de_precio').data('valor');
     var electricidadprecio = $('#e_precio').data('valor');
@@ -457,9 +469,9 @@ function recalculaSubtotalesYtotal() {
 
 function calculaSubtotales(cantidad,precio,tdsubtot,tdiva,tddesc,tdtot){
     var eslora = 0;
-        if($('#info-barco>#barcopies').data('valor')){
-            eslora = $('#info-barco>#barcopies').data('valor');
-        }
+    if ($('#de_eslora').data('valor')) {
+      eslora = $('#de_eslora').data('valor');
+    }
     var iva = ($('#valiva').data('valor'))/100;
     var descuento = $('#appbundle_marinahumedacotizacion_descuento').val();
     var subtotal = cantidad * precio * eslora;

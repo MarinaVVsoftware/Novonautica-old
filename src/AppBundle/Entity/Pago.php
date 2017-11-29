@@ -50,11 +50,36 @@ class Pago
     private $fecharegistro;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="estatuspago", type="smallint", nullable=true)
+     */
+    private $estatuspago;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecharealpago", type="datetime", nullable=true)
+     */
+    private $fecharealpago;
+
+    /**
      *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\MarinaHumedaCotizacion", inversedBy="pago")
      * @ORM\JoinColumn(name="idmhcotizacion", referencedColumnName="id")
      */
     private $mhcotizacion;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CuentaBancaria", inversedBy="pagos")
+     * @ORM\JoinColumn(name="idcuentabancaria", referencedColumnName="id",onDelete="CASCADE")
+     */
+    private $cuentabancaria;
+
+    public function __toString()
+    {
+      return $this->metodopago;
+    }
 
     /**
      * Get id
@@ -184,5 +209,61 @@ class Pago
     public function getMhcotizacion()
     {
         return $this->mhcotizacion;
+    }
+
+    /**
+     * @param int $estatuspago
+     */
+    public function setEstatuspago($estatuspago)
+    {
+        $this->estatuspago = $estatuspago;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEstatuspago()
+    {
+        return $this->estatuspago;
+    }
+
+    /**
+     * @param \DateTime $fecharealpago
+     */
+    public function setFecharealpago($fecharealpago)
+    {
+        $this->fecharealpago = $fecharealpago;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFecharealpago()
+    {
+        return $this->fecharealpago;
+    }
+
+    /**
+     * Set cuentabancaria
+     *
+     * @param \AppBundle\Entity\CuentaBancaria $cuentabancaria
+     *
+     * @return Pago
+     */
+    public function setCuentabancaria(\AppBundle\Entity\CuentaBancaria $cuentabancaria = null)
+    {
+        $this->cuentabancaria = $cuentabancaria;
+
+        return $this;
+    }
+
+    /**
+     * Get cuentabancaria
+     *
+     * @return \AppBundle\Entity\CuentaBancaria
+     */
+    public function getCuentabancaria()
+    {
+        return $this->cuentabancaria;
     }
 }

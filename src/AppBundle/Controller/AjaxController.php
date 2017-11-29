@@ -9,12 +9,16 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Barco;
+use AppBundle\Entity\Cliente;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
@@ -111,15 +115,6 @@ class AjaxController extends Controller
         {
             $encoders = array(new JsonEncoder());
             $normalizers = array(new ObjectNormalizer());
-
-//            $normalizer = new ObjectNormalizer();
-//            $normalizer->setCircularReferenceLimit(1);
-//            // Add Circular reference handler
-//            $normalizer->setCircularReferenceHandler(function ($object) {
-//                return $object->getId();
-//            });
-//            $normalizers = array($normalizer);
-
             $serializer = new Serializer($normalizers, $encoders);
 
             $em = $this->getDoctrine()->getManager();
@@ -135,7 +130,43 @@ class AjaxController extends Controller
         }
     }
 
+    /**
+     * @Route("/buscaclientetodo/{id}.{_format}", name="ajax_busca_cliente_todo", defaults={"_format"="JSON"})
+     * @Method({"GET"})
+     */
+    public function buscaClienteActionTodo(Request $request, Cliente $cliente)
+    {
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
 
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(1);
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $normalizer->setIgnoredAttributes(['barcos','monederomovimientos','mhcotizaciones','mhcotizacionesadicionales','astillerocotizaciones']);
+        $normalizers = [$normalizer];
+        $serializer = new Serializer($normalizers, $encoders);
+        return new Response($cliente = $serializer->serialize($cliente,$request->getRequestFormat()));
+    }
+
+    /**
+     * @Route("/buscabarcotodo/{id}.{_format}", name="ajax_busca_barco_todo", defaults={"_format"="JSON"})
+     * @Method({"GET"})
+     */
+    public function buscaBarcoActionTodo(Request $request, Barco $barco)
+    {
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(1);
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $normalizer->setIgnoredAttributes(['cliente','motores','mHcotizaciones','mhcotizacionesadicionales','astillerocotizaciones']);
+        $normalizers = [$normalizer];
+        $serializer = new Serializer($normalizers, $encoders);
+        return new Response($barco = $serializer->serialize($barco,$request->getRequestFormat()));
+    }
 
 }
 

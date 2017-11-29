@@ -66,7 +66,7 @@ class MarinaHumedaCotizacionType extends AbstractType
             ])
             ->add('mensaje',TextareaType::class,[
                 'label' => 'Mensaje en el correo:',
-                'attr' => ['rows' => 7],
+                'attr' => ['rows' => 7,'class' => 'editorwy'],
                 'required' => false,
             ])
             ->add('mhcservicios',CollectionType::class,[
@@ -147,16 +147,6 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('slip');
             }
         });
-
-//        $builder->addEventListener(
-//            FormEvents::PRE_SET_DATA,
-//            function (FormEvent $event) use ($formModifier) {
-//                // this would be your entity, i.e. SportMeetup
-//                $data = $event->getData();
-//
-//                $formModifier($event->getForm(), $data->getCliente());
-//            }
-//        );
 
         $builder->get('cliente')->addEventListener(
             FormEvents::POST_SUBMIT,

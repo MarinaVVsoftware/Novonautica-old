@@ -153,25 +153,9 @@
             <div class="content">
                 <table>
                     <tr>
-                        <td class="texto3 text-justify">
-                            <h4 class="texto2 letra-azul"><strong>Estimado, {{ marinaHumedaCotizacion.cliente }}.</strong></h4>
-                            <p>
-                               Por este medio nos gustaría entregarle la cotización solicitada de su embarcación
-                                <strong>"{{ marinaHumedaCotizacion.barco }}"</strong> con el servicio de
-                                <strong>slip</strong> por {{ marinaHumedaCotizacion.mhcservicios.0.cantidad }} días de estancia.
-                                <br>
-                            </p>
-                            <p>
-                                A continuación adjuntamos el documento PDF de la cotización. Una vez que evalue los
-                                servicios que ofrecemos puede proseguir con la autorización de tal servicio.
-                                <br>
-                            </p>
-                            <p>
-                                Al momento de dar click al botón de <strong>"Autorizar"</strong> dá por aceptada la cotización y
-                                continuaremos con el proceso de pago de tal servicio. En caso, de ser rechazado nos
-                                gustaría saber su opinión o comentarios.
-                                <br>
-                            </p>
+                        {#<td class="texto3 text-justify">#}
+                        <td>
+                         {{ marinaHumedaCotizacion.mensaje|raw }}
                         </td>
                     </tr>
                 </table>
