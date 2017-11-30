@@ -99,6 +99,9 @@
                 border-radius: 0px;
                 padding: 2px;
             }
+            #pagotarjeta,#pagotransferencia{
+                display: none;
+            }
         </style>
 {% endblock %}
 
@@ -142,13 +145,75 @@
                     {{ form_widget(form.metodopago) }}
                 </div>
             </div>
-            <div class="row pad-arriba-1">
-                <div class="col-sm-6">
-                    {{ form_errors(form.fechapago) }}
-                    {{ form_label(form.fechapago) }}<br>
-                    {{ form_widget(form.fechapago) }}
+
+            <div id="pagoefectivo">
+                <div class="row pad-arriba-1">
+                    <div class="col-sm-12">
+                        Un agente se comunicará con usted en la brevedad posible.
+                    </div>
                 </div>
             </div>
+
+            <div id="pagotransferencia">
+                <div class="row pad-arriba-1">
+                    <div class="col-sm-6">
+                        {{ form_errors(form.fechapago) }}
+                        {{ form_label(form.fechapago) }}<br>
+                        {{ form_widget(form.fechapago) }}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_errors(form.titular) }}
+                        {{ form_label(form.titular) }}<br>
+                        {{ form_widget(form.titular) }}
+                    </div>
+                </div>
+                <div class="row pad-arriba-1">
+                    <div class="col-sm-6">
+                        {{ form_errors(form.banco) }}
+                        {{ form_label(form.banco) }}<br>
+                        {{ form_widget(form.banco) }}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_errors(form.numcuenta) }}
+                        {{ form_label(form.numcuenta) }}<br>
+                        {{ form_widget(form.numcuenta) }}
+                    </div>
+                </div>
+                <div class="row pad-arriba-1">
+                    <div class="col-sm-6">
+                        {{ form_errors(form.clabe) }}
+                        {{ form_label(form.clabe) }}<br>
+                        {{ form_widget(form.clabe) }}
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Código de seguimiento</label><br>
+                        <input type="text" class="" value="{{ codigoseguimiento }}" readonly>
+                    </div>
+                </div>
+            </div>
+            <div id="pagotarjeta">
+                <div class="row pad-arriba-1">
+                    <div class="col-sm-6">
+                        <label>Titular de la tarjeta</label><br>
+                        <input type="text" class="">
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Número de la tarjeta</label><br>
+                        <input type="text" class="">
+                    </div>
+                </div>
+                <div class="row pad-arriba-1">
+                    <div class="col-sm-6">
+                        <label>Fecha de expiración</label><br>
+                        <input type="text" class="">
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Código de seguridad</label><br>
+                        <input type="text" class="">
+                    </div>
+                </div>
+            </div>
+
         <div class="row pad-arriba-1">
             <div class="col-sm-6">
                 <button type="submit" class="btn letra-blanca fondo-azul">Aceptar</button>
@@ -187,6 +252,28 @@
         $('.datepicker').datepicker({
             autoclose: true,
             format: 'yyyy-mm-dd',
+        });
+
+        $('#appbundle_pago_metodopago').change(function () {
+            var metodopago = $(this).val();
+            console.log(metodopago);
+            switch (metodopago){
+                case 'Efectivo':
+                    $('#pagoefectivo').show();
+                    $('#pagotarjeta').hide();
+                    $('#pagotransferencia').hide();
+                    break;
+                case 'Transferencia':
+                    $('#pagoefectivo').hide();
+                    $('#pagotarjeta').hide();
+                    $('#pagotransferencia').show();
+                    break;
+                case 'Tarjeta de crédito':
+                    $('#pagoefectivo').hide();
+                    $('#pagotarjeta').show();
+                    $('#pagotransferencia').hide();
+                    break;
+            }
         });
     </script>
 {% endblock %}

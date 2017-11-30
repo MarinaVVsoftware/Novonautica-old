@@ -40,6 +40,10 @@ class MarinaHumedaCotizacionAceptadaType extends AbstractType
                     'readonly' => true],
                 'format' => 'yyyy-MM-dd'
             ])
+            ->add('titular')
+            ->add('banco')
+            ->add('numcuenta')
+            ->add('clabe')
         ;
     }
 
