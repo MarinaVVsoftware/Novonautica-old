@@ -106,7 +106,7 @@ class SidebarController extends Controller
                 'path' => $this->generateUrl('ajustes_index'),
                 'submenu' => [
                     ['name' => 'Valores', 'path' => $this->generateUrl('ajustes_index')],
-                    ['name' => 'Cuenatas banco', 'path' => $this->generateUrl('cuenta-bancaria_index')],
+                    ['name' => 'Cuentas bancarias', 'path' => $this->generateUrl('cuenta-bancaria_index')],
                 ]
             ]
         ]);

@@ -6,10 +6,6 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cotización PDF</title>
-    <link rel="stylesheet"
-          type="text/css"
-          href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"
-    >
     <style type="text/css">
         @import url('https://fonts.googleapis.com/css?family=Montserrat');
         * {
@@ -57,10 +53,10 @@
             color:#ffffff;
         }
         .fondo-verde{
-            background: #7a9b4a;
+            background-color: #7a9b4a;
         }
         .fondo-naranja{
-            background: #e6670a;
+            background-color: #e6670a;
         }
         .fondo-azul{
             background: #458fce
@@ -121,16 +117,28 @@
         .espacio-pie{
             height: 100px;
         }
+        .btnverde{
+            padding: 5px 5px 5px 5px;
+            border-radius: 3px;
+            border: 1px solid #000000;
+            background: #7a9b4a;
+        }
+        .btnnaranja{
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #000000;
+            background: #e6670a;
+        }
     </style>
 </head>
 <body>
-<table class="head-wrap fondo-bicolor">
-    <tr>
-        <td valign="middle">
-            <img src="{{ absolute_url(asset('img/logo.png')) }}" class="img-responsive imagenlogo"/>
-        </td>
-    </tr>
-</table>
+{#<table class="head-wrap fondo-bicolor">#}
+    {#<tr>#}
+        {#<td valign="middle">#}
+            {#<img src="{{ absolute_url(asset('img/logo.png')) }}" class="img-responsive imagenlogo"/>#}
+        {#</td>#}
+    {#</tr>#}
+{#</table>#}
 <table class="body-wrap">
     <tr class="fondo-portada">
         <td></td>
@@ -139,7 +147,7 @@
                 <table>
                     <tr>
                         <td class="texto3">
-                            <h4 class="texto1 letra-blanca">LA MARINA MÁS GRANDE DEL CARIBE</h4>
+                            <h4 class="texto1">LA MARINA MÁS GRANDE DEL CARIBE</h4>
                         </td>
                     </tr>
                 </table>
@@ -170,11 +178,11 @@
                 <table>
                     <tr>
                         <td align="center">
-                            <a class="btn btn-opcion fondo-verde"
+                            <a class="btnverde"
                                href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ path('respuesta-cliente',{'token':tokenAcepta }) }}">Autorizar</a>
                         </td>
                         <td align="center">
-                            <a class="btn btn-opcion fondo-naranja"
+                            <a class="btnnaranja"
                                href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ path('respuesta-cliente',{'token':tokenRechaza }) }}">Rechazar</a>
                         </td>
                     </tr>
