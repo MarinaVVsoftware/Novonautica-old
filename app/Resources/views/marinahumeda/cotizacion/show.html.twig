@@ -124,7 +124,7 @@
                                             <tr>
                                                 <th>Estatus Pago</th>
                                                 <td>
-                                                    {% if marinaHumedaCotizacion.pago.estatuspago == 1 %}
+                                                    {% if marinaHumedaCotizacion.pago.estatuspago is defined and marinaHumedaCotizacion.pago.estatuspago == 1 %}
                                                         Pagado
                                                     {% else %}
                                                         No pagado

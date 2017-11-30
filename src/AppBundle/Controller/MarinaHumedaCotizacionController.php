@@ -7,6 +7,7 @@ use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Entity\MarinaHumedaServicio;
 use AppBundle\Entity\MarinaHumedaTarifa;
 use AppBundle\Entity\Pago;
+use AppBundle\Entity\SlipMovimiento;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Form\MarinaHumedaCotizacionAceptadaType;
 use AppBundle\Form\MarinaHumedaCotizacionRechazadaType;
@@ -595,6 +596,16 @@ class MarinaHumedaCotizacionController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            // Agrega un movimiento al slip
+            $slip = $marinaHumedaCotizacion->getSlip();
+            $movimiento = new SlipMovimiento();
+            $movimiento->setSlip($slip);
+            $movimiento->setEstatus(1);
+            $movimiento->setFechaLlegada($marinaHumedaCotizacion->getFechaLlegada());
+            $movimiento->setFechaSalida($marinaHumedaCotizacion->getFechaSalida());
+            $slip->addMovimiento($movimiento);
+
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
         }
