@@ -229,14 +229,30 @@ class MarinaHumedaCotizacionController extends Controller
      */
     public function displayMarinaPDF(MarinaHumedaCotizacion $mhc)
     {
-        $html = $this->renderView('marinahumeda/cotizacion/cotizacionpdf.html.twig', [
+        $html = $this->renderView('marinahumeda/cotizacion/pdf/cotizacionpdf.html.twig', [
             'title' => 'Cotizacion-'.$mhc->getFolio().'.pdf',
             'marinaHumedaCotizacion' => $mhc
         ]);
-
+       $header = $this->renderView('marinahumeda/cotizacion/pdf/pdfencabezado.twig', [
+           'marinaHumedaCotizacion' => $mhc
+       ]);
+        $footer = $this->renderView('marinahumeda/cotizacion/pdf/pdfpie.twig', [
+            'marinaHumedaCotizacion' => $mhc
+        ]);
+        $hojapdf = $this->get('knp_snappy.pdf');
+        $options = [
+            'margin-top'    => 23,
+            'margin-right'  => 0,
+            'margin-bottom' => 29,
+            'margin-left'   => 0,
+            'header-html' => utf8_decode($header),
+            'footer-html' => utf8_decode($footer)
+        ];
         return new PdfResponse(
-            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-            'Cotizacion-'.$mhc->getFolio().'-'.$mhc->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
+            $hojapdf->getOutputFromHtml($html,$options),
+            'Cotizacion-'.$mhc
+                            ->getFolio().'-'.$mhc
+                            ->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
         );
     }
 
@@ -252,18 +268,15 @@ class MarinaHumedaCotizacionController extends Controller
      */
     public function repuestaCliente(Request $request, $token)
     {
-
+        $codigoSeguimiento = 0;
         $em = $this->getDoctrine()->getManager();
 
         $cotizacionAceptar = $em->getRepository(MarinaHumedaCotizacion::class)
             ->findOneBy(['tokenacepta'=>$token]);
-
         if($cotizacionAceptar){
+            $valorSistema = new ValorSistema();
 //            if($cotizacionAceptar->getValidacliente() == 0){
 
-                $cotizacionAceptar->setValidacliente(2);
-                $em->persist($cotizacionAceptar);
-                $em->flush();
 
                 if($cotizacionAceptar->getFoliorecotiza()==0){
                     $folio = $cotizacionAceptar->getFolio();
@@ -271,17 +284,25 @@ class MarinaHumedaCotizacionController extends Controller
                     $folio = $cotizacionAceptar->getFolio().'-'.$cotizacionAceptar->getFoliorecotiza();
                 }
 
+            $codigoSeguimiento = $folio.'-'.$valorSistema->generaToken(10);
+
+            $cotizacionAceptar
+                ->setValidacliente(2);
+
+
+            $em->persist($cotizacionAceptar);
+            $em->flush();
+
                 $mensaje1 = '¡Enhorabuena!';
                 $mensaje2 = 'La cotización '.$folio.' ha sido aprobada.';
                 $mensaje3 = 'Para seguir adelante con su servicio es requerido el pago de los servicios que serán proporcionados. A continuación seleccione un método de pago.';
                 $suformulario = 1;
             $pago = new Pago();
-            $pago->setMhcotizacion($cotizacionAceptar);
+            $pago->setMhcotizacion($cotizacionAceptar)->setCodigoseguimiento($codigoSeguimiento);
 
             $editForm = $this->createForm(MarinaHumedaCotizacionAceptadaType::class, $pago);
             $editForm ->handleRequest($request);
             if ($editForm->isSubmitted() && $editForm->isValid()) {
-
                 $fechaHoraActual = new \DateTime('now');
                 $pago->setFecharegistro($fechaHoraActual);
                 $em->persist($pago);
@@ -334,6 +355,7 @@ class MarinaHumedaCotizacionController extends Controller
             'mensaje2' => $mensaje2,
             'mensaje3' => $mensaje3,
             'suformulario' => $suformulario,
+            'codigoseguimiento' => $codigoSeguimiento,
             'form' => $editForm->createView()
         ]);
 
