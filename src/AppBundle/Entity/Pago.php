@@ -38,6 +38,41 @@ class Pago
     /**
      * @var string
      *
+     * @ORM\Column(name="titular", type="string", length=255, nullable=true)
+     */
+    private $titular;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="banco", type="string", length=255, nullable=true)
+     */
+    private $banco;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="numcuenta", type="string", length=255, nullable=true)
+     */
+    private $numcuenta;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="clabe", type="string", length=255, nullable=true)
+     */
+    private $clabe;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigoseguimiento", type="string", length=255, nullable=true)
+     */
+    private $codigoseguimiento;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="token", type="string", length=255, nullable=true)
      */
     private $token;
@@ -265,5 +300,85 @@ class Pago
     public function getCuentabancaria()
     {
         return $this->cuentabancaria;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitular()
+    {
+        return $this->titular;
+    }
+
+    /**
+     * @param string $titular
+     */
+    public function setTitular($titular)
+    {
+        $this->titular = $titular;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBanco()
+    {
+        return $this->banco;
+    }
+
+    /**
+     * @param string $banco
+     */
+    public function setBanco($banco)
+    {
+        $this->banco = $banco;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNumcuenta()
+    {
+        return $this->numcuenta;
+    }
+
+    /**
+     * @param string $numcuenta
+     */
+    public function setNumcuenta($numcuenta)
+    {
+        $this->numcuenta = $numcuenta;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClabe()
+    {
+        return $this->clabe;
+    }
+
+    /**
+     * @param string $clabe
+     */
+    public function setClabe($clabe)
+    {
+        $this->clabe = $clabe;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCodigoseguimiento()
+    {
+        return $this->codigoseguimiento;
+    }
+
+    /**
+     * @param string $codigoseguimiento
+     */
+    public function setCodigoseguimiento($codigoseguimiento)
+    {
+        $this->codigoseguimiento = $codigoseguimiento;
     }
 }

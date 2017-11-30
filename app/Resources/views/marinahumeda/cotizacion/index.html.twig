@@ -36,7 +36,7 @@
                             <tbody>
                             {% for marinaHumedaCotizacion in marinaHumedaCotizacions|sort|reverse %}
                                 <tr>
-                                    <td>
+                                    <td>{{ marinaHumedaCotizacion.id }}-
                                         {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
                                             {{ marinaHumedaCotizacion.folio }}
                                         {% else %}
