@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,25 +37,27 @@ class Slip
     private $pies;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="estatus", type="smallint", nullable=true)
-     */
-    private $estatus;
-
-    /**
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaCotizacion", mappedBy="slip")
      */
     private $mhcotizaciones;
 
     /**
+     * @var SlipMovimiento
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\SlipMovimiento", mappedBy="slip", cascade={"persist", "remove"})
+     */
+    private $movimientos;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->mhcotizaciones = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->mhcotizaciones = new ArrayCollection();
+        $this->movimientos = new ArrayCollection();
     }
+
     public function __toString()
     {
         return 'Num: '.$this->num.' - '.$this->pies.' fts';
@@ -118,38 +121,13 @@ class Slip
     }
 
     /**
-     * Set estatus
-     *
-     * @param integer $estatus
-     *
-     * @return Slip
-     */
-    public function setEstatus($estatus)
-    {
-        $this->estatus = $estatus;
-
-        return $this;
-    }
-
-    /**
-     * Get estatus
-     *
-     * @return int
-     */
-    public function getEstatus()
-    {
-        return $this->estatus;
-    }
-
-
-    /**
      * Add mhcotizacione
      *
-     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+     * @param MarinaHumedaCotizacion $mhcotizacione
      *
      * @return Slip
      */
-    public function addMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+    public function addMhcotizacione(MarinaHumedaCotizacion $mhcotizacione)
     {
         $this->mhcotizaciones[] = $mhcotizacione;
 
@@ -159,9 +137,9 @@ class Slip
     /**
      * Remove mhcotizacione
      *
-     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+     * @param MarinaHumedaCotizacion $mhcotizacione
      */
-    public function removeMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+    public function removeMhcotizacione(MarinaHumedaCotizacion $mhcotizacione)
     {
         $this->mhcotizaciones->removeElement($mhcotizacione);
     }
@@ -174,5 +152,39 @@ class Slip
     public function getMhcotizaciones()
     {
         return $this->mhcotizaciones;
+    }
+
+    /**
+     * Add movimiento
+     *
+     * @param SlipMovimiento $movimiento
+     *
+     * @return Slip
+     */
+    public function addMovimiento(SlipMovimiento $movimiento)
+    {
+        $this->movimientos[] = $movimiento;
+
+        return $this;
+    }
+
+    /**
+     * Remove movimiento
+     *
+     * @param SlipMovimiento $movimiento
+     */
+    public function removeMovimiento(SlipMovimiento $movimiento)
+    {
+        $this->movimientos->removeElement($movimiento);
+    }
+
+    /**
+     * Get movimientos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMovimientos()
+    {
+        return $this->movimientos;
     }
 }

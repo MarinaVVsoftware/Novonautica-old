@@ -12,140 +12,115 @@
     >
     <style type="text/css">
         @import url('https://fonts.googleapis.com/css?family=Montserrat');
+
         * {
             margin: 0;
             padding: 0;
         }
+
         * {
             font-family: 'Montserrat', sans-serif;
         }
-        body{
+
+        body {
             color: #666666;
             width: 100% !important;
             height: 100%;
             font-size: 16px;
         }
 
-        .texto1{
+        .texto1 {
             font-size: 20px;
         }
-        .texto2{
+
+        .texto2 {
             font-size: 14px;
         }
-        .letra-blanca{
-            color:#ffffff;
+
+        .letra-blanca {
+            color: #ffffff;
         }
-        .fondo-gris{
+
+        .fondo-gris {
             background: #d4d4d4;
         }
-        .fondo-blanco{
+
+        .fondo-blanco {
             background: #ffffff;
         }
-        .fondo-azul{
+
+        .fondo-azul {
             background: #458fce
         }
-        .fondo-bicolor-arriba{
-            background: url("{{ absolute_url(asset('img/imagencorreo-02.jpg')) }}") no-repeat;
-            background-size: cover;
-        }
-        .fondo-bicolor-abajo{
+
+
+
+        .fondo-bicolor-abajo {
             background: url("{{ absolute_url(asset('img/cotizacion-02.jpg')) }}") no-repeat;
             background-size: cover;
         }
-        .pad-izq-0{
+
+        .pad-izq-0 {
             padding-left: 0px;
         }
-        .pad-der-0{
+
+        .pad-der-0 {
             padding-right: 0px;
         }
-        .imagenlogo{
-            min-width: 200px;
-            padding: 10px;
-        }
-        .bordeempresa{
+
+
+
+        .bordeempresa {
             border: 1px solid #000000;
         }
-        .fila-titulo{
+
+        .fila-titulo {
             padding-top: 10px;
             padding-bottom: 10px;
         }
-        .pie{
+
+        .pie {
             height: 100px;
         }
-        .cuadro-terminos{
+
+        .cuadro-terminos {
             border: 1px solid #458fce;
         }
-        .pad-arriba-1{
+
+        .pad-arriba-1 {
             padding-top: 20px;
         }
-        .pad-abajo-1{
+
+        .pad-abajo-1 {
             padding-bottom: 20px;
         }
-        .pad-arriba-2{
+
+        .pad-arriba-2 {
             padding-top: 15px;
         }
     </style>
 </head>
 <body>
 <div class="container-fluid">
-    <div class="row fondo-bicolor-arriba">
-        <div class="col-xs-3 ">
-            <img src="{{ absolute_url(asset('img/logo.png') ) }}" class="img-responsive imagenlogo">
-        </div>
-        <div class="col-xs-8 text-right letra-blanca">
-            <p class="texto1"><strong>Cotización</strong></p>
-            <p>Folio:
-                {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
-                    {{ marinaHumedaCotizacion.folio }}
-                {% else %}
-                    {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
-                {% endif %}
-                <br>
-                Fecha: {{ marinaHumedaCotizacion.fecharegistro|date('d-m-Y') }}
-                <br>
-                Moneda: USD (US Dollar)
-            </p>
+    <div class="row">
+        <div class="col-xs-12 text-center fila-titulo">
+            <h4><strong>Información del Cliente</strong></h4>
         </div>
     </div>
-    <div class="row fondo-gris">
-        <div class="col-xs-7 fondo-blanco">
-            <div class="row">
-                <div class="col-xs-12 text-center fila-titulo">
-                    <h4><strong>Información de la Empresa</strong></h4>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-6">
-                    <img src="{{ absolute_url(asset('img/cotizacion-03.png') ) }}" class="img-responsive imagenlogo bordeempresa">
-                </div>
-                <div class="col-xs-6">
-                    <p>
-                        <strong>MARINA  V&V</strong><br>
-                        Calle Vialidad Paseo Mujeres<br>
-                        Mza 1 L-1<br>
-                        Isla Mujeres. Quintana Roo.<br>
-                        C.P. 77400<br>
-                        (999)-000-0000<br>
-                        info@tucompañia.com
-                    </p>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <p><strong>Nombre: </strong>{{ marinaHumedaCotizacion.cliente }}</p>
+            <p><strong>Embarcación: </strong>{{ marinaHumedaCotizacion.barco }}</p>
+            <p><strong>Eslora: </strong>{{ marinaHumedaCotizacion.barco.eslora }} fts</p>
         </div>
-        <div class="col-xs-5">
-            <div class="row">
-                <div class="col-xs-12 text-center fila-titulo">
-                    <h4><strong>Información del Cliente</strong></h4>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <p><strong>Nombre: </strong>{{ marinaHumedaCotizacion.cliente }}</p>
-                    <p><strong>Embarcación: </strong>{{ marinaHumedaCotizacion.barco }}</p>
-                    <p><strong>Eslora: </strong>{{ marinaHumedaCotizacion.barco.eslora }} fts</p>
-                    <p><strong>Fecha Llegada: </strong>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</p>
-                    <p><strong>Fecha Salida: </strong>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</p>
-                </div>
-            </div>
+
+        <div class="col-xs-6">
+            <p><strong>Fecha
+                    Llegada: </strong>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}
+            </p>
+            <p><strong>Fecha
+                    Salida: </strong>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}{% endif %}
+            </p>
         </div>
     </div>
     <div class="row fondo-azul letra-blanca">
@@ -165,13 +140,13 @@
                     <th>Sub-Total</th>
                     <th>IVA</th>
                     {% if marinaHumedaCotizacion.descuento > 0 %}
-                    <th>Descuento</th>
+                        <th>Descuento</th>
                     {% endif %}
                     <th>Total</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for mhservicio in marinaHumedaCotizacion.mhcservicios  %}
+                {% for mhservicio in marinaHumedaCotizacion.mhcservicios %}
                     {% if mhservicio.estatus %}
                         <tr>
                             <td>{{ mhservicio.cantidad }}</td>
@@ -181,7 +156,7 @@
                             <td>$ {{ mhservicio.subtotal|number_format(2,'.',',') }}</td>
                             <td>$ {{ mhservicio.iva|number_format(2,'.',',') }}</td>
                             {% if marinaHumedaCotizacion.descuento > 0 %}
-                            <td>$ {{ mhservicio.descuento|number_format(2,'.',',') }}</td>
+                                <td>$ {{ mhservicio.descuento|number_format(2,'.',',') }}</td>
                             {% endif %}
                             <td>$ {{ mhservicio.total|number_format(2,'.',',') }}</td>
                         </tr>
@@ -198,15 +173,17 @@
     </div>
     <div class="row">
         <div class="col-xs-5 col-xs-offset-7 text-right">
-            <p><strong>{{ marinaHumedaCotizacion.iva }}%  IVA:</strong> ${{ marinaHumedaCotizacion.ivatotal|number_format(2,'.',',') }} USD</p>
+            <p><strong>{{ marinaHumedaCotizacion.iva }}% IVA:</strong>
+                ${{ marinaHumedaCotizacion.ivatotal|number_format(2,'.',',') }} USD</p>
         </div>
     </div>
     {% if marinaHumedaCotizacion.descuento > 0 %}
-    <div class="row">
-        <div class="col-xs-5 col-xs-offset-7 text-right">
-            <p><strong>Descuento:</strong> ${{ marinaHumedaCotizacion.descuentototal|number_format(2,'.',',') }} USD</p>
+        <div class="row">
+            <div class="col-xs-5 col-xs-offset-7 text-right">
+                <p><strong>Descuento:</strong> ${{ marinaHumedaCotizacion.descuentototal|number_format(2,'.',',') }} USD
+                </p>
+            </div>
         </div>
-    </div>
     {% endif %}
     <div class="row">
         <div class="col-xs-5 col-xs-offset-7 text-right fondo-gris">
@@ -230,23 +207,25 @@
                     <th>Sub-Total</th>
                     <th>IVA</th>
                     {% if marinaHumedaCotizacion.descuento > 0 %}
-                    <th>Descuento</th>
+                        <th>Descuento</th>
                     {% endif %}
                     <th>Total</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for mhservicio in marinaHumedaCotizacion.mhcservicios  %}
+                {% for mhservicio in marinaHumedaCotizacion.mhcservicios %}
                     {% if mhservicio.estatus %}
                         <tr>
                             <td>{{ mhservicio.cantidad }}</td>
                             <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
                             <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
                             <td>$ {{ (mhservicio.precio * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
-                            <td>$ {{ (mhservicio.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
+                            <td>
+                                $ {{ (mhservicio.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                             <td>$ {{ (mhservicio.iva * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                             {% if marinaHumedaCotizacion.descuento > 0 %}
-                            <td>$ {{ (mhservicio.descuento * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
+                                <td>
+                                    $ {{ (mhservicio.descuento * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                             {% endif %}
                             <td>$ {{ (mhservicio.total * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                         </tr>
@@ -258,24 +237,30 @@
     </div>
     <div class="row">
         <div class="col-xs-5 col-xs-offset-7 text-right">
-            <p><strong>Sub-Total:</strong> ${{ (marinaHumedaCotizacion.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }} MXN</p>
+            <p><strong>Sub-Total:</strong>
+                ${{ (marinaHumedaCotizacion.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }} MXN</p>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-5 col-xs-offset-7 text-right">
-            <p><strong>{{ marinaHumedaCotizacion.iva }}%  IVA:</strong> ${{ (marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }} MXN</p>
+            <p><strong>{{ marinaHumedaCotizacion.iva }}% IVA:</strong>
+                ${{ (marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }} MXN</p>
         </div>
     </div>
     {% if marinaHumedaCotizacion.descuento > 0 %}
-    <div class="row">
-        <div class="col-xs-5 col-xs-offset-7 text-right">
-            <p><strong>Descuento:</strong> ${{ (marinaHumedaCotizacion.descuentototal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }} MXN</p>
+        <div class="row">
+            <div class="col-xs-5 col-xs-offset-7 text-right">
+                <p><strong>Descuento:</strong>
+                    ${{ (marinaHumedaCotizacion.descuentototal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}
+                    MXN</p>
+            </div>
         </div>
-    </div>
     {% endif %}
     <div class="row">
         <div class="col-xs-5 col-xs-offset-7 text-right fondo-gris">
-            <p><strong>Total: ${{ (marinaHumedaCotizacion.total * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }} MXN</strong></p>
+            <p><strong>Total:
+                    ${{ (marinaHumedaCotizacion.total * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}
+                    MXN</strong></p>
         </div>
     </div>
     <div class="row pad-arriba-1">
@@ -298,10 +283,7 @@
         </div>
     </div>
 
-    <div class="row pie fondo-bicolor-abajo">
-        <div class="col-xs-12">
-        </div>
-    </div>
+
 </div>
 </body>
 

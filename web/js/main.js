@@ -43,7 +43,7 @@ $(document).ready(function() {
             "image": false,
             "color": false,
             "link": false,
-            "html": false,
+            "html": true,
         }
     });
 //---- seleccionar choice al recotizar------
