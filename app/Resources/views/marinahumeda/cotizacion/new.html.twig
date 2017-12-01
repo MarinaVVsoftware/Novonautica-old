@@ -53,14 +53,22 @@
 
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
-                                    {{ form_errors(form.barco) }}
-                                    <div class="radio buscabarcomh">
-                                        {{ form_label(form.barco) }}
-                                        {{ form_widget(form.barco) }}
+                                <div class="col-sm-9">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            {{ form_errors(form.barco) }}
+                                            <div class="radio buscabarcomh">
+                                                {{ form_label(form.barco) }}
+                                                {{ form_widget(form.barco) }}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div id="info-barco">
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <div id="info-barco">
 
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +94,7 @@
                                     <label>Descuento(%)</label>
                                     {{ form_widget(form.descuento,{'value':0}) }}
                                     <label>Dolar</label>
-                                    {{ form_widget(form.dolar,{'value':valdolar}) }}
+                                    {{ form_widget(form.dolar,{'value':(valdolar/100)}) }}
                                     <label>Slip</label>
                                     {{ form_widget(form.slip) }}
                                 </div>
@@ -116,7 +124,7 @@
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="" class="valdolar">{{ valdolar }} MXN</div>
+                                    <div id="" class="valdolar">{{ (valdolar/100)|number_format(2) }} MXN</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -239,7 +247,7 @@
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="" class="valdolar">{{ valdolar }} MXN</div>
+                                    <div id="" class="valdolar">{{ (valdolar/100)|number_format(2) }} MXN</div>
                                 </div>
                             </div>
                             <div class="row">

@@ -1,20 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Luiz
- * Date: 28/11/2017
- * Time: 12:25 PM
- */
 
 namespace AppBundle\Form;
 
-
+//use Doctrine\DBAL\Types\DateType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PagoType extends AbstractType
 {
@@ -24,28 +19,50 @@ class PagoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('estatuspago', ChoiceType::class,[
-                'choices' =>[ 'Pagado' => 1, 'No Pagado' => 0 ],
-                'expanded' => true,
-                'multiple' => false,
-                'label' => ' ',
-
+            ->add('metodopago',ChoiceType::class,[
+                'choices'  => [
+                    'Efectivo' => 'Efectivo',
+                    'Transferencia' => 'Transferencia',
+                    'Tarjeta de crédito' => 'Tarjeta de crédito'
+                    ],
+                'label' => 'Método de pago',
+                'required' => false
+            ])
+            ->add('cantidad',MoneyType::class,[
+                'label' => 'Pago',
+                'required' => false,
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
+                'attr' => ['class' => 'esdecimal']
             ])
             ->add('fecharealpago',DateType::class,[
-                'label' => 'Fecha real del pago',
+                'label' => 'Fecha de pago',
                 'widget' => 'single_text',
                 'html5' => false,
                 'attr' => ['class' => 'datepicker-solo input-calendario',
                     'readonly' => true],
                 'format' => 'yyyy-MM-dd'
             ])
-            ->add('cuentabancaria',EntityType::class,[
-                'class' => 'AppBundle:CuentaBancaria',
-                'label' => 'Cuenta Bancaria',
-                'placeholder' => 'Seleccionar...',
+            ->add('dolar',MoneyType::class,[
+                'label' => 'Valor del dolar',
+                'required' => false,
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
+                'attr' => ['class' => 'esdecimal']
             ])
+//            ->add('fechalimitepago')
+//            ->add('titular')
+//            ->add('banco')
+//            ->add('numcuenta')
+//            ->add('codigoseguimiento')
+//            ->add('fecharealpago')
+//            ->add('mhcotizacion')
+//            ->add('cuentabancaria')
         ;
     }
+    
     /**
      * {@inheritdoc}
      */
@@ -63,4 +80,6 @@ class PagoType extends AbstractType
     {
         return 'appbundle_pago';
     }
+
+
 }

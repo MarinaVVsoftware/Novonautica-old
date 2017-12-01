@@ -260,7 +260,7 @@
                                                 <td>$ {{ cotizacion.descuentototal|number_format(2,'.',',') }}</td>
                                                 <td>$ {{ cotizacion.total|number_format(2,'.',',') }}</td>
                                                 <td>
-                                                    {% if cotizacion.pago.estatuspago == 1 %}
+                                                    {% if cotizacion.pago.estatuspago is defined and cotizacion.pago.estatuspago == 1 %}
                                                         <img src="{{ asset('img/status-aprobado-icon.svg') }}"
                                                              class="center-block" data-toggle="tooltip" data-placement="left" title="Pagado">
                                                     {% else %}

@@ -132,94 +132,18 @@
             <div class="col-sm-12">
                 <p class="letra-azul"><strong>{{ mensaje1 }}</strong></p>
                 <p><strong>{{ mensaje2 }}</strong></p>
-                <p>{{ mensaje3 }}</p>
+                {% if mensaje3 is defined %}
+                    <p>{{ mensaje3 }}</p>
+                {% endif %}
+                {% if suformulario == 1 %}
+                <p>El tipo de cambio del dolar en la cotización tiene una vigencia de {{ diasHabiles }} días hábiles</p>
+                {% endif %}
             </div>
         </div>
-        {% form_theme form 'estructura/temaerror.html.twig' %}
-        {{ form_start(form) }}
-        {% if suformulario == 1 %}
-            <div class="row pad-arriba-1">
-                <div class="col-sm-6">
-                    {{ form_errors(form.metodopago) }}
-                    {{ form_label(form.metodopago) }}<br>
-                    {{ form_widget(form.metodopago) }}
-                </div>
-            </div>
 
-            <div id="pagoefectivo">
-                <div class="row pad-arriba-1">
-                    <div class="col-sm-12">
-                        Un agente se comunicará con usted en la brevedad posible.
-                    </div>
-                </div>
-            </div>
-
-            <div id="pagotransferencia">
-                <div class="row pad-arriba-1">
-                    <div class="col-sm-6">
-                        {{ form_errors(form.fechapago) }}
-                        {{ form_label(form.fechapago) }}<br>
-                        {{ form_widget(form.fechapago) }}
-                    </div>
-                    <div class="col-sm-6">
-                        {{ form_errors(form.titular) }}
-                        {{ form_label(form.titular) }}<br>
-                        {{ form_widget(form.titular) }}
-                    </div>
-                </div>
-                <div class="row pad-arriba-1">
-                    <div class="col-sm-6">
-                        {{ form_errors(form.banco) }}
-                        {{ form_label(form.banco) }}<br>
-                        {{ form_widget(form.banco) }}
-                    </div>
-                    <div class="col-sm-6">
-                        {{ form_errors(form.numcuenta) }}
-                        {{ form_label(form.numcuenta) }}<br>
-                        {{ form_widget(form.numcuenta) }}
-                    </div>
-                </div>
-                <div class="row pad-arriba-1">
-                    <div class="col-sm-6">
-                        {{ form_errors(form.clabe) }}
-                        {{ form_label(form.clabe) }}<br>
-                        {{ form_widget(form.clabe) }}
-                    </div>
-                    <div class="col-sm-6">
-                        <label>Código de seguimiento</label><br>
-                        <input type="text" class="" value="{{ codigoseguimiento }}" readonly>
-                    </div>
-                </div>
-            </div>
-            <div id="pagotarjeta">
-                <div class="row pad-arriba-1">
-                    <div class="col-sm-6">
-                        <label>Titular de la tarjeta</label><br>
-                        <input type="text" class="">
-                    </div>
-                    <div class="col-sm-6">
-                        <label>Número de la tarjeta</label><br>
-                        <input type="text" class="">
-                    </div>
-                </div>
-                <div class="row pad-arriba-1">
-                    <div class="col-sm-6">
-                        <label>Fecha de expiración</label><br>
-                        <input type="text" class="">
-                    </div>
-                    <div class="col-sm-6">
-                        <label>Código de seguridad</label><br>
-                        <input type="text" class="">
-                    </div>
-                </div>
-            </div>
-
-        <div class="row pad-arriba-1">
-            <div class="col-sm-6">
-                <button type="submit" class="btn letra-blanca fondo-azul">Aceptar</button>
-            </div>
-        </div>
-        {% elseif suformulario == 2 %}
+        {% if suformulario == 2 %}
+            {% form_theme form 'estructura/temaerror.html.twig' %}
+            {{ form_start(form) }}
             <div class="row pad-arriba-1">
                 <div class="col-sm-6">
                     {{ form_errors(form.notascliente) }}
@@ -236,8 +160,100 @@
                     <button type="submit" class="btn letra-blanca fondo-azul">Enviar</button>
                 </div>
             </div>
+            {{ form_end(form) }}
+        {% elseif suformulario == 1 %}
+            <div class="row pad-arriba-1">
+                <div class="col-sm-6">
+                    <label>Cuentas de depósito</label>
+                    {% for cb in cuentaBancaria %}
+                        <pre>{{ cb.banco }} {{ cb.clabe }}</pre>
+                    {% endfor %}
+                </div>
+                <div class="col-sm-6">
+                    <label>Código de seguimiento</label><br>
+                    <input type="text" class="" value="{{ codigoSeguimiento }}" readonly>
+                </div>
+            </div>
         {% endif %}
-        {{ form_end(form) }}
+        {#{% elseif suformulario == 1 %}#}
+            {#<div class="row pad-arriba-1">#}
+                {#<div class="col-sm-6">#}
+                    {#{{ form_errors(form.metodopago) }}#}
+                    {#{{ form_label(form.metodopago) }}<br>#}
+                    {#{{ form_widget(form.metodopago) }}#}
+                {#</div>#}
+            {#</div>#}
+
+            {#<div id="pagoefectivo">#}
+                {#<div class="row pad-arriba-1">#}
+                    {#<div class="col-sm-12">#}
+                        {#Un agente se comunicará con usted en la brevedad posible.#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
+
+            {#<div id="pagotransferencia">#}
+                {#<div class="row pad-arriba-1">#}
+                    {#<div class="col-sm-6">#}
+                        {#{{ form_errors(form.titular) }}#}
+                        {#{{ form_label(form.titular) }}<br>#}
+                        {#{{ form_widget(form.titular) }}#}
+                    {#</div>#}
+                    {#<div class="col-sm-6">#}
+                        {#{{ form_errors(form.banco) }}#}
+                        {#{{ form_label(form.banco) }}<br>#}
+                        {#{{ form_widget(form.banco) }}#}
+                    {#</div>#}
+                {#</div>#}
+                {#<div class="row pad-arriba-1">#}
+
+                    {#<div class="col-sm-6">#}
+                        {#{{ form_errors(form.numcuenta) }}#}
+                        {#<label>Últimos 4 dígitos de su número de cuenta</label><br>#}
+                        {#{{ form_widget(form.numcuenta) }}#}
+                    {#</div>#}
+                {#</div>#}
+                {#<div class="row pad-arriba-1">#}
+                    {#<div class="col-sm-6">#}
+                        {#<label>Cuentas de depósito</label>#}
+                        {#{% for cb in cuentaBancaria %}#}
+                            {#<pre>{{ cb.banco }} {{ cb.clabe }}</pre>#}
+                        {#{% endfor %}#}
+                    {#</div>#}
+                    {#<div class="col-sm-6">#}
+                        {#<label>Código de seguimiento</label><br>#}
+                        {#<input type="text" class="" value="{{ codigoseguimiento }}" readonly>#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
+            {#<div id="pagotarjeta">#}
+                {#<div class="row pad-arriba-1">#}
+                    {#<div class="col-sm-6">#}
+                        {#<label>Titular de la tarjeta</label><br>#}
+                        {#<input type="text" class="">#}
+                    {#</div>#}
+                    {#<div class="col-sm-6">#}
+                        {#<label>Número de la tarjeta</label><br>#}
+                        {#<input type="text" class="">#}
+                    {#</div>#}
+                {#</div>#}
+                {#<div class="row pad-arriba-1">#}
+                    {#<div class="col-sm-6">#}
+                        {#<label>Fecha de expiración</label><br>#}
+                        {#<input type="text" class="">#}
+                    {#</div>#}
+                    {#<div class="col-sm-6">#}
+                        {#<label>Código de seguridad</label><br>#}
+                        {#<input type="text" class="">#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
+
+            {#<div class="row pad-arriba-1">#}
+                {#<div class="col-sm-6">#}
+                    {#<button type="submit" class="btn letra-blanca fondo-azul">Aceptar</button>#}
+                {#</div>#}
+            {#</div>#}
     </div>
 {% endblock %}
 
@@ -256,7 +272,6 @@
 
         $('#appbundle_pago_metodopago').change(function () {
             var metodopago = $(this).val();
-            console.log(metodopago);
             switch (metodopago){
                 case 'Efectivo':
                     $('#pagoefectivo').show();

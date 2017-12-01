@@ -23,39 +23,42 @@ class ValorSistema
     private $id;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="nombre", type="string", length=255)
+     * @ORM\Column(name="dolar", type="integer")
      */
-    private $nombre;
+    private $dolar;
 
     /**
      * @var float
      * @Assert\NotBlank(
-     *     message="El valor no puede quedar vacío"
-     * )
-     * @Assert\Type(
-     *     type="float",
-     *     message="El valor {{ value }} no es válido"
+     *     message="El iva no puede quedar vacío"
      * )
      *
-     * @ORM\Column(name="valor", type="float")
+     * @ORM\Column(name="iva", type="float")
      */
-    private $valor;
+    private $iva;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="folio_marina", type="bigint")
+     */
+    private $folioMarina;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="unidad", type="string", length=255)
+     * @ORM\Column(name="mensaje_correo_marina", type="text")
      */
-    private $unidad;
+    private $mensajeCorreoMarina;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="descripcion", type="text", nullable=true)
+     * @ORM\Column(name="dias_habiles_marina_cotizacion", type="integer")
      */
-    private $descripcion;
+    private $diasHabilesMarinaCotizacion;
 
     /**
      * Generate a token
@@ -86,90 +89,84 @@ class ValorSistema
     }
 
     /**
-     * Set nombre
-     *
-     * @param string $nombre
-     *
-     * @return ValorSistema
-     */
-    public function setNombre($nombre)
-    {
-        $this->nombre = $nombre;
-
-        return $this;
-    }
-
-    /**
-     * Get nombre
-     *
      * @return string
      */
-    public function getNombre()
+    public function getMensajeCorreoMarina()
     {
-        return $this->nombre;
+        return $this->mensajeCorreoMarina;
     }
 
     /**
-     * Set valor
-     *
-     * @param float $valor
-     *
-     * @return ValorSistema
+     * @param string $mensajeCorreoMarina
      */
-    public function setValor($valor)
+    public function setMensajeCorreoMarina($mensajeCorreoMarina)
     {
-        $this->valor = $valor;
-
-        return $this;
+        $this->mensajeCorreoMarina = $mensajeCorreoMarina;
     }
 
     /**
-     * Get valor
-     *
+     * @return int
+     */
+    public function getDolar()
+    {
+        return $this->dolar;
+    }
+
+    /**
+     * @param int $dolar
+     */
+    public function setDolar($dolar)
+    {
+        $this->dolar = $dolar;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFolioMarina()
+    {
+        return $this->folioMarina;
+    }
+
+    /**
+     * @param int $folioMarina
+     */
+    public function setFolioMarina($folioMarina)
+    {
+        $this->folioMarina = $folioMarina;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDiasHabilesMarinaCotizacion()
+    {
+        return $this->diasHabilesMarinaCotizacion;
+    }
+
+    /**
+     * @param int $diasHabilesMarinaCotizacion
+     */
+    public function setDiasHabilesMarinaCotizacion($diasHabilesMarinaCotizacion)
+    {
+        $this->diasHabilesMarinaCotizacion = $diasHabilesMarinaCotizacion;
+    }
+
+    /**
      * @return float
      */
-    public function getValor()
+    public function getIva()
     {
-        return $this->valor;
+        return $this->iva;
     }
 
     /**
-     * Set unidad
-     *
-     * @param string $unidad
-     *
-     * @return ValorSistema
+     * @param float $iva
      */
-    public function setUnidad($unidad)
+    public function setIva($iva)
     {
-        $this->unidad = $unidad;
-
-        return $this;
+        $this->iva = $iva;
     }
 
-    /**
-     * Get unidad
-     *
-     * @return string
-     */
-    public function getUnidad()
-    {
-        return $this->unidad;
-    }
 
-    /**
-     * @return string
-     */
-    public function getDescripcion()
-    {
-        return $this->descripcion;
-    }
-
-    /**
-     * @param string $descripcion
-     */
-    public function setDescripcion($descripcion)
-    {
-        $this->descripcion = $descripcion;
-    }
 }

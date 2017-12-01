@@ -1,0 +1,128 @@
+{% extends 'estructura/plantilla.twig' %}
+{% block title %}
+  Registrar pagos
+{% endblock %}
+{% block contwrapper %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="panel panel-novo">
+            <div class="panel-heading">
+                <di class="row">
+                    <div class="col-sm-6">
+                        <h3 class="panel-title">Registrar Pago</h3>
+                        <span>
+                            {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
+                                {{ marinaHumedaCotizacion.folio }}
+                            {% else %}
+                                {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="{{ path('marina-humeda_show',{'id':marinaHumedaCotizacion.id}) }}" class="btn btn-contorno-azul pull-right">
+                            Regresar
+                        </a>
+                    </div>
+                </di>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Cliente</label>
+                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente }}</div>
+                        <label>Barco</label>
+                        <div class='info-input'>{{ marinaHumedaCotizacion.barco }}</div>
+                        <label>Total Cotización</label>
+                        <div class='info-input'>$ {{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</div>
+                        <label>Pagado hasta el momento</label>
+                        <div class='info-input'>$ {{ (marinaHumedaCotizacion.pagado/100)|number_format(2) }}</div>
+                    </div>
+                </div>
+                <div class="row espacio-linea">
+                    <div class="col-sm-6">
+                        <hr>
+                    </div>
+                </div>
+                {% for message in app.flashes('notice') %}
+                    <div class="flash-notice">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                {% form_theme form 'estructura/temaerror.html.twig' %}
+                {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-sm-4">
+                        {{ form_row(form.estatuspago) }}
+                    </div>
+                </div>
+                <div class="row espacio-linea">
+                    <div class="col-sm-6">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-9">
+                        <table id="servicioAdicional" class="table text-center">
+                            <thead>
+                            <tr>
+                                <th class="col-sm-2">Método de pago</th>
+                                <th class="col-sm-2">Pago</th>
+                                <th class="col-sm-2">Fecha de pago</th>
+                                <th class="col-sm-1">Valor del dolar</th>
+                                <th class="col-sm-1"></th>
+                            </tr>
+                            </thead>
+                            <tbody id="pago-fields-list0"
+                                 class="lista-pagos"
+                                 data-prototype="
+                                     {% filter escape %}
+                                     {{ include('marinahumeda/cotizacion/pago/coleccion-pago.twig', { 'form': form.pagos.vars.prototype }) }}
+                                     {#{{ form_widget(form.pagos.vars.prototype)|e('html_attr') }}#}
+                                     {% endfilter %}
+                                     ">
+                                {% for pagoField in form.pagos %}
+                                    {% form_theme pagoField 'marinahumeda/cotizacion/pago/coleccion-pago.twig' %}
+                                    <tr class="pago-agregado">
+                                        <td>{{ form_widget(pagoField.metodopago) }}</td>
+                                        <td>{{ form_widget(pagoField.cantidad) }} </td>
+                                        <td>{{ form_widget(pagoField.fecharealpago) }} </td>
+                                        <td>{{ form_widget(pagoField.dolar) }}</td>
+                                        <td>
+                                            <a href="#" class="remove-pago btn btn-naranja">
+                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row espacio-linea-arriba2">
+                    <div class="col-sm-8">
+                        <a href="#" id="" class="add-another-pago letra-azul pull-right" data-cantidad="{{ form.pagos|length }}" data-idlista="0">
+                            + Agregar Pago
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-azul">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+
+
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

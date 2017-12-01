@@ -15,6 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class MarinaHumedaRegistraPagoType extends AbstractType
 {
@@ -25,9 +26,22 @@ class MarinaHumedaRegistraPagoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('pago',EntityType::class,[
-                'class' => 'AppBundle:Pago',
-                'data_class' => 'AppBundle:Pago'
+            ->add('estatuspago',ChoiceType::class,[
+                'choices'  => [
+                    'Pagado' => 2,
+                    'Con adeudo' => 1,
+                    'No pagado' => 0,
+                ],
+                'label' => 'Estatus Pago',
+                'required' => false
+            ])
+            ->add('pagos',CollectionType::class,[
+                'entry_type' => PagoType::class,
+                'label' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'by_reference' => false
             ])
         ;
     }

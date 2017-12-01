@@ -43,4 +43,4 @@ monolog:
 knp_snappy:
     pdf:
         enabled:    true
-        binary: /usr/local/bin/wkhtmltopdf
+        binary: "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""

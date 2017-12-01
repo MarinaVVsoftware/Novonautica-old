@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Pago</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ pago.id }}</td>
+            </tr>
+            <tr>
+                <th>Metodopago</th>
+                <td>{{ pago.metodopago }}</td>
+            </tr>
+            <tr>
+                <th>Cantidad</th>
+                <td>{{ pago.cantidad }}</td>
+            </tr>
+            <tr>
+                <th>Fechalimitepago</th>
+                <td>{% if pago.fechalimitepago %}{{ pago.fechalimitepago|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Titular</th>
+                <td>{{ pago.titular }}</td>
+            </tr>
+            <tr>
+                <th>Banco</th>
+                <td>{{ pago.banco }}</td>
+            </tr>
+            <tr>
+                <th>Numcuenta</th>
+                <td>{{ pago.numcuenta }}</td>
+            </tr>
+            <tr>
+                <th>Codigoseguimiento</th>
+                <td>{{ pago.codigoseguimiento }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{% if pago.fecharegistro %}{{ pago.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Fecharealpago</th>
+                <td>{% if pago.fecharealpago %}{{ pago.fecharealpago|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('marina_cotizacion_pago_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('marina_cotizacion_pago_edit', { 'id': pago.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}
