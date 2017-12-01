@@ -13,7 +13,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+
 
 class MarinaHumedaCotizacionAceptadaType extends AbstractType
 {
@@ -32,18 +32,9 @@ class MarinaHumedaCotizacionAceptadaType extends AbstractType
                     ],
                 'label' => 'Método de pago'
                 ])
-            ->add('fechapago',DateType::class,[
-                'label' => 'Fecha de pago',
-                'widget' => 'single_text',
-                'html5' => false,
-                'attr' => ['class' => 'datepicker input-calendario',
-                    'readonly' => true],
-                'format' => 'yyyy-MM-dd'
-            ])
             ->add('titular')
             ->add('banco')
             ->add('numcuenta')
-            ->add('clabe')
         ;
     }
 

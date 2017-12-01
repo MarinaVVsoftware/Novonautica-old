@@ -42,7 +42,7 @@
                             <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
                         <li role="presentation" class="active">
-                            <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
+                            <a href="#validacion" aria-controls="validacion" role="tab" data-toggle="tab">Validación</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -383,11 +383,11 @@
                             </div>
 
                         </div>
-                        <div role="tabpanel" class="tab-pane active" id="correo">
+                        <div role="tabpanel" class="tab-pane active" id="validacion">
                             {% if edit_form.validanovo is defined %}
                                 <div class="row">
                                     <div class="col-sm-12 espacio-linea">
-                                        <label>Validación Novonautica</label>
+                                        <label>Indique su respuesta</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -403,9 +403,11 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-8 espacio-linea-arriba2">
-                                        {{ form_row(edit_form.notasnovo) }}
+                                <div id="notarechazado">
+                                    <div class="row">
+                                        <div class="col-sm-8 espacio-linea-arriba2">
+                                            {{ form_row(edit_form.notasnovo) }}
+                                        </div>
                                     </div>
                                 </div>
                             {% endif %}
@@ -428,12 +430,6 @@
                                     </div>
                                 </div>
                             {% endif %}
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <label>Mensaje en el correo:</label>
-                                    <div class="info-input">{{ marinaHumedaCotizacion.mensaje|raw }}</div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     {{ form_end(edit_form) }}

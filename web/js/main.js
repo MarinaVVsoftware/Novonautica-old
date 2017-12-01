@@ -66,6 +66,12 @@ $(document).ready(function() {
     $( ".esdecimal" ).keypress(function() {
         return esNumeroDecimal(event,this);
     });
+    $("#appbundle_marinahumedacotizacion_validanovo_0").click(function () {
+        $('#notarechazado').hide();
+    });
+    $("#appbundle_marinahumedacotizacion_validanovo_1").click(function () {
+        $('#notarechazado').show();
+    });
 });
 
 function isNumberKey(evt) {

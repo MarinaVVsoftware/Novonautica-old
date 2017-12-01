@@ -96,6 +96,13 @@ class MarinaHumedaCotizacion
     private $total;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="adeudo", type="float", nullable=true)
+     */
+    private $adeudo;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="mensaje", type="text", nullable=true)
@@ -875,5 +882,21 @@ class MarinaHumedaCotizacion
     public function getPago()
     {
         return $this->pago;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAdeudo()
+    {
+        return $this->adeudo;
+    }
+
+    /**
+     * @param float $adeudo
+     */
+    public function setAdeudo($adeudo)
+    {
+        $this->adeudo = $adeudo;
     }
 }

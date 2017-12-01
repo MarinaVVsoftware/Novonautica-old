@@ -31,9 +31,9 @@ class Pago
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fechapago", type="datetime", nullable=true)
+     * @ORM\Column(name="fechalimitepago", type="datetime", nullable=true)
      */
-    private $fechapago;
+    private $fechalimitepago;
 
     /**
      * @var string
@@ -55,13 +55,6 @@ class Pago
      * @ORM\Column(name="numcuenta", type="string", length=255, nullable=true)
      */
     private $numcuenta;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="clabe", type="string", length=255, nullable=true)
-     */
-    private $clabe;
 
     /**
      * @var string
@@ -151,27 +144,27 @@ class Pago
     }
 
     /**
-     * Set fechapago
+     * Set fechalimitepago
      *
-     * @param \DateTime $fechapago
+     * @param \DateTime $fechalimitepago
      *
      * @return Pago
      */
-    public function setFechapago($fechapago)
+    public function setFechalimitepago($fechalimitepago)
     {
-        $this->fechapago = $fechapago;
+        $this->fechalimitepago = $fechalimitepago;
 
         return $this;
     }
 
     /**
-     * Get fechapago
+     * Get fechalimitepago
      *
      * @return \DateTime
      */
-    public function getFechapago()
+    public function getFechalimitepago()
     {
-        return $this->fechapago;
+        return $this->fechalimitepago;
     }
 
     /**
@@ -348,22 +341,6 @@ class Pago
     public function setNumcuenta($numcuenta)
     {
         $this->numcuenta = $numcuenta;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClabe()
-    {
-        return $this->clabe;
-    }
-
-    /**
-     * @param string $clabe
-     */
-    public function setClabe($clabe)
-    {
-        $this->clabe = $clabe;
     }
 
     /**
