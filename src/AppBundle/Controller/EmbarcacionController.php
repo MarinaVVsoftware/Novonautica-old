@@ -4,9 +4,14 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Embarcacion;
 use AppBundle\Entity\EmbarcacionImagen;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Embarcacion controller.
@@ -46,11 +51,10 @@ class EmbarcacionController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-//            $em->persist($embarcacion);
-//            $em->flush();
+            $em->persist($embarcacion);
+            $em->flush();
 
-//            return $this->redirectToRoute('embarcacion_show');
-            dump($embarcacion);
+            return $this->redirectToRoute('embarcacion_show');
         }
 
         return $this->render('embarcacion/new.html.twig', array(
@@ -75,6 +79,15 @@ class EmbarcacionController extends Controller
         ));
     }
 
+    /*
+     * TODO
+     * Crear metodo que para accesar a traves de ajax post
+     * este metodo buscara el nombre del archivo en los documentos
+     * y usara unlink() para eliminarlo
+     * Alternativamente el metodo de edit action deberia hacer un ciclo sobre las imagenes que tiene
+     * y que existen, si no existe en su arreglo de imagenes = unlink()
+     */
+
     /**
      * Displays a form to edit an existing embarcacion entity.
      *
@@ -84,13 +97,37 @@ class EmbarcacionController extends Controller
     public function editAction(Request $request, Embarcacion $embarcacion)
     {
         $deleteForm = $this->createDeleteForm($embarcacion);
+
+        $oldImages = new ArrayCollection();
+        foreach ($embarcacion->getImagenes() as $imagen) {
+            $oldImages->add($imagen);
+        }
+
         $editForm = $this->createForm('AppBundle\Form\EmbarcacionType', $embarcacion);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $em = $this->getDoctrine()->getManager();
 
-            return $this->redirectToRoute('embarcacion_edit', array('id' => $embarcacion->getId()));
+            foreach ($oldImages as $oldImage) {
+                if (!$embarcacion->getImagenes()->contains($oldImage)) {
+//                    /** @var EmbarcacionImagen $oldImage */
+                    $fs = new Filesystem();
+                    if ($fs->exists('../web/uploads/embarcacion/' . $oldImage->getBasename())) {
+                        $fs->remove('../web/uploads/embarcacion/' . $oldImage->getBasename());
+                    }
+                    $oldImage->setEmbarcacion(null);
+                    $em->remove($oldImage);
+                }
+            }
+
+            $em->flush();
+
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['ok' => true]);
+            }
+
+            return $this->redirectToRoute('embarcacion_edit', ['id' => $embarcacion->getId()]);
         }
 
         return $this->render('embarcacion/edit.html.twig', array(

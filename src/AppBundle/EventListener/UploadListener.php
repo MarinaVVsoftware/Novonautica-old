@@ -25,7 +25,6 @@ class UploadListener
 
     public function onUpload(PostPersistEvent $event)
     {
-        dump($event);
         $response = $event->getResponse();
         $response['baseFileName'] = $event->getFile()->getBaseName();
 

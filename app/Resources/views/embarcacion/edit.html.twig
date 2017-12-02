@@ -1,21 +1,245 @@
-{% extends 'base.html.twig' %}
+{% extends 'estructura/plantilla.twig' %}
 
-{% block body %}
-    <h1>Embarcacion edit</h1>
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
+{% endblock %}
 
-    {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
-    {{ form_end(edit_form) }}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Embarcaciones</h3>
+                        </div>
+                        <div class="panel-body panel-pestanias">
+                            {{ form_start(edit_form) }}
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="primero active">
+                                    <a href="#especificaciones" data-toggle="tab">Generales</a>
+                                </li>
+                                <li>
+                                    <a href="#imagenes" data-toggle="tab">Imagenes & Video</a>
+                                </li>
+                                <li>
+                                    <a href="#layout" data-toggle="tab">Brochure & Layout</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="especificaciones">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{ form_row(edit_form.nombre) }}
+                                            {{ form_row(edit_form.precio) }}
+                                            {{ form_row(edit_form.construccion) }}
+                                            <div id="prefabricado">
+                                                {{ form_row(edit_form.marca) }}
+                                                {{ form_row(edit_form.modelo) }}
+                                            </div>
+                                            <div id="custom" style="display: none">
+                                                {{ form_row(edit_form.builder) }}
+                                                {{ form_row(edit_form.interiorDesigner) }}
+                                                {{ form_row(edit_form.exteriorDesigner) }}
+                                            </div>
+                                            {{ form_row(edit_form.ano) }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form_row(edit_form.longitud) }}
+                                            {{ form_row(edit_form.eslora) }}
+                                            {{ form_row(edit_form.manga) }}
+                                            {{ form_row(edit_form.calado) }}
+                                            {{ form_row(edit_form.peso) }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form_row(edit_form.capacidadCombustible) }}
+                                            {{ form_row(edit_form.capacidadAgua) }}
+                                            {{ form_row(edit_form.capacidadDeposito) }}
+                                            {{ form_row(edit_form.cabinas) }}
+                                            {{ form_row(edit_form.pasajerosDormidos) }}
+                                            {{ form_row(edit_form.generador) }}
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    {{ form_row(edit_form.descripcion) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="imagenes">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {{ form_row(edit_form.video) }}
+                                            {% form_theme edit_form.imagenes 'embarcacion/form-themes/_embarcacion_imagen.html.twig' %}
+                                            {{ form_row(edit_form.imagenes) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div id="boat-img" class="dropzone">
+                                                <div class="dz-message imagenes-message">
+                                                    Puedes arrastrar tus imagenes aquí.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="layout">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-azul pull-right">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_end(edit_form) }}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
-    <ul>
-        <li>
-            <a href="{{ path('embarcacion_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/dropzone.js') }}"></script>
+    <script type="text/javascript">
+      (function ($) {
+        const embarcacionForm = document.querySelector('[name="appbundle_embarcacion"]');
+        const construccionInput = document.querySelector('#appbundle_embarcacion_construccion');
+        const prefabricadoContainer = document.querySelector('#prefabricado');
+        const customContainer = document.querySelector('#custom');
+        const marcaInput = document.querySelector('#appbundle_embarcacion_marca');
+        const modeloInput = document.querySelector('#appbundle_embarcacion_modelo');
+        const tabContent = document.querySelector('.tab-content');
+        const firstError = tabContent.querySelector('.has-error');
+        const imgContainer = document.querySelector('#appbundle_embarcacion_imagenes');
+        let imgCount = '{{ edit_form.imagenes|length }}';
+
+        fetchModelos();
+        getConstruccion();
+
+        marcaInput.addEventListener('change', fetchModelos);
+        construccionInput.addEventListener('change', getConstruccion);
+
+        if (firstError) {
+          const tabPanes = tabContent.querySelectorAll('.tab-pane');
+          const tabPane = firstError.parentNode.parentNode.parentNode;
+          const tabPaneId = tabPane.getAttribute('id');
+          const tabs = document.querySelectorAll('.nav-tabs > li');
+          const tab = document.querySelector(`[href="#${tabPaneId}"]`).parentNode;
+
+          tabs.forEach(elem => elem.classList.remove('active'));
+          tabPanes.forEach(elem => elem.classList.remove('active'));
+          tab.classList.add('active');
+          tabPane.classList.add('active')
+        }
+
+        function getConstruccion() {
+          if (construccionInput.value === 'custom') {
+            prefabricadoContainer.style.display = 'none';
+            customContainer.style.display = 'block';
+          } else {
+            customContainer.style.display = 'none';
+            prefabricadoContainer.style.display = 'block';
+          }
+        }
+
+        function fetchModelos() {
+          fetch(`{{ app.request.baseUrl }}/embarcacion/marca/${marcaInput.value}/modelos.json`, {credentials: 'include'})
+              .then(response => response.status === 200 ? response.json() : response.status)
+              .then(marca => {
+                modeloInput.innerHTML = marca.modelos.length
+                    ? marca.modelos.map(modelo => `<option value="${modelo.id}">${modelo.nombre}</option>`).join('')
+                    : `<option>No hay modelos</option>`;
+              });
+        }
+
+        Dropzone.autoDiscover = false;
+        const imagenes = new Dropzone('#boat-img', {
+          url: '{{ oneup_uploader_endpoint('embarcacion') }}',
+          acceptedFiles: 'image/*',
+          maxFilesize: 2,
+          dictFileTooBig: 'La imagen es demasiado pesada el tamaño maximo es de 1MiB',
+          addRemoveLinks: true,
+          parallelUploads: 1,
+          autoProcessQueue: false, // Previene que las imagenes se suban automaticamente
+          init: function () {
+            this
+                .on('success', function (file, response) {
+                  const imgPrototype = imgContainer.dataset.prototype.replace(/__name__/g, imgCount);
+
+                  let divContainer = document.createElement('div');
+                  divContainer.innerHTML = imgPrototype;
+
+                  let imgInput = divContainer.querySelector('[name*="[basename]"]');
+                  let tipoInput = divContainer.querySelector('[name*="[tipo]"]');
+                  let sizeInput = divContainer.querySelector('[name*="[size]"]');
+                  imgInput.dataset.uuid = file.upload.uuid;
+                  imgInput.value = response.baseFileName;
+                  tipoInput.value = 1;
+                  sizeInput.value = file.size;
+                  imgContainer.appendChild(divContainer.firstChild);
+                  imgCount++;
+                })
+                .on('removedfile', function (file) {
+                  let imgInputContainer = imgContainer.querySelector(`input[value="${file.name}"]`);
+                  if (imgInputContainer) {
+                    $(imgInputContainer.parentNode).remove();
+                    // Elimina las imagenes de la entidad
+                    // Pero si la entidad es modificada tambien la guarda
+                    $.ajax({
+                      url: `{{ app.request.baseUrl }}/embarcacion/{{ embarcacion.id }}/edit`,
+                      data: $(embarcacionForm).serialize(),
+                      type: 'post'
+                    });
+                  }
+                })
+                .on('complete', () => { this.processQueue(); });
+          }
+        });
+
+          {% for imagen in embarcacion.imagenes %}
+        emitThumbnail({
+          name: '{{ imagen.basename }}',
+          size: {{ imagen.size }},
+          dataURL: '{{ app.request.basePath }}/uploads/embarcacion/{{ imagen.basename }}'
+        });
+          {% endfor %}
+
+        function emitThumbnail(thumb) {
+          imagenes.files.push(thumb);
+          imagenes.emit('addedfile', thumb);
+          imagenes.createThumbnailFromUrl(thumb,
+              imagenes.options.thumbnailWidth, imagenes.options.thumbnailHeight,
+              imagenes.options.thumbnailMethod, true, function (thumbnail) {
+                imagenes.emit('thumbnail', thumb, thumbnail);
+              });
+          imagenes.emit('complete', thumb);
+        }
+
+        embarcacionForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          // Checa si hay imagenes para cargar y
+          // Espera a que todas las imagenes esten cargadas para continuar
+          if (imagenes.getQueuedFiles()) {
+            imagenes.processQueue();
+            imagenes.on('queuecomplete', () => { this.submit(); });
+          } else {
+            this.submit();
+          }
+        });
+
+      })(jQuery);
+    </script>
 {% endblock %}

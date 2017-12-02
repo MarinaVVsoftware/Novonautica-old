@@ -186,7 +186,7 @@ class Embarcacion
     /**
      * @var EmbarcacionImagen
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\EmbarcacionImagen", mappedBy="embarcacion", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\EmbarcacionImagen", mappedBy="embarcacion", cascade={"persist", "remove"})
      */
     private $imagenes;
 
@@ -681,6 +681,41 @@ class Embarcacion
     }
 
     /**
+     * Add imagene
+     *
+     * @param EmbarcacionImagen $imagene
+     *
+     * @return Embarcacion
+     */
+    public function addImagene(EmbarcacionImagen $imagene)
+    {
+        $imagene->setEmbarcacion($this);
+        $this->imagenes[] = $imagene;
+
+        return $this;
+    }
+
+    /**
+     * Remove imagene
+     *
+     * @param EmbarcacionImagen $imagene
+     */
+    public function removeImagene(EmbarcacionImagen $imagene)
+    {
+        $this->imagenes->removeElement($imagene);
+    }
+
+    /**
+     * Get imagenes
+     *
+     * @return Collection
+     */
+    public function getImagenes()
+    {
+        return $this->imagenes;
+    }
+
+    /**
      * @Assert\Callback()
      *
      * @param ExecutionContextInterface $context
@@ -717,37 +752,4 @@ class Embarcacion
         }
     }
 
-    /**
-     * Add imagene
-     *
-     * @param EmbarcacionImagen $imagene
-     *
-     * @return Embarcacion
-     */
-    public function addImagene(EmbarcacionImagen $imagene)
-    {
-        $this->imagenes[] = $imagene;
-
-        return $this;
-    }
-
-    /**
-     * Remove imagene
-     *
-     * @param EmbarcacionImagen $imagene
-     */
-    public function removeImagene(EmbarcacionImagen $imagene)
-    {
-        $this->imagenes->removeElement($imagene);
-    }
-
-    /**
-     * Get imagenes
-     *
-     * @return Collection
-     */
-    public function getImagenes()
-    {
-        return $this->imagenes;
-    }
 }

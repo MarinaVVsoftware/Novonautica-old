@@ -36,6 +36,13 @@ class EmbarcacionImagen
     private $tipo;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="size", type="integer")
+     */
+    private $size;
+
+    /**
      * @var Embarcacion
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Embarcacion", inversedBy="imagenes")
@@ -122,5 +129,21 @@ class EmbarcacionImagen
     public function getEmbarcacion()
     {
         return $this->embarcacion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    /**
+     * @param int $size
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
     }
 }

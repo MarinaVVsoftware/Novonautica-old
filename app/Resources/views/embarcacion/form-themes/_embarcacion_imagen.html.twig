@@ -3,5 +3,7 @@
 {% endblock %}
 
 {% block appbundle_embarcacionimagen_widget %}
-    {{ form_widget(form) }}
+    {{ form_widget(form.basename) }}
+    {{ form_widget(form.tipo) }}
+    {{ form_widget(form.size) }}
 {% endblock %}

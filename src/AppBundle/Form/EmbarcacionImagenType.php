@@ -17,6 +17,8 @@ class EmbarcacionImagenType extends AbstractType
     {
         $builder
             ->add('basename', HiddenType::class)
+            ->add('tipo', HiddenType::class)
+            ->add('size', HiddenType::class)
         ;
     }
 
