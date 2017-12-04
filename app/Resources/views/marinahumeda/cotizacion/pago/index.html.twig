@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Pagos list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Metodopago</th>
+                <th>Cantidad</th>
+                <th>Fechalimitepago</th>
+                <th>Titular</th>
+                <th>Banco</th>
+                <th>Numcuenta</th>
+                <th>Codigoseguimiento</th>
+                <th>Fecharegistro</th>
+                <th>Fecharealpago</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for pago in pagos %}
+            <tr>
+                <td><a href="{{ path('marina_cotizacion_pago_show', { 'id': pago.id }) }}">{{ pago.id }}</a></td>
+                <td>{{ pago.metodopago }}</td>
+                <td>{{ pago.cantidad }}</td>
+                <td>{% if pago.fechalimitepago %}{{ pago.fechalimitepago|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ pago.titular }}</td>
+                <td>{{ pago.banco }}</td>
+                <td>{{ pago.numcuenta }}</td>
+                <td>{{ pago.codigoseguimiento }}</td>
+                <td>{% if pago.fecharegistro %}{{ pago.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if pago.fecharealpago %}{{ pago.fecharealpago|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('marina_cotizacion_pago_show', { 'id': pago.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('marina_cotizacion_pago_edit', { 'id': pago.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('marina_cotizacion_pago_new') }}">Create a new pago</a>
+        </li>
+    </ul>
+{% endblock %}

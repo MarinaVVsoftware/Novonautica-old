@@ -1,0 +1,22 @@
+{% block form_widget %}
+    {% spaceless %}
+        <div class="col-sm-2">
+            {{ form_row(form.metodopago) }}
+        </div>
+        <div class="col-sm-2">
+            {{ form_row(form.cantidad) }}
+        </div>
+        <div class="col-sm-2">
+            {{ form_row(form.fecharealpago) }}
+        </div>
+        <div class="col-sm-2">
+            {{ form_row(form.dolar) }}
+        </div>
+        <div class="col-sm-1">
+            <a href="#" class="remove-pago btn btn-naranja">
+                <i class="fa fa-times" aria-hidden="true"></i>
+                Quitar
+            </a>
+        </div>
+    {% endspaceless %}
+{% endblock %}

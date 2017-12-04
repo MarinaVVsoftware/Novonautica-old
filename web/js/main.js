@@ -38,6 +38,7 @@ $(document).ready(function() {
         format: 'yyyy-mm-dd',
         orientation: "bottom auto",
     });
+
     $('.editorwy').wysihtml5({
         toolbar:{
             "image": false,
@@ -45,6 +46,15 @@ $(document).ready(function() {
             "link": false,
             "html": true,
         }
+    });
+
+    $('.lista-pagos').on('click','.datepicker-solo',function(e) {
+        console.log('click calendario');
+        $(this).datepicker({
+            autoclose: true,
+            format: 'yyyy-mm-dd',
+            orientation: "auto",
+        })
     });
 //---- seleccionar choice al recotizar------
     var diasestadiaprecio =  $('#de_precio').data('valor');
@@ -206,6 +216,39 @@ $('.lista-servicios-adicionales').on('click','.remove-servicio-adicional',functi
     //console.log('quitar motor');
     $(this).parent().parent().remove();
     calculaTotalesAdicionales();
+    return false;
+});
+
+//collectio al agregar pagos a una cotización marina húmeda
+jQuery('.add-another-pago').click(function (e) {
+    e.preventDefault();
+    // var elementoMotor = document.getElementsByClassName(this);
+    var totPagos = $(this).data('cantidad');
+    var lista = $(this).data('idlista');
+    var pagoListPrimero = jQuery('#pago-fields-list'+lista);
+    //var motorListOtros = jQuery('.lista-motores'+lista);
+    // grab the prototype template
+    var newWidget = $(pagoListPrimero).data('prototype');
+    // replace the "__name__" used in the id and name of the prototype
+    // with a number that's unique to your emails
+    // end name attribute looks like name="contact[emails][2]"
+    newWidget = newWidget.replace(/__name__/g, totPagos);
+    totPagos++;
+    $(this).data('cantidad', totPagos);
+    // create a new list element and add it to the list
+    var newLi = jQuery('<div class="row"></div>').html(newWidget);
+    newLi.appendTo(pagoListPrimero);
+
+    // also add a remove button, just for this example
+    //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
+
+    newLi.before(newLi);
+});
+$('.lista-pagos').on('click','.remove-pago',function(e) {
+    e.preventDefault();
+    //console.log('quitar motor');
+    $(this).parent().parent().remove();
+
     return false;
 });
 

@@ -435,6 +435,50 @@ class MarinaHumedaCotizacionController extends Controller
     }
 
     /**
+     * @Route("/{id}/pago", name="marina_cotizacion_pago_edit")
+     * @Method({"GET", "POST"})
+     */
+    public function editPagoAction(Request $request,MarinaHumedaCotizacion $marinaHumedaCotizacion)
+    {
+
+        //$pago = new Pago();
+        //$marinaHumedaCotizacion->addPago($pago);
+        $totPagado = 0;
+        $listaPagos = new ArrayCollection();
+        foreach ($marinaHumedaCotizacion->getPagos() as $pago){
+            $listaPagos->add($pago);
+        }
+        $form = $this->createForm('AppBundle\Form\MarinaHumedaRegistraPagoType', $marinaHumedaCotizacion);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+                foreach ($listaPagos as $pago) {
+                    if (false === $marinaHumedaCotizacion->getPagos()->contains($pago)) {
+                        $pago->getMhcotizacion()->removePago($pago);
+                        $em->persist($pago);
+                        $em->remove($pago);
+                    }
+                }
+            foreach ($marinaHumedaCotizacion->getPagos() as $pago) {
+                $totPagado+=$pago->getCantidad();
+            }
+            $marinaHumedaCotizacion
+                ->setPagado($totPagado);
+            $em->persist($marinaHumedaCotizacion);
+            $em->flush();
+
+            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
+        }
+
+        return $this->render('marinahumeda/cotizacion/pago/edit.html.twig', array(
+            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
      * Muestra una cotizacion para recotizar
      *
      * @Route("/{id}/recotizar", name="marina-humeda_recotizar")
@@ -674,43 +718,43 @@ class MarinaHumedaCotizacionController extends Controller
         ]);
     }
 
-    /**
-     *
-     * @Route("/{id}/registra-pago", name="marina-humeda_registra_pago")
-     * @Method({"GET", "POST"})
-     **/
-    public function registraPagoAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
-    {
-        if ($marinaHumedaCotizacion->getEstatus() == 0 ||
-                $marinaHumedaCotizacion->getValidacliente() != 2
-        ) {
-            throw new NotFoundHttpException();
-        }
-        $pago = $marinaHumedaCotizacion->getPago();
-        $editForm = $this->createForm( 'AppBundle\Form\PagoType', $pago);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-
-            // Agrega un movimiento al slip
-            $slip = $marinaHumedaCotizacion->getSlip();
-            $movimiento = new SlipMovimiento();
-            $movimiento->setSlip($slip);
-            $movimiento->setEstatus(1);
-            $movimiento->setFechaLlegada($marinaHumedaCotizacion->getFechaLlegada());
-            $movimiento->setFechaSalida($marinaHumedaCotizacion->getFechaSalida());
-            $slip->addMovimiento($movimiento);
-
-            $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
-        }
-        return $this->render('marinahumeda/cotizacion/registrar-pago.twig', [
-            'title' => 'Registrar Pago',
-            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
-            'pago' => $pago,
-            'edit_form' => $editForm->createView()
-        ]);
-    }
+//    /**
+//     *
+//     * @Route("/{id}/registra-pago", name="marina-humeda_registra_pago")
+//     * @Method({"GET", "POST"})
+//     **/
+//    public function registraPagoAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
+//    {
+//        if ($marinaHumedaCotizacion->getEstatus() == 0 ||
+//                $marinaHumedaCotizacion->getValidacliente() != 2
+//        ) {
+//            throw new NotFoundHttpException();
+//        }
+//        $pago = $marinaHumedaCotizacion->getPago();
+//        $editForm = $this->createForm( 'AppBundle\Form\PagoType', $pago);
+//        $editForm->handleRequest($request);
+//
+//        if ($editForm->isSubmitted() && $editForm->isValid()) {
+//
+//            // Agrega un movimiento al slip
+//            $slip = $marinaHumedaCotizacion->getSlip();
+//            $movimiento = new SlipMovimiento();
+//            $movimiento->setSlip($slip);
+//            $movimiento->setEstatus(1);
+//            $movimiento->setFechaLlegada($marinaHumedaCotizacion->getFechaLlegada());
+//            $movimiento->setFechaSalida($marinaHumedaCotizacion->getFechaSalida());
+//            $slip->addMovimiento($movimiento);
+//
+//            $this->getDoctrine()->getManager()->flush();
+//            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
+//        }
+//        return $this->render('marinahumeda/cotizacion/registrar-pago.twig', [
+//            'title' => 'Registrar Pago',
+//            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+//            'pago' => $pago,
+//            'edit_form' => $editForm->createView()
+//        ]);
+//    }
 
     /**
      * Deletes a marinaHumedaCotizacion entity.

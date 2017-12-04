@@ -80,10 +80,13 @@
                                     <td class="align-middle">
                                         {% if marinaHumedaCotizacion.validacliente == 2 %}
 
-                                            {% if marinaHumedaCotizacion.pago.estatuspago is defined and marinaHumedaCotizacion.pago.estatuspago == 1 %}
+                                            {% if marinaHumedaCotizacion.estatuspago == 2 %}
                                                 <img src="{{ asset('img/status-aprobado-icon.svg') }}"
                                                     class="center-block" data-toggle="tooltip" data-placement="left" title="Pagado">
-                                            {% else %}
+                                            {% elseif marinaHumedaCotizacion.estatuspago == 1 %}
+                                                <img src="{{ asset('img/status-pendiente-icon.svg') }}"
+                                                     class="center-block" data-toggle="tooltip" data-placement="left" title="Con adeudo">
+                                                {% else %}
                                                 <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
                                                      class="center-block" data-toggle="tooltip" data-placement="left" title="No pagado">
                                             {% endif %}
@@ -103,7 +106,7 @@
                                             <a class="btn btn-naranja" href="{{ path('marina-humeda_recotizar', { 'id': marinaHumedaCotizacion.id }) }}">Recotizar</a>
                                         {% endif %}
                                         {% if marinaHumedaCotizacion.validacliente == 2 %}
-                                            <a class="btn btn-verde" href="{{ path('marina-humeda_registra_pago',{'id': marinaHumedaCotizacion.id}) }}">Registrar Pago</a>
+                                            <a class="btn btn-verde" href="{{ path('marina_cotizacion_pago_edit',{'id': marinaHumedaCotizacion.id}) }}">Pagos</a>
                                         {% endif %}
                                     </td>
                                 </tr>

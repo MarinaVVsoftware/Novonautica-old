@@ -29,11 +29,18 @@ class Pago
     private $metodopago;
 
     /**
-     * @var \DateTime
+     * @var float
      *
-     * @ORM\Column(name="fechalimitepago", type="datetime", nullable=true)
+     * @ORM\Column(name="cantidad", type="float", nullable=true)
      */
-    private $fechalimitepago;
+    private $cantidad;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="dolar", type="float", nullable=true)
+     */
+    private $dolar;
 
     /**
      * @var string
@@ -64,27 +71,6 @@ class Pago
     private $codigoseguimiento;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="token", type="string", length=255, nullable=true)
-     */
-    private $token;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="fecharegistro", type="datetime", nullable=true)
-     */
-    private $fecharegistro;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="estatuspago", type="smallint", nullable=true)
-     */
-    private $estatuspago;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="fecharealpago", type="datetime", nullable=true)
@@ -92,9 +78,8 @@ class Pago
     private $fecharealpago;
 
     /**
-     *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\MarinaHumedaCotizacion", inversedBy="pago")
-     * @ORM\JoinColumn(name="idmhcotizacion", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MarinaHumedaCotizacion", inversedBy="pagos")
+     * @ORM\JoinColumn(name="idpago", referencedColumnName="id",onDelete="CASCADE")
      */
     private $mhcotizacion;
 
@@ -143,117 +128,6 @@ class Pago
         return $this->metodopago;
     }
 
-    /**
-     * Set fechalimitepago
-     *
-     * @param \DateTime $fechalimitepago
-     *
-     * @return Pago
-     */
-    public function setFechalimitepago($fechalimitepago)
-    {
-        $this->fechalimitepago = $fechalimitepago;
-
-        return $this;
-    }
-
-    /**
-     * Get fechalimitepago
-     *
-     * @return \DateTime
-     */
-    public function getFechalimitepago()
-    {
-        return $this->fechalimitepago;
-    }
-
-    /**
-     * Set token
-     *
-     * @param string $token
-     *
-     * @return Pago
-     */
-    public function setToken($token)
-    {
-        $this->token = $token;
-
-        return $this;
-    }
-
-    /**
-     * Get token
-     *
-     * @return string
-     */
-    public function getToken()
-    {
-        return $this->token;
-    }
-
-    /**
-     * Set fecharegistro
-     *
-     * @param \DateTime $fecharegistro
-     *
-     * @return Pago
-     */
-    public function setFecharegistro($fecharegistro)
-    {
-        $this->fecharegistro = $fecharegistro;
-
-        return $this;
-    }
-
-    /**
-     * Get fecharegistro
-     *
-     * @return \DateTime
-     */
-    public function getFecharegistro()
-    {
-        return $this->fecharegistro;
-    }
-
-    /**
-     * Set mhcotizacion
-     *
-     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacion
-     *
-     * @return Pago
-     */
-    public function setMhcotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacion = null)
-    {
-        $this->mhcotizacion = $mhcotizacion;
-
-        return $this;
-    }
-
-    /**
-     * Get mhcotizacion
-     *
-     * @return \AppBundle\Entity\MarinaHumedaCotizacion
-     */
-    public function getMhcotizacion()
-    {
-        return $this->mhcotizacion;
-    }
-
-    /**
-     * @param int $estatuspago
-     */
-    public function setEstatuspago($estatuspago)
-    {
-        $this->estatuspago = $estatuspago;
-    }
-
-    /**
-     * @return int
-     */
-    public function getEstatuspago()
-    {
-        return $this->estatuspago;
-    }
 
     /**
      * @param \DateTime $fecharealpago
@@ -357,5 +231,61 @@ class Pago
     public function setCodigoseguimiento($codigoseguimiento)
     {
         $this->codigoseguimiento = $codigoseguimiento;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
+    }
+
+    /**
+     * @param float $cantidad
+     */
+    public function setCantidad($cantidad)
+    {
+        $this->cantidad = $cantidad;
+    }
+
+    /**
+     * Set mhcotizacion
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacion
+     *
+     * @return Pago
+     */
+    public function setMhcotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacion = null)
+    {
+        $this->mhcotizacion = $mhcotizacion;
+
+        return $this;
+    }
+
+    /**
+     * Get mhcotizacion
+     *
+     * @return \AppBundle\Entity\MarinaHumedaCotizacion
+     */
+    public function getMhcotizacion()
+    {
+        return $this->mhcotizacion;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDolar()
+    {
+        return $this->dolar;
+    }
+
+    /**
+     * @param float $dolar
+     */
+    public function setDolar($dolar)
+    {
+        $this->dolar = $dolar;
     }
 }

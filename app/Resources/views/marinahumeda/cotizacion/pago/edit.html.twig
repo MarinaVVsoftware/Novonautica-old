@@ -1,0 +1,99 @@
+{% extends 'estructura/plantilla.twig' %}
+{% block title %}
+  Registrar pagos
+{% endblock %}
+{% block contwrapper %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="panel panel-novo">
+            <div class="panel-heading">
+                <di class="row">
+                    <div class="col-sm-6">
+                        <h3 class="panel-title">Registrar Pago</h3>
+                        <span>
+                            {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
+                                {{ marinaHumedaCotizacion.folio }}
+                            {% else %}
+                                {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="{{ path('marina-humeda_show',{'id':marinaHumedaCotizacion.id}) }}" class="btn btn-contorno-azul pull-right">
+                            Regresar
+                        </a>
+                    </div>
+                </di>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Cliente</label>
+                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente }}</div>
+                        <label>Barco</label>
+                        <div class='info-input'>{{ marinaHumedaCotizacion.barco }}</div>
+                        <label>Total Cotización</label>
+                        <div class='info-input'>$ {{ marinaHumedaCotizacion.total|number_format(2,'.',',') }}</div>
+                        <label>Pagado hasta el momento</label>
+                        <div class='info-input'>$ {{ marinaHumedaCotizacion.pagado|number_format(2,'.',',') }}</div>
+                    </div>
+                </div>
+                <div class="row espacio-linea">
+                    <div class="col-sm-6">
+                        <hr>
+                    </div>
+                </div>
+                {% form_theme form 'estructura/temaerror.html.twig' %}
+                {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-sm-4">
+                        {{ form_row(form.estatuspago) }}
+                    </div>
+                </div>
+                <div class="row espacio-linea">
+                    <div class="col-sm-6">
+                        <hr>
+                    </div>
+                </div>
+                <div id="pago-fields-list0"
+                     class="lista-pagos"
+                     data-prototype="
+                                     {% filter escape %}
+                                     {{ include('marinahumeda/cotizacion/pago/coleccion-pago.twig', { 'form': form.pagos.vars.prototype }) }}
+                                     {#{{ form_widget(form.pagos.vars.prototype)|e('html_attr') }}#}
+                                     {% endfilter %}
+                                     ">
+                    {% for pagoField in form.pagos %}
+                        {% form_theme pagoField 'marinahumeda/cotizacion/pago/coleccion-pago.twig' %}
+                        <div class="row">
+                            {{ form_widget(pagoField) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="row espacio-linea-arriba2">
+                    <div class="col-sm-8">
+                        <a href="#" id="" class="add-another-pago letra-azul pull-right" data-cantidad="{{ form.pagos|length }}" data-idlista="0">
+                            + Agregar Pago
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-azul">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+
+
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

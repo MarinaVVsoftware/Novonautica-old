@@ -103,6 +103,20 @@ class MarinaHumedaCotizacion
     private $adeudo;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="pagado", type="float", nullable=true)
+     */
+    private $pagado;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="estatuspago", type="smallint")
+     */
+    private $estatuspago;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="mensaje", type="text", nullable=true)
@@ -217,17 +231,17 @@ class MarinaHumedaCotizacion
 
     /**
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Pago", mappedBy="mhcotizacion")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Pago", mappedBy="mhcotizacion",cascade={"persist"})
      */
-    private $pago;
+    private $pagos;
 
     public function __construct() {
         $this->mhcservicios = new ArrayCollection();
     }
-//    public function __toString()
-//    {
-//        return $this->;
-//    }
+    public function __toString()
+    {
+        return $this->folio.' '.$this->foliorecotiza;
+    }
 
     /**
      * Get id
@@ -859,31 +873,6 @@ class MarinaHumedaCotizacion
         return $this->slip;
     }
 
-
-    /**
-     * Set pago
-     *
-     * @param \AppBundle\Entity\Pago $pago
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setPago(\AppBundle\Entity\Pago $pago = null)
-    {
-        $this->pago = $pago;
-
-        return $this;
-    }
-
-    /**
-     * Get pago
-     *
-     * @return \AppBundle\Entity\Pago
-     */
-    public function getPago()
-    {
-        return $this->pago;
-    }
-
     /**
      * @return float
      */
@@ -898,5 +887,72 @@ class MarinaHumedaCotizacion
     public function setAdeudo($adeudo)
     {
         $this->adeudo = $adeudo;
+    }
+
+    /**
+     * Add pago
+     *
+     * @param \AppBundle\Entity\Pago $pago
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function addPago(\AppBundle\Entity\Pago $pago)
+    {
+        $pago->setMhcotizacion($this);
+        $this->pagos[] = $pago;
+
+        return $this;
+    }
+
+    /**
+     * Remove pago
+     *
+     * @param \AppBundle\Entity\Pago $pago
+     */
+    public function removePago(\AppBundle\Entity\Pago $pago)
+    {
+        $this->pagos->removeElement($pago);
+    }
+
+    /**
+     * Get pagos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPagos()
+    {
+        return $this->pagos;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEstatuspago()
+    {
+        return $this->estatuspago;
+    }
+
+    /**
+     * @param int $estatuspago
+     */
+    public function setEstatuspago($estatuspago)
+    {
+        $this->estatuspago = $estatuspago;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPagado()
+    {
+        return $this->pagado;
+    }
+
+    /**
+     * @param float $pagado
+     */
+    public function setPagado($pagado)
+    {
+        $this->pagado = $pagado;
     }
 }
