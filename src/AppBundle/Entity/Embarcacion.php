@@ -5,14 +5,18 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Embarcacion
  *
  * @ORM\Table(name="embarcacion")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EmbarcacionRepository")
+ *
+ * @Vich\Uploadable
  */
 class Embarcacion
 {
@@ -184,6 +188,18 @@ class Embarcacion
     private $modelo;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $brochure;
+
+    /**
+     * @var File
+     *
+     * @Vich\UploadableField(mapping="embarcacion_brochure", fileNameProperty="brochure")
+     */
+    private $brochureFile;
+
+    /**
      * @var EmbarcacionImagen
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\EmbarcacionImagen", mappedBy="embarcacion", cascade={"persist", "remove"})
@@ -191,12 +207,27 @@ class Embarcacion
     private $imagenes;
 
     /**
+     * @var EmbarcacionLayout
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\EmbarcacionLayout", mappedBy="embarcacion", cascade={"persist", "remove"})
+     */
+    private $layouts;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $updateAt;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->imagenes = new ArrayCollection();
-    }
+        $this->layouts = new ArrayCollection();
+     }
 
     /**
      * Get id
@@ -681,6 +712,116 @@ class Embarcacion
     }
 
     /**
+     * Add imagene
+     *
+     * @param EmbarcacionImagen $imagene
+     *
+     * @return Embarcacion
+     */
+    public function addImagene(EmbarcacionImagen $imagene)
+    {
+        $imagene->setEmbarcacion($this);
+        $this->imagenes[] = $imagene;
+
+        return $this;
+    }
+
+    /**
+     * Remove imagene
+     *
+     * @param EmbarcacionImagen $imagene
+     */
+    public function removeImagene(EmbarcacionImagen $imagene)
+    {
+        $this->imagenes->removeElement($imagene);
+    }
+
+    /**
+     * Get imagenes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImagenes()
+    {
+        return $this->imagenes;
+    }
+
+    /**
+     * Add layout
+     *
+     * @param EmbarcacionLayout $layout
+     *
+     * @return Embarcacion
+     */
+    public function addLayout(EmbarcacionLayout $layout)
+    {
+        $layout->setEmbarcacion($this);
+        $this->layouts[] = $layout;
+
+        return $this;
+    }
+
+    /**
+     * Remove layout
+     *
+     * @param EmbarcacionLayout $layout
+     */
+    public function removeLayout(EmbarcacionLayout $layout)
+    {
+        $this->layouts->removeElement($layout);
+    }
+
+    /**
+     * Get layouts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLayouts()
+    {
+        return $this->layouts;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBrochure()
+    {
+        return $this->brochure;
+    }
+
+    /**
+     * @param mixed $brochure
+     */
+    public function setBrochure($brochure)
+    {
+        $this->brochure = $brochure;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getBrochureFile()
+    {
+        return $this->brochureFile;
+    }
+
+    /**
+     * @param File $brochureFile
+     *
+     * @return Embarcacion
+     */
+    public function setBrochureFile(File $brochureFile = null)
+    {
+        $this->brochureFile = $brochureFile;
+
+        if ($brochureFile) {
+            $this->updateAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
      * @Assert\Callback()
      *
      * @param ExecutionContextInterface $context
@@ -715,40 +856,5 @@ class Embarcacion
                     ->addViolation();
             }
         }
-    }
-
-    /**
-     * Add imagene
-     *
-     * @param EmbarcacionImagen $imagene
-     *
-     * @return Embarcacion
-     */
-    public function addImagene(EmbarcacionImagen $imagene)
-    {
-        $imagene->setEmbarcacion($this);
-        $this->imagenes[] = $imagene;
-
-        return $this;
-    }
-
-    /**
-     * Remove imagene
-     *
-     * @param EmbarcacionImagen $imagene
-     */
-    public function removeImagene(EmbarcacionImagen $imagene)
-    {
-        $this->imagenes->removeElement($imagene);
-    }
-
-    /**
-     * Get imagenes
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getImagenes()
-    {
-        return $this->imagenes;
     }
 }

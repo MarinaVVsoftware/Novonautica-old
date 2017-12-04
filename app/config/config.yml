@@ -74,3 +74,10 @@ oneup_uploader:
     mappings:
         embarcacion:
             frontend: dropzone
+
+vich_uploader:
+    db_driver: orm
+    mappings:
+        embarcacion_brochure:
+            uri_prefix: /uploads/embarcacion
+            upload_destination: '%kernel.root_dir%/../web/uploads/embarcacion'

@@ -4,11 +4,14 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Embarcacion;
 use AppBundle\Entity\EmbarcacionImagen;
+use AppBundle\Entity\EmbarcacionLayout;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -95,6 +98,11 @@ class EmbarcacionController extends Controller
             $oldImages->add($imagen);
         }
 
+        $oldLayouts = new ArrayCollection();
+        foreach ($embarcacion->getLayouts() as $layout) {
+            $oldLayouts->add($layout);
+        }
+
         $editForm = $this->createForm('AppBundle\Form\EmbarcacionType', $embarcacion);
         $editForm->handleRequest($request);
 
@@ -103,13 +111,27 @@ class EmbarcacionController extends Controller
 
             foreach ($oldImages as $oldImage) {
                 if (!$embarcacion->getImagenes()->contains($oldImage)) {
-//                    /** @var EmbarcacionImagen $oldImage */
+                    /** @var EmbarcacionImagen $oldImage */
                     $fs = new Filesystem();
                     if ($fs->exists('../web/uploads/embarcacion/' . $oldImage->getBasename())) {
                         $fs->remove('../web/uploads/embarcacion/' . $oldImage->getBasename());
                     }
+
                     $oldImage->setEmbarcacion(null);
                     $em->remove($oldImage);
+                }
+            }
+
+            foreach ($oldLayouts as $oldLayout) {
+                if (!$embarcacion->getLayouts()->contains($oldLayout)) {
+                    /** @var EmbarcacionLayout $oldLayout */
+                    $fs = new Filesystem();
+                    if ($fs->exists('../web/uploads/embarcacion/' . $oldLayout->getBasename())) {
+                        $fs->remove('../web/uploads/embarcacion/' . $oldLayout->getBasename());
+                    }
+
+                    $oldLayout->setEmbarcacion(null);
+                    $em->remove($oldLayout);
                 }
             }
 
@@ -161,7 +183,6 @@ class EmbarcacionController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('embarcacion_delete', array('id' => $embarcacion->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

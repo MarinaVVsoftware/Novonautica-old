@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
 {% endblock %}
 
-{% form_theme form.imagenes 'embarcacion/form-themes/_embarcacion_imagen.html.twig' %}
+{% form_theme form 'embarcacion/form-themes/_embarcacion_imagen.html.twig' %}
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -88,8 +88,9 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="layout">
-                                    {#<div class="row">
-                                        <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            {{ form_row(form.brochureFile) }}
                                             {{ form_row(form.layouts) }}
                                         </div>
                                     </div>
@@ -99,7 +100,7 @@
                                                 Puedes arrastrar los layouts aquí.
                                             </div>
                                         </div>
-                                    </div>#}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -178,23 +179,28 @@
       (function () {
         const embarcacionForm = document.querySelector('[name="appbundle_embarcacion"]');
         const imgContainer = document.querySelector('#appbundle_embarcacion_imagenes');
-        // const layoutContainer = document.querySelector('#appbundle_embarcacion_layouts');
+        const layoutContainer = document.querySelector('#appbundle_embarcacion_layouts');
         let imgCount = '{{ form.imagenes|length }}';
-        {#let layoutCount = '{{ form.layouts|length }}';#}
+        let layoutCount = '{{ form.layouts|length }}';
 
         embarcacionForm.addEventListener('submit', function (e) {
           e.preventDefault();
-          if (!imagenes.getQueuedFiles().length) {
+          if (!imagenes.getQueuedFiles().length && !layouts.getQueuedFiles().length) {
             this.submit();
           } else {
+            if (imagenes.getQueuedFiles().length) {
               imagenes.processQueue();
-              imagenes.on('queuecomplete', () => {
-                this.submit();
-              });
-              layouts.processQueue();
-              layouts.on('queuecomplete', () => {
-                this.submit();
-              });
+              if (layouts.getQueuedFiles().length) {
+                layouts.processQueue();
+                layouts.on('queuecomplete', () => {
+                  this.submit();
+                });
+              } else {
+                imagenes.on('queuecomplete', () => {
+                  this.submit();
+                });
+              }
+            }
           }
         });
 
@@ -228,13 +234,14 @@
           }
         });
 
-        /*const layouts = new Dropzone('#boat-layout', {
+        const layouts = new Dropzone('#boat-layout', {
           ...dropzoneParameters,
           init: function () {
             this
                 .on('success', function (file, response) {
                   const layoutPrototype = layoutContainer.dataset.prototype.replace(/__name__/g, layoutCount);
-                  dropzoneSuccess(layoutContainer, layoutPrototype, 2, file, response, layoutCount);
+                  dropzoneSuccess(layoutContainer, layoutPrototype, 2, file, response);
+                  layoutCount++;
                   layouts.processQueue();
                 })
                 .on('removedfile', function (file) {
@@ -244,13 +251,21 @@
                   }
                 });
           }
-        });*/
+        });
 
           {% for imagen in embarcacion.imagenes %}
-        emitThumbnail({
+        emitThumbnail(imagenes, {
           name: '{{ imagen.basename }}',
           size: {{ imagen.size }},
           dataURL: '{{ app.request.basePath }}/uploads/embarcacion/{{ imagen.basename }}'
+        });
+          {% endfor %}
+
+          {% for layout in embarcacion.layouts %}
+        emitThumbnail(layouts, {
+          name: '{{ layout.basename }}',
+          size: {{ layout.size }},
+          dataURL: '{{ app.request.basePath }}/uploads/embarcacion/{{ layout.basename }}'
         });
           {% endfor %}
 
@@ -265,16 +280,17 @@
           contenedor.appendChild(divContainer.firstChild);
         }
 
-        function emitThumbnail(thumb) {
-          imagenes.files.push(thumb);
-          imagenes.emit('addedfile', thumb);
-          imagenes.createThumbnailFromUrl(thumb,
-              imagenes.options.thumbnailWidth, imagenes.options.thumbnailHeight,
-              imagenes.options.thumbnailMethod, true, function (thumbnail) {
-                imagenes.emit('thumbnail', thumb, thumbnail);
+        function emitThumbnail(dz, thumb) {
+          dz.files.push(thumb);
+          dz.emit('addedfile', thumb);
+          dz.createThumbnailFromUrl(thumb,
+              dz.options.thumbnailWidth, dz.options.thumbnailHeight,
+              dz.options.thumbnailMethod, true, function (thumbnail) {
+                dz.emit('thumbnail', thumb, thumbnail);
               });
-          imagenes.emit('complete', thumb);
+          dz.emit('complete', thumb);
         }
-      })();
+      })
+      ();
     </script>
 {% endblock %}

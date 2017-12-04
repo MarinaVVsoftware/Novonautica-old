@@ -3,12 +3,12 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Embarcacion;
-use AppBundle\Entity\EmbarcacionImagen;
 use AppBundle\Entity\EmbarcacionMarca;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class EmbarcacionType extends AbstractType
 {
@@ -60,13 +61,26 @@ class EmbarcacionType extends AbstractType
             ->add('descripcion')
             ->add('video')
             ->add('imagenes', CollectionType::class, [
-                'label' => 'Imagenes',
                 'entry_type' => EmbarcacionImagenType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false
-            ]);
+            ])
+            ->add('brochureFile', VichFileType::class, [
+                'required' => false,
+                'label' => 'Brochure',
+                'download_label' => 'Ver brochure',
+                'delete_label' => '¿Eliminar brochure?'
+            ])
+            ->add('layouts', CollectionType::class, [
+                'entry_type' => EmbarcacionLayoutType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false
+            ])
+        ;
 
         $formModifier = function (FormInterface $form, EmbarcacionMarca $marca = null) {
             $modelos = $marca ? $marca->getModelos() : [];
@@ -86,7 +100,6 @@ class EmbarcacionType extends AbstractType
 
         $builder->addEventListener(FormEvents::SUBMIT,
             function (FormEvent $event) {
-                $form = $event->getForm();
                 /** @var Embarcacion $embarcacion */
                 $embarcacion = $event->getData();
 
