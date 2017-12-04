@@ -17,7 +17,6 @@ class EmbarcacionImagenType extends AbstractType
     {
         $builder
             ->add('basename', HiddenType::class)
-            ->add('tipo', HiddenType::class)
             ->add('size', HiddenType::class)
         ;
     }
@@ -27,9 +26,9 @@ class EmbarcacionImagenType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\EmbarcacionImagen'
-        ));
+        ]);
     }
 
     /**

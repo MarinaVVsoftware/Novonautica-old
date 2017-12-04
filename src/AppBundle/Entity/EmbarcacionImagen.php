@@ -29,13 +29,6 @@ class EmbarcacionImagen
     private $basename;
 
     /**
-     * @var int Tipos 1 = Imagen, 2 = Layout
-     *
-     * @ORM\Column(name="tipo", type="smallint")
-     */
-    private $tipo;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="size", type="integer")
@@ -81,30 +74,6 @@ class EmbarcacionImagen
     public function getBasename()
     {
         return $this->basename;
-    }
-
-    /**
-     * Set tipo
-     *
-     * @param integer $tipo
-     *
-     * @return EmbarcacionImagen
-     */
-    public function setTipo($tipo)
-    {
-        $this->tipo = $tipo;
-
-        return $this;
-    }
-
-    /**
-     * Get tipo
-     *
-     * @return integer
-     */
-    public function getTipo()
-    {
-        return $this->tipo;
     }
 
     /**

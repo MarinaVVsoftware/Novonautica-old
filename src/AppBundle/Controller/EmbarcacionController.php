@@ -46,6 +46,7 @@ class EmbarcacionController extends Controller
     public function newAction(Request $request)
     {
         $embarcacion = new Embarcacion();
+
         $form = $this->createForm('AppBundle\Form\EmbarcacionType', $embarcacion);
         $form->handleRequest($request);
 
@@ -57,10 +58,10 @@ class EmbarcacionController extends Controller
             return $this->redirectToRoute('embarcacion_show');
         }
 
-        return $this->render('embarcacion/new.html.twig', array(
+        return $this->render('embarcacion/new.html.twig', [
             'embarcacion' => $embarcacion,
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -78,15 +79,6 @@ class EmbarcacionController extends Controller
             'delete_form' => $deleteForm->createView(),
         ));
     }
-
-    /*
-     * TODO
-     * Crear metodo que para accesar a traves de ajax post
-     * este metodo buscara el nombre del archivo en los documentos
-     * y usara unlink() para eliminarlo
-     * Alternativamente el metodo de edit action deberia hacer un ciclo sobre las imagenes que tiene
-     * y que existen, si no existe en su arreglo de imagenes = unlink()
-     */
 
     /**
      * Displays a form to edit an existing embarcacion entity.
@@ -130,11 +122,11 @@ class EmbarcacionController extends Controller
             return $this->redirectToRoute('embarcacion_edit', ['id' => $embarcacion->getId()]);
         }
 
-        return $this->render('embarcacion/edit.html.twig', array(
+        return $this->render('embarcacion/new.html.twig', [
             'embarcacion' => $embarcacion,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**

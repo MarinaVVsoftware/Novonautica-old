@@ -681,41 +681,6 @@ class Embarcacion
     }
 
     /**
-     * Add imagene
-     *
-     * @param EmbarcacionImagen $imagene
-     *
-     * @return Embarcacion
-     */
-    public function addImagene(EmbarcacionImagen $imagene)
-    {
-        $imagene->setEmbarcacion($this);
-        $this->imagenes[] = $imagene;
-
-        return $this;
-    }
-
-    /**
-     * Remove imagene
-     *
-     * @param EmbarcacionImagen $imagene
-     */
-    public function removeImagene(EmbarcacionImagen $imagene)
-    {
-        $this->imagenes->removeElement($imagene);
-    }
-
-    /**
-     * Get imagenes
-     *
-     * @return Collection
-     */
-    public function getImagenes()
-    {
-        return $this->imagenes;
-    }
-
-    /**
      * @Assert\Callback()
      *
      * @param ExecutionContextInterface $context
@@ -752,4 +717,38 @@ class Embarcacion
         }
     }
 
+    /**
+     * Add imagene
+     *
+     * @param EmbarcacionImagen $imagene
+     *
+     * @return Embarcacion
+     */
+    public function addImagene(EmbarcacionImagen $imagene)
+    {
+        $imagene->setEmbarcacion($this);
+        $this->imagenes[] = $imagene;
+
+        return $this;
+    }
+
+    /**
+     * Remove imagene
+     *
+     * @param EmbarcacionImagen $imagene
+     */
+    public function removeImagene(EmbarcacionImagen $imagene)
+    {
+        $this->imagenes->removeElement($imagene);
+    }
+
+    /**
+     * Get imagenes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImagenes()
+    {
+        return $this->imagenes;
+    }
 }

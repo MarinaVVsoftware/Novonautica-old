@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
 {% endblock %}
 
+{% form_theme form.imagenes 'embarcacion/form-themes/_embarcacion_imagen.html.twig' %}
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -73,7 +74,6 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             {{ form_row(form.video) }}
-                                            {% form_theme form.imagenes 'embarcacion/form-themes/_embarcacion_imagen.html.twig' %}
                                             {{ form_row(form.imagenes) }}
                                         </div>
                                     </div>
@@ -88,6 +88,18 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="layout">
+                                    {#<div class="row">
+                                        <div class="col-md-4">
+                                            {{ form_row(form.layouts) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div id="boat-layout" class="dropzone">
+                                            <div class="dz-message imagenes-message">
+                                                Puedes arrastrar los layouts aquí.
+                                            </div>
+                                        </div>
+                                    </div>#}
                                 </div>
                             </div>
                         </div>
@@ -114,8 +126,7 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/dropzone.js') }}"></script>
     <script type="text/javascript">
-      (function ($) {
-        const construccionForm = document.querySelector('[name="appbundle_embarcacion"]');
+      (function () {
         const construccionInput = document.querySelector('#appbundle_embarcacion_construccion');
         const prefabricadoContainer = document.querySelector('#prefabricado');
         const customContainer = document.querySelector('#custom');
@@ -123,8 +134,6 @@
         const modeloInput = document.querySelector('#appbundle_embarcacion_modelo');
         const tabContent = document.querySelector('.tab-content');
         const firstError = tabContent.querySelector('.has-error');
-        const imgContainer = document.querySelector('#appbundle_embarcacion_imagenes');
-        let imgCount = '{{ form.imagenes|length }}';
 
         fetchModelos();
         getConstruccion();
@@ -157,51 +166,105 @@
 
         function fetchModelos() {
           fetch(`{{ app.request.baseUrl }}/embarcacion/marca/${marcaInput.value}/modelos.json`, {credentials: 'include'})
-              .then(response => response.ok === 200 ? response.json() : response.status)
+              .then(response => response.status === 200 ? response.json() : response.status)
               .then(marca => {
                 modeloInput.innerHTML = marca.modelos.length
                     ? marca.modelos.map(modelo => `<option value="${modelo.id}">${modelo.nombre}</option>`).join('')
                     : `<option>No hay modelos</option>`;
               });
         }
+      })();
 
-        Dropzone.autoDiscover = false;
-        const imagenes = new Dropzone('#boat-img', {
+      (function () {
+        const embarcacionForm = document.querySelector('[name="appbundle_embarcacion"]');
+        const imgContainer = document.querySelector('#appbundle_embarcacion_imagenes');
+        // const layoutContainer = document.querySelector('#appbundle_embarcacion_layouts');
+        let imgCount = '{{ form.imagenes|length }}';
+        {#let layoutCount = '{{ form.layouts|length }}';#}
+
+        embarcacionForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (!imagenes.getQueuedFiles().length) {
+            this.submit();
+          } else {
+              imagenes.processQueue();
+              imagenes.on('queuecomplete', () => {
+                this.submit();
+              });
+              layouts.processQueue();
+              layouts.on('queuecomplete', () => {
+                this.submit();
+              });
+          }
+        });
+
+        let dropzoneParameters = {
           url: '{{ oneup_uploader_endpoint('embarcacion') }}',
           acceptedFiles: 'image/*',
           maxFilesize: 2,
           dictFileTooBig: 'La imagen es demasiado pesada el tamaño maximo es de 1MiB',
           addRemoveLinks: true,
+          parallelUploads: 1,
+          autoProcessQueue: false,
+        };
+
+        Dropzone.autoDiscover = false;
+        const imagenes = new Dropzone('#boat-img', {
+          ...dropzoneParameters,
           init: function () {
             this
                 .on('success', function (file, response) {
                   const imgPrototype = imgContainer.dataset.prototype.replace(/__name__/g, imgCount);
-
-                  let divContainer = document.createElement('div');
-                  divContainer.innerHTML = imgPrototype;
-
-                  let imgInput = divContainer.querySelector('[name*="[basename]"]');
-                  let tipoInput = divContainer.querySelector('[name*="[tipo]"]');
-                  let sizeInput = divContainer.querySelector('[name*="[size]"]');
-                  imgInput.dataset.uuid = file.upload.uuid;
-                  imgInput.value = response.baseFileName;
-                  tipoInput.value = 1;
-                  sizeInput.value = file.size;
-                  imgContainer.appendChild(divContainer.firstChild);
+                  dropzoneSuccess(imgContainer, imgPrototype, 1, file, response);
                   imgCount++;
+                  imagenes.processQueue();
                 })
                 .on('removedfile', function (file) {
-                  let imgInputContainer = imgContainer.querySelector(`[data-uuid="${file.upload.uuid}"]`);
+                  let imgInputContainer = imgContainer.querySelector(`input[value="${file.name}"]`);
                   if (imgInputContainer) {
-                    $(imgInputContainer.parentNode.parentNode).remove();
+                    $(imgInputContainer.parentNode).remove();
                   }
                 });
           }
         });
 
+        /*const layouts = new Dropzone('#boat-layout', {
+          ...dropzoneParameters,
+          init: function () {
+            this
+                .on('success', function (file, response) {
+                  const layoutPrototype = layoutContainer.dataset.prototype.replace(/__name__/g, layoutCount);
+                  dropzoneSuccess(layoutContainer, layoutPrototype, 2, file, response, layoutCount);
+                  layouts.processQueue();
+                })
+                .on('removedfile', function (file) {
+                  let layoutInputContainer = layoutContainer.querySelector(`input[value="${file.name}"]`);
+                  if (layoutInputContainer) {
+                    $(layoutInputContainer.parentNode).remove();
+                  }
+                });
+          }
+        });*/
+
           {% for imagen in embarcacion.imagenes %}
-        emitThumbnail({ name: '{{ imagen.basename }}', size: 0, dataURL: '{{ app.request.basePath }}/uploads/embarcacion/{{ imagen.basename }}' });
+        emitThumbnail({
+          name: '{{ imagen.basename }}',
+          size: {{ imagen.size }},
+          dataURL: '{{ app.request.basePath }}/uploads/embarcacion/{{ imagen.basename }}'
+        });
           {% endfor %}
+
+        function dropzoneSuccess(contenedor, prototipo, tipo, archivo, respuesta) {
+          let divContainer = document.createElement('div');
+          divContainer.innerHTML = prototipo;
+          let imgInput = divContainer.querySelector('[name*="[basename]"]');
+          let sizeInput = divContainer.querySelector('[name*="[size]"]');
+          imgInput.dataset.uuid = archivo.upload.uuid;
+          imgInput.value = respuesta.baseFileName;
+          sizeInput.value = archivo.size;
+          contenedor.appendChild(divContainer.firstChild);
+        }
+
         function emitThumbnail(thumb) {
           imagenes.files.push(thumb);
           imagenes.emit('addedfile', thumb);
@@ -212,7 +275,6 @@
               });
           imagenes.emit('complete', thumb);
         }
-
-      })(jQuery);
+      })();
     </script>
 {% endblock %}

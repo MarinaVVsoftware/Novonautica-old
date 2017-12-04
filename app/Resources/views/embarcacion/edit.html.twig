@@ -191,21 +191,15 @@
                   sizeInput.value = file.size;
                   imgContainer.appendChild(divContainer.firstChild);
                   imgCount++;
+
+                  imagenes.processQueue();
                 })
                 .on('removedfile', function (file) {
                   let imgInputContainer = imgContainer.querySelector(`input[value="${file.name}"]`);
                   if (imgInputContainer) {
                     $(imgInputContainer.parentNode).remove();
-                    // Elimina las imagenes de la entidad
-                    // Pero si la entidad es modificada tambien la guarda
-                    $.ajax({
-                      url: `{{ app.request.baseUrl }}/embarcacion/{{ embarcacion.id }}/edit`,
-                      data: $(embarcacionForm).serialize(),
-                      type: 'post'
-                    });
                   }
-                })
-                .on('complete', () => { this.processQueue(); });
+                });
           }
         });
 
@@ -232,11 +226,11 @@
           e.preventDefault();
           // Checa si hay imagenes para cargar y
           // Espera a que todas las imagenes esten cargadas para continuar
-          if (imagenes.getQueuedFiles()) {
+          if (!imagenes.getQueuedFiles().length) {
+            this.submit();
+          } else {
             imagenes.processQueue();
             imagenes.on('queuecomplete', () => { this.submit(); });
-          } else {
-            this.submit();
           }
         });
 

@@ -275,7 +275,7 @@
 }
 
 .dropzone .dz-preview.dz-image-preview {
-    background: white;
+    background: transparent;
 }
 
 .dropzone .dz-preview.dz-image-preview .dz-details {
@@ -504,4 +504,11 @@
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
     border-bottom: 6px solid #be2626;
+}
+
+/*
+ *  CUSTOM
+ */
+#boat-img .dz-preview:nth-of-type(2) {
+    border: 1px dashed aquamarine;
 }
