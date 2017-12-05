@@ -55,20 +55,43 @@
                         <hr>
                     </div>
                 </div>
-                <div id="pago-fields-list0"
-                     class="lista-pagos"
-                     data-prototype="
+                <div class="row">
+                    <div class="col-sm-9">
+                        <table id="servicioAdicional" class="table text-center">
+                            <thead>
+                            <tr>
+                                <th class="col-sm-2">Método de pago</th>
+                                <th class="col-sm-2">Pago</th>
+                                <th class="col-sm-2">Fecha de pago</th>
+                                <th class="col-sm-1">Valor del dolar</th>
+                                <th class="col-sm-1"></th>
+                            </tr>
+                            </thead>
+                            <tbody id="pago-fields-list0"
+                                 class="lista-pagos"
+                                 data-prototype="
                                      {% filter escape %}
                                      {{ include('marinahumeda/cotizacion/pago/coleccion-pago.twig', { 'form': form.pagos.vars.prototype }) }}
                                      {#{{ form_widget(form.pagos.vars.prototype)|e('html_attr') }}#}
                                      {% endfilter %}
                                      ">
-                    {% for pagoField in form.pagos %}
-                        {% form_theme pagoField 'marinahumeda/cotizacion/pago/coleccion-pago.twig' %}
-                        <div class="row">
-                            {{ form_widget(pagoField) }}
-                        </div>
-                    {% endfor %}
+                                {% for pagoField in form.pagos %}
+                                    {% form_theme pagoField 'marinahumeda/cotizacion/pago/coleccion-pago.twig' %}
+                                    <tr class="pago-agregado">
+                                        <td>{{ form_widget(pagoField.metodopago) }}</td>
+                                        <td>{{ form_widget(pagoField.cantidad) }} </td>
+                                        <td>{{ form_widget(pagoField.fecharealpago) }} </td>
+                                        <td>{{ form_widget(pagoField.dolar) }}</td>
+                                        <td>
+                                            <a href="#" class="remove-pago btn btn-naranja">
+                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="row espacio-linea-arriba2">
                     <div class="col-sm-8">

@@ -112,7 +112,7 @@ class MarinaHumedaCotizacion
     /**
      * @var int
      *
-     * @ORM\Column(name="estatuspago", type="smallint")
+     * @ORM\Column(name="estatuspago", type="smallint", nullable=true)
      */
     private $estatuspago;
 

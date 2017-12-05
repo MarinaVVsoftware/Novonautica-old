@@ -361,7 +361,7 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     cursor: pointer;
 }
 .panel-novo tbody td input[type="text"]{
-    background: none;
+    /*background: none;*/
     padding: 0px;
     border-radius: 0;
     text-align: center;

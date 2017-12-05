@@ -22,7 +22,7 @@ class PagoType extends AbstractType
                 'choices'  => [
                     'Efectivo' => 'Efectivo',
                     'Transferencia' => 'Transferencia',
-                    'Tarjeta de crédito' => 'Tarjeta de crédito',
+                    'Tarjeta de crédito' => 'Tarjeta de crédito'
                     ],
                 'label' => 'Método de pago',
                 'required' => false

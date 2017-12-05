@@ -14,6 +14,7 @@ use AppBundle\Form\MarinaHumedaCotizacionAceptadaType;
 use AppBundle\Form\MarinaHumedaCotizacionRechazadaType;
 use AppBundle\Form\MarinaHumedaCotizacionType;
 use Doctrine\Common\Collections\ArrayCollection;
+use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -685,6 +686,34 @@ class MarinaHumedaCotizacionController extends Controller
                     ->setTokenrechaza($tokenRechaza)
                     ->setNombrevalidanovo($this->getUser()->getNombre());
 
+
+               // creando pdf
+                $html = $this->renderView('marinahumeda/cotizacion/pdf/cotizacionpdf.html.twig', [
+                    'title' => 'Cotizacion-'.$marinaHumedaCotizacion->getFolio().'.pdf',
+                    'marinaHumedaCotizacion' => $marinaHumedaCotizacion
+                ]);
+                $header = $this->renderView('marinahumeda/cotizacion/pdf/pdfencabezado.twig', [
+                    'marinaHumedaCotizacion' => $marinaHumedaCotizacion
+                ]);
+                $footer = $this->renderView('marinahumeda/cotizacion/pdf/pdfpie.twig', [
+                    'marinaHumedaCotizacion' => $marinaHumedaCotizacion
+                ]);
+                $hojapdf = $this->get('knp_snappy.pdf');
+                $options = [
+                    'margin-top'    => 23,
+                    'margin-right'  => 0,
+                    'margin-bottom' => 33,
+                    'margin-left'   => 0,
+                    'header-html' => utf8_decode($header),
+                    'footer-html' => utf8_decode($footer)
+                ];
+                $pdfEnviar = new PdfResponse(
+                    $hojapdf->getOutputFromHtml($html,$options),
+                    'Cotizacion-'.$marinaHumedaCotizacion
+                        ->getFolio().'-'.$marinaHumedaCotizacion
+                        ->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
+                );
+                $attachment = new Swift_Attachment($pdfEnviar, 'Cotizacion-'.$marinaHumedaCotizacion->getFolio().'-'.$marinaHumedaCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
                 // Enviar correo de confirmacion
                 $message = (new \Swift_Message('¡Cotizacion de servicios!'))
                     ->setFrom('noresponder@novonautica.com')
@@ -697,7 +726,8 @@ class MarinaHumedaCotizacionController extends Controller
                             'tokenRechaza' => $tokenRechaza
                         ]),
                         'text/html'
-                    );
+                        )
+                    ->attach($attachment);
 
                 $mailer->send($message);
 

@@ -236,7 +236,7 @@ jQuery('.add-another-pago').click(function (e) {
     totPagos++;
     $(this).data('cantidad', totPagos);
     // create a new list element and add it to the list
-    var newLi = jQuery('<div class="row"></div>').html(newWidget);
+    var newLi = jQuery('<tr class="pago-agregado"></tr>').html(newWidget);
     newLi.appendTo(pagoListPrimero);
 
     // also add a remove button, just for this example
