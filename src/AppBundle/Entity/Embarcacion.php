@@ -174,6 +174,27 @@ class Embarcacion
     private $video;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="motores", type="array", nullable=true)
+     */
+    private $motores;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $brochure;
+
+    /**
+     * @var File
+     *
+     * @Assert\File(mimeTypes={"application/pdf", "image/*"}, mimeTypesMessage="Solo se permiten archivos PDF e imagenes")
+     *
+     * @Vich\UploadableField(mapping="embarcacion_brochure", fileNameProperty="brochure")
+     */
+    private $brochureFile;
+
+    /**
      * @var EmbarcacionMarca
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EmbarcacionMarca")
@@ -186,18 +207,6 @@ class Embarcacion
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EmbarcacionModelo")
      */
     private $modelo;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $brochure;
-
-    /**
-     * @var File
-     *
-     * @Vich\UploadableField(mapping="embarcacion_brochure", fileNameProperty="brochure")
-     */
-    private $brochureFile;
 
     /**
      * @var EmbarcacionImagen
@@ -227,7 +236,7 @@ class Embarcacion
     {
         $this->imagenes = new ArrayCollection();
         $this->layouts = new ArrayCollection();
-     }
+    }
 
     /**
      * Get id
@@ -819,6 +828,54 @@ class Embarcacion
         }
 
         return $this;
+    }
+
+    /**
+     * Set motores
+     *
+     * @param array $motores
+     *
+     * @return Embarcacion
+     */
+    public function setMotores($motores)
+    {
+        $this->motores = array_values($motores);
+
+        return $this;
+    }
+
+    /**
+     * Get motores
+     *
+     * @return array
+     */
+    public function getMotores()
+    {
+        return $this->motores;
+    }
+
+    /**
+     * Set updateAt
+     *
+     * @param \DateTime $updateAt
+     *
+     * @return Embarcacion
+     */
+    public function setUpdateAt($updateAt)
+    {
+        $this->updateAt = $updateAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updateAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdateAt()
+    {
+        return $this->updateAt;
     }
 
     /**

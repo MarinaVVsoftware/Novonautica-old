@@ -19,7 +19,7 @@ class EmbarcacionMarcaRepository extends EntityRepository
         $qb = $this->createQueryBuilder('marca');
 
         $qb
-            ->select('marca.id', 'marca.nombre')
+            ->select('marca.id', 'marca.nombre', 'marca.imagen')
             ->orderBy('marca.id', 'DESC')
             ->addOrderBy('marca.nombre', $order)
             ->setFirstResult($size * ((int)$current - 1))

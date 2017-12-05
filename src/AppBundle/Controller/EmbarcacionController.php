@@ -49,12 +49,13 @@ class EmbarcacionController extends Controller
     public function newAction(Request $request)
     {
         $embarcacion = new Embarcacion();
-
+        $embarcacion->setMotores([[]]);
         $form = $this->createForm('AppBundle\Form\EmbarcacionType', $embarcacion);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $embarcacion->setMotores(array_values($embarcacion->getMotores()));
             $em->persist($embarcacion);
             $em->flush();
 
@@ -108,6 +109,7 @@ class EmbarcacionController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $embarcacion->setMotores(array_values($embarcacion->getMotores()));
 
             foreach ($oldImages as $oldImage) {
                 if (!$embarcacion->getImagenes()->contains($oldImage)) {
@@ -140,7 +142,6 @@ class EmbarcacionController extends Controller
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse(['ok' => true]);
             }
-
             return $this->redirectToRoute('embarcacion_edit', ['id' => $embarcacion->getId()]);
         }
 

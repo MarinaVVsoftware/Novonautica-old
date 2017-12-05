@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
 {% endblock %}
 
-{% form_theme form 'embarcacion/form-themes/_embarcacion_imagen.html.twig' %}
+{% form_theme form 'embarcacion/form-themes/_embarcacion.html.twig' %}
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -13,7 +13,9 @@
                 <div class="col-md-12">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Embarcaciones</h3>
+                            <h3 class="panel-title">
+                                {{ embarcacion.nombre is empty ? 'Embarcaciones' : embarcacion.nombre }}
+                            </h3>
                         </div>
                         <div class="panel-body panel-pestanias">
                             {{ form_start(form) }}
@@ -61,6 +63,12 @@
                                             {{ form_row(form.pasajerosDormidos) }}
                                             {{ form_row(form.generador) }}
                                         </div>
+                                        <hr style="width: 100%; margin: 10px 0 !important;">
+                                        <div class="col-md-6">
+                                            {{ form_row(form.motores) }}
+                                            <a href="#" id="add-motor">+ Agregar motor</a>
+                                        </div>
+                                        <hr style="width: 100%; margin: 10px 0 !important;">
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-8">
@@ -89,15 +97,17 @@
                                 </div>
                                 <div class="tab-pane" id="layout">
                                     <div class="row">
-                                        <div class="col-md-8">
+                                        <div class="col-md-12">
                                             {{ form_row(form.brochureFile) }}
                                             {{ form_row(form.layouts) }}
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div id="boat-layout" class="dropzone">
-                                            <div class="dz-message imagenes-message">
-                                                Puedes arrastrar los layouts aquí.
+                                        <div class="col-md-12">
+                                            <div id="boat-layout" class="dropzone">
+                                                <div class="dz-message imagenes-message">
+                                                    Puedes arrastrar los layouts aquí.
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -176,7 +186,31 @@
         }
       })();
 
-      (function () {
+      (function ($) {
+        const motorContainer = document.querySelector('#appbundle_embarcacion_motores');
+        const addMotor = document.querySelector('#add-motor');
+        let motorCount = '{{ form.motores|length }}';
+
+        addMotor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const motorPrototype = motorContainer.dataset.prototype.replace(/__name__/g, motorCount);
+          const tempContainer = document.createElement('div');
+          tempContainer.innerHTML = motorPrototype;
+          const motorFormGroup = tempContainer.firstChild;
+          motorContainer.appendChild(motorFormGroup);
+          motorCount++;
+        });
+
+        $(document).on('click', '.remove-motor', function (e) {
+          e.preventDefault();
+          // if (motorContainer.children.length < 2) return; // Siempre deben agregar al menos un motor?
+          const that = this;
+          that.parentNode.parentNode.remove(that.parentNode)
+        })
+
+      })(jQuery);
+
+      (function ($) {
         const embarcacionForm = document.querySelector('[name="appbundle_embarcacion"]');
         const imgContainer = document.querySelector('#appbundle_embarcacion_imagenes');
         const layoutContainer = document.querySelector('#appbundle_embarcacion_layouts');
@@ -290,7 +324,6 @@
               });
           dz.emit('complete', thumb);
         }
-      })
-      ();
+      })(jQuery);
     </script>
 {% endblock %}

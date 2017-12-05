@@ -13,11 +13,13 @@
                         </div>
                         <div class="panel-body" style="min-height: initial">
                             {{ form_start(newForm) }}
-                            {{ form_rest(newForm) }}
+                            {{ form_row(newForm.nombre) }}
+                            {{ form_row(newForm.imagenFile) }}
                             {% if marca.id is not null %}
-                                <a href="{{ path('embarcacion_marca_new') }}" class="btn btn-xs btn-naranja">Cancelar</a>
+                                <a href="{{ path('embarcacion_marca_new') }}"
+                                   class="btn btn-naranja">Cancelar</a>
                             {% endif %}
-                            <button type="submit" class="btn btn-xs btn-azul pull-right">
+                            <button type="submit" class="btn btn-azul pull-right">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 Guardar
                             </button>
@@ -36,6 +38,7 @@
                                     <thead>
                                     <tr>
                                         <th>Nombre</th>
+                                        <th width="25%">Imagen</th>
                                         <th>Modelos</th>
                                         <th width="30%"></th>
                                     </tr>
@@ -43,7 +46,15 @@
                                     <tbody>
                                     {% for i, embarcacionMarca in embarcacionMarcas %}
                                         <tr>
-                                            <td>{{ embarcacionMarca.nombre }}</td>
+                                            <td align="center" valign="middle">{{ embarcacionMarca.nombre }}</td>
+                                            <td align="center" valign="middle">
+                                                <a href="{{ app.request.basePath ~ vich_uploader_asset(embarcacionMarca, 'imagenFile', 'AppBundle\\Entity\\EmbarcacionMarca') }}" target="_blank">
+                                                <img src="{{ app.request.basePath ~ vich_uploader_asset(embarcacionMarca, 'imagenFile', 'AppBundle\\Entity\\EmbarcacionMarca') }}"
+                                                     class="img-responsive"
+                                                     style="width: 30px;"
+                                                     alt="{{ embarcacionMarca.imagen }}">
+                                                </a>
+                                            </td>
                                             <td align="center" width="20%">
                                                 <a href="{{ path('embarcacion_modelo', {'marca': embarcacionMarca.id}) }}">
                                                     Ver modelos
@@ -57,7 +68,8 @@
                                                     </li>
                                                     <li>
                                                         {{ form_start(deleteForms[i]) }}
-                                                        <input type="submit" class="btn btn-xs btn-naranja" value="Eliminar">
+                                                        <input type="submit" class="btn btn-xs btn-naranja"
+                                                               value="Eliminar">
                                                         {{ form_end(deleteForms[i]) }}
                                                     </li>
                                                 </ul>

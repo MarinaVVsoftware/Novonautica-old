@@ -4,12 +4,17 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * EmbarcacionMarca
  *
  * @ORM\Table(name="embarcacion_marca")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EmbarcacionMarcaRepository")
+ * @Vich\Uploadable
  */
 class EmbarcacionMarca
 {
@@ -30,9 +35,33 @@ class EmbarcacionMarca
     private $nombre;
 
     /**
+     * @var File
+     *
+     * @Assert\File(maxSize="2M", maxSizeMessage="La imagen es demasiado pesado, el tamaño maximo es de 2MB")
+     * @Assert\Image(mimeTypesMessage="Estas intentando subir un archivo que no imagen")
+     *
+     * @Vich\UploadableField(mapping="embarcacion_marca", fileNameProperty="imagen")
+     */
+    private $imagenFile;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="imagen", type="string", nullable=true)
+     */
+    private $imagen;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $updateAt;
+
+    /**
      * @var EmbarcacionModelo
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\EmbarcacionModelo", mappedBy="marca", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\EmbarcacionModelo", mappedBy="marca", cascade={"persist", "remove"})
      */
     private $modelos;
 
@@ -78,6 +107,57 @@ class EmbarcacionMarca
     public function getNombre()
     {
         return $this->nombre;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImagen()
+    {
+        return $this->imagen;
+    }
+
+    /**
+     * @param string $imagen
+     */
+    public function setImagen($imagen)
+    {
+        $this->imagen = $imagen;
+    }
+
+    /**
+     * @return File
+     */
+    public function getImagenFile()
+    {
+        return $this->imagenFile;
+    }
+
+    /**
+     * @param File $imagenFile
+     */
+    public function setImagenFile(File $imagenFile = null)
+    {
+        $this->imagenFile = $imagenFile;
+        if ($imagenFile) {
+            $this->updateAt = new \DateTimeImmutable();
+        }
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdateAt()
+    {
+        return $this->updateAt;
+    }
+
+    /**
+     * @param \DateTime $updateAt
+     */
+    public function setUpdateAt($updateAt)
+    {
+        $this->updateAt = $updateAt;
     }
 
     /**

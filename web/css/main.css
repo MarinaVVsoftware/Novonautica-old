@@ -126,11 +126,13 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     background-color: #ff960d;
     color: #fff;
 }
-.btn-verde{
+
+.btn-verde {
     background-color: #009933;
     color: #fff;
 }
-.btn-verde:hover{
+
+.btn-verde:hover {
     background-color: #00bb38;
     color: #fff;
 }
@@ -546,9 +548,9 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     background-color: #353b51;
 }
 
-.panel-body  form textarea::-webkit-scrollbar-thumb,
+.panel-body form textarea::-webkit-scrollbar-thumb,
 body.wysihtml5-editor::-webkit-scrollbar-thumb {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     background-color: #292e41;
 }
 
@@ -955,12 +957,54 @@ td .select2-container--default .select2-selection--single {
 }
 
 /*----- editor texto wysihtml5------*/
-.wysihtml5-toolbar .btn{
+.wysihtml5-toolbar .btn {
     background: #292e41;
     color: #ffffff;
 }
+
 ul.wysihtml5-toolbar a.btn.wysihtml5-command-active {
     background-color: #0097f6;
     color: #ffffff;
 }
+
 /*---fin editor texto wysihtml5------*/
+
+/* --- Input file customizado --- */
+input[type="file"] {
+    overflow: hidden;
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+}
+
+input[type="file"] + label {
+    border: 1px solid #0097f6;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: #363c52;
+    color: #fff;
+}
+
+input[type="file"] + label:hover {
+    background: #0097f6;
+}
+
+input[type="file"] + label * {
+    pointer-events: none;
+}
+
+/* --- fin Input file customizado --- */

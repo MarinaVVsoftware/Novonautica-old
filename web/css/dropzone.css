@@ -509,6 +509,21 @@
 /*
  *  CUSTOM
  */
+#boat-layout .dz-preview:nth-of-type(2),
 #boat-img .dz-preview:nth-of-type(2) {
-    border: 1px dashed aquamarine;
+    border: 1px solid #0097f6;
+}
+
+#boat-layout .dz-preview:nth-of-type(2)::after,
+#boat-img .dz-preview:nth-of-type(2)::after {
+    content: 'Primera imagen';
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    color: #fff;
+    z-index: 99;
+    text-align: center;
+    background: #0097f6;
 }
