@@ -17,6 +17,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EmbarcacionRepository")
  *
  * @Vich\Uploadable
+ *
+ * @ORM\HasLifecycleCallbacks()
  */
 class Embarcacion
 {
@@ -37,9 +39,9 @@ class Embarcacion
     private $nombre;
 
     /**
-     * @var int
+     * @var int $precio esta guardado en centavos
      *
-     * @ORM\Column(name="precio", type="integer")
+     * @ORM\Column(name="precio", type="bigint")
      */
     private $precio;
 
@@ -234,6 +236,7 @@ class Embarcacion
      */
     public function __construct()
     {
+        $this->updateAt = new \DateTimeImmutable();
         $this->imagenes = new ArrayCollection();
         $this->layouts = new ArrayCollection();
     }

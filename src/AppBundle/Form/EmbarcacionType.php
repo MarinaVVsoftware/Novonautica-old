@@ -30,7 +30,8 @@ class EmbarcacionType extends AbstractType
             ->add('precio', MoneyType::class, [
                 'label' => 'Precio (USD)',
                 'currency' => 'USD',
-                'grouping' => true
+                'grouping' => true,
+                'divisor' => 100
             ])
             ->add('construccion', ChoiceType::class, [
                 'choices' => [
@@ -94,7 +95,8 @@ class EmbarcacionType extends AbstractType
             ->add('descripcion')
             ->add('video', TextType::class, [
                 'label' => 'Video (Youtube)',
-                'attr' => ['placeholder' => 'https://www.youtube.com/watch?v=SstAlDGCcIk']
+                'attr' => ['placeholder' => 'https://www.youtube.com/watch?v=SstAlDGCcIk'],
+                'required' => false,
             ])
             ->add('imagenes', CollectionType::class, [
                 'entry_type' => EmbarcacionImagenType::class,

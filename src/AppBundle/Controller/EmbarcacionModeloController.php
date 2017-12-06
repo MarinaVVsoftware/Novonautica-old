@@ -65,7 +65,7 @@ class EmbarcacionModeloController extends Controller
             return $this->redirectToRoute('embarcacion_modelo');
         }
 
-        return $this->render('embarcacionmodelo/new.html.twig', array(
+        return $this->render('embarcacionmodelo/new.html.twig', [
             'embarcacionModelo' => $embarcacionModelo,
             'embarcacionMarca' => $embarcacionMarca,
             'modelos' => $modelos,
@@ -73,7 +73,7 @@ class EmbarcacionModeloController extends Controller
             'deleteForms' => $deleteForms,
             'page' => $page,
             'pages' => $paginacion['pages']
-        ));
+        ]);
     }
 
     /**

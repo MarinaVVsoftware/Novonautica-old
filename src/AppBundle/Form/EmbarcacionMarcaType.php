@@ -16,6 +16,7 @@ class EmbarcacionMarcaType extends AbstractType
     {
         $builder
             ->add('imagenFile', VichImageType::class, [
+                'required' => false,
                 'label' => 'Imagen',
                 'delete_label' => '¿Eliminar imagen?',
                 'download_label' => 'Mostrar imagen'

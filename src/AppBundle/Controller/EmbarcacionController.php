@@ -33,11 +33,11 @@ class EmbarcacionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $embarcacions = $em->getRepository('AppBundle:Embarcacion')->findAll();
+        $embarcaciones = $em->getRepository('AppBundle:Embarcacion')->findAll();
 
-        return $this->render('embarcacion/index.html.twig', array(
-            'embarcacions' => $embarcacions,
-        ));
+        return $this->render('embarcacion/index.html.twig', [
+            'embarcacions' => $embarcaciones,
+        ]);
     }
 
     /**
@@ -49,6 +49,7 @@ class EmbarcacionController extends Controller
     public function newAction(Request $request)
     {
         $embarcacion = new Embarcacion();
+        // Hack para que aparezca al menos un motor el primer [] abre un arreglo, el segundo [] insera un arreglo de motor
         $embarcacion->setMotores([[]]);
         $form = $this->createForm('AppBundle\Form\EmbarcacionType', $embarcacion);
         $form->handleRequest($request);
@@ -59,7 +60,7 @@ class EmbarcacionController extends Controller
             $em->persist($embarcacion);
             $em->flush();
 
-            return $this->redirectToRoute('embarcacion_show');
+            return $this->redirectToRoute('embarcacion_index');
         }
 
         return $this->render('embarcacion/new.html.twig', [

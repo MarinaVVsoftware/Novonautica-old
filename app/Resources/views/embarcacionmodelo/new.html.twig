@@ -28,7 +28,14 @@
                 <div class="col-md-8">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Listado de modelos</h3>
+                            <h3 class="panel-title">
+                                Listado de modelos {{ embarcacionMarca ? 'de ' ~ embarcacionMarca.nombre : '' }}
+                                {% if embarcacionMarca %}
+                                    <small>
+                                        <a href="{{ path('embarcacion_modelo') }}" class="btn-xs">Ver todos los modelos</a>
+                                    </small>
+                                {% endif %}
+                            </h3>
                         </div>
                         <div class="panel-body no-padding">
                             <div class="table-responsive">
@@ -60,10 +67,10 @@
                                                 </ul>
                                             </td>
                                         </tr>
-                                        {% else %}
-                                            <tr>
-                                                <td colspan="3" align="center">No hay modelos</td>
-                                            </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3" align="center">No hay modelos</td>
+                                        </tr>
                                     {% endfor %}
                                     </tbody>
                                 </table>

@@ -14,29 +14,27 @@
                                 <table class="table table-novo">
                                     <thead>
                                     <tr>
-                                        <th>Nombre</th>
-                                        <th>Precio</th>
+                                        <th>Nombre de la embarcación</th>
+                                        <th>Modelo</th>
+                                        <th>Marca</th>
                                         <th>Longitud</th>
-                                        <th>Eslora</th>
-                                        <th>Actions</th>
+                                        <th>Precio</th>
+                                        <th>Año</th>
+                                        <th width="10%"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {% for embarcacion in embarcacions %}
                                         <tr>
                                             <td>{{ embarcacion.nombre }}</td>
-                                            <td>{{ embarcacion.precio }}</td>
+                                            <td>{{ embarcacion.modelo ?: 'Custom' }}</td>
+                                            <td>{{ embarcacion.marca ?: 'Custom' }}</td>
                                             <td>{{ embarcacion.longitud }}</td>
-                                            <td>{{ embarcacion.eslora }}</td>
+                                            <td>${{ (embarcacion.precio / 100)|number_format(2) }} USD</td>
+                                            <td>{{ embarcacion.ano }}</td>
                                             <td>
-                                                <ul>
-                                                    <li>
-                                                        <a href="{{ path('embarcacion_show', { 'id': embarcacion.id }) }}">show</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="{{ path('embarcacion_edit', { 'id': embarcacion.id }) }}">edit</a>
-                                                    </li>
-                                                </ul>
+                                                <a href="{{ path('embarcacion_edit', { 'id': embarcacion.id }) }}">
+                                                    <i class="fa fa-pencil" aria-hidden="true"></i></a>
                                             </td>
                                         </tr>
                                     {% endfor %}
