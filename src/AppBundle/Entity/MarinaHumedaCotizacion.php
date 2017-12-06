@@ -54,9 +54,9 @@ class MarinaHumedaCotizacion
     private $descuento;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="dolar", type="float", nullable=true)
+     * @ORM\Column(name="dolar", type="integer", nullable=true)
      */
     private $dolar;
 
@@ -68,44 +68,44 @@ class MarinaHumedaCotizacion
     private $iva;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="subtotal", type="float", nullable=true)
+     * @ORM\Column(name="subtotal", type="bigint", nullable=true)
      */
     private $subtotal;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="ivatotal", type="float", nullable=true)
+     * @ORM\Column(name="ivatotal", type="bigint", nullable=true)
      */
     private $ivatotal;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="descuentototal", type="float", nullable=true)
+     * @ORM\Column(name="descuentototal", type="bigint", nullable=true)
      */
     private $descuentototal;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="total", type="float", nullable=true)
+     * @ORM\Column(name="total", type="bigint", nullable=true)
      */
     private $total;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="adeudo", type="float", nullable=true)
+     * @ORM\Column(name="adeudo", type="bigint", nullable=true)
      */
     private $adeudo;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="pagado", type="float", nullable=true)
+     * @ORM\Column(name="pagado", type="bigint", nullable=true)
      */
     private $pagado;
 
@@ -328,7 +328,7 @@ class MarinaHumedaCotizacion
     /**
      * Set dolar
      *
-     * @param float $dolar
+     * @param int $dolar
      *
      * @return MarinaHumedaCotizacion
      */
@@ -342,7 +342,7 @@ class MarinaHumedaCotizacion
     /**
      * Get dolar
      *
-     * @return float
+     * @return int
      */
     public function getDolar()
     {
@@ -376,7 +376,7 @@ class MarinaHumedaCotizacion
     /**
      * Set subtotal
      *
-     * @param float $subtotal
+     * @param int $subtotal
      *
      * @return MarinaHumedaCotizacion
      */
@@ -390,7 +390,7 @@ class MarinaHumedaCotizacion
     /**
      * Get subtotal
      *
-     * @return float
+     * @return int
      */
     public function getSubtotal()
     {
@@ -400,7 +400,7 @@ class MarinaHumedaCotizacion
     /**
      * Set ivatotal
      *
-     * @param float $ivatotal
+     * @param int $ivatotal
      *
      * @return MarinaHumedaCotizacion
      */
@@ -414,7 +414,7 @@ class MarinaHumedaCotizacion
     /**
      * Get ivatotal
      *
-     * @return float
+     * @return int
      */
     public function getIvatotal()
     {
@@ -424,7 +424,7 @@ class MarinaHumedaCotizacion
     /**
      * Set descuentototal
      *
-     * @param float $descuentototal
+     * @param int $descuentototal
      *
      * @return MarinaHumedaCotizacion
      */
@@ -438,7 +438,7 @@ class MarinaHumedaCotizacion
     /**
      * Get descuentototal
      *
-     * @return float
+     * @return int
      */
     public function getDescuentototal()
     {
@@ -448,7 +448,7 @@ class MarinaHumedaCotizacion
     /**
      * Set total
      *
-     * @param float $total
+     * @param int $total
      *
      * @return MarinaHumedaCotizacion
      */
@@ -462,7 +462,7 @@ class MarinaHumedaCotizacion
     /**
      * Get total
      *
-     * @return float
+     * @return int
      */
     public function getTotal()
     {

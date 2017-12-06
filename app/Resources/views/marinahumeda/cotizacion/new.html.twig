@@ -94,7 +94,7 @@
                                     <label>Descuento(%)</label>
                                     {{ form_widget(form.descuento,{'value':0}) }}
                                     <label>Dolar</label>
-                                    {{ form_widget(form.dolar,{'value':valdolar}) }}
+                                    {{ form_widget(form.dolar,{'value':(valdolar/100)}) }}
                                     <label>Slip</label>
                                     {{ form_widget(form.slip) }}
                                 </div>

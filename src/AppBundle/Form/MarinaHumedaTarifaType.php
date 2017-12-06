@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 //use Doctrine\DBAL\Types\TextType;
 //use Doctrine\DBAL\Types\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\AbstractType;
@@ -25,10 +26,13 @@ class MarinaHumedaTarifaType extends AbstractType
                             'Electricidad' => 2
                             ]
             ])
-            ->add('costo',null,[
+            ->add('costo',MoneyType::class,[
                 'label' => 'Costo por día (USD)',
                 'required' => false,
-                'attr' => ['class' => 'esdecimal']
+                'attr' => ['class' => 'esdecimal'],
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
             ])
 
             ->add('descripcion',TextType::class,[

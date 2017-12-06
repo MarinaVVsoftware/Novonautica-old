@@ -16,6 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 
 
 class MonederoType extends AbstractType
@@ -32,9 +33,12 @@ class MonederoType extends AbstractType
                     'Restar' => 2
                 ]
             ])
-            ->add('monto', TextType::class, [
+            ->add('monto', MoneyType::class, [
                 'label' => 'Monto a procesar',
                 'required' => false,
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
                 'attr' => ['class' => 'esdecimal']
             ])
             ->add('descripcion', TextareaType::class, [

@@ -66,7 +66,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label>Dolar:</label>
-                                    {{ form_widget(form.dolar,{'value':valdolar}) }}
+                                    {{ form_widget(form.dolar,{'value':(valdolar/100)}) }}
                                 </div>
                                 <div class="col-sm-9">
                                     <button type="submit" class="btn btn-azul pull-right">
@@ -269,8 +269,8 @@
                     success: function(datos) {
                         JSON.stringify(datos);
                         var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-                        fila.children('.valorprecio').html('$ '+datos.precio);
-                        fila.children('.valorprecio').data('valor',datos.precio);
+                        fila.children('.valorprecio').html('$ '+(datos.precio/100));
+                        fila.children('.valorprecio').data('valor',(datos.precio/100));
                         fila.children('.valorunidad').html(datos.unidad);
                         calculaSubtotalesAdicionales(fila);
                     }

@@ -29,9 +29,9 @@ class MarinaHumedaTarifa
     private $tipo;
 
     /**
-     * @var float
+     * @var int
      *
-     * @ORM\Column(name="costo", type="float")
+     * @ORM\Column(name="costo", type="integer")
      */
     private $costo;
 
@@ -51,7 +51,7 @@ class MarinaHumedaTarifa
 
     public function __toString()
     {
-        return '$'.$this->costo.' - '.$this->descripcion;
+        return '$'.($this->costo/100).' - '.$this->descripcion;
     }
 
     /**
@@ -91,7 +91,7 @@ class MarinaHumedaTarifa
     /**
      * Set costo
      *
-     * @param float $costo
+     * @param int $costo
      *
      * @return MarinaHumedaTarifa
      */
@@ -105,7 +105,7 @@ class MarinaHumedaTarifa
     /**
      * Get costo
      *
-     * @return float
+     * @return int
      */
     public function getCosto()
     {
