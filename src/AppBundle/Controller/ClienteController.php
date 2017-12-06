@@ -88,7 +88,8 @@ class ClienteController extends Controller
                     ]),
                     'text/html'
                 );
-            $mailer->send($message);
+            //FIXME Prevenir que se envie el correo al nuevo cliente
+//            $mailer->send($message);
 
             return $this->redirectToRoute('cliente_show', array('id' => $cliente->getId()));
 
