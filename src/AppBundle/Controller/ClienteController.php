@@ -77,8 +77,9 @@ class ClienteController extends Controller
             $em->persist($cliente);
             $em->flush();
 
+            // FIXME Aun no se requiere enviar el correo al usuario
             // Enviar correo de confirmacion
-            $message = (new \Swift_Message('¡Has sido dado de alta en NovoNautica!'))
+            /*$message = (new \Swift_Message('¡Has sido dado de alta en NovoNautica!'))
                 ->setFrom('noresponder@novonautica.com')
                 ->setTo($cliente->getCorreo())
                 ->setBcc('admin@novonautica.com')
@@ -89,7 +90,7 @@ class ClienteController extends Controller
                     ]),
                     'text/html'
                 );
-            $mailer->send($message);
+            $mailer->send($message);*/
 
             return $this->redirectToRoute('cliente_show', ['id' => $cliente->getId()]);
 
