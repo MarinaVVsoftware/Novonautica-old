@@ -137,6 +137,11 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     color: #fff;
 }
 
+.btn-transparent {
+    background-color: transparent;
+    border: none;
+}
+
 /*++ fin botones color ++*/
 
 /*++++ mensajes sistema ++++*/

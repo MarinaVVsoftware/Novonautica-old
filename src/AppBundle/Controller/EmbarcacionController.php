@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -28,16 +29,29 @@ class EmbarcacionController extends Controller
      *
      * @Route("/", name="embarcacion_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+        $page = $request->query->get('page') ?: 1;
+        $limit = $request->query->get('limit') ?: 10;
+
         $em = $this->getDoctrine()->getManager();
+        $paginacion = $em->getRepository('AppBundle:Embarcacion')
+            ->paginacion($page);
 
-        $embarcaciones = $em->getRepository('AppBundle:Embarcacion')->findAll();
+        $pages = ceil($paginacion->count() / $limit);
+        $embarcaciones = $paginacion->getQuery()->getResult();
 
-        return $this->render('embarcacion/index.html.twig', [
-            'embarcacions' => $embarcaciones,
-        ]);
+        $deleteForms = [];
+        foreach ($embarcaciones as $embarcacion) {
+            $deleteForms[] = $this->createDeleteForm($embarcacion)->createView();
+        }
+
+        return $this->render('embarcacion/index.html.twig', compact('embarcaciones', 'page', 'pages', 'deleteForms'));
     }
 
     /**
@@ -170,7 +184,7 @@ class EmbarcacionController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('embarcacion_index');
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /**

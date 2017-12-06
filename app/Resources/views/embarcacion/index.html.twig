@@ -24,7 +24,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for embarcacion in embarcacions %}
+                                    {% for i, embarcacion in embarcaciones %}
                                         <tr>
                                             <td>{{ embarcacion.nombre }}</td>
                                             <td>{{ embarcacion.modelo ?: 'Custom' }}</td>
@@ -33,8 +33,19 @@
                                             <td>${{ (embarcacion.precio / 100)|number_format(2) }} USD</td>
                                             <td>{{ embarcacion.ano }}</td>
                                             <td>
-                                                <a href="{{ path('embarcacion_edit', { 'id': embarcacion.id }) }}">
-                                                    <i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                                <ul class="list-unstyled list-inline">
+                                                    <li>
+                                                        <a href="{{ path('embarcacion_edit', { 'id': embarcacion.id }) }}">
+                                                            <i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                                    </li>
+                                                    <li>
+                                                        {{ form_start(deleteForms[i]) }}
+                                                        <button type="submit" class="btn btn-transparent">
+                                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                                        </button>
+                                                        {{ form_end(deleteForms[i]) }}
+                                                    </li>
+                                                </ul>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -43,7 +54,27 @@
                             </div>
                         </div>
                         <div class="panel-footer">
-
+                            <nav>
+                                <ul class="pager">
+                                    {% if page > 1 %}
+                                        <li class="previous">
+                                            <a href="{{ path('embarcacion_index', {'page': page - 1}) }}">
+                                                <span aria-hidden="true">&larr;</span> Anterior
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    <li>
+                                        Estas viendo la pagina {{ page }} de {{ pages }} paginas
+                                    </li>
+                                    {% if page < pages %}
+                                        <li class="next">
+                                            <a href="{{ path('embarcacion_index', {'page': page + 1}) }}">Siguiente
+                                                <span aria-hidden="true">&rarr;</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
