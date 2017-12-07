@@ -15,6 +15,7 @@
                                     <thead>
                                     <tr>
                                         <th>Nombre de la embarcación</th>
+                                        <th>Pais de ubicacion</th>
                                         <th>Modelo</th>
                                         <th>Marca</th>
                                         <th>Longitud</th>
@@ -27,6 +28,7 @@
                                     {% for i, embarcacion in embarcaciones %}
                                         <tr>
                                             <td>{{ embarcacion.nombre }}</td>
+                                            <td>{{ embarcacion.pais }}</td>
                                             <td>{{ embarcacion.modelo ?: 'Custom' }}</td>
                                             <td>{{ embarcacion.marca ?: 'Custom' }}</td>
                                             <td>{{ embarcacion.longitud }}</td>

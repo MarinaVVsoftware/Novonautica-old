@@ -22,9 +22,10 @@ class EmbarcacionRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('em');
 
-        $qb->select('em', 'ma', 'mo')
+        $qb->select('em', 'ma', 'mo', 'pa')
             ->leftJoin('em.marca', 'ma')
             ->leftJoin('em.modelo', 'mo')
+            ->leftJoin('em.pais', 'pa')
             ->setFirstResult($limit * ($page - 1))
             ->setMaxResults($limit);
 

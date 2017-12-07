@@ -211,6 +211,13 @@ class Embarcacion
     private $modelo;
 
     /**
+     * @var Pais
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Pais")
+     */
+    private $pais;
+
+    /**
      * @var EmbarcacionImagen
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\EmbarcacionImagen", mappedBy="embarcacion", cascade={"persist", "remove"})
@@ -879,6 +886,30 @@ class Embarcacion
     public function getUpdateAt()
     {
         return $this->updateAt;
+    }
+
+    /**
+     * Set pais
+     *
+     * @param Pais $pais
+     *
+     * @return Embarcacion
+     */
+    public function setPais(Pais $pais = null)
+    {
+        $this->pais = $pais;
+
+        return $this;
+    }
+
+    /**
+     * Get pais
+     *
+     * @return Pais
+     */
+    public function getPais()
+    {
+        return $this->pais;
     }
 
     /**

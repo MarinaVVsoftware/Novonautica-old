@@ -46,6 +46,10 @@ class EmbarcacionType extends AbstractType
                 'label' => 'Año',
                 'attr' => ['placeholder' => '2017']
             ])
+            ->add('pais', EntityType::class, [
+                'label' => 'País de ubicación',
+                'class' => 'AppBundle\Entity\Pais',
+            ])
             ->add('builder')
             ->add('interiorDesigner')
             ->add('exteriorDesigner')
