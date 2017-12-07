@@ -74,18 +74,14 @@ class MarinaHumedaCotizacionController extends Controller
         $marinaDiasEstadia = new MarinaHumedaCotizaServicios();
         $marinaElectricidad = new MarinaHumedaCotizaServicios();
 
-        $dolarBase = $this->getDoctrine()
-            ->getRepository(ValorSistema::class)
-            ->find(1)
-            ->getValor();
-        $iva = $this->getDoctrine()
-            ->getRepository(ValorSistema::class)
-            ->find(2)
-            ->getValor();
-        $mensaje = $this->getDoctrine()
-            ->getRepository(ValorSistema::class)
-            ->find(4)
-            ->getDescripcion();
+        $em = $this->getDoctrine()->getManager();
+        $qb = $em->createQueryBuilder();
+        $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
+        $sistema =$query->getArrayResult();
+
+        $dolarBase = $sistema[0]['dolar'];
+        $iva = $sistema[0]['iva'];
+        $mensaje = $sistema[0]['mensajeCorreoMarina'];
 
         $marinaHumedaCotizacion
             ->addMarinaHumedaCotizaServicios($marinaDiasEstadia)
@@ -96,7 +92,7 @@ class MarinaHumedaCotizacionController extends Controller
         $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+
 
             $granSubtotal = 0;
             $granIva = 0;
@@ -160,10 +156,7 @@ class MarinaHumedaCotizacionController extends Controller
             //-------------------------------------------------
 
             $fechaHoraActual = new \DateTime('now');
-            $foliobase = $this->getDoctrine()
-                                ->getRepository(ValorSistema::class)
-                                ->find(3)
-                                ->getValor();
+            $foliobase = $sistema[0]['folioMarina'];
             $folionuevo = $foliobase + 1;
 
             $marinaHumedaCotizacion
@@ -180,8 +173,8 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setFoliorecotiza(0);
             $folioactualiza = $this->getDoctrine()
                                     ->getRepository(ValorSistema::class)
-                                    ->find(3)
-                                    ->setValor($folionuevo);
+                                    ->find(1)
+                                    ->setFolioMarina($folionuevo);
 
             $em->persist($marinaHumedaCotizacion);
             $em->flush();

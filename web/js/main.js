@@ -392,7 +392,7 @@ $('#appbundle_marinahumedacotizacion_fechaLlegada').on( "change", function() {
     $('#dias_estadia_cantidad').data('valor',dias_estadia);
 
 
-    de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
+    de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val()/100);
     de_precio_mxn = de_precio * dolar;
 
     $('#de_cantidad').html(dias_estadia);
@@ -401,7 +401,7 @@ $('#appbundle_marinahumedacotizacion_fechaLlegada').on( "change", function() {
     calculaSubtotales(dias_estadia,de_precio,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
     calculaSubtotales(dias_estadia,de_precio_mxn,$('#de_subtotal_mxn'),$('#de_iva_mxn'),$('#de_descuento_mxn'),$('#de_total_mxn'));
 
-    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val();
+    e_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val()/100);
     e_precio_mxn = e_precio * dolar;
 
     $('#e_cantidad').html(dias_estadia);
@@ -421,7 +421,7 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on( "change", function() {
     $('#dias_estadia_cantidad').html(dias_estadia);
     $('#dias_estadia_cantidad').data('valor',dias_estadia);
 
-    de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
+    de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val()/100);
     de_precio_mxn = de_precio * dolar;
 
     $('#de_cantidad').html(dias_estadia);
@@ -430,7 +430,7 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on( "change", function() {
     calculaSubtotales(dias_estadia,de_precio,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
     calculaSubtotales(dias_estadia,de_precio_mxn,$('#de_subtotal_mxn'),$('#de_iva_mxn'),$('#de_descuento_mxn'),$('#de_total_mxn'));
 
-    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val();
+    e_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val()/100);
     e_precio_mxn = e_precio * dolar;
 
     $('#e_cantidad').html(dias_estadia);
@@ -446,7 +446,7 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on( "change", function() {
 $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change',function () {
     dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
     de_cantidad = $('#dias_estadia_cantidad').data('valor');
-    de_precio = $(this).val();
+    de_precio = ($(this).val()/100);
     de_precio_mxn = (de_precio * dolar).toFixed(2);
 
     $('#de_precio').html('$ '+de_precio);
@@ -473,7 +473,7 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change',functio
 $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').on('change',function () {
     dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
     e_cantidad =  $('#dias_estadia_cantidad').data('valor');
-    e_precio = $(this).val();
+    e_precio = ($(this).val()/100);
     e_precio_mxn = (e_precio * dolar).toFixed(2);
 
     $('#e_precio').html('$ '+e_precio);

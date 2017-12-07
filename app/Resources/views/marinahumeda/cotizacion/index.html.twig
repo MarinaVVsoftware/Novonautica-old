@@ -49,10 +49,10 @@
                                     <td>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</td>
                                     <td>{{ marinaHumedaCotizacion.slip }}</td>
                                     <td>{{ marinaHumedaCotizacion.descuento }}%</td>
-                                    <td>${{ marinaHumedaCotizacion.subtotal|number_format(2,'.',',') }}</td>
-                                    <td>${{ marinaHumedaCotizacion.ivatotal|number_format(2,'.',',') }}</td>
-                                    <td>${{ marinaHumedaCotizacion.descuentototal|number_format(2,'.',',') }}</td>
-                                    <td>${{ marinaHumedaCotizacion.total|number_format(2,'.',',') }}</td>
+                                    <td>${{ (marinaHumedaCotizacion.subtotal/100)|number_format(2) }}</td>
+                                    <td>${{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }}</td>
+                                    <td>${{ (marinaHumedaCotizacion.descuentototal/100)|number_format(2) }}</td>
+                                    <td>${{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</td>
                                     <td class="align-middle">
                                         {% if marinaHumedaCotizacion.validanovo == 0 %}
                                             <img src="{{ asset('img/status-pendiente-icon.svg') }}"

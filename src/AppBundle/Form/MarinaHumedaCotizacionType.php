@@ -61,10 +61,13 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'attr' => ['class' => 'esdecimal',
                     'autocomplete' => 'off']
             ])
-            ->add('dolar', null, [
+            ->add('dolar', MoneyType::class, [
+                'required'=>false,
+                'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
                 'empty_data' => 0,
-                'attr' => ['class' => 'esdecimal',
-                    'autocomplete' => 'off']
             ])
             ->add('mensaje', TextareaType::class, [
                 'label' => 'Mensaje en el correo:',
