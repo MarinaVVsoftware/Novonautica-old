@@ -6,131 +6,165 @@ body {
     font-size: 14px;
     overflow-y: hidden;
 }
+
 hr {
     margin-top: 0 !important;
     border-bottom: 1px solid rgba(62, 70, 99, 0.38) !important;
-    border-top: 2px solid rgba(0,0,0,0.2) !important;
+    border-top: 2px solid rgba(0, 0, 0, 0.2) !important;
     margin-bottom: 0 !important;
 }
-a{
+
+a {
     color: #ffffff;
 }
-.btn{
+
+.btn {
     min-width: 120px;
 }
+
 /*++++ colores fondo ++++*/
-.fondo-azul{
+.fondo-azul {
     background-color: #0097f6;
 }
-.fondo-rojo{
+
+.fondo-rojo {
     background-color: #DB235C;
 }
-.fondo-amarillo{
+
+.fondo-amarillo {
     background-color: #dc9f00;
 }
-.fondo-verde{
+
+.fondo-verde {
     background-color: #009933;
 }
-.fondo-naranja{
+
+.fondo-naranja {
     background-color: #FF6600;
 }
-.fondo-blanco{
+
+.fondo-blanco {
     background-color: #ffffff !important;
 }
-.fondo-morado{
+
+.fondo-morado {
     background-color: #292e41;
 }
+
 /*++ fin colores fondo +++*/
 
 /*++++ colores letra +++++*/
-.letra-azul{
+.letra-azul {
     color: #0097f6;
 }
+
 /*++ fin colores letra ++++*/
 
 /*++++ tamaño letra +++++*/
-.tipo-letra1{
+.tipo-letra1 {
     font-size: 2rem;
 }
-.tipo-letra2{
+
+.tipo-letra2 {
     font-size: 1.5rem;
 }
-.tipo-letra3{
+
+.tipo-letra3 {
     font-size: 6rem;
 }
+
 /*+++ fin tamaño letra ++++*/
 
 /*++++ botones color ++++*/
-.btn-morado-claro{
+.btn-morado-claro {
     background: #3e4766;
     color: #fff;
 }
-.btn-morado-claro:hover{
+
+.btn-morado-claro:hover {
     background: #5d6696;
     color: #fff;
 }
-.btn-azul{
+
+.btn-azul {
     background: #0097f6;
     color: #fff;
 }
-.btn-azul:hover{
+
+.btn-azul:hover {
     background: #4bc7fb;
     color: #fff;
 }
-.btn-contorno-azul{
+
+.btn-contorno-azul {
     background: #292e41;
     color: #fff;
-    border:1px solid #0097f6;
+    border: 1px solid #0097f6;
 }
-.btn-contorno-azul:hover{
+
+.btn-contorno-azul:hover {
     color: #ffffff;
     background: #3e4766;
 }
-form > .btn-borrar,.btn-borrar{
+
+form > .btn-borrar, .btn-borrar {
     background: #8c0400;
     color: #fff;
 }
-form > .btn-borrar:hover,.btn-borrar:hover{
+
+form > .btn-borrar:hover, .btn-borrar:hover {
     background: #d40400;
     color: #fff;
 }
-.btn-naranja{
+
+.btn-naranja {
     background-color: #FF6600;
     color: #fff;
 }
-.btn-naranja:hover{
+
+.btn-naranja:hover {
     background-color: #ff960d;
     color: #fff;
 }
-.btn-verde{
+
+.btn-verde {
     background-color: #009933;
     color: #fff;
 }
-.btn-verde:hover{
+
+.btn-verde:hover {
     background-color: #00bb38;
     color: #fff;
+}
+
+.btn-transparent {
+    background-color: transparent;
+    border: none;
 }
 
 /*++ fin botones color ++*/
 
 /*++++ mensajes sistema ++++*/
-.alert-danger{
+.alert-danger {
     background: #FF6600 !important;
     border-color: #FF6600;
     padding: 7px;
     margin-bottom: 3px;
 }
+
 /*++ fin mensajes sistema ++*/
 
 /*+++++ check box estilo ++++++*/
-.input-estatus{
+.input-estatus {
     margin-top: 2rem;
 }
+
 .cont-label-novo {
     width: 20px;
     position: relative;
     margin: 20px auto;
 }
+
 .cont-label-novo label {
     width: 20px;
     max-width: none;
@@ -145,6 +179,7 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     border-radius: 4px;
     box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.4);
 }
+
 .cont-label-novo label:after {
     content: '';
     width: 14px;
@@ -160,31 +195,38 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
+
 .cont-label-novo label:hover::after {
     opacity: 0.3;
 }
+
 .cont-label-novo input[type=checkbox] {
     /*visibility: hidden;*/
 }
+
 .cont-label-novo input[type=checkbox]:checked + label:after {
     opacity: 1;
 }
+
 /*+++ fin check box estilo ++++*/
 
 /*+++++ radio boton +++++*/
-.radio {
+input.radio {
     margin: 0.5rem;
 }
-.radio>label{
+
+input.radio > label {
     margin-bottom: 4px;
 }
-.radio input[type="radio"] {
+
+input.radio input[type="radio"] {
     position: absolute;
     opacity: 0;
 }
-.radio input[type="radio"] + label:before {
+
+input.radio input[type="radio"] + label:before {
     content: '';
-    background:   #3e4766;
+    background: #3e4766;
     border-radius: 100%;
     border: 1px solid #0097f6;
     display: inline-block;
@@ -199,23 +241,27 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     -webkit-transition: all 250ms ease;
     transition: all 250ms ease;
 }
-.radio input[type="radio"]:checked + label:before {
+
+input.radio input[type="radio"]:checked + label:before {
     background-color: #3197EE;
     box-shadow: inset 0 0 0 4px #3e4766;
 }
 
-.radio input[type="radio"]:focus + .radio-label:before {
+input.radio input[type="radio"]:focus + input.radio-label:before {
     outline: none;
     border-color: #3197EE;
 }
-.radio input[type="radio"]:disabled + .radio-label:before {
+
+input.radio input[type="radio"]:disabled + input.radio-label:before {
     box-shadow: inset 0 0 0 4px #f4f4f4;
     border-color: #b4b4b4;
     background: #b4b4b4;
 }
-.radio input[type="radio"] + .radio-label:empty:before {
+
+input.radio input[type="radio"] + input.radio-label:empty:before {
     margin-right: 0;
 }
+
 /*++++ fin radio boton ++++*/
 #loading {
     /*visibility: hidden;*/
@@ -226,7 +272,7 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     position: fixed;
     display: block;
     /*opacity: 0.7;*/
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 2000;
     text-align: center;
 }
@@ -237,9 +283,10 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     bottom: 50%;
 }
 
-.wrapper{
+.wrapper {
     overflow-y: hidden;
 }
+
 .hoja-login {
     height: auto;
     min-height: 100%;
@@ -310,16 +357,13 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     top: -5px;
     color: #ffffff;
 }
+
 .btn-salir i {
     color: #0097f6;
 }
 
 .sidebar hr {
     width: 95%;
-}
-
-.content {
-    padding: 30px;
 }
 
 .panel-novo {
@@ -334,53 +378,66 @@ form > .btn-borrar:hover,.btn-borrar:hover{
 .panel-novo > .panel-heading {
     background-color: #292e41;
 }
+
 .panel-novo > .panel-body,
 .panel-novo > .panel-footer {
     background-color: #363c52;
 }
-.panel-novo > .panel-body{
+
+.panel-novo > .panel-body {
     min-height: 400px;
 }
+
 .panel-novo > .panel-footer {
     border-top: none;
 }
-.panel-novo thead{
+
+.panel-novo thead {
     background-color: #292e41;
     border-top: 2px solid #1c1f29;
 }
-.table>thead>tr>th {
+
+.table > thead > tr > th {
     border: 2px solid #1c1f29;
 }
+
 .panel-novo th, .panel-novo td {
     border-left: 2px solid #292e41 !important;
     border-bottom: 2px solid #292e41;
     border-right: 2px solid #292e41 !important;
 }
-.panel-novo tbody tr:hover{
+
+.panel-novo tbody tr:hover {
     /*background: #3e4766;*/
     cursor: pointer;
 }
-.panel-novo tbody td input[type="text"]{
+
+.panel-novo tbody td input[type="text"] {
     background: none;
     padding: 0px;
     border-radius: 0;
     text-align: center;
 }
-.panel-novo tbody td .btn{
+
+.panel-novo tbody td .btn {
     min-width: auto;
 }
-.panel-novo tbody .servicio-agregado>td{
+
+.panel-novo tbody .servicio-agregado > td {
     padding: 0 !important;
     vertical-align: middle;
 }
-.panel-novo .panel-pestanias{
+
+.panel-novo .panel-pestanias {
     padding-top: 0;
 }
-.panel-novo .nav-tabs{
+
+.panel-novo .nav-tabs {
     border: none;
 }
-.panel-novo .nav-tabs>li>a,
-.fc-left>.fc-button-group>.fc-state-default{
+
+.panel-novo .nav-tabs > li > a,
+.fc-left > .fc-button-group > .fc-state-default {
     margin-right: 0;
     border: none;
     border-radius: 0;
@@ -393,9 +450,9 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     min-width: 180px;
     text-align: center;
 }
-.panel-novo .nav-tabs>li.active>a,
-.fc-left>.fc-button-group>button.fc-state-active
-{
+
+.panel-novo .nav-tabs > li.active > a,
+.fc-left > .fc-button-group > button.fc-state-active {
     color: #fff;
     /*background: #0097f6;*/
     background: url("../img/pestania-select-medio.png");
@@ -403,146 +460,188 @@ form > .btn-borrar:hover,.btn-borrar:hover{
     border: none;
     z-index: 1;
 }
-.panel-novo .nav-tabs>li>a:hover{
+
+.panel-novo .nav-tabs > li > a:hover {
     color: #9b9b9b;
 }
-.panel-novo .nav>li>a{
+
+.panel-novo .nav > li > a {
     padding: 10px 35px;
 }
-.panel .nav>.primero>a,
-.fc-left>.fc-button-group>.fc-month-button
-{
+
+.panel .nav > .primero > a,
+.fc-left > .fc-button-group > .fc-month-button {
     background: #292e41;
     -webkit-clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
     clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
 }
-.panel-novo .nav-tabs>li,
-.fc-left>.fc-button-group>.fc-state-default
-{
+
+.panel-novo .nav-tabs > li,
+.fc-left > .fc-button-group > .fc-state-default {
     margin-left: -34px;
 }
-.panel-novo .nav-tabs>li.primero,
-.fc-left>.fc-button-group>.fc-month-button
-{
+
+.panel-novo .nav-tabs > li.primero,
+.fc-left > .fc-button-group > .fc-month-button {
     margin-left: 0;
 }
-.fc-left>.fc-button-group>.fc-state-hover{
+
+.fc-left > .fc-button-group > .fc-state-hover {
     z-index: 0;
 }
-.fc-left>.fc-button-group>button:focus{
+
+.fc-left > .fc-button-group > button:focus {
     outline: none;
 }
-.panel-body .tab-content{
+
+.panel-body .tab-content {
     padding: 20px 15px;
 }
-.panel-body  form input[type="text"],
-.panel-body  form input[type="email"],
-.panel-body  form input[type="password"],
-.panel-body  form input[type="number"],
-.panel-body  form select,
-.panel-body  form textarea,
-.panel-body  form .info-input,
-.info-input{
+
+.panel-body form input[type="text"],
+.panel-body form input[type="email"],
+.panel-body form input[type="password"],
+.panel-body form input[type="number"],
+.panel-body form select,
+.panel-body form textarea,
+.panel-body form .info-input,
+.info-input {
     background: #3e4766;
     border: none;
     border-radius: 17px;
     padding: 5px 15px;
     width: 100%;
+    color: #fff;
     min-height: 25px;
 }
-.panel-body  form input[type="time"]{
+
+.input-group .input-group-addon {
+    border-top-left-radius: 17px;
+    border-bottom-left-radius: 17px;
+    background-color: #3e4766;
+    border: none;
+    color: #fff;
+}
+
+.panel-body form input[type="time"] {
     text-align: center;
     color: #ffffff;
     border: 1px solid #008CBA;
     background: #363c52;
 }
-.panel-body form input[type="time"]::-webkit-inner-spin-button{
+
+.panel-body form input[type="time"]::-webkit-inner-spin-button {
     background: #363c52;
 }
-.panel-body form .info-input{
+
+.panel-body form .info-input {
     min-height: 30px;
 }
+
 .panel-body form input:focus,
 .panel-body form select:focus,
-.panel-body form textarea{
+.panel-body form textarea {
     outline: none;
 }
-.panel-body  form textarea{
+
+.panel-body form textarea {
     resize: none;
 }
-.panel-body  form textarea::-webkit-scrollbar {
+
+.panel-body form textarea::-webkit-scrollbar {
     width: 14px;
     background-color: #353b51;
 }
-.panel-body  form textarea::-webkit-scrollbar-thumb,
+
+.panel-body form textarea::-webkit-scrollbar-thumb,
 body.wysihtml5-editor::-webkit-scrollbar-thumb {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     background-color: #292e41;
 }
-.panel-body  form textarea::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+
+.panel-body form textarea::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: #59616e;
     border: 1px solid #353b51;
 }
-.espacio-linea{
+
+.panel-footer > nav > .pager > li > a {
+    background: transparent;
+    border-color: #0097f6;
+}
+
+.espacio-linea {
     padding-top: 3rem;
     padding-bottom: 3rem;
 }
-.espacio-linea-arriba2{
+
+.espacio-linea-arriba2 {
     padding-top: 2rem;
 }
-.espacio-linea-arriba5{
+
+.espacio-linea-arriba5 {
     padding-top: 5rem;
 }
-.espacio-linea-abajo2{
+
+.espacio-linea-abajo2 {
     padding-bottom: 2rem;
 }
-.align-middle{
+
+.align-middle {
     vertical-align: middle !important;
 }
+
 @media (min-width: 768px) {
     .skin-novo .main-sidebar {
         padding-top: 98px;
     }
-    nav hr{
+
+    nav hr {
         margin-left: -230px;
     }
 }
+
 @media (max-width: 767px) {
     .main-sidebar {
         padding-top: 146px;
     }
-    .panel-novo .nav-tabs>li{
+
+    .panel-novo .nav-tabs > li {
         margin-left: 0;
     }
 }
 
 /*++++ datepicker calendario ++++*/
-.panel-body  form .input-calendario{
+.panel-body form .input-calendario {
     border: 1px solid #0097f6 !important;
     border-radius: 0px !important;
     background: url(../img/calendario-icon.png) no-repeat 97% !important;
     background-size: 20px !important;
 }
-.datepicker-dropdown{
+
+.datepicker-dropdown {
     background: #292e41;
     border: none;
     padding: 0px;
 }
-.datepicker-days > table > thead > tr >th{
+
+.datepicker-days > table > thead > tr > th {
     background: #3e4766;
     border-radius: 0px;
 }
+
 .datepicker .datepicker-switch:hover,
 .datepicker .next:hover,
 .datepicker .prev:hover,
 .datepicker tfoot tr th:hover {
     background: #0097f6;
 }
+
 .datepicker table tr td.day.focused,
 .datepicker table tr td.day:hover {
     background: #0097f6;
 }
+
 .datepicker table tr td.active,
 .datepicker table tr td.active.disabled,
 .datepicker table tr td.active.disabled:hover,
@@ -550,6 +649,7 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     background: #0097f6 !important;
     border-radius: 20px;
 }
+
 .datepicker table tr td.selected,
 .datepicker table tr td.selected.disabled,
 .datepicker table tr td.selected.disabled:hover,
@@ -558,69 +658,86 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     background: #0097f6;
     border-radius: 20px;
 }
+
 .datepicker table tr td.range,
 .datepicker table tr td.range.disabled,
 .datepicker table tr td.range.disabled:hover,
 .datepicker table tr td.range:hover {
     background: #3e4766;
 }
+
 .datepicker table tr td span.focused, .datepicker table tr td span:hover {
     background: #0097f6;
 }
+
 /*++++ fin datepicker calendario ++++*/
 
 /*+++++ calendario agenda +++++*/
 .fc-widget-header {
-     background: none;
+    background: none;
 }
+
 .fc-state-default {
     text-shadow: none;
     box-shadow: none;
 }
-.fc-toolbar{
+
+.fc-toolbar {
     padding-top: 0px;
 }
-.fc-unthemed td.fc-today{
+
+.fc-unthemed td.fc-today {
     background: #3e4766
 }
-.fc-center>div>button,
-.fc-center>div>h2 {
+
+.fc-center > div > button,
+.fc-center > div > h2 {
     float: left;
 }
-.fc-center button{
+
+.fc-center button {
     background: none;
     color: #0c97f4;
-    margin:0;
-    border:none;
+    margin: 0;
+    border: none;
 }
-.fc-center button:focus{
-    outline:none;
+
+.fc-center button:focus {
+    outline: none;
 }
-.fc-center button>span{
-    font-size:2rem;
+
+.fc-center button > span {
+    font-size: 2rem;
 }
+
 .fc button .fc-icon {
     margin: 0;
     line-height: 2.5rem;
 }
-.fc-center button:hover{
+
+.fc-center button:hover {
     background: none;
 }
-.fc-center .fc-prev-button{
+
+.fc-center .fc-prev-button {
     padding: 0px;
     margin-right: 1rem;
 }
-.fc-center .fc-next-button{
+
+.fc-center .fc-next-button {
     padding: 0px;
     margin-left: 1rem;
 }
-.fc-toolbar .fc-center{
+
+.fc-toolbar .fc-center {
     width: 100%;
     padding-top: 2rem;
 }
-.fc-body thead{
+
+.fc-body thead {
     background: none;
 }
+
 .fc-unthemed .fc-content,
 .fc-unthemed .fc-divider,
 .fc-unthemed .fc-list-heading td,
@@ -633,6 +750,7 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
 .fc-unthemed thead {
     border-color: #282d40;
 }
+
 /*+++ fin calendario agenda +++++*/
 
 /*++++++++ radio boton aceptar,rechazar +++++++*/
@@ -640,36 +758,45 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
 .middle input[type="radio"] {
     display: none;
 }
+
 .middle .opcionaceptar:checked + label {
     background-color: #009933;
 }
+
 .middle .opcionrechazar:checked + label {
     background-color: #FF6600;
 }
+
 .middle .opcionpendiente:checked + label {
     background-color: #858585;
 }
+
 .middle input[type="radio"]:checked + label span {
     color: #ffffff;
     transform: translateY(70px);
 }
+
 .middle input[type="radio"]:checked + label span:before {
     transform: translateY(0px);
     opacity: 1;
 }
-.middle .opcionaceptar + label:hover{
+
+.middle .opcionaceptar + label:hover {
     background-color: #009933;
     box-shadow: 0px 0px 15px 1px #009933;
 }
-.middle .opcionrechazar + label:hover{
+
+.middle .opcionrechazar + label:hover {
     background-color: #FF6600;
     box-shadow: 0px 0px 15px 1px #FF6600;
 }
-.middle .opcionpendiente + label:hover{
+
+.middle .opcionpendiente + label:hover {
     background-color: #858585;
     box-shadow: 0px 0px 15px 1px #858585;
 
 }
+
 .middle label {
     padding: 10px 30px;
     border-radius: 4px;
@@ -684,10 +811,10 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     margin-right: 2rem;
 }
 
-
 .middle label:active {
     transform: translateY(10px);
 }
+
 .middle label span {
     position: absolute;
     transform: translate(0, 60px);
@@ -698,6 +825,7 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     user-select: none;
     color: #000;
 }
+
 .middle .opcionaceptar + label:before,
 .middle .opcionrechazar + label:before,
 .middle .opcionpendiente + label:before {
@@ -710,56 +838,60 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     font-weight: normal;
     color: #000000;
 }
+
 /*++++++ fin radio boton aceptar,rechazar +++++*/
 
 /*+++++ Modal borrar ++++*/
-    .ventanaborrar .modal-content{
-        background: #363c52;
-    }
-    .ventanainfomapa .modal-content .modal-header{
-        background: #3e4766;
-    }
-    .ventanainfomapa .modal-content .modal-body,
-    .ventanainfomapa .modal-footer{
-        border-top: 0px !important;
-        background: #292e41;
-    }
+.ventanaborrar .modal-content {
+    background: #363c52;
+}
+
+.ventanainfomapa .modal-content .modal-header {
+    background: #3e4766;
+}
+
+.ventanainfomapa .modal-content .modal-body,
+.ventanainfomapa .modal-footer {
+    border-top: 0px !important;
+    background: #292e41;
+}
+
 /*++ Fin Modal borrar ++*/
 
 /*++ Scroll admin +++*/
-.scroll-novo::-webkit-scrollbar-track
-{
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+.scroll-novo::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     border-radius: 4px;
     background-color: #59616e;
 }
 
-.scroll-novo::-webkit-scrollbar
-{
+.scroll-novo::-webkit-scrollbar {
     width: 12px;
     background-color: #353b51;
 }
 
-.scroll-novo::-webkit-scrollbar-thumb
-{
+.scroll-novo::-webkit-scrollbar-thumb {
     border-radius: 4px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     background-color: #282d40;
 }
+
 /*++ fin Scroll admin +++*/
 
-.barcoespacio:hover,text:hover{
+.barcoespacio:hover, text:hover {
     cursor: pointer;
 }
-.select2-container{
+
+.select2-container {
     width: 100% !important;
 }
+
 td .select2-container--default .select2-selection--single {
     border-radius: 0 !important;
 }
 
 /* ---- temporal ----*/
-.etiqueta-evento{
+.etiqueta-evento {
     color: #ffffff;
     text-align: left;
     margin-right: -8px;
@@ -767,14 +899,17 @@ td .select2-container--default .select2-selection--single {
     margin-bottom: 4px;
     padding: 4px;
 }
-.panel-novo .calendario tbody tr:hover{
+
+.panel-novo .calendario tbody tr:hover {
     background: none;
     cursor: none;
 }
-.calendario tbody td:hover{
+
+.calendario tbody td:hover {
     background: #3e4766;
     cursor: pointer;
 }
+
 #mnsmas {
     height: 20px;
     padding-top: 0px;
@@ -782,6 +917,7 @@ td .select2-container--default .select2-selection--single {
     color: #008CBA;
     border: 1px solid #008CBA;
 }
+
 #hrs {
     text-align: center;
     width: 90px;
@@ -793,6 +929,7 @@ td .select2-container--default .select2-selection--single {
     margin-left: -4px;
     margin-right: -4px;
 }
+
 #mnsmas {
     height: 20px;
     padding-top: 0px;
@@ -800,32 +937,79 @@ td .select2-container--default .select2-selection--single {
     color: #008CBA;
     border: 1px solid #008CBA;
 }
+
 .margenboton {
     margin-right: 30px;
 }
+
 .padingleft {
     padding-left: 25px;
 }
-.estatus-personal{
+
+.estatus-personal {
     width: 24px;
 }
+
 /* ---- fin temporal ----*/
 
-.fondo-error{
+.fondo-error {
     background: url("../img/Novonautica-error-03.svg") no-repeat center;
 }
-.contenido-error{
+
+.contenido-error {
     padding-top: 8%;
     padding-bottom: 2%;
 }
 
 /*----- editor texto wysihtml5------*/
-.wysihtml5-toolbar .btn{
+.wysihtml5-toolbar .btn {
     background: #292e41;
     color: #ffffff;
 }
+
 ul.wysihtml5-toolbar a.btn.wysihtml5-command-active {
     background-color: #0097f6;
     color: #ffffff;
 }
+
 /*---fin editor texto wysihtml5------*/
+
+/* --- Input file customizado --- */
+input[type="file"] {
+    overflow: hidden;
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+}
+
+input[type="file"] + label {
+    border: 1px solid #0097f6;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: #363c52;
+    color: #fff;
+}
+
+input[type="file"] + label:hover {
+    background: #0097f6;
+}
+
+input[type="file"] + label * {
+    pointer-events: none;
+}
+
+/* --- fin Input file customizado --- */
