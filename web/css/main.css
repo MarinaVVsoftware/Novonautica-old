@@ -211,20 +211,20 @@ form > .btn-borrar:hover, .btn-borrar:hover {
 /*+++ fin check box estilo ++++*/
 
 /*+++++ radio boton +++++*/
-.radio {
+input.radio {
     margin: 0.5rem;
 }
 
-.radio > label {
+input.radio > label {
     margin-bottom: 4px;
 }
 
-.radio input[type="radio"] {
+input.radio input[type="radio"] {
     position: absolute;
     opacity: 0;
 }
 
-.radio input[type="radio"] + label:before {
+input.radio input[type="radio"] + label:before {
     content: '';
     background: #3e4766;
     border-radius: 100%;
@@ -242,23 +242,23 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     transition: all 250ms ease;
 }
 
-.radio input[type="radio"]:checked + label:before {
+input.radio input[type="radio"]:checked + label:before {
     background-color: #3197EE;
     box-shadow: inset 0 0 0 4px #3e4766;
 }
 
-.radio input[type="radio"]:focus + .radio-label:before {
+input.radio input[type="radio"]:focus + input.radio-label:before {
     outline: none;
     border-color: #3197EE;
 }
 
-.radio input[type="radio"]:disabled + .radio-label:before {
+input.radio input[type="radio"]:disabled + input.radio-label:before {
     box-shadow: inset 0 0 0 4px #f4f4f4;
     border-color: #b4b4b4;
     background: #b4b4b4;
 }
 
-.radio input[type="radio"] + .radio-label:empty:before {
+input.radio input[type="radio"] + input.radio-label:empty:before {
     margin-right: 0;
 }
 
@@ -513,14 +513,6 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     width: 100%;
     color: #fff;
     min-height: 25px;
-}
-
-.input-group .input-group-addon {
-    border-top-left-radius: 17px;
-    border-bottom-left-radius: 17px;
-    background-color: #3e4766;
-    border: none;
-    color: #fff;
 }
 
 .input-group .input-group-addon {
