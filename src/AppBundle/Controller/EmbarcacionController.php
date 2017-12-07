@@ -84,22 +84,6 @@ class EmbarcacionController extends Controller
     }
 
     /**
-     * Finds and displays a embarcacion entity.
-     *
-     * @Route("/{id}", name="embarcacion_show")
-     * @Method("GET")
-     */
-    public function showAction(Embarcacion $embarcacion)
-    {
-        $deleteForm = $this->createDeleteForm($embarcacion);
-
-        return $this->render('embarcacion/show.html.twig', array(
-            'embarcacion' => $embarcacion,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
      * Displays a form to edit an existing embarcacion entity.
      *
      * @Route("/{id}/edit", name="embarcacion_edit")
