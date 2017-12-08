@@ -488,10 +488,20 @@ class MarinaHumedaCotizacionController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
+       $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
+ //       $marinaHumedaCotizacion = clone $marinaHumedaCotizacionAnterior;
         $foliorecotizado = $marinaHumedaCotizacionAnterior->getFoliorecotiza()+1;
         $cliente = $marinaHumedaCotizacionAnterior->getCliente();
         $barco = $marinaHumedaCotizacionAnterior->getBarco();
+//        $marinaHumedaCotizacion
+//            ->setFoliorecotiza($foliorecotizado)
+//            ->setNotasnovo(null)
+//            ->setValidanovo(0)
+//            ->setFecharegistro(null)
+//            ->setNombrevalidanovo(null)
+//        ;
+
+
 
         $marinaHumedaCotizacion
             ->setCliente($cliente)
@@ -548,6 +558,7 @@ class MarinaHumedaCotizacionController extends Controller
 
         $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
@@ -565,7 +576,6 @@ class MarinaHumedaCotizacionController extends Controller
             $diferenciaDias = date_diff($llegada, $salida);
 
             $cantidad = ($diferenciaDias->days);
-
             // Días Estadía
             $precio = $marinaDiasEstadia->getPrecio()->getCosto();
 
@@ -724,6 +734,10 @@ class MarinaHumedaCotizacionController extends Controller
 
                 $mailer->send($message);
 
+            }else{
+                if($marinaHumedaCotizacion->getValidanovo()==1){
+                    $marinaHumedaCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
+                }
             }
 
             $this->getDoctrine()->getManager()->flush();

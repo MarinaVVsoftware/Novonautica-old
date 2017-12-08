@@ -242,6 +242,10 @@ class MarinaHumedaCotizacion
     {
         return $this->folio.' '.$this->foliorecotiza;
     }
+    public function __clone()
+    {
+        $this->id = null;
+    }
 
     /**
      * Get id

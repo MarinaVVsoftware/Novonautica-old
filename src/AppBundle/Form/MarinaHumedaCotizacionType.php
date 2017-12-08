@@ -32,6 +32,7 @@ class MarinaHumedaCotizacionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('cliente', EntityType::class, [
                 'class' => 'AppBundle:Cliente',

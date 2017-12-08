@@ -312,7 +312,7 @@ elclienteastillero.change(function() {
     var data = {};
     data[elclienteastillero.attr('name')] = elclienteastillero.val();
     // Submit data via AJAX to the form's action path.
-    console.log(elclienteastillero.val());
+
     $.ajax({
         url : form.attr('action'),
         type: form.attr('method'),
@@ -492,23 +492,23 @@ $('#appbundle_marinahumedacotizacion_descuento').keyup(function () {
 //-- Dolar --
 $('#appbundle_marinahumedacotizacion_dolar').keyup(function () {
     $('.valdolar').html(parseFloat($(this).val()).toFixed(2)+' MXN');
-
     recalculaSubtotalesYtotal();
 });
 
 function recalculaSubtotalesYtotal() {
     dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+
     dias_estadia =  $('#dias_estadia_cantidad').data('valor');
 
     de_cantidad = dias_estadia;
-    de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
+    de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val()/100;
     de_precio_mxn = de_precio * dolar;
     //$('#de_cantidad').html(de_cantidad);
     calculaSubtotales(de_cantidad,de_precio,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
     calculaSubtotales(de_cantidad,de_precio_mxn,$('#de_subtotal_mxn'),$('#de_iva_mxn'),$('#de_descuento_mxn'),$('#de_total_mxn'));
 
     e_cantidad = dias_estadia;
-    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val();
+    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val()/100;
     e_precio_mxn = e_precio * dolar;
     calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
     calculaSubtotales(e_cantidad,e_precio_mxn,$('#e_subtotal_mxn'),$('#e_iva_mxn'),$('#e_descuento_mxn'),$('#e_total_mxn'));
@@ -517,6 +517,8 @@ function recalculaSubtotalesYtotal() {
 }
 
 function calculaSubtotales(cantidad,precio,tdsubtot,tdiva,tddesc,tdtot){
+
+
     var eslora = 0;
     if ($('#de_eslora').data('valor')) {
       eslora = $('#de_eslora').data('valor');

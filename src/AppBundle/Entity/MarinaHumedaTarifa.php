@@ -36,9 +36,9 @@ class MarinaHumedaTarifa
     private $costo;
 
     /**
-     * @var float
+     * @var int
      *
-     * @ORM\Column(name="pies", type="float", nullable=true)
+     * @ORM\Column(name="pies", type="integer", nullable=true)
      */
     private $pies;
 
