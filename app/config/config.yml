@@ -37,6 +37,9 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    form_themes:
+          - 'bootstrap_3_layout.html.twig'
+          - '/estructura/novonautica-form-theme.html.twig'
 
 # Doctrine Configuration
 doctrine:
@@ -67,3 +70,18 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
+
+oneup_uploader:
+    mappings:
+        embarcacion:
+            frontend: dropzone
+
+vich_uploader:
+    db_driver: orm
+    mappings:
+        embarcacion_brochure:
+            uri_prefix: /uploads/embarcacion
+            upload_destination: '%kernel.root_dir%/../web/uploads/embarcacion'
+        embarcacion_marca:
+            uri_prefix: /uploads/embarcacion/marcas
+            upload_destination: '%kernel.root_dir%/../web/uploads/embarcacion/marcas'
