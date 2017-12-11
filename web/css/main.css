@@ -398,14 +398,25 @@ input.radio input[type="radio"] + input.radio-label:empty:before {
 }
 
 .table > thead > tr > th {
-    border: 2px solid #1c1f29;
+    border: 2px solid #1c1f29 !important;
 }
 
-.panel-novo th, .panel-novo td {
-    border-left: 2px solid #292e41 !important;
-    border-bottom: 2px solid #292e41;
-    border-right: 2px solid #292e41 !important;
+.dataTables_processing {
+    background-color: #4a97f6;
 }
+
+.panel-novo th, .panel-novo table tr td {
+    border: 2px solid #292e41;
+    border-left: none;
+}
+
+.panel-novo table tr td:first-of-type {
+    border-left: 2px solid #292e41;
+}
+.panel-novo table tr td {
+    border-top: none;
+}
+
 
 .panel-novo tbody tr:hover {
     /*background: #3e4766;*/
@@ -501,7 +512,9 @@ input.radio input[type="radio"] + input.radio-label:empty:before {
 .panel-body form input[type="email"],
 .panel-body form input[type="password"],
 .panel-body form input[type="number"],
+.panel-body .dt-bootstrap input,
 .panel-body form select,
+.panel-body .dt-bootstrap select,
 .panel-body form textarea,
 .panel-body form .info-input,
 .info-input {
@@ -512,6 +525,20 @@ input.radio input[type="radio"] + input.radio-label:empty:before {
     width: 100%;
     color: #fff;
     min-height: 25px;
+}
+
+.panel-body ul.pagination li.active a {
+    background: #0097f6;
+}
+
+.panel-body ul.pagination li a:hover {
+    color: #fff;
+}
+.panel-body ul.pagination li.disabled a:focus,
+.panel-body ul.pagination li.disabled a:hover,
+.panel-body ul.pagination li a {
+    background: #292e41;
+    border: none;
 }
 
 .input-group .input-group-addon {
