@@ -6,6 +6,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -27,9 +28,12 @@ class PagoType extends AbstractType
                 'label' => 'Método de pago',
                 'required' => false
             ])
-            ->add('cantidad',TextType::class,[
+            ->add('cantidad',MoneyType::class,[
                 'label' => 'Pago',
                 'required' => false,
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
                 'attr' => ['class' => 'esdecimal']
             ])
             ->add('fecharealpago',DateType::class,[
@@ -40,9 +44,12 @@ class PagoType extends AbstractType
                     'readonly' => true],
                 'format' => 'yyyy-MM-dd'
             ])
-            ->add('dolar',TextType::class,[
+            ->add('dolar',MoneyType::class,[
                 'label' => 'Valor del dolar',
                 'required' => false,
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
                 'attr' => ['class' => 'esdecimal']
             ])
 //            ->add('fechalimitepago')

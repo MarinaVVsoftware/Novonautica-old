@@ -263,6 +263,7 @@ class MarinaHumedaCotizacionController extends Controller
      */
     public function repuestaCliente(Request $request, $token)
     {
+
         $em = $this->getDoctrine()->getManager();
         $cotizacionAceptar = $em->getRepository(MarinaHumedaCotizacion::class)
             ->findOneBy(['tokenacepta'=>$token]);
@@ -275,8 +276,12 @@ class MarinaHumedaCotizacionController extends Controller
 
             $cuentaBancaria = $em->getRepository(CuentaBancaria::class)
                                       ->findAll();
-            $diasHabiles = $em->getRepository(ValorSistema::class)
-                                     ->find(5)->getValor();
+            $qb = $em->createQueryBuilder();
+            $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
+            $sistema =$query->getArrayResult();
+            dump($sistema);
+            $diasHabiles = $sistema[0]['diasHabilesMarinaCotizacion'];
+
             if($cotizacionAceptar->getFoliorecotiza()==0){
                 $folio = $cotizacionAceptar->getFolio();
             }else{
@@ -446,6 +451,10 @@ class MarinaHumedaCotizacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $total = $marinaHumedaCotizacion->getTotal();
+            $pagado = $marinaHumedaCotizacion->getPagado();
+            $faltante = $total - $pagado;
+
             $em = $this->getDoctrine()->getManager();
 
                 foreach ($listaPagos as $pago) {
@@ -458,12 +467,19 @@ class MarinaHumedaCotizacionController extends Controller
             foreach ($marinaHumedaCotizacion->getPagos() as $pago) {
                 $totPagado+=$pago->getCantidad();
             }
-            $marinaHumedaCotizacion
-                ->setPagado($totPagado);
-            $em->persist($marinaHumedaCotizacion);
-            $em->flush();
+            if($total < $totPagado) {
+                $this->addFlash(
+                    'notice',
+                    'Error! Se intenta pagar más del total'
+                );
+            }else{
+                $marinaHumedaCotizacion
+                    ->setPagado($totPagado);
+                $em->persist($marinaHumedaCotizacion);
+                $em->flush();
+                return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
+            }
 
-            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
         }
 
         return $this->render('marinahumeda/cotizacion/pago/edit.html.twig', array(

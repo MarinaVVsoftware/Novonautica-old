@@ -33,9 +33,9 @@
                         <label>Barco</label>
                         <div class='info-input'>{{ marinaHumedaCotizacion.barco }}</div>
                         <label>Total Cotización</label>
-                        <div class='info-input'>$ {{ marinaHumedaCotizacion.total|number_format(2,'.',',') }}</div>
+                        <div class='info-input'>$ {{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</div>
                         <label>Pagado hasta el momento</label>
-                        <div class='info-input'>$ {{ marinaHumedaCotizacion.pagado|number_format(2,'.',',') }}</div>
+                        <div class='info-input'>$ {{ (marinaHumedaCotizacion.pagado/100)|number_format(2) }}</div>
                     </div>
                 </div>
                 <div class="row espacio-linea">
@@ -43,6 +43,12 @@
                         <hr>
                     </div>
                 </div>
+                {% for message in app.flashes('notice') %}
+                    <div class="flash-notice">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
                 {% form_theme form 'estructura/temaerror.html.twig' %}
                 {{ form_start(form) }}
                 <div class="row">

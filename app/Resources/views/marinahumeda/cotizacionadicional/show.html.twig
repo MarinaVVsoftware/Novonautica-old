@@ -81,7 +81,7 @@
                         <div class="row">
                             <div class="col-sm-10 text-right">
                                 <span>Tipo de cambio:</span>
-                                <div id="tipocambio" class="">{{ (marinaHumedaCotizacionAdicional.dolar/100)|number_format(2,'.',',') }}
+                                <div id="tipocambio" class="">{{ (marinaHumedaCotizacionAdicional.dolar/100)|number_format(2) }}
                                     MXN
                                 </div>
                             </div>
@@ -111,10 +111,10 @@
                                                 <td>{{ servicio.cantidad }}</td>
                                                 <td>{{ servicio.marinahumedaservicio }}</td>
                                                 <td>{{ servicio.marinahumedaservicio.unidad }}</td>
-                                                <td>$ {{ (servicio.precio/100)|number_format(2,'.',',') }}</td>
-                                                <td>$ {{ (servicio.subtotal/100)|number_format(2,'.',',') }}</td>
-                                                <td>$ {{ (servicio.iva/100)|number_format(2,'.',',') }}</td>
-                                                <td>$ {{ (servicio.total/100)|number_format(2,'.',',') }}</td>
+                                                <td>$ {{ (servicio.precio/100)|number_format(2) }}</td>
+                                                <td>$ {{ (servicio.subtotal/100)|number_format(2) }}</td>
+                                                <td>$ {{ (servicio.iva/100)|number_format(2) }}</td>
+                                                <td>$ {{ (servicio.total/100)|number_format(2) }}</td>
                                             </tr>
                                     {% endfor %}
                                     </tbody>
