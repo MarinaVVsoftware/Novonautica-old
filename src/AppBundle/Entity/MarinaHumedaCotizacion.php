@@ -203,6 +203,27 @@ class MarinaHumedaCotizacion
     private $tokenrechaza;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="metodopago", type="string", length=100, nullable=true)
+     */
+    private $metodopago;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigoseguimiento", type="string", length=255, nullable=true)
+     */
+    private $codigoseguimiento;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecharealpago", type="datetime", nullable=true)
+     */
+    private $fecharespuesta;
+
+    /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="mhcotizaciones")
      * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
@@ -958,5 +979,53 @@ class MarinaHumedaCotizacion
     public function setPagado($pagado)
     {
         $this->pagado = $pagado;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetodopago()
+    {
+        return $this->metodopago;
+    }
+
+    /**
+     * @param string $metodopago
+     */
+    public function setMetodopago($metodopago)
+    {
+        $this->metodopago = $metodopago;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCodigoseguimiento()
+    {
+        return $this->codigoseguimiento;
+    }
+
+    /**
+     * @param string $codigoseguimiento
+     */
+    public function setCodigoseguimiento($codigoseguimiento)
+    {
+        $this->codigoseguimiento = $codigoseguimiento;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFecharespuesta()
+    {
+        return $this->fecharespuesta;
+    }
+
+    /**
+     * @param \DateTime $fecharespuesta
+     */
+    public function setFecharespuesta($fecharespuesta)
+    {
+        $this->fecharespuesta = $fecharespuesta;
     }
 }

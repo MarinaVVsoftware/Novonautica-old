@@ -32,9 +32,6 @@ class MarinaHumedaCotizacionAceptadaType extends AbstractType
                     ],
                 'label' => 'Método de pago'
                 ])
-            ->add('titular')
-            ->add('banco')
-            ->add('numcuenta')
         ;
     }
 
@@ -44,7 +41,7 @@ class MarinaHumedaCotizacionAceptadaType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Pago'
+            'data_class' => 'AppBundle\Entity\MarinaHumedaCotizacion'
         ));
     }
 
@@ -53,6 +50,6 @@ class MarinaHumedaCotizacionAceptadaType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'appbundle_pago';
+        return 'appbundle_marinahumedacotizacion';
     }
 }

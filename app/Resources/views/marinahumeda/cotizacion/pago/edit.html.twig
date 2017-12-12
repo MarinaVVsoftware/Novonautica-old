@@ -36,6 +36,8 @@
                         <div class='info-input'>$ {{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</div>
                         <label>Pagado hasta el momento</label>
                         <div class='info-input'>$ {{ (marinaHumedaCotizacion.pagado/100)|number_format(2) }}</div>
+                        <label>Faltante</label>
+                        <div class='info-input'>$ {{ ((marinaHumedaCotizacion.total-marinaHumedaCotizacion.pagado)/100)|number_format(2) }}</div>
                     </div>
                 </div>
                 <div class="row espacio-linea">
@@ -51,11 +53,11 @@
 
                 {% form_theme form 'estructura/temaerror.html.twig' %}
                 {{ form_start(form) }}
-                <div class="row">
-                    <div class="col-sm-4">
-                        {{ form_row(form.estatuspago) }}
-                    </div>
-                </div>
+                {#<div class="row">#}
+                    {#<div class="col-sm-4">#}
+                        {#{{ form_row(form.estatuspago) }}#}
+                    {#</div>#}
+                {#</div>#}
                 <div class="row espacio-linea">
                     <div class="col-sm-6">
                         <hr>

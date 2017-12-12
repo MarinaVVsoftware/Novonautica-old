@@ -26,15 +26,15 @@ class MarinaHumedaRegistraPagoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('estatuspago',ChoiceType::class,[
-                'choices'  => [
-                    'Pagado' => 2,
-                    'Con adeudo' => 1,
-                    'No pagado' => 0,
-                ],
-                'label' => 'Estatus Pago',
-                'required' => false
-            ])
+//            ->add('estatuspago',ChoiceType::class,[
+//                'choices'  => [
+//                    'Pagado' => 2,
+//                    'Con adeudo' => 1,
+//                    'No pagado' => 0,
+//                ],
+//                'label' => 'Estatus Pago',
+//                'required' => false
+//            ])
             ->add('pagos',CollectionType::class,[
                 'entry_type' => PagoType::class,
                 'label' => false,
