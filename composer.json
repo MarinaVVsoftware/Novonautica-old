@@ -20,6 +20,7 @@
         "incenteev/composer-parameter-handler": "^2.0",
         "knplabs/knp-snappy-bundle": "^1.5",
         "oneup/uploader-bundle": "^1.9",
+        "roave/security-advisories": "dev-master",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^3.0.2",
         "symfony/monolog-bundle": "^3.1.0",
@@ -27,7 +28,8 @@
         "symfony/swiftmailer-bundle": "^2.3.10",
         "symfony/symfony": "3.3.*",
         "twig/twig": "^1.0||^2.0",
-        "vich/uploader-bundle": "^1.6"
+        "vich/uploader-bundle": "^1.6",
+        "webinarium/datatables-bundle": "^2.2"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

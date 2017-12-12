@@ -109,29 +109,36 @@ class MarinaHumedaMonederoController extends Controller
             $montoProcesar = $monederoMovimiento->getMonto();
             $operacion = $monederoMovimiento->getOperacion();
 
-            if($operacion==1){
+            if($operacion==1){ //suma
                 $montoTotal = $montoActual + $montoProcesar;
             }else{
-                if($operacion==2){
-                    $montoTotal = $montoActual - $montoProcesar;
+                if($operacion==2){ //resta
+                        $montoTotal = $montoActual - $montoProcesar;
                 }else{
                     $montoTotal = $montoActual;
                 }
             }
             //-------------------------------------------------
-            $fechaHoraActual = new \DateTime('now');
-            $monederoMovimiento
-                ->setFecha($fechaHoraActual)
-                ->setResultante($montoTotal)
-                ->setTipo(1);
-            $cliente->setMonederomarinahumeda($montoTotal);
+            if($montoTotal<0){
+                //error se restara mas de lo que se tiene $this->addFlash(
+                $this->addFlash('notice', 'Error! la cantidad que se resta es mayor que el monto que se tiene');
+            }else{
+                $fechaHoraActual = new \DateTime('now');
+                $monederoMovimiento
+                    ->setFecha($fechaHoraActual)
+                    ->setResultante($montoTotal)
+                    ->setTipo(1);
+                $cliente->setMonederomarinahumeda($montoTotal);
 
-            $em->persist($monederoMovimiento);
-            $em->persist($cliente);
-            $em->flush();
+                $em->persist($monederoMovimiento);
+                $em->persist($cliente);
+                $em->flush();
 
 
-            return $this->redirectToRoute('mh_monedero_index');
+                return $this->redirectToRoute('mh_monedero_index');
+            }
+
+
         }
         return $this->render('marinahumeda/monedero/operacion.html.twig', array(
             'monederoMovimiento' => $monederoMovimiento,

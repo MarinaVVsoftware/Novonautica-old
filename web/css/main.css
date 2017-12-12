@@ -398,21 +398,31 @@ input.radio input[type="radio"] + input.radio-label:empty:before {
 }
 
 .table > thead > tr > th {
-    border: 2px solid #1c1f29;
+    border: 2px solid #1c1f29 !important;
 }
 
-.panel-novo th, .panel-novo td {
-    border-left: 2px solid #292e41 !important;
-    border-bottom: 2px solid #292e41;
-    border-right: 2px solid #292e41 !important;
+.dataTables_processing {
+    background-color: #4a97f6;
 }
+
+.panel-novo th, .panel-novo table tr td {
+    border: 2px solid #292e41;
+    border-left: none;
+}
+
+.panel-novo table tr td:first-of-type {
+    border-left: 2px solid #292e41;
+}
+.panel-novo table tr td {
+    border-top: none;
+}
+
 
 .panel-novo tbody tr:hover {
     /*background: #3e4766;*/
     cursor: pointer;
 }
-
-.panel-novo tbody td input[type="text"] {
+.panel-novo tbody td input[type="text"]{
     background: none;
     padding: 0px;
     border-radius: 0;
@@ -502,7 +512,9 @@ input.radio input[type="radio"] + input.radio-label:empty:before {
 .panel-body form input[type="email"],
 .panel-body form input[type="password"],
 .panel-body form input[type="number"],
+.panel-body .dt-bootstrap input,
 .panel-body form select,
+.panel-body .dt-bootstrap select,
 .panel-body form textarea,
 .panel-body form .info-input,
 .info-input {
@@ -513,6 +525,20 @@ input.radio input[type="radio"] + input.radio-label:empty:before {
     width: 100%;
     color: #fff;
     min-height: 25px;
+}
+
+.panel-body ul.pagination li.active a {
+    background: #0097f6;
+}
+
+.panel-body ul.pagination li a:hover {
+    color: #fff;
+}
+.panel-body ul.pagination li.disabled a:focus,
+.panel-body ul.pagination li.disabled a:hover,
+.panel-body ul.pagination li a {
+    background: #292e41;
+    border: none;
 }
 
 .input-group .input-group-addon {
@@ -783,12 +809,12 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
 
 .middle .opcionaceptar + label:hover {
     background-color: #009933;
-    box-shadow: 0px 0px 15px 1px #009933;
+    /*box-shadow: 0px 0px 15px 1px #009933;*/
 }
 
 .middle .opcionrechazar + label:hover {
     background-color: #FF6600;
-    box-shadow: 0px 0px 15px 1px #FF6600;
+    /*box-shadow: 0px 0px 15px 1px #FF6600;*/
 }
 
 .middle .opcionpendiente + label:hover {
@@ -812,15 +838,15 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
 }
 
 .middle label:active {
-    transform: translateY(10px);
+    /*transform: translateY(10px);*/
 }
 
 .middle label span {
     position: absolute;
-    transform: translate(0, 60px);
+    /*transform: translate(0, 60px);*/
     left: 0;
     right: 0;
-    transition: all 300ms ease;
+    /*transition: all 300ms ease;*/
     font-size: 1.5em;
     user-select: none;
     color: #000;
@@ -832,13 +858,15 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     content: '';
     font-size: 1.2em;
     display: block;
-    transform: translateY(-80px);
+    /*transform: translateY(-80px);*/
     opacity: 0;
-    transition: all 300ms ease-in-out;
+    /*transition: all 300ms ease-in-out;*/
     font-weight: normal;
     color: #000000;
 }
-
+#notarechazado{
+    display: none;
+}
 /*++++++ fin radio boton aceptar,rechazar +++++*/
 
 /*+++++ Modal borrar ++++*/

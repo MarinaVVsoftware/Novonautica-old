@@ -60,21 +60,20 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
     public function newAction(Request $request)
     {
         $marinaHumedaCotizacionAdicional = new MarinaHumedaCotizacionAdicional();
-        $dolarBase = $this->getDoctrine()
-            ->getRepository(ValorSistema::class)
-            ->find(1)
-            ->getValor();
-        $iva = $this->getDoctrine()
-            ->getRepository(ValorSistema::class)
-            ->find(2)
-            ->getValor();
+        $em = $this->getDoctrine()->getManager();
+        $qb = $em->createQueryBuilder();
+        $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
+        $sistema =$query->getArrayResult();
+
+        $dolarBase = $sistema[0]['dolar'];
+        $iva = $sistema[0]['iva'];
 
 
         $form = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionAdicionalType', $marinaHumedaCotizacionAdicional);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+
             $granSubtotal = 0;
             $granIvatotal = 0;
             $granTotal = 0;

@@ -31,7 +31,7 @@
                                 <td>{{ i }}</td>
                                 <td>{{ marinaHumedaServicio.nombre }}</td>
                                 <td>{{ marinaHumedaServicio.unidad }}</td>
-                                <td>$ {{ marinaHumedaServicio.precio|number_format(2,'.',',') }}</td>
+                                <td>$ {{ (marinaHumedaServicio.precio/100)|number_format(2) }}</td>
                                 <td>
                                     <a class="btn btn-azul" href="{{ path('marina-humeda-servicio_edit', { 'id': marinaHumedaServicio.id }) }}">
                                         Editar

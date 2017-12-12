@@ -1,51 +1,61 @@
-$(document).ready(function () {
-  $('#loading').hide();
-  // $('.treeview ul a').on('click',function () {
-  //     $('#loading').show();
-  // });
-  $('.loadpage').on('click', function () {
-    $('#loading').show();
-  });
-  // $('.btn').on('click',function () {
-  //     $('#loading').show(); $('#loading').show();
-  // });
-  $('.barcoespacio').on('click', function () {
-    $('#infobarco').html('Barco: ' + $(this).attr('id'));
-    $('#modalinfobarco').modal('toggle');
-  });
-  $('.select-buscador').select2();
-  $.fn.datepicker.dates['es'] = {
-    days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
-    daysShort: ["Dom", "Lun", "Mar", "Mi", "Ju", "Vi", "Sab"],
-    daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-    months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-    monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-    today: "Hoy",
-    clear: "Quitar",
-    // format: "dd-mm-yyyy",
-    titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
-    weekStart: 0
-  };
-  $('.input-daterange').datepicker({
-    format: 'yyyy-mm-dd',
-    language: "es",
-    orientation: "bottom auto",
-    autoclose: true,
-    startDate: "0d"
-  });
-  $('.datepicker-solo').datepicker({
-    autoclose: true,
-    format: 'yyyy-mm-dd',
-    orientation: "bottom auto",
-  });
-  $('.editorwy').wysihtml5({
-    toolbar: {
-      "image": false,
-      "color": false,
-      "link": false,
-      "html": true,
-    }
-  });
+$(document).ready(function() {
+    $('#loading').hide();
+    // $('.treeview ul a').on('click',function () {
+    //     $('#loading').show();
+    // });
+    $('.loadpage').on('click',function (){
+        $('#loading').show();
+    });
+    // $('.btn').on('click',function () {
+    //     $('#loading').show(); $('#loading').show();
+    // });
+    $('.barcoespacio').on('click',function(){
+        $('#infobarco').html('Barco: '+$(this).attr('id'));
+        $('#modalinfobarco').modal('toggle');
+    });
+    $('.select-buscador').select2();
+    $.fn.datepicker.dates['es'] = {
+        days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+        daysShort: ["Dom", "Lun", "Mar", "Mi", "Ju", "Vi", "Sab"],
+        daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+        months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+        today: "Hoy",
+        clear: "Quitar",
+        // format: "dd-mm-yyyy",
+        titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+        weekStart: 0
+    };
+    $('.input-daterange').datepicker({
+        format: 'yyyy-mm-dd',
+        language: "es",
+        orientation: "bottom auto",
+        autoclose: true,
+        startDate: "0d"
+    });
+    $('.datepicker-solo').datepicker({
+        autoclose: true,
+        format: 'yyyy-mm-dd',
+        orientation: "bottom auto",
+    });
+
+    $('.editorwy').wysihtml5({
+        toolbar:{
+            "image": false,
+            "color": false,
+            "link": false,
+            "html": true,
+        }
+    });
+
+    $('.lista-pagos').on('click','.datepicker-solo',function(e) {
+        console.log('click calendario');
+        $(this).datepicker({
+            autoclose: true,
+            format: 'yyyy-mm-dd',
+            orientation: "auto",
+        })
+    });
 //---- seleccionar choice al recotizar------
   var diasestadiaprecio = $('#de_precio').data('valor');
   var electricidadprecio = $('#e_precio').data('valor');
@@ -60,12 +70,18 @@ $(document).ready(function () {
     }
   });
 //-- fin seleccionar choice al recotizar----
-  $(".esnumero").keypress(function () {
-    return isNumberKey(event);
-  });
-  $(".esdecimal").keypress(function () {
-    return esNumeroDecimal(event, this);
-  });
+    $( ".esnumero" ).keypress(function() {
+        return isNumberKey(event);
+    });
+    $( ".esdecimal" ).keypress(function() {
+        return esNumeroDecimal(event,this);
+    });
+    $("#appbundle_marinahumedacotizacion_validanovo_0").click(function () {
+        $('#notarechazado').hide();
+    });
+    $("#appbundle_marinahumedacotizacion_validanovo_1").click(function () {
+        $('#notarechazado').show();
+    });
 });
 
 function isNumberKey(evt) {
@@ -205,6 +221,39 @@ $('.lista-servicios-adicionales').on('click', '.remove-servicio-adicional', func
   return false;
 });
 
+//collectio al agregar pagos a una cotización marina húmeda
+jQuery('.add-another-pago').click(function (e) {
+    e.preventDefault();
+    // var elementoMotor = document.getElementsByClassName(this);
+    var totPagos = $(this).data('cantidad');
+    var lista = $(this).data('idlista');
+    var pagoListPrimero = jQuery('#pago-fields-list'+lista);
+    //var motorListOtros = jQuery('.lista-motores'+lista);
+    // grab the prototype template
+    var newWidget = $(pagoListPrimero).data('prototype');
+    // replace the "__name__" used in the id and name of the prototype
+    // with a number that's unique to your emails
+    // end name attribute looks like name="contact[emails][2]"
+    newWidget = newWidget.replace(/__name__/g, totPagos);
+    totPagos++;
+    $(this).data('cantidad', totPagos);
+    // create a new list element and add it to the list
+    var newLi = jQuery('<tr class="pago-agregado"></tr>').html(newWidget);
+    newLi.appendTo(pagoListPrimero);
+
+    // also add a remove button, just for this example
+    //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
+
+    newLi.before(newLi);
+});
+$('.lista-pagos').on('click','.remove-pago',function(e) {
+    e.preventDefault();
+    //console.log('quitar motor');
+    $(this).parent().parent().remove();
+
+    return false;
+});
+
 //--- select dependiente para marina humeda cotización ---
 var elclientemh = $('#appbundle_marinahumedacotizacion_cliente');
 elclientemh.change(function () {
@@ -259,26 +308,26 @@ elcliente.change(function () {
 var elclienteastillero = $('#appbundle_astillerocotizacion_cliente');
 elclienteastillero.change(function () {
 
-  // ... retrieve the corresponding form.
-  var form = $(this).closest('form');
-  // Simulate form data, but only include the selected elcliente value.
-  var data = {};
-  data[elclienteastillero.attr('name')] = elclienteastillero.val();
-  // Submit data via AJAX to the form's action path.
-  console.log(elclienteastillero.val());
-  $.ajax({
-    url: form.attr('action'),
-    type: form.attr('method'),
-    data: data,
-    success: function (html) {
-      // Replace current position field ...
-      $('#appbundle_astillerocotizacion_barco').replaceWith(
-          // ... with the returned one from the AJAX response.
-          $(html).find('#appbundle_astillerocotizacion_barco')
-      );
-      // barco field now displays the appropriate barcos.
-    }
-  });
+    // ... retrieve the corresponding form.
+    var form = $(this).closest('form');
+    // Simulate form data, but only include the selected elcliente value.
+    var data = {};
+    data[elclienteastillero.attr('name')] = elclienteastillero.val();
+    // Submit data via AJAX to the form's action path.
+
+    $.ajax({
+        url : form.attr('action'),
+        type: form.attr('method'),
+        data : data,
+        success: function(html) {
+            // Replace current position field ...
+            $('#appbundle_astillerocotizacion_barco').replaceWith(
+                // ... with the returned one from the AJAX response.
+                $(html).find('#appbundle_astillerocotizacion_barco')
+            );
+            // barco field now displays the appropriate barcos.
+        }
+    });
 });
 
 //--- fin select dependiente para astillero cotización ---
@@ -345,8 +394,8 @@ $('#appbundle_marinahumedacotizacion_fechaLlegada').on("change", function () {
   $('#dias_estadia_cantidad').data('valor', dias_estadia);
 
 
-  de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
-  de_precio_mxn = de_precio * dolar;
+    de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val()/100);
+    de_precio_mxn = de_precio * dolar;
 
   $('#de_cantidad').html(dias_estadia);
   $('#de_cantidad_mxn').html(dias_estadia);
@@ -354,8 +403,8 @@ $('#appbundle_marinahumedacotizacion_fechaLlegada').on("change", function () {
   calculaSubtotales(dias_estadia, de_precio, $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
   calculaSubtotales(dias_estadia, de_precio_mxn, $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
 
-  e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val();
-  e_precio_mxn = e_precio * dolar;
+    e_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val()/100);
+    e_precio_mxn = e_precio * dolar;
 
   $('#e_cantidad').html(dias_estadia);
   $('#e_cantidad_mxn').html(dias_estadia);
@@ -374,8 +423,8 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on("change", function () {
   $('#dias_estadia_cantidad').html(dias_estadia);
   $('#dias_estadia_cantidad').data('valor', dias_estadia);
 
-  de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
-  de_precio_mxn = de_precio * dolar;
+    de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val()/100);
+    de_precio_mxn = de_precio * dolar;
 
   $('#de_cantidad').html(dias_estadia);
   $('#de_cantidad_mxn').html(dias_estadia);
@@ -383,8 +432,8 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on("change", function () {
   calculaSubtotales(dias_estadia, de_precio, $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
   calculaSubtotales(dias_estadia, de_precio_mxn, $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
 
-  e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val();
-  e_precio_mxn = e_precio * dolar;
+    e_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val()/100);
+    e_precio_mxn = e_precio * dolar;
 
   $('#e_cantidad').html(dias_estadia);
   $('#e_cantidad_mxn').html(dias_estadia);
@@ -396,11 +445,11 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on("change", function () {
 });
 
 //-- Días estadía --
-$('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change', function () {
-  dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-  de_cantidad = $('#dias_estadia_cantidad').data('valor');
-  de_precio = $(this).val();
-  de_precio_mxn = (de_precio * dolar).toFixed(2);
+$('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change',function () {
+    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+    de_cantidad = $('#dias_estadia_cantidad').data('valor');
+    de_precio = ($(this).val()/100);
+    de_precio_mxn = (de_precio * dolar).toFixed(2);
 
   $('#de_precio').html('$ ' + de_precio);
   $('#de_precio_mxn').html('$ ' + de_precio_mxn);
@@ -423,11 +472,11 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change', functi
 //     calculaTotales();
 // });
 
-$('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').on('change', function () {
-  dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-  e_cantidad = $('#dias_estadia_cantidad').data('valor');
-  e_precio = $(this).val();
-  e_precio_mxn = (e_precio * dolar).toFixed(2);
+$('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').on('change',function () {
+    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+    e_cantidad =  $('#dias_estadia_cantidad').data('valor');
+    e_precio = ($(this).val()/100);
+    e_precio_mxn = (e_precio * dolar).toFixed(2);
 
   $('#e_precio').html('$ ' + e_precio);
   $('#e_precio_mxn').html('$ ' + e_precio_mxn);
@@ -444,42 +493,44 @@ $('#appbundle_marinahumedacotizacion_descuento').keyup(function () {
 
 //-- Dolar --
 $('#appbundle_marinahumedacotizacion_dolar').keyup(function () {
-  $('.valdolar').html(parseFloat($(this).val()).toFixed(2) + ' MXN');
-
-  recalculaSubtotalesYtotal();
+    $('.valdolar').html(parseFloat($(this).val()).toFixed(2)+' MXN');
+    recalculaSubtotalesYtotal();
 });
 
 function recalculaSubtotalesYtotal() {
-  dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-  dias_estadia = $('#dias_estadia_cantidad').data('valor');
+    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
 
-  de_cantidad = dias_estadia;
-  de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val();
-  de_precio_mxn = de_precio * dolar;
-  //$('#de_cantidad').html(de_cantidad);
-  calculaSubtotales(de_cantidad, de_precio, $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
-  calculaSubtotales(de_cantidad, de_precio_mxn, $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
+    dias_estadia =  $('#dias_estadia_cantidad').data('valor');
 
-  e_cantidad = dias_estadia;
-  e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val();
-  e_precio_mxn = e_precio * dolar;
-  calculaSubtotales(e_cantidad, e_precio, $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
-  calculaSubtotales(e_cantidad, e_precio_mxn, $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+    de_cantidad = dias_estadia;
+    de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val()/100;
+    de_precio_mxn = de_precio * dolar;
+    //$('#de_cantidad').html(de_cantidad);
+    calculaSubtotales(de_cantidad,de_precio,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
+    calculaSubtotales(de_cantidad,de_precio_mxn,$('#de_subtotal_mxn'),$('#de_iva_mxn'),$('#de_descuento_mxn'),$('#de_total_mxn'));
+
+    e_cantidad = dias_estadia;
+    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val()/100;
+    e_precio_mxn = e_precio * dolar;
+    calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
+    calculaSubtotales(e_cantidad,e_precio_mxn,$('#e_subtotal_mxn'),$('#e_iva_mxn'),$('#e_descuento_mxn'),$('#e_total_mxn'));
 
   calculaTotales();
 }
 
-function calculaSubtotales(cantidad, precio, tdsubtot, tdiva, tddesc, tdtot) {
-  var eslora = 0;
-  if ($('#de_eslora').data('valor')) {
-    eslora = $('#de_eslora').data('valor');
-  }
-  var iva = ($('#valiva').data('valor')) / 100;
-  var descuento = $('#appbundle_marinahumedacotizacion_descuento').val();
-  var subtotal = cantidad * precio * eslora;
-  var ivatot = subtotal * iva;
-  var desctot = (subtotal * descuento) / 100;
-  var total = (subtotal + ivatot - desctot).toFixed(2);
+function calculaSubtotales(cantidad,precio,tdsubtot,tdiva,tddesc,tdtot){
+
+
+    var eslora = 0;
+    if ($('#de_eslora').data('valor')) {
+      eslora = $('#de_eslora').data('valor');
+    }
+    var iva = ($('#valiva').data('valor'))/100;
+    var descuento = $('#appbundle_marinahumedacotizacion_descuento').val();
+    var subtotal = cantidad * precio * eslora;
+    var ivatot = subtotal * iva;
+    var desctot = (subtotal*descuento)/100;
+    var total = (subtotal + ivatot - desctot).toFixed(2);
 
   tdsubtot.html('$ ' + (subtotal).toFixed(2));
   tdiva.html('$ ' + (ivatot).toFixed(2));
@@ -686,3 +737,30 @@ if (inputFiles.length) { // Hay que asegurarse que hay inputs en la pagina para 
     });
   });
 }
+
+/*
+  Reemplazo de lenguaje para datatables
+ */
+
+const datatablesSettings = {
+  serverSide: true,
+  processing: true,
+  responsive: true,
+  language: {
+    lengthMenu: 'Mostrar _MENU_ entradas',
+    zeroRecords: 'No hay entradas',
+    info: 'Mostrando la pagina _PAGE_ of _PAGES_',
+    infoEmpty: 'No hay entradas disponibles',
+    infoFiltered: '(filtados de _MAX_ total de entradas)',
+    processing: 'Procesando...',
+    thousands: 'Millones',
+    loadingRecords: 'Cargando entradas...',
+    search: 'Buscar',
+    paginate: {
+      first: 'Primera',
+      last: 'Ultima',
+      next: 'Siguiente',
+      previous: 'Anterior',
+    }
+  }
+};
