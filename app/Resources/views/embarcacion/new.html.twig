@@ -124,12 +124,14 @@
                                         Guardar
                                     </button>
                                     {{ form_end(form) }}
+                                    {% if delete_form is defined %}
                                     {{ form_start(delete_form) }}
                                     <button type="submit" class="btn btn-naranja pull-left">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                         Eliminar
                                     </button>
                                     {{ form_end(delete_form) }}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
