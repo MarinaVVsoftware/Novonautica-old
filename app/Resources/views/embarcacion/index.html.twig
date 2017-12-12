@@ -1,5 +1,10 @@
 {% extends 'estructura/plantilla.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    {{ parent() }}
+{% endblock %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -9,78 +14,81 @@
                         <div class="panel-heading">
                             <h3 class="panel-title">Embarcaciones</h3>
                         </div>
-                        <div class="panel-body no-padding">
-                            <div class="table-responsive">
-                                <table class="table table-novo">
-                                    <thead>
+                        <div class="panel-body">
+                            <table class="table table-novo">
+                                <thead>
+                                <tr>
+                                    <th>Nombre de la embarcación</th>
+                                    <th>Pais de ubicacion</th>
+                                    <th>Modelo</th>
+                                    <th>Marca</th>
+                                    <th>Longitud</th>
+                                    <th>Precio</th>
+                                    <th>Año</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {#{% for i, embarcacion in embarcaciones %}
                                     <tr>
-                                        <th>Nombre de la embarcación</th>
-                                        <th>Pais de ubicacion</th>
-                                        <th>Modelo</th>
-                                        <th>Marca</th>
-                                        <th>Longitud</th>
-                                        <th>Precio</th>
-                                        <th>Año</th>
-                                        <th width="10%"></th>
+                                        <td>{{ embarcacion.nombre }}</td>
+                                        <td>{{ embarcacion.pais }}</td>
+                                        <td>{{ embarcacion.modelo ?: 'Custom' }}</td>
+                                        <td>{{ embarcacion.marca ?: 'Custom' }}</td>
+                                        <td>{{ embarcacion.longitud }}</td>
+                                        <td>$ {{ (embarcacion.precio / 100)|number_format(2) }} USD</td>
+                                        <td>{{ embarcacion.ano }}</td>
+                                        <td>
+                                            <ul class="list-unstyled list-inline">
+                                                <li>
+                                                    <a href="{{ path('embarcacion_edit', { 'id': embarcacion.id }) }}">
+                                                        <i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                                </li>
+                                                <li>
+                                                    {{ form_start(deleteForms[i]) }}
+                                                    <button type="submit" class="btn btn-transparent">
+                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                    {{ form_end(deleteForms[i]) }}
+                                                </li>
+                                            </ul>
+                                        </td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for i, embarcacion in embarcaciones %}
-                                        <tr>
-                                            <td>{{ embarcacion.nombre }}</td>
-                                            <td>{{ embarcacion.pais }}</td>
-                                            <td>{{ embarcacion.modelo ?: 'Custom' }}</td>
-                                            <td>{{ embarcacion.marca ?: 'Custom' }}</td>
-                                            <td>{{ embarcacion.longitud }}</td>
-                                            <td>${{ (embarcacion.precio / 100)|number_format(2) }} USD</td>
-                                            <td>{{ embarcacion.ano }}</td>
-                                            <td>
-                                                <ul class="list-unstyled list-inline">
-                                                    <li>
-                                                        <a href="{{ path('embarcacion_edit', { 'id': embarcacion.id }) }}">
-                                                            <i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        {{ form_start(deleteForms[i]) }}
-                                                        <button type="submit" class="btn btn-transparent">
-                                                            <i class="fa fa-trash" aria-hidden="true"></i>
-                                                        </button>
-                                                        {{ form_end(deleteForms[i]) }}
-                                                    </li>
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
+                                {% endfor %}#}
+                                </tbody>
+                            </table>
                         </div>
                         <div class="panel-footer">
-                            <nav>
-                                <ul class="pager">
-                                    {% if page > 1 %}
-                                        <li class="previous">
-                                            <a href="{{ path('embarcacion_index', {'page': page - 1}) }}">
-                                                <span aria-hidden="true">&larr;</span> Anterior
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                    <li>
-                                        Estas viendo la pagina {{ page }} de {{ pages }} paginas
-                                    </li>
-                                    {% if page < pages %}
-                                        <li class="next">
-                                            <a href="{{ path('embarcacion_index', {'page': page + 1}) }}">Siguiente
-                                                <span aria-hidden="true">&rarr;</span>
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                </ul>
-                            </nav>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, datatableSettings) {
+        $('.table-novo').DataTable({
+          ...datatableSettings,
+          ajax: '{{ path('embarcacion_index') }}',
+          createdRow: function (tr, data) {
+            let lastTd = tr.querySelector('td:last-child');
+            let entryPath = `{{ app.request.requestUri }}${data[7]}/edit`;
+            lastTd.innerHTML = `
+            <ul class="list-unstyled list-inline">
+            <li>
+                <a href="${entryPath}">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                </a>
+            </li>
+            </ul>
+            `
+          },
+        });
+      })(jQuery, datatablesSettings)
+    </script>
 {% endblock %}

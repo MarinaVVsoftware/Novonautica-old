@@ -3,6 +3,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
 {% endblock %}
 
 {% form_theme form 'embarcacion/form-themes/_embarcacion.html.twig' %}
@@ -122,10 +123,18 @@
                                         <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                         Guardar
                                     </button>
+                                    {{ form_end(form) }}
+                                    {% if delete_form is defined %}
+                                    {{ form_start(delete_form) }}
+                                    <button type="submit" class="btn btn-naranja pull-left">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                        Eliminar
+                                    </button>
+                                    {{ form_end(delete_form) }}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
-                        {{ form_end(form) }}
                     </div>
                 </div>
             </div>
@@ -137,6 +146,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/dropzone.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
       (function () {
         const construccionInput = document.querySelector('#appbundle_embarcacion_construccion');
