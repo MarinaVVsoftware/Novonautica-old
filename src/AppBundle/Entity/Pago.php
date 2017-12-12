@@ -79,7 +79,6 @@ class Pago
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MarinaHumedaCotizacion", inversedBy="pagos")
-     * @ORM\JoinColumn(name="idpago", referencedColumnName="id",onDelete="CASCADE")
      */
     private $mhcotizacion;
 
