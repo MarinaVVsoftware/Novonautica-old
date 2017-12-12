@@ -14,31 +14,47 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-6">
-                            <table class="table text-center">
+                            <table class="table">
                                 <thead>
                                 <tr>
                                     <th>Elemento</th>
                                     <th>Valor</th>
-                                    <th>Unidad</th>
-                                    <th></th>
+
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for valorSistema in valorSistemas %}
                                     <tr>
-                                        <td>{{ valorSistema.nombre }}</td>
-                                        <td>{{ valorSistema.valor }}</td>
-                                        <td>{{ valorSistema.unidad }}</td>
-                                        <td>
-                                            <a class="btn btn-azul" href="{{ path('ajustes_edit', { 'id': valorSistema.id }) }}">
-                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                                Editar
-                                            </a>
-                                        </td>
+                                        <td>Dolar</td>
+                                        <td>{{ (valorSistemas.0.dolar/100)|number_format(2) }} MXN</td>
                                     </tr>
-                                {% endfor %}
+                                    <tr>
+                                        <td>Iva</td>
+                                        <td>{{ valorSistemas.0.iva }} %</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Folio Cotizaciones Marina Humeda</td>
+                                        <td>{{ valorSistemas.0.folioMarina }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Días Habiles Pago Cotización Marina</td>
+                                        <td>{{ valorSistemas.0.diasHabilesMarinaCotizacion }} días</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mensaje Correo Marina Humeda</td>
+                                        <td>{{ valorSistemas.0.mensajeCorreoMarina|raw }}</td>
+                                    </tr>
+
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a class="btn btn-azul"
+                               href="{{ path('ajustes_edit', { 'id': valorSistemas.0.id }) }}">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                Editar
+                            </a>
                         </div>
                     </div>
                 </div>

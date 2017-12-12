@@ -6,6 +6,7 @@ use AppBundle\Entity\Cliente;
 
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -29,9 +30,12 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
                 'attr' => ['class' => 'select-buscador selectclientebuscar'],
 
             ])
-            ->add('dolar',TextType::class,[
-                'attr' => ['class' => 'esdecimal',
-                    'autocomplete'=>'off']
+            ->add('dolar',MoneyType::class,[
+                'required'=>false,
+                'attr' => ['class' => 'esdecimal', 'autocomplete'=>'off'],
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
             ])
             ->add('mhcservicios',CollectionType::class,[
                 'entry_type' => MarinaHumedaCotizaServiciosAdicionalesType::class,

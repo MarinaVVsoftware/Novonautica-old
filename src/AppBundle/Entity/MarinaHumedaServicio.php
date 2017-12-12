@@ -43,12 +43,12 @@ class MarinaHumedaServicio
     private $unidad;
 
     /**
-     * @var float
+     * @var integer
      * @Assert\NotBlank(
      *     message="Precio no puede quedar vacío"
      * )
      *
-     * @ORM\Column(name="precio", type="float", nullable=true)
+     * @ORM\Column(name="precio", type="integer", nullable=true)
      */
     private $precio;
 
@@ -116,26 +116,20 @@ class MarinaHumedaServicio
     }
 
     /**
-     * Set precio
-     *
-     * @param float $precio
-     *
-     * @return MarinaHumedaServicio
-     */
-    public function setPrecio($precio)
-    {
-        $this->precio = $precio;
-
-        return $this;
-    }
-
-    /**
-     * Get precio
-     *
-     * @return float
+     * @return int
      */
     public function getPrecio()
     {
         return $this->precio;
     }
+
+    /**
+     * @param int $precio
+     */
+    public function setPrecio($precio)
+    {
+        $this->precio = $precio;
+    }
+
+
 }

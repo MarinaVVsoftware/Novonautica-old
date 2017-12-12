@@ -130,7 +130,7 @@
                                         {% for i,servicio in edit_form.mhcservicios %}
                                             {% form_theme servicio 'marinahumeda/cotizacionadicional/coleccion-servicio-adicional.twig' %}
                                             <tr class="servicio-agregado">
-                                                <td class="valorcantidad" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].cantidad}}">
+                                                <td class="valorcantidad" data-valor="{{ (marinaHumedaCotizacionAdicional.mhcservicios[i].cantidad/100)}}">
                                                     {{ form_widget(servicio.cantidad) }}
                                                 </td>
                                                 <td class="td-servicio">
@@ -139,17 +139,17 @@
                                                 <td class="valorunidad">
                                                     {{ marinaHumedaCotizacionAdicional.mhcservicios[i].marinahumedaservicio.unidad }}
                                                 </td>
-                                                <td class="valorprecio" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].precio }}">
-                                                   $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].precio|number_format(2,'.',',') }}
+                                                <td class="valorprecio" data-valor="{{ (marinaHumedaCotizacionAdicional.mhcservicios[i].precio/100) }}">
+                                                   $ {{ (marinaHumedaCotizacionAdicional.mhcservicios[i].precio/100)|number_format(2) }}
                                                 </td>
-                                                <td class="valorsubtotal" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].subtotal }}">
-                                                   $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].subtotal|number_format(2,'.',',') }}
+                                                <td class="valorsubtotal" data-valor="{{ (marinaHumedaCotizacionAdicional.mhcservicios[i].subtotal/100)}}">
+                                                   $ {{ (marinaHumedaCotizacionAdicional.mhcservicios[i].subtotal/100)|number_format(2) }}
                                                 </td>
-                                                <td class="valoriva" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].iva }}">
-                                                   $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].iva|number_format(2,'.',',') }}
+                                                <td class="valoriva" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].iva/100 }}">
+                                                   $ {{ (marinaHumedaCotizacionAdicional.mhcservicios[i].iva/100)|number_format(2) }}
                                                 </td>
-                                                <td class="valortotal" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].total }}">
-                                                   $ {{ marinaHumedaCotizacionAdicional.mhcservicios[i].total|number_format(2,'.',',') }}
+                                                <td class="valortotal" data-valor="{{ marinaHumedaCotizacionAdicional.mhcservicios[i].total/100 }}">
+                                                   $ {{ (marinaHumedaCotizacionAdicional.mhcservicios[i].total/100)|number_format(2) }}
                                                 </td>
                                                 <td>
                                                     <a href="#" class="remove-servicio-adicional btn btn-naranja">
@@ -179,7 +179,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
-                                        $ <span id="gransubtot">{{ marinaHumedaCotizacionAdicional.subtotal|number_format(2,'.',',') }}</span>
+                                        $ <span id="gransubtot">{{ (marinaHumedaCotizacionAdicional.subtotal/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -193,7 +193,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
-                                        $ <span id="graniva">{{ marinaHumedaCotizacionAdicional.ivatotal|number_format(2,'.',',') }}</span>
+                                        $ <span id="graniva">{{ (marinaHumedaCotizacionAdicional.ivatotal/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -207,7 +207,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
-                                        $ <span id="grantot">{{ marinaHumedaCotizacionAdicional.total|number_format(2,'.',',') }}</span>
+                                        $ <span id="grantot">{{ (marinaHumedaCotizacionAdicional.total/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -247,8 +247,8 @@
                     success: function(datos) {
                         JSON.stringify(datos);
                         var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-                        fila.children('.valorprecio').html('$ '+datos.precio);
-                        fila.children('.valorprecio').data('valor',datos.precio);
+                        fila.children('.valorprecio').html('$ '+(datos.precio/100));
+                        fila.children('.valorprecio').data('valor',(datos.precio/100));
                         fila.children('.valorunidad').html(datos.unidad);
                         calculaSubtotalesAdicionales(fila);
                     }

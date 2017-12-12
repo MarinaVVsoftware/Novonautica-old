@@ -29,7 +29,7 @@
                                     <tr>
                                         <td>{{ cliente.id }}</td>
                                         <td>{{ cliente.nombre }}</td>
-                                        <td>$ {{ cliente.monederomarinahumeda|number_format(2,'.',',') }}</td>
+                                        <td>$ {{ (cliente.monederomarinahumeda/100)|number_format(2,'.',',') }}</td>
                                         <td>
                                             <a class="btn btn-morado-claro" href="{{ path('mh_monedero_ver', { 'id': cliente.id }) }}">Detalle</a>
                                             <a class="btn btn-azul"

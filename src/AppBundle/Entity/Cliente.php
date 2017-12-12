@@ -126,9 +126,9 @@ class Cliente
 
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="monederomarinahumeda", type="float", nullable=true)
+     * @ORM\Column(name="monederomarinahumeda", type="bigint", nullable=true)
      */
     private $monederomarinahumeda;
 
@@ -469,30 +469,7 @@ class Cliente
         return $this->correofacturacion;
     }
 
-    /**
-     * set monederomarinahumeda
-     *
-     * @param float $monederomarinahumeda
-     *
-     * @return Cliente
-     */
-    public function setMonederomarinahumeda($monederomarinahumeda)
-    {
-        $this->monederomarinahumeda = $monederomarinahumeda;
 
-        return $this;
-    }
-
-    /**
-     * Get monederomarinahumeda
-     *
-     * @return float
-     *
-     */
-    public function getMonederomarinahumeda()
-    {
-        return $this->monederomarinahumeda;
-    }
 
     /**
      * set password
@@ -744,5 +721,21 @@ class Cliente
     public function getMonederomovimientos()
     {
         return $this->monederomovimientos;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMonederomarinahumeda()
+    {
+        return $this->monederomarinahumeda;
+    }
+
+    /**
+     * @param int $monederomarinahumeda
+     */
+    public function setMonederomarinahumeda($monederomarinahumeda)
+    {
+        $this->monederomarinahumeda = $monederomarinahumeda;
     }
 }
