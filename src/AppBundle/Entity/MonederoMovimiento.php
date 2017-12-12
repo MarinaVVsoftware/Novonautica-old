@@ -22,9 +22,9 @@ class MonederoMovimiento
     private $id;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="monto", type="float", nullable=true)
+     * @ORM\Column(name="monto", type="bigint", nullable=true)
      */
     private $monto;
 
@@ -50,9 +50,9 @@ class MonederoMovimiento
     private $fecha;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="resultante", type="float", nullable=true)
+     * @ORM\Column(name="resultante", type="bigint", nullable=true)
      */
     private $resultante;
 

@@ -36,11 +36,11 @@
                                     <td>{{ i }}</td>
                                     <td>{{ marinaHumedaCotizacionAdicional.cliente }}</td>
                                     <td>{{ marinaHumedaCotizacionAdicional.barco }}</td>
-                                    <td>${{ marinaHumedaCotizacionAdicional.dolar|number_format(2,'.',',') }}</td>
+                                    <td>${{ (marinaHumedaCotizacionAdicional.dolar/100)|number_format(2) }}</td>
                                     <td>{{ marinaHumedaCotizacionAdicional.iva }}%</td>
-                                    <td>${{ marinaHumedaCotizacionAdicional.subtotal|number_format(2,'.',',') }}</td>
-                                    <td>${{ marinaHumedaCotizacionAdicional.ivatotal|number_format(2,'.',',') }}</td>
-                                    <td>${{ marinaHumedaCotizacionAdicional.total|number_format(2,'.',',') }}</td>
+                                    <td>${{ (marinaHumedaCotizacionAdicional.subtotal/100)|number_format(2) }}</td>
+                                    <td>${{ (marinaHumedaCotizacionAdicional.ivatotal/100)|number_format(2) }}</td>
+                                    <td>${{ (marinaHumedaCotizacionAdicional.total/100)|number_format(2) }}</td>
                                     <td>
                                         <a class="btn btn-morado-claro"
                                            href="{{ path('marina-humeda-cotizacion-adicional_show', { 'id': marinaHumedaCotizacionAdicional.id }) }}">Detalle</a>

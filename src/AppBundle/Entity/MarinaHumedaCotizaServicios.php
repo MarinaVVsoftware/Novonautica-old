@@ -36,39 +36,39 @@ class MarinaHumedaCotizaServicios
     private $cantidad;
 
     /**
-     * @var float
+     * @var int
      *
-     * @ORM\Column(name="precio", type="float", nullable=true)
+     * @ORM\Column(name="precio", type="integer", nullable=true)
      */
     private $precio;
 
     private $precioaux;
 
     /**
-     * @var float
+     * @var int
      *
-     * @ORM\Column(name="subtotal", type="float", nullable=true)
+     * @ORM\Column(name="subtotal", type="bigint", nullable=true)
      */
     private $subtotal;
 
     /**
-     * @var float
+     * @var int
      *
-     * @ORM\Column(name="iva", type="float", nullable=true)
+     * @ORM\Column(name="iva", type="bigint", nullable=true)
      */
     private $iva;
 
     /**
-     * @var float
+     * @var int
      *
-     * @ORM\Column(name="descuento", type="float", nullable=true)
+     * @ORM\Column(name="descuento", type="bigint", nullable=true)
      */
     private $descuento;
 
     /**
-     * @var float
+     * @var int
      *
-     * @ORM\Column(name="total", type="float", nullable=true)
+     * @ORM\Column(name="total", type="bigint", nullable=true)
      */
     private $total;
 
@@ -162,7 +162,7 @@ class MarinaHumedaCotizaServicios
     /**
      * Set precio
      *
-     * @param float $precio
+     * @param int $precio
      *
      * @return MarinaHumedaCotizaServicios
      */
@@ -176,7 +176,7 @@ class MarinaHumedaCotizaServicios
     /**
      * Get precio
      *
-     * @return float
+     * @return int
      */
     public function getPrecio()
     {
@@ -186,7 +186,7 @@ class MarinaHumedaCotizaServicios
     /**
      * Set precioaux
      *
-     * @param float $precioaux
+     * @param int $precioaux
      *
      * @return MarinaHumedaCotizaServicios
      */
@@ -200,7 +200,7 @@ class MarinaHumedaCotizaServicios
     /**
      * Get precioaux
      *
-     * @return float
+     * @return int
      */
     public function getPrecioAux()
     {
@@ -210,7 +210,7 @@ class MarinaHumedaCotizaServicios
     /**
      * Set subtotal
      *
-     * @param float $subtotal
+     * @param int $subtotal
      *
      * @return MarinaHumedaCotizaServicios
      */
@@ -224,7 +224,7 @@ class MarinaHumedaCotizaServicios
     /**
      * Get subtotal
      *
-     * @return float
+     * @return int
      */
     public function getSubtotal()
     {
@@ -234,7 +234,7 @@ class MarinaHumedaCotizaServicios
     /**
      * Set iva
      *
-     * @param float $iva
+     * @param int $iva
      *
      * @return MarinaHumedaCotizaServicios
      */
@@ -248,7 +248,7 @@ class MarinaHumedaCotizaServicios
     /**
      * Get iva
      *
-     * @return float
+     * @return int
      */
     public function getIva()
     {
@@ -258,7 +258,7 @@ class MarinaHumedaCotizaServicios
     /**
      * Set descuento
      *
-     * @param float $descuento
+     * @param int $descuento
      *
      * @return MarinaHumedaCotizaServicios
      */
@@ -272,7 +272,7 @@ class MarinaHumedaCotizaServicios
     /**
      * Get descuento
      *
-     * @return float
+     * @return int
      */
     public function getDescuento()
     {
@@ -282,7 +282,7 @@ class MarinaHumedaCotizaServicios
     /**
      * Set total
      *
-     * @param float $total
+     * @param int $total
      *
      * @return MarinaHumedaCotizaServicios
      */
@@ -296,7 +296,7 @@ class MarinaHumedaCotizaServicios
     /**
      * Get total
      *
-     * @return float
+     * @return int
      */
     public function getTotal()
     {

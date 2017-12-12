@@ -23,34 +23,42 @@
                 {% form_theme edit_form 'estructura/temaerror.html.twig' %}
                 {{ form_start(edit_form) }}
                 <div class="row">
-                    <div class="col-sm-8">
-                        {{ form_errors(edit_form.valor) }}
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                {{ form_row(edit_form.dolar )}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-9">
+                                {{ form_row(edit_form.iva )}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-9">
+                                {{ form_row(edit_form.folioMarina )}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-9">
+                                {{ form_row(edit_form.diasHabilesMarinaCotizacion )}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                {{ form_row(edit_form.mensajeCorreoMarina )}}
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <label>Elemento: </label>
-                        <p>{{ valorSistema.nombre }}</p>
-                    </div>
-                    <div class="col-sm-2">
-
-                        {{ form_label(edit_form.valor) }}
-                        <p>{{ form_widget(edit_form.valor) }}</p>
-                    </div>
-                    <div class="col-sm-2">
-                        <label>Unidad: </label>
-                        <p>{{ valorSistema.unidad }}</p>
-                    </div>
-                    <div class="col-sm-5">
-                        <button type="submit" class="btn btn-azul" >
+                <div class="row espacio-linea-arriba2">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-azul">
                             <i class="fa fa-floppy-o" aria-hidden="true"></i>
                             Guardar
                         </button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-10 col-sm-offset-1">
-                        {{ form_row(edit_form.descripcion) }}
                     </div>
                 </div>
                 {{ form_end(edit_form) }}

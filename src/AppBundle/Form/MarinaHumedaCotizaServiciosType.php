@@ -15,6 +15,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Entity\MarinaHumedaTarifa;
 
@@ -25,42 +27,76 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             //->add('servicio')
 //            ->add('cantidad',null,[
 //                'attr' => ['class' => 'esdecimal']
 //            ])
-            ->add('precio',EntityType::class,[
+            ->add('precio', EntityType::class, [
                 'class' => 'AppBundle:MarinaHumedaTarifa',
                 'label' => 'Precio',
                 'placeholder' => '0',
                 'required' => false,
                 'choice_value' => 'costo',
-                'query_builder' => function(EntityRepository $er){
+                'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('t')
-                        ->andWhere('t.tipo = 1')
-                        ;
+                        ->andWhere('t.tipo = 1');
                 }
             ])
-            ->add('precioAux',EntityType::class,[
+            ->add('precioAux', EntityType::class, [
                 'class' => 'AppBundle:MarinaHumedaTarifa',
                 'label' => 'Precio',
                 'placeholder' => '0',
                 'required' => false,
                 'choice_value' => 'costo',
-                'query_builder' => function(EntityRepository $er){
+                'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('t')
-                        ->andWhere('t.tipo = 2')
-                        ;
+                        ->andWhere('t.tipo = 2');
                 }
-            ])
-//            ->add('estatus', null,[
-//                'label' => ' '
-//            ])
-            //->add('iva')
-            //->add('descuento')
-            //->add('total')
-        ;
+            ]);
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+
+                $data = $event->getData();
+
+                $costo = $data->getPrecio();
+
+                $form = $event->getForm();
+                $form
+                    ->add('precio', EntityType::class, [
+                    'class' => 'AppBundle:MarinaHumedaTarifa',
+                    'label' => 'Precio',
+                    'placeholder' => '0',
+                    'required' => false,
+                    'choice_value' => 'costo',
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('t')
+                            ->andWhere('t.tipo = 1');
+                    },
+                    'choice_attr' => function ($objeto) use ($costo) {
+                        return $objeto->getCosto() === $costo ? ['selected' => 'selected'] : [''];
+                    }
+                ])
+                    ->add('precioAux', EntityType::class, [
+                        'class' => 'AppBundle:MarinaHumedaTarifa',
+                        'label' => 'Precio',
+                        'placeholder' => '0',
+                        'required' => false,
+                        'choice_value' => 'costo',
+                        'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('t')
+                                ->andWhere('t.tipo = 2');
+                        },
+                        'choice_attr' => function ($objeto) use ($costo) {
+                            return $objeto->getCosto() === $costo ? ['selected' => 'selected'] : [''];
+                        }
+                    ]);
+                ;
+            }
+        );
     }
 
     /**

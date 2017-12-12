@@ -54,9 +54,9 @@ class MarinaHumedaCotizacion
     private $descuento;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="dolar", type="float", nullable=true)
+     * @ORM\Column(name="dolar", type="integer", nullable=true)
      */
     private $dolar;
 
@@ -68,32 +68,53 @@ class MarinaHumedaCotizacion
     private $iva;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="subtotal", type="float", nullable=true)
+     * @ORM\Column(name="subtotal", type="bigint", nullable=true)
      */
     private $subtotal;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="ivatotal", type="float", nullable=true)
+     * @ORM\Column(name="ivatotal", type="bigint", nullable=true)
      */
     private $ivatotal;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="descuentototal", type="float", nullable=true)
+     * @ORM\Column(name="descuentototal", type="bigint", nullable=true)
      */
     private $descuentototal;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="total", type="float", nullable=true)
+     * @ORM\Column(name="total", type="bigint", nullable=true)
      */
     private $total;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="adeudo", type="bigint", nullable=true)
+     */
+    private $adeudo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="pagado", type="bigint", nullable=true)
+     */
+    private $pagado;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="estatuspago", type="smallint", nullable=true)
+     */
+    private $estatuspago;
 
     /**
      * @var string
@@ -182,6 +203,27 @@ class MarinaHumedaCotizacion
     private $tokenrechaza;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="metodopago", type="string", length=100, nullable=true)
+     */
+    private $metodopago;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigoseguimiento", type="string", length=255, nullable=true)
+     */
+    private $codigoseguimiento;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecharealpago", type="datetime", nullable=true)
+     */
+    private $fecharespuesta;
+
+    /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="mhcotizaciones")
      * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
@@ -210,17 +252,21 @@ class MarinaHumedaCotizacion
 
     /**
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Pago", mappedBy="mhcotizacion")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Pago", mappedBy="mhcotizacion",cascade={"persist"})
      */
-    private $pago;
+    private $pagos;
 
     public function __construct() {
         $this->mhcservicios = new ArrayCollection();
     }
-//    public function __toString()
-//    {
-//        return $this->;
-//    }
+    public function __toString()
+    {
+        return $this->folio.' '.$this->foliorecotiza;
+    }
+    public function __clone()
+    {
+        $this->id = null;
+    }
 
     /**
      * Get id
@@ -307,7 +353,7 @@ class MarinaHumedaCotizacion
     /**
      * Set dolar
      *
-     * @param float $dolar
+     * @param int $dolar
      *
      * @return MarinaHumedaCotizacion
      */
@@ -321,7 +367,7 @@ class MarinaHumedaCotizacion
     /**
      * Get dolar
      *
-     * @return float
+     * @return int
      */
     public function getDolar()
     {
@@ -355,7 +401,7 @@ class MarinaHumedaCotizacion
     /**
      * Set subtotal
      *
-     * @param float $subtotal
+     * @param int $subtotal
      *
      * @return MarinaHumedaCotizacion
      */
@@ -369,7 +415,7 @@ class MarinaHumedaCotizacion
     /**
      * Get subtotal
      *
-     * @return float
+     * @return int
      */
     public function getSubtotal()
     {
@@ -379,7 +425,7 @@ class MarinaHumedaCotizacion
     /**
      * Set ivatotal
      *
-     * @param float $ivatotal
+     * @param int $ivatotal
      *
      * @return MarinaHumedaCotizacion
      */
@@ -393,7 +439,7 @@ class MarinaHumedaCotizacion
     /**
      * Get ivatotal
      *
-     * @return float
+     * @return int
      */
     public function getIvatotal()
     {
@@ -403,7 +449,7 @@ class MarinaHumedaCotizacion
     /**
      * Set descuentototal
      *
-     * @param float $descuentototal
+     * @param int $descuentototal
      *
      * @return MarinaHumedaCotizacion
      */
@@ -417,7 +463,7 @@ class MarinaHumedaCotizacion
     /**
      * Get descuentototal
      *
-     * @return float
+     * @return int
      */
     public function getDescuentototal()
     {
@@ -427,7 +473,7 @@ class MarinaHumedaCotizacion
     /**
      * Set total
      *
-     * @param float $total
+     * @param int $total
      *
      * @return MarinaHumedaCotizacion
      */
@@ -441,7 +487,7 @@ class MarinaHumedaCotizacion
     /**
      * Get total
      *
-     * @return float
+     * @return int
      */
     public function getTotal()
     {
@@ -852,28 +898,134 @@ class MarinaHumedaCotizacion
         return $this->slip;
     }
 
+    /**
+     * @return float
+     */
+    public function getAdeudo()
+    {
+        return $this->adeudo;
+    }
 
     /**
-     * Set pago
+     * @param float $adeudo
+     */
+    public function setAdeudo($adeudo)
+    {
+        $this->adeudo = $adeudo;
+    }
+
+    /**
+     * Add pago
      *
      * @param \AppBundle\Entity\Pago $pago
      *
      * @return MarinaHumedaCotizacion
      */
-    public function setPago(\AppBundle\Entity\Pago $pago = null)
+    public function addPago(\AppBundle\Entity\Pago $pago)
     {
-        $this->pago = $pago;
+        $pago->setMhcotizacion($this);
+        $this->pagos[] = $pago;
 
         return $this;
     }
 
     /**
-     * Get pago
+     * Remove pago
      *
-     * @return \AppBundle\Entity\Pago
+     * @param \AppBundle\Entity\Pago $pago
      */
-    public function getPago()
+    public function removePago(\AppBundle\Entity\Pago $pago)
     {
-        return $this->pago;
+        $this->pagos->removeElement($pago);
+    }
+
+    /**
+     * Get pagos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPagos()
+    {
+        return $this->pagos;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEstatuspago()
+    {
+        return $this->estatuspago;
+    }
+
+    /**
+     * @param int $estatuspago
+     */
+    public function setEstatuspago($estatuspago)
+    {
+        $this->estatuspago = $estatuspago;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPagado()
+    {
+        return $this->pagado;
+    }
+
+    /**
+     * @param float $pagado
+     */
+    public function setPagado($pagado)
+    {
+        $this->pagado = $pagado;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetodopago()
+    {
+        return $this->metodopago;
+    }
+
+    /**
+     * @param string $metodopago
+     */
+    public function setMetodopago($metodopago)
+    {
+        $this->metodopago = $metodopago;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCodigoseguimiento()
+    {
+        return $this->codigoseguimiento;
+    }
+
+    /**
+     * @param string $codigoseguimiento
+     */
+    public function setCodigoseguimiento($codigoseguimiento)
+    {
+        $this->codigoseguimiento = $codigoseguimiento;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFecharespuesta()
+    {
+        return $this->fecharespuesta;
+    }
+
+    /**
+     * @param \DateTime $fecharespuesta
+     */
+    public function setFecharespuesta($fecharespuesta)
+    {
+        $this->fecharespuesta = $fecharespuesta;
     }
 }
