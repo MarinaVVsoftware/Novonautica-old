@@ -105,7 +105,7 @@
                                         %}
                                             <a class="btn btn-naranja" href="{{ path('marina-humeda_recotizar', { 'id': marinaHumedaCotizacion.id }) }}">Recotizar</a>
                                         {% endif %}
-                                        {% if marinaHumedaCotizacion.validacliente == 2 %}
+                                        {% if marinaHumedaCotizacion.validacliente == 2 and marinaHumedaCotizacion.estatusPago != 2 %}
                                             <a class="btn btn-verde" href="{{ path('marina_cotizacion_pago_edit',{'id': marinaHumedaCotizacion.id}) }}">Pagos</a>
                                         {% endif %}
                                     </td>
