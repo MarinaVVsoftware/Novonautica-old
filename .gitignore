@@ -1,4 +1,3 @@
-*~
 /.web-server-pid
 /app/config/parameters.yml
 /build/
@@ -16,6 +15,8 @@
 !var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
+
+*~
 .idea/
 .DS_store
 /node_modules

@@ -1,0 +1,30 @@
+{#Para saber como utilizar este tema hay que checar EmbarcacionType, EmbarcacionImagenType y /Embarcacion/new.html.twig#}
+{% block appbundle_embarcacionimagen_label %}
+{% endblock %}
+
+{% block appbundle_embarcacionimagen_widget %}
+    {{ form_widget(form.basename) }}
+    {{ form_widget(form.size) }}
+{% endblock %}
+
+{% block appbundle_embarcacionlayout_label %}
+{% endblock %}
+
+{% block appbundle_embarcacionlayout_widget %}
+    {{ form_widget(form.basename) }}
+    {{ form_widget(form.size) }}
+{% endblock %}
+
+
+{% block embarcacion_motor_widget %}
+    {% spaceless %}
+        {{ form_row(form.marca) }}
+        {{ form_row(form.modelo) }}
+        <div class="text-right">
+            <a href="#" class="remove-motor btn-xs btn-naranja text-right">
+                <i class="fa fa-times" aria-hidden="true"></i>
+                Eliminar motor
+            </a>
+        </div>
+    {% endspaceless %}
+{% endblock %}
