@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new Oneup\UploaderBundle\OneupUploaderBundle(),
             new Vich\UploaderBundle\VichUploaderBundle(),
+            new DataTables\DataTablesBundle(),
             new AppBundle\AppBundle(),
         ];
 

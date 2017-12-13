@@ -252,12 +252,13 @@ class MarinaHumedaCotizacion
 
     /**
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Pago", mappedBy="mhcotizacion",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Pago", mappedBy="mhcotizacion",cascade={"persist","remove"})
      */
     private $pagos;
 
     public function __construct() {
         $this->mhcservicios = new ArrayCollection();
+        $this->pagos = new ArrayCollection();
     }
     public function __toString()
     {

@@ -2,7 +2,6 @@
 
 namespace AppBundle\Repository;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * EmbarcacionRepository
@@ -12,30 +11,16 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class EmbarcacionRepository extends EntityRepository
 {
-    /**
-     * @param int $page
-     * @param int $limit
-     *
-     * @return Paginator
-     */
-    public function paginacion($page = 1, $limit = 10)
+    public function findAllLight() : array
     {
         $qb = $this->createQueryBuilder('em');
 
         $qb->select('em', 'ma', 'mo', 'pa')
             ->leftJoin('em.marca', 'ma')
             ->leftJoin('em.modelo', 'mo')
-            ->leftJoin('em.pais', 'pa')
-            ->setFirstResult($limit * ($page - 1))
-            ->setMaxResults($limit);
+            ->leftJoin('em.pais', 'pa');
 
-        return new Paginator($qb, true);
-
-        // Alternativa usando DQL
-        /*$em = $this->getEntityManager();
-        $dql = 'SELECT em, ma, mo FROM AppBundle:Embarcacion em LEFT JOIN em.marca ma LEFT JOIN em.modelo mo';
-        $query = $em->createQuery($dql);
-
-        return $query->getResult();*/
+        return $qb->getQuery()->getResult();
     }
+
 }

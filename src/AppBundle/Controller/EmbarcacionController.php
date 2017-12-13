@@ -6,16 +6,16 @@ use AppBundle\Entity\Embarcacion;
 use AppBundle\Entity\EmbarcacionImagen;
 use AppBundle\Entity\EmbarcacionLayout;
 use Doctrine\Common\Collections\ArrayCollection;
+use SensioLabs\Security\Exception\HttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Embarcacion controller.
@@ -28,7 +28,7 @@ class EmbarcacionController extends Controller
      * Lists all embarcacion entities.
      *
      * @Route("/", name="embarcacion_index")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      *
      * @param Request $request
      *
@@ -36,22 +36,25 @@ class EmbarcacionController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $page = $request->query->get('page') ?: 1;
-        $limit = $request->query->get('limit') ?: 10;
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'embarcaciones');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getCode());
+            }
+        }
 
         $em = $this->getDoctrine()->getManager();
-        $paginacion = $em->getRepository('AppBundle:Embarcacion')
-            ->paginacion($page);
-
-        $pages = ceil($paginacion->count() / $limit);
-        $embarcaciones = $paginacion->getQuery()->getResult();
+        $embarcaciones = $em->getRepository('AppBundle:Embarcacion')->findAllLight();
 
         $deleteForms = [];
         foreach ($embarcaciones as $embarcacion) {
             $deleteForms[] = $this->createDeleteForm($embarcacion)->createView();
         }
 
-        return $this->render('embarcacion/index.html.twig', compact('embarcaciones', 'page', 'pages', 'deleteForms'));
+        return $this->render('embarcacion/index.html.twig', compact('embarcaciones', 'deleteForms'));
     }
 
     /**
@@ -176,9 +179,9 @@ class EmbarcacionController extends Controller
      *
      * @param Embarcacion $embarcacion The embarcacion entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return FormInterface
      */
-    private function createDeleteForm(Embarcacion $embarcacion)
+    private function createDeleteForm(Embarcacion $embarcacion) : FormInterface
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('embarcacion_delete', array('id' => $embarcacion->getId())))

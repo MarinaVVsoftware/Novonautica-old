@@ -737,3 +737,30 @@ if (inputFiles.length) { // Hay que asegurarse que hay inputs en la pagina para 
     });
   });
 }
+
+/*
+  Reemplazo de lenguaje para datatables
+ */
+
+const datatablesSettings = {
+  serverSide: true,
+  processing: true,
+  responsive: true,
+  language: {
+    lengthMenu: 'Mostrar _MENU_ entradas',
+    zeroRecords: 'No hay entradas',
+    info: 'Mostrando la pagina _PAGE_ of _PAGES_',
+    infoEmpty: 'No hay entradas disponibles',
+    infoFiltered: '(filtados de _MAX_ total de entradas)',
+    processing: 'Procesando...',
+    thousands: 'Millones',
+    loadingRecords: 'Cargando entradas...',
+    search: 'Buscar',
+    paginate: {
+      first: 'Primera',
+      last: 'Ultima',
+      next: 'Siguiente',
+      previous: 'Anterior',
+    }
+  }
+};
