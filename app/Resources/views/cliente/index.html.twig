@@ -22,14 +22,11 @@
                                 <th>Teléfono</th>
                                 <th>Celular</th>
                                 <th>Dirección</th>
-                                {#<th>Fecha Registro</th>#}
-                                {#<th>Hora registro</th>#}
                                 <th>Empresa</th>
                                 <th>Razon Social</th>
                                 <th>RFC</th>
                                 <th>Dirección Fiscal</th>
                                 <th>Correo Facturación</th>
-                                {#<th>Estatus</th>#}
                                 <th>Acciones</th>
                             </tr>
                             </thead>
@@ -44,14 +41,11 @@
                                     <td>{{ cliente.telefono }}</td>
                                     <td>{{ cliente.celular }}</td>
                                     <td>{{ cliente.direccion }}</td>
-                                    {#<td>{% if cliente.fecharegistro %}{{ cliente.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>#}
-                                    {#<td>{% if cliente.horaregistro %}{{ cliente.horaregistro|date('H:i:s') }}{% endif %}</td>#}
                                     <td>{{ cliente.empresa }}</td>
                                     <td>{{ cliente.razonsocial }}</td>
                                     <td>{{ cliente.rfc }}</td>
                                     <td>{{ cliente.direccionfiscal }}</td>
                                     <td>{{ cliente.correofacturacion }}</td>
-                                    {#<td>{% if cliente.estatus %}Activado{% else %}Desactivado{% endif %}</td>#}
                                     <td>
                                         <a class="btn btn-morado-claro"
                                            href="{{ path('cliente_show', { 'id': cliente.id }) }}">Detalle</a>
