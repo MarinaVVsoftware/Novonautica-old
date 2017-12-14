@@ -46,15 +46,15 @@ class EmbarcacionController extends Controller
             }
         }
 
-        $em = $this->getDoctrine()->getManager();
+        /*$em = $this->getDoctrine()->getManager();
         $embarcaciones = $em->getRepository('AppBundle:Embarcacion')->findAllLight();
 
         $deleteForms = [];
         foreach ($embarcaciones as $embarcacion) {
             $deleteForms[] = $this->createDeleteForm($embarcacion)->createView();
-        }
+        }*/
 
-        return $this->render('embarcacion/index.html.twig', compact('embarcaciones', 'deleteForms'));
+        return $this->render('embarcacion/index.html.twig'/*, compact('embarcaciones')*/);
     }
 
     /**

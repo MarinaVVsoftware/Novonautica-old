@@ -1,5 +1,6 @@
 /.web-server-pid
 /app/config/parameters.yml
+/app/config/config_dev.yml
 /build/
 /phpunit.xml
 /var/*
@@ -15,7 +16,6 @@
 !var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
-
 *~
 .idea/
 .DS_store
