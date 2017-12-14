@@ -24,9 +24,8 @@ class Motor
 
     /**
      * @var string
-     * @Assert\NotBlank(
-     *     message="Marca del motor no puede quedar vacío"
-     * )
+     *
+     * @Assert\NotBlank(message="Marca del motor no puede quedar vacío")
      *
      * @ORM\Column(name="marca", type="string", length=100)
      */
@@ -34,6 +33,8 @@ class Motor
 
     /**
      * @var string
+     *
+     * @Assert\NotBlank(message="Modelo del motor no puede quedar vacío")
      *
      * @ORM\Column(name="modelo", type="string", length=100, nullable=true)
      */
