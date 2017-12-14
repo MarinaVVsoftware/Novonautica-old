@@ -2,16 +2,17 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Annotations\Annotation\Required;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Cliente
  *
  * @ORM\Table(name="cliente")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ClienteRepository")
+ * @UniqueEntity("correo", message="Este correo ya ha sido registrado")
  */
 class Cliente
 {
@@ -146,14 +147,9 @@ class Cliente
      */
     private $estatus;
 
-//* @Assert\Collection(
-//*     fields={
-//*         "nombre"  = @Assert\NotBlank()
-//*     },
-//*     allowExtraFields= true,
-//     *     missingFieldsMessage=" Agrege el nombre del barco para continuar"
-//    * )
     /**
+     * @Assert\Valid()
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Barco", mappedBy="cliente",cascade={"persist"})
      */
     private $barcos;
@@ -684,10 +680,6 @@ class Cliente
     {
         return $this->mhcotizacionesadicionales;
     }
-
-
-
-
 
     /**
      * Add monederomovimiento
