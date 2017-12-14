@@ -10,14 +10,16 @@ namespace AppBundle\DataTables;
 
 
 use AppBundle\Entity\Embarcacion;
+use DataTables\AbstractDataTableHandler;
 use DataTables\DataTableException;
 use DataTables\DataTableHandlerInterface;
 use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-class EmbarcacionDataTable implements DataTableHandlerInterface
+class EmbarcacionDataTable extends AbstractDataTableHandler
 {
+    const ID = 'embarcaciones';
     private $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)
@@ -43,14 +45,14 @@ class EmbarcacionDataTable implements DataTableHandlerInterface
         $query = $embarcacionRepo->createQueryBuilder('em');
         $results->recordsTotal = $query->select('COUNT(em.id)')->getQuery()->getSingleScalarResult();
 
-        $query = $embarcacionRepo->createQueryBuilder('em');
+        $query = $embarcacionRepo->createQueryBuilder('em')
+            ->select('em', 'ma', 'mo', 'pa')
+            ->leftJoin('em.marca', 'ma')
+            ->leftJoin('em.modelo', 'mo')
+            ->leftJoin('em.pais', 'pa');
 
         if ($request->search->value) {
             $query
-                ->select('em', 'ma', 'mo', 'pa')
-                ->leftJoin('em.marca', 'ma')
-                ->leftJoin('em.modelo', 'mo')
-                ->leftJoin('em.pais', 'pa')
                 ->orWhere(
                     $query->expr()->like('LOWER(em.nombre)', ':search'),
                     $query->expr()->like('LOWER(mo.nombre)', ':search'),
@@ -61,6 +63,38 @@ class EmbarcacionDataTable implements DataTableHandlerInterface
                     $query->expr()->like('LOWER(em.ano)', ':search')
                 )
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
+        }
+
+        foreach ($request->columns as $column) {
+            if ($column->data == 0 && $column->search->value) {
+                $query
+                    ->andWhere($query->expr()->like('LOWER(em.nombre)', '?0'))
+                    ->setParameter(0, strtolower("%{$column->search->value}%"));
+            } elseif ($column->data == 1 && $column->search->value) {
+                $query
+                    ->andWhere($query->expr()->like('LOWER(pa.name)', '?1'))
+                    ->setParameter(1, strtolower("%{$column->search->value}%"));
+            } elseif ($column->data == 2 && $column->search->value) {
+                $query
+                    ->andWhere($query->expr()->like('LOWER(mo.nombre)', '?2'))
+                    ->setParameter(2, strtolower("%{$column->search->value}%"));
+            } elseif ($column->data == 3 && $column->search->value) {
+                $query
+                    ->andWhere($query->expr()->like('LOWER(ma.nombre)', '?3'))
+                    ->setParameter(3, strtolower("%{$column->search->value}%"));
+            } elseif ($column->data == 4 && $column->search->value) {
+                $query
+                    ->andWhere($query->expr()->like('LOWER(em.longitud)', '?4'))
+                    ->setParameter(4, strtolower("%{$column->search->value}%"));
+            } elseif ($column->data == 5 && $column->search->value) {
+                $query
+                    ->andWhere($query->expr()->like('LOWER(em.precio)', '?5'))
+                    ->setParameter(5, strtolower("%{$column->search->value}%"));
+            } elseif ($column->data == 6 && $column->search->value) {
+                $query
+                    ->andWhere($query->expr()->like('LOWER(em.ano)', '?6'))
+                    ->setParameter(6, strtolower("%{$column->search->value}%"));
+            }
         }
 
         foreach ($request->order as $order) {
@@ -79,7 +113,6 @@ class EmbarcacionDataTable implements DataTableHandlerInterface
             } elseif ($order->column === 6) {
                 $query->addOrderBy('em.ano', $order->dir);
             }
-
         }
 
         /** @var Embarcacion[] $embarcaciones */
@@ -98,7 +131,7 @@ class EmbarcacionDataTable implements DataTableHandlerInterface
 
             $results->data[] = [
                 $embarcacion->getNombre(),
-                $embarcacion->getPais() ? $embarcacion->getPais()->getName() : 'No se encontro',
+                $embarcacion->getPais() ? $embarcacion->getPais()->getName() : '',
                 $embarcacion->getModelo() ? $embarcacion->getModelo()->getNombre() : 'Custom',
                 $embarcacion->getMarca() ? $embarcacion->getMarca()->getNombre() : 'Custom',
                 $embarcacion->getLongitud(),

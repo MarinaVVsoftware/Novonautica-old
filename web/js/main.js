@@ -739,7 +739,7 @@ if (inputFiles.length) { // Hay que asegurarse que hay inputs en la pagina para 
 }
 
 /*
-  Reemplazo de lenguaje para datatables
+  Configuracion basica para datatables
  */
 
 const datatablesSettings = {
@@ -762,5 +762,27 @@ const datatablesSettings = {
       next: 'Siguiente',
       previous: 'Anterior',
     }
-  }
+  },
+  searchDelay: 500,
+  columnDefs: [{targets: 'no-sort', orderable: false}],
+  initComplete: function () {
+    this.api().columns('.with-choices').every(function () {
+      const column = this;
+      const columnHeader = column.header();
+      const select = document.createElement('select');
+      select.add(new Option(columnHeader.innerHTML, ''));
+      columnHeader.innerHTML = '';
+      columnHeader.appendChild(select);
+
+      select.addEventListener('click', e => e.stopPropagation());
+      select.addEventListener('change', function () {
+        let val = $.fn.dataTable.util.escapeRegex(this.value);
+        column.search(val, true, true).draw();
+      });
+
+      this.data().unique().sort().map((optionValue) => {
+        select.add(new Option(optionValue, optionValue))
+      });
+    });
+  },
 };
