@@ -405,6 +405,22 @@ input.radio input[type="radio"] + input.radio-label:empty:before {
     background-color: #4a97f6;
 }
 
+.dataTable.table-novo.table thead tr th {
+    padding-top: 0;
+    padding-bottom: 0;
+    vertical-align: middle;
+    height: 40px;
+}
+
+.dataTable.table-novo thead tr th.with-choices select:focus {
+    outline: none;
+}
+
+.dataTable.table-novo thead tr th.with-choices select {
+    height: 100%;
+    background: transparent;
+}
+
 .panel-novo th, .panel-novo table tr td {
     border: 2px solid #292e41;
     border-left: none;
@@ -413,16 +429,17 @@ input.radio input[type="radio"] + input.radio-label:empty:before {
 .panel-novo table tr td:first-of-type {
     border-left: 2px solid #292e41;
 }
+
 .panel-novo table tr td {
     border-top: none;
 }
-
 
 .panel-novo tbody tr:hover {
     /*background: #3e4766;*/
     cursor: pointer;
 }
-.panel-novo tbody td input[type="text"]{
+
+.panel-novo tbody td input[type="text"] {
     background: none;
     padding: 0px;
     border-radius: 0;
@@ -534,6 +551,7 @@ input.radio input[type="radio"] + input.radio-label:empty:before {
 .panel-body ul.pagination li a:hover {
     color: #fff;
 }
+
 .panel-body ul.pagination li.disabled a:focus,
 .panel-body ul.pagination li.disabled a:hover,
 .panel-body ul.pagination li a {
@@ -864,9 +882,11 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     font-weight: normal;
     color: #000000;
 }
-#notarechazado{
+
+#notarechazado {
     display: none;
 }
+
 /*++++++ fin radio boton aceptar,rechazar +++++*/
 
 /*+++++ Modal borrar ++++*/
