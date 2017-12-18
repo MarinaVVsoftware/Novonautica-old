@@ -46,23 +46,21 @@
                     </div>
                 </div>
                 {% for message in app.flashes('notice') %}
-                    <div class="flash-notice">
-                        {{ message }}
+                    <div class="row espacio-linea-abajo2">
+                        <div class="col-sm-9">
+                            <div class="alert alert-danger" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <h4><i class="icon fa fa-ban"></i> Alerta!</h4>
+                                {{ message }}
+                            </div>
+                        </div>
                     </div>
+
                 {% endfor %}
 
                 {% form_theme form 'estructura/temaerror.html.twig' %}
                 {{ form_start(form) }}
-                {#<div class="row">#}
-                    {#<div class="col-sm-4">#}
-                        {#{{ form_row(form.estatuspago) }}#}
-                    {#</div>#}
-                {#</div>#}
-                <div class="row espacio-linea">
-                    <div class="col-sm-6">
-                        <hr>
-                    </div>
-                </div>
+
                 <div class="row">
                     <div class="col-sm-9">
                         <table id="servicioAdicional" class="table text-center">

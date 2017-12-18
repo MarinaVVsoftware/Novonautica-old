@@ -1,3 +1,4 @@
+{% macro deleteModal(delete_form) %}
 <div class="modal fade ventanaborrar" id="modalBorrar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -8,8 +9,12 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-6">
-                        {% block botonborra %}
-                        {% endblock %}
+                        {{ form_start(delete_form) }}
+                        <button type="submit" class="btn btn-borrar">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            Borrar
+                        </button>
+                        {{ form_end(delete_form) }}
                     </div>
                     <div class="col-sm-6">
                         <button type="button" class="btn btn-naranja pull-right" data-dismiss="modal">
@@ -22,3 +27,12 @@
         </div>
     </div>
 </div>
+{% endmacro %}
+
+{% macro deleteButton() %}
+    <button type="button" class="btn btn-borrar" data-toggle="modal"
+            data-target="#modalBorrar">
+        <i class="fa fa-trash-o" aria-hidden="true"></i>
+        Borrar
+    </button>
+{% endmacro %}

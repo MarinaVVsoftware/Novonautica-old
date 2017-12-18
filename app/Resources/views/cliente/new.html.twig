@@ -12,34 +12,13 @@
                     <h3 class="panel-title">Nuevo Cliente</h3>
                 </div>
                 <div class="panel-body">
-                    {% form_theme form 'estructura/temaerror.html.twig' %}
                     {{ form_start(form) }}
                     <div class="row">
-                        <div class="col-sm-6">
-                            {{ form_errors(form.nombre) }}
-                            {{ form_errors(form.correo) }}
-
-                            {{ form_errors(form.telefono) }}
-                            {{ form_errors(form.celular) }}
-                            {{ form_errors(form.correofacturacion) }}
-                            {{ form_errors(form.barcos.children[0].nombre) }}
-                            {{ form_errors(form) }}
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-5">
-                            {{ form_label(form.nombre) }}
-                            {{ form_widget(form.nombre) }}
-
-                            {{ form_label(form.correo) }}
-                            {{ form_widget(form.correo) }}
-
-                            {{ form_label(form.telefono) }}
-                            {{ form_widget(form.telefono) }}
-
-                            {{ form_label(form.celular) }}
-                            {{ form_widget(form.celular) }}
-
+                            {{ form_row(form.nombre) }}
+                            {{ form_row(form.correo) }}
+                            {{ form_row(form.telefono) }}
+                            {{ form_row(form.celular) }}
                             {{ form_row(form.direccion) }}
                         </div>
                         <div class="col-sm-5">
@@ -47,9 +26,7 @@
                             {{ form_row(form.razonsocial) }}
                             {{ form_row(form.rfc) }}
                             {{ form_row(form.direccionfiscal) }}
-
-                            {{ form_label(form.correofacturacion) }}
-                            {{ form_widget(form.correofacturacion) }}
+                            {{ form_row(form.correofacturacion) }}
 
                         </div>
                     </div>
@@ -59,24 +36,24 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-5">
-                            {{ form_label(form.barcos.children[0].nombre) }}
-                            {{ form_widget(form.barcos.children[0].nombre) }}
+                        {% for barco in form.barcos %}
+                            <div class="col-sm-6">
+                                {{ form_row(barco.nombre) }}
+                                {{ form_row(barco.modelo) }}
 
-                            {{ form_row(form.barcos.children[0].modelo) }}
-                            {{ form_row(form.barcos.children[0].anio) }}
-                            {{ form_row(form.barcos.children[0].eslora) }}
-                            {{ form_row(form.barcos.children[0].calado) }}
-                            {{ form_row(form.barcos.children[0].manga) }}
-                        </div>
-                        <div class="col-sm-5">
-                            {{ form_row(form.barcos.children[0].nombreResponsable) }}
-                            {{ form_row(form.barcos.children[0].telefonoResponsable) }}
-                            {{ form_row(form.barcos.children[0].correoResponsable) }}
-                            {{ form_row(form.barcos.children[0].nombreCapitan) }}
-                            {{ form_row(form.barcos.children[0].telefonoCapitan) }}
-                            {{ form_row(form.barcos.children[0].correoCapitan) }}
-                        </div>
+                                {{ form_row(barco.eslora) }}
+                                {{ form_row(barco.calado) }}
+                                {{ form_row(barco.manga) }}
+                            </div>
+                            <div class="col-sm-6">
+                                {{ form_row(barco.nombreResponsable) }}
+                                {{ form_row(barco.telefonoResponsable) }}
+                                {{ form_row(barco.correoResponsable) }}
+                                {{ form_row(barco.nombreCapitan) }}
+                                {{ form_row(barco.telefonoCapitan) }}
+                                {{ form_row(barco.correoCapitan) }}
+                            </div>
+                        {% endfor %}
                     </div>
                     <div class="row">
                         <div class="col-sm-12 espacio-linea">
@@ -100,7 +77,8 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <a href="#" id="" class="add-another-motor letra-azul" data-cantidad="{{ form.barcos.children[0].motores|length }}" data-idlista="0">
+                            <a href="#" id="" class="add-another-motor letra-azul"
+                               data-cantidad="{{ form.barcos.children[0].motores|length }}" data-idlista="0">
                                 + Agregar Motor
                             </a>
                         </div>

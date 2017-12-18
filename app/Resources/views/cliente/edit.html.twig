@@ -1,8 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
-
-{% block title %}
-    Novonautiva | Editar Cliente
-{% endblock %}
+{% import 'estructura/modalborrar.twig' as modal %}
 
 {% block contwrapper %}
     <div class="content-wrapper">
@@ -16,7 +13,6 @@
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right"
                                href="{{ path('cliente_show',{ 'id': cliente.id }) }}">
-                                {#<i class="fa fa-arrow-left" aria-hidden="true"></i>#}
                                 Regresar
                             </a>
                         </div>
@@ -71,12 +67,12 @@
                                     {{ form_label(edit_form.correofacturacion) }}
                                     {{ form_widget(edit_form.correofacturacion) }}
                                     {#<div class="input-estatus">#}
-                                        {#Estatus#}
-                                        {#<span class="cont-label-novo">#}
-                                            {#{{ form_errors(edit_form.estatus) }}#}
-                                            {#{{ form_widget(edit_form.estatus) }}#}
-                                            {#{{ form_label(edit_form.estatus) }}#}
-                                        {#</span>#}
+                                    {#Estatus#}
+                                    {#<span class="cont-label-novo">#}
+                                    {#{{ form_errors(edit_form.estatus) }}#}
+                                    {#{{ form_widget(edit_form.estatus) }}#}
+                                    {#{{ form_label(edit_form.estatus) }}#}
+                                    {#</span>#}
                                     {#</div>#}
                                 </div>
                             </div>
@@ -94,17 +90,16 @@
                                     <div class="col-sm-5">
                                         {{ form_row(edit_form.barcos[i].nombre) }}
                                         {{ form_row(edit_form.barcos[i].modelo) }}
-                                        {{ form_row(edit_form.barcos[i].anio) }}
                                         {{ form_row(edit_form.barcos[i].eslora) }}
                                         {{ form_row(edit_form.barcos[i].calado) }}
                                         {{ form_row(edit_form.barcos[i].manga) }}
 
                                         {#<div class="input-estatus">#}
-                                            {#Estatus#}
-                                            {#<span class="cont-label-novo">#}
-                                            {#{{ form_errors(edit_form.barcos[i].estatus) }}#}
-                                                {#{{ form_widget(edit_form.barcos[i].estatus) }}#}
-                                                {#{{ form_label(edit_form.barcos[i].estatus) }}#}
+                                        {#Estatus#}
+                                        {#<span class="cont-label-novo">#}
+                                        {#{{ form_errors(edit_form.barcos[i].estatus) }}#}
+                                        {#{{ form_widget(edit_form.barcos[i].estatus) }}#}
+                                        {#{{ form_label(edit_form.barcos[i].estatus) }}#}
                                         {#</span>#}
                                         {#</div>#}
                                     </div>
@@ -128,7 +123,6 @@
                                      data-prototype="
                                                 {% filter escape %}
                                                     {{ include('motor/form-cliente.twig', { 'form': edit_form.barcos[i].motores.vars.prototype }) }}
-                                                    {#{{ form_widget(edit_form.barcos[i].motores.vars.prototype)|e('html_attr') }}#}
                                                 {% endfilter %}
                                                 ">
                                     {% for motorField in edit_form.barcos[i].motores %}
@@ -150,47 +144,33 @@
                             </div>
                         {% endfor %}
                     </div>
-
                     <div class="row">
                         <div class="col-sm-12">
-                            {#{% for barco in barcos %}#}
-                            {#<a href="{{ path('barco_edit',{'id':barco.id}) }}" class="btn btn-azul">{{ barco.nombre }}</a>#}
-                            {#{% endfor %}#}
                             <a href="{{ path('barco_new',{'cliente':cliente.id}) }}" class="btn btn-azul">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                 Agregar Barco
                             </a>
                         </div>
                     </div>
+                </div>
+                <div class="panel-footer">
                     <div class="row">
                         <div class="col-sm-12">
+                            {{ delete_form is defined ? modal.deleteButton() : '' }}
                             <button type="submit" class="btn btn-azul pull-right">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 Guardar
                             </button>
-                        </div>
-                    </div>
-
-                    {{ form_end(edit_form) }}
-                    <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-12">
                             <a class="btn btn-naranja pull-right"
+
                                href="{{ path('cliente_show',{ 'id': cliente.id }) }}">
                                 <i class="fa fa-ban" aria-hidden="true"></i>
                                 Cancelar
                             </a>
                         </div>
                     </div>
-                    <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-12">
-                            <button type="button" class="btn btn-borrar pull-right" data-toggle="modal"
-                                    data-target="#modalBorrar">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                Borrar
-                            </button>
-                        </div>
-                    </div>
                 </div>
+                {{ form_end(edit_form) }}
             </div>
         </section>
     </div>
@@ -199,14 +179,5 @@
 {% endblock %}
 
 {% block modals %}
-    {% embed 'estructura/modalborrar.twig' %}
-        {% block botonborra %}
-            {{ form_start(delete_form) }}
-            <button type="submit" class="btn btn-borrar">
-                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                Borrar
-            </button>
-            {{ form_end(delete_form) }}
-        {% endblock %}
-    {% endembed %}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}

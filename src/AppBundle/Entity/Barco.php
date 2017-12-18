@@ -25,9 +25,8 @@ class Barco
 
     /**
      * @var string
-     *  @Assert\NotBlank(
-     *     message="Nombre del barco no puede quedar vacío"
-     * )
+     *
+     * @Assert\NotBlank(message="Nombre del barco no puede quedar vacío")
      *
      * @ORM\Column(name="nombre", type="string", length=255)
      */
@@ -39,13 +38,6 @@ class Barco
      * @ORM\Column(name="modelo", type="string", length=100, nullable=true)
      */
     private $modelo;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="anio", type="integer", nullable=true)
-     */
-    private $anio;
 
     /**
      * @var string
@@ -140,6 +132,7 @@ class Barco
     private $cliente;
 
     /**
+     * @Assert\Valid()
      *
      * @ORM\OneToMany(targetEntity="Motor", mappedBy="barco",cascade={"persist"})
      */
@@ -160,7 +153,8 @@ class Barco
      */
     private $astillerocotizaciones;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->motores = new ArrayCollection();
         $this->mhcotizaciones = new ArrayCollection();
         $this->mhcotizacionesadicionales = new ArrayCollection();
@@ -231,30 +225,6 @@ class Barco
     }
 
     /**
-     * Set anio
-     *
-     * @param integer $anio
-     *
-     * @return Barco
-     */
-    public function setAnio($anio)
-    {
-        $this->anio = $anio;
-
-        return $this;
-    }
-
-    /**
-     * Get anio
-     *
-     * @return int
-     */
-    public function getAnio()
-    {
-        return $this->anio;
-    }
-
-    /**
      * Set calado
      *
      * @param string $calado
@@ -311,7 +281,7 @@ class Barco
      */
     public function setEslora($eslora)
     {
-        $this->eslora= $eslora;
+        $this->eslora = $eslora;
 
         return $this;
     }
@@ -554,7 +524,6 @@ class Barco
     }
 
 
-
     /**
      * Add marinahumedacotizacion
      *
@@ -612,7 +581,6 @@ class Barco
     {
         $this->mhcotizaciones->removeElement($mhcotizacione);
     }
-
 
 
     /**

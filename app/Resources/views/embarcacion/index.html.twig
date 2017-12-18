@@ -18,47 +18,19 @@
                             <table class="table table-novo">
                                 <thead>
                                 <tr>
-                                    <th>Nombre de la embarcación</th>
-                                    <th>Pais de ubicacion</th>
-                                    <th>Modelo</th>
-                                    <th>Marca</th>
-                                    <th>Longitud</th>
-                                    <th>Precio</th>
-                                    <th>Año</th>
-                                    <th></th>
+                                    <th class="with-choices">Embarcación</th>
+                                    <th class="with-choices">Pais de ubicacion</th>
+                                    <th class="with-choices">Modelo</th>
+                                    <th class="with-choices">Marca</th>
+                                    <th class="with-choices">Longitud</th>
+                                    <th class="with-choices">Precio</th>
+                                    <th class="with-choices">Año</th>
+                                    <th class="no-sort"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {#{% for i, embarcacion in embarcaciones %}
-                                    <tr>
-                                        <td>{{ embarcacion.nombre }}</td>
-                                        <td>{{ embarcacion.pais }}</td>
-                                        <td>{{ embarcacion.modelo ?: 'Custom' }}</td>
-                                        <td>{{ embarcacion.marca ?: 'Custom' }}</td>
-                                        <td>{{ embarcacion.longitud }}</td>
-                                        <td>$ {{ (embarcacion.precio / 100)|number_format(2) }} USD</td>
-                                        <td>{{ embarcacion.ano }}</td>
-                                        <td>
-                                            <ul class="list-unstyled list-inline">
-                                                <li>
-                                                    <a href="{{ path('embarcacion_edit', { 'id': embarcacion.id }) }}">
-                                                        <i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                                </li>
-                                                <li>
-                                                    {{ form_start(deleteForms[i]) }}
-                                                    <button type="submit" class="btn btn-transparent">
-                                                        <i class="fa fa-trash" aria-hidden="true"></i>
-                                                    </button>
-                                                    {{ form_end(deleteForms[i]) }}
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                {% endfor %}#}
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="panel-footer">
                         </div>
                     </div>
                 </div>
@@ -79,13 +51,9 @@
             let lastTd = tr.querySelector('td:last-child');
             let entryPath = `{{ app.request.requestUri }}${data[7]}/edit`;
             lastTd.innerHTML = `
-            <ul class="list-unstyled list-inline">
-            <li>
                 <a href="${entryPath}">
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                 </a>
-            </li>
-            </ul>
             `
           },
         });

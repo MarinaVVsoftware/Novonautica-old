@@ -211,57 +211,56 @@ form > .btn-borrar:hover, .btn-borrar:hover {
 /*+++ fin check box estilo ++++*/
 
 /*+++++ radio boton +++++*/
-input.radio {
-    margin: 0.5rem;
-}
-
-input.radio > label {
-    margin-bottom: 4px;
-}
-
-input.radio input[type="radio"] {
+[type="radio"]:checked,
+[type="radio"]:not(:checked) {
     position: absolute;
-    opacity: 0;
+    left: -9999px;
 }
-
-input.radio input[type="radio"] + label:before {
-    content: '';
-    background: #3e4766;
-    border-radius: 100%;
-    border: 1px solid #0097f6;
-    display: inline-block;
-    width: 1.4em;
-    height: 1.4em;
+[type="radio"]:checked + label,
+[type="radio"]:not(:checked) + label
+{
     position: relative;
-    top: -0.2em;
-    margin-right: 1em;
-    vertical-align: top;
+    padding-left: 28px;
     cursor: pointer;
-    text-align: center;
-    -webkit-transition: all 250ms ease;
-    transition: all 250ms ease;
+    line-height: 20px;
+    display: inline-block;
+    color: #ffffff;
 }
-
-input.radio input[type="radio"]:checked + label:before {
-    background-color: #3197EE;
-    box-shadow: inset 0 0 0 4px #3e4766;
+[type="radio"]:checked + label:before,
+[type="radio"]:not(:checked) + label:before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    width: 22px;
+    height: 22px;
+    border: 1px solid #ddd;
+    border-radius: 100%;
+    background: #3e4766;
 }
-
-input.radio input[type="radio"]:focus + input.radio-label:before {
-    outline: none;
-    border-color: #3197EE;
+[type="radio"]:checked + label:after,
+[type="radio"]:not(:checked) + label:after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: #0097f6;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    border-radius: 100%;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
 }
-
-input.radio input[type="radio"]:disabled + input.radio-label:before {
-    box-shadow: inset 0 0 0 4px #f4f4f4;
-    border-color: #b4b4b4;
-    background: #b4b4b4;
+[type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    transform: scale(0);
 }
-
-input.radio input[type="radio"] + input.radio-label:empty:before {
-    margin-right: 0;
+[type="radio"]:checked + label:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
 }
-
 /*++++ fin radio boton ++++*/
 #loading {
     /*visibility: hidden;*/
@@ -405,6 +404,22 @@ input.radio input[type="radio"] + input.radio-label:empty:before {
     background-color: #4a97f6;
 }
 
+.dataTable.table-novo.table thead tr th {
+    padding-top: 0;
+    padding-bottom: 0;
+    vertical-align: middle;
+    height: 40px;
+}
+
+.dataTable.table-novo thead tr th.with-choices select:focus {
+    outline: none;
+}
+
+.dataTable.table-novo thead tr th.with-choices select {
+    height: 100%;
+    background: transparent;
+}
+
 .panel-novo th, .panel-novo table tr td {
     border: 2px solid #292e41;
     border-left: none;
@@ -413,17 +428,17 @@ input.radio input[type="radio"] + input.radio-label:empty:before {
 .panel-novo table tr td:first-of-type {
     border-left: 2px solid #292e41;
 }
+
 .panel-novo table tr td {
     border-top: none;
 }
-
 
 .panel-novo tbody tr:hover {
     /*background: #3e4766;*/
     cursor: pointer;
 }
 .panel-novo tbody td input[type="text"]{
-    background: none;
+    /*background: none;*/
     padding: 0px;
     border-radius: 0;
     text-align: center;
@@ -534,6 +549,7 @@ input.radio input[type="radio"] + input.radio-label:empty:before {
 .panel-body ul.pagination li a:hover {
     color: #fff;
 }
+
 .panel-body ul.pagination li.disabled a:focus,
 .panel-body ul.pagination li.disabled a:hover,
 .panel-body ul.pagination li a {
@@ -797,6 +813,13 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     background-color: #858585;
 }
 
+.middle [type="radio"]:checked + label:after,
+.middle [type="radio"]:not(:checked) + label:after {
+    content: '';
+    width: 0px;
+    height: 0px;
+}
+
 .middle input[type="radio"]:checked + label span {
     color: #ffffff;
     transform: translateY(70px);
@@ -835,6 +858,7 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     position: relative;
     font-weight: 900;
     margin-right: 2rem;
+    min-width: 145px;
 }
 
 .middle label:active {
@@ -864,9 +888,11 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     font-weight: normal;
     color: #000000;
 }
-#notarechazado{
+
+#notarechazado {
     display: none;
 }
+
 /*++++++ fin radio boton aceptar,rechazar +++++*/
 
 /*+++++ Modal borrar ++++*/

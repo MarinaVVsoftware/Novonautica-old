@@ -1,7 +1,8 @@
 {% extends 'estructura/plantilla.twig' %}
 
-{% block title %}
-    Novonautiva | Listado Clientes
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
 {% endblock %}
 
 {% block contwrapper %}
@@ -12,58 +13,143 @@
                     <h3 class="panel-title">Listado Clientes</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="table-responsive scroll-novo">
-                        <table class="table text-center">
-                            <thead>
+                    <table class="table-novo table text-center">
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th class="no-sort">Teléfono / Celular</th>
+                            <th class="no-sort">Dirección</th>
+                            <th class="with-choices">Empresa</th>
+                            <th class="no-sort">Facturación</th>
+                            <th class="no-sort">Barcos</th>
+                            <th class="no-sort"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {#{% for i, cliente in clientes|reverse %}
                             <tr>
-                                <th>Num.</th>
-                                <th>Nombre</th>
-                                <th>Correo</th>
-                                <th>Teléfono</th>
-                                <th>Celular</th>
-                                <th>Dirección</th>
-                                {#<th>Fecha Registro</th>#}
-                                {#<th>Hora registro</th>#}
-                                <th>Empresa</th>
-                                <th>Razon Social</th>
-                                <th>RFC</th>
-                                <th>Dirección Fiscal</th>
-                                <th>Correo Facturación</th>
-                                {#<th>Estatus</th>#}
-                                <th>Acciones</th>
+                                <td>{{ cliente.nombre }}</td>
+                                <td>{{ cliente.correo }}</td>
+                                <td>{{ cliente.telefono }} / {{ cliente.celular }}</td>
+                                <td>{{ cliente.direccion }}</td>
+                                <td>{{ cliente.empresa }}</td>
+                                <td align="left" style="text-align: left;">
+                                    <button class="btn btn-block btn-contorno-azul" type="button" data-toggle="collapse"
+                                            data-target="#facturacion-{{ cliente.id }}" aria-expanded="false"
+                                            aria-controls="#facturacion-{{ cliente.id }}">
+                                        Mostrar datos
+                                    </button>
+                                    <div id="facturacion-{{ cliente.id }}" class="collapse">
+                                        <dl class="dl-horizontal">
+                                            <dt>Razon social</dt>
+                                            <dd>{{ cliente.razonsocial }}</dd>
+                                            <dt>RFC</dt>
+                                            <dd>{{ cliente.rfc }}</dd>
+                                            <dt>Direccion fiscal</dt>
+                                            <dd>{{ cliente.direccionfiscal }}</dd>
+                                            <dt>Correo de facturación</dt>
+                                            <dd>{{ cliente.correofacturacion }}</dd>
+                                        </dl>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a class="btn btn-morado-claro"
+                                       href="{{ path('cliente_show', { 'id': cliente.id }) }}">Detalle</a>
+                                    <a class="btn btn-azul" href="{{ path('cliente_edit', { 'id': cliente.id }) }}">Editar</a>
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            {% set i=0 %}
-                            {% for cliente in clientes|reverse %}
-                                {% set i=i+1 %}
-                                <tr>
-                                    <td>{{ i }}</td>
-                                    <td>{{ cliente.nombre }}</td>
-                                    <td>{{ cliente.correo }}</td>
-                                    <td>{{ cliente.telefono }}</td>
-                                    <td>{{ cliente.celular }}</td>
-                                    <td>{{ cliente.direccion }}</td>
-                                    {#<td>{% if cliente.fecharegistro %}{{ cliente.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>#}
-                                    {#<td>{% if cliente.horaregistro %}{{ cliente.horaregistro|date('H:i:s') }}{% endif %}</td>#}
-                                    <td>{{ cliente.empresa }}</td>
-                                    <td>{{ cliente.razonsocial }}</td>
-                                    <td>{{ cliente.rfc }}</td>
-                                    <td>{{ cliente.direccionfiscal }}</td>
-                                    <td>{{ cliente.correofacturacion }}</td>
-                                    {#<td>{% if cliente.estatus %}Activado{% else %}Desactivado{% endif %}</td>#}
-                                    <td>
-                                        <a class="btn btn-morado-claro"
-                                           href="{{ path('cliente_show', { 'id': cliente.id }) }}">Detalle</a>
-                                        <a class="btn btn-azul" href="{{ path('cliente_edit', { 'id': cliente.id }) }}">Editar</a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                        {% endfor %}#}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, settings) {
+        $('.table-novo').DataTable({
+          ...settings,
+          ajax: '{{ path('cliente_index') }}',
+          columns: [
+            {
+              data: 'nombre'
+            },
+            {
+              data: 'correo'
+            },
+            {
+              data: 'telefono'
+            },
+            {
+              data: 'direccion'
+            },
+            {
+              data: 'empresa'
+            },
+            {
+              className: 'td-facturacion',
+              data: 'facturacion'
+            },
+            {
+              className: 'td-barcos',
+              data: 'barcos'
+            },
+            {
+              data: 'id'
+            },
+          ],
+          createdRow: function (tr, data) {
+            let facturacionTd = tr.querySelector('.td-facturacion');
+            let barcosTd = tr.querySelector('.td-barcos');
+            let lastTd = tr.querySelector('td:last-child');
+            let entryPath = `{{ app.request.requestUri }}${data['id']}`;
+            barcosTd.innerHTML = `
+                <ul class="list-unstyled text-left">
+                ${data['barcos'].map(barco => `<li><a href="${entryPath}#${barco[0]}">${barco[1]}</a></li>`)}
+                </ul>
+            `.replace(',', '');
+
+            facturacionTd.innerHTML = `
+            <button class="btn btn-block btn-contorno-azul" data-toggle="collapse"
+            data-target="#facturacion-${data['id']}">
+                Mostrar datos
+            </button>
+            <div id="facturacion-${data['id']}" class="collapse">
+                <dl class="dl-horizontal text-left">
+                  <dt>Razon social</dt>
+                  <dd>${data.facturacion[0] || ''}</dd>
+                  <dt>RFC</dt>
+                  <dd>${data.facturacion[1] || ''}</dd>
+                  <dt>Direccion fiscal</dt>
+                  <dd>${data.facturacion[2] || ''}</dd>
+                  <dt>Correo de facturación</dt>
+                  <dd>${data.facturacion[3] || ''}</dd>
+                </dl>
+            </div>
+            `;
+
+            lastTd.innerHTML = `
+            <ul class="unstyled-list list-inline">
+                <li>
+                <a href="${entryPath}/editar">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                </a>
+                </li>
+                <li>
+                <a href="${entryPath}">
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                </a>
+                </li>
+            </ul>
+            `
+          },
+        });
+      })(jQuery, datatablesSettings);
+    </script>
 {% endblock %}

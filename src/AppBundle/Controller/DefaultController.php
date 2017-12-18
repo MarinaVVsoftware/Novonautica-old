@@ -21,6 +21,13 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/marina/cotizacion", name="marina-humeda_index")
+     */
+    public function displayCotizacionIndex(Request $request)
+    {
+
+    }
+    /**
      * Genera el pdf de una cotizacion en base a su id
      *
      * @Route("/{id}/mhc-pdf", name="marinahc-pdf")
