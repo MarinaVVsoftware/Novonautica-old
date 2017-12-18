@@ -417,7 +417,7 @@ form > .btn-borrar:hover, .btn-borrar:hover {
 
 .dataTable.table-novo thead tr th.with-choices select {
     height: 100%;
-    background: transparent;
+    background: #292e41;
 }
 
 .panel-novo th, .panel-novo table tr td {
