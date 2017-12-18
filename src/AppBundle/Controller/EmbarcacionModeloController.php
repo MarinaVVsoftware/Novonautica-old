@@ -65,7 +65,7 @@ class EmbarcacionModeloController extends Controller
             return $this->redirectToRoute('embarcacion_modelo');
         }
 
-        return $this->render('embarcacionmodelo/new.html.twig', [
+        return $this->render('embarcacion/modelo/new.html.twig', [
             'embarcacionModelo' => $embarcacionModelo,
             'embarcacionMarca' => $embarcacionMarca,
             'modelos' => $modelos,

@@ -44,6 +44,11 @@ class ValorSistemaType extends AbstractType
                 'required' => false,
                 'label' => 'Mensaje en correo de marina húmeda cotización'
             ])
+            ->add('mensajeCorreoMarinaGasolina',TextareaType::class,[
+                'attr' => ['rows' => 7, 'class' => 'editorwy'],
+                'required' => false,
+                'label' => 'Mensaje en correo de gasolina de marina húmeda cotización'
+            ])
         ;
     }
     

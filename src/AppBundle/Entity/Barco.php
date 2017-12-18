@@ -40,13 +40,6 @@ class Barco
     private $modelo;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="anio", type="integer", nullable=true)
-     */
-    private $anio;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="calado", type="string", length=100, nullable=true)
@@ -229,30 +222,6 @@ class Barco
     public function getModelo()
     {
         return $this->modelo;
-    }
-
-    /**
-     * Set anio
-     *
-     * @param integer $anio
-     *
-     * @return Barco
-     */
-    public function setAnio($anio)
-    {
-        $this->anio = $anio;
-
-        return $this;
-    }
-
-    /**
-     * Get anio
-     *
-     * @return int
-     */
-    public function getAnio()
-    {
-        return $this->anio;
     }
 
     /**

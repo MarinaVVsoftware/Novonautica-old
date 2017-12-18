@@ -373,7 +373,7 @@ function diasEntreFechas(inicio, fin) {
   return days;
 }
 
-//--- para marina humeda nueva cotización ---
+//--- para marina humeda nueva cotización estadia ---
 
 var de_cantidad = 0;
 var de_precio = 0;
@@ -659,6 +659,70 @@ function calculaTotalesAdicionales() {
 }
 
 //---- fin marina humeda servicio adicional -----------
+
+//--- para marina humeda nueva cotización gasolina ---
+$('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').keyup(function () {
+    $('#g_cantidad').data('valor',$(this).val());
+    $('#g_cantidad').html($(this).val());
+    $('#g_cantidad_mxn').data('valor',$(this).val());
+    $('#g_cantidad_mxn').html($(this).val());
+    gasolinaCalculaSubtotales();
+    gasolinaCalculaSubtotalesMxn();
+});
+$('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').keyup(function () {
+    var dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+    $('#g_precio').data('valor',$(this).val());
+    $('#g_precio').html('$ '+parseFloat($(this).val()).toFixed(2));
+    $('#g_precio_mxn').data('valor',$(this).val()*dolar);
+    $('#g_precio_mxn').html('$ '+parseFloat($(this).val()*dolar).toFixed(2));
+    gasolinaCalculaSubtotales();
+    gasolinaCalculaSubtotalesMxn();
+});
+$('#appbundle_marinahumedacotizacion_descuento').keyup(function () {
+    //var dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+    //$('#g_descuento').data('valor',$(this).val());
+    //$('#g_descuento_mxn').data('valor',$(this).val()*dolar);
+    gasolinaCalculaSubtotales();
+    gasolinaCalculaSubtotalesMxn();
+});
+
+function gasolinaCalculaSubtotales() {
+    var cantidad = $('#g_cantidad').data('valor');
+    var precio = $('#g_precio').data('valor');
+    var subtotal = cantidad * precio;
+    var ivatot = (subtotal * $('#valiva').data('valor'))/100;
+    var descuentotot = (subtotal * $('#appbundle_marinahumedacotizacion_descuento').val())/100;
+    var total = subtotal - descuentotot + ivatot;
+
+    $('#g_subtotal').html('$ '+parseFloat(subtotal).toFixed(2));
+    $('#g_iva').html('$ '+parseFloat(ivatot).toFixed(2));
+    $('#g_descuento').html('$ '+parseFloat(descuentotot).toFixed(2));
+    $('#g_total').html('$ '+parseFloat(total).toFixed(2));
+
+    $('#gransubtot_g').html(parseFloat(subtotal).toFixed(2));
+    $('#graniva_g').html(parseFloat(ivatot).toFixed(2));
+    $('#grandecuento_g').html(parseFloat(descuentotot).toFixed(2));
+    $('#grantot_g').html(parseFloat(total).toFixed(2));
+}
+function gasolinaCalculaSubtotalesMxn() {
+    var cantidad = $('#g_cantidad_mxn').data('valor');
+    var precio = $('#g_precio_mxn').data('valor');
+    var subtotal = cantidad * precio;
+    var ivatot = (subtotal * $('#valiva').data('valor'))/100;
+    var descuentotot = (subtotal * $('#appbundle_marinahumedacotizacion_descuento').val())/100;
+    var total = subtotal - descuentotot + ivatot;
+
+    $('#g_subtotal_mxn').html('$ '+parseFloat(subtotal).toFixed(2));
+    $('#g_iva_mxn').html('$ '+parseFloat(ivatot).toFixed(2));
+    $('#g_descuento_mxn').html('$ '+parseFloat(descuentotot).toFixed(2));
+    $('#g_total_mxn').html('$ '+parseFloat(total).toFixed(2));
+
+    $('#gransubtot_g_mxn').html(parseFloat(subtotal).toFixed(2));
+    $('#graniva_g_mxn').html(parseFloat(ivatot).toFixed(2));
+    $('#grandecuento_g_mxn').html(parseFloat(descuentotot).toFixed(2));
+    $('#grantot_g_mxn').html(parseFloat(total).toFixed(2));
+}
+//--- fin marina humeda nueva cotización gasolina ---
 
 
 //--- para astillero nueva cotización ---

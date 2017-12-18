@@ -24,25 +24,25 @@ class MarinaHumedaCotizacion
      */
     private $id;
 
+//* @Assert\NotBlank(
+//*     message="Fecha de llegada no puede quedar vacío"
+//* )
     /**
      * @var \DateTime
-     * @Assert\NotBlank(
-     *     message="Fecha de llegada no puede quedar vacío"
-     * )
      * @Assert\Date()
      *
-     * @ORM\Column(name="fecha_llegada", type="datetime")
+     * @ORM\Column(name="fecha_llegada", type="datetime", nullable=true)
      */
     private $fechaLlegada;
 
+//* @Assert\NotBlank(
+//*     message="Fecha de salida no puede quedar vacío"
+//* )
     /**
      * @var \DateTime
-     * @Assert\NotBlank(
-     *     message="Fecha de salida no puede quedar vacío"
-     * )
      * @Assert\Date()
      *
-     * @ORM\Column(name="fecha_salida", type="datetime")
+     * @ORM\Column(name="fecha_salida", type="datetime", nullable=true)
      */
     private $fechaSalida;
 
@@ -54,9 +54,9 @@ class MarinaHumedaCotizacion
     private $descuento;
 
     /**
-     * @var integer
+     * @var float
      *
-     * @ORM\Column(name="dolar", type="integer", nullable=true)
+     * @ORM\Column(name="dolar", type="float", nullable=true)
      */
     private $dolar;
 
@@ -354,7 +354,7 @@ class MarinaHumedaCotizacion
     /**
      * Set dolar
      *
-     * @param int $dolar
+     * @param float $dolar
      *
      * @return MarinaHumedaCotizacion
      */
@@ -368,7 +368,7 @@ class MarinaHumedaCotizacion
     /**
      * Get dolar
      *
-     * @return int
+     * @return float
      */
     public function getDolar()
     {
