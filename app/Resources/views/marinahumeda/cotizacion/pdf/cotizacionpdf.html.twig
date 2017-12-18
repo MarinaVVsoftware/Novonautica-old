@@ -115,12 +115,16 @@
         </div>
 
         <div class="col-xs-6">
+            {% if marinaHumedaCotizacion.fechaLlegada %}
             <p><strong>Fecha
-                    Llegada: </strong>{% if marinaHumedaCotizacion.fechaLlegada %}{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}
+                    Llegada: </strong>{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}
             </p>
+            {% endif %}
+            {% if marinaHumedaCotizacion.fechaSalida %}
             <p><strong>Fecha
-                    Salida: </strong>{% if marinaHumedaCotizacion.fechaSalida %}{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}{% endif %}
+                    Salida: </strong>{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}
             </p>
+            {% endif %}
         </div>
     </div>
     <div class="row fondo-azul letra-blanca">
@@ -151,14 +155,22 @@
                         <tr>
                             <td>{{ mhservicio.cantidad }}</td>
                             <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                            <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
-                            <td>$ {{ mhservicio.precio|number_format(2,'.',',') }}</td>
-                            <td>$ {{ mhservicio.subtotal|number_format(2,'.',',') }}</td>
-                            <td>$ {{ mhservicio.iva|number_format(2,'.',',') }}</td>
+                            <td>
+                                {% if mhservicio.tipo == 1 %}
+                                    Días Estadia
+                                {% elseif mhservicio.tipo == 2 %}
+                                    Conexión a electricidad
+                                {% else %}
+                                    Abastecimiento de gasolina
+                                {% endif %}
+                            </td>
+                            <td>$ {{ (mhservicio.precio/100)|number_format(2) }}</td>
+                            <td>$ {{ (mhservicio.subtotal/100)|number_format(2) }}</td>
+                            <td>$ {{ (mhservicio.iva/100)|number_format(2) }}</td>
                             {% if marinaHumedaCotizacion.descuento > 0 %}
-                                <td>$ {{ mhservicio.descuento|number_format(2,'.',',') }}</td>
+                                <td>$ {{ (mhservicio.descuento/100)|number_format(2) }}</td>
                             {% endif %}
-                            <td>$ {{ mhservicio.total|number_format(2,'.',',') }}</td>
+                            <td>$ {{ (mhservicio.total/100)|number_format(2) }}</td>
                         </tr>
                     {% endif %}
                 {% endfor %}
@@ -168,26 +180,26 @@
     </div>
     <div class="row">
         <div class="col-xs-5 col-xs-offset-7 text-right">
-            <p><strong>Sub-Total:</strong> ${{ marinaHumedaCotizacion.subtotal|number_format(2,'.',',') }} USD</p>
+            <p><strong>Sub-Total:</strong> ${{ (marinaHumedaCotizacion.subtotal/100)|number_format(2) }} USD</p>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-5 col-xs-offset-7 text-right">
             <p><strong>{{ marinaHumedaCotizacion.iva }}% IVA:</strong>
-                ${{ marinaHumedaCotizacion.ivatotal|number_format(2,'.',',') }} USD</p>
+                ${{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }} USD</p>
         </div>
     </div>
     {% if marinaHumedaCotizacion.descuento > 0 %}
         <div class="row">
             <div class="col-xs-5 col-xs-offset-7 text-right">
-                <p><strong>Descuento:</strong> ${{ marinaHumedaCotizacion.descuentototal|number_format(2,'.',',') }} USD
+                <p><strong>Descuento:</strong> ${{ (marinaHumedaCotizacion.descuentototal/100)|number_format(2) }} USD
                 </p>
             </div>
         </div>
     {% endif %}
     <div class="row">
         <div class="col-xs-5 col-xs-offset-7 text-right fondo-gris">
-            <p><strong>Total: ${{ marinaHumedaCotizacion.total|number_format(2,'.',',') }} USD</strong></p>
+            <p><strong>Total: ${{ (marinaHumedaCotizacion.total/100)|number_format(2) }} USD</strong></p>
         </div>
     </div>
     <div class="row pad-arriba-2">
@@ -218,16 +230,25 @@
                         <tr>
                             <td>{{ mhservicio.cantidad }}</td>
                             <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                            <td>{% if mhservicio.tipo == 1 %} Días Estadia {% else %} Conexión a electricidad {% endif %}</td>
-                            <td>$ {{ (mhservicio.precio * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
                             <td>
-                                $ {{ (mhservicio.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
-                            <td>$ {{ (mhservicio.iva * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
+                                {% if mhservicio.tipo == 1 %}
+                                    Días Estadia
+                                {% elseif mhservicio.tipo == 2 %}
+                                    Conexión a electricidad
+                                {% else %}
+                                    Abastecimiento de gasolina
+                                {% endif %}
+                            </td>
+                            <td>$ {{ ((mhservicio.precio * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>
+                            <td>
+                                $ {{ ((mhservicio.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>
+                            <td>$ {{ ((mhservicio.iva * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>
                             {% if marinaHumedaCotizacion.descuento > 0 %}
                                 <td>
-                                    $ {{ (mhservicio.descuento * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
+                                    $ {{ ((mhservicio.descuento * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
+                                </td>
                             {% endif %}
-                            <td>$ {{ (mhservicio.total * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}</td>
+                            <td>$ {{ ((mhservicio.total * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>
                         </tr>
                     {% endif %}
                 {% endfor %}
@@ -238,20 +259,20 @@
     <div class="row">
         <div class="col-xs-5 col-xs-offset-7 text-right">
             <p><strong>Sub-Total:</strong>
-                ${{ (marinaHumedaCotizacion.subtotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }} MXN</p>
+                ${{ ((marinaHumedaCotizacion.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }} MXN</p>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-5 col-xs-offset-7 text-right">
             <p><strong>{{ marinaHumedaCotizacion.iva }}% IVA:</strong>
-                ${{ (marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }} MXN</p>
+                ${{ ((marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }} MXN</p>
         </div>
     </div>
     {% if marinaHumedaCotizacion.descuento > 0 %}
         <div class="row">
             <div class="col-xs-5 col-xs-offset-7 text-right">
                 <p><strong>Descuento:</strong>
-                    ${{ (marinaHumedaCotizacion.descuentototal * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}
+                    ${{ ((marinaHumedaCotizacion.descuentototal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
                     MXN</p>
             </div>
         </div>
@@ -259,7 +280,7 @@
     <div class="row">
         <div class="col-xs-5 col-xs-offset-7 text-right fondo-gris">
             <p><strong>Total:
-                    ${{ (marinaHumedaCotizacion.total * marinaHumedaCotizacion.dolar)|number_format(2,'.',',') }}
+                    ${{ ((marinaHumedaCotizacion.total * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
                     MXN</strong></p>
         </div>
     </div>

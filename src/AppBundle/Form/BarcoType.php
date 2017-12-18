@@ -29,10 +29,6 @@ class BarcoType extends AbstractType
             ->add('modelo',TextType::class,[
                 'required' => false
             ])
-            ->add('anio',IntegerType::class,[
-                'label' => 'Año',
-                'required' => false
-            ])
             ->add('calado',TextType::class,[
                 'required' => false,
                 'attr' => ['class' => 'esdecimal']

@@ -54,6 +54,13 @@ class ValorSistema
     private $mensajeCorreoMarina;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="mensaje_correo_marina_gasolina", type="text")
+     */
+    private $mensajeCorreoMarinaGasolina;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="dias_habiles_marina_cotizacion", type="integer")
@@ -166,6 +173,22 @@ class ValorSistema
     public function setIva($iva)
     {
         $this->iva = $iva;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMensajeCorreoMarinaGasolina()
+    {
+        return $this->mensajeCorreoMarinaGasolina;
+    }
+
+    /**
+     * @param string $mensajeCorreoMarinaGasolina
+     */
+    public function setMensajeCorreoMarinaGasolina($mensajeCorreoMarinaGasolina)
+    {
+        $this->mensajeCorreoMarinaGasolina = $mensajeCorreoMarinaGasolina;
     }
 
 
