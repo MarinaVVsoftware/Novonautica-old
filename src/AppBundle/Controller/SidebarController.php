@@ -50,9 +50,23 @@ class SidebarController extends Controller
                         'name' => 'Cotizaciones',
                         'path' => $this->generateUrl('marina-humeda_index'),
                         'submenu' => [
-                            ['name' => 'Listado', 'path' => $this->generateUrl('marina-humeda_index')],
-                            ['name' => 'Nuevo', 'path' => $this->generateUrl('marina-humeda_new')],
-                            ['name' => 'Tarifas', 'path' => $this->generateUrl('marinahumeda-tarifas_index')],
+                            [
+                                'name' => 'Estadía',
+                                'path' => $this->generateUrl('marina-humeda_estadia_index'),
+                                'submenu' => [
+                                    ['name' => 'Listado', 'path' => $this->generateUrl('marina-humeda_estadia_index')],
+                                    ['name' => 'Nuevo', 'path' => $this->generateUrl('marina-humeda_estadia_new')],
+                                    ['name' => 'Tarifas', 'path' => $this->generateUrl('marinahumeda-tarifas_index')],
+                                ]
+                            ],
+                            [
+                                'name' => 'Gasolina',
+                                'path' => $this->generateUrl('marina-humeda_gasolina_index'),
+                                'submenu' => [
+                                    ['name' => 'Listado', 'path' => $this->generateUrl('marina-humeda_gasolina_index')],
+                                    ['name' => 'Nuevo', 'path' => $this->generateUrl('marina-humeda_gasolina_new')],
+                                ]
+                            ],
                         ]
                     ],
                     [
@@ -79,6 +93,7 @@ class SidebarController extends Controller
             ],
             [
                 'name' => 'Ocean Deal',
+                'icon' => 'life-buoy',
                 'path' => $this->generateUrl('embarcacion_index'),
                 'submenu' => [
                     ['name' => 'Embarcaciones', 'path' => $this->generateUrl('embarcacion_index')],
@@ -112,7 +127,7 @@ class SidebarController extends Controller
         ]);
     }
 
-    private function add(Array $paths)
+    private function add(Array $paths) : array
     {
         return $this->paths = array_merge($this->paths, $paths);
     }

@@ -10,4 +10,28 @@ namespace AppBundle\Repository;
  */
 class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findAllEstadia()
+    {
+        $qb = $this->createQueryBuilder('mhc');
+
+        return $qb
+            ->select('mhc', 'servicios')
+            ->join('mhc.mhcservicios', 'servicios')
+            ->where($qb->expr()->neq('servicios.tipo', '3'))
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllGasolina()
+    {
+        $qb = $this->createQueryBuilder('mhc');
+
+        return $qb
+            ->select('mhc', 'servicios')
+            ->join('mhc.mhcservicios', 'servicios')
+            ->where($qb->expr()->eq('servicios.tipo','3'))
+            ->getQuery()
+            ->getResult();
+    }
+
 }

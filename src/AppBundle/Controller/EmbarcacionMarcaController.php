@@ -59,7 +59,7 @@ class EmbarcacionMarcaController extends Controller
             return $this->redirectToRoute('embarcacion_marca_new');
         }
 
-        return $this->render('embarcacionmarca/new.html.twig', [
+        return $this->render('embarcacion/marca/new.html.twig', [
             'marca' => $marca,
             'embarcacionMarcas' => $marcas,
             'newForm' => $newForm->createView(),

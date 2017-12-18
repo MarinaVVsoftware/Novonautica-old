@@ -1,9 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
 
-{% block title %}
-    Novonautiva | Ver Cliente
-{% endblock %}
-
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -94,8 +90,8 @@
                                             <td>{{ cliente.correofacturacion }}</td>
                                         </tr>
                                         {#<tr>#}
-                                            {#<th>Estatus</th>#}
-                                            {#<td>{% if cliente.estatus %}Activado{% else %}Desactivado{% endif %}</td>#}
+                                        {#<th>Estatus</th>#}
+                                        {#<td>{% if cliente.estatus %}Activado{% else %}Desactivado{% endif %}</td>#}
                                         {#</tr>#}
                                         </tbody>
                                     </table>
@@ -136,10 +132,6 @@
                                                 <td>{{ barco.modelo }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Año</th>
-                                                <td>{{ barco.anio }}</td>
-                                            </tr>
-                                            <tr>
                                                 <th>Calado</th>
                                                 <td>{{ barco.calado }}</td>
                                             </tr>
@@ -176,8 +168,8 @@
                                                 <td>{{ barco.correoCapitan }}</td>
                                             </tr>
                                             {#<tr>#}
-                                                {#<th>Estatus</th>#}
-                                                {#<td>{% if barco.estatus %}Activado{% else %}Desactivado{% endif %}</td>#}
+                                            {#<th>Estatus</th>#}
+                                            {#<td>{% if barco.estatus %}Activado{% else %}Desactivado{% endif %}</td>#}
                                             {#</tr>#}
                                             </tbody>
                                         </table>
@@ -203,8 +195,8 @@
                                                     <td>{{ motor.modelo }}</td>
                                                 </tr>
                                                 {#<tr>#}
-                                                    {#<th>Estatus</th>#}
-                                                    {#<td>{% if motor.estatus %}Activado{% else %}Desactivado{% endif %}</td>#}
+                                                {#<th>Estatus</th>#}
+                                                {#<td>{% if motor.estatus %}Activado{% else %}Desactivado{% endif %}</td>#}
                                                 {#</tr>#}
                                                 </tbody>
                                             </table>
@@ -243,35 +235,38 @@
                                         <tbody>
                                         {% for cotizacion in cliente.mHcotizaciones %}
                                             {% if cotizacion.validacliente == 2 %}
-                                            <tr>
-                                                <td>
-                                                    {% if cotizacion.foliorecotiza == 0 %}
-                                                        {{ cotizacion.folio }}
-                                                    {% else %}
-                                                        {{ cotizacion.folio }}-{{ cotizacion.foliorecotiza }}
-                                                    {% endif %}
-                                                </td>
-                                                <td>{{ cotizacion.barco }}</td>
-                                                <td>Marina Humeda</td>
-                                                <td>{% if cotizacion.fechaLlegada %}{{ cotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
-                                                <td>{% if cotizacion.fechaSalida %}{{ cotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</td>
-                                                <td>$ {{ cotizacion.subtotal|number_format(2,'.',',') }}</td>
-                                                <td>$ {{ cotizacion.ivatotal|number_format(2,'.',',') }}</td>
-                                                <td>$ {{ cotizacion.descuentototal|number_format(2,'.',',') }}</td>
-                                                <td>$ {{ cotizacion.total|number_format(2,'.',',') }}</td>
-                                                <td>
-                                                    {% if cotizacion.pago.estatuspago is defined and cotizacion.pago.estatuspago == 1 %}
-                                                        <img src="{{ asset('img/status-aprobado-icon.svg') }}"
-                                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Pagado">
-                                                    {% else %}
-                                                        <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                                             class="center-block" data-toggle="tooltip" data-placement="left" title="No pagado">
-                                                    {% endif %}
-                                                </td>
-                                                <td>
-                                                    <a class="btn btn-morado-claro" href="{{ path('marina-humeda_show', { 'id': cotizacion.id }) }}">Detalle</a>
-                                                </td>
-                                            </tr>
+                                                <tr>
+                                                    <td>
+                                                        {% if cotizacion.foliorecotiza == 0 %}
+                                                            {{ cotizacion.folio }}
+                                                        {% else %}
+                                                            {{ cotizacion.folio }}-{{ cotizacion.foliorecotiza }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{ cotizacion.barco }}</td>
+                                                    <td>Marina Humeda</td>
+                                                    <td>{% if cotizacion.fechaLlegada %}{{ cotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
+                                                    <td>{% if cotizacion.fechaSalida %}{{ cotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</td>
+                                                    <td>$ {{ cotizacion.subtotal|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ cotizacion.ivatotal|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ cotizacion.descuentototal|number_format(2,'.',',') }}</td>
+                                                    <td>$ {{ cotizacion.total|number_format(2,'.',',') }}</td>
+                                                    <td>
+                                                        {% if cotizacion.pago.estatuspago is defined and cotizacion.pago.estatuspago == 1 %}
+                                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                                 class="center-block" data-toggle="tooltip"
+                                                                 data-placement="left" title="Pagado">
+                                                        {% else %}
+                                                            <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                                                 class="center-block" data-toggle="tooltip"
+                                                                 data-placement="left" title="No pagado">
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-morado-claro"
+                                                           href="{{ path('marina-humeda_show', { 'id': cotizacion.id }) }}">Detalle</a>
+                                                    </td>
+                                                </tr>
                                             {% endif %}
                                         {% endfor %}
                                         </tbody>
@@ -284,4 +279,25 @@
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+      (function () {
+        if (location.hash) {
+          const tab = document.querySelector(`a[href="${location.hash}"]`).parentNode;
+          const pane = document.getElementById(`${location.hash.replace('#', '')}`);
+          [
+            ...document.querySelectorAll('li[role="presentation"].active'),
+            ...document.querySelectorAll('.tab-pane.active')
+          ].forEach(item => item.classList.remove('active'));
+          tab.classList.add('active');
+
+          tab.dataset.expanded = true;
+          pane.classList.add('active');
+          location.hash = '#_';
+        }
+      })();
+    </script>
 {% endblock %}
