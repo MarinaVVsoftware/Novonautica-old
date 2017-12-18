@@ -1067,3 +1067,12 @@ input[type="file"] + label * {
 }
 
 /* --- fin Input file customizado --- */
+
+.cuadro-zona{
+    cursor: pointer;
+}
+.cuadro-zona:hover{
+    fill:rgba(0,0,0,0.08) ;
+    opacity: 0;
+
+}

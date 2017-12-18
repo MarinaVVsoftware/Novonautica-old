@@ -24,14 +24,14 @@ class SlipMovimiento
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha_llegada", type="date")
+     * @ORM\Column(name="fecha_llegada", type="date", nullable=true)
      */
     private $fechaLlegada;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha_salida", type="date")
+     * @ORM\Column(name="fecha_salida", type="date", nullable=true)
      */
     private $fechaSalida;
 
@@ -48,6 +48,13 @@ class SlipMovimiento
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @ORM\OneToOne(targetEntity="MarinaHumedaCotizacion", inversedBy="slipmovimiento")
+     * @ORM\JoinColumn(name="idmarinahumedacotizacion", referencedColumnName="id")
+     */
+    private $marinahumedacotizacion;
+
 
     /**
      * @var Slip 0 = Desocupado, 1 = Ocupado
@@ -190,5 +197,29 @@ class SlipMovimiento
     public function getSlip()
     {
         return $this->slip;
+    }
+
+    /**
+     * Set marinahumedacotizacion
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion
+     *
+     * @return SlipMovimiento
+     */
+    public function setMarinahumedacotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion = null)
+    {
+        $this->marinahumedacotizacion = $marinahumedacotizacion;
+
+        return $this;
+    }
+
+    /**
+     * Get marinahumedacotizacion
+     *
+     * @return \AppBundle\Entity\MarinaHumedaCotizacion
+     */
+    public function getMarinahumedacotizacion()
+    {
+        return $this->marinahumedacotizacion;
     }
 }

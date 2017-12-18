@@ -1,14 +1,8 @@
 $(document).ready(function() {
     $('#loading').hide();
-    // $('.treeview ul a').on('click',function () {
-    //     $('#loading').show();
-    // });
     $('.loadpage').on('click',function (){
         $('#loading').show();
     });
-    // $('.btn').on('click',function () {
-    //     $('#loading').show(); $('#loading').show();
-    // });
     $('.barcoespacio').on('click',function(){
         $('#infobarco').html('Barco: '+$(this).attr('id'));
         $('#modalinfobarco').modal('toggle');
@@ -56,6 +50,11 @@ $(document).ready(function() {
             orientation: "auto",
         })
     });
+    $('.cuadro-zona').on('click',function () {
+       var direc = $(this).data('direccion');
+        window.location.href = direc;
+    });
+
 //---- seleccionar choice al recotizar------
   var diasestadiaprecio = $('#de_precio').data('valor');
   var electricidadprecio = $('#e_precio').data('valor');
