@@ -65,12 +65,11 @@ class ClienteDataTable extends AbstractDataTableHandler
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
         }
 
-        // Filter by columns.
         foreach ($request->columns as $column) {
             if ($column->search->value) {
                 $value = strtolower($column->search->value);
 
-                if ($column->data == 4) {
+                if ($column->data == 'empresa') {
                     $q->andWhere('LOWER(cl.empresa) LIKE :empresa')
                         ->setParameter('empresa', "%{$value}%");
                 }
