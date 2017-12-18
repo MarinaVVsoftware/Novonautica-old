@@ -23,4 +23,42 @@ class EmbarcacionRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findAnos()
+    {
+        $qb = $this->createQueryBuilder('em');
+
+        return $qb->select('em.ano as nombre')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findPaises()
+    {
+        $qb = $this->createQueryBuilder('em');
+
+        return $qb->select('pa.name as nombre')
+            ->leftJoin('em.pais', 'pa')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findMarcas()
+    {
+        $qb = $this->createQueryBuilder('em');
+
+        return $qb->select('ma.nombre')
+            ->leftJoin('em.marca', 'ma')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findModelos()
+    {
+        $qb = $this->createQueryBuilder('em');
+
+        return $qb->select('mo.nombre')
+            ->leftJoin('em.modelo', 'mo')
+            ->getQuery()
+            ->getResult();
+    }
 }
