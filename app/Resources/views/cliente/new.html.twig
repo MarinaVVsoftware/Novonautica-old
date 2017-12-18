@@ -36,23 +36,24 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-5">
-                            {{ form_label(form.barcos.children[0].nombre) }}
-                            {{ form_widget(form.barcos.children[0].nombre) }}
+                        {% for barco in form.barcos %}
+                            <div class="col-sm-6">
+                                {{ form_row(barco.nombre) }}
+                                {{ form_row(barco.modelo) }}
 
-                            {{ form_row(form.barcos.children[0].modelo) }}
-                            {{ form_row(form.barcos.children[0].eslora) }}
-                            {{ form_row(form.barcos.children[0].calado) }}
-                            {{ form_row(form.barcos.children[0].manga) }}
-                        </div>
-                        <div class="col-sm-5">
-                            {{ form_row(form.barcos.children[0].nombreResponsable) }}
-                            {{ form_row(form.barcos.children[0].telefonoResponsable) }}
-                            {{ form_row(form.barcos.children[0].correoResponsable) }}
-                            {{ form_row(form.barcos.children[0].nombreCapitan) }}
-                            {{ form_row(form.barcos.children[0].telefonoCapitan) }}
-                            {{ form_row(form.barcos.children[0].correoCapitan) }}
-                        </div>
+                                {{ form_row(barco.eslora) }}
+                                {{ form_row(barco.calado) }}
+                                {{ form_row(barco.manga) }}
+                            </div>
+                            <div class="col-sm-6">
+                                {{ form_row(barco.nombreResponsable) }}
+                                {{ form_row(barco.telefonoResponsable) }}
+                                {{ form_row(barco.correoResponsable) }}
+                                {{ form_row(barco.nombreCapitan) }}
+                                {{ form_row(barco.telefonoCapitan) }}
+                                {{ form_row(barco.correoCapitan) }}
+                            </div>
+                        {% endfor %}
                     </div>
                     <div class="row">
                         <div class="col-sm-12 espacio-linea">
