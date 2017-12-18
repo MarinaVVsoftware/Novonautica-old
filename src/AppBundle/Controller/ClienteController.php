@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Cliente controller.
@@ -24,17 +25,19 @@ class ClienteController extends Controller
      * @Route("/", name="cliente_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'cliente');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getCode());
+            }
+        }
 
-        $clientes = $em->getRepository('AppBundle:Cliente')->findAll();
-
-        return $this->render('cliente/index.html.twig', [
-            'title' => 'Clientes',
-            'clientes' => $clientes,
-            'clientelistado' => 1
-        ]);
+        return $this->render('cliente/index.html.twig', ['title' => 'Clientes']);
     }
 
     /**
@@ -113,7 +116,7 @@ class ClienteController extends Controller
     {
         $deleteForm = $this->createDeleteForm($cliente);
         //$barcos = $cliente->getBarcos();
-       
+
         return $this->render('cliente/show.html.twig', [
             'title' => 'Cliente',
             'cliente' => $cliente,

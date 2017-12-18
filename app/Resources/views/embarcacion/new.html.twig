@@ -1,4 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
+{% import 'estructura/modalborrar.twig' as modal %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -123,24 +124,22 @@
                                         <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                         Guardar
                                     </button>
-                                    {{ form_end(form) }}
-                                    {% if delete_form is defined %}
-                                    {{ form_start(delete_form) }}
-                                    <button type="submit" class="btn btn-naranja pull-left">
-                                        <i class="fa fa-trash" aria-hidden="true"></i>
-                                        Eliminar
-                                    </button>
-                                    {{ form_end(delete_form) }}
-                                    {% endif %}
+                                    <div class="pull-left">
+                                        {{ delete_form is defined ? modal.deleteButton() : '' }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        {{ form_end(form) }}
                     </div>
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
 
+{% block modals %}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : ''}}
 {% endblock %}
 
 {% block javascripts %}

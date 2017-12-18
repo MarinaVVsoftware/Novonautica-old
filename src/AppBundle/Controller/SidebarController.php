@@ -93,6 +93,7 @@ class SidebarController extends Controller
             ],
             [
                 'name' => 'Ocean Deal',
+                'icon' => 'life-buoy',
                 'path' => $this->generateUrl('embarcacion_index'),
                 'submenu' => [
                     ['name' => 'Embarcaciones', 'path' => $this->generateUrl('embarcacion_index')],
@@ -126,7 +127,7 @@ class SidebarController extends Controller
         ]);
     }
 
-    private function add(Array $paths)
+    private function add(Array $paths) : array
     {
         return $this->paths = array_merge($this->paths, $paths);
     }
