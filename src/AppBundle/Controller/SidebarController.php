@@ -42,7 +42,7 @@ class SidebarController extends Controller
             [
                 'name' => 'Marina Humeda',
                 'icon' => 'ship',
-                'path' => $this->generateUrl('marina-administracion'),
+                'path' => $this->removeOneRoute($this->generateUrl('marina-administracion')),
                 'submenu' => [
                     [
                         'name' => 'Slip',
@@ -137,5 +137,10 @@ class SidebarController extends Controller
     private function add(Array $paths) : array
     {
         return $this->paths = array_merge($this->paths, $paths);
+    }
+
+    private function removeOneRoute($route) : string
+    {
+        return implode('/', array_slice(explode('/', $route), 1, -1));
     }
 }

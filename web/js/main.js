@@ -143,7 +143,7 @@ jQuery('.add-another-motor').click(function (e) {
 $('.lista-motores').on('click', '.remove-motor', function (e) {
   e.preventDefault();
   //console.log('quitar motor');
-  $(this).parent().remove();
+  $(this).parent().parent().parent().remove();
 
   return false;
 });
