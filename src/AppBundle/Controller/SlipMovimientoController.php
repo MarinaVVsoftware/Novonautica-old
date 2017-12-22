@@ -84,9 +84,7 @@ class SlipMovimientoController extends Controller
                             ->where('s.pies >= '.$eslora)
                             ->getQuery()
                             ->getResult();
-
         $encoders = [new XmlEncoder(), new JsonEncoder()];
-
         $normalizer = new ObjectNormalizer();
 //        $normalizer->setCircularReferenceLimit(1);
 //        $normalizer->setCircularReferenceHandler(function ($object) {
@@ -141,7 +139,7 @@ class SlipMovimientoController extends Controller
     /**
      * Lists all slipMovimiento entities.
      *
-     * @Route("/asignar", name="slipmovimiento_index")
+     * @Route("/ocupacion", name="slipmovimiento_index")
      * @Method("GET")
      */
     public function indexAction()
@@ -159,7 +157,7 @@ class SlipMovimientoController extends Controller
     /**
      * Creates a new slipMovimiento entity.
      *
-     * @Route("/asignar/nuevo", name="slipmovimiento_new")
+     * @Route("/ocupacion/nuevo", name="slipmovimiento_new")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -190,7 +188,7 @@ class SlipMovimientoController extends Controller
     /**
      * Finds and displays a slipMovimiento entity.
      *
-     * @Route("/asignar/{id}", name="slipmovimiento_show")
+     * @Route("/ocupacion/{id}", name="slipmovimiento_show")
      * @Method("GET")
      */
     public function showAction(SlipMovimiento $slipMovimiento)
@@ -206,7 +204,7 @@ class SlipMovimientoController extends Controller
     /**
      * Displays a form to edit an existing slipMovimiento entity.
      *
-     * @Route("/asignar/{id}/editar", name="slipmovimiento_edit")
+     * @Route("/ocupacion/{id}/editar", name="slipmovimiento_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, SlipMovimiento $slipMovimiento)
@@ -232,7 +230,7 @@ class SlipMovimientoController extends Controller
     /**
      * Deletes a slipMovimiento entity.
      *
-     * @Route("/asignar/{id}", name="slipmovimiento_delete")
+     * @Route("/ocupacion/{id}", name="slipmovimiento_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, SlipMovimiento $slipMovimiento)

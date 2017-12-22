@@ -49,7 +49,7 @@ class SidebarController extends Controller
                         'path' => $this->generateUrl('marina-administracion'),
                         'submenu' => [
                             ['name' => 'Mapa', 'path' => $this->generateUrl('marina-administracion')],
-                            ['name' => 'Asignar', 'path' => $this->generateUrl('slipmovimiento_index')],
+                            ['name' => 'Ocupacion', 'path' => $this->generateUrl('slipmovimiento_index')],
                         ]
                     ],
                     ['name' => 'Monedero', 'path' => $this->generateUrl('mh_monedero_index')],
