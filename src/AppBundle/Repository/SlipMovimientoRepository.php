@@ -10,4 +10,14 @@ namespace AppBundle\Repository;
  */
 class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function ordenaFechasEstadia()
+    {
+        $qb = $this->createQueryBuilder('smov');
+
+        return $qb
+            ->select('smov')
+            ->orderBy('smov.fechaLlegada','ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

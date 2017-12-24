@@ -44,7 +44,14 @@ class SidebarController extends Controller
                 'icon' => 'ship',
                 'path' => $this->generateUrl('marina-administracion'),
                 'submenu' => [
-                    ['name' => 'Slip', 'path' => $this->generateUrl('marina-administracion')],
+                    [
+                        'name' => 'Slip',
+                        'path' => $this->generateUrl('marina-administracion'),
+                        'submenu' => [
+                            ['name' => 'Mapa', 'path' => $this->generateUrl('marina-administracion')],
+                            ['name' => 'Ocupacion', 'path' => $this->generateUrl('slipmovimiento_index')],
+                        ]
+                    ],
                     ['name' => 'Monedero', 'path' => $this->generateUrl('mh_monedero_index')],
                     [
                         'name' => 'Cotizaciones',
