@@ -14,14 +14,14 @@
                 <div class="panel-body">
                     {{ form_start(form) }}
                     <div class="row">
-                        <div class="col-sm-5">
+                        <div class="col-sm-4">
                             {{ form_row(form.nombre) }}
                             {{ form_row(form.correo) }}
                             {{ form_row(form.telefono) }}
                             {{ form_row(form.celular) }}
                             {{ form_row(form.direccion) }}
                         </div>
-                        <div class="col-sm-5">
+                        <div class="col-sm-4">
                             {{ form_row(form.empresa) }}
                             {{ form_row(form.razonsocial) }}
                             {{ form_row(form.rfc) }}
@@ -37,18 +37,19 @@
                     </div>
                     <div class="row">
                         {% for barco in form.barcos %}
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 {{ form_row(barco.nombre) }}
                                 {{ form_row(barco.modelo) }}
-
                                 {{ form_row(barco.eslora) }}
                                 {{ form_row(barco.calado) }}
                                 {{ form_row(barco.manga) }}
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 {{ form_row(barco.nombreResponsable) }}
                                 {{ form_row(barco.telefonoResponsable) }}
                                 {{ form_row(barco.correoResponsable) }}
+                            </div>
+                            <div class="col-sm-4">
                                 {{ form_row(barco.nombreCapitan) }}
                                 {{ form_row(barco.telefonoCapitan) }}
                                 {{ form_row(barco.correoCapitan) }}
@@ -65,7 +66,6 @@
                          data-prototype="
                                     {% filter escape %}
                                     {{ include('motor/form-cliente.twig', { 'form': form.barcos.children[0].motores.vars.prototype }) }}
-                                        {#{{ form_widget(form.barcos.children[0].motores.vars.prototype)|e('html_attr') }}#}
                                     {% endfilter %}
                                         ">
                         {% for motorField in form.barcos.children[0].motores %}
@@ -74,6 +74,11 @@
                                 {{ form_widget(motorField) }}
                             </div>
                         {% endfor %}
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 espacio-linea">
+                            <hr>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
