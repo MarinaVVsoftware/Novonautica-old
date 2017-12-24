@@ -46,7 +46,7 @@ class SidebarController extends Controller
                 'submenu' => [
                     [
                         'name' => 'Slip',
-                        'path' => $this->generateUrl('marina-administracion'),
+                        'path' => $this->removeOneRoute($this->generateUrl('marina-administracion')),
                         'submenu' => [
                             ['name' => 'Mapa', 'path' => $this->generateUrl('marina-administracion')],
                             ['name' => 'Ocupacion', 'path' => $this->generateUrl('slipmovimiento_index')],
@@ -109,11 +109,22 @@ class SidebarController extends Controller
                     ['name' => 'Modelos', 'path' => $this->generateUrl('embarcacion_modelo')]
                 ]
             ],
-            [ 'name' => 'Eventos', 'icon' => 'address-book', 'path' => $this->generateUrl('marina-agenda') ],
-            [ 'name' => 'Productos', 'icon' => 'th', 'path' => $this->generateUrl('producto_index') ],
-            [ 'name' => 'Recursos Humanos', 'icon' => 'address-book-o', 'path' => $this->generateUrl('recursos-humanos') ],
-            [ 'name' => 'Contabilidad', 'icon' => 'archive', 'path' => $this->generateUrl('contabilidad') ],
-            [ 'name' => 'Reportes', 'icon' => 'file-text-o', 'path' => $this->generateUrl('reportes') ],
+            ['name' => 'Eventos', 'icon' => 'address-book', 'path' => $this->generateUrl('marina-agenda')],
+            [
+                'name' => 'Productos',
+                'icon' => 'th',
+                'path' => $this->generateUrl('producto_index'),
+                'submenu' => [
+                    ['name' => 'Listado', 'path' => $this->generateUrl('producto_index')],
+                    ['name' => 'Nuevo Producto', 'path' => $this->generateUrl('producto_new')],
+                    ['name' => 'Marcas', 'path' => $this->generateUrl('producto_marca')],
+                    ['name' => 'Categorias', 'path' => $this->generateUrl('producto_categoria')],
+                    ['name' => 'Subcategorias', 'path' => $this->generateUrl('producto_subcategoria')],
+                ]
+            ],
+            ['name' => 'Recursos Humanos', 'icon' => 'address-book-o', 'path' => $this->generateUrl('recursos-humanos')],
+            ['name' => 'Contabilidad', 'icon' => 'archive', 'path' => $this->generateUrl('contabilidad')],
+            ['name' => 'Reportes', 'icon' => 'file-text-o', 'path' => $this->generateUrl('reportes')],
         ]);
     }
 
@@ -134,7 +145,7 @@ class SidebarController extends Controller
         ]);
     }
 
-    private function add(Array $paths) : array
+    private function add(Array $paths): array
     {
         return $this->paths = array_merge($this->paths, $paths);
     }
