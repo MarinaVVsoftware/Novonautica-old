@@ -25,6 +25,7 @@
                             </thead>
                             <tbody>
                             {% for slipMovimiento in slipMovimientos %}
+                                {% if slipMovimiento %}
                                 <tr>
                                     <td>{{ slipMovimiento.marinahumedacotizacion.barco }}</td>
                                     <td>{{ slipMovimiento.slip.num }}</td>
@@ -40,10 +41,10 @@
                                     <td>{{ slipMovimiento.estatus }}</td>
                                     <td>{% if slipMovimiento.createdAt %}{{ slipMovimiento.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
                                     <td>
-                                        <a class="btn btn-morado-claro" href="{{ path('slipmovimiento_show', { 'id': slipMovimiento.id }) }}">Detalle</a>
                                         <a class="btn btn-azul" href="{{ path('slipmovimiento_edit', { 'id': slipMovimiento.id }) }}">Editar</a>
                                     </td>
                                 </tr>
+                                {% endif %}
                             {% endfor %}
                             </tbody>
                         </table>
