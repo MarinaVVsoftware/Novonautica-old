@@ -1,0 +1,182 @@
+{% extends 'estructura/plantilla.twig' %}
+{% import 'estructura/modalborrar.twig' as modal %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">Editar Slip Asignado</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="{{ path('slipmovimiento_index') }}" class="btn btn-contorno-azul pull-right">
+                                Regresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    {{ form_start(edit_form) }}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {{ form_widget(edit_form) }}
+                        </div>
+                        <div class="col-sm-6">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Fecha Llegada</th>
+                                    <th>Fecha Salida</th>
+                                    <th>Slip Actual</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="c_llegada">{{ slipMovimiento.fechaLlegada|date('Y-m-d') }}</td>
+                                    <td class="c_salida">{{ slipMovimiento.fechaSalida|date('Y-m-d') }}</td>
+                                    <td class="c_slip">{{ slipMovimiento.slip.num }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="tabla-ocupado">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="disponibilidad">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-6">
+                            <button type="submit" class="btn btn-azul">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                    {{ form_end(edit_form) }}
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ delete_form is defined ? modal.deleteButton() : '' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+{% block modals %}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            buscarSlips();
+        });
+
+        $('#appbundle_slipmovimiento_marinahumedacotizacion').on('change', function() {
+            buscarSlips();
+        });
+
+        function buscarSlips () {
+            $('#loading').show();
+            var eslora = $('#appbundle_slipmovimiento_marinahumedacotizacion').find(':selected').data('eslora');
+            var llegada = $('#appbundle_slipmovimiento_marinahumedacotizacion').find(':selected').data('llegada');
+            var salida = $('#appbundle_slipmovimiento_marinahumedacotizacion').find(':selected').data('salida');
+
+            $('.c_llegada').html(llegada);
+            $('.c_salida').html(salida);
+
+            var url = "{{ path('ajax_buscar_slips',{'eslora':'numeslora','id':1,'_format':'json'}) }}";
+            url = url.replace("numeslora", eslora);
+
+            //limpiando divs
+            $("#appbundle_slipmovimiento_slip>option").each(function () {
+                $(this).attr("style", "display:none");
+            });
+            $("#appbundle_slipmovimiento_slip").val('');
+            $('.disponibilidad').html('');
+            $('.tabla-ocupado').html('');
+
+            $.ajax({
+                method: "GET",
+                url: url,
+                dataType: 'json',
+                success: function (slips) {
+                    //JSON.stringify(slips);
+                    $("#appbundle_slipmovimiento_slip>option").each(function () {
+                        for(var k in slips) {
+                            if ($(this).val() == slips[k].id) {
+                                $(this).attr("style", "display:block");
+                                $(this).data("llegada", llegada);
+                                $(this).data("salida", salida);
+                            }
+                        }
+                    });
+                    $('#loading').hide();
+                },
+                error: function (jqXHR, exception) {
+                    if (jqXHR.status === 405) {
+                        console.error("METHOD NOT ALLOWED!");
+                    }
+                    $('#loading').hide();
+                }
+            }).fail(function () {
+                $('#loading').hide();
+            });
+
+        }
+
+        $('#appbundle_slipmovimiento_slip').on('change',function () {
+            $('.tabla-ocupado').html('');
+            var slip = $(this).find(':selected').val();
+            var eslora = $(this).find(':selected').data('eslora');
+            var llegada = $(this).find(':selected').data('llegada');
+            var salida = $(this).find(':selected').data('salida');
+            // console.log(slip);
+            // console.log(llegada);
+            // console.log(salida);
+            var url = "{{ path('ajax_buscar__movimientos_slip',{'slip':'numslip','llegada':'lallegada','salida':'lasalida','id':4,'_format':'json'}) }}";
+            url = url.replace("numslip", slip);
+            url = url.replace("lallegada", llegada);
+            url = url.replace("lasalida", salida);
+            $('.disponibilidad').html('');
+            $.ajax({
+                method: "GET",
+                url: url,
+                dataType: 'json',
+                success: function (slipMovimietos) {
+                    //var sm = JSON.stringify(slipMovimietos);
+                    if(slipMovimietos ==""){
+                        $('.disponibilidad').html('<div class="alert alert-success" role="alert">Slip disponible</div>');
+                    }else{
+                        console.log(slipMovimietos);
+                        for(var k in slipMovimietos) {
+                            $('.disponibilidad').html('<div class="alert alert-danger" role="alert">Slip ocupado</div>');
+                            $('.tabla-ocupado').html('<table class="table"><thead><tr><th>Fecha Llegada</th><th>Fecha Salida</th></tr></thead>' +
+                                '<tbody><tr><td>'+slipMovimietos[k].fechaLlegada+'</td>' +
+                                '<td>'+slipMovimietos[k].fechaSalida+'</td></tr></tbody></table>')
+                        }
+                    }
+                    //$('.disponibilidad').html('mov = '+sm.id);
+                    $('#loading').hide();
+                },
+                error: function (jqXHR, exception) {
+                    if (jqXHR.status === 405) {
+                        console.error("METHOD NOT ALLOWED!");
+                    }
+                    $('#loading').hide();
+                }
+            }).fail(function () {
+                $('#loading').hide();
+            });
+        });
+    </script>
+{% endblock %}

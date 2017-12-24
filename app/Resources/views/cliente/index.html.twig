@@ -20,46 +20,13 @@
                             <th>Correo</th>
                             <th class="no-sort">Teléfono / Celular</th>
                             <th class="no-sort">Dirección</th>
-                            <th class="with-choices">Empresa</th>
+                            <th class="with-choices">Empresas</th>
                             <th class="no-sort">Facturación</th>
                             <th class="no-sort">Barcos</th>
                             <th class="no-sort"></th>
                         </tr>
                         </thead>
                         <tbody>
-                        {#{% for i, cliente in clientes|reverse %}
-                            <tr>
-                                <td>{{ cliente.nombre }}</td>
-                                <td>{{ cliente.correo }}</td>
-                                <td>{{ cliente.telefono }} / {{ cliente.celular }}</td>
-                                <td>{{ cliente.direccion }}</td>
-                                <td>{{ cliente.empresa }}</td>
-                                <td align="left" style="text-align: left;">
-                                    <button class="btn btn-block btn-contorno-azul" type="button" data-toggle="collapse"
-                                            data-target="#facturacion-{{ cliente.id }}" aria-expanded="false"
-                                            aria-controls="#facturacion-{{ cliente.id }}">
-                                        Mostrar datos
-                                    </button>
-                                    <div id="facturacion-{{ cliente.id }}" class="collapse">
-                                        <dl class="dl-horizontal">
-                                            <dt>Razon social</dt>
-                                            <dd>{{ cliente.razonsocial }}</dd>
-                                            <dt>RFC</dt>
-                                            <dd>{{ cliente.rfc }}</dd>
-                                            <dt>Direccion fiscal</dt>
-                                            <dd>{{ cliente.direccionfiscal }}</dd>
-                                            <dt>Correo de facturación</dt>
-                                            <dd>{{ cliente.correofacturacion }}</dd>
-                                        </dl>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a class="btn btn-morado-claro"
-                                       href="{{ path('cliente_show', { 'id': cliente.id }) }}">Detalle</a>
-                                    <a class="btn btn-azul" href="{{ path('cliente_edit', { 'id': cliente.id }) }}">Editar</a>
-                                </td>
-                            </tr>
-                        {% endfor %}#}
                         </tbody>
                     </table>
                 </div>

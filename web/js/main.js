@@ -1,14 +1,8 @@
 $(document).ready(function() {
     $('#loading').hide();
-    // $('.treeview ul a').on('click',function () {
-    //     $('#loading').show();
-    // });
     $('.loadpage').on('click',function (){
         $('#loading').show();
     });
-    // $('.btn').on('click',function () {
-    //     $('#loading').show(); $('#loading').show();
-    // });
     $('.barcoespacio').on('click',function(){
         $('#infobarco').html('Barco: '+$(this).attr('id'));
         $('#modalinfobarco').modal('toggle');
@@ -39,14 +33,14 @@ $(document).ready(function() {
         orientation: "bottom auto",
     });
 
-    $('.editorwy').wysihtml5({
-        toolbar:{
-            "image": false,
-            "color": false,
-            "link": false,
-            "html": true,
-        }
-    });
+  $('.editorwy').wysihtml5({
+    toolbar: {
+      "image": false,
+      "color": false,
+      "link": false,
+      "html": true,
+    }
+  });
 
     $('.lista-pagos').on('click','.datepicker-solo',function(e) {
         console.log('click calendario');
@@ -56,6 +50,11 @@ $(document).ready(function() {
             orientation: "auto",
         })
     });
+    $('.cuadro-zona').on('click',function () {
+       var direc = $(this).data('direccion');
+        window.location.href = direc;
+    });
+
 //---- seleccionar choice al recotizar------
   var diasestadiaprecio = $('#de_precio').data('valor');
   var electricidadprecio = $('#e_precio').data('valor');
@@ -70,18 +69,18 @@ $(document).ready(function() {
     }
   });
 //-- fin seleccionar choice al recotizar----
-    $( ".esnumero" ).keypress(function() {
-        return isNumberKey(event);
-    });
-    $( ".esdecimal" ).keypress(function() {
-        return esNumeroDecimal(event,this);
-    });
-    $("#appbundle_marinahumedacotizacion_validanovo_0").click(function () {
-        $('#notarechazado').hide();
-    });
-    $("#appbundle_marinahumedacotizacion_validanovo_1").click(function () {
-        $('#notarechazado').show();
-    });
+  $(".esnumero").keypress(function () {
+    return isNumberKey(event);
+  });
+  $(".esdecimal").keypress(function () {
+    return esNumeroDecimal(event, this);
+  });
+  $("#appbundle_marinahumedacotizacion_validanovo_0").click(function () {
+    $('#notarechazado').hide();
+  });
+  $("#appbundle_marinahumedacotizacion_validanovo_1").click(function () {
+    $('#notarechazado').show();
+  });
 });
 
 function isNumberKey(evt) {
@@ -144,7 +143,7 @@ jQuery('.add-another-motor').click(function (e) {
 $('.lista-motores').on('click', '.remove-motor', function (e) {
   e.preventDefault();
   //console.log('quitar motor');
-  $(this).parent().remove();
+  $(this).parent().parent().parent().remove();
 
   return false;
 });
@@ -223,35 +222,35 @@ $('.lista-servicios-adicionales').on('click', '.remove-servicio-adicional', func
 
 //collectio al agregar pagos a una cotización marina húmeda
 jQuery('.add-another-pago').click(function (e) {
-    e.preventDefault();
-    // var elementoMotor = document.getElementsByClassName(this);
-    var totPagos = $(this).data('cantidad');
-    var lista = $(this).data('idlista');
-    var pagoListPrimero = jQuery('#pago-fields-list'+lista);
-    //var motorListOtros = jQuery('.lista-motores'+lista);
-    // grab the prototype template
-    var newWidget = $(pagoListPrimero).data('prototype');
-    // replace the "__name__" used in the id and name of the prototype
-    // with a number that's unique to your emails
-    // end name attribute looks like name="contact[emails][2]"
-    newWidget = newWidget.replace(/__name__/g, totPagos);
-    totPagos++;
-    $(this).data('cantidad', totPagos);
-    // create a new list element and add it to the list
-    var newLi = jQuery('<tr class="pago-agregado"></tr>').html(newWidget);
-    newLi.appendTo(pagoListPrimero);
+  e.preventDefault();
+  // var elementoMotor = document.getElementsByClassName(this);
+  var totPagos = $(this).data('cantidad');
+  var lista = $(this).data('idlista');
+  var pagoListPrimero = jQuery('#pago-fields-list' + lista);
+  //var motorListOtros = jQuery('.lista-motores'+lista);
+  // grab the prototype template
+  var newWidget = $(pagoListPrimero).data('prototype');
+  // replace the "__name__" used in the id and name of the prototype
+  // with a number that's unique to your emails
+  // end name attribute looks like name="contact[emails][2]"
+  newWidget = newWidget.replace(/__name__/g, totPagos);
+  totPagos++;
+  $(this).data('cantidad', totPagos);
+  // create a new list element and add it to the list
+  var newLi = jQuery('<tr class="pago-agregado"></tr>').html(newWidget);
+  newLi.appendTo(pagoListPrimero);
 
-    // also add a remove button, just for this example
-    //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
+  // also add a remove button, just for this example
+  //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
 
-    newLi.before(newLi);
+  newLi.before(newLi);
 });
-$('.lista-pagos').on('click','.remove-pago',function(e) {
-    e.preventDefault();
-    //console.log('quitar motor');
-    $(this).parent().parent().remove();
+$('.lista-pagos').on('click', '.remove-pago', function (e) {
+  e.preventDefault();
+  //console.log('quitar motor');
+  $(this).parent().parent().remove();
 
-    return false;
+  return false;
 });
 
 //--- select dependiente para marina humeda cotización ---
@@ -308,26 +307,26 @@ elcliente.change(function () {
 var elclienteastillero = $('#appbundle_astillerocotizacion_cliente');
 elclienteastillero.change(function () {
 
-    // ... retrieve the corresponding form.
-    var form = $(this).closest('form');
-    // Simulate form data, but only include the selected elcliente value.
-    var data = {};
-    data[elclienteastillero.attr('name')] = elclienteastillero.val();
-    // Submit data via AJAX to the form's action path.
+  // ... retrieve the corresponding form.
+  var form = $(this).closest('form');
+  // Simulate form data, but only include the selected elcliente value.
+  var data = {};
+  data[elclienteastillero.attr('name')] = elclienteastillero.val();
+  // Submit data via AJAX to the form's action path.
 
-    $.ajax({
-        url : form.attr('action'),
-        type: form.attr('method'),
-        data : data,
-        success: function(html) {
-            // Replace current position field ...
-            $('#appbundle_astillerocotizacion_barco').replaceWith(
-                // ... with the returned one from the AJAX response.
-                $(html).find('#appbundle_astillerocotizacion_barco')
-            );
-            // barco field now displays the appropriate barcos.
-        }
-    });
+  $.ajax({
+    url: form.attr('action'),
+    type: form.attr('method'),
+    data: data,
+    success: function (html) {
+      // Replace current position field ...
+      $('#appbundle_astillerocotizacion_barco').replaceWith(
+          // ... with the returned one from the AJAX response.
+          $(html).find('#appbundle_astillerocotizacion_barco')
+      );
+      // barco field now displays the appropriate barcos.
+    }
+  });
 });
 
 //--- fin select dependiente para astillero cotización ---
@@ -394,8 +393,8 @@ $('#appbundle_marinahumedacotizacion_fechaLlegada').on("change", function () {
   $('#dias_estadia_cantidad').data('valor', dias_estadia);
 
 
-    de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val()/100);
-    de_precio_mxn = de_precio * dolar;
+  de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100);
+  de_precio_mxn = de_precio * dolar;
 
   $('#de_cantidad').html(dias_estadia);
   $('#de_cantidad_mxn').html(dias_estadia);
@@ -403,8 +402,8 @@ $('#appbundle_marinahumedacotizacion_fechaLlegada').on("change", function () {
   calculaSubtotales(dias_estadia, de_precio, $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
   calculaSubtotales(dias_estadia, de_precio_mxn, $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
 
-    e_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val()/100);
-    e_precio_mxn = e_precio * dolar;
+  e_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
+  e_precio_mxn = e_precio * dolar;
 
   $('#e_cantidad').html(dias_estadia);
   $('#e_cantidad_mxn').html(dias_estadia);
@@ -423,8 +422,8 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on("change", function () {
   $('#dias_estadia_cantidad').html(dias_estadia);
   $('#dias_estadia_cantidad').data('valor', dias_estadia);
 
-    de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val()/100);
-    de_precio_mxn = de_precio * dolar;
+  de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100);
+  de_precio_mxn = de_precio * dolar;
 
   $('#de_cantidad').html(dias_estadia);
   $('#de_cantidad_mxn').html(dias_estadia);
@@ -432,8 +431,8 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on("change", function () {
   calculaSubtotales(dias_estadia, de_precio, $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
   calculaSubtotales(dias_estadia, de_precio_mxn, $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
 
-    e_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val()/100);
-    e_precio_mxn = e_precio * dolar;
+  e_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
+  e_precio_mxn = e_precio * dolar;
 
   $('#e_cantidad').html(dias_estadia);
   $('#e_cantidad_mxn').html(dias_estadia);
@@ -445,11 +444,11 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on("change", function () {
 });
 
 //-- Días estadía --
-$('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change',function () {
-    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-    de_cantidad = $('#dias_estadia_cantidad').data('valor');
-    de_precio = ($(this).val()/100);
-    de_precio_mxn = (de_precio * dolar).toFixed(2);
+$('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change', function () {
+  dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+  de_cantidad = $('#dias_estadia_cantidad').data('valor');
+  de_precio = ($(this).val() / 100);
+  de_precio_mxn = (de_precio * dolar).toFixed(2);
 
   $('#de_precio').html('$ ' + de_precio);
   $('#de_precio_mxn').html('$ ' + de_precio_mxn);
@@ -472,11 +471,11 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change',functio
 //     calculaTotales();
 // });
 
-$('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').on('change',function () {
-    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-    e_cantidad =  $('#dias_estadia_cantidad').data('valor');
-    e_precio = ($(this).val()/100);
-    e_precio_mxn = (e_precio * dolar).toFixed(2);
+$('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').on('change', function () {
+  dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+  e_cantidad = $('#dias_estadia_cantidad').data('valor');
+  e_precio = ($(this).val() / 100);
+  e_precio_mxn = (e_precio * dolar).toFixed(2);
 
   $('#e_precio').html('$ ' + e_precio);
   $('#e_precio_mxn').html('$ ' + e_precio_mxn);
@@ -493,44 +492,44 @@ $('#appbundle_marinahumedacotizacion_descuento').keyup(function () {
 
 //-- Dolar --
 $('#appbundle_marinahumedacotizacion_dolar').keyup(function () {
-    $('.valdolar').html(parseFloat($(this).val()).toFixed(2)+' MXN');
-    recalculaSubtotalesYtotal();
+  $('.valdolar').html(parseFloat($(this).val()).toFixed(2) + ' MXN');
+  recalculaSubtotalesYtotal();
 });
 
 function recalculaSubtotalesYtotal() {
-    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+  dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
 
-    dias_estadia =  $('#dias_estadia_cantidad').data('valor');
+  dias_estadia = $('#dias_estadia_cantidad').data('valor');
 
-    de_cantidad = dias_estadia;
-    de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val()/100;
-    de_precio_mxn = de_precio * dolar;
-    //$('#de_cantidad').html(de_cantidad);
-    calculaSubtotales(de_cantidad,de_precio,$('#de_subtotal'),$('#de_iva'),$('#de_descuento'),$('#de_total'));
-    calculaSubtotales(de_cantidad,de_precio_mxn,$('#de_subtotal_mxn'),$('#de_iva_mxn'),$('#de_descuento_mxn'),$('#de_total_mxn'));
+  de_cantidad = dias_estadia;
+  de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100;
+  de_precio_mxn = de_precio * dolar;
+  //$('#de_cantidad').html(de_cantidad);
+  calculaSubtotales(de_cantidad, de_precio, $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
+  calculaSubtotales(de_cantidad, de_precio_mxn, $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
 
-    e_cantidad = dias_estadia;
-    e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val()/100;
-    e_precio_mxn = e_precio * dolar;
-    calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
-    calculaSubtotales(e_cantidad,e_precio_mxn,$('#e_subtotal_mxn'),$('#e_iva_mxn'),$('#e_descuento_mxn'),$('#e_total_mxn'));
+  e_cantidad = dias_estadia;
+  e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100;
+  e_precio_mxn = e_precio * dolar;
+  calculaSubtotales(e_cantidad, e_precio, $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+  calculaSubtotales(e_cantidad, e_precio_mxn, $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
 
   calculaTotales();
 }
 
-function calculaSubtotales(cantidad,precio,tdsubtot,tdiva,tddesc,tdtot){
+function calculaSubtotales(cantidad, precio, tdsubtot, tdiva, tddesc, tdtot) {
 
 
-    var eslora = 0;
-    if ($('#de_eslora').data('valor')) {
-      eslora = $('#de_eslora').data('valor');
-    }
-    var iva = ($('#valiva').data('valor'))/100;
-    var descuento = $('#appbundle_marinahumedacotizacion_descuento').val();
-    var subtotal = cantidad * precio * eslora;
-    var ivatot = subtotal * iva;
-    var desctot = (subtotal*descuento)/100;
-    var total = (subtotal + ivatot - desctot).toFixed(2);
+  var eslora = 0;
+  if ($('#de_eslora').data('valor')) {
+    eslora = $('#de_eslora').data('valor');
+  }
+  var iva = ($('#valiva').data('valor')) / 100;
+  var descuento = $('#appbundle_marinahumedacotizacion_descuento').val();
+  var subtotal = cantidad * precio * eslora;
+  var ivatot = subtotal * iva;
+  var desctot = (subtotal * descuento) / 100;
+  var total = (subtotal + ivatot - desctot).toFixed(2);
 
   tdsubtot.html('$ ' + (subtotal).toFixed(2));
   tdiva.html('$ ' + (ivatot).toFixed(2));
@@ -662,66 +661,68 @@ function calculaTotalesAdicionales() {
 
 //--- para marina humeda nueva cotización gasolina ---
 $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').keyup(function () {
-    $('#g_cantidad').data('valor',$(this).val());
-    $('#g_cantidad').html($(this).val());
-    $('#g_cantidad_mxn').data('valor',$(this).val());
-    $('#g_cantidad_mxn').html($(this).val());
-    gasolinaCalculaSubtotales();
-    gasolinaCalculaSubtotalesMxn();
+  $('#g_cantidad').data('valor', $(this).val());
+  $('#g_cantidad').html($(this).val());
+  $('#g_cantidad_mxn').data('valor', $(this).val());
+  $('#g_cantidad_mxn').html($(this).val());
+  gasolinaCalculaSubtotales();
+  gasolinaCalculaSubtotalesMxn();
 });
 $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').keyup(function () {
-    var dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-    $('#g_precio').data('valor',$(this).val());
-    $('#g_precio').html('$ '+parseFloat($(this).val()).toFixed(2));
-    $('#g_precio_mxn').data('valor',$(this).val()*dolar);
-    $('#g_precio_mxn').html('$ '+parseFloat($(this).val()*dolar).toFixed(2));
-    gasolinaCalculaSubtotales();
-    gasolinaCalculaSubtotalesMxn();
+  var dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+  $('#g_precio').data('valor', $(this).val());
+  $('#g_precio').html('$ ' + parseFloat($(this).val()).toFixed(2));
+  $('#g_precio_mxn').data('valor', $(this).val() * dolar);
+  $('#g_precio_mxn').html('$ ' + parseFloat($(this).val() * dolar).toFixed(2));
+  gasolinaCalculaSubtotales();
+  gasolinaCalculaSubtotalesMxn();
 });
 $('#appbundle_marinahumedacotizacion_descuento').keyup(function () {
-    //var dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-    //$('#g_descuento').data('valor',$(this).val());
-    //$('#g_descuento_mxn').data('valor',$(this).val()*dolar);
-    gasolinaCalculaSubtotales();
-    gasolinaCalculaSubtotalesMxn();
+  //var dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+  //$('#g_descuento').data('valor',$(this).val());
+  //$('#g_descuento_mxn').data('valor',$(this).val()*dolar);
+  gasolinaCalculaSubtotales();
+  gasolinaCalculaSubtotalesMxn();
 });
 
 function gasolinaCalculaSubtotales() {
-    var cantidad = $('#g_cantidad').data('valor');
-    var precio = $('#g_precio').data('valor');
-    var subtotal = cantidad * precio;
-    var ivatot = (subtotal * $('#valiva').data('valor'))/100;
-    var descuentotot = (subtotal * $('#appbundle_marinahumedacotizacion_descuento').val())/100;
-    var total = subtotal - descuentotot + ivatot;
+  var cantidad = $('#g_cantidad').data('valor');
+  var precio = $('#g_precio').data('valor');
+  var subtotal = cantidad * precio;
+  var ivatot = (subtotal * $('#valiva').data('valor')) / 100;
+  var descuentotot = (subtotal * $('#appbundle_marinahumedacotizacion_descuento').val()) / 100;
+  var total = subtotal - descuentotot + ivatot;
 
-    $('#g_subtotal').html('$ '+parseFloat(subtotal).toFixed(2));
-    $('#g_iva').html('$ '+parseFloat(ivatot).toFixed(2));
-    $('#g_descuento').html('$ '+parseFloat(descuentotot).toFixed(2));
-    $('#g_total').html('$ '+parseFloat(total).toFixed(2));
+  $('#g_subtotal').html('$ ' + parseFloat(subtotal).toFixed(2));
+  $('#g_iva').html('$ ' + parseFloat(ivatot).toFixed(2));
+  $('#g_descuento').html('$ ' + parseFloat(descuentotot).toFixed(2));
+  $('#g_total').html('$ ' + parseFloat(total).toFixed(2));
 
-    $('#gransubtot_g').html(parseFloat(subtotal).toFixed(2));
-    $('#graniva_g').html(parseFloat(ivatot).toFixed(2));
-    $('#grandecuento_g').html(parseFloat(descuentotot).toFixed(2));
-    $('#grantot_g').html(parseFloat(total).toFixed(2));
+  $('#gransubtot_g').html(parseFloat(subtotal).toFixed(2));
+  $('#graniva_g').html(parseFloat(ivatot).toFixed(2));
+  $('#grandecuento_g').html(parseFloat(descuentotot).toFixed(2));
+  $('#grantot_g').html(parseFloat(total).toFixed(2));
 }
+
 function gasolinaCalculaSubtotalesMxn() {
-    var cantidad = $('#g_cantidad_mxn').data('valor');
-    var precio = $('#g_precio_mxn').data('valor');
-    var subtotal = cantidad * precio;
-    var ivatot = (subtotal * $('#valiva').data('valor'))/100;
-    var descuentotot = (subtotal * $('#appbundle_marinahumedacotizacion_descuento').val())/100;
-    var total = subtotal - descuentotot + ivatot;
+  var cantidad = $('#g_cantidad_mxn').data('valor');
+  var precio = $('#g_precio_mxn').data('valor');
+  var subtotal = cantidad * precio;
+  var ivatot = (subtotal * $('#valiva').data('valor')) / 100;
+  var descuentotot = (subtotal * $('#appbundle_marinahumedacotizacion_descuento').val()) / 100;
+  var total = subtotal - descuentotot + ivatot;
 
-    $('#g_subtotal_mxn').html('$ '+parseFloat(subtotal).toFixed(2));
-    $('#g_iva_mxn').html('$ '+parseFloat(ivatot).toFixed(2));
-    $('#g_descuento_mxn').html('$ '+parseFloat(descuentotot).toFixed(2));
-    $('#g_total_mxn').html('$ '+parseFloat(total).toFixed(2));
+  $('#g_subtotal_mxn').html('$ ' + parseFloat(subtotal).toFixed(2));
+  $('#g_iva_mxn').html('$ ' + parseFloat(ivatot).toFixed(2));
+  $('#g_descuento_mxn').html('$ ' + parseFloat(descuentotot).toFixed(2));
+  $('#g_total_mxn').html('$ ' + parseFloat(total).toFixed(2));
 
-    $('#gransubtot_g_mxn').html(parseFloat(subtotal).toFixed(2));
-    $('#graniva_g_mxn').html(parseFloat(ivatot).toFixed(2));
-    $('#grandecuento_g_mxn').html(parseFloat(descuentotot).toFixed(2));
-    $('#grantot_g_mxn').html(parseFloat(total).toFixed(2));
+  $('#gransubtot_g_mxn').html(parseFloat(subtotal).toFixed(2));
+  $('#graniva_g_mxn').html(parseFloat(ivatot).toFixed(2));
+  $('#grandecuento_g_mxn').html(parseFloat(descuentotot).toFixed(2));
+  $('#grantot_g_mxn').html(parseFloat(total).toFixed(2));
 }
+
 //--- fin marina humeda nueva cotización gasolina ---
 
 
@@ -834,6 +835,8 @@ const datatablesSettings = {
       const column = this;
       const columnHeader = column.header();
       const select = document.createElement('select');
+      let columnName = columnHeader.innerHTML.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+
       select.add(new Option(columnHeader.innerHTML, ''));
       columnHeader.innerHTML = '';
       columnHeader.appendChild(select);
@@ -844,9 +847,22 @@ const datatablesSettings = {
         column.search(val, true, true).draw();
       });
 
+      $.ajax({
+        url: `${location.href}${columnName}.json`,
+        success: function (options) {
+          options
+              .map(opt => opt.nombre || opt.name)
+              .filter((item, index, array) => array.indexOf(item || '') === index)
+              .sort()
+              .forEach(optionValue => select.add(new Option(optionValue, optionValue)));
+        }
+      });
+
+      /* LIMITADO A LOS DATOS QUE RECIBE EN EL PRIMER QUERY
       this.data().unique().sort().map((optionValue) => {
         select.add(new Option(optionValue, optionValue))
       });
+      */
     });
   },
 };

@@ -10,4 +10,30 @@ namespace AppBundle\Repository;
  */
 class ProductoRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findMarcas()
+    {
+        return $this->createQueryBuilder('pro')
+            ->select('mar.nombre')
+            ->leftJoin('pro.marca', 'mar')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findCategorias()
+    {
+        return $this->createQueryBuilder('pro')
+            ->select('cat.nombre')
+            ->leftJoin('pro.categoria', 'cat')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findSubcategorias()
+    {
+        return $this->createQueryBuilder('pro')
+            ->select('sub.nombre')
+            ->leftJoin('pro.subcategoria', 'sub')
+            ->getQuery()
+            ->getResult();
+    }
 }

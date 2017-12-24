@@ -116,4 +116,3 @@ class EmbarcacionLayout
         $this->embarcacion = $embarcacion;
     }
 }
-

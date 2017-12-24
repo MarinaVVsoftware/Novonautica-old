@@ -256,13 +256,26 @@ class MarinaHumedaCotizacion
      */
     private $pagos;
 
+    /**
+     * @ORM\OneToOne(targetEntity="SlipMovimiento", mappedBy="marinahumedacotizacion")
+     */
+    private $slipmovimiento;
+
     public function __construct() {
         $this->mhcservicios = new ArrayCollection();
         $this->pagos = new ArrayCollection();
     }
     public function __toString()
     {
-        return $this->folio.' '.$this->foliorecotiza;
+        $folioTot = '';
+        $f = $this->folio;
+        $fre = $this->foliorecotiza;
+        if($fre == 0){
+            $folioTot=$f;
+        }else{
+            $folioTot=$f.'-'.$fre;
+        }
+        return 'Folio: '.$folioTot.' - Barco: '.$this->getBarco().' - Eslora: '.$this->getBarco()->getEslora();
     }
     public function __clone()
     {
@@ -1028,5 +1041,29 @@ class MarinaHumedaCotizacion
     public function setFecharespuesta($fecharespuesta)
     {
         $this->fecharespuesta = $fecharespuesta;
+    }
+
+    /**
+     * Set slipmovimiento
+     *
+     * @param \AppBundle\Entity\SlipMovimiento $slipmovimiento
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setSlipmovimiento(\AppBundle\Entity\SlipMovimiento $slipmovimiento = null)
+    {
+        $this->slipmovimiento = $slipmovimiento;
+
+        return $this;
+    }
+
+    /**
+     * Get slipmovimiento
+     *
+     * @return \AppBundle\Entity\SlipMovimiento
+     */
+    public function getSlipmovimiento()
+    {
+        return $this->slipmovimiento;
     }
 }
