@@ -41,8 +41,8 @@ class SidebarController extends Controller
             ],
             [
                 'name' => 'Marina Humeda',
+                'path' => $this->removeOneRoute($this->removeOneRoute($this->generateUrl('marina-administracion'))),
                 'icon' => 'ship',
-                'path' => $this->removeOneRoute($this->generateUrl('marina-administracion')),
                 'submenu' => [
                     [
                         'name' => 'Slip',
@@ -123,7 +123,15 @@ class SidebarController extends Controller
                 ]
             ],
             ['name' => 'Recursos Humanos', 'icon' => 'address-book-o', 'path' => $this->generateUrl('recursos-humanos')],
-            ['name' => 'Contabilidad', 'icon' => 'archive', 'path' => $this->generateUrl('contabilidad')],
+            [
+                'name' => 'Contabilidad',
+                'icon' => 'archive',
+                'path' => $this->generateUrl('contabilidad'),
+                'submenu' => [
+                    ['name' => 'Facturas', 'path' => $this->generateUrl('display_cotizacion_facturacion')],
+                    ['name' => 'Nueva factura', 'path' => $this->generateUrl('display_new_cotizacion_facturacion')]
+                ]
+            ],
             ['name' => 'Reportes', 'icon' => 'file-text-o', 'path' => $this->generateUrl('reportes')],
         ]);
     }

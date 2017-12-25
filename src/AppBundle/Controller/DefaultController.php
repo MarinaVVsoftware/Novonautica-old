@@ -3,7 +3,13 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use function Sodium\add;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 
@@ -27,6 +33,61 @@ class DefaultController extends Controller
     {
 
     }
+
+    /**
+     * @Route("/contabilidad/facturacion/", name="display_cotizacion_facturacion")
+     */
+    public function displayCotizacionFacturaIndex()
+    {
+        return $this->render('index-facturacion.html.twig', ['title' => 'Facturas']);
+    }
+
+    /**
+     * @Route("/contabilidad/facturacion/new", name="display_new_cotizacion_facturacion")
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function displayCotizacionFacturaNew(Request $request)
+    {
+        $form = $this
+            ->createFormBuilder([])
+            ->add('cotizacion', EntityType::class, [
+                'label' => 'Seleccionar una cotización',
+                'class' => 'AppBundle\Entity\MarinaHumedaCotizacion'
+            ])
+            ->add('rfc', TextType::class, ['label' => 'RFC'])
+            ->add('cliente', TextType::class)
+            ->add('empresa', TextType::class, ['label' => 'Nombre de la empresa'])
+            ->add('pais', ChoiceType::class, [
+                'label' => 'País',
+                'choices' => ['México']
+            ])
+            ->add('estado', ChoiceType::class, [
+                'choices' => ['Quintana Roo']
+            ])
+            ->add('ciudad', TextType::class)
+            ->add('direccionFiscal', TextareaType::class)
+            ->add('codigoPostal', TextType::class)
+            ->add('numeroTelefonico', TextType::class)
+            ->add('correoElectronico', TextType::class)
+            ->add('fechaExpedicion', TextType::class)
+            ->add('lugarExpedicion', TextType::class)
+            ->add('tipoCambio', TextType::class)
+            ->add('condicionesPago', TextType::class)
+            ->add('cuenta', TextType::class)
+            ->add('referenciaPago', TextType::class)
+            ->add('iva', TextType::class, ['label' => 'IVA'])
+            ->getForm();
+
+
+        return $this->render('new-facturacion.html.twig', [
+            'title' => 'Nueva factura',
+            'form' => $form->createView()
+        ]);
+    }
+
     /**
      * Genera el pdf de una cotizacion en base a su id
      *
@@ -46,7 +107,6 @@ class DefaultController extends Controller
      * Displays a form to edit an existing marinaHumedaCotizacion entity.
      *
      * @Route("/{id}/correovalidacion", name="marina-humeda_validaras")
-
      **/
     public function validaAction(Request $request, MarinaHumedaCotizacion $mhc)
     {
