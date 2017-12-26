@@ -37,6 +37,23 @@ class AstilleroCotizacionController extends Controller
             'astilleroCotizacions' => $astilleroCotizacions,
         ]);
     }
+    /**
+     * @Route("/aceptaciones", name="astillero-aceptaciones")
+     */
+    public function displayAstilleroAceptaciones()
+    {
+        return $this->render('astillero-aceptaciones.twig', [
+            'title' => 'Aceptaciones'
+        ]);
+    }
+
+    /**
+     * @Route("/odt", name="astillero-odt")
+     */
+    public function displayAstilleroODT(Request $request)
+    {
+        return $this->render('astillero-odt.twig');
+    }
 
     /**
      * Crea una nueva cotizacion de astillero
@@ -64,14 +81,20 @@ class AstilleroCotizacionController extends Controller
             ->addAcservicio($astilleroKarcher)
             ->addAcservicio($astilleroVarada);
 
-        $dolar = $this->getDoctrine()
-            ->getRepository(ValorSistema::class)
-            ->find(1)
-            ->getValor();
-        $iva = $this->getDoctrine()
-            ->getRepository(ValorSistema::class)
-            ->find(2)
-            ->getValor();
+        $em = $this->getDoctrine()->getManager();
+        $qb = $em->createQueryBuilder();
+        $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
+        $sistema =$query->getArrayResult();
+        $dolar = $sistema[0]['dolar'];
+        $iva = $sistema[0]['iva'];
+//        $dolar = $this->getDoctrine()
+//            ->getRepository(ValorSistema::class)
+//            ->find(1)
+//            ->getValor();
+//        $iva = $this->getDoctrine()
+//            ->getRepository(ValorSistema::class)
+//            ->find(2)
+//            ->getValor();
 
         $form = $this->createForm('AppBundle\Form\AstilleroCotizacionType', $astilleroCotizacion);
         $form->handleRequest($request);
