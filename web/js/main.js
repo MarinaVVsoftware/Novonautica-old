@@ -4,7 +4,12 @@ $(document).ready(function() {
         $('#loading').show();
     });
     $('.barcoespacio').on('click',function(){
-        $('#infobarco').html('Barco: '+$(this).attr('id'));
+        $('#numSlip').html($(this).attr('id'));
+        $('#barcoNombre').html($(this).data('embarcacion'));
+        $('#clienteNombre').html($(this).data('cliente'));
+        $('#esloraInfo').html($(this).data('eslora'));
+        $('#llegadaInfo').html($(this).data('llegada'));
+        $('#salidaInfo').html($(this).data('salida'));
         $('#modalinfobarco').modal('toggle');
     });
     $('.select-buscador').select2();

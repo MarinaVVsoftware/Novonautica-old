@@ -17,6 +17,16 @@
                 </div>
             </div>
             <div class="panel-body">
+                {% for message in app.flashes('notice') %}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <span class="glyphicon glyphicon-exclamation-sign"></span> {{ message }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
                 {{ form_start(form) }}
                 <div class="row">
                     <div class="col-sm-6">
@@ -25,6 +35,9 @@
                     <div class="col-sm-6">
                         <table class="table">
                             <thead>
+                            <tr>
+                                <th colspan="2" class="text-center">Estadía del Barco</th>
+                            </tr>
                             <tr>
                                 <th>Fecha Llegada</th>
                                 <th>Fecha Salida</th>
@@ -37,13 +50,14 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div class="tabla-ocupado">
-                        </div>
+
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="disponibilidad">
+                        </div>
+                        <div class="tabla-ocupado">
                         </div>
                     </div>
                 </div>
@@ -136,9 +150,8 @@
                     if(slipMovimietos ==""){
                         $('.disponibilidad').html('<div class="alert alert-success" role="alert">Slip disponible</div>');
                     }else{
-                        console.log(slipMovimietos);
                         for(var k in slipMovimietos) {
-                            $('.disponibilidad').html('<div class="alert alert-danger" role="alert">Slip ocupado</div>');
+                            $('.disponibilidad').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign"></span> Slip ocupado</div>');
                             $('.tabla-ocupado').html('<table class="table"><thead><tr><th>Fecha Llegada</th><th>Fecha Salida</th></tr></thead>' +
                                 '<tbody><tr><td>'+slipMovimietos[k].fechaLlegada+'</td>' +
                                 '<td>'+slipMovimietos[k].fechaSalida+'</td></tr></tbody></table>')

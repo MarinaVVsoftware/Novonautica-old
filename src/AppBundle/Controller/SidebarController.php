@@ -133,6 +133,7 @@ class SidebarController extends Controller
                 ]
             ],
             ['name' => 'Reportes', 'icon' => 'file-text-o', 'path' => $this->generateUrl('reportes')],
+            ['name' => 'Historial Correos', 'icon' => 'envelope', 'path' => $this->generateUrl('historial-correo_index')],
         ]);
     }
 

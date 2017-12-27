@@ -2,13 +2,20 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * SlipMovimiento
  *
  * @ORM\Table(name="slip_movimiento")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SlipMovimientoRepository")
+ * @UniqueEntity(
+ *      fields={"marinahumedacotizacion"},
+ *     errorPath="port",
+ *     message="Esta cotización ya ha sido asignada a otro slip"
+ * )
  */
 class SlipMovimiento
 {

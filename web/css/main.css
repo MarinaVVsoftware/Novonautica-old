@@ -141,7 +141,14 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     background-color: transparent;
     border: none;
 }
-
+.btn-morado-2{
+    background-color: #3d2e5a;
+    color: #fff;
+}
+.btn-morado-2:hover{
+    background-color: #3e1e7d;
+    color: #fff;
+}
 /*++ fin botones color ++*/
 
 /*++++ mensajes sistema ++++*/
@@ -201,7 +208,7 @@ form > .btn-borrar:hover, .btn-borrar:hover {
 }
 
 .cont-label-novo input[type=checkbox] {
-    /*visibility: hidden;*/
+    visibility: hidden;
 }
 
 .cont-label-novo input[type=checkbox]:checked + label:after {
@@ -1094,4 +1101,13 @@ input[type="file"] + label * {
     fill:rgba(0,0,0,0.08) ;
     opacity: 0;
 
+}
+.alert-dismissable .close, .alert-dismissible .close {
+    position: initial;
+}
+.sin-encabezado{
+    border-top: 2px solid #292e41;
+}
+.tabla-info td{
+    padding: 3px;
 }

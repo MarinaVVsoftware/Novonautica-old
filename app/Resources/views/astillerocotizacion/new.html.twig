@@ -28,7 +28,7 @@
                         </li>
                         <li role="presentation">
                             <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios
-                                Generales</a>
+                                Básicos</a>
                         </li>
                         <li role="presentation">
                             <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Servicios</a>
@@ -98,10 +98,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-1">
-
-                                </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 col-sm-offset-1">
                                     <label>Número de pies</label>
                                     {% if form.acservicios.0.cantidad is defined %}
                                         {{ form_widget(form.acservicios.0.cantidad) }}
@@ -230,6 +227,7 @@
                                     {% endif %}
                                 </div>
                             </div>
+
                         </div>
                         <div role="tabpanel" class="tab-pane" id="total">
                             <div class="row">
