@@ -76,7 +76,7 @@ class EmbarcacionMarcaController extends Controller
     {
         $normalizer = new ObjectNormalizer();
         $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
-        $normalizer->setIgnoredAttributes(['marca']);
+        $normalizer->setIgnoredAttributes(['marca', 'updateAt']);
 
         $modelos = $serializer->serialize($marca, $request->getRequestFormat());
 

@@ -2,14 +2,22 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Producto\Categoria;
+use AppBundle\Entity\Producto\Marca;
+use AppBundle\Entity\Producto\Subcategoria;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Producto
  *
  * @ORM\Table(name="producto")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ProductoRepository")
+ * @Vich\Uploadable()
+ * @ORM\HasLifecycleCallbacks()
  */
 class Producto
 {
@@ -24,69 +32,119 @@ class Producto
 
     /**
      * @var string
-     * @Assert\NotBlank(
-     *     message="Nombre no puede quedar vacío"
-     * )
      *
-     * @ORM\Column(name="nombre", type="string", length=255)
+     * @Assert\NotBlank(message="Este campo no puede quedar vacio")
+     *
+     * @ORM\Column(name="nombre", type="string", length=100)
      */
     private $nombre;
 
     /**
-     * @var string
-     * @Assert\NotBlank(
-     *     message="El producto debe tener un código"
-     * )
+     * @var int
      *
-     * @ORM\Column(name="codigo", type="string", length=5, unique=true)
-     */
-    private $codigo;
-
-    /**
-     * @var string
+     * @Assert\NotBlank(message="Este campo no puede quedar vacio")
      *
-     * @ORM\Column(name="descripcion", type="text", nullable=true)
-     */
-    private $descripcion;
-
-    /**
-     * @var float
-     * @Assert\NotBlank(
-     *     message="El precio no puede quedar vacío"
-     * )
-     * @Assert\Type(
-     *     type="numeric",
-     *      message="El valor {{ value }} no es válido para el precio."
-     * )
-     *
-     * @ORM\Column(name="precio", type="float", nullable=true)
+     * @ORM\Column(name="precio", type="bigint")
      */
     private $precio;
 
     /**
-     * @var float
-     * @Assert\NotBlank(
-     *     message="La cantidad no puede quedar vacío"
-     * )
-     * @Assert\Type(
-     *     type="numeric",
-     *      message="El valor {{ value }} no es válido para la cantidad."
-     * )
+     * @var string
      *
-     * @ORM\Column(name="cantidad", type="float", nullable=true)
+     * @ORM\Column(name="ucp", type="string", length=50, nullable=true)
      */
-    private $cantidad;
+    private $ucp;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="unidad", type="string", length=10, nullable=true)
+     * @Assert\NotBlank(message="Este campo no puede quedar vacio")
+     *
+     * @ORM\Column(name="modelo", type="string", length=50)
+     */
+    private $modelo;
+
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank(message="Este campo no puede quedar vacio")
+     *
+     * @ORM\Column(name="unidad", type="string", length=20)
      */
     private $unidad;
 
-    public function __toString()
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank(message="Este campo no puede quedar vacio")
+     *
+     * @ORM\Column(name="descripcion", type="text")
+     */
+    private $descripcion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $imagen;
+
+    /**
+     * @var File
+     *
+     * @Assert\File(mimeTypes={"image/*"}, mimeTypesMessage="Solo se permiten imagenes")
+     *
+     * @Vich\UploadableField(mapping="producto_imagen", fileNameProperty="imagen")
+     */
+    private $imagenFile;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fichaTecnica;
+
+    /**
+     * @var File
+     *
+     * @Assert\File(mimeTypes={"application/pdf", "image/*"}, mimeTypesMessage="Solo se permiten archivos PDF e imagenes")
+     *
+     * @Vich\UploadableField(mapping="producto_ficha", fileNameProperty="fichaTecnica")
+     */
+    private $fichaTecnicaFile;
+
+    /**
+     * @var Marca
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Producto\Marca", inversedBy="productos")
+     */
+    private $marca;
+
+    /**
+     * @var Categoria
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Producto\Categoria", inversedBy="productos")
+     */
+    private $categoria;
+
+    /**
+     * @var Subcategoria
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Producto\Subcategoria", inversedBy="productos")
+     */
+    private $subcategoria;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $updateAt;
+
+    public function __construct()
     {
-        return $this->codigo.' - '.$this->nombre;
+        $this->updateAt = new \DateTimeImmutable();
     }
 
     /**
@@ -124,27 +182,99 @@ class Producto
     }
 
     /**
-     * Set codigo
+     * Set precio
      *
-     * @param string $codigo
+     * @param integer $precio
      *
      * @return Producto
      */
-    public function setCodigo($codigo)
+    public function setPrecio($precio)
     {
-        $this->codigo = $codigo;
+        $this->precio = $precio;
 
         return $this;
     }
 
     /**
-     * Get codigo
+     * Get precio
+     *
+     * @return int
+     */
+    public function getPrecio()
+    {
+        return $this->precio;
+    }
+
+    /**
+     * Set ucp
+     *
+     * @param string $ucp
+     *
+     * @return Producto
+     */
+    public function setUcp($ucp)
+    {
+        $this->ucp = $ucp;
+
+        return $this;
+    }
+
+    /**
+     * Get ucp
      *
      * @return string
      */
-    public function getCodigo()
+    public function getUcp()
     {
-        return $this->codigo;
+        return $this->ucp;
+    }
+
+    /**
+     * Set modelo
+     *
+     * @param string $modelo
+     *
+     * @return Producto
+     */
+    public function setModelo($modelo)
+    {
+        $this->modelo = $modelo;
+
+        return $this;
+    }
+
+    /**
+     * Get modelo
+     *
+     * @return string
+     */
+    public function getModelo()
+    {
+        return $this->modelo;
+    }
+
+    /**
+     * Set unidad
+     *
+     * @param string $unidad
+     *
+     * @return Producto
+     */
+    public function setUnidad($unidad)
+    {
+        $this->unidad = $unidad;
+
+        return $this;
+    }
+
+    /**
+     * Get unidad
+     *
+     * @return string
+     */
+    public function getUnidad()
+    {
+        return $this->unidad;
     }
 
     /**
@@ -172,75 +302,194 @@ class Producto
     }
 
     /**
-     * Set precio
+     * Set imagen
      *
-     * @param float $precio
+     * @param string $imagen
      *
      * @return Producto
      */
-    public function setPrecio($precio)
+    public function setImagen($imagen)
     {
-        $this->precio = $precio;
+        $this->imagen = $imagen;
 
         return $this;
     }
 
     /**
-     * Get precio
-     *
-     * @return float
-     */
-    public function getPrecio()
-    {
-        return $this->precio;
-    }
-
-    /**
-     * Set cantidad
-     *
-     * @param float $cantidad
-     *
-     * @return Producto
-     */
-    public function setCantidad($cantidad)
-    {
-        $this->cantidad = $cantidad;
-
-        return $this;
-    }
-
-    /**
-     * Get cantidad
-     *
-     * @return float
-     */
-    public function getCantidad()
-    {
-        return $this->cantidad;
-    }
-
-    /**
-     * Set unidad
-     *
-     * @param string $unidad
-     *
-     * @return Producto
-     */
-    public function setUnidad($unidad)
-    {
-        $this->unidad = $unidad;
-
-        return $this;
-    }
-
-    /**
-     * Get unidad
+     * Get imagen
      *
      * @return string
      */
-    public function getUnidad()
+    public function getImagen()
     {
-        return $this->unidad;
+        return $this->imagen;
     }
 
+    /**
+     * @param File|UploadedFile $image
+     *
+     * @return Producto
+     */
+    public function setImagenFile(File $image = null)
+    {
+        $this->imagenFile = $image;
+
+        if ($image) {
+            $this->updateAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getImagenFile()
+    {
+        return $this->imagenFile;
+    }
+
+    /**
+     * Set fichaTecnica
+     *
+     * @param string $fichaTecnica
+     *
+     * @return Producto
+     */
+    public function setFichaTecnica($fichaTecnica)
+    {
+        $this->fichaTecnica = $fichaTecnica;
+
+        return $this;
+    }
+
+    /**
+     * Get fichaTecnica
+     *
+     * @return string
+     */
+    public function getFichaTecnica()
+    {
+        return $this->fichaTecnica;
+    }
+
+    /**
+     * @param File $fichaTecnicaFile
+     *
+     * @return Producto
+     */
+    public function setFichaTecnicaFile(File $fichaTecnicaFile = null)
+    {
+        $this->fichaTecnicaFile = $fichaTecnicaFile;
+
+        if ($fichaTecnicaFile) {
+            $this->updateAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getFichaTecnicaFile()
+    {
+        return $this->fichaTecnicaFile;
+    }
+
+    /**
+     * Set updateAt
+     *
+     * @param \DateTime $updateAt
+     *
+     * @return Producto
+     */
+    public function setUpdateAt($updateAt)
+    {
+        $this->updateAt = $updateAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updateAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdateAt()
+    {
+        return $this->updateAt;
+    }
+
+    /**
+     * Set marca
+     *
+     * @param Marca $marca
+     *
+     * @return Producto
+     */
+    public function setMarca(Marca $marca = null)
+    {
+        $this->marca = $marca;
+
+        return $this;
+    }
+
+    /**
+     * Get marca
+     *
+     * @return Marca
+     */
+    public function getMarca()
+    {
+        return $this->marca;
+    }
+
+    /**
+     * Set categoria
+     *
+     * @param Categoria $categoria
+     *
+     * @return Producto
+     */
+    public function setCategoria(Categoria $categoria = null)
+    {
+        $this->categoria = $categoria;
+
+        return $this;
+    }
+
+    /**
+     * Get categoria
+     *
+     * @return Categoria
+     */
+    public function getCategoria()
+    {
+        return $this->categoria;
+    }
+
+    /**
+     * Set subcategoria
+     *
+     * @param Subcategoria $subcategoria
+     *
+     * @return Producto
+     */
+    public function setSubcategoria(Subcategoria $subcategoria = null)
+    {
+        $this->subcategoria = $subcategoria;
+
+        return $this;
+    }
+
+    /**
+     * Get subcategoria
+     *
+     * @return Subcategoria
+     */
+    public function getSubcategoria()
+    {
+        return $this->subcategoria;
+    }
 }

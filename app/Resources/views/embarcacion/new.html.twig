@@ -49,9 +49,9 @@
                                                 {{ form_row(form.interiorDesigner) }}
                                                 {{ form_row(form.exteriorDesigner) }}
                                             </div>
-                                            {{ form_row(form.ano) }}
                                         </div>
                                         <div class="col-md-4">
+                                            {{ form_row(form.ano) }}
                                             {{ form_row(form.longitud) }}
                                             {{ form_row(form.eslora) }}
                                             {{ form_row(form.manga) }}
@@ -66,19 +66,15 @@
                                             {{ form_row(form.pasajerosDormidos) }}
                                             {{ form_row(form.generador) }}
                                         </div>
+                                        <div class="col-md-8">
+                                            {{ form_row(form.descripcion) }}
+                                        </div>
                                         <hr style="width: 100%; margin: 10px 0 !important;">
                                         <div class="col-md-6">
                                             {{ form_row(form.motores) }}
-                                            <a href="#" id="add-motor">+ Agregar motor</a>
                                         </div>
                                         <hr style="width: 100%; margin: 10px 0 !important;">
-                                        <div class="col-md-12">
-                                            <div class="row">
-                                                <div class="col-md-8">
-                                                    {{ form_row(form.descripcion) }}
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <a href="#" id="add-motor">+ Agregar motor</a>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="imagenes">
@@ -139,7 +135,7 @@
 {% endblock %}
 
 {% block modals %}
-    {{ delete_form is defined ? modal.deleteModal(delete_form) : ''}}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}
 
 {% block javascripts %}
@@ -147,6 +143,10 @@
     <script type="text/javascript" src="{{ asset('js/dropzone.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
+      /*
+          CAMBIAR TAB CUANDO EXISTAN ERRORES
+          RELLENADO CON FETCH DEL SELECT "MODELO"
+      */
       (function () {
         const construccionInput = document.querySelector('#appbundle_embarcacion_construccion');
         const prefabricadoContainer = document.querySelector('#prefabricado');
@@ -196,6 +196,9 @@
         }
       })();
 
+      /*
+        SYMFONY COLLECTION "MOTORES"
+      */
       (function ($) {
         const motorContainer = document.querySelector('#appbundle_embarcacion_motores');
         const addMotor = document.querySelector('#add-motor');
@@ -213,13 +216,16 @@
 
         $(document).on('click', '.remove-motor', function (e) {
           e.preventDefault();
-          // if (motorContainer.children.length < 2) return; // Siempre deben agregar al menos un motor?
+          if (motorContainer.children.length < 2) return; // Dejar minimo un motor
           const that = this;
           that.parentNode.parentNode.remove(that.parentNode)
         })
 
       })(jQuery);
 
+      /*
+        DROPZONE
+      */
       (function ($) {
         const embarcacionForm = document.querySelector('[name="appbundle_embarcacion"]');
         const imgContainer = document.querySelector('#appbundle_embarcacion_imagenes');

@@ -10,7 +10,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Cliente controller.
@@ -39,6 +44,26 @@ class ClienteController extends Controller
 
         return $this->render('cliente/index.html.twig', ['title' => 'Clientes']);
     }
+
+    /**
+     * @Route("/empresas.{_format}", defaults={"_format" = "json"})
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getEmpresasAction(Request $request)
+    {
+        $empresas = $this->getDoctrine()->getRepository('AppBundle:Cliente')->findEmpresas();
+        return new Response($this->serializeEntities($empresas, $request->getRequestFormat(), [
+            'barcos',
+            'monederomovimientos',
+            'mhcotizaciones',
+            'mhcotizacionesadicionales',
+            'astillerocotizaciones'
+        ]));
+    }
+
 
     /**
      * Creates a new cliente entity.
@@ -213,6 +238,15 @@ class ClienteController extends Controller
         }
 
         return $this->redirectToRoute('cliente_index');
+    }
+
+    private function serializeEntities($entity, $format, $ignoredAttributes): string
+    {
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+        $normalizer->setIgnoredAttributes($ignoredAttributes);
+
+        return $serializer->serialize($entity, $format);
     }
 
     /**

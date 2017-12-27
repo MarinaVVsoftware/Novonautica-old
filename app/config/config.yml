@@ -70,6 +70,7 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
+    port: 587
 
 oneup_uploader:
     mappings:
@@ -85,3 +86,18 @@ vich_uploader:
         embarcacion_marca:
             uri_prefix: /uploads/embarcacion/marcas
             upload_destination: '%kernel.root_dir%/../web/uploads/embarcacion/marcas'
+        producto_imagen:
+            uri_prefix: /uploads/producto/imagenes
+            upload_destination: '%kernel.root_dir%/../web/uploads/producto/imagenes'
+        producto_ficha:
+            uri_prefix: /uploads/producto/fichas
+            upload_destination: '%kernel.root_dir%/../web/uploads/producto/fichas'
+        producto_marca_imagen:
+            uri_prefix: /uploads/producto/marca/imagenes
+            upload_destination: '%kernel.root_dir%/../web/uploads/producto/marca/imagenes'
+        producto_categoria_imagen:
+            uri_prefix: /uploads/producto/categoria/imagenes
+            upload_destination: '%kernel.root_dir%/../web/uploads/producto/categoria/imagenes'
+        producto_subcategoria_imagen:
+            uri_prefix: /uploads/producto/subcategoria/imagenes
+            upload_destination: '%kernel.root_dir%/../web/uploads/producto/subcategoria/imagenes'

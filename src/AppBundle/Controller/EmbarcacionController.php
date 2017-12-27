@@ -16,6 +16,10 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Embarcacion controller.
@@ -139,10 +143,69 @@ class EmbarcacionController extends Controller
         }
 
         return $this->render('embarcacion/new.html.twig', [
+            'title' => $embarcacion->getNombre(),
             'embarcacion' => $embarcacion,
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/paises.{_format}", defaults={"_format" = "json"})
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getPaisesAction(Request $request)
+    {
+        $marcas = $this->getDoctrine()->getRepository('AppBundle:Embarcacion')->findPaises();
+        return new Response($this->serializeEntities($marcas, $request->getRequestFormat()));
+    }
+
+    /**
+     * @Route("/marcas.{_format}", defaults={"_format" = "json"})
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getMarcasAction(Request $request)
+    {
+        $marcas = $this->getDoctrine()->getRepository('AppBundle:Embarcacion')->findMarcas();
+        return new Response($this->serializeEntities($marcas, $request->getRequestFormat(), [
+            'imagenFile',
+            'updateAt',
+            'modelos'
+        ]));
+    }
+
+    /**
+     * @Route("/modelos.{_format}", defaults={"_format" = "json"})
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getModelosAction(Request $request)
+    {
+        $marcas = $this->getDoctrine()->getRepository('AppBundle:Embarcacion')->findModelos();
+        return new Response($this->serializeEntities($marcas, $request->getRequestFormat(), [
+            'marca'
+        ]));
+    }
+
+    /**
+     * @Route("/anos.{_format}", defaults={"_format" = "json"})
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getYearsAction(Request $request)
+    {
+        $years = $this->getDoctrine()->getRepository('AppBundle:Embarcacion')->findAnos();
+        return new Response($this->serializeEntities($years, $request->getRequestFormat()));
     }
 
     /**
@@ -163,6 +226,15 @@ class EmbarcacionController extends Controller
         }
 
         return $this->redirectToRoute('embarcacion_index');
+    }
+
+    private function serializeEntities($entity, $format, $ignoredAttributes = []): string
+    {
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+        $normalizer->setIgnoredAttributes($ignoredAttributes);
+
+        return $serializer->serialize($entity, $format);
     }
 
     /**

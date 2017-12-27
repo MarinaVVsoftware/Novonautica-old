@@ -216,9 +216,9 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     position: absolute;
     left: -9999px;
 }
+
 [type="radio"]:checked + label,
-[type="radio"]:not(:checked) + label
-{
+[type="radio"]:not(:checked) + label {
     position: relative;
     padding-left: 28px;
     cursor: pointer;
@@ -226,6 +226,7 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     display: inline-block;
     color: #ffffff;
 }
+
 [type="radio"]:checked + label:before,
 [type="radio"]:not(:checked) + label:before {
     content: '';
@@ -238,6 +239,7 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     border-radius: 100%;
     background: #3e4766;
 }
+
 [type="radio"]:checked + label:after,
 [type="radio"]:not(:checked) + label:after {
     content: '';
@@ -251,16 +253,19 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     -webkit-transition: all 0.2s ease;
     transition: all 0.2s ease;
 }
+
 [type="radio"]:not(:checked) + label:after {
     opacity: 0;
     -webkit-transform: scale(0);
     transform: scale(0);
 }
+
 [type="radio"]:checked + label:after {
     opacity: 1;
     -webkit-transform: scale(1);
     transform: scale(1);
 }
+
 /*++++ fin radio boton ++++*/
 #loading {
     /*visibility: hidden;*/
@@ -437,7 +442,8 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     /*background: #3e4766;*/
     cursor: pointer;
 }
-.panel-novo tbody td input[type="text"]{
+
+.panel-novo tbody td input[type="text"] {
     /*background: none;*/
     padding: 0px;
     border-radius: 0;
@@ -633,6 +639,15 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     vertical-align: middle !important;
 }
 
+/**
+    FIX SIDEBAR SCROLLABLE
+ */
+
+.fixed .content-wrapper,
+.fixed .right-side {
+    padding-top: 97px;
+}
+
 @media (min-width: 768px) {
     .skin-novo .main-sidebar {
         padding-top: 98px;
@@ -644,6 +659,8 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
 }
 
 @media (max-width: 767px) {
+    .fixed .content-wrapper,
+    .fixed .right-side,
     .main-sidebar {
         padding-top: 146px;
     }
@@ -651,6 +668,8 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     .panel-novo .nav-tabs > li {
         margin-left: 0;
     }
+
+
 }
 
 /*++++ datepicker calendario ++++*/
@@ -1067,3 +1086,12 @@ input[type="file"] + label * {
 }
 
 /* --- fin Input file customizado --- */
+
+.cuadro-zona{
+    cursor: pointer;
+}
+.cuadro-zona:hover{
+    fill:rgba(0,0,0,0.08) ;
+    opacity: 0;
+
+}

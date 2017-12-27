@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 /**
  * Marinahumedatarifa controller.
  *
- * @Route("/marina/cotizacion/tarifas")
+ * @Route("/marina/cotizacion/estadia/tarifas")
  */
 class MarinaHumedaTarifaController extends Controller
 {
