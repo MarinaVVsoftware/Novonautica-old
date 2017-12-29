@@ -64,6 +64,36 @@ class ClienteController extends Controller
         ]));
     }
 
+    /**
+     * El campo factura de clientes utilizara este metodo para conseguir la informacion
+     * de un cliente a traves de su RFC
+     *
+     * @Route("/listado.{_format}", defaults={"_format"="json"})
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getClientesLike(Request $request)
+    {
+        $query = $request->query->all();
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Cliente');
+        $clientes = $repo->findLike(key($query), $query[key($query)]);
+
+        $ignoredAttributes = [
+            'barcos',
+            'fecharegistro',
+            'monederomovimientos',
+            'mHcotizaciones',
+            'mhcotizacionesadicionales',
+            'astillerocotizaciones',
+            'monederomarinahumeda',
+            'estatus',
+            'password'
+        ];
+
+        return new Response($this->serializeEntities($clientes, $request->getRequestFormat(), $ignoredAttributes));
+    }
 
     /**
      * Creates a new cliente entity.
@@ -240,7 +270,7 @@ class ClienteController extends Controller
         return $this->redirectToRoute('cliente_index');
     }
 
-    private function serializeEntities($entity, $format, $ignoredAttributes): string
+    private function serializeEntities($entity, $format, $ignoredAttributes = []): string
     {
         $normalizer = new ObjectNormalizer();
         $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);

@@ -26,6 +26,7 @@ class AppKernel extends Kernel
             new Vich\UploaderBundle\VichUploaderBundle(),
             new DataTables\DataTablesBundle(),
             new AppBundle\AppBundle(),
+            new Hyperion\MultifacturasBundle\MultifacturasBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
