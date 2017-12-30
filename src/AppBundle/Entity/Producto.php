@@ -147,6 +147,11 @@ class Producto
         $this->updateAt = new \DateTimeImmutable();
     }
 
+    public function __toString()
+    {
+        return $this->nombre;
+    }
+
     /**
      * Get id
      *

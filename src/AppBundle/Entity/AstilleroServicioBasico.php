@@ -7,10 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AstilleroServicio
  *
- * @ORM\Table(name="astillero_servicio")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\AstilleroServicioRepository")
+ * @ORM\Table(name="astillero_servicio_basico")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AstilleroServicioBasicoRepository")
  */
-class AstilleroServicio
+class AstilleroServicioBasico
 {
     /**
      * @var int
@@ -44,7 +44,7 @@ class AstilleroServicio
      *
      * @param string $nombre
      *
-     * @return AstilleroServicio
+     * @return AstilleroServicioBasico
      */
     public function setNombre($nombre)
     {

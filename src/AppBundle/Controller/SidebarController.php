@@ -82,7 +82,7 @@ class SidebarController extends Controller
                         'submenu' => [
                             ['name' => 'Listado', 'path' => $this->generateUrl('marina-humeda-cotizacion-adicional_index')],
                             ['name' => 'Nuevo', 'path' => $this->generateUrl('marina-humeda-cotizacion-adicional_new')],
-                            ['name' => 'Catálogo', 'path' => $this->generateUrl('marina-humeda-servicio_index')]
+                            ['name' => 'Catálogo', 'path' => $this->generateUrl('marina-humeda-servicio_index')],
                         ]
                     ],
                 ]
@@ -96,6 +96,22 @@ class SidebarController extends Controller
                     ['name' => 'Cotizaciones', 'path' => $this->generateUrl('astillero_index')],
                     ['name' => 'Aceptaciones', 'path' => $this->generateUrl('astillero-aceptaciones')],
                     ['name' => 'ODT', 'path' => $this->generateUrl('astillero-odt')],
+                    [
+                        'name' => 'Productos',
+                        'path' => $this->generateUrl('astillero_producto_index'),
+                        'submenu' => [
+                            ['name' => 'Listado', 'path' => $this->generateUrl('astillero_producto_index')],
+                            ['name' => 'Nuevo', 'path' => $this->generateUrl('astillero_producto_new')],
+                        ]
+                    ],
+                    [
+                        'name' => 'Servicios',
+                        'path' => $this->generateUrl('astillero_servicio_index'),
+                        'submenu' => [
+                            ['name' => 'Listado', 'path' => $this->generateUrl('astillero_servicio_index')],
+                            ['name' => 'Nuevo', 'path' => $this->generateUrl('astillero_servicio_new')],
+                        ]
+                    ]
                 ]
             ],
             [
@@ -133,6 +149,7 @@ class SidebarController extends Controller
                 ]
             ],
             ['name' => 'Reportes', 'icon' => 'file-text-o', 'path' => $this->generateUrl('reportes')],
+            ['name' => 'Historial Correos', 'icon' => 'envelope', 'path' => $this->generateUrl('historial-correo_index')],
         ]);
     }
 

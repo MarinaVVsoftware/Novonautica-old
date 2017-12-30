@@ -18,6 +18,30 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
+                        <div class="col-sm-4">
+                            <table class="tabla-info">
+                                <tbody class="sin-encabezado">
+                                <tr>
+                                    <td>Fecha:</td>
+                                    <td> {{ fechaBuscar|date('Y-m-d') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Total de Slips:</td>
+                                    <td>{{ totSlips }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Slips ocupados:</td>
+                                    <td>{{ numOcupados }}</td>
+                                </tr>
+                                <tr>
+                                    <td>% Ocupación:</td>
+                                    <td>{{ porcentajeOcupado }}%</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-11 col-sm-offset-1">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class=""
                                  app-context="doc-2d" x="0px" y="0px" width="100%" height="500"><title></title>
@@ -75,22 +99,50 @@
                                               height="28.8246" fill="rgba(0,150,246,1)" stroke="none"
                                               stroke-width="0.3473126647040211" stroke-linecap="butt"
                                               stroke-linejoin="miter" opacity="1" x="0" rx="0" y="0"></rect>
+                                        {% set i = 126 %}
                                         <path d="M 4.1784515380859375 0 L 10.814102172851562 0 C 13.121826171875 0 14.992584228515625 1.816986083984375 14.992584228515625 4.058319091796875 L 14.992584228515625 35.430450439453125 C 14.992584228515625 37.6717529296875 9.656524658203125 54.96795654296875 7.7794342041015625 56.270172119140625 L 7.5112762451171875 56.270172119140625 C 5.2035675048828125 56.270172119140625 0 37.6717529296875 0 35.430450439453125 L 0 4.058319091796875 C 0 1.816986083984375 1.870758056640625 0 4.1784515380859375 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 -170.87 250.395)" class="barcoespacio" id="126">
                                             <title></title>
                                             <desc></desc>
                                         </path>
+                                        {% set i = 125 %}
                                         <path d="M 4.1784820556640625 0 L 10.814132690429688 0 C 13.121826171875 0 14.992568969726562 1.81695556640625 14.992568969726562 4.05828857421875 L 14.992568969726562 35.43040466308594 C 14.992568969726562 37.67179870605469 9.65655517578125 54.96797180175781 7.779449462890625 56.27015686035156 L 7.5113067626953125 56.27015686035156 C 5.203582763671875 56.27015686035156 0 37.67179870605469 0 35.43040466308594 L 0 4.05828857421875 C 0 1.81695556640625 1.870758056640625 0 4.1784820556640625 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(177,157,13,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 -149.585 250.007)" class="barcoespacio"
                                               id="125"></path>
+                                        {% set i = 124 %}
                                         <path d="M 4.178474426269531 0 L 10.814125061035156 0 C 13.121826171875 0 14.992591857910156 1.817047119140625 14.992591857910156 4.058380126953125 L 14.992591857910156 35.4305419921875 C 14.992591857910156 37.67181396484375 9.65655517578125 54.968048095703125 7.7794647216796875 56.27020263671875 L 7.511299133300781 56.27020263671875 C 5.20361328125 56.27020263671875 0 37.67181396484375 0 35.4305419921875 L 0 4.058380126953125 C 0 1.817047119140625 1.8707809448242188 0 4.178474426269531 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(211,49,49,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 -118.044 250.607)" class="barcoespacio"
                                               id="124"></path>
+                                        {% set i = 123 %}
                                         <path d="M 4.178474426269531 0 L 10.814109802246094 0 C 13.121826171875 0 14.992584228515625 1.81695556640625 14.992584228515625 4.0583038330078125 L 14.992584228515625 35.430389404296875 C 14.992584228515625 37.6717529296875 9.656547546386719 54.967926025390625 7.7794647216796875 56.270233154296875 L 7.511283874511719 56.270233154296875 C 5.203605651855469 56.270233154296875 0 37.6717529296875 0 35.430389404296875 L 0 4.0583038330078125 C 0 1.81695556640625 1.8707733154296875 0 4.178474426269531 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 -97.7848 250.553)" class="barcoespacio"
                                               id="123"></path>
                                         <rect transform="matrix(1 0 0 1 -31.9249 244.941)" width="6.04315"
@@ -101,20 +153,48 @@
                                               height="28.8246" fill="rgba(0,150,246,1)" stroke="none"
                                               stroke-width="0.3473126647040211" stroke-linecap="butt"
                                               stroke-linejoin="miter" opacity="1" x="0" rx="0" y="0"></rect>
+                                        {% set i = 122 %}
                                         <path d="M 4.1784515380859375 0 L 10.814094543457031 0 C 13.121814727783203 0 14.99258804321289 1.816986083984375 14.99258804321289 4.05828857421875 L 14.99258804321289 35.430389404296875 C 14.99258804321289 37.6717529296875 9.656547546386719 54.967987060546875 7.7794647216796875 56.27020263671875 L 7.511280059814453 56.27020263671875 C 5.203582763671875 56.27020263671875 0 37.6717529296875 0 35.430389404296875 L 0 4.05828857421875 C 0 1.816986083984375 1.8707656860351562 0 4.1784515380859375 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 -70.5143 251.242)" class="barcoespacio"
                                               id="122"></path>
+                                        {% set i = 121 %}
                                         <path d="M 4.178455352783203 0 L 10.814094543457031 0 C 13.121814727783203 0 14.992568969726562 1.8169708251953125 14.992568969726562 4.05828857421875 L 14.992568969726562 35.43040466308594 C 14.992568969726562 37.67173767089844 9.656547546386719 54.96794128417969 7.779426574707031 56.27015686035156 L 7.511283874511719 56.27015686035156 C 5.203582763671875 56.27015686035156 0 37.67173767089844 0 35.43040466308594 L 0 4.05828857421875 C 0 1.8169708251953125 1.8707351684570312 0 4.178455352783203 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 -50.4753 250.854)" class="barcoespacio"
                                               id="121"></path>
+                                        {% set i = 120 %}
                                         <path d="M 4.178472518920898 0 L 10.814093589782715 0 C 13.12181282043457 0 14.992597579956055 1.816986083984375 14.992597579956055 4.0583038330078125 L 14.992597579956055 35.43043518066406 C 14.992597579956055 37.67179870605469 9.656547546386719 54.96794128417969 7.779439926147461 56.27015686035156 L 7.511285781860352 56.27015686035156 C 5.203586578369141 56.27015686035156 0 37.67179870605469 0 35.43043518066406 L 0 4.0583038330078125 C 0 1.816986083984375 1.8707847595214844 0 4.178472518920898 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 -21.4325 250.1)" class="barcoespacio"
                                               id="120"></path>
+                                        {% set i = 119 %}
                                         <path d="M 4.178441047668457 0 L 10.814081192016602 0 C 13.121831893920898 0 14.992568969726562 1.816986083984375 14.992568969726562 4.05828857421875 L 14.992568969726562 35.43043518066406 C 14.992568969726562 37.67173767089844 9.656538009643555 54.96797180175781 7.779459476470947 56.27012634277344 L 7.5112738609313965 56.27012634277344 C 5.203588485717773 56.27012634277344 0 37.67173767089844 0 35.43043518066406 L 0 4.05828857421875 C 0 1.816986083984375 1.870755672454834 0 4.178441047668457 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 -1.17344 250.047)" class="barcoespacio"
                                               id="119"></path>
                                         <rect transform="matrix(1 0 0 1 65.7157 243.44)" width="6.04315"
@@ -125,20 +205,48 @@
                                               height="28.8246" fill="rgba(0,150,246,1)" stroke="none"
                                               stroke-width="0.3473126647040211" stroke-linecap="butt"
                                               stroke-linejoin="miter" opacity="1" x="0" rx="0" y="0"></rect>
+                                        {% set i = 118 %}
                                         <path d="M 4.178424835205078 0 L 10.814067840576172 0 C 13.121784210205078 0 14.99258804321289 1.816986083984375 14.99258804321289 4.05828857421875 L 14.99258804321289 35.430419921875 C 14.99258804321289 37.6717529296875 9.656551361083984 54.967987060546875 7.779445648193359 56.2701416015625 L 7.511260986328125 56.2701416015625 C 5.203575134277344 56.2701416015625 0 37.6717529296875 0 35.430419921875 L 0 4.05828857421875 C 0 1.816986083984375 1.8707714080810547 0 4.178424835205078 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 27.1265 249.741)" class="barcoespacio"
                                               id="118"></path>
+                                        {% set i = 117 %}
                                         <path d="M 4.178455352783203 0 L 10.814064025878906 0 C 13.121780395507812 0 14.9925537109375 1.816986083984375 14.9925537109375 4.0583038330078125 L 14.9925537109375 35.43040466308594 C 14.9925537109375 37.67173767089844 9.65652084350586 54.96797180175781 7.779438018798828 56.27015686035156 L 7.511257171630859 56.27015686035156 C 5.203540802001953 56.27015686035156 0 37.67173767089844 0 35.43040466308594 L 0 4.0583038330078125 C 0 1.816986083984375 1.8707389831542969 0 4.178455352783203 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 47.1635 249.353)" class="barcoespacio"
                                               id="117"></path>
+                                        {% set i = 116 %}
                                         <path d="M 4.1784515380859375 0 L 10.814094543457031 0 C 13.121780395507812 0 14.992591857910156 1.8170166015625 14.992591857910156 4.0583343505859375 L 14.992591857910156 35.43043518066406 C 14.992591857910156 37.67176818847656 9.656547546386719 54.96803283691406 7.7794189453125 56.27018737792969 L 7.51129150390625 56.27018737792969 C 5.203575134277344 56.27018737792969 0 37.67176818847656 0 35.43043518066406 L 0 4.0583343505859375 C 0 1.8170166015625 1.8708038330078125 0 4.1784515380859375 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 77.4564 249.953)" class="barcoespacio"
                                               id="116"></path>
+                                        {% set i = 115 %}
                                         <path d="M 4.178459167480469 0 L 10.814102172851562 0 C 13.121810913085938 0 14.992584228515625 1.816986083984375 14.992584228515625 4.0583038330078125 L 14.992584228515625 35.430389404296875 C 14.992584228515625 37.671783447265625 9.656547546386719 54.96795654296875 7.779441833496094 56.270172119140625 L 7.511283874511719 56.270172119140625 C 5.2035675048828125 56.270172119140625 0 37.671783447265625 0 35.430389404296875 L 0 4.0583038330078125 C 0 1.816986083984375 1.8707733154296875 0 4.178459167480469 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 97.7155 249.9)" class="barcoespacio"
                                               id="115"></path>
                                         <rect transform="matrix(1 0 0 1 164.634 245.544)" width="6.04315"
@@ -149,32 +257,74 @@
                                               height="28.8246" fill="rgba(0,150,246,1)" stroke="none"
                                               stroke-width="0.3473126647040211" stroke-linecap="butt"
                                               stroke-linejoin="miter" opacity="1" x="0" rx="0" y="0"></rect>
+                                        {% set i = 114 %}
                                         <path d="M 4.178489685058594 0 L 10.814216613769531 0 C 13.121818542480469 0 14.992576599121094 1.81695556640625 14.992576599121094 4.0583038330078125 L 14.992576599121094 35.430389404296875 C 14.992576599121094 37.6717529296875 9.656547546386719 54.967926025390625 7.779441833496094 56.27020263671875 L 7.511283874511719 56.27020263671875 C 5.203575134277344 56.27020263671875 0 37.6717529296875 0 35.430389404296875 L 0 4.0583038330078125 C 0 1.81695556640625 1.8707656860351562 0 4.178489685058594 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 126.047 250.493)" class="barcoespacio"
                                               id="114"></path>
+                                        {% set i = 113 %}
                                         <path d="M 4.17840576171875 0 L 10.814117431640625 0 C 13.12176513671875 0 14.992584228515625 1.81695556640625 14.992584228515625 4.0583038330078125 L 14.992584228515625 35.43043518066406 C 14.992584228515625 37.67176818847656 9.656509399414062 54.96794128417969 7.7794647216796875 56.27015686035156 L 7.5112762451171875 56.27015686035156 C 5.20355224609375 56.27015686035156 0 37.67176818847656 0 35.43043518066406 L 0 4.0583038330078125 C 0 1.81695556640625 1.8707733154296875 0 4.17840576171875 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 146.084 250.105)" class="barcoespacio"
                                               id="113"></path>
+                                        {% set i = 112 %}
                                         <path d="M 4.1784210205078125 0 L 10.814117431640625 0 C 13.121841430664062 0 14.992645263671875 1.8169708251953125 14.992645263671875 4.0583038330078125 L 14.992645263671875 35.430419921875 C 14.992645263671875 37.6717529296875 9.656570434570312 54.96795654296875 7.779449462890625 56.27020263671875 L 7.51129150390625 56.27020263671875 C 5.203582763671875 56.27020263671875 0 37.6717529296875 0 35.430419921875 L 0 4.0583038330078125 C 0 1.8169708251953125 1.8707733154296875 0 4.1784210205078125 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 175.127 250.705)" class="barcoespacio"
                                               id="112"></path>
+                                        {% set i = 111 %}
                                         <path d="M 4.1784515380859375 0 L 10.814056396484375 0 C 13.121749877929688 0 14.992568969726562 1.81695556640625 14.992568969726562 4.0583038330078125 L 14.992568969726562 35.43043518066406 C 14.992568969726562 37.67176818847656 9.65655517578125 54.96791076660156 7.7794342041015625 56.27015686035156 L 7.51129150390625 56.27015686035156 C 5.2035369873046875 56.27015686035156 0 37.67176818847656 0 35.43043518066406 L 0 4.0583038330078125 C 0 1.81695556640625 1.870758056640625 0 4.1784515380859375 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 195.386 250.649)" class="barcoespacio"
                                               id="111"></path>
                                         <rect transform="matrix(1 0 0 1 261.983 244.975)" width="6.04315"
                                               height="28.8246" fill="rgba(0,150,246,1)" stroke="none"
                                               stroke-width="0.3473126647040211" stroke-linecap="butt"
                                               stroke-linejoin="miter" opacity="1" x="0" rx="0" y="0"></rect>
+                                        {% set i = 110 %}
                                         <path d="M 4.1784515380859375 0 L 10.814117431640625 0 C 13.121795654296875 0 14.992538452148438 1.8169403076171875 14.992538452148438 4.05828857421875 L 14.992538452148438 35.430419921875 C 14.992538452148438 37.6717529296875 9.6566162109375 54.967926025390625 7.7794952392578125 56.2701416015625 L 7.5113372802734375 56.2701416015625 C 5.20361328125 56.2701416015625 0 37.6717529296875 0 35.430419921875 L 0 4.05828857421875 C 0 1.8169403076171875 1.8707733154296875 0 4.1784515380859375 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 223.528 250.114)" class="barcoespacio"
                                               id="110"></path>
+                                        {% set i = 109 %}
                                         <path d="M 4.1783905029296875 0 L 10.814132690429688 0 C 13.121780395507812 0 14.992538452148438 1.816986083984375 14.992538452148438 4.0583343505859375 L 14.992538452148438 35.43043518066406 C 14.992538452148438 37.67176818847656 9.656509399414062 54.96797180175781 7.7794342041015625 56.27018737792969 L 7.5112152099609375 56.27018737792969 C 5.2035675048828125 56.27018737792969 0 37.67176818847656 0 35.43043518066406 L 0 4.0583343505859375 C 0 1.816986083984375 1.8707427978515625 0 4.1783905029296875 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 243.787 250.06)" class="barcoespacio"
                                               id="109"></path>
                                         <rect transform="matrix(1 0 0 1 310.677 243.454)" width="6.04315"
@@ -185,20 +335,48 @@
                                               height="28.8246" fill="rgba(0,150,246,1)" stroke="none"
                                               stroke-width="0.3473126647040211" stroke-linecap="butt"
                                               stroke-linejoin="miter" opacity="1" x="0" rx="0" y="0"></rect>
+                                        {% set i = 108 %}
                                         <path d="M 4.178436279296875 0 L 10.814056396484375 0 C 13.121734619140625 0 14.9925537109375 1.81695556640625 14.9925537109375 4.058319091796875 L 14.9925537109375 35.430389404296875 C 14.9925537109375 37.6717529296875 9.65655517578125 54.967987060546875 7.7794189453125 56.270172119140625 L 7.51123046875 56.270172119140625 C 5.20355224609375 56.270172119140625 0 37.6717529296875 0 35.430389404296875 L 0 4.058319091796875 C 0 1.81695556640625 1.870758056640625 0 4.178436279296875 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 272.089 249.757)" class="barcoespacio"
                                               id="108"></path>
+                                        {% set i = 107 %}
                                         <path d="M 4.178436279296875 0 L 10.814056396484375 0 C 13.121734619140625 0 14.99261474609375 1.816986083984375 14.99261474609375 4.058319091796875 L 14.99261474609375 35.43046569824219 C 14.99261474609375 37.67173767089844 9.65655517578125 54.96797180175781 7.779449462890625 56.27015686035156 L 7.511260986328125 56.27015686035156 C 5.203521728515625 56.27015686035156 0 37.67173767089844 0 35.43046569824219 L 0 4.058319091796875 C 0 1.816986083984375 1.8707275390625 0 4.178436279296875 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 292.126 249.367)" class="barcoespacio"
                                               id="107"></path>
+                                        {% set i = 106 %}
                                         <path d="M 4.178497314453125 0 L 10.81414794921875 0 C 13.121856689453125 0 14.99261474609375 1.81695556640625 14.99261474609375 4.0582733154296875 L 14.99261474609375 35.43040466308594 C 14.99261474609375 37.67170715332031 9.656585693359375 54.96794128417969 7.779449462890625 56.27015686035156 L 7.511260986328125 56.27015686035156 C 5.203582763671875 56.27015686035156 0 37.67170715332031 0 35.43040466308594 L 0 4.0582733154296875 C 0 1.81695556640625 1.8707275390625 0 4.178497314453125 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 322.417 249.967)" class="barcoespacio"
                                               id="106"></path>
+                                        {% set i = 105 %}
                                         <path d="M 4.178497314453125 0 L 10.814208984375 0 C 13.121795654296875 0 14.99261474609375 1.816925048828125 14.99261474609375 4.0582733154296875 L 14.99261474609375 35.43040466308594 C 14.99261474609375 37.67170715332031 9.656585693359375 54.96791076660156 7.77947998046875 56.27009582519531 L 7.511322021484375 56.27009582519531 C 5.20361328125 56.27009582519531 0 37.67170715332031 0 35.43040466308594 L 0 4.0582733154296875 C 0 1.816925048828125 1.87078857421875 0 4.178497314453125 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 342.676 249.913)" class="barcoespacio"
                                               id="105"></path>
                                         <rect transform="matrix(1 0 0 1 409.595 245.559)" width="6.04315"
@@ -209,32 +387,74 @@
                                               height="28.8246" fill="rgba(0,150,246,1)" stroke="none"
                                               stroke-width="0.3473126647040211" stroke-linecap="butt"
                                               stroke-linejoin="miter" opacity="1" x="0" rx="0" y="0"></rect>
+                                        {% set i = 104 %}
                                         <path d="M 4.178436279296875 0 L 10.813995361328125 0 C 13.12176513671875 0 14.992523193359375 1.816986083984375 14.992523193359375 4.05828857421875 L 14.992523193359375 35.43040466308594 C 14.992523193359375 37.67173767089844 9.656494140625 54.96794128417969 7.779449462890625 56.27015686035156 L 7.511260986328125 56.27015686035156 C 5.203521728515625 56.27015686035156 0 37.67173767089844 0 35.43040466308594 L 0 4.05828857421875 C 0 1.816986083984375 1.8707275390625 0 4.178436279296875 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 371.008 250.506)" class="barcoespacio"
                                               id="104"></path>
+                                        {% set i = 103 %}
                                         <path d="M 4.178466796875 0 L 10.8140869140625 0 C 13.121856689453125 0 14.99261474609375 1.8169403076171875 14.99261474609375 4.05828857421875 L 14.99261474609375 35.430419921875 C 14.99261474609375 37.6717529296875 9.656585693359375 54.96795654296875 7.779449462890625 56.2701416015625 L 7.5113525390625 56.2701416015625 C 5.20361328125 56.2701416015625 0 37.6717529296875 0 35.430419921875 L 0 4.05828857421875 C 0 1.8169403076171875 1.8707275390625 0 4.178466796875 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 391.045 250.118)" class="barcoespacio"
                                               id="103"></path>
+                                        {% set i = 102 %}
                                         <path d="M 4.178466796875 0 L 10.814117431640625 0 C 13.121795654296875 0 14.992645263671875 1.8170013427734375 14.992645263671875 4.058349609375 L 14.992645263671875 35.43040466308594 C 14.992645263671875 37.67173767089844 9.65655517578125 54.96797180175781 7.779510498046875 56.27015686035156 L 7.511260986328125 56.27015686035156 C 5.203582763671875 56.27015686035156 0 37.67173767089844 0 35.43040466308594 L 0 4.058349609375 C 0 1.8170013427734375 1.87078857421875 0 4.178466796875 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 420.087 250.718)" class="barcoespacio"
                                               id="102"></path>
+                                        {% set i = 101 %}
                                         <path d="M 4.17840576171875 0 L 10.81414794921875 0 C 13.121734619140625 0 14.992523193359375 1.816986083984375 14.992523193359375 4.058319091796875 L 14.992523193359375 35.43037414550781 C 14.992523193359375 37.67173767089844 9.656463623046875 54.96791076660156 7.779388427734375 56.27018737792969 L 7.511199951171875 56.27018737792969 C 5.203521728515625 56.27018737792969 0 37.67173767089844 0 35.43037414550781 L 0 4.058319091796875 C 0 1.816986083984375 1.8707275390625 0 4.17840576171875 0 Z"
-                                              stroke-width="0.24090033589381726" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381726" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 440.347 250.665)" class="barcoespacio"
                                               id="101"></path>
                                         <rect transform="matrix(1 0 0 1 505.773 245.229)" width="6.04315"
                                               height="28.8246" fill="rgba(0,150,246,1)" stroke="none"
                                               stroke-width="0.3473126647040092" stroke-linecap="butt"
                                               stroke-linejoin="miter" opacity="1" x="0" rx="0" y="0"></rect>
+                                        {% set i = 100 %}
                                         <path d="M 4.178466796875 0 L 10.81414794921875 0 C 13.121826171875 0 14.992584228515625 1.8169708251953125 14.992584228515625 4.0583343505859375 L 14.992584228515625 35.430419921875 C 14.992584228515625 37.6717529296875 9.656646728515625 54.967987060546875 7.779449462890625 56.27020263671875 L 7.511322021484375 56.27020263671875 C 5.203643798828125 56.27020263671875 0 37.6717529296875 0 35.430419921875 L 0 4.0583343505859375 C 0 1.8169708251953125 1.870819091796875 0 4.178466796875 0 Z"
-                                              stroke-width="0.24090033589381557" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381557" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 467.318 250.368)" class="barcoespacio"
                                               id="100"></path>
+                                        {% set i = 99 %}
                                         <path d="M 4.17840576171875 0 L 10.81414794921875 0 C 13.1217041015625 0 14.992462158203125 1.8170013427734375 14.992462158203125 4.0583343505859375 L 14.992462158203125 35.430419921875 C 14.992462158203125 37.67181396484375 9.656463623046875 54.96795654296875 7.77935791015625 56.270172119140625 L 7.51116943359375 56.270172119140625 C 5.20355224609375 56.270172119140625 0 37.67181396484375 0 35.430419921875 L 0 4.0583343505859375 C 0 1.8170013427734375 1.8707275390625 0 4.17840576171875 0 Z"
-                                              stroke-width="0.24090033589381557" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381557" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 487.577 250.314)" class="barcoespacio"
                                               id="99"></path>
                                         <rect transform="matrix(1 0 0 1 554.467 243.708)" width="6.04315"
@@ -245,20 +465,48 @@
                                               height="28.8246" fill="rgba(0,150,246,1)" stroke="none"
                                               stroke-width="0.3473126647040092" stroke-linecap="butt"
                                               stroke-linejoin="miter" opacity="1" x="0" rx="0" y="0"></rect>
+                                        {% set i = 98 %}
                                         <path d="M 4.17840576171875 0 L 10.81414794921875 0 C 13.12188720703125 0 14.99261474609375 1.8170318603515625 14.99261474609375 4.058349609375 L 14.99261474609375 35.43043518066406 C 14.99261474609375 37.67176818847656 9.656494140625 54.96800231933594 7.77947998046875 56.27015686035156 L 7.5113525390625 56.27015686035156 C 5.20355224609375 56.27015686035156 0 37.67176818847656 0 35.43043518066406 L 0 4.058349609375 C 0 1.8170318603515625 1.87078857421875 0 4.17840576171875 0 Z"
-                                              stroke-width="0.24090033589381557" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381557" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 515.879 250.011)" class="barcoespacio"
                                               id="98"></path>
+                                        {% set i = 97 %}
                                         <path d="M 4.178466796875 0 L 10.81402587890625 0 C 13.121826171875 0 14.9925537109375 1.816986083984375 14.9925537109375 4.0583038330078125 L 14.9925537109375 35.430419921875 C 14.9925537109375 37.6717529296875 9.656494140625 54.96795654296875 7.7794189453125 56.270111083984375 L 7.51123046875 56.270111083984375 C 5.2034912109375 56.270111083984375 0 37.6717529296875 0 35.430419921875 L 0 4.0583038330078125 C 0 1.816986083984375 1.87078857421875 0 4.178466796875 0 Z"
-                                              stroke-width="0.24090033589381557" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381557" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 535.916 249.623)" class="barcoespacio"
                                               id="97"></path>
+                                        {% set i = 96 %}
                                         <path d="M 4.17852783203125 0 L 10.8140869140625 0 C 13.1217041015625 0 14.9925537109375 1.81695556640625 14.9925537109375 4.0582733154296875 L 14.9925537109375 35.43040466308594 C 14.9925537109375 37.67176818847656 9.65655517578125 54.96794128417969 7.779541015625 56.27012634277344 L 7.51123046875 56.27012634277344 C 5.20367431640625 56.27012634277344 0 37.67176818847656 0 35.43040466308594 L 0 4.0582733154296875 C 0 1.81695556640625 1.8707275390625 0 4.17852783203125 0 Z"
-                                              stroke-width="0.24090033589381557" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381557" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 566.207 250.223)" class="barcoespacio"
                                               id="96"></path>
+                                        {% set i = 95 %}
                                         <path d="M 4.1783447265625 0 L 10.8140869140625 0 C 13.1217041015625 0 14.9925537109375 1.816986083984375 14.9925537109375 4.0583038330078125 L 14.9925537109375 35.430419921875 C 14.9925537109375 37.6717529296875 9.65643310546875 54.96795654296875 7.77935791015625 56.270172119140625 L 7.51123046875 56.270172119140625 C 5.2034912109375 56.270172119140625 0 37.6717529296875 0 35.430419921875 L 0 4.0583038330078125 C 0 1.816986083984375 1.8707275390625 0 4.1783447265625 0 Z"
-                                              stroke-width="0.24090033589381557" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381557" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 586.466 250.167)" class="barcoespacio"
                                               id="95"></path>
                                         <rect transform="matrix(1 0 0 1 653.385 245.814)" width="6.04315"
@@ -269,20 +517,48 @@
                                               height="28.8246" fill="rgba(0,150,246,1)" stroke="none"
                                               stroke-width="0.3473126647040092" stroke-linecap="butt"
                                               stroke-linejoin="miter" opacity="1" x="0" rx="0" y="0"></rect>
+                                        {% set i = 94 %}
                                         <path d="M 4.178466796875 0 L 10.81414794921875 0 C 13.1219482421875 0 14.99273681640625 1.8169403076171875 14.99273681640625 4.05828857421875 L 14.99273681640625 35.43043518066406 C 14.99273681640625 37.67176818847656 9.656494140625 54.96797180175781 7.77947998046875 56.27015686035156 L 7.51123046875 56.27015686035156 C 5.20361328125 56.27015686035156 0 37.67176818847656 0 35.43043518066406 L 0 4.05828857421875 C 0 1.8169403076171875 1.87078857421875 0 4.178466796875 0 Z"
-                                              stroke-width="0.24090033589381557" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381557" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 614.797 250.761)" class="barcoespacio"
                                               id="94"></path>
+                                        {% set i = 93 %}
                                         <path d="M 4.178466796875 0 L 10.8140869140625 0 C 13.12188720703125 0 14.99267578125 1.8170013427734375 14.99267578125 4.058319091796875 L 14.99267578125 35.43040466308594 C 14.99267578125 37.67173767089844 9.65655517578125 54.96797180175781 7.7794189453125 56.27018737792969 L 7.51123046875 56.27018737792969 C 5.20355224609375 56.27018737792969 0 37.67173767089844 0 35.43040466308594 L 0 4.058319091796875 C 0 1.8170013427734375 1.87078857421875 0 4.178466796875 0 Z"
-                                              stroke-width="0.24090033589381557" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381557" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 634.834 250.372)" class="barcoespacio"
                                               id="93"></path>
+                                        {% set i = 92 %}
                                         <path d="M 4.17852783203125 0 L 10.814208984375 0 C 13.12188720703125 0 14.99261474609375 1.8169708251953125 14.99261474609375 4.0583038330078125 L 14.99261474609375 35.43040466308594 C 14.99261474609375 37.67173767089844 9.65655517578125 54.96794128417969 7.779541015625 56.27012634277344 L 7.51141357421875 56.27012634277344 C 5.2037353515625 56.27012634277344 0 37.67173767089844 0 35.43040466308594 L 0 4.0583038330078125 C 0 1.8169708251953125 1.87078857421875 0 4.17852783203125 0 Z"
-                                              stroke-width="0.24090033589381557" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381557" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 663.877 250.972)" class="barcoespacio"
                                               id="92"></path>
+                                        {% set i = 91 %}
                                         <path d="M 4.17852783203125 0 L 10.81414794921875 0 C 13.1219482421875 0 14.99267578125 1.81695556640625 14.99267578125 4.0583038330078125 L 14.99267578125 35.430450439453125 C 14.99267578125 37.671722412109375 9.65655517578125 54.96795654296875 7.77947998046875 56.270172119140625 L 7.51141357421875 56.270172119140625 C 5.20379638671875 56.270172119140625 0 37.671722412109375 0 35.430450439453125 L 0 4.0583038330078125 C 0 1.81695556640625 1.8707275390625 0 4.17852783203125 0 Z"
-                                              stroke-width="0.24090033589381557" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.24090033589381557" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 684.136 250.919)" class="barcoespacio"
                                               id="91"></path>
                                         <g transform="matrix(0.00252441 -0.999997 0.999997 0.00252441 -107.808 337.213)">
@@ -505,8 +781,15 @@
                                               height="15.1691" fill="rgba(0,150,246,1)" stroke="none"
                                               stroke-width="0.28319507959679224" stroke-linecap="butt"
                                               stroke-linejoin="miter" opacity="1" x="0" rx="0" y="0"></rect>
+                                        {% set i = 90 %}
                                         <path d="M 6.69976806640625 0 L 17.3394775390625 0 C 21.0396728515625 0 24.0390625 3.1906280517578125 24.0390625 7.126434326171875 L 24.0390625 62.21632385253906 C 24.0390625 66.15211486816406 15.4832763671875 96.52449035644531 12.47369384765625 98.81117248535156 L 12.04364013671875 98.81117248535156 C 8.34344482421875 98.81117248535156 0 66.15211486816406 0 62.21632385253906 L 0 7.126434326171875 C 0 3.1906280517578125 2.99951171875 0 6.69976806640625 0 Z"
-                                              stroke-width="0.4042258280757665" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.4042258280757665" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 727.899 207.152)" class="barcoespacio"
                                               data-mantain-aspect-ratio="false" id="90"></path>
                                         <rect transform="matrix(1 0 0 1 759.878 199.125)" width="8.9679"
@@ -517,12 +800,26 @@
                                               height="71.5253" fill="rgba(0,150,246,1)" stroke="none"
                                               stroke-width="0.6664688163499335" stroke-linecap="butt"
                                               stroke-linejoin="miter" opacity="1" x="0" rx="0" y="0"></rect>
+                                        {% set i = 89 %}
                                         <path d="M 6.64532470703125 0 L 17.1986083984375 0 C 20.8687744140625 0 23.843994140625 3.1905670166015625 23.843994140625 7.1263885498046875 L 23.843994140625 62.21624755859375 C 23.843994140625 66.15206909179688 15.3575439453125 96.52447509765625 12.3720703125 98.81118774414062 L 11.9456787109375 98.81118774414062 C 8.27557373046875 98.81118774414062 0 66.15206909179688 0 62.21624755859375 L 0 7.1263885498046875 C 0 3.1905670166015625 2.97515869140625 0 6.64532470703125 0 Z"
-                                              stroke-width="0.40258087407936366" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.40258087407936366" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 777.071 207.578)" class="barcoespacio"
                                               data-mantain-aspect-ratio="false" id="89"></path>
+                                        {% set i = 88 %}
                                         <path d="M 6.28057861328125 0 L 16.2547607421875 0 C 19.72344970703125 0 22.535400390625 3.1906585693359375 22.535400390625 7.1264801025390625 L 22.535400390625 62.21630859375 C 22.535400390625 66.15213012695312 14.5147705078125 96.52450561523438 11.6932373046875 98.81121826171875 L 11.290283203125 98.81121826171875 C 7.82159423828125 98.81121826171875 0 66.15213012695312 0 62.21630859375 L 0 7.1264801025390625 C 0 3.1906585693359375 2.81201171875 0 6.28057861328125 0 Z"
-                                              stroke-width="0.3913773264119635" stroke="none" fill="rgba(29,105,19,1)"
+                                              stroke-width="0.3913773264119635" stroke="none"
+                                              fill="{{ dibujoSlip[i].color }}"
+                                              data-embarcacion="{{ dibujoSlip[i].embarcacion }}"
+                                              data-cliente="{{ dibujoSlip[i].cliente }}"
+                                              data-eslora="{{ dibujoSlip[i].eslora }}"
+                                              data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
+                                              data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
                                               transform="matrix(1 0 0 1 827.017 207.293)" class="barcoespacio"
                                               data-mantain-aspect-ratio="false" id="88"></path>
 
@@ -574,10 +871,39 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                    <h2 class="modal-title letra-azul" id="myModalLabel">Slip</h2>
+                    <h2 class="modal-title letra-azul" id="myModalLabel">Slip <span id="numSlip"></span></h2>
                 </div>
                 <div class="modal-body">
-                    <div id="infobarco"></div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>Barco</label>
+                            <div class="info-input" id="barcoNombre"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>Cliente</label>
+                            <div class="info-input" id="clienteNombre"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>Eslora</label>
+                            <div class="info-input" id="esloraInfo"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>Fecha Llegada</label>
+                            <div class="info-input" id="llegadaInfo"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>Fecha Salida</label>
+                            <div class="info-input" id="salidaInfo"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <!--<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>-->

@@ -25,22 +25,55 @@ use Symfony\Component\Validator\Constraints\DateTime;
  */
 class SlipMovimientoController extends Controller
 {
-    /**
-     * @Route("/mapa", name="marina-administracion")
-     */
-    public function displayMarinaAdministracion()
-    {
-        return $this->render('marinahumeda/mapa/marina-administracion.twig', [
-            'title' => 'Slip'
-        ]);
-    }
+
     /**
      * @Route("/mapa/zona-a", name="slip_zona_a")
      */
     public function displayZonaAAdministracion()
     {
+        $fechaBuscar = new \DateTime('now');
+        $em = $this->getDoctrine()->getManager();
+        $qbcs = $em->getRepository('AppBundle:Slip')->createQueryBuilder('s');
+        $totSlips = $qbcs->select('count(s.id)')->getQuery()->getSingleScalarResult();
+        $qbbe = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
+        $slipsOcupados = $qbbe
+            ->select('sm','slip','marinahumedacotizacion','barco','cliente')
+            ->join('sm.slip','slip')
+            ->join('sm.marinahumedacotizacion','marinahumedacotizacion')
+            ->join('marinahumedacotizacion.barco','barco')
+            ->join('marinahumedacotizacion.cliente','cliente')
+            ->where(':fecha_buscar BETWEEN sm.fechaLlegada AND sm.fechaSalida')
+            ->getQuery()
+            ->setParameter('fecha_buscar',$fechaBuscar->format('Y-m-d'))
+            ->getArrayResult();
+        $numOcupados = count($slipsOcupados);
+
+        $porcentajeOcupado = ($numOcupados*100)/$totSlips;
+        $dibujoSlip=[];
+        $slipInicial=1;
+        $slipFinal=36;
+        for($i=$slipInicial;$i<=$slipFinal;$i++){
+            $dibujoSlip[$i] = ['color'=>'rgb(29, 105, 19)','embarcacion'=>'','cliente'=>'','eslora'=>'','fechaLlegada'=>'','fechaSalida'=>''];
+        }
+        for($i=$slipInicial;$i<=$slipFinal;$i++){
+            foreach ($slipsOcupados as $slip){
+                if($i == $slip['slip']['id']){
+                    $dibujoSlip[$i]['color'] = '#FF6600';
+                    $dibujoSlip[$i]['embarcacion'] = $slip['marinahumedacotizacion']['barco']['nombre'];
+                    $dibujoSlip[$i]['cliente'] = $slip['marinahumedacotizacion']['cliente']['nombre'];
+                    $dibujoSlip[$i]['eslora'] = $slip['marinahumedacotizacion']['barco']['eslora'];
+                    $dibujoSlip[$i]['fechaLlegada'] = $slip['fechaLlegada'];
+                    $dibujoSlip[$i]['fechaSalida'] = $slip['fechaSalida'];
+                }
+            }
+        }
         return $this->render('marinahumeda/mapa/slip-zona-a.twig', [
-            'title' => 'Slip Zona A'
+            'title' => 'Slip Zona A',
+            'fechaBuscar'=>$fechaBuscar,
+            'totSlips'=>$totSlips,
+            'numOcupados'=>$numOcupados,
+            'porcentajeOcupado'=>$porcentajeOcupado,
+            'dibujoSlip'=>$dibujoSlip
         ]);
     }
     /**
@@ -48,8 +81,49 @@ class SlipMovimientoController extends Controller
      */
     public function displayZonaBAdministracion()
     {
+        $fechaBuscar = new \DateTime('now');
+        $em = $this->getDoctrine()->getManager();
+        $qbcs = $em->getRepository('AppBundle:Slip')->createQueryBuilder('s');
+        $totSlips = $qbcs->select('count(s.id)')->getQuery()->getSingleScalarResult();
+        $qbbe = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
+        $slipsOcupados = $qbbe
+            ->select('sm','slip','marinahumedacotizacion','barco','cliente')
+            ->join('sm.slip','slip')
+            ->join('sm.marinahumedacotizacion','marinahumedacotizacion')
+            ->join('marinahumedacotizacion.barco','barco')
+            ->join('marinahumedacotizacion.cliente','cliente')
+            ->where(':fecha_buscar BETWEEN sm.fechaLlegada AND sm.fechaSalida')
+            ->getQuery()
+            ->setParameter('fecha_buscar',$fechaBuscar->format('Y-m-d'))
+            ->getArrayResult();
+        $numOcupados = count($slipsOcupados);
+
+        $porcentajeOcupado = ($numOcupados*100)/$totSlips;
+        $dibujoSlip=[];
+        $slipInicial=37;
+        $slipFinal=87;
+        for($i=$slipInicial;$i<=$slipFinal;$i++){
+            $dibujoSlip[$i] = ['color'=>'rgb(29, 105, 19)','embarcacion'=>'','cliente'=>'','eslora'=>'','fechaLlegada'=>'','fechaSalida'=>''];
+        }
+        for($i=$slipInicial;$i<=$slipFinal;$i++){
+            foreach ($slipsOcupados as $slip){
+                if($i == $slip['slip']['id']){
+                    $dibujoSlip[$i]['color'] = '#FF6600';
+                    $dibujoSlip[$i]['embarcacion'] = $slip['marinahumedacotizacion']['barco']['nombre'];
+                    $dibujoSlip[$i]['cliente'] = $slip['marinahumedacotizacion']['cliente']['nombre'];
+                    $dibujoSlip[$i]['eslora'] = $slip['marinahumedacotizacion']['barco']['eslora'];
+                    $dibujoSlip[$i]['fechaLlegada'] = $slip['fechaLlegada'];
+                    $dibujoSlip[$i]['fechaSalida'] = $slip['fechaSalida'];
+                }
+            }
+        }
         return $this->render('marinahumeda/mapa/slip-zona-b.twig', [
-            'title' => 'Slip Zona B'
+            'title' => 'Slip Zona B',
+            'fechaBuscar'=>$fechaBuscar,
+            'totSlips'=>$totSlips,
+            'numOcupados'=>$numOcupados,
+            'porcentajeOcupado'=>$porcentajeOcupado,
+            'dibujoSlip'=>$dibujoSlip
         ]);
     }
     /**
@@ -57,8 +131,49 @@ class SlipMovimientoController extends Controller
      */
     public function displayZonaCAdministracion()
     {
+        $fechaBuscar = new \DateTime('now');
+        $em = $this->getDoctrine()->getManager();
+        $qbcs = $em->getRepository('AppBundle:Slip')->createQueryBuilder('s');
+        $totSlips = $qbcs->select('count(s.id)')->getQuery()->getSingleScalarResult();
+        $qbbe = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
+        $slipsOcupados = $qbbe
+            ->select('sm','slip','marinahumedacotizacion','barco','cliente')
+            ->join('sm.slip','slip')
+            ->join('sm.marinahumedacotizacion','marinahumedacotizacion')
+            ->join('marinahumedacotizacion.barco','barco')
+            ->join('marinahumedacotizacion.cliente','cliente')
+            ->where(':fecha_buscar BETWEEN sm.fechaLlegada AND sm.fechaSalida')
+            ->getQuery()
+            ->setParameter('fecha_buscar',$fechaBuscar->format('Y-m-d'))
+            ->getArrayResult();
+        $numOcupados = count($slipsOcupados);
+
+        $porcentajeOcupado = ($numOcupados*100)/$totSlips;
+        $dibujoSlip=[];
+        $slipInicial=88;
+        $slipFinal=126;
+        for($i=$slipInicial;$i<=$slipFinal;$i++){
+            $dibujoSlip[$i] = ['color'=>'rgb(29, 105, 19)','embarcacion'=>'','cliente'=>'','eslora'=>'','fechaLlegada'=>'','fechaSalida'=>''];
+        }
+        for($i=$slipInicial;$i<=$slipFinal;$i++){
+            foreach ($slipsOcupados as $slip){
+                if($i == $slip['slip']['id']){
+                    $dibujoSlip[$i]['color'] = '#FF6600';
+                    $dibujoSlip[$i]['embarcacion'] = $slip['marinahumedacotizacion']['barco']['nombre'];
+                    $dibujoSlip[$i]['cliente'] = $slip['marinahumedacotizacion']['cliente']['nombre'];
+                    $dibujoSlip[$i]['eslora'] = $slip['marinahumedacotizacion']['barco']['eslora'];
+                    $dibujoSlip[$i]['fechaLlegada'] = $slip['fechaLlegada'];
+                    $dibujoSlip[$i]['fechaSalida'] = $slip['fechaSalida'];
+                }
+            }
+        }
         return $this->render('marinahumeda/mapa/slip-zona-c.twig', [
-            'title' => 'Slip Zona C'
+            'title' => 'Slip Zona C',
+            'fechaBuscar'=>$fechaBuscar,
+            'totSlips'=>$totSlips,
+            'numOcupados'=>$numOcupados,
+            'porcentajeOcupado'=>$porcentajeOcupado,
+            'dibujoSlip'=>$dibujoSlip
         ]);
     }
     /**
@@ -66,11 +181,99 @@ class SlipMovimientoController extends Controller
      */
     public function displayZonaDAdministracion()
     {
+        $fechaBuscar = new \DateTime('now');
+        $em = $this->getDoctrine()->getManager();
+        $qbcs = $em->getRepository('AppBundle:Slip')->createQueryBuilder('s');
+        $totSlips = $qbcs->select('count(s.id)')->getQuery()->getSingleScalarResult();
+        $qbbe = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
+        $slipsOcupados = $qbbe
+            ->select('sm','slip','marinahumedacotizacion','barco','cliente')
+            ->join('sm.slip','slip')
+            ->join('sm.marinahumedacotizacion','marinahumedacotizacion')
+            ->join('marinahumedacotizacion.barco','barco')
+            ->join('marinahumedacotizacion.cliente','cliente')
+            ->where(':fecha_buscar BETWEEN sm.fechaLlegada AND sm.fechaSalida')
+            ->getQuery()
+            ->setParameter('fecha_buscar',$fechaBuscar->format('Y-m-d'))
+            ->getArrayResult();
+        $numOcupados = count($slipsOcupados);;
+        $porcentajeOcupado = ($numOcupados*100)/$totSlips;
+        $dibujoSlip=[];
+        $slipInicial=127;
+        $slipFinal=176;
+        for($i=$slipInicial;$i<=$slipFinal;$i++){
+            $dibujoSlip[$i] = ['color'=>'rgb(29, 105, 19)','embarcacion'=>'','cliente'=>'','eslora'=>'','fechaLlegada'=>'','fechaSalida'=>''];
+        }
+        for($i=$slipInicial;$i<=$slipFinal;$i++){
+            foreach ($slipsOcupados as $slip){
+                if($i == $slip['slip']['id']){
+                    $dibujoSlip[$i]['color'] = '#FF6600';
+                    $dibujoSlip[$i]['embarcacion'] = $slip['marinahumedacotizacion']['barco']['nombre'];
+                    $dibujoSlip[$i]['cliente'] = $slip['marinahumedacotizacion']['cliente']['nombre'];
+                    $dibujoSlip[$i]['eslora'] = $slip['marinahumedacotizacion']['barco']['eslora'];
+                    $dibujoSlip[$i]['fechaLlegada'] = $slip['fechaLlegada'];
+                    $dibujoSlip[$i]['fechaSalida'] = $slip['fechaSalida'];
+                }
+            }
+        }
         return $this->render('marinahumeda/mapa/slip-zona-d.twig', [
-            'title' => 'Slip Zona D'
+            'title' => 'Slip Zona D',
+            'fechaBuscar'=>$fechaBuscar,
+            'totSlips'=>$totSlips,
+            'numOcupados'=>$numOcupados,
+            'porcentajeOcupado'=>$porcentajeOcupado,
+            'dibujoSlip'=>$dibujoSlip
         ]);
     }
-
+    /**
+     * @Route("/mapa", name="marina-administracion")
+     */
+    public function displayMarinaAdministracion()
+    {
+        $fechaBuscar = new \DateTime('now');
+        $em = $this->getDoctrine()->getManager();
+        $qbcs = $em->getRepository('AppBundle:Slip')->createQueryBuilder('s');
+        $totSlips = $qbcs->select('count(s.id)')->getQuery()->getSingleScalarResult();
+        $qbbe = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
+        $slipsOcupados = $qbbe
+            ->select('sm','slip','marinahumedacotizacion','barco','cliente')
+            ->join('sm.slip','slip')
+            ->join('sm.marinahumedacotizacion','marinahumedacotizacion')
+            ->join('marinahumedacotizacion.barco','barco')
+            ->join('marinahumedacotizacion.cliente','cliente')
+            ->where(':fecha_buscar BETWEEN sm.fechaLlegada AND sm.fechaSalida')
+            ->getQuery()
+            ->setParameter('fecha_buscar',$fechaBuscar->format('Y-m-d'))
+            ->getArrayResult();
+        $numOcupados = count($slipsOcupados);;
+        $porcentajeOcupado = ($numOcupados*100)/$totSlips;
+        $dibujoSlip=[];
+        $slipInicial=1;
+        $slipFinal=176;
+        for($i=$slipInicial;$i<=$slipFinal;$i++){
+            $dibujoSlip[$i] = ['color'=>'rgb(29, 105, 19)','embarcacion'=>'','cliente'=>'','eslora'=>'','fechaLlegada'=>'','fechaSalida'=>''];
+        }
+        for($i=$slipInicial;$i<=$slipFinal;$i++){
+            foreach ($slipsOcupados as $slip){
+                if($i == $slip['slip']['id']){
+                    $dibujoSlip[$i]['color'] = '#FF6600';
+                    $dibujoSlip[$i]['embarcacion'] = $slip['marinahumedacotizacion']['barco']['nombre'];
+                    $dibujoSlip[$i]['cliente'] = $slip['marinahumedacotizacion']['cliente']['nombre'];
+                    $dibujoSlip[$i]['eslora'] = $slip['marinahumedacotizacion']['barco']['eslora'];
+                    $dibujoSlip[$i]['fechaLlegada'] = $slip['fechaLlegada'];
+                    $dibujoSlip[$i]['fechaSalida'] = $slip['fechaSalida'];
+                }
+            }
+        }
+        return $this->render('marinahumeda/mapa/marina-administracion.twig', [
+            'title' => 'Slips',
+            'fechaBuscar'=>$fechaBuscar,
+            'totSlips'=>$totSlips,
+            'numOcupados'=>$numOcupados,
+            'porcentajeOcupado'=>$porcentajeOcupado,
+            'dibujoSlip'=>$dibujoSlip
+        ]);
+    }
     /**
      * @Route("/buscar/{eslora}/{id}.{_format}", name="ajax_buscar_slips", defaults={"_format"="JSON"})
      * @Method({"GET"})
@@ -146,7 +349,7 @@ class SlipMovimientoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $smovRepositorio = $em->getRepository('AppBundle:SlipMovimiento');
-        $slipMovimientos = $smovRepositorio->ordenaFechasEstadia();
+        $slipMovimientos = $smovRepositorio->ordenaDescendente();
 
         return $this->render('slipmovimiento/index.html.twig', array(
             'slipMovimientos' => $slipMovimientos,
@@ -167,15 +370,40 @@ class SlipMovimientoController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
 
-            $fll = $slipMovimiento->getMarinahumedacotizacion()->getFechaLlegada();
-            $fs = $slipMovimiento->getMarinahumedacotizacion()->getFechaSalida();
-            $slipMovimiento->setFechaLlegada($fll)->setFechaSalida($fs);
-            $em->persist($slipMovimiento);
-            $em->flush();
-
-            return $this->redirectToRoute('slipmovimiento_index');
+            $esloraBarco = $slipMovimiento->getMarinahumedacotizacion()->getBarco()->getEslora();
+            $esloraSlip = $slipMovimiento->getSlip()->getPies();
+            if($esloraSlip<$esloraBarco){
+                $this->addFlash(
+                    'notice',
+                    'Error, el tamaño del slip es menor que la eslora de la embarcación'
+                );
+            }else{
+                $em = $this->getDoctrine()->getManager();
+                $slip = $slipMovimiento->getSlip()->getId();
+                $llegada = $slipMovimiento->getMarinahumedacotizacion()->getFechaLlegada();
+                $salida = $slipMovimiento->getMarinahumedacotizacion()->getFechaSalida();
+                $qb = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
+                $slipsProbables = $qb
+                    ->where('sm.slip = :slipcomparar AND ((:fecha_llegada BETWEEN sm.fechaLlegada AND sm.fechaSalida) OR (:fecha_salida BETWEEN sm.fechaLlegada AND sm.fechaSalida))')
+                    ->getQuery()
+                    ->setParameter('slipcomparar',$slip)
+                    ->setParameter('fecha_llegada', $llegada)
+                    ->setParameter('fecha_salida', $salida)
+                    ->getResult()
+                ;
+                if(empty($slipsProbables)){
+                    $slipMovimiento->setFechaLlegada($llegada)->setFechaSalida($salida);
+                    $em->persist($slipMovimiento);
+                    $em->flush();
+                    return $this->redirectToRoute('slipmovimiento_index');
+                }else{
+                    $this->addFlash(
+                        'notice',
+                        'Error, el slip que intenta asignar ya esta ocupado'
+                    );
+                }
+            }
         }
 
         return $this->render('slipmovimiento/new.html.twig', array(
@@ -209,21 +437,53 @@ class SlipMovimientoController extends Controller
      */
     public function editAction(Request $request, SlipMovimiento $slipMovimiento)
     {
+        $slipActual = $slipMovimiento->getSlip()->getNum();
         $deleteForm = $this->createDeleteForm($slipMovimiento);
         $editForm = $this->createForm('AppBundle\Form\SlipMovimientoType', $slipMovimiento);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('slipmovimiento_index');
+            $esloraBarco = $slipMovimiento->getMarinahumedacotizacion()->getBarco()->getEslora();
+            $esloraSlip = $slipMovimiento->getSlip()->getPies();
+            if($esloraSlip<$esloraBarco){
+                $this->addFlash(
+                    'notice',
+                    'Error, el tamaño del slip es menor que la eslora de la embarcación'
+                );
+            }else{
+                $em = $this->getDoctrine()->getManager();
+                $slip = $slipMovimiento->getSlip()->getId();
+                $llegada = $slipMovimiento->getMarinahumedacotizacion()->getFechaLlegada();
+                $salida = $slipMovimiento->getMarinahumedacotizacion()->getFechaSalida();
+                $qb = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
+                $slipsProbables = $qb
+                    ->where('sm.slip = :slipcomparar AND ((:fecha_llegada BETWEEN sm.fechaLlegada AND sm.fechaSalida) OR (:fecha_salida BETWEEN sm.fechaLlegada AND sm.fechaSalida))')
+                    ->getQuery()
+                    ->setParameter('slipcomparar',$slip)
+                    ->setParameter('fecha_llegada', $llegada)
+                    ->setParameter('fecha_salida', $salida)
+                    ->getResult()
+                ;
+                if(empty($slipsProbables)){
+                    $slipMovimiento->setFechaLlegada($llegada)->setFechaSalida($salida);
+                    $em->persist($slipMovimiento);
+                    $em->flush();
+                    return $this->redirectToRoute('slipmovimiento_index');
+                }else{
+                    $this->addFlash(
+                        'notice',
+                        'Error, el slip que intenta asignar ya esta ocupado'
+                    );
+                }
+            }
         }
 
         return $this->render('slipmovimiento/edit.html.twig', array(
             'slipMovimiento' => $slipMovimiento,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'title' => 'Editar Slip Asignado'
+            'title' => 'Editar Slip Asignado',
+            'slipActual' => $slipActual
         ));
     }
 

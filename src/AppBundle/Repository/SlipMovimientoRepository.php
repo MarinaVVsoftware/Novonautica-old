@@ -20,4 +20,13 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function ordenaDescendente(){
+        $qb = $this->createQueryBuilder('smov');
+        return $qb
+            ->select('smov')
+            ->orderBy('smov.id','DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

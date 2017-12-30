@@ -28,7 +28,7 @@
                         </li>
                         <li role="presentation">
                             <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios
-                                Generales</a>
+                                Básicos</a>
                         </li>
                         <li role="presentation">
                             <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Servicios</a>
@@ -71,20 +71,35 @@
                                                 {{ form_label(form.fechaLlegada) }}
                                                 {{ form_widget(form.fechaLlegada) }}
                                             </div>
+
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 {{ form_label(form.fechaSalida) }}
                                                 {{ form_widget(form.fechaSalida) }}
                                             </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            {{ form_label(form.diasEstadia) }}
+                                            {{ form_widget(form.diasEstadia) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            {{ form_label(form.dolar) }}
+                                            {{ form_widget(form.dolar) }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-3">
-                                    {{ form_label(form.diasEstadia) }}
-                                    {{ form_widget(form.diasEstadia) }}
+
                                 </div>
                             </div>
                             <div class="row espacio-linea">
@@ -98,10 +113,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-1">
-
-                                </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 col-sm-offset-1">
                                     <label>Número de pies</label>
                                     {% if form.acservicios.0.cantidad is defined %}
                                         {{ form_widget(form.acservicios.0.cantidad) }}
@@ -230,12 +242,13 @@
                                     {% endif %}
                                 </div>
                             </div>
+
                         </div>
                         <div role="tabpanel" class="tab-pane" id="total">
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="valdolar" class="" data-valor="{{ valdolar }}">{{ valdolar }} MXN</div>
+                                    <div id="valdolar" class="" >{{ valdolar }} MXN</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -261,7 +274,7 @@
                                                class="lista-servicios"
                                                data-prototype="
                                                     {% filter escape %}
-                                                        {{ include('astillerocotizacion/coleccion-servicio.twig', { 'form': form.acservicios.vars.prototype }) }}
+                                                        {{ include('astillero/cotizacion/coleccion-servicio.twig', { 'form': form.acservicios.vars.prototype }) }}
                                                         {#{{ form_widget(form.acservicios.vars.prototype) }}#}
                                                     {% endfilter %}"
                                         >
@@ -343,11 +356,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <a href="#" id="" class="add-another-servicio btn btn-contorno-azul" data-cantidad="{{ form.acservicios|length }}" data-idlista="0">
-                                        + Agregar servicio
-                                    </a>
                                     <a href="#" class="add-producto btn btn-contorno-azul">
                                         + Agrega Producto
+                                    </a>
+                                    <a href="#" class="add-servicio btn btn-contorno-azul">
+                                        + Agrega Servicio
+                                    </a>
+                                    <a href="#" id="" class="add-another-servicio btn btn-contorno-azul" data-cantidad="{{ form.acservicios|length }}" data-idlista="0">
+                                        + Agregar Otro
                                     </a>
                                 </div>
                             </div>
@@ -416,20 +432,20 @@
                     {% if form.acservicios.3.cantidad is defined %}
                         {{ form_widget(form.acservicios.3.cantidad,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-                    {% if form.acservicios.0.servicio is defined %}
-                        {{ form_widget(form.acservicios.0.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% if form.acservicios.0.otroservicio is defined %}
+                        {{ form_widget(form.acservicios.0.otroservicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-                    {% if form.acservicios.1.servicio is defined %}
-                        {{ form_widget(form.acservicios.1.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% if form.acservicios.1.otroservicio is defined %}
+                        {{ form_widget(form.acservicios.1.otroservicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-                    {% if form.acservicios.2.servicio is defined %}
-                        {{ form_widget(form.acservicios.2.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% if form.acservicios.2.otroservicio is defined %}
+                        {{ form_widget(form.acservicios.2.otroservicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-                    {% if form.acservicios.3.servicio is defined %}
-                        {{ form_widget(form.acservicios.3.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% if form.acservicios.3.otroservicio is defined %}
+                        {{ form_widget(form.acservicios.3.otroservicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-                    {% if form.acservicios.4.servicio is defined %}
-                        {{ form_widget(form.acservicios.4.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% if form.acservicios.4.otroservicio is defined %}
+                        {{ form_widget(form.acservicios.4.otroservicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
                     {% if form.acservicios.0.producto is defined %}
                         {{ form_widget(form.acservicios.0.producto,{'attr':{'class':'hidden'}}) }}
@@ -445,6 +461,21 @@
                     {% endif %}
                     {% if form.acservicios.4.producto is defined %}
                         {{ form_widget(form.acservicios.4.producto,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.0.servicio is defined %}
+                        {{ form_widget(form.acservicios.0.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.1.servicio is defined %}
+                        {{ form_widget(form.acservicios.1.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.2.servicio is defined %}
+                        {{ form_widget(form.acservicios.2.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.3.servicio is defined %}
+                        {{ form_widget(form.acservicios.3.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.4.servicio is defined %}
+                        {{ form_widget(form.acservicios.4.servicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
                     {{ form_end(form) }}
                 </div>
@@ -462,24 +493,91 @@
         </section>
     </div>
 {% endblock %}
-{% block modals %}
-    <div class="modal fade" id="buscaProducto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Agrega productos</h4>
-                </div>
-                <div class="modal-body">
-                    <div id="listadoproductos">
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (function ($) {
+            $('.selectclientebuscar').change(function (e) {
+                $('#loading').show();
+                $("#info-barco").empty();
+                $("#info-cliente").empty();
 
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+                var url = "{{ path('ajax_busca_cliente_todo',{'id':'iddelcliente','_format':'json'}) }}";
+                url = url.replace("iddelcliente", $(this).val());
+                $.ajax({
+                    method: "GET",
+                    url: url,
+                    dataType: 'json',
+                    success: function (cliente) {
+                        JSON.stringify(cliente);
+                        var html = "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
+                            "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
+                            "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>" +
+                            "<label>R.F.C.</label>" + "<div class='info-input'>" + cliente.rfc + "</div>" +
+                            "<label>Razón social</label>" + "<div class='info-input'>" + cliente.razonsocial + "</div>" +
+                            "<label>Dirección fiscal</label>" + "<div class='info-input'>" + cliente.direccionfiscal + "</div>";
+                        $("#info-cliente").append(html);
+
+                        $('#loading').hide();
+                    },
+                    error: function (jqXHR, exception) {
+                        if (jqXHR.status === 405) {
+                            console.error("METHOD NOT ALLOWED!");
+                        }
+                        $('#loading').hide();
+                    }
+                }).fail(function () {
+                    $('#loading').hide();
+                });
+            });
+
+            var x = 1;
+            $('.buscabarcomh').click(function () {
+                if (x == 2) {
+                    if ($("input[type=radio]:checked").val() != null) {
+                        $('#loading').show();
+                        $("#info-barco").empty();
+                        var idbarco = $("input[type=radio]:checked").val();
+                        buscaDatosBarco(idbarco);
+                        x = 1;
+                    }
+                } else {
+                    x++;
+                }
+            });
+
+            function buscaDatosBarco(idbarco) {
+                $.ajax({
+                    method: "GET",
+                    url: `{{ app.request.baseUrl }}/ajax/buscabarcotodo/${idbarco}.json`,
+                    dataType: 'json',
+                    success: function (barco) {
+                        JSON.stringify(barco);
+                        var html = "<label>Modelo</label>" + "<div class='info-input'>" + barco.modelo + "</div>" +
+                            "<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>" +
+                            "<label>Manga</label>" + "<div class='info-input'>" + barco.manga + "</div>" +
+                            "<label>Nombre del capitán</label>" + "<div class='info-input'>" + barco.nombreCapitan + "</div>" +
+                            "<label>Teléfono del capitán</label>" + "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
+                            "<label>Correo del capitán</label>" + "<div class='info-input'>" + barco.correoCapitan + "</div>";
+                        $("#info-barco").append(html);
+                        $("#de_eslora").data('valor', barco.eslora);
+                        $("#e_eslora").data('valor', barco.eslora);
+                        $("#de_eslora").html(barco.eslora);
+                        $("#e_eslora").html(barco.eslora);
+                        $("#de_eslora_mxn").html(barco.eslora);
+                        $("#e_eslora_mxn").html(barco.eslora);
+                        recalculaSubtotalesYtotal();
+
+                        // Filtrado de opcions de slip por tamaño de eslora
+                        const slipOptions = [...document.querySelectorAll('#appbundle_marinahumedacotizacion_slip > option')]
+                    .filter((slip) => barco.eslora >= Number(slip.dataset.feet)
+                            ? slip.style.display = 'none'
+                            : slip.style.display = 'block');
+                    },
+                    complete: () => { $("#loading").hide(); }
+            })
+            }
+
+        })(jQuery);
+    </script>
 {% endblock %}

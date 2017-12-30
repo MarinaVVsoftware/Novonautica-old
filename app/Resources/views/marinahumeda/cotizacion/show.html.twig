@@ -545,8 +545,56 @@
                             </div>
                         </div>
                     {% endif %}
+                    {% if marinaHumedaCotizacion.validanovo == 2 %}
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <button class="btn btn-morado-2 pull-right loadpage" id="reenviar"
+                                    data-idcotizacion="{{ marinaHumedaCotizacion.id }}">
+                                <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                Reenviar
+                            </button>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('#reenviar').on('click',function () {
+            var url = "{{ path('marina-humeda_reenviar',{'id':'idcotizacion'}) }}";
+            url = url.replace("idcotizacion", $(this).data('idcotizacion'));
+            $.ajax({
+                method: "POST",
+                url: url,
+                success: function () {
+                    $('#loading').hide();
+                    $('#estatusEnvio').modal('show');
+                    setTimeout(function(){  $('#estatusEnvio').modal('hide'); }, 3000);
+                }
+            });
+        });
+    </script>
+{% endblock %}
+{% block modals %}
+    <div id="estatusEnvio" class="modal fade ventanaborrar" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Mensaje</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Correo enviado con éxito</p>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 {% endblock %}

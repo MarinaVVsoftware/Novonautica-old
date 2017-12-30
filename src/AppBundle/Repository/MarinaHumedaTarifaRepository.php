@@ -10,4 +10,13 @@ namespace AppBundle\Repository;
  */
 class MarinaHumedaTarifaRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function ordenaPorTipoCosto()
+    {
+        $qb = $this->createQueryBuilder('t');
+        return $qb
+            ->select('t')
+            ->orderBy('t.tipo,t.costo','DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

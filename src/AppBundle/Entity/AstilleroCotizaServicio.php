@@ -25,9 +25,9 @@ class AstilleroCotizaServicio
     /**
      * @var string
      *
-     * @ORM\Column(name="servicio", type="string", length=255, nullable=true)
+     * @ORM\Column(name="otroservicio", type="string", length=255, nullable=true)
      */
-    private $servicio;
+    private $otroservicio;
 
     /**
      * @var float
@@ -37,30 +37,30 @@ class AstilleroCotizaServicio
     private $cantidad;
 
     /**
-     * @var float
+     * @var int
      *
-     * @ORM\Column(name="precio", type="float", nullable=true)
+     * @ORM\Column(name="precio", type="integer", nullable=true)
      */
     private $precio;
 
     /**
-     * @var float
+     * @var int
      *
-     * @ORM\Column(name="subtotal", type="float", nullable=true)
+     * @ORM\Column(name="subtotal", type="bigint", nullable=true)
      */
     private $subtotal;
 
     /**
-     * @var float
+     * @var int
      *
-     * @ORM\Column(name="iva", type="float", nullable=true)
+     * @ORM\Column(name="iva", type="bigint", nullable=true)
      */
     private $iva;
 
     /**
-     * @var float
+     * @var int
      *
-     * @ORM\Column(name="total", type="float", nullable=true)
+     * @ORM\Column(name="total", type="bigint", nullable=true)
      */
     private $total;
 
@@ -80,17 +80,22 @@ class AstilleroCotizaServicio
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\AstilleroServicio")
-     * @ORM\JoinColumn(name="idservicio", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\AstilleroServicioBasico")
+     * @ORM\JoinColumn(name="idserviciobasico", referencedColumnName="id")
      */
-    private $astilleroservicio;
+    private $astilleroserviciobasico;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Producto")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Astillero\Producto")
      * @ORM\JoinColumn(name="idproducto", referencedColumnName="id")
      */
     private $producto;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Astillero\Servicio")
+     * @ORM\JoinColumn(name="idservicio", referencedColumnName="id")
+     */
+    private $servicio;
 
     /**
      * Get id
@@ -103,27 +108,27 @@ class AstilleroCotizaServicio
     }
 
     /**
-     * Set servicio
+     * Set otroservicio
      *
-     * @param string $servicio
+     * @param string $otroservicio
      *
      * @return AstilleroCotizaServicio
      */
-    public function setServicio($servicio)
+    public function setOtroservicio($otroservicio)
     {
-        $this->servicio = $servicio;
+        $this->otroservicio = $otroservicio;
 
         return $this;
     }
 
     /**
-     * Get servicio
+     * Get otroservicio
      *
      * @return string
      */
-    public function getServicio()
+    public function getOtroservicio()
     {
-        return $this->servicio;
+        return $this->otroservicio;
     }
 
     /**
@@ -148,102 +153,6 @@ class AstilleroCotizaServicio
     public function getCantidad()
     {
         return $this->cantidad;
-    }
-
-    /**
-     * Set precio
-     *
-     * @param float $precio
-     *
-     * @return AstilleroCotizaServicio
-     */
-    public function setPrecio($precio)
-    {
-        $this->precio = $precio;
-
-        return $this;
-    }
-
-    /**
-     * Get precio
-     *
-     * @return float
-     */
-    public function getPrecio()
-    {
-        return $this->precio;
-    }
-
-    /**
-     * Set subtotal
-     *
-     * @param float $subtotal
-     *
-     * @return AstilleroCotizaServicio
-     */
-    public function setSubtotal($subtotal)
-    {
-        $this->subtotal = $subtotal;
-
-        return $this;
-    }
-
-    /**
-     * Get subtotal
-     *
-     * @return float
-     */
-    public function getSubtotal()
-    {
-        return $this->subtotal;
-    }
-
-    /**
-     * Set iva
-     *
-     * @param float $iva
-     *
-     * @return AstilleroCotizaServicio
-     */
-    public function setIva($iva)
-    {
-        $this->iva = $iva;
-
-        return $this;
-    }
-
-    /**
-     * Get iva
-     *
-     * @return float
-     */
-    public function getIva()
-    {
-        return $this->iva;
-    }
-
-    /**
-     * Set total
-     *
-     * @param float $total
-     *
-     * @return AstilleroCotizaServicio
-     */
-    public function setTotal($total)
-    {
-        $this->total = $total;
-
-        return $this;
-    }
-
-    /**
-     * Get total
-     *
-     * @return float
-     */
-    public function getTotal()
-    {
-        return $this->total;
     }
 
     /**
@@ -295,38 +204,38 @@ class AstilleroCotizaServicio
     }
 
     /**
-     * Set astilleroservicio
+     * Set astilleroserviciobasico
      *
-     * @param \AppBundle\Entity\AstilleroServicio $astilleroservicio
+     * @param \AppBundle\Entity\AstilleroServicioBasico $astilleroservicio
      *
      * @return AstilleroCotizaServicio
      */
-    public function setAstilleroservicio(\AppBundle\Entity\AstilleroServicio $astilleroservicio = null)
+    public function setAstilleroserviciobasico(\AppBundle\Entity\AstilleroServicioBasico $astilleroserviciobasico = null)
     {
-        $this->astilleroservicio = $astilleroservicio;
+        $this->astilleroserviciobasico = $astilleroserviciobasico;
 
         return $this;
     }
 
     /**
-     * Get astilleroservicio
+     * Get astilleroserviciobasico
      *
-     * @return \AppBundle\Entity\AstilleroServicio
+     * @return \AppBundle\Entity\AstilleroServicioBasico
      */
-    public function getAstilleroservicio()
+    public function getAstilleroserviciobasico()
     {
-        return $this->astilleroservicio;
+        return $this->astilleroserviciobasico;
     }
 
 
     /**
      * Set producto
      *
-     * @param \AppBundle\Entity\Producto $producto
+     * @param \AppBundle\Entity\Astillero\Producto $producto
      *
      * @return AstilleroCotizaServicio
      */
-    public function setProducto(\AppBundle\Entity\Producto $producto = null)
+    public function setProducto(\AppBundle\Entity\Astillero\Producto $producto = null)
     {
         $this->producto = $producto;
 
@@ -336,10 +245,98 @@ class AstilleroCotizaServicio
     /**
      * Get producto
      *
-     * @return \AppBundle\Entity\Producto
+     * @return \AppBundle\Entity\Astillero\Producto
      */
     public function getProducto()
     {
         return $this->producto;
+    }
+
+    /**
+     * Set servicio
+     *
+     * @param \AppBundle\Entity\Astillero\Servicio $servicio
+     *
+     * @return AstilleroCotizaServicio
+     */
+    public function setServicio(\AppBundle\Entity\Astillero\Servicio $servicio = null)
+    {
+        $this->servicio = $servicio;
+
+        return $this;
+    }
+
+    /**
+     * Get servicio
+     *
+     * @return \AppBundle\Entity\Astillero\Servicio
+     */
+    public function getServicio()
+    {
+        return $this->servicio;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrecio()
+    {
+        return $this->precio;
+    }
+
+    /**
+     * @param int $precio
+     */
+    public function setPrecio($precio)
+    {
+        $this->precio = $precio;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSubtotal()
+    {
+        return $this->subtotal;
+    }
+
+    /**
+     * @param int $subtotal
+     */
+    public function setSubtotal($subtotal)
+    {
+        $this->subtotal = $subtotal;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIva()
+    {
+        return $this->iva;
+    }
+
+    /**
+     * @param int $iva
+     */
+    public function setIva($iva)
+    {
+        $this->iva = $iva;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    /**
+     * @param int $total
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
     }
 }

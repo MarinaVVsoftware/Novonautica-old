@@ -17,27 +17,44 @@
                         <thead>
                         <tr>
                             <th>Id</th>
+                            <th>Cliente</th>
+                            <th>Barco</th>
                             <th>Fecha llegada</th>
                             <th>Fecha salida</th>
                             <th>Subtotal</th>
                             <th>Ivatotal</th>
                             <th>Total</th>
+                            <th>Validación</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for astilleroCotizacion in astilleroCotizacions %}
                             <tr>
-                                <td>
-                                    <a href="{{ path('astillero_show', { 'id': astilleroCotizacion.id }) }}">{{ astilleroCotizacion.id }}</a>
-                                </td>
+                                <td>{{ astilleroCotizacion.id }}</td>
+                                <td>{{ astilleroCotizacion.cliente }}</td>
+                                <td>{{ astilleroCotizacion.barco }}</td>
+
                                 <td>{% if astilleroCotizacion.fechaLlegada %}{{ astilleroCotizacion.fechaLlegada|date('Y-m-d') }}{% endif %}</td>
                                 <td>{% if astilleroCotizacion.fechaSalida %}{{ astilleroCotizacion.fechaSalida|date('Y-m-d') }}{% endif %}</td>
                                 <td>{{ astilleroCotizacion.subtotal }}</td>
                                 <td>{{ astilleroCotizacion.ivatotal }}</td>
                                 <td>{{ astilleroCotizacion.total }}</td>
+                                <td class="align-middle">
+                                    {% if astilleroCotizacion.validanovo == 0 %}
+                                        <img src="{{ asset('img/status-pendiente-icon.svg') }}"
+                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Pendiente">
+                                    {% elseif astilleroCotizacion.validanovo == 1 %}
+                                        <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Rechazado">
+                                    {% elseif astilleroCotizacion.validanovo == 2 %}
+                                        <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <a class="btn btn-morado-claro" href="{{ path('astillero_show', { 'id': astilleroCotizacion.id }) }}">Detalle</a>
+                                    <a class="btn btn-morado-claro" href="{{ path('astillero_validar', { 'id': astilleroCotizacion.id }) }}">Validar</a>
                                     {#<a class="btn btn-azul" href="{{ path('astillero_edit', { 'id': astilleroCotizacion.id }) }}">Editar</a>#}
                                 </td>
                             </tr>

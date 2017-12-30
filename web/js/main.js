@@ -4,7 +4,12 @@ $(document).ready(function() {
         $('#loading').show();
     });
     $('.barcoespacio').on('click',function(){
-        $('#infobarco').html('Barco: '+$(this).attr('id'));
+        $('#numSlip').html($(this).attr('id'));
+        $('#barcoNombre').html($(this).data('embarcacion'));
+        $('#clienteNombre').html($(this).data('cliente'));
+        $('#esloraInfo').html($(this).data('eslora'));
+        $('#llegadaInfo').html($(this).data('llegada'));
+        $('#salidaInfo').html($(this).data('salida'));
         $('#modalinfobarco').modal('toggle');
     });
     $('.select-buscador').select2();
@@ -164,6 +169,7 @@ jQuery('.add-another-servicio').click(function (e) {
   // end name attribute looks like name="contact[emails][2]"
   newWidget = newWidget.replace(/__name__/g, totServicios);
   newWidget = newWidget.replace('td-producto', 'hide');
+  newWidget = newWidget.replace('td-servicio', 'hide');
   totServicios++;
   $(this).data('cantidad', totServicios);
   // create a new list element and add it to the list
@@ -176,12 +182,76 @@ jQuery('.add-another-servicio').click(function (e) {
   newLi.before(newLi);
 
 });
+
 $('.lista-servicios').on('click', '.remove-servicio', function (e) {
   e.preventDefault();
   //console.log('quitar motor');
   $(this).parent().parent().remove();
 
   return false;
+});
+
+//---- aparecer form collection con select de productos ----
+$('.add-producto').click(function (e) {
+    e.preventDefault();
+    // var elementoMotor = document.getElementsByClassName(this);
+    var totServicios = $('.add-another-servicio').data('cantidad');
+    var lista = $('.add-another-servicio').data('idlista');
+    var servicioListPrimero = jQuery('#servicio-fields-list' + lista);
+    //var motorListOtros = jQuery('.lista-motores'+lista);
+    // grab the prototype template
+    var newWidget = $(servicioListPrimero).data('prototype');
+
+
+    // replace the "__name__" used in the id and name of the prototype
+    // with a number that's unique to your emails
+    // end name attribute looks like name="contact[emails][2]"
+    newWidget = newWidget.replace(/__name__/g, totServicios);
+    newWidget = newWidget.replace('td-otroservicio', 'hide');
+    newWidget = newWidget.replace('td-servicio', 'hide');
+    totServicios++;
+    $('.add-another-servicio').data('cantidad', totServicios);
+    // create a new list element and add it to the list
+    var newLi = jQuery('<tr class="servicio-agregado"></tr>').html(newWidget);
+
+    newLi.appendTo(servicioListPrimero);
+    $('.select-buscador').select2();
+    // also add a remove button, just for this example
+    //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
+
+    newLi.before(newLi);
+    //$('.select-busca-producto').select2();
+});
+//---- aparecer form collection con select de productos ----
+$('.add-servicio').click(function (e) {
+    e.preventDefault();
+    // var elementoMotor = document.getElementsByClassName(this);
+    var totServicios = $('.add-another-servicio').data('cantidad');
+    var lista = $('.add-another-servicio').data('idlista');
+    var servicioListPrimero = jQuery('#servicio-fields-list' + lista);
+    //var motorListOtros = jQuery('.lista-motores'+lista);
+    // grab the prototype template
+    var newWidget = $(servicioListPrimero).data('prototype');
+
+
+    // replace the "__name__" used in the id and name of the prototype
+    // with a number that's unique to your emails
+    // end name attribute looks like name="contact[emails][2]"
+    newWidget = newWidget.replace(/__name__/g, totServicios);
+    newWidget = newWidget.replace('td-otroservicio', 'hide');
+    newWidget = newWidget.replace('td-producto', 'hide');
+    totServicios++;
+    $('.add-another-servicio').data('cantidad', totServicios);
+    // create a new list element and add it to the list
+    var newLi = jQuery('<tr class="servicio-agregado"></tr>').html(newWidget);
+
+    newLi.appendTo(servicioListPrimero);
+    $('.select-buscador').select2();
+    // also add a remove button, just for this example
+    //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
+
+    newLi.before(newLi);
+    //$('.select-busca-producto').select2();
 });
 
 //collectio al agregar servicios adicionales marina humeda
@@ -330,37 +400,6 @@ elclienteastillero.change(function () {
 });
 
 //--- fin select dependiente para astillero cotización ---
-
-//---- aparecer form collection con select de productos ----
-$('.add-producto').click(function (e) {
-  e.preventDefault();
-  // var elementoMotor = document.getElementsByClassName(this);
-  var totServicios = $('.add-another-servicio').data('cantidad');
-  var lista = $('.add-another-servicio').data('idlista');
-  var servicioListPrimero = jQuery('#servicio-fields-list' + lista);
-  //var motorListOtros = jQuery('.lista-motores'+lista);
-  // grab the prototype template
-  var newWidget = $(servicioListPrimero).data('prototype');
-
-
-  // replace the "__name__" used in the id and name of the prototype
-  // with a number that's unique to your emails
-  // end name attribute looks like name="contact[emails][2]"
-  newWidget = newWidget.replace(/__name__/g, totServicios);
-  newWidget = newWidget.replace('td-servicio', 'hide');
-  totServicios++;
-  $('.add-another-servicio').data('cantidad', totServicios);
-  // create a new list element and add it to the list
-  var newLi = jQuery('<tr class="servicio-agregado"></tr>').html(newWidget);
-
-  newLi.appendTo(servicioListPrimero);
-  $('.select-buscador').select2();
-  // also add a remove button, just for this example
-  //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
-
-  newLi.before(newLi);
-  //$('.select-busca-producto').select2();
-});
 
 //-- fin aparecer form collection con select de productos ---
 
