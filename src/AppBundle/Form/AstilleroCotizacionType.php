@@ -6,6 +6,7 @@ namespace AppBundle\Form;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -34,7 +35,7 @@ class AstilleroCotizacionType extends AbstractType
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
                     'readonly' => true],
-                'format' => 'dd-MM-yyyy'
+                'format' => 'yyyy-MM-dd'
             ])
             ->add('fechaSalida',DateType::class,[
                 'label' => 'Fecha Salida',
@@ -42,10 +43,19 @@ class AstilleroCotizacionType extends AbstractType
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
                     'readonly' => true],
-                'format' => 'dd-MM-yyyy'
+                'format' => 'yyyy-MM-dd'
             ])
             ->add('diasEstadia',null,[
-                'label'=>'Días Estadia'
+                'label'=>'Días Estadia',
+                'attr'=>['readonly'=>true]
+            ])
+            ->add('dolar', MoneyType::class, [
+                'required'=>false,
+                'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
+                'empty_data' => 0,
             ])
             ->add('acservicios',CollectionType::class,[
                 'entry_type' => AstilleroCotizaServicioType::class,

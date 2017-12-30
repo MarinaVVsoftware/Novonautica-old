@@ -125,4 +125,3 @@ class Correo
         return $this->descripcion;
     }
 }
-

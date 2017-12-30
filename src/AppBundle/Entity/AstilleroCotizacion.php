@@ -114,6 +114,27 @@ class AstilleroCotizacion
      */
     private $acservicios;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="validanovo", type="smallint")
+     */
+    private $validanovo;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="validacliente", type="smallint")
+     */
+    private $validacliente;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="estatus", type="boolean")
+     */
+    private $estatus;
+
     public function __construct() {
         $this->acservicios = new ArrayCollection();
     }
@@ -425,5 +446,53 @@ class AstilleroCotizacion
     public function getAcservicios()
     {
         return $this->acservicios;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValidanovo()
+    {
+        return $this->validanovo;
+    }
+
+    /**
+     * @param int $validanovo
+     */
+    public function setValidanovo($validanovo)
+    {
+        $this->validanovo = $validanovo;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValidacliente()
+    {
+        return $this->validacliente;
+    }
+
+    /**
+     * @param int $validacliente
+     */
+    public function setValidacliente($validacliente)
+    {
+        $this->validacliente = $validacliente;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEstatus()
+    {
+        return $this->estatus;
+    }
+
+    /**
+     * @param bool $estatus
+     */
+    public function setEstatus($estatus)
+    {
+        $this->estatus = $estatus;
     }
 }

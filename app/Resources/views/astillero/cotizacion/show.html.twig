@@ -72,6 +72,18 @@
                                             <th>Fecharegistro</th>
                                             <td>{% if astilleroCotizacion.fecharegistro %}{{ astilleroCotizacion.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
                                         </tr>
+                                        <tr>
+                                            <th>Estatus validación</th>
+                                            <td>
+                                                {% if astilleroCotizacion.validanovo == 0 %}
+                                                    Pendiente validación de Novonautica
+                                                {% elseif astilleroCotizacion.validanovo == 1 %}
+                                                    Rechazado
+                                                {% elseif astilleroCotizacion.validanovo == 2 %}
+                                                    Aprobado
+                                                {% endif %}
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
