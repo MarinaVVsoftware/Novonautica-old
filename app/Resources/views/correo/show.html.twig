@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Correo</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ correo.id }}</td>
+            </tr>
+            <tr>
+                <th>Fecha</th>
+                <td>{% if correo.fecha %}{{ correo.fecha|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Tipo</th>
+                <td>{{ correo.tipo }}</td>
+            </tr>
+            <tr>
+                <th>Descripcion</th>
+                <td>{{ correo.descripcion }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('historial-correo_index') }}">Back to the list</a>
+        </li>
+    </ul>
+{% endblock %}

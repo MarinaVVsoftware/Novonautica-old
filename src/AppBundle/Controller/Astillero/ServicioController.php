@@ -1,0 +1,140 @@
+<?php
+
+namespace AppBundle\Controller\Astillero;
+
+use AppBundle\Entity\Astillero\Servicio;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+
+/**
+ * Servicio controller.
+ *
+ * @Route("astillero/servicio")
+ */
+class ServicioController extends Controller
+{
+    /**
+     * Lists all servicio entities.
+     *
+     * @Route("/", name="astillero_servicio_index")
+     * @Method("GET")
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $servicios = $em->getRepository('AppBundle:Astillero\Servicio')->findAll();
+
+        return $this->render('astillero/servicio/index.html.twig', array(
+            'servicios' => $servicios,
+            'title' => 'Astillero Servicios'
+        ));
+    }
+
+    /**
+     * Creates a new servicio entity.
+     *
+     * @Route("/nuevo", name="astillero_servicio_new")
+     * @Method({"GET", "POST"})
+     */
+    public function newAction(Request $request)
+    {
+        $servicio = new Servicio();
+        $form = $this->createForm('AppBundle\Form\Astillero\ServicioType', $servicio);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($servicio);
+            $em->flush();
+
+            return $this->redirectToRoute('astillero_servicio_index');
+        }
+
+        return $this->render('astillero/servicio/new.html.twig', array(
+            'servicio' => $servicio,
+            'form' => $form->createView(),
+            'title' => 'Astillero Nuevo Servicio'
+        ));
+    }
+
+    /**
+     * Finds and displays a servicio entity.
+     *
+     * @Route("/{id}", name="astillero_servicio_show")
+     * @Method("GET")
+     */
+    public function showAction(Servicio $servicio)
+    {
+        $deleteForm = $this->createDeleteForm($servicio);
+
+        return $this->render('astillero/servicio/show.html.twig', array(
+            'servicio' => $servicio,
+            'delete_form' => $deleteForm->createView(),
+            'title' => 'Astillero Detalle Servicios'
+        ));
+    }
+
+    /**
+     * Displays a form to edit an existing servicio entity.
+     *
+     * @Route("/{id}/editar", name="astillero_servicio_edit")
+     * @Method({"GET", "POST"})
+     */
+    public function editAction(Request $request, Servicio $servicio)
+    {
+        $deleteForm = $this->createDeleteForm($servicio);
+        $editForm = $this->createForm('AppBundle\Form\Astillero\ServicioType', $servicio);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('astillero_servicio_index');
+        }
+
+        return $this->render('astillero/servicio/edit.html.twig', array(
+            'servicio' => $servicio,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            'title' => 'Astillero Editar Servicio'
+        ));
+    }
+
+    /**
+     * Deletes a servicio entity.
+     *
+     * @Route("/{id}", name="astillero_servicio_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, Servicio $servicio)
+    {
+        $form = $this->createDeleteForm($servicio);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($servicio);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('astillero_servicio_index');
+    }
+
+    /**
+     * Creates a form to delete a servicio entity.
+     *
+     * @param Servicio $servicio The servicio entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Servicio $servicio)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('astillero_servicio_delete', array('id' => $servicio->getId())))
+            ->setMethod('DELETE')
+            ->getForm()
+        ;
+    }
+}

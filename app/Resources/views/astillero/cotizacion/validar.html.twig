@@ -1,0 +1,450 @@
+{% extends 'estructura/plantilla.twig' %}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">{{ title }}</h3>
+                            {#<span>#}
+                                {#{% if astilleroCotizacion.foliorecotiza == 0 %}#}
+                                    {#{{ astilleroCotizacion.folio }}#}
+                                {#{% else %}#}
+                                    {#{{ astilleroCotizacion.folio }}-{{ astilleroCotizacion.foliorecotiza }}#}
+                                {#{% endif %}#}
+                            {#</span>#}
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('astillero_index') }}">Regresar</a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-body panel-pestanias">
+                    {{ form_start(edit_form) }}
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="primero">
+                            <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Total (USD)</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
+                        </li>
+                        <li role="presentation" class="active">
+                            <a href="#validacion" aria-controls="validacion" role="tab" data-toggle="tab">Validación</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane" id="generales">
+                            <div class="row">
+                                <div class="col-sm-3">
+
+                                    <div id="info-cliente">
+                                        <label>Cliente</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.cliente.nombre }}</div>
+                                        <label>Correo electrónico</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.cliente.correo }}</div>
+                                        <label>Número de teléfono</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.cliente.telefono }}</div>
+                                        <label>Dirección</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.cliente.direccion }}</div>
+                                        <label>R.F.C.</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.cliente.rfc }}</div>
+                                        <label>Razón social</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.cliente.razonsocial }}</div>
+                                        <label>Dirección fiscal</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.cliente.direccionfiscal }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+
+                                    <div id="info-barco">
+                                        <label>Barco</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.nombre }}</div>
+                                        <label>Modelo</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.modelo }}</div>
+                                        <label>Eslora</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.eslora }}</div>
+                                        <label>Manga</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.manga }}</div>
+                                        <label>Nombre del capitán</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.nombreCapitan }}</div>
+                                        <label>Teléfono del capitán</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.telefonoCapitan }}</div>
+                                        <label>Correo del capitán</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.correoCapitan }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="servicios">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="input-daterange" id="rangoFehas">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label>Fecha de llegada</label>
+                                                <div class='info-input'>{{ astilleroCotizacion.fechaLlegada|date('d-m-Y') }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label>Fecha de salida</label>
+                                                <div class='info-input'>{{ astilleroCotizacion.fechaSalida|date('d-m-Y') }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <label>Dolar</label>
+                                    <div class='info-input'>{{ (astilleroCotizacion.dolar/100)|number_format(2) }}</div>
+
+                                </div>
+                                {#<div class="col-sm-6">#}
+                                    {#{%  if astilleroCotizacion.mhcservicios.0.tipo == 3 %}#}
+                                        {#<div class="row">#}
+                                            {#<div class="col-sm-6">#}
+                                                {#<label>Litros:</label>#}
+                                                {#<div class='info-input'>{{ astilleroCotizacion.mHCservicios.0.cantidad }}</div>#}
+                                            {#</div>#}
+                                            {#<div class="col-sm-6">#}
+                                                {#<label>Precio por litro</label>#}
+                                                {#<div class='info-input'>{{ (astilleroCotizacion.mHCservicios.0.precio/100)|number_format(2) }}</div>#}
+                                            {#</div>#}
+                                        {#</div>#}
+                                    {#{% else %}#}
+                                        {#<div class="row">#}
+                                            {#<div class="col-sm-6">#}
+                                                {#<label>Días Estadía:</label>#}
+                                                {#<div class='info-input'>{{ astilleroCotizacion.mhcservicios.0.cantidad }}</div>#}
+                                            {#</div>#}
+
+                                            {#<div class="col-sm-6">#}
+                                                {#<label>Precio por día:</label>#}
+                                                {#<div class='info-input'>{{ astilleroCotizacion.mhcservicios.0.precio/100 }}</div>#}
+                                            {#</div>#}
+                                        {#</div>#}
+                                        {#<div class="row">#}
+                                            {#<div class="col-sm-6 col-sm-offset-6">#}
+                                                {#<label>Precio electricidad:</label>#}
+                                                {#<div class='info-input'>{{ (astilleroCotizacion.mhcservicios.1.precio/100)}}</div>#}
+                                            {#</div>#}
+                                        {#</div>#}
+                                    {#{% endif %}#}
+                                {#</div>#}
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="total">
+                            <div class="row">
+                                <div class="col-sm-9 text-right">
+                                    <span>Tipo de cambio:</span>
+                                    <div id="tipocambio" class=""
+                                         data-valor="{{ astilleroCotizacion.dolar/100 }}">{{ (astilleroCotizacion.dolar/100)|number_format(2) }}
+                                        MXN
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <small>Precios en USD</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <table id="mh_nuevacotizacion" class="table text-center">
+                                        <thead>
+                                        <tr>
+                                            <th>Cantidad</th>
+                                            <th>Eslora (pies)</th>
+                                            <th>Servicio</th>
+                                            <th>Prec. Unid.</th>
+                                            <th>Sub-Total</th>
+                                            <th>IVA</th>
+
+                                            <th>Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for acservicio in astilleroCotizacion.acservicios  %}
+                                            {% if acservicio.estatus %}
+                                                <tr>
+                                                    <td>{{ acservicio.cantidad }}</td>
+                                                    <td>{{ astilleroCotizacion.barco.eslora }}</td>
+                                                    <td>
+                                                        {#{% if mhservicio.tipo == 1 %}#}
+                                                            {#Días Estadia#}
+                                                        {#{% elseif mhservicio.tipo == 2 %}#}
+                                                            {#Conexión a electricidad#}
+                                                        {#{% else %}#}
+                                                            {#Abastecimiento de gasolina#}
+                                                        {#{% endif %}#}
+                                                    </td>
+                                                    <td>$ {{ (acservicio.precio/100)|number_format(2) }}</td>
+                                                    <td>$ {{ (acservicio.subtotal/100)|number_format(2) }}</td>
+                                                    <td>$ {{ (acservicio.iva/100)|number_format(2) }}</td>
+
+                                                    <td>$ {{ (acservicio.total/100)|number_format(2) }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div id="valiva" class="" data-valor="{{ astilleroCotizacion.iva }}">
+                                        <small>IVA: {{ astilleroCotizacion.iva }} %</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $
+                                        <span id="gransubtot">{{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $
+                                        <span id="graniva">{{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $
+                                        <span id="grantot">{{ (astilleroCotizacion.total/100)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="totalmxn">
+                            <div class="row">
+                                <div class="col-sm-9 text-right">
+                                    <span>Tipo de cambio:</span>
+                                    <div id="" class=""
+                                         data-valor="{{ astilleroCotizacion.dolar/100 }}">{{ (astilleroCotizacion.dolar/100)|number_format(2) }}
+                                        MXN
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <small>Precios en MXN</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <table id="" class="table text-center">
+                                        <thead>
+                                        <tr>
+                                            <th>Cantidad</th>
+                                            <th>Eslora (pies)</th>
+                                            <th>Servicio</th>
+                                            <th>Prec. Unid.</th>
+                                            <th>Sub-Total</th>
+                                            <th>IVA</th>
+                                            <th>Descuento</th>
+                                            <th>Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {#{% for mhservicio in astilleroCotizacion.mhcservicios  %}#}
+                                            {#{% if mhservicio.estatus %}#}
+                                                {#<tr>#}
+                                                    {#<td>{{ mhservicio.cantidad }}</td>#}
+                                                    {#<td>{{ astilleroCotizacion.barco.eslora }}</td>#}
+                                                    {#<td>#}
+                                                        {#{% if mhservicio.tipo == 1 %}#}
+                                                            {#Días Estadia#}
+                                                        {#{% elseif mhservicio.tipo == 2 %}#}
+                                                            {#Conexión a electricidad#}
+                                                        {#{% else %}#}
+                                                            {#Abastecimiento de gasolina#}
+                                                        {#{% endif %}#}
+                                                    {#</td>#}
+                                                    {#<td>$ {{ ((mhservicio.precio * astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>#}
+                                                    {#<td>$ {{ ((mhservicio.subtotal * astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>#}
+                                                    {#<td>$ {{ ((mhservicio.iva * astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>#}
+                                                    {#<td>$ {{ ((mhservicio.descuento * astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>#}
+                                                    {#<td>$ {{ ((mhservicio.total * astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>#}
+                                                {#</tr>#}
+                                            {#{% endif %}#}
+                                        {#{% endfor %}#}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div id="" class="" data-valor="{{ astilleroCotizacion.iva }}">
+                                        <small>IVA: {{ astilleroCotizacion.iva }} %</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $
+                                        <span id="gransubtot">{{ ((astilleroCotizacion.subtotal * astilleroCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $
+                                        <span id="graniva">{{ ((astilleroCotizacion.ivatotal * astilleroCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $
+                                        <span id="grantot">{{ ((astilleroCotizacion.total * astilleroCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div role="tabpanel" class="tab-pane active" id="validacion">
+                            {% if edit_form.validanovo is defined %}
+                                <div class="row">
+                                    <div class="col-sm-12 espacio-linea">
+                                        <label>Indique su respuesta</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="middle">
+                                            {{ form_widget(edit_form.validanovo) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button type="submit" class="btn btn-azul pull-right">
+                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                            Guardar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="notarechazado">
+                                    <div class="row">
+                                        <div class="col-sm-8 espacio-linea-arriba2">
+                                            {#{{ form_row(edit_form.notasnovo) }}#}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if edit_form.validacliente is defined %}
+                                <div class="row">
+                                    <div class="col-sm-12 espacio-linea">
+                                        <label>Validación Cliente</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="middle">
+                                            {{ form_widget(edit_form.validacliente) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8 espacio-linea-arriba2">
+                                        {{ form_row(edit_form.notascliente) }}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {{ form_end(edit_form) }}
+                </div>
+                {#<div class="panel-footer">#}
+                {#<div class="row">#}
+                {#<div class="col-sm-12">#}
+                {#<a href="{{ path('marina-humeda_show',{ 'id': astilleroCotizacion.id }) }}" class="btn btn-naranja pull-right">#}
+                {#<i class="fa fa-ban" aria-hidden="true"></i>#}
+                {#Cancelar#}
+                {#</a>#}
+                {#</div>#}
+                {#</div>#}
+                {#</div>#}
+            </div>
+        </section>
+    </div>
+{% endblock %}

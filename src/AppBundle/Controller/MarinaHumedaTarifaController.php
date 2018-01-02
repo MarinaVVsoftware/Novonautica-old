@@ -24,7 +24,9 @@ class MarinaHumedaTarifaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $marinaHumedaTarifas = $em->getRepository('AppBundle:MarinaHumedaTarifa')->findAll();
+        //$marinaHumedaTarifas = $em->getRepository('AppBundle:MarinaHumedaTarifa')->findAll();
+        $mhtRepo = $em->getRepository('AppBundle:MarinaHumedaTarifa');
+        $marinaHumedaTarifas = $mhtRepo->ordenaPorTipoCosto();
 
         return $this->render('marinahumeda/tarifa/index.html.twig', [
             'title' => 'Tarifas',
