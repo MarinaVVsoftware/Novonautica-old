@@ -31,6 +31,10 @@
                                             Recotización Servicio Marina Humeda
                                         {% elseif correo.tipo == 3%}
                                             Cootización Servicio Astillero
+                                        {% elseif correo.tipo == 4%}
+                                            Recotización Servicio Astillero
+                                        {% else %}
+                                            Otros
                                         {% endif %}
                                     </td>
                                     <td>{{ correo.descripcion }}</td>

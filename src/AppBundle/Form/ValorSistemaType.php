@@ -32,10 +32,20 @@ class ValorSistemaType extends AbstractType
             ->add('folioMarina',TextType::class,[
                 'attr' => ['class' => 'esdecimal'],
                 'required' => false,
-                'label' => 'Folio Marina Húmeda Cotización'
+                'label' => 'Folio Cotizaciones'
+            ])
+            ->add('folioAstillero',TextType::class,[
+                'attr' => ['class' => 'esdecimal'],
+                'required' => false,
+                'label' => 'Astillero Cotización (no usado)'
             ])
             ->add('diasHabilesMarinaCotizacion',TextType::class,[
                 'label' => 'Días hábiles pago de cotización marina húmeda',
+                'attr' => ['class' => 'esdecimal'],
+                'required' => false,
+            ])
+            ->add('diasHabilesAstilleroCotizacion',TextType::class,[
+                'label' => 'Días hábiles cotización astillero',
                 'attr' => ['class' => 'esdecimal'],
                 'required' => false,
             ])
@@ -48,6 +58,11 @@ class ValorSistemaType extends AbstractType
                 'attr' => ['rows' => 7, 'class' => 'editorwy'],
                 'required' => false,
                 'label' => 'Mensaje en correo de gasolina de marina húmeda cotización'
+            ])
+            ->add('mensajeCorreoAstillero',TextareaType::class,[
+                'attr' => ['rows' => 7, 'class' => 'editorwy'],
+                'required' => false,
+                'label' => 'Mensaje en correo de astillero cotización'
             ])
         ;
     }

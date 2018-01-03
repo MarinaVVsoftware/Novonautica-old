@@ -74,7 +74,7 @@
     </style>
 </head>
 <body>
-<div class="container-fluid">
+<div class="container-fluid" style="page-break-inside: avoid;">
     <dv class="row pad-arriba-1">
         <div class="col-xs-12">
             Estimado Capitán:<br>
@@ -90,7 +90,7 @@
                     <td></td>
                     <td></td>
                     <td colspan="2">Tipo de cambio:</td>
-                    <td class="cuadro-bordeado">$ 19.00</td>
+                    <td class="cuadro-bordeado">$ {{ (astilleroCotizacion.dolar/100)|number_format(2) }}</td>
                 </tr>
                 <tr class="altura-1">
                     <td></td>
@@ -102,47 +102,47 @@
                 </tr>
                 <tr>
                     <td>Tipo de Embarcación:</td>
-                    <td class="cuadro-bordeado">SEARAY</td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.barco.modelo }}</td>
                     <td class="pad-izq-1">Nombre del encargado:</td>
-                    <td class="cuadro-bordeado">MARCOS GARCIA</td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.barco.nombreResponsable }}</td>
                     <td class="pad-izq-1">Fecha de llegada:</td>
-                    <td class="cuadro-bordeado"></td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.fechaLlegada|date('d-m-Y') }}</td>
                 </tr>
                 <tr>
                     <td>Nombre de la Embarcación:</td>
-                    <td class="cuadro-bordeado">AMAPOLA</td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.barco.nombre }}</td>
                     <td class="pad-izq-1">Teléfono del encargado:</td>
-                    <td class="cuadro-bordeado">9982273449</td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.barco.telefonoResponsable }}</td>
                     <td class="pad-izq-1">Fecha de salida:</td>
-                    <td class="cuadro-bordeado"></td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.fechaSalida|date('d-m-Y') }}</td>
                 </tr>
                 <tr>
                     <td>Eslora:</td>
-                    <td class="cuadro-bordeado">40</td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.barco.eslora }}</td>
                     <td class="pad-izq-1">Email encargado:</td>
-                    <td class="cuadro-bordeado">grupometsva@hotmail.com</td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.barco.correoResponsable }}</td>
                     <td class="pad-izq-1">Días Estadía:</td>
-                    <td class="cuadro-bordeado">15</td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.diasEstadia }}</td>
                 </tr>
                 <tr>
                     <td>Manga:</td>
-                    <td class="cuadro-bordeado"></td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.barco.manga }}</td>
                     <td class="pad-izq-1">RFC:</td>
-                    <td class="cuadro-bordeado"></td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.cliente.rfc }}</td>
                     <td class="pad-izq-1">Días Adicionales:</td>
                     <td class="cuadro-bordeado"></td>
                 </tr>
                 <tr>
                     <td>Nombre del capitán:</td>
-                    <td class="cuadro-bordeado">TIOJARIS VARGAS</td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.barco.nombreCapitan }}</td>
                     <td class="pad-izq-1">Razón social:</td>
-                    <td class="cuadro-bordeado"></td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.cliente.razonsocial }}</td>
                     <td class="pad-izq-1">Lugar de trabajo:</td>
                     <td class="cuadro-bordeado">Astillero V&V</td>
                 </tr>
                 <tr>
                     <td>Teléfono del capitán:</td>
-                    <td class="cuadro-bordeado">9982273449</td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.barco.telefonoCapitan }}</td>
                     <td class="pad-izq-1">Clabe bancaria:</td>
                     <td class="cuadro-bordeado"></td>
                     <td></td>
@@ -150,7 +150,7 @@
                 </tr>
                 <tr>
                     <td>Email capitán:</td>
-                    <td class="cuadro-bordeado">grupometsva@hotmail.com</td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.barco.correoCapitan }}</td>
                     <td class="pad-izq-1">Número de cuenta:</td>
                     <td class="cuadro-bordeado"></td>
                     <td></td>
@@ -168,7 +168,7 @@
                     <td></td>
                     <td></td>
                     <td class="pad-izq-1">Dirección fiscal:</td>
-                    <td class="cuadro-bordeado"></td>
+                    <td class="cuadro-bordeado">{{ astilleroCotizacion.cliente.direccionfiscal }}</td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -183,64 +183,36 @@
     </div>
     <div class="row pad-arriba-1">
         <div class="col-xs-12">
+            Precios en USD
             <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>Descripción</th>
+                    <th>Cantidad</th>
                     <th></th>
                     <th>Precio unitario</th>
-                    <th>Cantidad</th>
                     <th>Subtotal</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Maniobra de varado y botadura por pie:</td>
-                    <td></td>
-                    <td>$120.00</td>
-                    <td>40</td>
-                    <td>$4,800.00</td>
-                </tr>
-                <tr>
-                    <td>Maniobra de varado y botadura por pie:</td>
-                    <td></td>
-                    <td>$120.00</td>
-                    <td>40</td>
-                    <td>$4,800.00</td>
-                </tr>
-                <tr>
-                    <td>Maniobra de varado y botadura por pie:</td>
-                    <td></td>
-                    <td>$120.00</td>
-                    <td>40</td>
-                    <td>$4,800.00</td>
-                </tr>
-                <tr>
-                    <td>Maniobra de varado y botadura por pie:</td>
-                    <td></td>
-                    <td>$120.00</td>
-                    <td>40</td>
-                    <td>$4,800.00</td>
-                </tr>
-                <tr>
-                    <td>Maniobra de varado y botadura por pie:</td>
-                    <td></td>
-                    <td>$120.00</td>
-                    <td>40</td>
-                    <td>$4,800.00</td>
-                </tr>
-                <tr>
-                    <td>Maniobra de varado y botadura por pie:</td>
-                    <td></td>
-                    <td>$120.00</td>
-                    <td>40</td>
-                    <td>$4,800.00</td>
-                </tr>
+                {% set sumaserv = 0 %}
+                {% for unservicio in astilleroCotizacion.acservicios %}
+                    {% if unservicio.astilleroserviciobasico and unservicio.estatus%}
+                        <tr>
+                            <td>{{ unservicio.astilleroserviciobasico.nombre }}</td>
+                            <td>{{ unservicio.cantidad }}</td>
+                            <td></td>
+                            <td>$ {{ (unservicio.precio/100)|number_format(2) }}</td>
+                            <td>$ {{ (unservicio.subtotal/100)|number_format(2) }}</td>
+                        </tr>
+                        {% set sumaserv=sumaserv+unservicio.subtotal  %}
+                    {% endif %}
+                {% endfor %}
                 </tbody>
                 <tfoot>
                 <tr>
                     <th colspan="4" class="text-right">Sub total estadía</th>
-                    <td class="borde-bajo-doble">$ 24,614.00</td>
+                    <td class="borde-bajo-doble">$ {{ (sumaserv/100)|number_format(2) }}</td>
                 </tr>
                 </tfoot>
             </table>
@@ -253,64 +225,36 @@
     </div>
     <div class="row pad-arriba-1">
         <div class="col-xs-12">
+            Precios en USD
             <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>Descripción</th>
                     <th>Cantidad</th>
-                    <th>Precio unitario</th>
                     <th>Unidad</th>
+                    <th>Precio unitario</th>
                     <th>Subtotal</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Uso de instalaciones:</td>
-                    <td>1</td>
-                    <td>$120.00</td>
-                    <td>Serv</td>
-                    <td>$3,000.00</td>
-                </tr>
-                <tr>
-                    <td>Uso de instalaciones:</td>
-                    <td>1</td>
-                    <td>$120.00</td>
-                    <td>Serv</td>
-                    <td>$3,000.00</td>
-                </tr>
-                <tr>
-                    <td>Uso de instalaciones:</td>
-                    <td>1</td>
-                    <td>$120.00</td>
-                    <td>Serv</td>
-                    <td>$3,000.00</td>
-                </tr>
-                <tr>
-                    <td>Uso de instalaciones:</td>
-                    <td>1</td>
-                    <td>$120.00</td>
-                    <td>Serv</td>
-                    <td>$3,000.00</td>
-                </tr>
-                <tr>
-                    <td>Uso de instalaciones:</td>
-                    <td>1</td>
-                    <td>$120.00</td>
-                    <td>Serv</td>
-                    <td>$3,000.00</td>
-                </tr>
-                <tr>
-                    <td>Uso de instalaciones:</td>
-                    <td>1</td>
-                    <td>$120.00</td>
-                    <td>Serv</td>
-                    <td>$3,000.00</td>
-                </tr>
+                {% set sumaserv = 0 %}
+                {% for unservicio in astilleroCotizacion.acservicios %}
+                    {% if unservicio.servicio and unservicio.estatus%}
+                        <tr>
+                            <td>{{ unservicio.servicio.nombre }}</td>
+                            <td>{{ unservicio.cantidad }}</td>
+                            <td>Serv.</td>
+                            <td>$ {{ (unservicio.precio/100)|number_format(2) }}</td>
+                            <td>$ {{ (unservicio.subtotal/100)|number_format(2) }}</td>
+                        </tr>
+                        {% set sumaserv=sumaserv+unservicio.subtotal  %}
+                    {% endif %}
+                {% endfor %}
                 </tbody>
                 <tfoot>
                 <tr>
                     <th colspan="4" class="text-right">Total trabajos</th>
-                    <td class="borde-bajo-doble">$ 24,614.00</td>
+                    <td class="borde-bajo-doble">$ {{ (sumaserv/100)|number_format(2) }}</td>
                 </tr>
                 </tfoot>
             </table>
@@ -323,50 +267,78 @@
     </div>
     <div class="row pad-arriba-1">
         <div class="col-xs-12">
+            Precios en USD
             <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>Descripción</th>
                     <th>Cantidad</th>
-                    <th>Precio unitario</th>
                     <th>Unidad</th>
+                    <th>Precio unitario</th>
                     <th>Subtotal</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Lijas:</td>
-                    <td>1</td>
-                    <td>$120.00</td>
-                    <td>Pz</td>
-                    <td>$200.00</td>
-                </tr>
-                <tr>
-                    <td>Lijas:</td>
-                    <td>1</td>
-                    <td>$120.00</td>
-                    <td>Pz</td>
-                    <td>$200.00</td>
-                </tr>
-                <tr>
-                    <td>Lijas:</td>
-                    <td>1</td>
-                    <td>$120.00</td>
-                    <td>Pz</td>
-                    <td>$200.00</td>
-                </tr>
-                <tr>
-                    <td>Lijas:</td>
-                    <td>1</td>
-                    <td>$120.00</td>
-                    <td>Pz</td>
-                    <td>$200.00</td>
-                </tr>
+                {% set sumaserv = 0 %}
+                {% for unservicio in astilleroCotizacion.acservicios %}
+                    {% if unservicio.producto and unservicio.estatus%}
+                        <tr>
+                            <td>{{ unservicio.producto.nombre }}</td>
+                            <td>{{ unservicio.cantidad }}</td>
+                            <td>{{ unservicio.producto.unidad }}</td>
+                            <td>$ {{ (unservicio.precio/100)|number_format(2) }}</td>
+                            <td>$ {{ (unservicio.subtotal/100)|number_format(2) }}</td>
+                        </tr>
+                        {% set sumaserv=sumaserv+unservicio.subtotal  %}
+                    {% endif %}
+                {% endfor %}
                 </tbody>
                 <tfoot>
                 <tr>
                     <th colspan="4" class="text-right">Total materiales</th>
-                    <td class="borde-bajo-doble">$ 1,614.00</td>
+                    <td class="borde-bajo-doble">$ {{ (sumaserv/100)|number_format(2) }}</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="row pad-arriba-1">
+        <div class="col-xs-12 text-center">
+            <strong>Cotización Otros</strong>
+        </div>
+    </div>
+    <div class="row pad-arriba-1">
+        <div class="col-xs-12">
+            Precios en USD
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Unidad</th>
+                    <th>Precio unitario</th>
+                    <th>Subtotal</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% set sumaserv = 0 %}
+                {% for unservicio in astilleroCotizacion.acservicios %}
+                    {% if unservicio.otroservicio and unservicio.estatus%}
+                        <tr>
+                            <td>{{ unservicio.otroservicio }}</td>
+                            <td>{{ unservicio.cantidad }}</td>
+                            <td>Otros</td>
+                            <td>$ {{ (unservicio.precio/100)|number_format(2) }}</td>
+                            <td>$ {{ (unservicio.subtotal/100)|number_format(2) }}</td>
+                        </tr>
+                        {% set sumaserv=sumaserv+unservicio.subtotal  %}
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th colspan="4" class="text-right">Total materiales</th>
+                    <td class="borde-bajo-doble">$ {{ (sumaserv/100)|number_format(2) }}</td>
                 </tr>
                 </tfoot>
             </table>
@@ -396,15 +368,15 @@
                         <tbody>
                         <tr>
                             <td>Total</td>
-                            <td class="borde-bajo-doble">$ 24,614.00</td>
+                            <td class="borde-bajo-doble">$ {{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</td>
                         </tr>
                         <tr>
-                            <td>IVA 16%</td>
-                            <td class="borde-bajo-doble">$ 3,938.24</td>
+                            <td>IVA {{ astilleroCotizacion.iva }}%</td>
+                            <td class="borde-bajo-doble">$ {{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</td>
                         </tr>
                         <tr>
                             <td>Total general</td>
-                            <td class="borde-bajo-doble">$ 28,552.24</td>
+                            <td class="borde-bajo-doble">$ {{ (astilleroCotizacion.total/100)|number_format(2) }}</td>
                         </tr>
                         <tr class="altura-1">
                             <td></td>
@@ -420,7 +392,7 @@
                         </tr>
                         <tr>
                             <td>Saldo pendiente</td>
-                            <td class="borde-bajo-doble">$ 28,552.24</td>
+                            <td class="borde-bajo-doble">$ -</td>
                         </tr>
                         </tbody>
                     </table>

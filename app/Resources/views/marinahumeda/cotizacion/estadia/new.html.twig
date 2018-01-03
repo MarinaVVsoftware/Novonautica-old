@@ -423,7 +423,7 @@
                   "<label>Razón social</label>" + "<div class='info-input'>" + cliente.razonsocial + "</div>" +
                   "<label>Dirección fiscal</label>" + "<div class='info-input'>" + cliente.direccionfiscal + "</div>";
               $("#info-cliente").append(html);
-              $("#de_eslora").data('valor', barco.eslora);
+
               $('#loading').hide();
             },
             error: function (jqXHR, exception) {
