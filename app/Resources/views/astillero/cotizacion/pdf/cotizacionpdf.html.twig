@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cotización PDF</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"
+    >
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        * {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            width: 100% !important;
+            height: 100%;
+            font-size: 14px;
+        }
+
+        .cuadro-bordeado {
+            border: 1px solid #000;
+            padding: 3px;
+        }
+
+        .pad-arriba-1 {
+            padding-top: 15px;
+        }
+
+        .pad-arriba-2 {
+            padding-top: 7px;
+        }
+        .pad-izq-1{
+            padding-left: 5px;
+        }
+        .borde-bajo-doble {
+            border-bottom: 4px solid #000000;
+            border-bottom-style: double;
+        }
+
+        .altura-1 {
+            height: 10px;
+        }
+
+        .fondo-gris {
+            background-color: #a8a8a8;
+        }
+        .fondo-amarillo-1{
+            background-color: #ecd63e;
+        }
+        .fondo-amarillo-2{
+            background-color: #c5b038;
+        }
+        .fondo-rosado{
+            background-color: #ffaeae;
+        }
+        .table-bordered, .table-bordered>thead>tr>th,
+        .table-bordered>tbody>tr>td{
+            border: 1px solid #000000;
+        }
+        .table-bordered>tfoot>tr>td{
+            border-bottom: 4px solid #000000;
+            border-bottom-style: double;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <dv class="row pad-arriba-1">
+        <div class="col-xs-12">
+            Estimado Capitán:<br>
+            Por medio de este documento le presento la cotización para varar y trabajar su embarcación:
+        </div>
+    </dv>
+    <div class="row pad-arriba-1">
+        <div class="col-xs-12">
+            <table class="">
+                <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2">Tipo de cambio:</td>
+                    <td class="cuadro-bordeado">$ 19.00</td>
+                </tr>
+                <tr class="altura-1">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Tipo de Embarcación:</td>
+                    <td class="cuadro-bordeado">SEARAY</td>
+                    <td class="pad-izq-1">Nombre del encargado:</td>
+                    <td class="cuadro-bordeado">MARCOS GARCIA</td>
+                    <td class="pad-izq-1">Fecha de llegada:</td>
+                    <td class="cuadro-bordeado"></td>
+                </tr>
+                <tr>
+                    <td>Nombre de la Embarcación:</td>
+                    <td class="cuadro-bordeado">AMAPOLA</td>
+                    <td class="pad-izq-1">Teléfono del encargado:</td>
+                    <td class="cuadro-bordeado">9982273449</td>
+                    <td class="pad-izq-1">Fecha de salida:</td>
+                    <td class="cuadro-bordeado"></td>
+                </tr>
+                <tr>
+                    <td>Eslora:</td>
+                    <td class="cuadro-bordeado">40</td>
+                    <td class="pad-izq-1">Email encargado:</td>
+                    <td class="cuadro-bordeado">grupometsva@hotmail.com</td>
+                    <td class="pad-izq-1">Días Estadía:</td>
+                    <td class="cuadro-bordeado">15</td>
+                </tr>
+                <tr>
+                    <td>Manga:</td>
+                    <td class="cuadro-bordeado"></td>
+                    <td class="pad-izq-1">RFC:</td>
+                    <td class="cuadro-bordeado"></td>
+                    <td class="pad-izq-1">Días Adicionales:</td>
+                    <td class="cuadro-bordeado"></td>
+                </tr>
+                <tr>
+                    <td>Nombre del capitán:</td>
+                    <td class="cuadro-bordeado">TIOJARIS VARGAS</td>
+                    <td class="pad-izq-1">Razón social:</td>
+                    <td class="cuadro-bordeado"></td>
+                    <td class="pad-izq-1">Lugar de trabajo:</td>
+                    <td class="cuadro-bordeado">Astillero V&V</td>
+                </tr>
+                <tr>
+                    <td>Teléfono del capitán:</td>
+                    <td class="cuadro-bordeado">9982273449</td>
+                    <td class="pad-izq-1">Clabe bancaria:</td>
+                    <td class="cuadro-bordeado"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Email capitán:</td>
+                    <td class="cuadro-bordeado">grupometsva@hotmail.com</td>
+                    <td class="pad-izq-1">Número de cuenta:</td>
+                    <td class="cuadro-bordeado"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="pad-izq-1">Banco:</td>
+                    <td class="cuadro-bordeado"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="pad-izq-1">Dirección fiscal:</td>
+                    <td class="cuadro-bordeado"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row pad-arriba-1">
+        <div class="col-xs-12 text-center">
+            <strong>Cotización servicios básicos</strong>
+        </div>
+    </div>
+    <div class="row pad-arriba-1">
+        <div class="col-xs-12">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th></th>
+                    <th>Precio unitario</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Maniobra de varado y botadura por pie:</td>
+                    <td></td>
+                    <td>$120.00</td>
+                    <td>40</td>
+                    <td>$4,800.00</td>
+                </tr>
+                <tr>
+                    <td>Maniobra de varado y botadura por pie:</td>
+                    <td></td>
+                    <td>$120.00</td>
+                    <td>40</td>
+                    <td>$4,800.00</td>
+                </tr>
+                <tr>
+                    <td>Maniobra de varado y botadura por pie:</td>
+                    <td></td>
+                    <td>$120.00</td>
+                    <td>40</td>
+                    <td>$4,800.00</td>
+                </tr>
+                <tr>
+                    <td>Maniobra de varado y botadura por pie:</td>
+                    <td></td>
+                    <td>$120.00</td>
+                    <td>40</td>
+                    <td>$4,800.00</td>
+                </tr>
+                <tr>
+                    <td>Maniobra de varado y botadura por pie:</td>
+                    <td></td>
+                    <td>$120.00</td>
+                    <td>40</td>
+                    <td>$4,800.00</td>
+                </tr>
+                <tr>
+                    <td>Maniobra de varado y botadura por pie:</td>
+                    <td></td>
+                    <td>$120.00</td>
+                    <td>40</td>
+                    <td>$4,800.00</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th colspan="4" class="text-right">Sub total estadía</th>
+                    <td class="borde-bajo-doble">$ 24,614.00</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="row pad-arriba-1">
+        <div class="col-xs-12 text-center">
+            <strong>Cotización Trabajos</strong>
+        </div>
+    </div>
+    <div class="row pad-arriba-1">
+        <div class="col-xs-12">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio unitario</th>
+                    <th>Unidad</th>
+                    <th>Subtotal</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Uso de instalaciones:</td>
+                    <td>1</td>
+                    <td>$120.00</td>
+                    <td>Serv</td>
+                    <td>$3,000.00</td>
+                </tr>
+                <tr>
+                    <td>Uso de instalaciones:</td>
+                    <td>1</td>
+                    <td>$120.00</td>
+                    <td>Serv</td>
+                    <td>$3,000.00</td>
+                </tr>
+                <tr>
+                    <td>Uso de instalaciones:</td>
+                    <td>1</td>
+                    <td>$120.00</td>
+                    <td>Serv</td>
+                    <td>$3,000.00</td>
+                </tr>
+                <tr>
+                    <td>Uso de instalaciones:</td>
+                    <td>1</td>
+                    <td>$120.00</td>
+                    <td>Serv</td>
+                    <td>$3,000.00</td>
+                </tr>
+                <tr>
+                    <td>Uso de instalaciones:</td>
+                    <td>1</td>
+                    <td>$120.00</td>
+                    <td>Serv</td>
+                    <td>$3,000.00</td>
+                </tr>
+                <tr>
+                    <td>Uso de instalaciones:</td>
+                    <td>1</td>
+                    <td>$120.00</td>
+                    <td>Serv</td>
+                    <td>$3,000.00</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th colspan="4" class="text-right">Total trabajos</th>
+                    <td class="borde-bajo-doble">$ 24,614.00</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="row pad-arriba-1">
+        <div class="col-xs-12 text-center">
+            <strong>Cotización Materiales</strong>
+        </div>
+    </div>
+    <div class="row pad-arriba-1">
+        <div class="col-xs-12">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio unitario</th>
+                    <th>Unidad</th>
+                    <th>Subtotal</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Lijas:</td>
+                    <td>1</td>
+                    <td>$120.00</td>
+                    <td>Pz</td>
+                    <td>$200.00</td>
+                </tr>
+                <tr>
+                    <td>Lijas:</td>
+                    <td>1</td>
+                    <td>$120.00</td>
+                    <td>Pz</td>
+                    <td>$200.00</td>
+                </tr>
+                <tr>
+                    <td>Lijas:</td>
+                    <td>1</td>
+                    <td>$120.00</td>
+                    <td>Pz</td>
+                    <td>$200.00</td>
+                </tr>
+                <tr>
+                    <td>Lijas:</td>
+                    <td>1</td>
+                    <td>$120.00</td>
+                    <td>Pz</td>
+                    <td>$200.00</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th colspan="4" class="text-right">Total materiales</th>
+                    <td class="borde-bajo-doble">$ 1,614.00</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-8">
+            <p class="fondo-rosado">Esta cotización es válida por 7 días solamente y no es un acuerdo vinculante de tarífa, plan de pago o
+                ubicácion dentro del Astillero.</p>
+            <p class="fondo-gris">*Importante que todos los trabajadores externos cuenten con un seguro de
+                responsabilidad civil.</p>
+            <p class="fondo-amarillo-1">Anticipo del 70% para inicio de trabajo.<br>
+                FAVOR DE PRESENTAR COPIA DE LOS SIGUIENTES DOC:<br>
+                A) IMPORTACIÓN O EXP. DEL BARCO<br>
+                B) SEGURO VIGENTE DEL BARCO<br>
+                C) IFE DEL PROP. O CAPITÁN<br>
+                D) CERTIFICADO DE MATRÍCULA /CERTIFICADO DE REGISTRO<br>
+                IMPRESCINDIBLE PRESENTAR DICHA DOC. ANTES DE QUE EL BARCO SUBA<br>
+                NOTA IMPORTANTE: La salida está señalada para antes del medio día, de lo contrario se cotizará un día
+                más y correrá por cuenta del cliente.
+            </p>
+        </div>
+        <div class="col-xs-4">
+            <div class="row">
+                <div class="col-xs-12">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td>Total</td>
+                            <td class="borde-bajo-doble">$ 24,614.00</td>
+                        </tr>
+                        <tr>
+                            <td>IVA 16%</td>
+                            <td class="borde-bajo-doble">$ 3,938.24</td>
+                        </tr>
+                        <tr>
+                            <td>Total general</td>
+                            <td class="borde-bajo-doble">$ 28,552.24</td>
+                        </tr>
+                        <tr class="altura-1">
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Anticipo 1</td>
+                            <td class="borde-bajo-doble">$ -</td>
+                        </tr>
+                        <tr>
+                            <td>Anticipo 2</td>
+                            <td class="borde-bajo-doble">$ -</td>
+                        </tr>
+                        <tr>
+                            <td>Saldo pendiente</td>
+                            <td class="borde-bajo-doble">$ 28,552.24</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-bordered">
+                <thead>
+                <tr class="fondo-amarillo-2">
+                    <th colspan="2">
+                        Por este medio nos permitimos proporcionar a ustedes los datos bancarios, para pagos mediante
+                        transferencias, siendo los siguientes:
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        Razón social: V&V Astillero, S.A. De C.V.<br>
+                        R.F.C.: VAS-1503206-W4<br>
+                        Dirección: Calle Vialidad Paseo Mujeres Mz 1 Lt 1<br>
+                        Zona Continental SM 3<br>
+                        Ciudad: Isla Mujeres, Q. Roo, México C.P. 77400<br>
+                        Banco: INBURSA<br>
+                        Moneda: Pesos<br>
+                        No. De Cuenta: 50029365981<br>
+                        Sucursal: Cancún 076<br>
+                        Clabe: 036691500293659811
+                    </td>
+                    <td>
+                        DATOS BANCARIOS DOLARES<br>
+                        Codigo Swift: CHASUS33<br>
+                        Ruta Banco Receptor (ABA): 021 000 021<br>
+                        Beneficiario: V&V ASTILLERO SA DE CV<br>
+                        Cuenta del beneficiario: 0366 91500314566346<br>
+                        Banco Beneficiario: Banco Inbursa, S.A. México, D.F.<br>
+                        Cuenta Banco: 400475464<br>
+                        Nuestro Codigo Swift: INBUMXMM<br>
+                        En caso de que lo JP MORGAN CHASE BANK requieran direccion: 271<br>
+                        PARK AVENUE NEW YORK CITY NY 10017 UNITED ESTATES
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

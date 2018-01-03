@@ -114,12 +114,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-3 col-sm-offset-1">
-                                    <label>Número de pies</label>
-                                    {% if form.acservicios.0.cantidad is defined %}
-                                        {{ form_widget(form.acservicios.0.cantidad) }}
-                                    {% endif %}
-                                </div>
-                                <div class="col-sm-3">
                                     <label>Precio por pie</label>
                                     {% if form.acservicios.0.precio is defined %}
                                         {{ form_widget(form.acservicios.0.precio) }}
@@ -227,13 +221,6 @@
                                               {% endif %}
                                          </span>
                                     </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <label>Número de pies</label>
-                                    {% if form.acservicios.4.cantidad is defined %}
-                                        {{ form_widget(form.acservicios.4.cantidad) }}
-                                    {% endif %}
-
                                 </div>
                                 <div class="col-sm-3">
                                     <label>Precio por pie</label>
@@ -414,7 +401,6 @@
                                     <hr>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     {% if form.acservicios.0.estatus is defined %}
@@ -422,6 +408,9 @@
                     {% endif %}
                     {% if form.acservicios.1.estatus is defined %}
                         {{ form_widget(form.acservicios.1.estatus,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.0.cantidad is defined %}
+                        {{ form_widget(form.acservicios.0.cantidad,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
                     {% if form.acservicios.1.cantidad is defined %}
                         {{ form_widget(form.acservicios.1.cantidad,{'attr':{'class':'hidden'}}) }}
@@ -473,6 +462,9 @@
                     {% endif %}
                     {% if form.acservicios.3.servicio is defined %}
                         {{ form_widget(form.acservicios.3.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.4.cantidad is defined %}
+                        {{ form_widget(form.acservicios.4.cantidad,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
                     {% if form.acservicios.4.servicio is defined %}
                         {{ form_widget(form.acservicios.4.servicio,{'attr':{'class':'hidden'}}) }}
