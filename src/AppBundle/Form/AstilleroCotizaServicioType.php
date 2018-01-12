@@ -53,7 +53,7 @@ class AstilleroCotizaServicioType extends AbstractType
                 'class' => 'AppBundle:Astillero\Servicio',
                 'label' => ' ',
                 'placeholder' => 'Seleccionar...',
-                'attr' => ['class' => 'select-busca-producto'],
+                'attr' => ['class' => 'select-busca-servicio'],
                 'required'=>false,
             ])
         ;

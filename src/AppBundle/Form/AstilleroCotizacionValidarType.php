@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -31,6 +32,11 @@ class AstilleroCotizacionValidarType extends AbstractType
                 'choice_attr' => function ($val, $key, $index) {
                     return ['class' => 'opcion' . strtolower($key)];
                 },
+            ])
+            ->add('notasnovo', TextareaType::class, [
+                'label' => 'Observaciones',
+                'attr' => ['rows' => 7],
+                'required' => false
             ])
         ;
     }

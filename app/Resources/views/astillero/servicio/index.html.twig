@@ -25,7 +25,7 @@
                                     <tr>
                                         <td>{{ servicio.id }}</td>
                                         <td>{{ servicio.nombre }}</td>
-                                        <td>{{ servicio.precio }}</td>
+                                        <td>$ {{ (servicio.precio /100)|number_format(2) }}</td>
                                         <td>{{ servicio.unidad }}</td>
                                         <td>{{ servicio.descripcion }}</td>
                                         <td>

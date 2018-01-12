@@ -163,16 +163,7 @@
                     <tr>
                         {#<td class="texto3 text-justify">#}
                         <td>
-                            {#{{ marinaHumedaCotizacion.mensaje|raw }} #}
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eleifend a magna et
-                            rhoncus. In in mattis elit. Nulla gravida nisi massa, non euismod turpis faucibus eu.
-                            Praesent at porttitor erat, posuere pellentesque orci. Nam quam nunc, ornare vitae
-                            iaculis a, consectetur quis metus. Nulla facilisi. Class aptent taciti sociosqu ad
-                            litora torquent per conubia nostra, per inceptos himenaeos. Phasellus aliquet aliquet
-                            justo. Maecenas nunc purus, pellentesque eu suscipit eget, mollis non dui. Cras id
-                            turpis vitae metus posuere sagittis ut sit amet metus. Quisque dictum urna quis quam
-                            convallis, nec tincidunt sem auctor.
-                        </td>
+                            {{ astilleroCotizacion.mensaje|raw }}
                     </tr>
                 </table>
             </div>
@@ -187,11 +178,11 @@
                     <tr>
                         <td align="center">
                             <a class="btnverde"
-                               href="">Autorizar</a>
+                               href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ path('respuesta-cliente-astillero',{'token':tokenAcepta }) }}">Autorizar</a>
                         </td>
                         <td align="center">
                             <a class="btnnaranja"
-                               href="">Rechazar</a>
+                               href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ path('respuesta-cliente-astillero',{'token':tokenRechaza }) }}">Rechazar</a>
                         </td>
                     </tr>
                 </table>

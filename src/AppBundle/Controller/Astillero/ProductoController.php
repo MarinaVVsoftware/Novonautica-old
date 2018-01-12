@@ -3,9 +3,17 @@
 namespace AppBundle\Controller\Astillero;
 
 use AppBundle\Entity\Astillero\Producto;
+use Proxies\__CG__\AppBundle\Entity\Astillero\Servicio;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Producto controller.
@@ -57,6 +65,22 @@ class ProductoController extends Controller
             'form' => $form->createView(),
             'title' => 'Astillero Nuevo Producto'
         ));
+    }
+    /**
+     * @Route("/buscarproducto/{id}.{_format}", name="ajax_astillero_busca_producto", defaults={"_format"="JSON"})
+     *
+     */
+    public function buscarAction(Request $request, Producto $producto){
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(1);
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $normalizer->setIgnoredAttributes(['ACotizacionesServicios']);
+        $normalizers = [$normalizer];
+        $serializer = new Serializer($normalizers, $encoders);
+        return new Response($producto = $serializer->serialize($producto,$request->getRequestFormat()));
     }
 
     /**

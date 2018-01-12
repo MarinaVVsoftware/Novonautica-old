@@ -32,12 +32,20 @@
                                         <td>{{ valorSistemas.0.iva }} %</td>
                                     </tr>
                                     <tr>
-                                        <td>Folio Cotizaciones Marina Humeda</td>
+                                        <td>Folio Cotizaciones</td>
                                         <td>{{ valorSistemas.0.folioMarina }}</td>
                                     </tr>
                                     <tr>
                                         <td>Días Habiles Pago Cotización Marina</td>
                                         <td>{{ valorSistemas.0.diasHabilesMarinaCotizacion }} días</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cotizaciones Astillero (no usado)</td>
+                                        <td>{{ valorSistemas.0.folioAstillero }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Días Habiles Cotización Astillero</td>
+                                        <td>{{ valorSistemas.0.diasHabilesAstilleroCotizacion }} días</td>
                                     </tr>
                                     <tr>
                                         <td>Mensaje Correo Marina Humeda</td>
@@ -46,6 +54,10 @@
                                     <tr>
                                         <td>Mensaje Correo Gasolina Marina Humeda</td>
                                         <td>{{ valorSistemas.0.mensajeCorreoMarinaGasolina|raw }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mensaje Correo Astillero</td>
+                                        <td>{{ valorSistemas.0.mensajeCorreoAstillero|raw }}</td>
                                     </tr>
                                 </tbody>
                             </table>
