@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Facturacion</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ facturacion.id }}</td>
+            </tr>
+            <tr>
+                <th>Rfc</th>
+                <td>{{ facturacion.rfc }}</td>
+            </tr>
+            <tr>
+                <th>Cliente</th>
+                <td>{{ facturacion.cliente }}</td>
+            </tr>
+            <tr>
+                <th>Empresa</th>
+                <td>{{ facturacion.empresa }}</td>
+            </tr>
+            <tr>
+                <th>Direccionfiscal</th>
+                <td>{{ facturacion.direccionFiscal }}</td>
+            </tr>
+            <tr>
+                <th>Codigopostal</th>
+                <td>{{ facturacion.codigoPostal }}</td>
+            </tr>
+            <tr>
+                <th>Numerotelefonico</th>
+                <td>{{ facturacion.numeroTelefonico }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ facturacion.email }}</td>
+            </tr>
+            <tr>
+                <th>Tipocambio</th>
+                <td>{{ facturacion.tipoCambio }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('contabilidad_facturacion_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('contabilidad_facturacion_edit', { 'id': facturacion.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

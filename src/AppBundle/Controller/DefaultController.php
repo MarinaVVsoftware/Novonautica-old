@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Pais;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use function Sodium\add;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -12,6 +14,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\MarinaHumedaCotizacion;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class DefaultController extends Controller
 {
@@ -35,66 +42,12 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/contabilidad/facturacion/", name="display_cotizacion_facturacion")
-     */
-    public function displayCotizacionFacturaIndex()
-    {
-        return $this->render('index-facturacion.html.twig', ['title' => 'Facturas']);
-    }
-
-    /**
-     * @Route("/contabilidad/facturacion/new", name="display_new_cotizacion_facturacion")
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function displayCotizacionFacturaNew(Request $request)
-    {
-        $form = $this
-            ->createFormBuilder([])
-            ->add('cotizacion', EntityType::class, [
-                'label' => 'Seleccionar una cotización',
-                'class' => 'AppBundle\Entity\MarinaHumedaCotizacion'
-            ])
-            ->add('rfc', TextType::class, ['label' => 'RFC'])
-            ->add('cliente', TextType::class)
-            ->add('empresa', TextType::class, ['label' => 'Nombre de la empresa'])
-            ->add('pais', ChoiceType::class, [
-                'label' => 'País',
-                'choices' => ['México']
-            ])
-            ->add('estado', ChoiceType::class, [
-                'choices' => ['Quintana Roo']
-            ])
-            ->add('ciudad', TextType::class)
-            ->add('direccionFiscal', TextareaType::class)
-            ->add('codigoPostal', TextType::class)
-            ->add('numeroTelefonico', TextType::class)
-            ->add('correoElectronico', TextType::class)
-            ->add('fechaExpedicion', TextType::class)
-            ->add('lugarExpedicion', TextType::class)
-            ->add('tipoCambio', TextType::class)
-            ->add('condicionesPago', TextType::class)
-            ->add('cuenta', TextType::class)
-            ->add('referenciaPago', TextType::class)
-            ->add('iva', TextType::class, ['label' => 'IVA'])
-            ->getForm();
-
-
-        return $this->render('new-facturacion.html.twig', [
-            'title' => 'Nueva factura',
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
      * Genera el pdf de una cotizacion en base a su id
      *
      * @Route("/{id}/mhc-pdf", name="marinahc-pdf")
      * @param MarinaHumedaCotizacion $mhc
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function displayMarinaPDF(MarinaHumedaCotizacion $mhc)
     {
@@ -185,5 +138,23 @@ class DefaultController extends Controller
         ]);
     }
 
+    /**
+     * Retorna todos los estados en base a un id de un pais
+     *
+     * @Route("/pais/{pais}/estados.{_format}", name="estados_index", defaults={"_format" = "json"})
+     * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param $pais
+     *
+     * @return Response
+     */
+    public function estadosAction(Request $request, Pais $pais)
+    {
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setIgnoredAttributes(['country']);
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
 
+        return new Response($serializer->serialize($pais, $request->getRequestFormat()));
+    }
 }

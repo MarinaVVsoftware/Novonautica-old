@@ -1,0 +1,4 @@
+services:
+    multifacturas:
+        class: Hyperion\MultifacturasBundle\src\Multifacturas
+        arguments: ['%kernel.environment%', '%kernel.project_dir%']

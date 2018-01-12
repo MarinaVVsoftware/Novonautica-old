@@ -30,6 +30,7 @@
                                 <th>Validación</th>
                                 <th>Aceptación</th>
                                 <th>Pago</th>
+                                <th>Facturada</th>
                                 <th>Acciones</th>
                             </tr>
                             </thead>
@@ -91,6 +92,12 @@
                                                      class="center-block" data-toggle="tooltip" data-placement="left" title="No pagado">
                                             {% endif %}
 
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle">
+                                        {% if marinaHumedaCotizacion.factura is not null %}
+                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Facturada">
                                         {% endif %}
                                     </td>
                                     <td>

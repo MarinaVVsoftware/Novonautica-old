@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ title }}</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"
+    >
+    <style>
+        h6 {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div id="header" class="row">
+        <div class="col-xs-4 text-center" style="padding: 50px 0">
+            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('img/logo.png') }}" alt="" class="img-responsive center-block">
+        </div>
+        <div class="col-xs-4">
+            <h4 style="font-weight: bold;margin-top: 0">{{ factura.emisor.nombre }}</h4>
+            <p style="font-size: smaller">
+                RFC: {{ factura.emisor.rfc }}
+                <br>
+                Régimen fiscal: {{ factura.emisor.regimenFiscal }}
+                <br>
+                {{ factura.emisor.direccion }}
+                <br>
+                Tipo comprobante: {{ factura.tipoComprobante }}
+                <br>
+                Versión CFDI: 3.3
+            </p>
+        </div>
+        <div class="col-xs-4">
+            <table class="table table-bordered table-striped table-condensed text-center">
+                <tbody>
+                <tr style="background: #CCCCCC">
+                    <td> FOLIO </td>
+                </tr>
+                <tr>
+                    <td>  {{ factura.folioCotizacion }} </td>
+                </tr>
+                <tr style="background: #CCCCCC">
+                    <td> LUGAR Y FECHA </td>
+                </tr>
+                <tr>
+                    <td> {{ factura.emisor.codigoPostal }}, {{ factura.fechaTimbrado }} </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="body" class="row">
+        <table class="table table-condensed table-bordered table-striped">
+            <tbody>
+            <tr>
+                <td colspan="7">RECEPTOR DEL COMPROBANTE FISCAL</td>
+                <td colspan="3" class="text-center"><small>FOLIO FISCAL</small></td>
+            </tr>
+            <tr>
+                <td rowspan="3" colspan="7">
+                    <h4>{{ factura.razonSocial }}</h4>
+                    RFC: {{ factura.rfc }}
+                    <br>
+                    {{ factura.direccionFiscal }}
+                    <br>
+                    Uso CFDI: {{ factura.usoCFDI }}
+                </td>
+                <td colspan="3" class="text-center">{{ factura.folioFiscal }}</td>
+            </tr>
+            <tr class="text-center">
+                <td colspan="3"><small>SERIE CERTIFICADO CSD</small></td>
+            </tr>
+            <tr class="text-center">
+                <td colspan="3">{{ factura.serieCertificadoCSD }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table table-condensed table-bordered table-striped" style="margin-bottom: 0">
+            <thead>
+            <tr class="text-center">
+                <th>CANTIDAD</th>
+                <th>CLAVE UNIDAD</th>
+                <th>CLAVE PRODUCTO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>PRECIO</th>
+                <th>IMPUESTOS</th>
+                <th>IMPORTE</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for concepto in factura.conceptos %}
+                <tr class="text-center">
+                    <td>{{ concepto.cantidad }}</td>
+                    <td>{{ concepto.claveUnidad }}</td>
+                    <td>{{ concepto.claveProdServ }}</td>
+                    <td>{{ concepto.descripcion }}</td>
+                    <td>${{ concepto.valorunitario / 100 }}</td>
+                    <td>IVA ${{ concepto.iva / 100 }}</td>
+                    <td>${{ concepto.subtotal / 100 }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <table class="table table-bordered" style="margin-bottom: 0">
+            <tr>
+                <td rowspan="3" colspan="6">
+                    TOTAL CON LETRA: <strong>{{ numLetras }}</strong>
+                    <br>
+                    Moneda: USD - Dolar Americano
+                    <br>
+                    Forma de pago: {{ factura.formaPago }} - {{ formaPago }}
+                    <br>
+                    Método de pago: {{ factura.metodoPago }} - {{ metodoPago }}
+                </td>
+                <td colspan="2">SUBTOTAL</td>
+                <td colspan="2">$ {{ factura.subtotal / 100|number_format(2) }} USD</td>
+            </tr>
+            <tr>
+                <td colspan="2">IVA(16%)</td>
+                <td colspan="2">$ {{ factura.iva / 100|number_format(2) }} USD</td>
+            </tr>
+            <tr>
+                <td colspan="2">TOTAL</td>
+                <td colspan="2">$ {{ factura.total / 100|number_format(2) }} USD</td>
+            </tr>
+        </table>
+    </div>
+    <div id="footer" class="row">
+        <div class="col-xs-8">
+            <div class="row" style="font-size: xx-small">
+                <div class="col-xs-12">
+                    <h6>SELLO DIGITAL DEL CFDI:</h6>
+                    <p style="word-break: break-word;">{{ factura.selloCFDI }}</p>
+                </div>
+                <div class="col-xs-12">
+                    <h6>SELLO DEL SAT:</h6>
+                    <p style="word-break: break-word;">{{ factura.selloSAT }}</p>
+                </div>
+                <div class="col-xs-12">
+                    <h6>CADENA ORIGINAL:</h6>
+                    <p style="word-break: break-word;">{{ factura.cadenaOriginal }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4" style="padding: 25px 0;">
+            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('timbrados/') ~ factura.pngArchivo|split('/')|last }}" alt="" class="img-responsive center-block">
+        </div>
+        <div class="col-xs-12" style="border: 1px solid #000;">
+            <h6>NÚMERO DE SERIE DEL CERTIFICADO DEL SAT:</h6>
+            <small>{{ factura.certificadoSAT }}</small>
+            <h6>FECHA Y HORA DE CERTIFICACIÓN</h6>
+            <small>{{ factura.fechaTimbrado }}</small>
+            <h6 class="text-center">Este documento es una representacion impresa de un CFDI</h6>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -65,29 +65,31 @@
 {% endblock %}
 
 {% block modals %}
-    {{ delete_form is defined ? modal.deleteModal(delete_form) : ''}}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-      const categoriaSelect = document.getElementById('appbundle_producto_categoria');
-      const subcategoriaSelect = document.getElementById('appbundle_producto_subcategoria');
+        (function () {
+            const categoriaSelect = document.getElementById('appbundle_producto_categoria');
+            const subcategoriaSelect = document.getElementById('appbundle_producto_subcategoria');
 
-      fetchModelos(categoriaSelect.value);
+            fetchModelos(categoriaSelect.value);
 
-      categoriaSelect.addEventListener('change', function () {
-        fetchModelos(this.value);
-      });
-
-      function fetchModelos(id) {
-        fetch(`{{ app.request.baseUrl }}/producto/categoria/${id}/subcategorias.json`, {credentials: 'include'})
-            .then(response => response.status === 200 ? response.json() : response.status)
-            .then(categoria => {
-              subcategoriaSelect.innerHTML = categoria.subcategorias.length
-                  ? categoria.subcategorias.map(subcategoria => `<option value="${subcategoria.id}">${subcategoria.nombre}</option>`).join('')
-                  : `<option>No existen subcategorias</option>`;
+            categoriaSelect.addEventListener('change', function () {
+                fetchModelos(this.value);
             });
-      }
+
+            function fetchModelos(id) {
+                fetch(`{{ app.request.baseUrl }}/producto/categoria/${id}/subcategorias.json`, {credentials: 'include'})
+                    .then(response => response.status === 200 ? response.json() : response.status)
+                    .then(categoria => {
+                        subcategoriaSelect.innerHTML = categoria.subcategorias.length
+                            ? categoria.subcategorias.map(subcategoria => `<option value="${subcategoria.id}">${subcategoria.nombre}</option>`).join('')
+                            : `<option>No existen subcategorias</option>`;
+                    });
+            }
+        })();
     </script>
 {% endblock %}
