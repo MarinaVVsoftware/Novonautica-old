@@ -144,8 +144,15 @@ class SidebarController extends Controller
                 'icon' => 'archive',
                 'path' => $this->generateUrl('contabilidad'),
                 'submenu' => [
-                    ['name' => 'Facturas', 'path' => $this->generateUrl('display_cotizacion_facturacion')],
-                    ['name' => 'Nueva factura', 'path' => $this->generateUrl('display_new_cotizacion_facturacion')]
+                    [
+                        'name' => 'Facturación',
+                        'path' => $this->generateUrl('contabilidad_facturacion_index'),
+                        'submenu' => [
+                            ['name' => 'Facturas', 'path' => $this->generateUrl('contabilidad_facturacion_index')],
+                            ['name' => 'Nueva factura', 'path' => $this->generateUrl('contabilidad_facturacion_new')],
+                            ['name' => 'Emisor', 'path' => $this->generateUrl('contabilidad_facturacion_emisor')]
+                        ]
+                    ]
                 ]
             ],
             ['name' => 'Reportes', 'icon' => 'file-text-o', 'path' => $this->generateUrl('reportes')],
@@ -175,7 +182,7 @@ class SidebarController extends Controller
         return $this->paths = array_merge($this->paths, $paths);
     }
 
-    private function removeOneRoute($route) : string
+    private function removeOneRoute($route): string
     {
         return implode('/', array_slice(explode('/', $route), 1, -1));
     }

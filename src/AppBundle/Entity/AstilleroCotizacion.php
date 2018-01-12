@@ -86,6 +86,32 @@ class AstilleroCotizacion
      * @ORM\Column(name="total", type="float", nullable=true)
      */
     private $total;
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="adeudo", type="bigint", nullable=true)
+     */
+    private $adeudo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="pagado", type="bigint", nullable=true)
+     */
+    private $pagado;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="estatuspago", type="smallint", nullable=true)
+     */
+    private $estatuspago;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="mensaje", type="text", nullable=true)
+     */
+    private $mensaje;
 
     /**
      * @var \DateTime
@@ -115,6 +141,12 @@ class AstilleroCotizacion
     private $acservicios;
 
     /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Pago", mappedBy="acotizacion",cascade={"persist","remove"})
+     */
+    private $pagos;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="validanovo", type="smallint")
@@ -129,14 +161,87 @@ class AstilleroCotizacion
     private $validacliente;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="notasnovo", type="text", nullable=true)
+     */
+    private $notasnovo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="notascliente", type="text", nullable=true)
+     */
+    private $notascliente;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="folio", type="integer", length=255)
+     */
+    private $folio;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="foliorecotiza", type="integer", length=255)
+     */
+    private $foliorecotiza;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombrevalidanovo", type="string", length=255, nullable=true)
+     */
+    private $nombrevalidanovo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tokenacepta", type="string", length=110, nullable=true)
+     */
+    private $tokenacepta;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tokenrechaza", type="string", length=110, nullable=true)
+     */
+    private $tokenrechaza;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="estatus", type="boolean")
      */
     private $estatus;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="metodopago", type="string", length=100, nullable=true)
+     */
+    private $metodopago;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigoseguimiento", type="string", length=255, nullable=true)
+     */
+    private $codigoseguimiento;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecharealpago", type="datetime", nullable=true)
+     */
+    private $fecharespuesta;
+
+
+
     public function __construct() {
         $this->acservicios = new ArrayCollection();
+        $this->pagos = new ArrayCollection();
     }
 
     /**
@@ -494,5 +599,274 @@ class AstilleroCotizacion
     public function setEstatus($estatus)
     {
         $this->estatus = $estatus;
+    }
+
+    /**
+     * Get estatus
+     *
+     * @return boolean
+     */
+    public function getEstatus()
+    {
+        return $this->estatus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMensaje()
+    {
+        return $this->mensaje;
+    }
+
+    /**
+     * @param string $mensaje
+     */
+    public function setMensaje($mensaje)
+    {
+        $this->mensaje = $mensaje;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFolio()
+    {
+        return $this->folio;
+    }
+
+    /**
+     * @param int $folio
+     */
+    public function setFolio($folio)
+    {
+        $this->folio = $folio;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFoliorecotiza()
+    {
+        return $this->foliorecotiza;
+    }
+
+    /**
+     * @param int $foliorecotiza
+     */
+    public function setFoliorecotiza($foliorecotiza)
+    {
+        $this->foliorecotiza = $foliorecotiza;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNombrevalidanovo()
+    {
+        return $this->nombrevalidanovo;
+    }
+
+    /**
+     * @param string $nombrevalidanovo
+     */
+    public function setNombrevalidanovo($nombrevalidanovo)
+    {
+        $this->nombrevalidanovo = $nombrevalidanovo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTokenacepta()
+    {
+        return $this->tokenacepta;
+    }
+
+    /**
+     * @param string $tokenacepta
+     */
+    public function setTokenacepta($tokenacepta)
+    {
+        $this->tokenacepta = $tokenacepta;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTokenrechaza()
+    {
+        return $this->tokenrechaza;
+    }
+
+    /**
+     * @param string $tokenrechaza
+     */
+    public function setTokenrechaza($tokenrechaza)
+    {
+        $this->tokenrechaza = $tokenrechaza;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCodigoseguimiento()
+    {
+        return $this->codigoseguimiento;
+    }
+
+    /**
+     * @param string $codigoseguimiento
+     */
+    public function setCodigoseguimiento($codigoseguimiento)
+    {
+        $this->codigoseguimiento = $codigoseguimiento;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetodopago()
+    {
+        return $this->metodopago;
+    }
+
+    /**
+     * @param string $metodopago
+     */
+    public function setMetodopago($metodopago)
+    {
+        $this->metodopago = $metodopago;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotasnovo()
+    {
+        return $this->notasnovo;
+    }
+
+    /**
+     * @param string $notasnovo
+     */
+    public function setNotasnovo($notasnovo)
+    {
+        $this->notasnovo = $notasnovo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotascliente()
+    {
+        return $this->notascliente;
+    }
+
+    /**
+     * @param string $notascliente
+     */
+    public function setNotascliente($notascliente)
+    {
+        $this->notascliente = $notascliente;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFecharespuesta()
+    {
+        return $this->fecharespuesta;
+    }
+
+    /**
+     * @param \DateTime $fecharespuesta
+     */
+    public function setFecharespuesta($fecharespuesta)
+    {
+        $this->fecharespuesta = $fecharespuesta;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAdeudo()
+    {
+        return $this->adeudo;
+    }
+
+    /**
+     * @param int $adeudo
+     */
+    public function setAdeudo($adeudo)
+    {
+        $this->adeudo = $adeudo;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPagado()
+    {
+        return $this->pagado;
+    }
+
+    /**
+     * @param int $pagado
+     */
+    public function setPagado($pagado)
+    {
+        $this->pagado = $pagado;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEstatuspago()
+    {
+        return $this->estatuspago;
+    }
+
+    /**
+     * @param int $estatuspago
+     */
+    public function setEstatuspago($estatuspago)
+    {
+        $this->estatuspago = $estatuspago;
+    }
+
+    /**
+     * Add pago
+     *
+     * @param \AppBundle\Entity\Pago $pago
+     *
+     * @return AstilleroCotizacion
+     */
+    public function addPago(\AppBundle\Entity\Pago $pago)
+    {
+        $pago->setAcotizacion($this);
+        $this->pagos[] = $pago;
+
+        return $this;
+    }
+
+    /**
+     * Remove pago
+     *
+     * @param \AppBundle\Entity\Pago $pago
+     */
+    public function removePago(\AppBundle\Entity\Pago $pago)
+    {
+        $this->pagos->removeElement($pago);
+    }
+
+    /**
+     * Get pagos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPagos()
+    {
+        return $this->pagos;
     }
 }

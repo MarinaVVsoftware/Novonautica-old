@@ -86,7 +86,7 @@ class MarcaController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('producto_marca_index');
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /**

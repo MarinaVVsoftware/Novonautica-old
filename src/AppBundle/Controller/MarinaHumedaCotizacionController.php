@@ -488,6 +488,8 @@ class MarinaHumedaCotizacionController extends Controller
                 $faltante = $total - $totPagado;
                     if($faltante==0){
                         $marinaHumedaCotizacion->setEstatuspago(2);
+                    }else{
+                        $marinaHumedaCotizacion->setEstatuspago(1);
                     }
                 $marinaHumedaCotizacion
                     ->setPagado($totPagado);
@@ -881,7 +883,7 @@ class MarinaHumedaCotizacionController extends Controller
                     $tipoCorreo = 2;
                 }
                 $historialCorreo = new Correo();
-                $historialCorreo->setFecha(new \DateTime('now'))->setTipo($tipoCorreo)->setDescripcion('Envio de cotización con Folio: '.$folio);
+                $historialCorreo->setFecha(new \DateTime('now'))->setTipo($tipoCorreo)->setDescripcion('Envio de cotización con folio: '.$folio);
                 $em->persist($historialCorreo);
             }else{
                 if($marinaHumedaCotizacion->getValidanovo()==1){

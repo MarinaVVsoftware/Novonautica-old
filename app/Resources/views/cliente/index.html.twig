@@ -76,9 +76,10 @@
             let barcosTd = tr.querySelector('.td-barcos');
             let lastTd = tr.querySelector('td:last-child');
             let entryPath = `{{ app.request.requestUri }}${data['id']}`;
+            let barcosList = data['barcos'].map(barco => `<li><a href="${entryPath}#${barco[0]}">${barco[1]}</a></li>`).join('');
             barcosTd.innerHTML = `
                 <ul class="list-unstyled text-left">
-                ${data['barcos'].map(barco => `<li><a href="${entryPath}#${barco[0]}">${barco[1]}</a></li>`)}
+                ${barcosList}
                 </ul>
             `.replace(',', '');
 

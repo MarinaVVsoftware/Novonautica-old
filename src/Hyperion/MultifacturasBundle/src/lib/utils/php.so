@@ -1,0 +1,41 @@
+<?php
+
+function mf_ogpk($param1)
+{
+    return openssl_get_privatekey($param1);
+}
+
+function mf_os($param1, &$param2, $param3, $param4)
+{
+    openssl_sign($param1, $param2, $param3, $param4);
+}
+
+function mf_ofk($param1)
+{
+    openssl_free_key($param1);
+}
+
+function mf_od($param1, $param2, $param3)
+{
+    return openssl_digest($param1, $param2, $param3);
+}
+
+function mf_oe($param1, $param2, $param3, $param4, $param5)
+{
+    return openssl_digest($param1, $param2, $param3);
+}
+
+function mf_oo($param1, &$param2, $param3, $param4, $param5)
+{
+    return openssl_open($param1, $param2, $param3, $param4, $param5);
+}
+
+function mf_osl($param1, &$param2, &$param3, $param4, $param5)
+{
+    return openssl_seal($param1, $param2, $param3, $param4, $param5);
+}
+
+function mf_opn($param1)
+{
+    return openssl_pkey_new($param1);
+}

@@ -1,0 +1,418 @@
+{% extends 'estructura/plantilla.twig' %}
+{#{% import 'estructura/modalborrar.twig' as modal %}#}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .autocomplete-suggestions {
+            background: #3e4766;
+            overflow: auto;
+        }
+
+        .autocomplete-suggestion {
+            padding: 2px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .autocomplete-selected {
+            background: #0097f6;
+        }
+
+        .autocomplete-suggestions strong {
+            font-weight: normal;
+            color: #3399FF;
+        }
+
+        .autocomplete-suggestion:hover strong {
+            color: #363c52;
+        }
+
+        .autocomplete-group {
+            padding: 2px 5px;
+        }
+
+        .autocomplete-group strong {
+            display: block;
+            border-bottom: 1px solid #000;
+        }
+    </style>
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    {% for message in app.flashes('danger') %}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Nueva factura
+                            </h3>
+                        </div>
+                        <div class="panel-body panel-pestanias">
+                            {{ form_start(form) }}
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="primero active">
+                                    <a href="#generales" data-toggle="tab">Generales</a>
+                                </li>
+                                <li class="primero">
+                                    <a href="#conceptos" data-toggle="tab">Conceptos</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="generales">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            {{ form_row(form.emisor) }}
+                                        </div>
+                                    </div>
+                                    <hr style="margin: 1em 0 !important;">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            {{ form_row(form.rfc) }}
+                                            {{ form_row(form.cliente) }}
+                                            {{ form_row(form.numeroTelefonico) }}
+                                            {{ form_row(form.email) }}
+                                        </div>
+                                        <div class="col-sm-3">
+                                            {{ form_row(form.razonSocial) }}
+                                            {{ form_row(form.direccionFiscal) }}
+                                        </div>
+                                        <div class="col-sm-3">
+                                            {{ form_row(form.metodoPago) }}
+                                            {{ form_row(form.formaPago) }}
+                                            {{ form_row(form.tipoComprobante) }}
+                                            {{ form_row(form.usoCFDI) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="conceptos">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            {{ form_row(form.folioCotizacion) }}
+                                            {{ form_row(form.cotizacion) }}
+                                        </div>
+                                        <div class="col-sm-3">
+                                            {{ form_row(form.tipoCambio) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th style="vertical-align: middle;">Cantidad</th>
+                                                    <th style="vertical-align: middle">Unidad</th>
+                                                    <th style="vertical-align: middle">ClaveProdServ</th>
+                                                    <th style="vertical-align: middle">Clave Unidad</th>
+                                                    <th style="vertical-align: middle" width="25%">Descripción</th>
+                                                    <th style="vertical-align: middle">Valor unitario</th>
+                                                    <th style="vertical-align: middle">Descuento</th>
+                                                    <th style="vertical-align: middle">IVA</th>
+                                                    <th style="vertical-align: middle">Sub-total</th>
+                                                    <th style="vertical-align: middle">Total</th>
+                                                </tr>
+                                                </thead>
+                                                {% form_theme form.conceptos 'contabilidad/facturacion/form-themes/_concepto.html.twig' %}
+                                                <tbody id="prototype-holder"
+                                                       data-prototype="{{ form_widget(form.conceptos.vars.prototype)|e('html_attr') }}">
+                                                {{ form_row(form.conceptos) }}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <a href="#" id="add-servicio" class="btn btn-contorno-azul">
+                                                + Agregar servicio
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-4 col-sm-push-5 text-right">
+                                            {% form_theme form 'contabilidad/facturacion/form-themes/_factura.html.twig' %}
+                                            <h4 class="letra-azul">Sub-total</h4>
+                                            {{ form_widget(form.subtotal) }}
+                                            <hr>
+                                            <h4 class="letra-azul">Descuento</h4>
+                                            {{ form_widget(form.descuento) }}
+                                            <hr>
+                                            <h4 class="letra-azul">IVA</h4>
+                                            {{ form_widget(form.iva) }}
+                                            <hr>
+                                            <h4 class="letra-azul">Total</h4>
+                                            {{ form_widget(form.total) }}
+                                            <hr>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-azul pull-right">
+                                        {#<i class="fa fa-floppy-o" aria-hidden="true"></i>#}
+                                        Facturar
+                                    </button>
+                                    <div class="pull-left">
+                                        {#{{ delete_form is defined ? modal.deleteButton() : '' }}#}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{#
+{% block modals %}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
+{% endblock %}
+#}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/jquery.autocomplete.min.js') }}"></script>
+    <script type="text/javascript">
+      /*
+          MOSTRAR TAB ACTIVA DONDE HAY ERRORES
+      */
+      (function () {
+        const fooForm = document.querySelector('form');
+        const tabContent = document.querySelector('.tab-content');
+        const firstError = tabContent.querySelector('.has-error');
+        const tabPanes = tabContent.querySelectorAll('.tab-pane');
+        const tabs = document.querySelectorAll('.nav-tabs > li');
+
+        if (firstError) showErrors(firstError.parentNode.parentNode.parentNode);
+        fooForm.addEventListener('invalid', e => { showErrors(e.target.parentNode.parentNode.parentNode.parentNode) }, true);
+
+        function showErrors(pane) {
+          const tabId = pane.getAttribute('id');
+          const tab = document.querySelector(`[href="#${tabId}"]`).parentNode;
+
+          tabs.forEach(elem => elem.classList.remove('active'));
+          tabPanes.forEach(elem => elem.classList.remove('active'));
+          tab.classList.add('active');
+          pane.classList.add('active')
+        }
+      })();
+
+      /*
+          JQUERY AUTOCOMPLETE && COLLECCION DE CONCEPTOS
+      */
+      (function ($) {
+        const $rfcSelect = $('#appbundle_contabilidad_facturacion_rfc');
+        const $cotizacionSelect = $('#appbundle_contabilidad_facturacion_folioCotizacion');
+        const addLink = document.getElementById('add-servicio');
+        const conceptoHolder = document.getElementById('prototype-holder');
+        const cotizacionHolder = document.getElementById('appbundle_contabilidad_facturacion_cotizacion');
+        const tipoCambioHolder = document.getElementById('appbundle_contabilidad_facturacion_tipoCambio');
+        const subtotalHolder = document.getElementById('appbundle_contabilidad_facturacion_subtotal');
+        const descuentoHolder = document.getElementById('appbundle_contabilidad_facturacion_descuento');
+        const ivaHolder = document.getElementById('appbundle_contabilidad_facturacion_iva');
+        const totalHolder = document.getElementById('appbundle_contabilidad_facturacion_total');
+        let conceptoCounter = '{{ form.conceptos|length }}';
+        const autocompleteSettings = {
+          dataType: 'json',
+          deferRequestBy: 300,
+          showNoSuggestionNotice: true,
+          noSuggestionNotice: 'No se encontraron resultados',
+          triggerSelectOnValidInput: false,
+        };
+
+        // Si ya se cargo una cotizacion, entonces esconder 'agregar servicio'
+        if ($cotizacionSelect.val() && conceptoHolder.childElementCount) { addLink.classList.add('hidden'); }
+
+        // Autocomplete para rellenado de datos de cliente con RFC
+        $rfcSelect.autocomplete({
+          ...autocompleteSettings,
+          minChars: 2,
+          paramName: 'rfc',
+          serviceUrl: `{{ app.request.BaseUrl }}/cliente/listado.json`,
+          params: {},
+          transformResult: function (clientes) {
+            return {
+              suggestions: clientes.map(cliente => {
+                return {
+                  value: cliente.rfc,
+                  data: cliente
+                }
+              })
+            }
+          },
+          beforeRender: function (container, suggestions) {
+            if (!suggestions.length) return;
+            [...container[0].childNodes].map((suggestion, i) => {
+              suggestion.innerHTML = `${suggestion.innerHTML} <small>${suggestions[i].data.nombre.substring(0, 15)}...</small>`;
+            })
+          },
+          onSelect: function (cliente) {
+            const razon = document.getElementById('appbundle_contabilidad_facturacion_razonSocial');
+            const direccion = document.getElementById('appbundle_contabilidad_facturacion_direccionFiscal');
+            const nombre = document.getElementById('appbundle_contabilidad_facturacion_cliente');
+            const email = document.getElementById('appbundle_contabilidad_facturacion_email');
+            const telefono = document.getElementById('appbundle_contabilidad_facturacion_numeroTelefonico');
+            razon.value = cliente.data.empresa;
+            direccion.value = cliente.data.direccionfiscal;
+            nombre.value = cliente.data.nombre;
+            email.value = cliente.data.correo;
+            telefono.value = cliente.data.telefono;
+          }
+        });
+
+        // Autocomplete para agregar filas a la tabla de conceptos
+        $cotizacionSelect.autocomplete({
+          ...autocompleteSettings,
+          minChars: 1,
+          paramName: 'folio',
+          serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/cotizaciones.json`,
+          params: {},
+          transformResult: function (cotizaciones) {
+            return {
+              suggestions: cotizaciones.map(cotizacion => {
+                return {
+                  value: cotizacion.folio.toString(),
+                  data: cotizacion
+                }
+              })
+            }
+          },
+          onSelect: function (suggestion) {
+            if (conceptoHolder.children.length) return;
+            suggestion.data.conceptos.forEach(concepto => appendRow(concepto)); // Rellena los conceptos
+            // Rellena los valores totales de la tabla
+            cotizacionHolder.value = suggestion.data.id;
+            tipoCambioHolder.value = `${(suggestion.data.tipocambio / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            tipoCambioHolder.setAttribute('readonly', true);
+            subtotalHolder.value = `${(suggestion.data.subtotal / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            descuentoHolder.value = `${(suggestion.data.descuento / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            ivaHolder.value = `${(suggestion.data.iva / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            totalHolder.value = `${(suggestion.data.total / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+
+            addLink.classList.add('hidden');
+          }
+        });
+
+        // Agrega un row al hacer click a 'Agregar Servicio'
+        addLink.addEventListener('click', function (e) {
+          e.preventDefault();
+          appendRow();
+        });
+
+        function appendRow(data) {
+          let prototype = conceptoHolder.dataset.prototype.replace(/__name__/g, conceptoCounter);
+          let unaTabla = document.createElement('table');
+          unaTabla.innerHTML = prototype;
+          let concepto = unaTabla.querySelector('.concepto-item');
+          let cantidadConcepto = concepto.children[1].firstElementChild;
+          let unidadConcepto = concepto.children[2].firstElementChild;
+          let cpsConcepto = concepto.children[3].firstElementChild;
+          let cuConcepto = concepto.children[4].firstElementChild;
+          let descripcionConcepto = concepto.children[5].firstElementChild;
+          let vUnitarioConcepto = concepto.children[6].querySelector('input');
+          let descuentoConcepto = concepto.children[7].querySelector('input');
+          let ivaConcepto = concepto.children[8].querySelector('input');
+          let subtotalConcepto = concepto.children[9].querySelector('input');
+          let totalConcepto = concepto.children[10].querySelector('input');
+
+          if (data) {
+            cantidadConcepto.value = data.cantidad;
+            unidadConcepto.value = data.unidad;
+            cpsConcepto.value = data.cps || '01010101';
+            cuConcepto.value = data.cu || 'ACT';
+            descripcionConcepto.value = data.descripcion;
+            vUnitarioConcepto.value = `${data.precio / 100}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            descuentoConcepto.value = `${data.descuento / 100}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            ivaConcepto.value = `${data.iva / 100}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            subtotalConcepto.value = `${data.subtotal / 100}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            totalConcepto.value = `${data.total / 100}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          } else {
+            cantidadConcepto.addEventListener('keyup', calculateConceptos);
+            vUnitarioConcepto.addEventListener('keyup', calculateConceptos);
+            descuentoConcepto.addEventListener('keyup', calculateConceptos);
+            totalConcepto.addEventListener('change', calculateTotals);
+          }
+
+          function calculateConceptos() {
+            if (!cantidadConcepto.value && !vUnitarioConcepto.value && !descuentoConcepto.value) return;
+            subtotalConcepto.value = (cantidadConcepto.value * vUnitarioConcepto.value).toFixed(2) || 0;
+            descuentoConcepto.value = descuentoConcepto.value || 0;
+            ivaConcepto.value = (subtotalConcepto.value * .16).toFixed(2) || ((cantidadConcepto.value * vUnitarioConcepto.value) / .16).toFixed(2) || 0;
+            totalConcepto.value = ((Number(subtotalConcepto.value) + Number(ivaConcepto.value)) - descuentoConcepto.value).toFixed(2) || 0;
+            totalConcepto.dispatchEvent(new Event('change'));
+          }
+
+          function calculateTotals() {
+            if (!conceptoHolder.children.length && !this.value) return;
+            let subtotalColumn = conceptoHolder.getElementsByClassName('subtotal-column');
+            let descuentoColumn = conceptoHolder.getElementsByClassName('descuento-column');
+            let ivaColumn = conceptoHolder.getElementsByClassName('iva-column');
+            let totalColumn = conceptoHolder.getElementsByClassName('total-column');
+
+            subtotalHolder.value = [...subtotalColumn]
+                .map(row => { return Number(row.value) })
+                .reduce((a, b) => { return a + b; })
+                .toFixed(2);
+            descuentoHolder.value = [...descuentoColumn]
+                .map(row => { return Number(row.value) })
+                .reduce((a, b) => { return a + b; })
+                .toFixed(2);
+            ivaHolder.value = [...ivaColumn]
+                .map(row => { return Number(row.value) })
+                .reduce((a, b) => { return a + b; })
+                .toFixed(2);
+            totalHolder.value = [...totalColumn]
+                .map(row => { return Number(row.value) })
+                .reduce((a, b) => { return a + b; })
+                .toFixed(2);
+
+          }
+
+          conceptoHolder.appendChild(concepto);
+          conceptoCounter++;
+        }
+
+        $(document).on('keyup change', '#appbundle_contabilidad_facturacion_folioCotizacion', function (e) {
+          if ((e.keyCode === 8 && !this.value) || !this.value.trim() || e.type === 'change') {
+            conceptoHolder.innerHTML = '';
+            // tipoCambioHolder.value = '';
+            tipoCambioHolder.removeAttribute('readonly');
+            cotizacionHolder.value = '';
+            subtotalHolder.value = 0;
+            descuentoHolder.value = 0;
+            ivaHolder.value = 0;
+            totalHolder.value = 0;
+            addLink.classList.remove('hidden');
+          }
+        });
+
+        $(document).on('click', '.remove-concepto', function (e) {
+          e.preventDefault();
+          this.parentNode.parentNode.remove(this);
+          if (!conceptoHolder.children.length) {
+            addLink.classList.remove('hidden');
+            $cotizacionSelect.val('');
+            subtotalHolder.value = 0;
+            descuentoHolder.value = 0;
+            ivaHolder.value = 0;
+            totalHolder.value = 0;
+          }
+        });
+      })(jQuery);
+    </script>
+{% endblock %}

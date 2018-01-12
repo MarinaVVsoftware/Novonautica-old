@@ -86,7 +86,7 @@ class AstilleroCotizaServicio
     private $astilleroserviciobasico;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Astillero\Producto")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Astillero\Producto", inversedBy="ACotizacionesServicios")
      * @ORM\JoinColumn(name="idproducto", referencedColumnName="id")
      */
     private $producto;

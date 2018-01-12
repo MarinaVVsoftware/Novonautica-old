@@ -13,10 +13,10 @@
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive scroll-novo">
-                    <table class="table">
+                    <table class="table text-center">
                         <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>Folio</th>
                             <th>Cliente</th>
                             <th>Barco</th>
                             <th>Fecha llegada</th>
@@ -25,21 +25,29 @@
                             <th>Ivatotal</th>
                             <th>Total</th>
                             <th>Validación</th>
+                            <th>Aceptación</th>
+                            <th>Pago</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for astilleroCotizacion in astilleroCotizacions %}
+                        {% for astilleroCotizacion in astilleroCotizacions|reverse %}
                             <tr>
-                                <td>{{ astilleroCotizacion.id }}</td>
+                                <td>
+                                    {% if astilleroCotizacion.foliorecotiza == 0 %}
+                                        {{astilleroCotizacion.folio }}
+                                    {% else %}
+                                        {{ astilleroCotizacion.folio }}-{{ astilleroCotizacion.foliorecotiza }}
+                                    {% endif %}
+                                </td>
                                 <td>{{ astilleroCotizacion.cliente }}</td>
                                 <td>{{ astilleroCotizacion.barco }}</td>
 
                                 <td>{% if astilleroCotizacion.fechaLlegada %}{{ astilleroCotizacion.fechaLlegada|date('Y-m-d') }}{% endif %}</td>
                                 <td>{% if astilleroCotizacion.fechaSalida %}{{ astilleroCotizacion.fechaSalida|date('Y-m-d') }}{% endif %}</td>
-                                <td>{{ astilleroCotizacion.subtotal }}</td>
-                                <td>{{ astilleroCotizacion.ivatotal }}</td>
-                                <td>{{ astilleroCotizacion.total }}</td>
+                                <td>$ {{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</td>
+                                <td>$ {{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</td>
+                                <td>$ {{ (astilleroCotizacion.total/100)|number_format(2) }}</td>
                                 <td class="align-middle">
                                     {% if astilleroCotizacion.validanovo == 0 %}
                                         <img src="{{ asset('img/status-pendiente-icon.svg') }}"
@@ -52,10 +60,46 @@
                                              class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
                                     {% endif %}
                                 </td>
+                                <td class="align-middle">
+                                    {% if astilleroCotizacion.validacliente == 0 %}
+                                        <img src="{{ asset('img/status-pendiente-icon.svg') }}"
+                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Pendiente">
+                                    {% elseif astilleroCotizacion.validacliente == 1 %}
+                                        <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Rechazado">
+                                    {% elseif astilleroCotizacion.validacliente == 2 %}
+                                        <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
+                                    {% endif %}
+                                </td>
+                                <td class="align-middle">
+                                    {% if astilleroCotizacion.validacliente == 2 %}
+                                        {% if astilleroCotizacion.estatuspago == 2 %}
+                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Pagado">
+                                        {% elseif astilleroCotizacion.estatuspago == 1 %}
+                                            <img src="{{ asset('img/status-pendiente-icon.svg') }}"
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Con adeudo">
+                                        {% else %}
+                                            <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="No pagado">
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <a class="btn btn-morado-claro" href="{{ path('astillero_show', { 'id': astilleroCotizacion.id }) }}">Detalle</a>
-                                    <a class="btn btn-azul" href="{{ path('astillero_validar', { 'id': astilleroCotizacion.id }) }}">Validar</a>
-                                    {#<a class="btn btn-azul" href="{{ path('astillero_edit', { 'id': astilleroCotizacion.id }) }}">Editar</a>#}
+                                    {% if astilleroCotizacion.validanovo == 0 %}
+                                        <a class="btn btn-azul" href="{{ path('astillero_validar', { 'id': astilleroCotizacion.id }) }}">Validar</a>
+                                    {% endif %}
+                                    {% if (astilleroCotizacion.validanovo == 1 or
+                                        astilleroCotizacion.validacliente == 1) and
+                                        astilleroCotizacion.estatus == 1
+                                    %}
+                                        <a class="btn btn-naranja" href="{{ path('astillero_recotizar', { 'id': astilleroCotizacion.id }) }}">Recotizar</a>
+                                    {% endif %}
+                                    {% if astilleroCotizacion.validacliente == 2 and astilleroCotizacion.estatusPago != 2 %}
+                                        <a class="btn btn-verde" href="{{ path('astillero_cotizacion_pago_edit',{'id': astilleroCotizacion.id}) }}">Pagos</a>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

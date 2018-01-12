@@ -6,6 +6,11 @@ use AppBundle\Entity\Astillero\Servicio;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Servicio controller.
@@ -58,7 +63,22 @@ class ServicioController extends Controller
             'title' => 'Astillero Nuevo Servicio'
         ));
     }
-
+    /**
+     * @Route("/buscarservicio/{id}.{_format}", name="ajax_astillero_busca_servicio", defaults={"_format"="JSON"})
+     *
+     */
+    public function buscarAction(Request $request, Servicio $servicio){
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(1);
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $normalizer->setIgnoredAttributes(['ACotizacionesServicios']);
+        $normalizers = [$normalizer];
+        $serializer = new Serializer($normalizers, $encoders);
+        return new Response($servicio = $serializer->serialize($servicio,$request->getRequestFormat()));
+    }
     /**
      * Finds and displays a servicio entity.
      *

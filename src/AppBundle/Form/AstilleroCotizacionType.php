@@ -7,6 +7,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -56,6 +57,11 @@ class AstilleroCotizacionType extends AbstractType
                 'divisor' => 100,
                 'grouping' => true,
                 'empty_data' => 0,
+            ])
+            ->add('mensaje', TextareaType::class, [
+                'label' => 'Mensaje en el correo:',
+                'attr' => ['rows' => 7, 'class' => 'editorwy'],
+                'required' => false,
             ])
             ->add('acservicios',CollectionType::class,[
                 'entry_type' => AstilleroCotizaServicioType::class,

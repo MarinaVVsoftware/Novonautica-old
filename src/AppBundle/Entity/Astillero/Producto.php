@@ -49,11 +49,22 @@ class Producto
      */
     private $descripcion;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizaServicio", mappedBy="producto")
+     */
+    private $ACotizacionesServicios;
+
     public function __toString()
     {
         return $this->nombre;
     }
-
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->ACotizacionesServicios = new \Doctrine\Common\Collections\ArrayCollection();
+    }
     /**
      * Get id
      *
@@ -158,5 +169,39 @@ class Producto
     public function getDescripcion()
     {
         return $this->descripcion;
+    }
+
+    /**
+     * Add aCotizacionesServicio
+     *
+     * @param \AppBundle\Entity\AstilleroCotizaServicio $aCotizacionesServicio
+     *
+     * @return Producto
+     */
+    public function addACotizacionesServicio(\AppBundle\Entity\AstilleroCotizaServicio $aCotizacionesServicio)
+    {
+        $this->ACotizacionesServicios[] = $aCotizacionesServicio;
+
+        return $this;
+    }
+
+    /**
+     * Remove aCotizacionesServicio
+     *
+     * @param \AppBundle\Entity\AstilleroCotizaServicio $aCotizacionesServicio
+     */
+    public function removeACotizacionesServicio(\AppBundle\Entity\AstilleroCotizaServicio $aCotizacionesServicio)
+    {
+        $this->ACotizacionesServicios->removeElement($aCotizacionesServicio);
+    }
+
+    /**
+     * Get aCotizacionesServicios
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getACotizacionesServicios()
+    {
+        return $this->ACotizacionesServicios;
     }
 }

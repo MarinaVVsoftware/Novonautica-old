@@ -33,6 +33,12 @@
                         <li role="presentation">
                             <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Servicios</a>
                         </li>
+                        <li role="presentation">
+                            <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div class="row">
@@ -235,7 +241,7 @@
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="valdolar" class="" >{{ valdolar }} MXN</div>
+                                    <div id="valdolar" class="" ><span class="dolarval">{{ (valdolar/100)|number_format(2) }}</span> MXN</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -265,73 +271,58 @@
                                                         {#{{ form_widget(form.acservicios.vars.prototype) }}#}
                                                     {% endfilter %}"
                                         >
-                                        <tr>
-                                            <td id="grua_cantidad">0</td>
+                                        <tr id="fila_grua" class="servicio-agregado">
+                                            <td id="grua_cantidad" class="valorcantidad" data-valor="0">0</td>
                                             <td>Uso de grua</td>
-                                            <td id="grua_precio">$ 0.00</td>
+                                            <td id="grua_precio" class="valorprecio" data-valor="0">$ 0.00</td>
                                             <td id="grua_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
                                             <td id="grua_iva" class="valoriva" data-valor="0">$ 0.00</td>
                                             <td id="grua_total" class="valortotal" data-valor="0">$ 0.00</td>
                                             <td></td>
                                         </tr>
-                                        <tr>
-                                            <td id="suelo_cantidad">0</td>
+                                        <tr id="fila_suelo" class="servicio-agregado">
+                                            <td id="suelo_cantidad" class="valorcantidad" data-valor="0">0</td>
                                             <td>Uso de suelo</td>
-                                            <td id="suelo_precio">$ 0.00</td>
-                                            <td id="suelo_subtotal" data-valor="0">$ 0.00</td>
-                                            <td id="suelo_iva" data-valor="0">$ 0.00</td>
-                                            <td id="suelo_total" data-valor="0">$ 0.00</td>
+                                            <td id="suelo_precio" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td id="suelo_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
+                                            <td id="suelo_iva" class="valoriva" data-valor="0">$ 0.00</td>
+                                            <td id="suelo_total" class="valortotal" data-valor="0">$ 0.00</td>
                                             <td></td>
                                         </tr>
-                                        <tr id="cotizarampa" class="hidden">
-                                            <td>1</td>
+                                        <tr id="cotizarampa" class="hidden servicio-agregado">
+                                            <td class="valorcantidad" data-valor="1">1</td>
                                             <td>Uso de rampa</td>
-                                            <td id="rampa_precio">$ 0.00</td>
-                                            <td id="rampa_subtotal" data-valor="0">$ 0.00</td>
-                                            <td id="rampa_iva" data-valor="0">$ 0.00</td>
-                                            <td id="rampa_total" data-valor="0">$ 0.00</td>
+                                            <td id="rampa_precio" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td id="rampa_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
+                                            <td id="rampa_iva" class="valoriva" data-valor="0">$ 0.00</td>
+                                            <td id="rampa_total" class="valortotal" data-valor="0">$ 0.00</td>
                                             <td></td>
                                         </tr>
-                                        <tr id="cotizakarcher" class="hidden">
-                                            <td>1</td>
+                                        <tr id="cotizakarcher" class="hidden servicio-agregado">
+                                            <td class="valorcantidad" data-valor="1">1</td>
                                             <td>Uso de karcher</td>
-                                            <td id="karcher_precio">$ 0.00</td>
-                                            <td id="karcher_subtotal" data-valor="0">$ 0.00</td>
-                                            <td id="karcher_iva" data-valor="0">$ 0.00</td>
-                                            <td id="karcher_total" data-valor="0">$ 0.00</td>
+                                            <td id="karcher_precio" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td id="karcher_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
+                                            <td id="karcher_iva" class="valoriva" data-valor="0">$ 0.00</td>
+                                            <td id="karcher_total" class="valortotal" data-valor="0">$ 0.00</td>
                                             <td></td>
                                         </tr>
-                                        <tr id="cotizavarada" class="hidden">
-                                            <td id="varada_cantidad">0</td>
+                                        <tr id="cotizavarada" class="hidden servicio-agregado">
+                                            <td id="varada_cantidad" class="valorcantidad" data-valor="0">0</td>
                                             <td>Sacar varada y boadura</td>
-                                            <td id="varada_precio">$ 0.00</td>
-                                            <td id="varada_subtotal" data-valor="0">$ 0.00</td>
-                                            <td id="varada_iva" data-valor="0">$ 0.00</td>
-                                            <td id="varada_total" data-valor="0">$ 0.00</td>
+                                            <td id="varada_precio" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td id="varada_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
+                                            <td id="varada_iva" class="valoriva" data-valor="0">$ 0.00</td>
+                                            <td id="varada_total" class="valortotal" data-valor="0">$ 0.00</td>
                                             <td></td>
                                         </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-sm-3">
-                                    {#<div class="row">#}
-                                    {#<div class="col-sm-12">#}
-                                    {#<a class="btn btn-morado-claro">Visualizar</a>#}
-                                    {#</div>#}
-                                    {#</div>#}
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <button type="submit" class="btn btn-azul">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                Guardar
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <div id="valiva" class="" data-valor="{{ valiva }}">
+                                    <div id="valorsistemaiva" class="" data-valor="{{ valiva }}">
                                         <small>IVA: {{ valiva }} %</small>
                                     </div>
                                 </div>
@@ -399,6 +390,144 @@
                             <div class="row">
                                 <div class="col-sm-4 col-sm-offset-5">
                                     <hr>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="totalmxn">
+                            <div class="row">
+                                <div class="col-sm-9 text-right">
+                                    <span>Tipo de cambio:</span>
+                                    <div id="valdolar" class="" ><span class="dolarval">{{ (valdolar/100)|number_format(2) }}</span> MXN</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <small>Precios en MXN</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <table id="a_nuevacotizacion_mxn" class="table text-center">
+                                        <thead>
+                                        <tr>
+                                            <th class="col-sm-1">Cantidad</th>
+                                            <th class="col-sm-2">Servicio</th>
+                                            <th class="col-sm-1">Prec. Unid.</th>
+                                            <th class="col-sm-1">Sub-Total</th>
+                                            <th class="col-sm-1">IVA</th>
+                                            <th class="col-sm-1">Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr id="fila_grua_mxn" class="servicio-agregado">
+                                            <td id="grua_cantidad_mxn" class="valorcantidad" data-valor="0">0</td>
+                                            <td>Uso de grua</td>
+                                            <td id="grua_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td id="grua_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
+                                            <td id="grua_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
+                                            <td id="grua_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
+                                        </tr>
+                                        <tr id="fila_suelo_mxn" class="servicio-agregado">
+                                            <td id="suelo_cantidad_mxn" class="valorcantidad" data-valor="0">0</td>
+                                            <td>Uso de suelo</td>
+                                            <td id="suelo_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td id="suelo_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
+                                            <td id="suelo_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
+                                            <td id="suelo_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
+                                        </tr>
+                                        <tr id="cotizarampa_mxn" class="hidden servicio-agregado">
+                                            <td class="valorcantidad" data-valor="1">1</td>
+                                            <td>Uso de rampa</td>
+                                            <td id="rampa_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td id="rampa_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
+                                            <td id="rampa_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
+                                            <td id="rampa_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
+                                        </tr>
+                                        <tr id="cotizakarcher_mxn" class="hidden servicio-agregado">
+                                            <td class="valorcantidad" data-valor="1">1</td>
+                                            <td>Uso de karcher</td>
+                                            <td id="karcher_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td id="karcher_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
+                                            <td id="karcher_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
+                                            <td id="karcher_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
+                                        </tr>
+                                        <tr id="cotizavarada_mxn" class="hidden servicio-agregado">
+                                            <td id="varada_cantidad_mxn" class="valorcantidad" data-valor="0">0</td>
+                                            <td>Sacar varada y boadura</td>
+                                            <td id="varada_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td id="varada_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
+                                            <td id="varada_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
+                                            <td id="varada_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div id="" class="">
+                                        <small>IVA: {{ valiva }} %</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
+                                    <p>
+                                        $ <span id="gransubtot_mxn">00.00</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $ <span id="graniva_mxn">00.00</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $ <span id="grantot_mxn">00.00</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="correo">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    {{ form_row(form.mensaje) }}
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-azul">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -472,14 +601,6 @@
                     {{ form_end(form) }}
                 </div>
                 <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <a href="{{ path('astillero_index') }}" class="btn btn-naranja pull-right">
-                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                Cancelar
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
@@ -552,13 +673,19 @@
                             "<label>Teléfono del capitán</label>" + "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
                             "<label>Correo del capitán</label>" + "<div class='info-input'>" + barco.correoCapitan + "</div>";
                         $("#info-barco").append(html);
-                        $("#de_eslora").data('valor', barco.eslora);
-                        $("#e_eslora").data('valor', barco.eslora);
-                        $("#de_eslora").html(barco.eslora);
-                        $("#e_eslora").html(barco.eslora);
-                        $("#de_eslora_mxn").html(barco.eslora);
-                        $("#e_eslora_mxn").html(barco.eslora);
-                        recalculaSubtotalesYtotal();
+                        $("#grua_cantidad").data('valor', barco.eslora);
+                        $("#varada_cantidad").data('valor', barco.eslora);
+                        $("#grua_cantidad").html(barco.eslora);
+                        $("#varada_cantidad").html(barco.eslora);
+                        calculaSubtotalesAstillero($('#fila_grua'));
+                        calculaSubtotalesAstillero($('#cotizavarada'));
+
+                        $("#grua_cantidad_mxn").data('valor', barco.eslora);
+                        $("#varada_cantidad_mxn").data('valor', barco.eslora);
+                        $("#grua_cantidad_mxn").html(barco.eslora);
+                        $("#varada_cantidad_mxn").html(barco.eslora);
+                        calculaSubtotalesAstillero($('#fila_grua_mxn'));
+                        calculaSubtotalesAstillero($('#cotizavarada_mxn'));
 
                         // Filtrado de opcions de slip por tamaño de eslora
                         const slipOptions = [...document.querySelectorAll('#appbundle_marinahumedacotizacion_slip > option')]
@@ -571,5 +698,63 @@
             }
 
         })(jQuery);
+        $('#a_nuevacotizacion>tbody').change('.select-busca-producto',function (e) {
+            //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
+            var idservicio = $('.select-busca-producto:focus option:selected' ).val();
+            if(idservicio > 0){
+                var url = "{{ path('ajax_astillero_busca_producto',{'id':'iddelserivicio','_format':'json'}) }}";
+                url = url.replace("iddelserivicio", idservicio);
+                $.ajax({
+                    method: "GET",
+                    url: url,
+                    dataType: 'json',
+                    success: function(datos) {
+                        JSON.stringify(datos);
+                        var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
+                        fila.children('.valorprecio').html('$ '+(datos.precio/100));
+                        fila.children('.valorprecio').data('valor',(datos.precio/100));
+                        calculaSubtotalesAstillero(fila);
+
+                        var idfila = fila.data('id');
+                        var dolar = $('#appbundle_astillerocotizacion_dolar').val();
+                        var valormxn = (datos.precio/100) * dolar;
+                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').data('valor',valormxn);
+                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat(valormxn).toFixed(2));
+                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.td-producto').html(datos.nombre);
+                        fila =  $('#a_nuevacotizacion_mxn>tbody>#'+idfila);
+                        calculaSubtotalesAstillero(fila);
+                    }
+                });
+            }
+        });
+        $('#a_nuevacotizacion>tbody').change('.select-busca-servicio',function (e) {
+            //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
+            var idservicio = $('.select-busca-servicio:focus option:selected' ).val();
+            if(idservicio > 0){
+                var url = "{{ path('ajax_astillero_busca_servicio',{'id':'iddelserivicio','_format':'json'}) }}";
+                url = url.replace("iddelserivicio", idservicio);
+                $.ajax({
+                    method: "GET",
+                    url: url,
+                    dataType: 'json',
+                    success: function(datos) {
+                        JSON.stringify(datos);
+                        var fila = $('.select-busca-servicio:focus option:selected').parent().parent().parent();
+                        fila.children('.valorprecio').html('$ '+(datos.precio/100));
+                        fila.children('.valorprecio').data('valor',(datos.precio/100));
+                        calculaSubtotalesAstillero(fila);
+
+                        var idfila = fila.data('id');
+                        var dolar = $('#appbundle_astillerocotizacion_dolar').val();
+                        var valormxn = (datos.precio/100) * dolar;
+                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').data('valor',valormxn);
+                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat(valormxn).toFixed(2));
+                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.td-servicio').html(datos.nombre);
+                        fila =  $('#a_nuevacotizacion_mxn>tbody>#'+idfila);
+                        calculaSubtotalesAstillero(fila);
+                    }
+                });
+            }
+        });
     </script>
 {% endblock %}

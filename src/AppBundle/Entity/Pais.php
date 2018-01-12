@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +42,21 @@ class Pais
      * @ORM\Column(name="phonecode", type="integer")
      */
     private $phonecode;
+
+    /**
+     * @var Estado
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Estado", mappedBy="country")
+     */
+    private $states;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->states = new ArrayCollection();
+    }
 
     public function __toString()
     {
@@ -127,5 +143,39 @@ class Pais
     public function getPhonecode()
     {
         return $this->phonecode;
+    }
+
+    /**
+     * Add state
+     *
+     * @param Estado $state
+     *
+     * @return Pais
+     */
+    public function addState(Estado $state)
+    {
+        $this->states[] = $state;
+
+        return $this;
+    }
+
+    /**
+     * Remove state
+     *
+     * @param Estado $state
+     */
+    public function removeState(Estado $state)
+    {
+        $this->states->removeElement($state);
+    }
+
+    /**
+     * Get states
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStates()
+    {
+        return $this->states;
     }
 }

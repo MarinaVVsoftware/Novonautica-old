@@ -47,6 +47,13 @@ class ValorSistema
     private $folioMarina;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="folio_astillero", type="bigint")
+     */
+    private $folioAstillero;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="mensaje_correo_marina", type="text")
@@ -61,11 +68,25 @@ class ValorSistema
     private $mensajeCorreoMarinaGasolina;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="mensaje_correo_astillero", type="text")
+     */
+    private $mensajeCorreoAstillero;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="dias_habiles_marina_cotizacion", type="integer")
      */
     private $diasHabilesMarinaCotizacion;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="dias_habiles_astillero_cotizacion", type="integer")
+     */
+    private $diasHabilesAstilleroCotizacion;
 
     /**
      * Generate a token
@@ -189,6 +210,54 @@ class ValorSistema
     public function setMensajeCorreoMarinaGasolina($mensajeCorreoMarinaGasolina)
     {
         $this->mensajeCorreoMarinaGasolina = $mensajeCorreoMarinaGasolina;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMensajeCorreoAstillero()
+    {
+        return $this->mensajeCorreoAstillero;
+    }
+
+    /**
+     * @param string $mensajeCorreoAstillero
+     */
+    public function setMensajeCorreoAstillero($mensajeCorreoAstillero)
+    {
+        $this->mensajeCorreoAstillero = $mensajeCorreoAstillero;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFolioAstillero()
+    {
+        return $this->folioAstillero;
+    }
+
+    /**
+     * @param int $folioAstillero
+     */
+    public function setFolioAstillero($folioAstillero)
+    {
+        $this->folioAstillero = $folioAstillero;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDiasHabilesAstilleroCotizacion()
+    {
+        return $this->diasHabilesAstilleroCotizacion;
+    }
+
+    /**
+     * @param int $diasHabilesAstilleroCotizacion
+     */
+    public function setDiasHabilesAstilleroCotizacion($diasHabilesAstilleroCotizacion)
+    {
+        $this->diasHabilesAstilleroCotizacion = $diasHabilesAstilleroCotizacion;
     }
 
 

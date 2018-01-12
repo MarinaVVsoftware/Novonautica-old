@@ -83,6 +83,11 @@ class Pago
     private $mhcotizacion;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\AstilleroCotizacion", inversedBy="pagos")
+     */
+    private $acotizacion;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CuentaBancaria", inversedBy="pagos")
      * @ORM\JoinColumn(name="idcuentabancaria", referencedColumnName="id",onDelete="CASCADE")
      */
@@ -286,5 +291,29 @@ class Pago
     public function setDolar($dolar)
     {
         $this->dolar = $dolar;
+    }
+
+    /**
+     * Set acotizacion
+     *
+     * @param \AppBundle\Entity\AstilleroCotizacion $acotizacion
+     *
+     * @return Pago
+     */
+    public function setAcotizacion(\AppBundle\Entity\AstilleroCotizacion $acotizacion = null)
+    {
+        $this->acotizacion = $acotizacion;
+
+        return $this;
+    }
+
+    /**
+     * Get acotizacion
+     *
+     * @return \AppBundle\Entity\AstilleroCotizacion
+     */
+    public function getAcotizacion()
+    {
+        return $this->acotizacion;
     }
 }
