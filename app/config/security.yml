@@ -57,5 +57,7 @@ security:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/marina/cotizacion/gracias, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/marina/cotizacion/.*/confirma, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/astillero/gracias, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/marina/.*/confirma, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/.*, roles: IS_AUTHENTICATED_FULLY }
