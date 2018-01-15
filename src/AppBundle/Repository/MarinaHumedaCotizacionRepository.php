@@ -33,4 +33,45 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getAllClientes()
+    {
+        $qb = $this->createQueryBuilder('mhce');
+
+        return $qb
+            ->select('cliente.nombre AS nombre')
+            ->join('mhce.cliente', 'cliente')
+            ->join('mhce.mhcservicios', 'servicios')
+            ->where($qb->expr()->neq('servicios.tipo','3'))
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getAllBarcos()
+    {
+        $qb = $this->createQueryBuilder('mhce');
+
+        return $qb
+            ->select('barco.nombre AS nombre')
+            ->join('mhce.barco', 'barco')
+            ->join('mhce.mhcservicios', 'servicios')
+            ->where($qb->expr()->neq('servicios.tipo','3'))
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getAllValidas()
+    {
+        $qb = $this->createQueryBuilder('mhce');
+
+        return $qb
+            ->select('mhce.validanovo AS nombre')
+            ->join('mhce.mhcservicios', 'servicios')
+            ->where($qb->expr()->neq('servicios.tipo','3'))
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
 }

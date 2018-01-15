@@ -6,10 +6,6 @@ use AppBundle\Entity\Correo;
 use AppBundle\Entity\CuentaBancaria;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
-use AppBundle\Entity\MarinaHumedaServicio;
-use AppBundle\Entity\MarinaHumedaTarifa;
-use AppBundle\Entity\Pago;
-use AppBundle\Entity\SlipMovimiento;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Form\MarinaHumedaCotizacionAceptadaType;
 use AppBundle\Form\MarinaHumedaCotizacionGasolinaType;
@@ -24,7 +20,12 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 
 /**
@@ -44,33 +45,53 @@ class MarinaHumedaCotizacionController extends Controller
         return $this->render('marinahumeda/cotizacion/gracias.twig', [
         ]);
     }
+
     /**
      * Enlista todas las cotizaciones estadias
      *
-     * @Route("/estadia", name="marina-humeda_estadia_index")
+     * @Route("/estadia/", name="marina-humeda_estadia_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse|Response
      */
-    public function indexEstadiaAction()
+    public function indexEstadiaAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'cotizacionEstadia');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getCode());
+            }
+        }
 
-        $mhcRepo = $em->getRepository('AppBundle:MarinaHumedaCotizacion');
-        $marinaHumedaCotizacions = $mhcRepo->findAllEstadia();
-
-        return $this->render('marinahumeda/cotizacion/estadia/index.html.twig', [
-            'title' => 'Cotizaciones Estadias',
-            'marinaHumedaCotizacions' => $marinaHumedaCotizacions,
-        ]);
+        return $this->render('marinahumeda/cotizacion/estadia/index.html.twig', ['title' => 'Cotizaciones de Estadias']);
     }
+
     /**
      * Enlista todas las cotizaciones gasolina
      *
-     * @Route("/gasolina", name="marina-humeda_gasolina_index")
+     * @Route("/gasolina/", name="marina-humeda_gasolina_index")
      * @Method("GET")
      */
-    public function indexGasolinaAction()
+    public function indexGasolinaAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'cotizacionGasolina');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getCode());
+            }
+        }
+
+        return $this->render('marinahumeda/cotizacion/gasolina/index.html.twig', ['title' => 'Cotizaciones de Gasolina']);
+
+        /*$em = $this->getDoctrine()->getManager();
 
         $mhcRepo = $em->getRepository('AppBundle:MarinaHumedaCotizacion');
         $marinaHumedaCotizacions = $mhcRepo->findAllGasolina();
@@ -78,7 +99,37 @@ class MarinaHumedaCotizacionController extends Controller
         return $this->render('marinahumeda/cotizacion/gasolina/index.html.twig', [
             'title' => 'Cotizaciones Gasolina',
             'marinaHumedaCotizacions' => $marinaHumedaCotizacions,
-        ]);
+        ]);*/
+    }
+
+    /**
+     * @Route("/estadia/cliente.{_format}", defaults={"_format" = "json"})
+     * @Route("/gasolina/cliente.{_format}", defaults={"_format" = "json"})
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getClientesAction(Request $request)
+    {
+        $clientes = $this->getDoctrine()->getRepository('AppBundle:MarinaHumedaCotizacion')->getAllClientes();
+
+        return new Response($this->serializeEntities($clientes, $request->getRequestFormat()));
+    }
+
+    /**
+     * @Route("/estadia/barco.{_format}", defaults={"_format" = "json"})
+     * @Route("/gasolina/barco.{_format}", defaults={"_format" = "json"})
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getBarcosAction(Request $request)
+    {
+        $barcos = $this->getDoctrine()->getRepository('AppBundle:MarinaHumedaCotizacion')->getAllBarcos();
+
+        return new Response($this->serializeEntities($barcos, $request->getRequestFormat()));
     }
 
     /**
@@ -998,17 +1049,26 @@ class MarinaHumedaCotizacionController extends Controller
         return $this->redirectToRoute('marina-humeda_index');
     }
 
+    private function serializeEntities($entity, $format, $ignoredAttributes = []): string
+    {
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+        $normalizer->setIgnoredAttributes($ignoredAttributes);
+
+        return $serializer->serialize($entity, $format);
+    }
+
     /**
      * Crea un formulario para eliminar una cotizacion
      *
      * @param MarinaHumedaCotizacion $marinaHumedaCotizacion The marinaHumedaCotizacion entity
      *
-     * @return Form The form
+     * @return Form|\Symfony\Component\Form\FormInterface
      */
     private function createDeleteForm(MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('marina-humeda_delete', array('id' => $marinaHumedaCotizacion->getId())))
+            ->setAction($this->generateUrl('marina-humeda_delete', ['id' => $marinaHumedaCotizacion->getId()]))
             ->setMethod('DELETE')
             ->getForm()
         ;

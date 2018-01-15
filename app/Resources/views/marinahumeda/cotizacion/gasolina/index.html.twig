@@ -1,7 +1,8 @@
 {% extends 'estructura/plantilla.twig' %}
 
-{% block title %}
-    Novonautica | Cotizaciones Marina Húmeda
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    {{ parent() }}
 {% endblock %}
 
 {% block contwrapper %}
@@ -12,104 +13,188 @@
                     <h3 class="panel-title">Cotizaciones Gasolina</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="table-responsive scroll-novo">
-                        <table class="table text-center">
-                            <thead>
+                    <table class="table table-novo table-condensed text-center">
+                        <thead>
+                        <tr>
+                            <th>Folio</th>
+                            <th class="with-choices">Cliente</th>
+                            <th class="with-choices">Barco</th>
+                            <th>Descuento(%)</th>
+                            <th>Subtotal</th>
+                            <th>Iva Total</th>
+                            <th>Descuento Total</th>
+                            <th>Total</th>
+                            <th class="with-options class="with-choices" ">Validación</th>
+                            <th class="with-options">Aceptación</th>
+                            <th class="with-options">Pago</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        {#<tbody>
+                        {% for marinaHumedaCotizacion in marinaHumedaCotizacions|sort|reverse %}
                             <tr>
-                                <th>Folio</th>
-                                <th>Cliente</th>
-                                <th>Barco</th>
-                                <th>Descuento(%)</th>
-                                <th>Subtotal</th>
-                                <th>Iva Total</th>
-                                <th>Descuento Total</th>
-                                <th>Total</th>
-                                <th>Validación</th>
-                                <th>Aceptación</th>
-                                <th>Pago</th>
-                                <th>Acciones</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for marinaHumedaCotizacion in marinaHumedaCotizacions|sort|reverse %}
-                                <tr>
-                                    <td>
-                                        {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
-                                            {{ marinaHumedaCotizacion.folio }}
+                                <td>
+                                    {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
+                                        {{ marinaHumedaCotizacion.folio }}
+                                    {% else %}
+                                        {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ marinaHumedaCotizacion.cliente }}</td>
+                                <td>{{ marinaHumedaCotizacion.barco }}</td>
+                                <td>{{ marinaHumedaCotizacion.descuento }}%</td>
+                                <td>${{ (marinaHumedaCotizacion.subtotal/100)|number_format(2) }}</td>
+                                <td>${{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }}</td>
+                                <td>${{ (marinaHumedaCotizacion.descuentototal/100)|number_format(2) }}</td>
+                                <td>${{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</td>
+                                <td class="align-middle">
+                                    {% if marinaHumedaCotizacion.validanovo == 0 %}
+                                        <img src="{{ asset('img/status-pendiente-icon.svg') }}"
+                                             class="center-block" data-toggle="tooltip" data-placement="left"
+                                             title="Pendiente">
+                                    {% elseif marinaHumedaCotizacion.validanovo == 1 %}
+                                        <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                             class="center-block" data-toggle="tooltip" data-placement="left"
+                                             title="Rechazado">
+                                    {% elseif marinaHumedaCotizacion.validanovo == 2 %}
+                                        <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                             class="center-block" data-toggle="tooltip" data-placement="left"
+                                             title="Aceptado">
+                                    {% endif %}
+                                </td>
+                                <td class="align-middle">
+                                    {% if marinaHumedaCotizacion.validacliente == 0 %}
+                                        <img src="{{ asset('img/status-pendiente-icon.svg') }}"
+                                             class="center-block" data-toggle="tooltip" data-placement="left"
+                                             title="Pendiente">
+                                    {% elseif marinaHumedaCotizacion.validacliente == 1 %}
+                                        <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                             class="center-block" data-toggle="tooltip" data-placement="left"
+                                             title="Rechazado">
+                                    {% elseif marinaHumedaCotizacion.validacliente == 2 %}
+                                        <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                             class="center-block" data-toggle="tooltip" data-placement="left"
+                                             title="Aceptado">
+                                    {% endif %}
+                                </td>
+                                <td class="align-middle">
+                                    {% if marinaHumedaCotizacion.validacliente == 2 %}
+
+                                        {% if marinaHumedaCotizacion.estatuspago == 2 %}
+                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                 class="center-block" data-toggle="tooltip" data-placement="left"
+                                                 title="Pagado">
+                                        {% elseif marinaHumedaCotizacion.estatuspago == 1 %}
+                                            <img src="{{ asset('img/status-pendiente-icon.svg') }}"
+                                                 class="center-block" data-toggle="tooltip" data-placement="left"
+                                                 title="Con adeudo">
                                         {% else %}
-                                            {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ marinaHumedaCotizacion.cliente }}</td>
-                                    <td>{{ marinaHumedaCotizacion.barco }}</td>
-                                    <td>{{ marinaHumedaCotizacion.descuento }}%</td>
-                                    <td>${{ (marinaHumedaCotizacion.subtotal/100)|number_format(2) }}</td>
-                                    <td>${{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }}</td>
-                                    <td>${{ (marinaHumedaCotizacion.descuentototal/100)|number_format(2) }}</td>
-                                    <td>${{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</td>
-                                    <td class="align-middle">
-                                        {% if marinaHumedaCotizacion.validanovo == 0 %}
-                                            <img src="{{ asset('img/status-pendiente-icon.svg') }}"
-                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Pendiente">
-                                        {% elseif marinaHumedaCotizacion.validanovo == 1 %}
                                             <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Rechazado">
-                                        {% elseif marinaHumedaCotizacion.validanovo == 2 %}
-                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
-                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
+                                                 class="center-block" data-toggle="tooltip" data-placement="left"
+                                                 title="No pagado">
                                         {% endif %}
-                                    </td>
-                                    <td class="align-middle">
-                                        {% if marinaHumedaCotizacion.validacliente == 0 %}
-                                            <img src="{{ asset('img/status-pendiente-icon.svg') }}"
-                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Pendiente">
-                                        {% elseif marinaHumedaCotizacion.validacliente == 1 %}
-                                            <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Rechazado">
-                                        {% elseif marinaHumedaCotizacion.validacliente == 2 %}
-                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
-                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
-                                        {% endif %}
-                                    </td>
-                                    <td class="align-middle">
-                                        {% if marinaHumedaCotizacion.validacliente == 2 %}
 
-                                            {% if marinaHumedaCotizacion.estatuspago == 2 %}
-                                                <img src="{{ asset('img/status-aprobado-icon.svg') }}"
-                                                    class="center-block" data-toggle="tooltip" data-placement="left" title="Pagado">
-                                            {% elseif marinaHumedaCotizacion.estatuspago == 1 %}
-                                                <img src="{{ asset('img/status-pendiente-icon.svg') }}"
-                                                     class="center-block" data-toggle="tooltip" data-placement="left" title="Con adeudo">
-                                                {% else %}
-                                                <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                                     class="center-block" data-toggle="tooltip" data-placement="left" title="No pagado">
-                                            {% endif %}
-
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-morado-claro"
-                                           href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">Detalle</a>
-                                        {% if marinaHumedaCotizacion.validanovo == 0 %}
-                                            <a class="btn btn-azul" href="{{ path('marina-humeda_validar', { 'id': marinaHumedaCotizacion.id }) }}">Validar</a>
-                                        {% endif %}
-                                        {% if (marinaHumedaCotizacion.validanovo == 1 or
-                                              marinaHumedaCotizacion.validacliente == 1) and
-                                              marinaHumedaCotizacion.estatus == 1
-                                        %}
-                                            <a class="btn btn-naranja" href="{{ path('marina-humeda_gasolina_recotizar', { 'id': marinaHumedaCotizacion.id }) }}">Recotizar</a>
-                                        {% endif %}
-                                        {% if marinaHumedaCotizacion.validacliente == 2 and marinaHumedaCotizacion.estatusPago != 2 %}
-                                            <a class="btn btn-verde" href="{{ path('marina_cotizacion_pago_edit',{'id': marinaHumedaCotizacion.id}) }}">Pagos</a>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a class="btn btn-morado-claro"
+                                       href="{{ path('marina-humeda_show', { 'id': marinaHumedaCotizacion.id }) }}">Detalle</a>
+                                    {% if marinaHumedaCotizacion.validanovo == 0 %}
+                                        <a class="btn btn-azul"
+                                           href="{{ path('marina-humeda_validar', { 'id': marinaHumedaCotizacion.id }) }}">Validar</a>
+                                    {% endif %}
+                                    {% if (marinaHumedaCotizacion.validanovo == 1 or
+                                        marinaHumedaCotizacion.validacliente == 1) and
+                                        marinaHumedaCotizacion.estatus == 1 %}
+                                        <a class="btn btn-naranja"
+                                           href="{{ path('marina-humeda_gasolina_recotizar', { 'id': marinaHumedaCotizacion.id }) }}">Recotizar</a>
+                                    {% endif %}
+                                    {% if marinaHumedaCotizacion.validacliente == 2 and marinaHumedaCotizacion.estatusPago != 2 %}
+                                        <a class="btn btn-verde"
+                                           href="{{ path('marina_cotizacion_pago_edit',{'id': marinaHumedaCotizacion.id}) }}">Pagos</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>#}
+                    </table>
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, datatableSettings) {
+        const aceptado = `<img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">`;
+        const rechazado = `<img src="{{ asset('img/status-desaprovado-icon.svg') }}" class="center-block">`;
+        const pendiente = `<img src="{{ asset('img/status-pendiente-icon.svg') }}" class="center-block">`;
+
+        const $tabla = $('.table-novo').DataTable({
+          ...datatableSettings,
+          ajax: '{{ path('marina-humeda_gasolina_index') }}',
+          autoWidth: false,
+          columns: [
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+          ],
+          rowCallback: function (row, data) {
+            for (let i of [8, 9, 10]) {
+              if (!data[i]) row.children[i].innerHTML = pendiente;
+              if (data[i] === 1) row.children[i].innerHTML = rechazado;
+              if (data[i] === 2) row.children[i].innerHTML = aceptado;
+            }
+
+            row.lastElementChild.innerHTML = writeLastChild(data[8], data[9], data[10], data[11]);
+          }
+        });
+
+        $tabla.columns('.with-options').every(function () {
+          const column = this;
+          const columnHeader = column.header();
+          const select = document.createElement('select');
+
+          select.add(new Option(columnHeader.innerHTML, ''));
+          columnHeader.innerHTML = '';
+          columnHeader.appendChild(select);
+
+          select.addEventListener('click', e => e.stopPropagation());
+          select.addEventListener('change', function () {
+            let val = $.fn.dataTable.util.escapeRegex(this.value);
+            column.search(val, true, true).draw();
+          });
+
+          select.add(new Option('Aceptada', '2'));
+          select.add(new Option('Rechazada', '1'));
+          select.add(new Option('Pendiente', null));
+        });
+
+        function writeLastChild(validacion, aceptacion, pago, item) {
+          return `
+          <td>
+            <ul class="list-unstyled">
+              <li><a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.requestUri ~ '../${item.id}' }}">Detalle</a></li>
+              ${validacion === 0 ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '../${item.id}/validar' }}">Validar</a></li>` : ''}
+              ${(validacion === 1 || aceptacion === 1) && item.estatus ? `<li><a class="btn btn-xs btn-block btn-naranja" href="{{ app.request.requestUri ~ '${item.id}/recotizar' }}">Recotizar</a></li>` : ''}
+              ${(aceptacion === 2 && pago !== 2) ? `<li><a class="btn btn-xs btn-block btn-verde" href="{{ app.request.requestUri ~ '../${item.id}/pago' }}">Pagos</a></li>` : ''}
+            </ul>
+          </td>
+        `;
+        }
+      })(jQuery, datatablesSettings)
+
+    </script>
 {% endblock %}
