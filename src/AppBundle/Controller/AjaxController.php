@@ -162,7 +162,7 @@ class AjaxController extends Controller
         $normalizer->setCircularReferenceHandler(function ($object) {
             return $object->getId();
         });
-        $normalizer->setIgnoredAttributes(['cliente','motores','mHcotizaciones','mhcotizacionesadicionales','astillerocotizaciones']);
+        $normalizer->setIgnoredAttributes(['motores','mHcotizaciones','mhcotizacionesadicionales','astillerocotizaciones']); //'cliente',
         $normalizers = [$normalizer];
         $serializer = new Serializer($normalizers, $encoders);
         return new Response($barco = $serializer->serialize($barco,$request->getRequestFormat()));

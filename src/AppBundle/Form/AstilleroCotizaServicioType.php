@@ -37,7 +37,6 @@ class AstilleroCotizaServicioType extends AbstractType
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
-
             ])
             ->add('estatus', null,[
                 'label' => ' '

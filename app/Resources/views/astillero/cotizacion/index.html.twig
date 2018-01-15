@@ -40,7 +40,7 @@
                                         {{ astilleroCotizacion.folio }}-{{ astilleroCotizacion.foliorecotiza }}
                                     {% endif %}
                                 </td>
-                                <td>{{ astilleroCotizacion.cliente }}</td>
+                                <td>{{ astilleroCotizacion.barco.cliente }}</td>
                                 <td>{{ astilleroCotizacion.barco }}</td>
 
                                 <td>{% if astilleroCotizacion.fechaLlegada %}{{ astilleroCotizacion.fechaLlegada|date('Y-m-d') }}{% endif %}</td>

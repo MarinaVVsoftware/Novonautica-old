@@ -10,4 +10,14 @@ namespace AppBundle\Repository;
  */
 class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function soloAceptados()
+    {
+        $qb = $this->createQueryBuilder('ac');
+
+        return $qb
+            ->select('ac')
+            ->where($qb->expr()->eq('ac.validacliente',2))
+            ->getQuery()
+            ->getResult();
+    }
 }

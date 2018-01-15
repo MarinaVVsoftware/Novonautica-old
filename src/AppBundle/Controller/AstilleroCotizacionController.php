@@ -60,8 +60,14 @@ class AstilleroCotizacionController extends Controller
      */
     public function displayAstilleroAceptaciones()
     {
-        return $this->render('astillero-aceptaciones.twig', [
-            'title' => 'Aceptaciones'
+
+        $em = $this->getDoctrine()->getManager();
+        $miRepositorio = $em->getRepository('AppBundle:AstilleroCotizacion');
+        $astilleroCotizacions = $miRepositorio->soloAceptados();
+
+        return $this->render('astillero/cotizacion/index.html.twig', [
+            'title' => 'Aceptaciones',
+            'astilleroCotizacions' => $astilleroCotizacions,
         ]);
     }
 
@@ -83,21 +89,21 @@ class AstilleroCotizacionController extends Controller
      *
      * @return RedirectResponse|Response
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request) //cantidades se guardan en pesos
     {
         $astilleroCotizacion = new AstilleroCotizacion();
         $astilleroGrua = new AstilleroCotizaServicio();
         $astilleroSuelo = new AstilleroCotizaServicio();
         $astilleroRampa = new AstilleroCotizaServicio();
         $astilleroKarcher = new AstilleroCotizaServicio();
-        $astilleroVarada = new AstilleroCotizaServicio();
+
 
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
             ->addAcservicio($astilleroSuelo)
             ->addAcservicio($astilleroRampa)
             ->addAcservicio($astilleroKarcher)
-            ->addAcservicio($astilleroVarada);
+          ;
 
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
@@ -112,6 +118,7 @@ class AstilleroCotizacionController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $valordolar = $astilleroCotizacion->getDolar();
 
             $granSubtotal = 0;
             $granIva = 0;
@@ -128,7 +135,7 @@ class AstilleroCotizacionController extends Controller
                 ->getRepository(AstilleroServicioBasico::class)
                 ->find(1);
             $cantidad = $eslora;
-            $precio = $astilleroGrua->getPrecio();
+            $precio = ($astilleroGrua->getPrecio()/$valordolar)*100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -141,6 +148,8 @@ class AstilleroCotizacionController extends Controller
                 ->setProducto(null)
                 ->setOtroservicio(null)
                 ->setAstilleroserviciobasico($servicio);
+
+            $astilleroGrua->setPrecio($precio);
             $astilleroGrua->setCantidad($cantidad);
             $astilleroGrua->setIva($ivaTot);
             $astilleroGrua->setSubtotal($subTotal);
@@ -156,7 +165,7 @@ class AstilleroCotizacionController extends Controller
                 ->find(2);
             $cantidad = $cantidadDias;
 
-            $precio = $astilleroSuelo->getPrecio();
+            $precio = ($astilleroSuelo->getPrecio()/$valordolar)*100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -169,12 +178,12 @@ class AstilleroCotizacionController extends Controller
                 ->setServicio(null)
                 ->setProducto(null)
                 ->setOtroservicio(null);
-
-            $astilleroSuelo->setEstatus(1);
+            $astilleroSuelo->setPrecio($precio);
             $astilleroSuelo->setCantidad($cantidad);
             $astilleroSuelo->setSubtotal($subTotal);
             $astilleroSuelo->setIva($ivaTot);
             $astilleroSuelo->setTotal($total);
+            $astilleroSuelo->setEstatus(true);
 
             $granSubtotal += $subTotal;
             $granIva += $ivaTot;
@@ -185,7 +194,7 @@ class AstilleroCotizacionController extends Controller
                 ->getRepository(AstilleroServicioBasico::class)
                 ->find(3);
             $cantidad = 1;
-            $precio = $astilleroRampa->getPrecio();
+            $precio = ($astilleroRampa->getPrecio()/$valordolar)*100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -198,6 +207,7 @@ class AstilleroCotizacionController extends Controller
                 ->setServicio(null)
                 ->setProducto(null)
                 ->setOtroservicio(null);
+            $astilleroRampa->setPrecio($precio);
             $astilleroRampa->setCantidad($cantidad);
             $astilleroRampa->setSubtotal($subTotal);
             $astilleroRampa->setIva($ivaTot);
@@ -213,7 +223,7 @@ class AstilleroCotizacionController extends Controller
                 ->getRepository(AstilleroServicioBasico::class)
                 ->find(4);
             $cantidad = 1;
-            $precio = $astilleroKarcher->getPrecio();
+            $precio = ($astilleroKarcher->getPrecio()/$valordolar)*100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -226,6 +236,7 @@ class AstilleroCotizacionController extends Controller
                 ->setServicio(null)
                 ->setProducto(null)
                 ->setOtroservicio(null);
+            $astilleroKarcher->setPrecio($precio);
             $astilleroKarcher->setCantidad($cantidad);
             $astilleroKarcher->setSubtotal($subTotal);
             $astilleroKarcher->setIva($ivaTot);
@@ -237,39 +248,40 @@ class AstilleroCotizacionController extends Controller
                 $granTotal += $total;
             }
 
-            // sacar varada y botadura
-            $servicio = $this->getDoctrine()
-                ->getRepository(AstilleroServicioBasico::class)
-                ->find(5);
-            $cantidad = $eslora;
-            $precio = $astilleroVarada->getPrecio();
-            if ($precio == null) {
-                $precio = 0;
-            }
-            $subTotal = $cantidad * $precio;
-            $ivaTot = ($subTotal * $iva) / 100;
-            $total = $subTotal + $ivaTot;
-
-            $astilleroVarada
-                ->setAstilleroserviciobasico($servicio)
-                ->setServicio(null)
-                ->setProducto(null)
-                ->setOtroservicio(null);
-            $astilleroVarada->setCantidad($cantidad);
-            $astilleroVarada->setSubtotal($subTotal);
-            $astilleroVarada->setIva($ivaTot);
-            $astilleroVarada->setTotal($total);
-            if ($astilleroVarada->getEstatus()) {
-                $granSubtotal += $subTotal;
-                $granIva += $ivaTot;
-                $granTotal += $total;
-            }
+//            // sacar varada y botadura
+//            $servicio = $this->getDoctrine()
+//                ->getRepository(AstilleroServicioBasico::class)
+//                ->find(5);
+//            $cantidad = $eslora;
+//            $precio = $astilleroVarada->getPrecio();
+//            if ($precio == null) {
+//                $precio = 0;
+//            }
+//            $subTotal = $cantidad * $precio;
+//            $ivaTot = ($subTotal * $iva) / 100;
+//            $total = $subTotal + $ivaTot;
+//
+//            $astilleroVarada
+//                ->setAstilleroserviciobasico($servicio)
+//                ->setServicio(null)
+//                ->setProducto(null)
+//                ->setOtroservicio(null);
+//            $astilleroVarada->setCantidad($cantidad);
+//            $astilleroVarada->setSubtotal($subTotal);
+//            $astilleroVarada->setIva($ivaTot);
+//            $astilleroVarada->setTotal($total);
+//            if ($astilleroVarada->getEstatus()) {
+//                $granSubtotal += $subTotal;
+//                $granIva += $ivaTot;
+//                $granTotal += $total;
+//            }
 
             foreach ($astilleroCotizacion->getAcservicios() as $servAst) {
                 if ($servAst->getAstilleroserviciobasico() == null) {
                     $cantidad = $servAst->getCantidad();
                     if($servAst->getOtroservicio() != null){
                         $precio = $servAst->getPrecio();
+                        $precio = ($precio/$valordolar)*100;
                     }elseif ($servAst->getProducto() != null){
                         $precio = $servAst->getProducto()->getPrecio();
                     }elseif ($servAst->getServicio()->getPrecio() != null){
@@ -349,19 +361,27 @@ class AstilleroCotizacionController extends Controller
     /**
      * Genera el pdf de una cotizacion en base a su id
      *
-     * @Route("/{id}/pdf", name="astillero-pdf")
+     * @Route("/{id}/pdf/{tipo}", name="astillero-pdf")
      * @Method("GET")
      *
      * @param AstilleroCotizacion $ac
      *
      * @return PdfResponse
      */
-    public function displayMarinaPDF(AstilleroCotizacion $ac)
+    public function displayMarinaPDF(AstilleroCotizacion $ac,$tipo)
     {
-        $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
-            'title' => 'Cotizacion-0.pdf',
-            'astilleroCotizacion' => $ac
-        ]);
+        if($tipo == 1){ //dolares
+            $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
+                'title' => 'Cotizacion-0.pdf',
+                'astilleroCotizacion' => $ac
+            ]);
+        }else{ //pesos
+            $html = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
+                'title' => 'Cotizacion-0.pdf',
+                'astilleroCotizacion' => $ac
+            ]);
+        }
+
         $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
             'astilleroCotizacion' => $ac
         ]);
@@ -542,9 +562,13 @@ class AstilleroCotizacionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $tokenAcepta = $astilleroCotizacion->getTokenacepta();
         $tokenRechaza = $astilleroCotizacion->getTokenrechaza();
-        // creando pdf
+
         $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
             'title' => 'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf',
+            'astilleroCotizacion' => $astilleroCotizacion
+        ]);
+        $htmlMXN = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
+            'title' => 'Cotizacion-0.pdf',
             'astilleroCotizacion' => $astilleroCotizacion
         ]);
         $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
@@ -566,12 +590,17 @@ class AstilleroCotizacionController extends Controller
             $hojapdf->getOutputFromHtml($html, $options),
             'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
         );
-        $attachment = new Swift_Attachment($pdfEnviar, 'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
+        $pdfEnviarMXN = new PdfResponse(
+            $hojapdf->getOutputFromHtml($htmlMXN, $options),
+            'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
+        );
+        $attachment = new Swift_Attachment($pdfEnviar, 'CotizacionUSD-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
+        $attachmentMXN = new Swift_Attachment($pdfEnviarMXN, 'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
 
         // Enviar correo de confirmacion
         $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'))
             ->setFrom('noresponder@novonautica.com')
-            ->setTo($astilleroCotizacion->getCliente()->getCorreo())
+            ->setTo($astilleroCotizacion->getBarco()->getCliente()->getCorreo())
             ->setBcc('admin@novonautica.com')
             ->setBody(
                 $this->renderView('astillero/cotizacion/correo-clientevalida.twig', [
@@ -582,7 +611,8 @@ class AstilleroCotizacionController extends Controller
                 ),
                 'text/html'
             )
-            ->attach($attachment);
+            ->attach($attachment)
+            ->attach($attachmentMXN);
         $mailer->send($message);
 
         $historialCorreo = new Correo();
@@ -635,12 +665,11 @@ class AstilleroCotizacionController extends Controller
         }
         $astilleroCotizacion = new AstilleroCotizacion();
 
-        $cliente = $astilleroCotizacionAnterior->getCliente();
+
         $barco = $astilleroCotizacionAnterior->getBarco();
         $iva = $astilleroCotizacionAnterior->getIva();
-
+        $dolar = $astilleroCotizacionAnterior->getDolar();
         $astilleroCotizacion
-            ->setCliente($cliente)
             ->setFechaLlegada($astilleroCotizacionAnterior->getFechaLlegada())
             ->setFechaSalida($astilleroCotizacionAnterior->getFechaSalida())
             ->setDiasEstadia($astilleroCotizacionAnterior->getDiasEstadia())
@@ -652,7 +681,7 @@ class AstilleroCotizacionController extends Controller
             ->setFolio($astilleroCotizacionAnterior->getFolio())
            ;
         $astilleroCotizacion
-            ->setDolar($astilleroCotizacionAnterior->getDolar())
+            ->setDolar($dolar)
             ->setMensaje($astilleroCotizacionAnterior->getMensaje())
             ;
         $astilleroCotizacion
@@ -669,10 +698,10 @@ class AstilleroCotizacionController extends Controller
             ->setOtroservicio(null)
             ->setAstilleroserviciobasico($servicios[0]->getAstilleroserviciobasico());
         $astilleroGrua->setCantidad($servicios[0]->getCantidad());
-        $astilleroGrua->setPrecio($servicios[0]->getPrecio());
-        $astilleroGrua->setIva($servicios[0]->getIva());
-        $astilleroGrua->setSubtotal($servicios[0]->getSubtotal());
-        $astilleroGrua->setTotal($servicios[0]->getTotal());
+        $astilleroGrua->setPrecio(($servicios[0]->getPrecio()*$dolar)/100);
+        $astilleroGrua->setIva(($servicios[0]->getIva()*$dolar)/100);
+        $astilleroGrua->setSubtotal(($servicios[0]->getSubtotal()*$dolar)/100);
+        $astilleroGrua->setTotal(($servicios[0]->getTotal()*$dolar)/100);
         $astilleroGrua->setEstatus($servicios[0]->getEstatus());
         $astilleroSuelo = new AstilleroCotizaServicio();
         $astilleroSuelo
@@ -681,10 +710,10 @@ class AstilleroCotizacionController extends Controller
             ->setOtroservicio(null)
             ->setAstilleroserviciobasico($servicios[1]->getAstilleroserviciobasico());
         $astilleroSuelo->setCantidad($servicios[1]->getCantidad());
-        $astilleroSuelo->setPrecio($servicios[1]->getPrecio());
-        $astilleroSuelo->setIva($servicios[1]->getIva());
-        $astilleroSuelo->setSubtotal($servicios[1]->getSubtotal());
-        $astilleroSuelo->setTotal($servicios[1]->getTotal());
+        $astilleroSuelo->setPrecio(($servicios[1]->getPrecio()*$dolar)/100);
+        $astilleroSuelo->setIva(($servicios[1]->getIva()*$dolar)/100);
+        $astilleroSuelo->setSubtotal(($servicios[1]->getSubtotal()*$dolar)/100);
+        $astilleroSuelo->setTotal(($servicios[1]->getTotal()*$dolar)/100);
         $astilleroSuelo->setEstatus($servicios[1]->getEstatus());
         $astilleroRampa = new AstilleroCotizaServicio();
         $astilleroRampa
@@ -693,10 +722,10 @@ class AstilleroCotizacionController extends Controller
             ->setOtroservicio(null)
             ->setAstilleroserviciobasico($servicios[2]->getAstilleroserviciobasico());
         $astilleroRampa->setCantidad($servicios[2]->getCantidad());
-        $astilleroRampa->setPrecio($servicios[2]->getPrecio());
-        $astilleroRampa->setIva($servicios[2]->getIva());
-        $astilleroRampa->setSubtotal($servicios[2]->getSubtotal());
-        $astilleroRampa->setTotal($servicios[2]->getTotal());
+        $astilleroRampa->setPrecio(($servicios[2]->getPrecio()*$dolar)/100);
+        $astilleroRampa->setIva(($servicios[2]->getIva()*$dolar)/100);
+        $astilleroRampa->setSubtotal(($servicios[2]->getSubtotal()*$dolar)/100);
+        $astilleroRampa->setTotal(($servicios[2]->getTotal()*$dolar)/100);
         $astilleroRampa->setEstatus($servicios[2]->getEstatus());
         $astilleroKarcher = new AstilleroCotizaServicio();
         $astilleroKarcher
@@ -705,30 +734,30 @@ class AstilleroCotizacionController extends Controller
             ->setOtroservicio(null)
             ->setAstilleroserviciobasico($servicios[3]->getAstilleroserviciobasico());
         $astilleroKarcher->setCantidad($servicios[3]->getCantidad());
-        $astilleroKarcher->setPrecio($servicios[3]->getPrecio());
-        $astilleroKarcher->setIva($servicios[3]->getIva());
-        $astilleroKarcher->setSubtotal($servicios[3]->getSubtotal());
-        $astilleroKarcher->setTotal($servicios[3]->getTotal());
+        $astilleroKarcher->setPrecio(($servicios[3]->getPrecio()*$dolar)/100);
+        $astilleroKarcher->setIva(($servicios[3]->getIva()*$dolar)/100);
+        $astilleroKarcher->setSubtotal(($servicios[3]->getSubtotal()*$dolar)/100);
+        $astilleroKarcher->setTotal(($servicios[3]->getTotal()*$dolar)/100);
         $astilleroKarcher->setEstatus($servicios[3]->getEstatus());
-        $astilleroVarada = new AstilleroCotizaServicio();
-        $astilleroVarada
-            ->setServicio(null)
-            ->setProducto(null)
-            ->setOtroservicio(null)
-            ->setAstilleroserviciobasico($servicios[4]->getAstilleroserviciobasico());
-        $astilleroVarada->setCantidad($servicios[4]->getCantidad());
-        $astilleroVarada->setPrecio($servicios[4]->getPrecio());
-        $astilleroVarada->setIva($servicios[4]->getIva());
-        $astilleroVarada->setSubtotal($servicios[4]->getSubtotal());
-        $astilleroVarada->setTotal($servicios[4]->getTotal());
-        $astilleroVarada->setEstatus($servicios[4]->getEstatus());
+//        $astilleroVarada = new AstilleroCotizaServicio();
+//        $astilleroVarada
+//            ->setServicio(null)
+//            ->setProducto(null)
+//            ->setOtroservicio(null)
+//            ->setAstilleroserviciobasico($servicios[4]->getAstilleroserviciobasico());
+//        $astilleroVarada->setCantidad($servicios[4]->getCantidad());
+//        $astilleroVarada->setPrecio(($servicios[4]->getPrecio()*$dolar)/100);
+//        $astilleroVarada->setIva(($servicios[4]->getIva()*$dolar)/100);
+//        $astilleroVarada->setSubtotal(($servicios[4]->getSubtotal()*$dolar)/100);
+//        $astilleroVarada->setTotal(($servicios[4]->getTotal()*$dolar)/100);
+//        $astilleroVarada->setEstatus($servicios[4]->getEstatus());
 
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
             ->addAcservicio($astilleroSuelo)
             ->addAcservicio($astilleroRampa)
             ->addAcservicio($astilleroKarcher)
-            ->addAcservicio($astilleroVarada);
+           ;
         foreach ($servicios as $servAst) {
             if ($servAst->getAstilleroserviciobasico() == null) {
                 $copiaServicio = new AstilleroCotizaServicio();
@@ -737,18 +766,21 @@ class AstilleroCotizacionController extends Controller
                     ->setAstilleroserviciobasico($servAst->getAstilleroserviciobasico())
                     ->setProducto($servAst->getProducto())
                     ->setServicio($servAst->getServicio())
-                    ->setPrecio($servAst->getPrecio());
+                    ->setPrecio(($servAst->getPrecio()*$dolar)/100);
                 $copiaServicio->setCantidad($servAst->getCantidad());
-                $copiaServicio->setSubtotal($servAst->getSubtotal());
-                $copiaServicio->setIva($servAst->getIva());
-                $copiaServicio->setTotal($servAst->getTotal());
+                $copiaServicio->setSubtotal(($servAst->getSubtotal()*$dolar)/100);
+                $copiaServicio->setIva(($servAst->getIva()*$dolar)/100);
+                $copiaServicio->setTotal(($servAst->getTotal()*$dolar)/100);
                 $astilleroCotizacion->addAcservicio($copiaServicio);
+                dump($copiaServicio);
             }
         }
         $form = $this->createForm(AstilleroCotizacionType::class, $astilleroCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $valordolar = $astilleroCotizacion->getDolar();
+
             $granSubtotal = 0;
             $granIva = 0;
             $granTotal = 0;
@@ -760,13 +792,14 @@ class AstilleroCotizacionController extends Controller
 
             // Uso de grua
             $cantidad=$eslora;
-            $precio = $astilleroGrua->getPrecio();
+            $precio = ($astilleroGrua->getPrecio()/$valordolar)*100;
             if ($precio == null) {
                 $precio = 0;
             }
             $subTotal = $cantidad * $precio;
             $ivaTot = ($subTotal * $iva) / 100;
             $total = $subTotal + $ivaTot;
+            $astilleroGrua->setPrecio($precio);
             $astilleroGrua->setCantidad($cantidad);
             $astilleroGrua->setIva($ivaTot);
             $astilleroGrua->setSubtotal($subTotal);
@@ -777,13 +810,14 @@ class AstilleroCotizacionController extends Controller
 
             // Uso de suelo
             $cantidad = $cantidadDias;
-            $precio = $astilleroSuelo->getPrecio();
+            $precio = ($astilleroSuelo->getPrecio()/$valordolar)*100;
             if ($precio == null) {
                 $precio = 0;
             }
             $subTotal = $cantidad * $precio;
             $ivaTot = ($subTotal * $iva) / 100;
             $total = $subTotal + $ivaTot;
+            $astilleroSuelo->setPrecio($precio);
             $astilleroSuelo->setCantidad($cantidad);
             $astilleroSuelo->setSubtotal($subTotal);
             $astilleroSuelo->setIva($ivaTot);
@@ -794,13 +828,14 @@ class AstilleroCotizacionController extends Controller
 
             // Uso de rampa
             $cantidad = 1;
-            $precio = $astilleroRampa->getPrecio();
+            $precio = ($astilleroRampa->getPrecio()/$valordolar)*100;
             if ($precio == null) {
                 $precio = 0;
             }
             $subTotal = $cantidad * $precio;
             $ivaTot = ($subTotal * $iva) / 100;
             $total = $subTotal + $ivaTot;
+            $astilleroRampa->setPrecio($precio);
             $astilleroRampa->setCantidad($cantidad);
             $astilleroRampa->setSubtotal($subTotal);
             $astilleroRampa->setIva($ivaTot);
@@ -813,13 +848,14 @@ class AstilleroCotizacionController extends Controller
 
             // Uso de karcher
             $cantidad = 1;
-            $precio = $astilleroKarcher->getPrecio();
+            $precio = ($astilleroKarcher->getPrecio()/$valordolar)*100;
             if ($precio == null) {
                 $precio = 0;
             }
             $subTotal = $cantidad * $precio;
             $ivaTot = ($subTotal * $iva) / 100;
             $total = $subTotal + $ivaTot;
+            $astilleroKarcher->setPrecio($precio);
             $astilleroKarcher->setCantidad($cantidad);
             $astilleroKarcher->setSubtotal($subTotal);
             $astilleroKarcher->setIva($ivaTot);
@@ -830,29 +866,30 @@ class AstilleroCotizacionController extends Controller
                 $granTotal += $total;
             }
 
-            // sacar varada y botadura
-            $cantidad = $eslora;
-            $precio = $astilleroVarada->getPrecio();
-            if ($precio == null) {
-                $precio = 0;
-            }
-            $subTotal = $cantidad * $precio;
-            $ivaTot = ($subTotal * $iva) / 100;
-            $total = $subTotal + $ivaTot;
-            $astilleroVarada->setCantidad($cantidad);
-            $astilleroVarada->setSubtotal($subTotal);
-            $astilleroVarada->setIva($ivaTot);
-            $astilleroVarada->setTotal($total);
-            if ($astilleroVarada->getEstatus()) {
-                $granSubtotal += $subTotal;
-                $granIva += $ivaTot;
-                $granTotal += $total;
-            }
+//            // sacar varada y botadura
+//            $cantidad = $eslora;
+//            $precio = $astilleroVarada->getPrecio();
+//            if ($precio == null) {
+//                $precio = 0;
+//            }
+//            $subTotal = $cantidad * $precio;
+//            $ivaTot = ($subTotal * $iva) / 100;
+//            $total = $subTotal + $ivaTot;
+//            $astilleroVarada->setCantidad($cantidad);
+//            $astilleroVarada->setSubtotal($subTotal);
+//            $astilleroVarada->setIva($ivaTot);
+//            $astilleroVarada->setTotal($total);
+//            if ($astilleroVarada->getEstatus()) {
+//                $granSubtotal += $subTotal;
+//                $granIva += $ivaTot;
+//                $granTotal += $total;
+//            }
             foreach ($astilleroCotizacion->getAcservicios() as $servAst) {
                 if ($servAst->getAstilleroserviciobasico() == null) {
                     $cantidad = $servAst->getCantidad();
                     if($servAst->getOtroservicio() != null){
                         $precio = $servAst->getPrecio();
+                        $precio = ($precio/$valordolar)*100;
                     }elseif ($servAst->getProducto() != null){
                         $precio = $servAst->getProducto()->getPrecio();
                     }elseif ($servAst->getServicio()->getPrecio() != null){
@@ -937,6 +974,10 @@ class AstilleroCotizacionController extends Controller
                     'title' => 'Cotizacion-0.pdf',
                     'astilleroCotizacion' => $astilleroCotizacion
                 ]);
+                $htmlMXN = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
+                    'title' => 'Cotizacion-0.pdf',
+                    'astilleroCotizacion' => $astilleroCotizacion
+                ]);
                 $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
                     'astilleroCotizacion' => $astilleroCotizacion
                 ]);
@@ -956,12 +997,17 @@ class AstilleroCotizacionController extends Controller
                     $hojapdf->getOutputFromHtml($html, $options),
                     'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
                 );
-                $attachment = new Swift_Attachment($pdfEnviar, 'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
+                $pdfEnviarMXN = new PdfResponse(
+                    $hojapdf->getOutputFromHtml($htmlMXN, $options),
+                    'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
+                );
+                $attachment = new Swift_Attachment($pdfEnviar, 'CotizacionUSD-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
+                $attachmentMXN = new Swift_Attachment($pdfEnviarMXN, 'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
 
                 // Enviar correo de confirmacion
                 $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'))
                     ->setFrom('noresponder@novonautica.com')
-                    ->setTo($astilleroCotizacion->getCliente()->getCorreo())
+                    ->setTo($astilleroCotizacion->getBarco()->getCliente()->getCorreo())
                     ->setBcc('admin@novonautica.com')
                     ->setBody(
                         $this->renderView('astillero/cotizacion/correo-clientevalida.twig', [
@@ -972,7 +1018,8 @@ class AstilleroCotizacionController extends Controller
                         ),
                         'text/html'
                     )
-                    ->attach($attachment);
+                    ->attach($attachment)
+                    ->attach($attachmentMXN);
 
                 $mailer->send($message);
 

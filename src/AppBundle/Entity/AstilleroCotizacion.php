@@ -55,6 +55,13 @@ class AstilleroCotizacion
     /**
      * @var float
      *
+     * @ORM\Column(name="descuento", type="float", nullable=true)
+     */
+    private $descuento;
+
+    /**
+     * @var float
+     *
      * @ORM\Column(name="dolar", type="float", nullable=true)
      */
     private $dolar;
@@ -120,12 +127,12 @@ class AstilleroCotizacion
      */
     private $fecharegistro;
 
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="astillerocotizaciones")
-     * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
-     */
-    private $cliente;
+//    /**
+//     *
+//     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="astillerocotizaciones")
+//     * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
+//     */
+//    private $cliente;
 
     /**
      *
@@ -470,29 +477,29 @@ class AstilleroCotizacion
         return $this->fecharegistro;
     }
 
-    /**
-     * Set cliente
-     *
-     * @param \AppBundle\Entity\Cliente $cliente
-     *
-     * @return AstilleroCotizacion
-     */
-    public function setCliente(\AppBundle\Entity\Cliente $cliente = null)
-    {
-        $this->cliente = $cliente;
-
-        return $this;
-    }
-
-    /**
-     * Get cliente
-     *
-     * @return \AppBundle\Entity\Cliente
-     */
-    public function getCliente()
-    {
-        return $this->cliente;
-    }
+//    /**
+//     * Set cliente
+//     *
+//     * @param \AppBundle\Entity\Cliente $cliente
+//     *
+//     * @return AstilleroCotizacion
+//     */
+//    public function setCliente(\AppBundle\Entity\Cliente $cliente = null)
+//    {
+//        $this->cliente = $cliente;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get cliente
+//     *
+//     * @return \AppBundle\Entity\Cliente
+//     */
+//    public function getCliente()
+//    {
+//        return $this->cliente;
+//    }
 
     /**
      * Set barco
@@ -868,5 +875,21 @@ class AstilleroCotizacion
     public function getPagos()
     {
         return $this->pagos;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDescuento()
+    {
+        return $this->descuento;
+    }
+
+    /**
+     * @param float $descuento
+     */
+    public function setDescuento($descuento)
+    {
+        $this->descuento = $descuento;
     }
 }

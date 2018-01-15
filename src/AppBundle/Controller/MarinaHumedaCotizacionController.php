@@ -276,17 +276,18 @@ class MarinaHumedaCotizacionController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $tiposervicio = 3; // gasolina
-
-            $descuento = $marinaHumedaCotizacion->getDescuento();
+//            $descuento = $marinaHumedaCotizacion->getDescuento();
             $dolar = $marinaHumedaCotizacion->getDolar();
 
             $cantidad = $marinaGasolina->getCantidad();
-            $precio = $marinaGasolina->getPrecio();
+            $precioMXN = $marinaGasolina->getPrecio();
+            $precioDll = $precioMXN / $dolar * 100;
+            $precioIva = ($precioDll * $iva)/100;
+            $precio = $precioDll - $precioIva;
 
             $subTotal = $cantidad * $precio;
-            $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = ($subTotal * $iva)/100;
-            $total = $subTotal - $descuentoTot + $ivaTot;
+            $total = $subTotal + $ivaTot;
 
             $fechaHoraActual = new \DateTime('now');
             $foliobase = $sistema[0]['folioMarina'];
@@ -298,7 +299,6 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setCantidad($cantidad)
                 ->setPrecio($precio)
                 ->setSubtotal($subTotal)
-                ->setDescuento($descuentoTot)
                 ->setIva($ivaTot)
                 ->setTotal($total);
 
@@ -306,7 +306,6 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setIva($iva)
                 ->setSubtotal($subTotal)
                 ->setIvatotal($ivaTot)
-                ->setDescuentototal($descuentoTot)
                 ->setTotal($total)
                 ->setValidanovo(0)
                 ->setValidacliente(0)
@@ -746,12 +745,12 @@ class MarinaHumedaCotizacionController extends Controller
         $foliorecotizado = $marinaHumedaCotizacionAnterior->getFoliorecotiza()+1;
         $cliente = $marinaHumedaCotizacionAnterior->getCliente();
         $barco = $marinaHumedaCotizacionAnterior->getBarco();
-
+        $dolar = $marinaHumedaCotizacionAnterior->getDolar();
         $marinaHumedaCotizacion
             ->setCliente($cliente)
             ->setBarco($barco)
             ->setDescuento($marinaHumedaCotizacionAnterior->getDescuento())
-            ->setDolar($marinaHumedaCotizacionAnterior->getDolar())
+            ->setDolar($dolar)
             ->setIva($marinaHumedaCotizacionAnterior->getIva())
             ->setSubtotal($marinaHumedaCotizacionAnterior->getSubtotal())
             ->setIvatotal($marinaHumedaCotizacionAnterior->getIvatotal())
@@ -771,7 +770,7 @@ class MarinaHumedaCotizacionController extends Controller
         $marinaGasolina
             ->setTipo($servicios[0]->getTipo())
             ->setCantidad($servicios[0]->getCantidad())
-            ->setPrecio($servicios[0]->getPrecio())
+            ->setPrecio(($servicios[0]->getPrecio()*$dolar)/100)
             ->setSubtotal($servicios[0]->getSubtotal())
             ->setIva($servicios[0]->getIva())
             ->setDescuento($servicios[0]->getDescuento())
@@ -791,12 +790,14 @@ class MarinaHumedaCotizacionController extends Controller
             $dolar = $marinaHumedaCotizacion->getDolar();
 
             $cantidad = $marinaGasolina->getCantidad();
-            $precio = $marinaGasolina->getPrecio();
+            $precioMXN = $marinaGasolina->getPrecio();
+            $precioDll = $precioMXN / $dolar * 100;
+            $precioIva = ($precioDll * $iva)/100;
+            $precio = $precioDll - $precioIva;
 
             $subTotal = $cantidad * $precio;
-            $descuentoTot = ($subTotal * $descuento) / 100;
             $ivaTot = ($subTotal * $iva)/100;
-            $total = $subTotal - $descuentoTot + $ivaTot;
+            $total = $subTotal + $ivaTot;
 
             $fechaHoraActual = new \DateTime('now');
 
@@ -805,7 +806,6 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setCantidad($cantidad)
                 ->setPrecio($precio)
                 ->setSubtotal($subTotal)
-                ->setDescuento($descuentoTot)
                 ->setIva($ivaTot)
                 ->setTotal($total);
 
@@ -813,7 +813,6 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setIva($iva)
                 ->setSubtotal($subTotal)
                 ->setIvatotal($ivaTot)
-                ->setDescuentototal($descuentoTot)
                 ->setTotal($total)
                 ->setValidanovo(0)
                 ->setValidacliente(0)
