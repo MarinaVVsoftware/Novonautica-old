@@ -90,16 +90,6 @@ class MarinaHumedaCotizacionController extends Controller
         }
 
         return $this->render('marinahumeda/cotizacion/gasolina/index.html.twig', ['title' => 'Cotizaciones de Gasolina']);
-
-        /*$em = $this->getDoctrine()->getManager();
-
-        $mhcRepo = $em->getRepository('AppBundle:MarinaHumedaCotizacion');
-        $marinaHumedaCotizacions = $mhcRepo->findAllGasolina();
-
-        return $this->render('marinahumeda/cotizacion/gasolina/index.html.twig', [
-            'title' => 'Cotizaciones Gasolina',
-            'marinaHumedaCotizacions' => $marinaHumedaCotizacions,
-        ]);*/
     }
 
     /**
