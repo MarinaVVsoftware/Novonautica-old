@@ -1,0 +1,136 @@
+{#{% extends 'base.html.twig' %}#}
+
+{#{% block body %}#}
+    {#<h1>Productos list</h1>#}
+
+    {#<table>#}
+        {#<thead>#}
+            {#<tr>#}
+                {#<th>Id</th>#}
+                {#<th>Nombre</th>#}
+                {#<th>Actions</th>#}
+            {#</tr>#}
+        {#</thead>#}
+        {#<tbody>#}
+        {#{% for producto in productos %}#}
+            {#<tr>#}
+                {#<td><a href="{{ path('tienda_producto_show', { 'id': producto.id }) }}">{{ producto.id }}</a></td>#}
+                {#<td>{{ producto.nombre }}</td>#}
+                {#<td>#}
+                    {#<ul>#}
+                        {#<li>#}
+                            {#<a href="{{ path('tienda_producto_show', { 'id': producto.id }) }}">show</a>#}
+                        {#</li>#}
+                        {#<li>#}
+                            {#<a href="{{ path('tienda_producto_edit', { 'id': producto.id }) }}">edit</a>#}
+                        {#</li>#}
+                    {#</ul>#}
+                {#</td>#}
+            {#</tr>#}
+        {#{% endfor %}#}
+        {#</tbody>#}
+    {#</table>#}
+
+    {#<ul>#}
+        {#<li>#}
+            {#<a href="{{ path('tienda_producto_new') }}">Create a new producto</a>#}
+        {#</li>#}
+    {#</ul>#}
+{#{% endblock %}#}
+
+{% extends 'estructura/plantilla.twig' %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                {{ producto.id is null ? 'Nuevo producto' : 'Editar: ' ~ producto.nombre }}
+                            </h3>
+                        </div>
+                        <div class="panel-body" style="min-height: initial">
+                            {{ form_start(form) }}
+                            {{ form_row(form.nombre) }}
+                            {% if producto.id is not null %}
+                                <a href="{{ path('tienda_producto_index') }}"
+                                   class="btn btn-naranja">Cancelar</a>
+                            {% endif %}
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Listado de productos</h3>
+                        </div>
+                        <div class="panel-body no-padding">
+                            <div class="table-responsive">
+                                <table class="table table-novo">
+                                    <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th width="50%"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for i, item in productos %}
+                                        <tr>
+                                            <td align="center" valign="middle">{{ item.nombre }}</td>
+                                            <td align="center" valign="middle">
+                                                <ul class="list-inline">
+                                                    <li>
+                                                        <a href="{{ path('tienda_producto_index', {'producto': item.id}) }}"
+                                                           class="btn btn-xs btn-azul">Editar</a>
+                                                    </li>
+                                                    <li>
+                                                        {{ form_start(deleteForms[i]) }}
+                                                        <input type="submit" class="btn btn-xs btn-naranja"
+                                                               value="Eliminar">
+                                                        {{ form_end(deleteForms[i]) }}
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <nav>
+                                {#<ul class="pager">#}
+                                    {#{% if page > 1 %}#}
+                                        {#<li class="previous">#}
+                                            {#<a href="{{ path('contabilidad_facturacion_emisor', {'page': page - 1}) }}">#}
+                                                {#<span aria-hidden="true">&larr;</span> Anterior#}
+                                            {#</a>#}
+                                        {#</li>#}
+                                    {#{% endif %}#}
+                                    {#<li>#}
+                                        {#Estas viendo la pagina {{ page }} de {{ pages ?: 1 }} paginas#}
+                                    {#</li>#}
+                                    {#{% if page < pages %}#}
+                                        {#<li class="next">#}
+                                            {#<a href="{{ path('contabilidad_facturacion_emisor', {'page': page + 1}) }}">Siguiente#}
+                                                {#<span aria-hidden="true">&rarr;</span>#}
+                                            {#</a>#}
+                                        {#</li>#}
+                                    {#{% endif %}#}
+                                {#</ul>#}
+                                <span>:(</span>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

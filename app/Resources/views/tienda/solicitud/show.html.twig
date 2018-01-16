@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Solicitud</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ solicitud.id }}</td>
+            </tr>
+            <tr>
+                <th>Fecha</th>
+                <td>{{ solicitud.fecha }}</td>
+            </tr>
+            <tr>
+                <th>Embarcacion</th>
+                <td>{{ solicitud.embarcacion }}</td>
+            </tr>
+            <tr>
+                <th>Solicitud</th>
+                <td>{{ solicitud.solicitud }}</td>
+            </tr>
+            <tr>
+                <th>Solicitudespecial</th>
+                <td>{{ solicitud.solicitudEspecial }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('tienda_solicitud_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('tienda_solicitud_edit', { 'id': solicitud.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

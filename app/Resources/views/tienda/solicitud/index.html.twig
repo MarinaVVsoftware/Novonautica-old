@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Solicituds list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fecha</th>
+                <th>Embarcacion</th>
+                <th>Solicitud</th>
+                <th>Solicitudespecial</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for solicitud in solicituds %}
+            <tr>
+                <td><a href="{{ path('tienda_solicitud_show', { 'id': solicitud.id }) }}">{{ solicitud.id }}</a></td>
+                <td>{{ solicitud.fecha }}</td>
+                <td>{{ solicitud.embarcacion }}</td>
+                <td>{{ solicitud.solicitud }}</td>
+                <td>{{ solicitud.solicitudEspecial }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('tienda_solicitud_show', { 'id': solicitud.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('tienda_solicitud_edit', { 'id': solicitud.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('tienda_solicitud_new') }}">Create a new solicitud</a>
+        </li>
+    </ul>
+{% endblock %}
