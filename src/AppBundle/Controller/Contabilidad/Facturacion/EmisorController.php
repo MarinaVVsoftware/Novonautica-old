@@ -5,7 +5,8 @@ namespace AppBundle\Controller\Contabilidad\Facturacion;
 use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -62,7 +63,6 @@ class EmisorController extends Controller
             'deleteForms' => $deleteForms,
             'page' => $page,
             'pages' => $pages
-
         ]);
     }
 
@@ -79,7 +79,8 @@ class EmisorController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->remove($emisor);
+            $emisor->setEstatus(false);
+//            $em->remove($emisor); El emisor no debe ser eliminado
             $em->flush();
         }
 
@@ -98,7 +99,6 @@ class EmisorController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('contabilidad_facturacion_emisor_delete', ['id' => $emisor->getId()]))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

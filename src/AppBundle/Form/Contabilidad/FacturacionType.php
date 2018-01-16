@@ -2,20 +2,30 @@
 
 namespace AppBundle\Form\Contabilidad;
 
+use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Form\Contabilidad\Facturacion\ConceptoType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FacturacionType extends AbstractType
 {
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -39,11 +49,6 @@ class FacturacionType extends AbstractType
             ->add('direccionFiscal')
             ->add('numeroTelefonico')
             ->add('email')
-            ->add('folioCotizacion', TextType::class, [
-                'label' => 'Folio de cotización',
-                'required' => false
-            ])
-            ->add('cotizacion', HiddenType::class)
             ->add('conceptos', CollectionType::class, [
                 'label' => false,
                 'entry_type' => ConceptoType::class,
@@ -133,7 +138,48 @@ class FacturacionType extends AbstractType
             ->add('descuento', MoneyType::class, $moneySetting)
             ->add('subtotal', MoneyType::class, $moneySetting)
             ->add('iva', MoneyType::class, $moneySetting)
-            ->add('total', MoneyType::class, $moneySetting);
+            ->add('total', MoneyType::class, $moneySetting)
+            ->add('divisa', ChoiceType::class, [
+                'label' => 'Divisa a facturar',
+                'mapped' => false,
+                'choices' => [
+                    'USD' => 1,
+                    'MXN' => 2
+                ]
+            ])
+            ->add('folioCotizacion', TextType::class, [
+                'label' => 'Folio de cotización',
+                'required' => false
+            ]);
+
+        $formBuilder = function (FormInterface $form, $folioCotizacion = null) {
+            $facturacionRepo = $this->em->getRepository('AppBundle:Contabilidad\Facturacion');
+            $pagos = $folioCotizacion ? $facturacionRepo->getPagosByFolioCotizacion($folioCotizacion) : [];
+
+            $form->add('pagos', EntityType::class, [
+                'class' => 'AppBundle\Entity\Pago',
+                'required' => false,
+                'placeholder' => '',
+                'choices' => $pagos,
+                'choice_label' => function ($value) {
+                    return '$' . number_format(($value->getCantidad() / 100), 2);
+                }
+            ]);
+        };
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use ($formBuilder) {
+                $form = $event->getForm();
+                $formBuilder($form, $event->getData()->getFolioCotizacion());
+            });
+
+        $builder->get('folioCotizacion')->addEventListener(FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($formBuilder) {
+                $form = $event->getForm()->getParent();
+                $formBuilder($form, $event->getForm()->getData());
+            }
+        );
+
     }
 
     /**
@@ -141,9 +187,8 @@ class FacturacionType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Contabilidad\Facturacion'
-        ));
+        $resolver
+            ->setDefaults(['data_class' => 'AppBundle\Entity\Contabilidad\Facturacion']);
     }
 
     /**

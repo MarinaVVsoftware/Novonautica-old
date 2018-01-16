@@ -143,7 +143,7 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
             $cotizacion = $cotizaciones[$index];
 
             $results->data[] = [
-                $cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza(),
+                !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza(),
                 $cotizacion->getCliente()->getNombre(),
                 $cotizacion->getBarco()->getNombre(),
                 $cotizacion->getFechaLlegada()->format('d/m/Y'),

@@ -38,7 +38,7 @@
         {{ form_label(form.file) }}
         {% if download_uri %}
             <a href="{{ app.request.basePath ~ download_uri }}" target="_blank" class="adyacent-file btn btn-azul"
-               style="-webkit-border-radius: 0;-moz-border-radius: 0;border-radius: 0;">{{ translation_domain is same as(false) ? download_label : download_label|trans({}, translation_domain) }}</a>
+               style="min-width: auto;-webkit-border-radius: 0;-moz-border-radius: 0;border-radius: 0;">{{ translation_domain is same as(false) ? download_label : download_label|trans({}, translation_domain) }}</a>
         {% endif %}
         {% if form.delete is defined %}
             {{ form_row(form.delete) }}

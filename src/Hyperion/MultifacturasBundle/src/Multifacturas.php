@@ -51,8 +51,11 @@ class Multifacturas
         /*
          * Emisor
          */
-        $datos['emisor']['rfc'] = $factura->getEmisor()->getRfc(); //RFC DE PRUEBA
-        $datos['emisor']['nombre'] = $factura->getEmisor()->getNombre();  // EMPRESA DE PRUEBA
+        $datos['emisor']['rfc'] = $factura->getEmisor()->getRfc();
+        $datos['emisor']['nombre'] = $factura->getEmisor()->getNombre();
+        $datos['conf']['cer'] = __DIR__ . '/certificados/' . $factura->getEmisor()->getCer();
+        $datos['conf']['key'] = __DIR__ . '/certificados/' . $factura->getEmisor()->getKey();
+        $datos['conf']['pass'] = $factura->getEmisor()->getPassword();
 
         /*
          * Receptor
@@ -69,7 +72,8 @@ class Multifacturas
         foreach ($factura->getConceptos() as $i => $concepto) {
             $datos['conceptos'][$i]['cantidad'] = $concepto->getCantidad();
             $datos['conceptos'][$i]['unidad'] = $concepto->getUnidad();
-            $datos['conceptos'][$i]['ID'] = $concepto->getId();
+            $datos['conceptos'][$i]['ID'] = $i;
+            $datos['conceptos'][$i]['Descuento'] = ($concepto->getDescuento() / 100);
             $datos['conceptos'][$i]['descripcion'] = $concepto->getDescripcion();
             $datos['conceptos'][$i]['valorunitario'] = ($concepto->getValorunitario() / 100);
             $datos['conceptos'][$i]['importe'] = ($concepto->getSubtotal() / 100);
@@ -115,11 +119,6 @@ class Multifacturas
         }
 
         $config['version_cfdi'] = '3.3';
-
-        $config['conf']['cer'] = __DIR__ . '/certificados/lan7008173r5.cer.pem';
-        $config['conf']['key'] = __DIR__ . '/certificados/lan7008173r5.key.pem';
-        $config['conf']['pass'] = '12345678a';
-
         return $config;
     }
 }

@@ -14,7 +14,9 @@ class EmisorRepository extends \Doctrine\ORM\EntityRepository
     public function pagination($page = 1, $length = 1, $order = 'DESC') : Paginator
     {
         $qb = $this->createQueryBuilder('emi');
-        $qb->addOrderBy('emi.id', $order)
+        $qb
+//            ->where('emi.estatus = 1')
+            ->addOrderBy('emi.id', $order)
             ->setFirstResult($length * ((int)$page - 1))
             ->setMaxResults($length);
 

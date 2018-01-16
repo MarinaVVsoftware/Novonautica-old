@@ -3,9 +3,7 @@
 namespace AppBundle\Controller\Contabilidad;
 
 use AppBundle\Entity\Contabilidad\Facturacion;
-use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Extra\NumberToLetter;
-use Doctrine\Common\Collections\ArrayCollection;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -14,11 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Facturacion controller.
@@ -41,6 +36,65 @@ class FacturacionController extends Controller
 
         return $this->render('contabilidad/facturacion/index.html.twig', [
             'facturacions' => $facturacions,
+        ]);
+    }
+
+    /**
+     * Creates a new facturacion entity.
+     *
+     * @Route("/new", name="contabilidad_facturacion_new")
+     * @Method({"GET", "POST"})
+     */
+    public function newAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $factura = new Facturacion();
+        $valorSistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
+        $factura->setTipoCambio($valorSistema->getDolar());
+        $factura->setFolioCotizacion($valorSistema->getFolioMarina() + 1);
+        $valorSistema->setFolioMarina($factura->getFolioCotizacion());
+
+        $form = $this->createForm('AppBundle\Form\Contabilidad\FacturacionType', $factura);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // checar que el folio no se repita en la facturacion
+            /*if ($em->getRepository('AppBundle:Contabilidad\Facturacion')->findOneBy(['folioCotizacion' => $factura->getFolioCotizacion()])) {
+                $this->addFlash('danger', 'Este folio ya ha sido facturado.');
+                return $this->redirectToRoute('contabilidad_facturacion_new');
+            }*/
+
+            $facturador = $this->container->get('multifacturas');
+            $timbrado = $facturador->procesa($factura);
+
+            // Verificar que la factura se haya timbrado correctamente
+            if ($timbrado['codigo_mf_numero']) {
+                $this->addFlash('danger', $timbrado['codigo_mf_texto']);
+                return $this->redirectToRoute('contabilidad_facturacion_new');
+            }
+
+            $factura->getPagos()->setFactura($factura);
+            $factura->setXml(trim($timbrado['cfdi']));
+            $factura->setPng(trim($timbrado['png']));
+            $factura->setXmlArchivo($timbrado['archivo_xml']);
+            $factura->setPngArchivo($timbrado['archivo_png']);
+            $factura->setFolioFiscal($timbrado['uuid']);
+            $factura->setCadenaOriginal($timbrado['representacion_impresa_cadena']);
+            $factura->setSerieCertificadoCSD($timbrado['representacion_impresa_certificado_no']);
+            $factura->setFechaTimbrado((string) $timbrado['representacion_impresa_fecha_timbrado']);
+            $factura->setSelloCFDI((string) $timbrado['representacion_impresa_sello']);
+            $factura->setSelloSAT((string) $timbrado['representacion_impresa_selloSAT']);
+            $factura->setCertificadoSAT((string) $timbrado['representacion_impresa_certificadoSAT']);
+
+            $em->persist($factura);
+            $em->flush();
+
+            return $this->redirectToRoute('contabilidad_facturacion_index');
+        }
+
+        return $this->render('contabilidad/facturacion/new.html.twig', [
+            'facturacion' => $factura,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -97,78 +151,6 @@ class FacturacionController extends Controller
             $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
             'factura_' . $factura->getFolioCotizacion() . '.pdf', 'application/pdf', 'inline'
         );
-
-        /*return $this->render(':contabilidad/facturacion/pdf:factura.html.twig', [
-            'title' => 'Factura',
-            'factura' => $factura,
-            'numLetras' => $numLetras,
-            'formaPago' => $formaPago[$factura->getFormaPago()],
-            'metodoPago' => $metodoPago[$factura->getMetodoPago()],
-        ]);*/
-    }
-
-    /**
-     * Creates a new facturacion entity.
-     *
-     * @Route("/new", name="contabilidad_facturacion_new")
-     * @Method({"GET", "POST"})
-     */
-    public function newAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $factura = new Facturacion();
-        $tipoCambio = $em->getRepository('AppBundle:ValorSistema')->find(1)->getDolar();
-        $factura->setTipoCambio($tipoCambio);
-
-        $form = $this->createForm('AppBundle\Form\Contabilidad\FacturacionType', $factura);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $facturador = $this->container->get('multifacturas');
-
-            // Si el campo concepto esta lleno, se busca una cotizacion
-            $cotizacion = $factura->getCotizacion()
-                ? $em->getRepository('AppBundle:MarinaHumedaCotizacion')->find($factura->getCotizacion())
-                : false;
-
-            // A la cotizacion encontrada se le asigna la factura y viceversa
-            if ($cotizacion) {
-                $cotizacion->setFactura($factura);
-                $factura->setCotizacionMarina($cotizacion);
-                $factura->setTipoCambio($cotizacion->getDolar());
-            }
-
-            $timbrado = $facturador->procesa($factura);
-
-            // Verificar que la factura se haya timbrado correctamente
-            if ($timbrado['codigo_mf_numero']) {
-                $this->addFlash('danger', $timbrado['codigo_mf_texto']);
-
-                return $this->redirectToRoute('contabilidad_facturacion_new');
-            }
-
-            $factura->setXml(trim($timbrado['cfdi']));
-            $factura->setPng(trim($timbrado['png']));
-            $factura->setXmlArchivo($timbrado['archivo_xml']);
-            $factura->setPngArchivo($timbrado['archivo_png']);
-            $factura->setFolioFiscal($timbrado['uuid']);
-            $factura->setCadenaOriginal($timbrado['representacion_impresa_cadena']);
-            $factura->setSerieCertificadoCSD($timbrado['representacion_impresa_certificado_no']);
-            $factura->setFechaTimbrado((string) $timbrado['representacion_impresa_fecha_timbrado']);
-            $factura->setSelloCFDI((string) $timbrado['representacion_impresa_sello']);
-            $factura->setSelloSAT((string) $timbrado['representacion_impresa_selloSAT']);
-            $factura->setCertificadoSAT((string) $timbrado['representacion_impresa_certificadoSAT']);
-
-            $em->persist($factura);
-            $em->flush();
-
-            return $this->redirectToRoute('contabilidad_facturacion_index');
-        }
-
-        return $this->render('contabilidad/facturacion/new.html.twig', [
-            'facturacion' => $factura,
-            'form' => $form->createView(),
-        ]);
     }
 
     /**
@@ -255,11 +237,18 @@ class FacturacionController extends Controller
                 'iva' => (int)$cotizacion['ivatotal'],
                 'subtotal' => (int)$cotizacion['subtotal'],
                 'total' => (int)$cotizacion['total'],
-                'conceptos' => []
             ];
 
             // Aqui se deberia checar si es marina o astillero
-            foreach ($cotizacion['mhcservicios'] as $servicio) {
+            foreach ($cotizacion['pagos'] as $pago) {
+                $clearedCotizaciones[$i]['pagos'][] = [
+                    'id' => $pago['id'],
+                    'cantidad' => (int)$pago['cantidad'],
+                    'dolar' => (int)$pago['dolar'],
+                ];
+            }
+
+            /*foreach ($cotizacion['mhcservicios'] as $servicio) {
 
                 $cu = false; // Kilovoltio - amperio
                 $cps = false; //	Suministro de electricidad monofásica
@@ -287,7 +276,7 @@ class FacturacionController extends Controller
                     'subtotal' => (int)$servicio['subtotal'],
                     'total' => (int)$servicio['total'],
                 ];
-            }
+            }*/
         }
 
         return $clearedCotizaciones;

@@ -45,9 +45,9 @@
             <div class="row">
                 <div class="col-md-12">
                     {% for message in app.flashes('danger') %}
-                    <div class="alert alert-danger">
-                        {{ message }}
-                    </div>
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
                     {% endfor %}
                 </div>
             </div>
@@ -100,10 +100,15 @@
                                     <div class="row">
                                         <div class="col-sm-3">
                                             {{ form_row(form.folioCotizacion) }}
-                                            {{ form_row(form.cotizacion) }}
+                                        </div>
+                                        <div class="col-sm-3">
+                                            {{ form_row(form.pagos) }}
                                         </div>
                                         <div class="col-sm-3">
                                             {{ form_row(form.tipoCambio) }}
+                                        </div>
+                                        <div class="col-sm-3">
+                                            {{ form_row(form.divisa) }}
                                         </div>
                                     </div>
                                     <div class="row">
@@ -199,7 +204,9 @@
         const tabs = document.querySelectorAll('.nav-tabs > li');
 
         if (firstError) showErrors(firstError.parentNode.parentNode.parentNode);
-        fooForm.addEventListener('invalid', e => { showErrors(e.target.parentNode.parentNode.parentNode.parentNode) }, true);
+        fooForm.addEventListener('invalid', e => {
+          showErrors(e.target.parentNode.parentNode.parentNode.parentNode)
+        }, true);
 
         function showErrors(pane) {
           const tabId = pane.getAttribute('id');
@@ -212,6 +219,14 @@
         }
       })();
 
+      (function () {
+        const divisaSelect = document.getElementById('appbundle_contabilidad_facturacion_divisa');
+        divisaSelect.addEventListener('change', function (e) {
+          console.log(e);
+          console.log(this.value);
+        })
+      })();
+
       /*
           JQUERY AUTOCOMPLETE && COLLECCION DE CONCEPTOS
       */
@@ -220,7 +235,7 @@
         const $cotizacionSelect = $('#appbundle_contabilidad_facturacion_folioCotizacion');
         const addLink = document.getElementById('add-servicio');
         const conceptoHolder = document.getElementById('prototype-holder');
-        const cotizacionHolder = document.getElementById('appbundle_contabilidad_facturacion_cotizacion');
+        const pagosHolder = document.getElementById('appbundle_contabilidad_facturacion_pagos');
         const tipoCambioHolder = document.getElementById('appbundle_contabilidad_facturacion_tipoCambio');
         const subtotalHolder = document.getElementById('appbundle_contabilidad_facturacion_subtotal');
         const descuentoHolder = document.getElementById('appbundle_contabilidad_facturacion_descuento');
@@ -236,7 +251,9 @@
         };
 
         // Si ya se cargo una cotizacion, entonces esconder 'agregar servicio'
-        if ($cotizacionSelect.val() && conceptoHolder.childElementCount) { addLink.classList.add('hidden'); }
+        if (pagosHolder.selectedIndex && conceptoHolder.childElementCount) {
+          addLink.classList.add('hidden');
+        }
 
         // Autocomplete para rellenado de datos de cliente con RFC
         $rfcSelect.autocomplete({
@@ -292,11 +309,19 @@
               })
             }
           },
-          onSelect: function (suggestion) {
-            if (conceptoHolder.children.length) return;
-            suggestion.data.conceptos.forEach(concepto => appendRow(concepto)); // Rellena los conceptos
-            // Rellena los valores totales de la tabla
-            cotizacionHolder.value = suggestion.data.id;
+          onSelect: function ({data}) {
+            pagosHolder.innerHTML = '';
+            pagosHolder.appendChild(new Option());
+            pagosHolder.dataset.folio = data.folio;
+            data.pagos.forEach(function (pago) {
+              let opt = new Option(`$${(pago.cantidad / 100).toFixed(2)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'), pago.id);
+              pagosHolder.appendChild(opt);
+            });
+
+            // if (conceptoHolder.children.length) return;
+            // suggestion.data.conceptos.forEach(concepto => appendRow(concepto)); // Rellena los conceptos
+            // Rellena los valores totales
+            /*
             tipoCambioHolder.value = `${(suggestion.data.tipocambio / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
             tipoCambioHolder.setAttribute('readonly', true);
             subtotalHolder.value = `${(suggestion.data.subtotal / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
@@ -304,21 +329,56 @@
             ivaHolder.value = `${(suggestion.data.iva / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
             totalHolder.value = `${(suggestion.data.total / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 
-            addLink.classList.add('hidden');
+            addLink.classList.add('hidden');*/
           }
         });
 
-        // Agrega un row al hacer click a 'Agregar Servicio'
+        // Al seleccionar un pago, agrega una row con datos del pago
+        pagosHolder.addEventListener('change', function () {
+          if (!this.options[this.selectedIndex].value) {
+            $cotizacionSelect.val('');
+            addLink.classList.remove('hidden'); // Se permitiran mas servicios al seleccionar un pago?
+            conceptoHolder.innerHTML = '';
+            return;
+          }
+
+          $cotizacionSelect.val(this.dataset.folio || $cotizacionSelect.val());
+          addLink.classList.add('hidden');
+          let total = (clearPrice(this.options[this.selectedIndex].text)) * 100;
+          let iva = Math.round((total * 16) / 116);
+          let precio = Math.round(total - iva);
+
+          conceptoHolder.innerHTML = '';
+          if (![...conceptoHolder.children].length) {
+            appendRow({cantidad: 1, unidad: 'NA', descripcion: '', descuento: 0, total, iva, precio, subtotal: precio})
+          }
+        });
+
+        // Agrega una nueva row vacia
         addLink.addEventListener('click', function (e) {
           e.preventDefault();
           appendRow();
         });
 
+        // Agrega un row
         function appendRow(data) {
           let prototype = conceptoHolder.dataset.prototype.replace(/__name__/g, conceptoCounter);
           let unaTabla = document.createElement('table');
           unaTabla.innerHTML = prototype;
           let concepto = unaTabla.querySelector('.concepto-item');
+
+          conceptoHolder.appendChild(concepto);
+          addRowListener(concepto, data);
+          calculateTotals();
+
+          conceptoCounter++;
+        }
+
+        // Agrega funcionalidad a las row existentes
+        [...conceptoHolder.children].forEach(row => addRowListener(row));
+
+        // Le agrega la funcion de calculo a una row y si recibe datos los calcula;
+        function addRowListener(concepto, data) {
           let cantidadConcepto = concepto.children[1].firstElementChild;
           let unidadConcepto = concepto.children[2].firstElementChild;
           let cpsConcepto = concepto.children[3].firstElementChild;
@@ -330,69 +390,78 @@
           let subtotalConcepto = concepto.children[9].querySelector('input');
           let totalConcepto = concepto.children[10].querySelector('input');
 
+          cantidadConcepto.addEventListener('input', calculateConceptos);
+          vUnitarioConcepto.addEventListener('input', calculateConceptos);
+          descuentoConcepto.addEventListener('input', calculateConceptos);
+          ivaConcepto.addEventListener('input', calculateConceptos);
+
           if (data) {
-            cantidadConcepto.value = data.cantidad;
-            unidadConcepto.value = data.unidad;
-            cpsConcepto.value = data.cps || '01010101';
-            cuConcepto.value = data.cu || 'ACT';
-            descripcionConcepto.value = data.descripcion;
-            vUnitarioConcepto.value = `${data.precio / 100}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            descuentoConcepto.value = `${data.descuento / 100}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            ivaConcepto.value = `${data.iva / 100}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            subtotalConcepto.value = `${data.subtotal / 100}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            totalConcepto.value = `${data.total / 100}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          } else {
-            cantidadConcepto.addEventListener('keyup', calculateConceptos);
-            vUnitarioConcepto.addEventListener('keyup', calculateConceptos);
-            descuentoConcepto.addEventListener('keyup', calculateConceptos);
-            totalConcepto.addEventListener('change', calculateTotals);
+            cantidadConcepto.value = data.cantidad || cantidadConcepto.value;
+            unidadConcepto.value = data.unidad || unidadConcepto.value;
+            cpsConcepto.value = cpsConcepto.value || '01010101';
+            cuConcepto.value = cuConcepto.value || 'ACT';
+            descripcionConcepto.value = data.descripcion || descripcionConcepto.value;
+
+            vUnitarioConcepto.value = `${data.precio / 100}`;
+            descuentoConcepto.value = `${data.descuento / 100}`;
+            ivaConcepto.value = `${data.iva / 100}`;
+            subtotalConcepto.value = `${data.subtotal / 100}`;
+            totalConcepto.value = `${data.total / 100}`; // Agregarle comas a un precio .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
           }
 
           function calculateConceptos() {
-            if (!cantidadConcepto.value && !vUnitarioConcepto.value && !descuentoConcepto.value) return;
-            subtotalConcepto.value = (cantidadConcepto.value * vUnitarioConcepto.value).toFixed(2) || 0;
-            descuentoConcepto.value = descuentoConcepto.value || 0;
-            ivaConcepto.value = (subtotalConcepto.value * .16).toFixed(2) || ((cantidadConcepto.value * vUnitarioConcepto.value) / .16).toFixed(2) || 0;
-            totalConcepto.value = ((Number(subtotalConcepto.value) + Number(ivaConcepto.value)) - descuentoConcepto.value).toFixed(2) || 0;
-            totalConcepto.dispatchEvent(new Event('change'));
+            if (!/^[\d,\s.\\$]+$/.test(this.value) && this.value) return;
+            let cantidad = (cantidadConcepto.value);
+            let precio = clearPrice(vUnitarioConcepto.value);
+            let descuento = clearPrice(descuentoConcepto.value);
+            let subtotal = (cantidad * precio);
+            let iva = (subtotal * .16);
+            let total = (subtotal - descuento) + iva;
+
+            vUnitarioConcepto.value = precio;
+            descuentoConcepto.value = descuento;
+            ivaConcepto.value = iva;
+            subtotalConcepto.value = subtotal;
+            totalConcepto.value = total;
+
+            calculateTotals();
           }
+        }
 
-          function calculateTotals() {
-            if (!conceptoHolder.children.length && !this.value) return;
-            let subtotalColumn = conceptoHolder.getElementsByClassName('subtotal-column');
-            let descuentoColumn = conceptoHolder.getElementsByClassName('descuento-column');
-            let ivaColumn = conceptoHolder.getElementsByClassName('iva-column');
-            let totalColumn = conceptoHolder.getElementsByClassName('total-column');
+        function calculateTotals() {
+          if (!conceptoHolder.childElementCount) return;
+          let subtotalColumn = conceptoHolder.getElementsByClassName('subtotal-column');
+          let descuentoColumn = conceptoHolder.getElementsByClassName('descuento-column');
+          let ivaColumn = conceptoHolder.getElementsByClassName('iva-column');
+          let totalColumn = conceptoHolder.getElementsByClassName('total-column');
 
-            subtotalHolder.value = [...subtotalColumn]
-                .map(row => { return Number(row.value) })
-                .reduce((a, b) => { return a + b; })
-                .toFixed(2);
-            descuentoHolder.value = [...descuentoColumn]
-                .map(row => { return Number(row.value) })
-                .reduce((a, b) => { return a + b; })
-                .toFixed(2);
-            ivaHolder.value = [...ivaColumn]
-                .map(row => { return Number(row.value) })
-                .reduce((a, b) => { return a + b; })
-                .toFixed(2);
-            totalHolder.value = [...totalColumn]
-                .map(row => { return Number(row.value) })
-                .reduce((a, b) => { return a + b; })
-                .toFixed(2);
+          subtotalHolder.value = [...subtotalColumn]
+              .map(row => Number(clearPrice(row.value)))
+              .reduce((a, b) => a + b)
+              .toFixed(2);
+          descuentoHolder.value = [...descuentoColumn]
+              .map(row => Number(clearPrice(row.value)))
+              .reduce((a, b) => a + b)
+              .toFixed(2);
+          ivaHolder.value = [...ivaColumn]
+              .map(row => Number(clearPrice(row.value)))
+              .reduce((a, b) => a + b)
+              .toFixed(2);
+          totalHolder.value = [...totalColumn]
+              .map(row => Number(clearPrice(row.value)))
+              .reduce((a, b) => a + b)
+              .toFixed(2);
+        }
 
-          }
-
-          conceptoHolder.appendChild(concepto);
-          conceptoCounter++;
+        function clearPrice(textPrice) {
+          return textPrice.replace(/[,\\$]/g, '');
         }
 
         $(document).on('keyup change', '#appbundle_contabilidad_facturacion_folioCotizacion', function (e) {
           if ((e.keyCode === 8 && !this.value) || !this.value.trim() || e.type === 'change') {
             conceptoHolder.innerHTML = '';
-            // tipoCambioHolder.value = '';
             tipoCambioHolder.removeAttribute('readonly');
-            cotizacionHolder.value = '';
+            pagosHolder.selectedIndex = 0;
             subtotalHolder.value = 0;
             descuentoHolder.value = 0;
             ivaHolder.value = 0;
@@ -406,6 +475,7 @@
           this.parentNode.parentNode.remove(this);
           if (!conceptoHolder.children.length) {
             addLink.classList.remove('hidden');
+            pagosHolder.selectedIndex = 0;
             $cotizacionSelect.val('');
             subtotalHolder.value = 0;
             descuentoHolder.value = 0;
