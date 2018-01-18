@@ -11,15 +11,11 @@
             </tr>
             <tr>
                 <th>Fecha</th>
-                <td>{{ solicitud.fecha }}</td>
+                <td>{{ solicitud.fecha|date("m/d/Y") }}</td>
             </tr>
             <tr>
                 <th>Embarcacion</th>
                 <td>{{ solicitud.embarcacion }}</td>
-            </tr>
-            <tr>
-                <th>Solicitud</th>
-                <td>{{ solicitud.solicitud }}</td>
             </tr>
             <tr>
                 <th>Solicitudespecial</th>

@@ -1,16 +1,76 @@
-{% extends 'base.html.twig' %}
+{% extends 'estructura/plantilla.twig' %}
 
-{% block body %}
-    <h1>Solicitud creation</h1>
+{% block title %}
+    Novonautiva | Nueva Solicitud
+{% endblock %}
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
-    {{ form_end(form) }}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Nueva Solicitud</h3>
+                </div>
+                <div class="panel-body">
+                    {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-sm-4">
 
-    <ul>
-        <li>
-            <a href="{{ path('tienda_solicitud_index') }}">Back to the list</a>
-        </li>
-    </ul>
+                            {{ form_row(form.fecha) }}
+                            {{ form_row(form.embarcacion) }}
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a href="#" id="" class="add-another-producto letra-azul"
+                                            data-cantidad="1"
+                                       data-idlista="0">
+                                        + Agregar producto
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.solicitudEspecial) }}
+                        </div>
+                    </div>
+                    <div id="motor-fields-list0"
+                         class="lista-productos"
+                         data-prototype="
+                                    {% filter escape %}
+                                    {{ include('tienda/solicitud/form-solicitud.html.twig', { 'form': form.producto.vars.prototype }) }}
+                                    {% endfilter %}
+                                        ">
+                        {% for motorField in form.producto %}
+                            {% form_theme motorField 'tienda/solicitud/form-solicitud.html.twig' %}
+                            <div class="row">
+                                {{ form_widget(motorField) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 espacio-linea">
+                            <hr>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <a href="{{ path('tienda_solicitud_index') }}" class="btn btn-naranja pull-right">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 {% endblock %}

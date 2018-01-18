@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Tienda;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Solicitud
@@ -22,9 +23,9 @@ class Solicitud
     private $id;
 
     /**
-     * @var datetime_immutable
+     * @var \DateTime
      *
-     * @ORM\Column(name="fecha", type="datetime_immutable")
+     * @ORM\Column(name="fecha", type="datetime")
      */
     private $fecha;
 
@@ -36,19 +37,30 @@ class Solicitud
     private $embarcacion;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="solicitud", type="string", length=100)
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Producto", mappedBy="solicitud", cascade={"persist"})
      */
-    private $solicitud;
+    private $producto;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="solicitud_especial", type="string", length=150)
+     * @ORM\Column(name="solicitud_especial", type="string", length=255)
      */
     private $solicitudEspecial;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="estado", type="integer")
+     */
+    private $estado;
+
+    public function __construct()
+    {
+        $this->producto = new ArrayCollection();
+        $this->estado = 2;
+
+    }
 
     /**
      * Get id
@@ -63,7 +75,7 @@ class Solicitud
     /**
      * Set fecha
      *
-     * @param datetime_immutable $fecha
+     * @param \DateTime $fecha
      *
      * @return Solicitud
      */
@@ -77,7 +89,7 @@ class Solicitud
     /**
      * Get fecha
      *
-     * @return datetime_immutable
+     * @return \DateTime
      */
     public function getFecha()
     {
@@ -108,29 +120,6 @@ class Solicitud
         return $this->embarcacion;
     }
 
-    /**
-     * Set solicitud
-     *
-     * @param string $solicitud
-     *
-     * @return Solicitud
-     */
-    public function setSolicitud($solicitud)
-    {
-        $this->solicitud = $solicitud;
-
-        return $this;
-    }
-
-    /**
-     * Get solicitud
-     *
-     * @return string
-     */
-    public function getSolicitud()
-    {
-        return $this->solicitud;
-    }
 
     /**
      * Set solicitudEspecial
@@ -155,5 +144,56 @@ class Solicitud
     {
         return $this->solicitudEspecial;
     }
-}
 
+    /**
+     * @return int
+     */
+    public function getEstado(): int
+    {
+        return $this->estado;
+    }
+
+    /**
+     * @param int $estado
+     */
+    public function setEstado(int $estado): void
+    {
+        $this->estado = $estado;
+    }
+
+
+
+    /**
+     * Add producto
+     *
+     * @param \AppBundle\Entity\Tienda\Producto $producto
+     *
+     * @return Solicitud
+     */
+    public function addProducto(\AppBundle\Entity\Tienda\Producto $producto)
+    {   $producto->setSolicitud($this);
+        $this->producto[] = $producto;
+
+        return $this;
+    }
+
+    /**
+     * Remove producto
+     *
+     * @param \AppBundle\Entity\Tienda\Producto $producto
+     */
+    public function removeProducto(\AppBundle\Entity\Tienda\Producto $producto)
+    {
+        $this->producto->removeElement($producto);
+    }
+
+    /**
+     * Get producto
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProducto()
+    {
+        return $this->producto;
+    }
+}

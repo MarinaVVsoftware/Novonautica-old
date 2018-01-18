@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Tienda;
 
+use AppBundle\Entity\Tienda\Producto;
 use AppBundle\Entity\Tienda\Solicitud;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -10,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 /**
  * Solicitud controller.
  *
- * @Route("tienda_solicitud")
+ * @Route("tienda/solicitud")
  */
 class SolicitudController extends Controller
 {
@@ -40,6 +41,9 @@ class SolicitudController extends Controller
     public function newAction(Request $request)
     {
         $solicitud = new Solicitud();
+        $producto = new Producto();
+
+        $solicitud->addProducto($producto);
         $form = $this->createForm('AppBundle\Form\Tienda\SolicitudType', $solicitud);
         $form->handleRequest($request);
 
@@ -52,6 +56,7 @@ class SolicitudController extends Controller
         }
 
         return $this->render('tienda/solicitud/new.html.twig', array(
+            'title' => 'Nueva Solicitud',
             'solicitud' => $solicitud,
             'form' => $form->createView(),
         ));
@@ -123,7 +128,7 @@ class SolicitudController extends Controller
      *
      * @param Solicitud $solicitud The solicitud entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function createDeleteForm(Solicitud $solicitud)
     {

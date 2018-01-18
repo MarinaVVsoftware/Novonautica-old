@@ -24,10 +24,15 @@ class Producto
     /**
      * @var string
      *
-     * @ORM\Column(name="nombre", type="string", length=100)
+     * @ORM\Column(name="solicitud", type="string", length=100)
      */
     private $nombre;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Solicitud", inversedBy="producto")
+     * @ORM\JoinColumn(name="idproducto", referencedColumnName="id",onDelete="CASCADE")
+     */
+    private $solicitud;
 
     /**
      * Get id
@@ -62,5 +67,23 @@ class Producto
     {
         return $this->nombre;
     }
-}
 
+    /**
+     * @return Solicitud
+     */
+    public function getSolicitud()
+    {
+        return $this->solicitud;
+    }
+
+    /**
+     * @param Solicitud $solicitud
+     *
+     * @return Producto
+     */
+    public function setSolicitud(Solicitud $solicitud = null)
+    {
+        $this->solicitud = $solicitud;
+        return $this;
+    }
+}

@@ -1,0 +1,13 @@
+{% block form_widget %}
+    {% spaceless %}
+        <div class="col-sm-4">
+            <div class="form-group">
+                {{ form_row(form.nombre) }}
+                <a href="#" class="remove-producto btn btn-xs btn-naranja">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    Remover Producto
+                </a>
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock form_widget %}

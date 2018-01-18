@@ -1,45 +1,46 @@
-{% extends 'base.html.twig' %}
+{% extends 'estructura/plantilla.twig' %}
 
-{% block body %}
-    <h1>Solicituds list</h1>
+{% block title %}
+    Novonautiva | Servicios Adicionales
+{% endblock %}
 
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Fecha</th>
-                <th>Embarcacion</th>
-                <th>Solicitud</th>
-                <th>Solicitudespecial</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for solicitud in solicituds %}
-            <tr>
-                <td><a href="{{ path('tienda_solicitud_show', { 'id': solicitud.id }) }}">{{ solicitud.id }}</a></td>
-                <td>{{ solicitud.fecha }}</td>
-                <td>{{ solicitud.embarcacion }}</td>
-                <td>{{ solicitud.solicitud }}</td>
-                <td>{{ solicitud.solicitudEspecial }}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('tienda_solicitud_show', { 'id': solicitud.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('tienda_solicitud_edit', { 'id': solicitud.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
 
-    <ul>
-        <li>
-            <a href="{{ path('tienda_solicitud_new') }}">Create a new solicitud</a>
-        </li>
-    </ul>
+                <div class="panel-heading">
+                    <h3 class="panel-title">Solicitudes</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive scroll-novo">
+                        <table class="table text-center">
+                            <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Cliente</th>
+                                <th>Embarcación</th>
+                                <th>Solicitud Especial</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for solicitud in solicituds %}
+                                <tr>
+                                    <td>{{ solicitud.fecha|date("m/d/Y") }}</td>
+                                    <td>Por definir</td>
+                                    <td>{{ solicitud.embarcacion }}</td>
+                                    <td>{{ solicitud.solicitudEspecial }}</td>
+                                    <td>200 dineros</td>
+                                    <td>{{ solicitud.estado }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 {% endblock %}
