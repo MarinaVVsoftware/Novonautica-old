@@ -28,7 +28,7 @@
                             <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Total (USD)</a>
                         </li>
                         <li role="presentation">
-                            <a href="#totalmxn" aria-controls="servicios" role="tab" data-toggle="tab">Total (MXN)</a>
+                            <a href="#totalmxn" aria-controls="totalusd" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
                         <li role="presentation">
                             <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
@@ -63,7 +63,11 @@
                                         </tr>
                                         <tr>
                                             <th>Cliente</th>
-                                            <td>{{ astilleroCotizacion.cliente }}</td>
+                                            <td>{{ astilleroCotizacion.barco.cliente }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Correo</th>
+                                            <td>{{ astilleroCotizacion.barco.cliente.correo }}</td>
                                         </tr>
                                         <tr>
                                             <th>Barco</th>
@@ -423,9 +427,18 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <a target="_blank" class="btn btn-morado-claro pull-right"
-                               href="{{ path('astillero-pdf',{'id':astilleroCotizacion.id }) }}">
+                               href="{{ path('astillero-pdf',{'id':astilleroCotizacion.id,'tipo':1 }) }}">
                                 <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                Ver
+                                En dolares
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <a target="_blank" class="btn btn-morado-claro pull-right"
+                               href="{{ path('astillero-pdf',{'id':astilleroCotizacion.id,'tipo':2 }) }}">
+                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                En pesos
                             </a>
                         </div>
                     </div>

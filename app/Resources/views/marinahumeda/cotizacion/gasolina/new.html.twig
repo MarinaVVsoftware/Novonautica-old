@@ -29,10 +29,10 @@
                             <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a>
                         </li>
                         <li role="presentation">
-                            <a href="#totalusd" aria-controls="total" role="tab" data-toggle="tab">Total (USD)</a>
+                            <a href="#totalmxn" aria-controls="total" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
                         <li role="presentation">
-                            <a href="#totalmxn" aria-controls="total" role="tab" data-toggle="tab">Total (MXN)</a>
+                            <a href="#totalusd" aria-controls="total" role="tab" data-toggle="tab">Total (USD)</a>
                         </li>
                         <li role="presentation">
                             <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
@@ -70,16 +70,6 @@
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <label>Descuento(%)</label>
-                                    {{ form_widget(form.descuento,{'value':0}) }}
-                                </div>
-                                <div class="col-sm-3">
-                                    <label>Dolar</label>
-                                    {{ form_widget(form.dolar,{'value':(valdolar/100)}) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-3">
                                     <label>Litros:</label>
                                     {{ form_widget(form.mhcservicios.children.0.cantidad,{'value':0}) }}
                                 </div>
@@ -88,8 +78,14 @@
                                     {{ form_widget(form.mhcservicios.children.0.precio,{'value':0}) }}
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Dolar</label>
+                                    {{ form_widget(form.dolar,{'value':valdolar/100}) }}
+                                </div>
+                            </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="totalusd">
+                        <div role="tabpanel" class="tab-pane" id="totalmxn">
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
@@ -98,7 +94,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <small>Precios en USD</small>
+                                    <small>Precios en MXN</small>
                                 </div>
                             </div>
 
@@ -112,7 +108,6 @@
                                             <th>Prec. Unid.</th>
                                             <th>Sub-Total</th>
                                             <th>IVA</th>
-                                            <th>Descuento</th>
                                             <th>Total</th>
                                         </tr>
                                         </thead>
@@ -123,7 +118,6 @@
                                             <td id="g_precio" data-valor="0">$ 0.00</td>
                                             <td id="g_subtotal" data-valor="0">$ 0.00</td>
                                             <td id="g_iva" data-valor="0">$ 0.00</td>
-                                            <td id="g_descuento" data-valor="0">$ 0.00</td>
                                             <td id="g_total" data-valor="0">$ 0.00</td>
                                         </tr>
                                         </tbody>
@@ -148,7 +142,7 @@
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
                                         $ <span id="gransubtot_g">00.00</span>
-                                        <span class="tipo-letra2">USD</span>
+                                        <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
                             </div>
@@ -162,21 +156,7 @@
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
                                         $ <span id="graniva_g">00.00</span>
-                                        <span class="tipo-letra2">USD</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
-                                    <hr>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
-                                    <p class="letra-azul">Descuento:</p>
-                                    <p>
-                                        $ <span id="grandecuento_g">00.00</span>
-                                        <span class="tipo-letra2">USD</span>
+                                        <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
                             </div>
@@ -190,7 +170,7 @@
                                     <p class="letra-azul">Total:</p>
                                     <p>
                                         $ <span id="grantot_g">00.00</span>
-                                        <span class="tipo-letra2">USD</span>
+                                        <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
                             </div>
@@ -200,7 +180,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="totalmxn">
+                        <div role="tabpanel" class="tab-pane" id="totalusd">
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
@@ -209,7 +189,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <small>Precios en MXN</small>
+                                    <small>Precios en USD</small>
                                 </div>
                             </div>
 
@@ -223,7 +203,6 @@
                                             <th>Prec. Unid.</th>
                                             <th>Sub-Total</th>
                                             <th>IVA</th>
-                                            <th>Descuento</th>
                                             <th>Total</th>
                                         </tr>
                                         </thead>
@@ -234,7 +213,6 @@
                                             <td id="g_precio_mxn" data-valor="0">$ 0.00</td>
                                             <td id="g_subtotal_mxn" data-valor="0">$ 0.00</td>
                                             <td id="g_iva_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="g_descuento_mxn" data-valor="0">$ 0.00</td>
                                             <td id="g_total_mxn" data-valor="0">$ 0.00</td>
                                         </tr>
                                         </tbody>
@@ -259,7 +237,7 @@
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
                                         $ <span id="gransubtot_g_mxn">00.00</span>
-                                        <span class="tipo-letra2">MXN</span>
+                                        <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
                             </div>
@@ -273,21 +251,7 @@
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
                                         $ <span id="graniva_g_mxn">00.00</span>
-                                        <span class="tipo-letra2">MXN</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
-                                    <hr>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
-                                    <p class="letra-azul">Descuento:</p>
-                                    <p>
-                                        $ <span id="grandecuento_g_mxn">00.00</span>
-                                        <span class="tipo-letra2">MXN</span>
+                                        <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
                             </div>
@@ -301,7 +265,7 @@
                                     <p class="letra-azul">Total:</p>
                                     <p>
                                         $ <span id="grantot_g_mxn">00.00</span>
-                                        <span class="tipo-letra2">MXN</span>
+                                        <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
                             </div>

@@ -34,7 +34,7 @@
                             <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Servicios</a>
                         </li>
                         <li role="presentation">
-                            <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
+                            <a href="#totalusd" aria-controls="totalusd" role="tab" data-toggle="tab">Total (USD)</a>
                         </li>
                         <li role="presentation">
                             <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
@@ -52,12 +52,6 @@
                         <div role="tabpanel" class="tab-pane active" id="generales">
                             <div class="row">
                                 <div class="col-sm-3">
-                                    {{ form_row(form.cliente) }}
-                                    <div id="info-cliente">
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
                                     <div class="radio buscabarcomh">
                                         {{ form_label(form.barco) }}
                                         {{ form_widget(form.barco) }}
@@ -65,6 +59,12 @@
                                     <div id="info-barco">
 
                                     </div>
+                                </div>
+                                <div class="col-sm-3">
+                                {#{{ form_row(form.cliente) }}#}
+                                <div id="info-cliente">
+
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -115,12 +115,12 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-6 col-sm-offset-1">
-                                    <label class="tipo-letra1">Uso de grua</label>
+                                    <label class="tipo-letra1">Sacar varada y botadura</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-3 col-sm-offset-1">
-                                    <label>Precio por pie</label>
+                                    <label>Precio por pie (MXN)</label>
                                     {% if form.acservicios.0.precio is defined %}
                                         {{ form_widget(form.acservicios.0.precio) }}
                                     {% endif %}
@@ -133,7 +133,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-6 col-sm-offset-1">
-                                    <label class="tipo-letra1">Uso de suelo</label>
+                                    <label class="tipo-letra1">Uso de explanada</label>
                                 </div>
                             </div>
                             <div class="row">
@@ -141,7 +141,7 @@
 
                                 </div>
                                 <div class="col-sm-3">
-                                    <label>Precio por día</label>
+                                    <label>Precio por día (MXN)</label>
                                     {% if form.acservicios.1.precio is defined %}
                                         {{ form_widget(form.acservicios.1.precio) }}
                                     {% endif %}
@@ -170,7 +170,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label>Precio</label>
+                                    <label>Precio (MXN)</label>
                                     {% if form.acservicios.2.precio is defined %}
                                         {{ form_widget(form.acservicios.2.precio) }}
                                     {% endif %}
@@ -200,7 +200,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label>Precio</label>
+                                    <label>Precio (MXN)</label>
                                     {% if form.acservicios.3.precio is defined %}
                                         {{ form_widget(form.acservicios.3.precio) }}
                                     {% endif %}
@@ -211,31 +211,6 @@
                                     <hr>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-6 col-sm-offset-1">
-                                    <label class="tipo-letra1">Sacar varada y botadura</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-1">
-                                    <div class="input-estatus">
-                                        <span class="cont-label-novo">
-                                              {% if form.acservicios.4.estatus is defined %}
-                                                  {{ form_errors(form.acservicios.4.estatus) }}
-                                                  {{ form_widget(form.acservicios.4.estatus) }}
-                                                  {{ form_label(form.acservicios.4.estatus) }}
-                                              {% endif %}
-                                         </span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <label>Precio por pie</label>
-                                    {% if form.acservicios.4.precio is defined %}
-                                        {{ form_widget(form.acservicios.4.precio) }}
-                                    {% endif %}
-                                </div>
-                            </div>
-
                         </div>
                         <div role="tabpanel" class="tab-pane" id="total">
                             <div class="row">
@@ -246,7 +221,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <small>Precios en USD</small>
+                                    <small>Precios en MXN</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -273,7 +248,7 @@
                                         >
                                         <tr id="fila_grua" class="servicio-agregado">
                                             <td id="grua_cantidad" class="valorcantidad" data-valor="0">0</td>
-                                            <td>Uso de grua</td>
+                                            <td>Sacar varada y boradura</td>
                                             <td id="grua_precio" class="valorprecio" data-valor="0">$ 0.00</td>
                                             <td id="grua_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
                                             <td id="grua_iva" class="valoriva" data-valor="0">$ 0.00</td>
@@ -282,7 +257,7 @@
                                         </tr>
                                         <tr id="fila_suelo" class="servicio-agregado">
                                             <td id="suelo_cantidad" class="valorcantidad" data-valor="0">0</td>
-                                            <td>Uso de suelo</td>
+                                            <td>Uso de explanada</td>
                                             <td id="suelo_precio" class="valorprecio" data-valor="0">$ 0.00</td>
                                             <td id="suelo_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
                                             <td id="suelo_iva" class="valoriva" data-valor="0">$ 0.00</td>
@@ -307,15 +282,15 @@
                                             <td id="karcher_total" class="valortotal" data-valor="0">$ 0.00</td>
                                             <td></td>
                                         </tr>
-                                        <tr id="cotizavarada" class="hidden servicio-agregado">
-                                            <td id="varada_cantidad" class="valorcantidad" data-valor="0">0</td>
-                                            <td>Sacar varada y boadura</td>
-                                            <td id="varada_precio" class="valorprecio" data-valor="0">$ 0.00</td>
-                                            <td id="varada_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
-                                            <td id="varada_iva" class="valoriva" data-valor="0">$ 0.00</td>
-                                            <td id="varada_total" class="valortotal" data-valor="0">$ 0.00</td>
-                                            <td></td>
-                                        </tr>
+                                        {#<tr id="cotizavarada" class="hidden servicio-agregado">#}
+                                            {#<td id="varada_cantidad" class="valorcantidad" data-valor="0">0</td>#}
+                                            {#<td>Sacar varada y boadura</td>#}
+                                            {#<td id="varada_precio" class="valorprecio" data-valor="0">$ 0.00</td>#}
+                                            {#<td id="varada_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>#}
+                                            {#<td id="varada_iva" class="valoriva" data-valor="0">$ 0.00</td>#}
+                                            {#<td id="varada_total" class="valortotal" data-valor="0">$ 0.00</td>#}
+                                            {#<td></td>#}
+                                        {#</tr>#}
                                         </tbody>
                                     </table>
                                 </div>
@@ -355,7 +330,7 @@
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
                                         $ <span id="gransubtot">00.00</span>
-                                        <span class="tipo-letra2">USD</span>
+                                        <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
                             </div>
@@ -369,7 +344,7 @@
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
                                         $ <span id="graniva">00.00</span>
-                                        <span class="tipo-letra2">USD</span>
+                                        <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
                             </div>
@@ -383,7 +358,7 @@
                                     <p class="letra-azul">Total:</p>
                                     <p>
                                         $ <span id="grantot">00.00</span>
-                                        <span class="tipo-letra2">USD</span>
+                                        <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
                             </div>
@@ -393,7 +368,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="totalmxn">
+                        <div role="tabpanel" class="tab-pane" id="totalusd">
                             <div class="row">
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
@@ -402,7 +377,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <small>Precios en MXN</small>
+                                    <small>Precios en USD</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -421,7 +396,7 @@
                                         <tbody>
                                         <tr id="fila_grua_mxn" class="servicio-agregado">
                                             <td id="grua_cantidad_mxn" class="valorcantidad" data-valor="0">0</td>
-                                            <td>Uso de grua</td>
+                                            <td>Sacar varada y botadura</td>
                                             <td id="grua_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>
                                             <td id="grua_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
                                             <td id="grua_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
@@ -451,14 +426,14 @@
                                             <td id="karcher_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
                                             <td id="karcher_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
                                         </tr>
-                                        <tr id="cotizavarada_mxn" class="hidden servicio-agregado">
-                                            <td id="varada_cantidad_mxn" class="valorcantidad" data-valor="0">0</td>
-                                            <td>Sacar varada y boadura</td>
-                                            <td id="varada_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>
-                                            <td id="varada_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
-                                            <td id="varada_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
-                                            <td id="varada_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
-                                        </tr>
+                                        {#<tr id="cotizavarada_mxn" class="hidden servicio-agregado">#}
+                                            {#<td id="varada_cantidad_mxn" class="valorcantidad" data-valor="0">0</td>#}
+                                            {#<td>Sacar varada y boadura</td>#}
+                                            {#<td id="varada_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>#}
+                                            {#<td id="varada_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>#}
+                                            {#<td id="varada_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>#}
+                                            {#<td id="varada_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>#}
+                                        {#</tr>#}
                                         </tbody>
                                     </table>
                                 </div>
@@ -562,9 +537,7 @@
                     {% if form.acservicios.3.otroservicio is defined %}
                         {{ form_widget(form.acservicios.3.otroservicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-                    {% if form.acservicios.4.otroservicio is defined %}
-                        {{ form_widget(form.acservicios.4.otroservicio,{'attr':{'class':'hidden'}}) }}
-                    {% endif %}
+
                     {% if form.acservicios.0.producto is defined %}
                         {{ form_widget(form.acservicios.0.producto,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
@@ -577,9 +550,7 @@
                     {% if form.acservicios.3.producto is defined %}
                         {{ form_widget(form.acservicios.3.producto,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-                    {% if form.acservicios.4.producto is defined %}
-                        {{ form_widget(form.acservicios.4.producto,{'attr':{'class':'hidden'}}) }}
-                    {% endif %}
+
                     {% if form.acservicios.0.servicio is defined %}
                         {{ form_widget(form.acservicios.0.servicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
@@ -592,12 +563,8 @@
                     {% if form.acservicios.3.servicio is defined %}
                         {{ form_widget(form.acservicios.3.servicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-                    {% if form.acservicios.4.cantidad is defined %}
-                        {{ form_widget(form.acservicios.4.cantidad,{'attr':{'class':'hidden'}}) }}
-                    {% endif %}
-                    {% if form.acservicios.4.servicio is defined %}
-                        {{ form_widget(form.acservicios.4.servicio,{'attr':{'class':'hidden'}}) }}
-                    {% endif %}
+
+
                     {{ form_end(form) }}
                 </div>
                 <div class="panel-footer">
@@ -610,6 +577,41 @@
     {{ parent() }}
     <script type="text/javascript">
         (function ($) {
+            $('.selectbarcobuscar').change(function (e) {
+                $('#loading').show();
+                $("#info-barco").empty();
+                $("#info-cliente").empty();
+
+                var url = "{{ path('ajax_busca_barco_todo',{'id':'iddelbarco','_format':'json'}) }}";
+                url = url.replace("iddelbarco", $(this).val());
+                $.ajax({
+                    method: "GET",
+                    url: url,
+                    dataType: 'json',
+                    success: function (barco) {
+                        console.log(barco);
+                        JSON.stringify(barco);
+                        var html = "<label>Modelo</label>" + "<div class='info-input'>" + barco.modelo + "</div>" +
+                            "<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>" +
+                            "<label>Manga</label>" + "<div class='info-input'>" + barco.manga + "</div>" +
+                            "<label>Nombre del capitán</label>" + "<div class='info-input'>" + barco.nombreCapitan + "</div>" +
+                            "<label>Teléfono del capitán</label>" + "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
+                            "<label>Correo del capitán</label>" + "<div class='info-input'>" + barco.correoCapitan + "</div>";
+                        $("#info-barco").append(html);
+                        var cliente = barco.cliente;
+                        var html = "<label>Cliente</label>" + "<div class='info-input'>" + cliente.nombre + "</div>" +
+                            "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
+                            "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
+                            "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>" +
+                            "<label>R.F.C.</label>" + "<div class='info-input'>" + cliente.rfc + "</div>" +
+                            "<label>Razón social</label>" + "<div class='info-input'>" + cliente.razonsocial + "</div>" +
+                            "<label>Dirección fiscal</label>" + "<div class='info-input'>" + cliente.direccionfiscal + "</div>";
+                        $("#info-cliente").append(html);
+                        $('#loading').hide();
+                    }
+                });
+            });
+
             $('.selectclientebuscar').change(function (e) {
                 $('#loading').show();
                 $("#info-barco").empty();
@@ -674,14 +676,14 @@
                             "<label>Correo del capitán</label>" + "<div class='info-input'>" + barco.correoCapitan + "</div>";
                         $("#info-barco").append(html);
                         $("#grua_cantidad").data('valor', barco.eslora);
-                        $("#varada_cantidad").data('valor', barco.eslora);
+                        // $("#varada_cantidad").data('valor', barco.eslora);
                         $("#grua_cantidad").html(barco.eslora);
                         $("#varada_cantidad").html(barco.eslora);
                         calculaSubtotalesAstillero($('#fila_grua'));
                         calculaSubtotalesAstillero($('#cotizavarada'));
 
                         $("#grua_cantidad_mxn").data('valor', barco.eslora);
-                        $("#varada_cantidad_mxn").data('valor', barco.eslora);
+                        // $("#varada_cantidad_mxn").data('valor', barco.eslora);
                         $("#grua_cantidad_mxn").html(barco.eslora);
                         $("#varada_cantidad_mxn").html(barco.eslora);
                         calculaSubtotalesAstillero($('#fila_grua_mxn'));
@@ -711,13 +713,15 @@
                     success: function(datos) {
                         JSON.stringify(datos);
                         var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-                        fila.children('.valorprecio').html('$ '+(datos.precio/100));
-                        fila.children('.valorprecio').data('valor',(datos.precio/100));
+                        var dolar = $('#appbundle_astillerocotizacion_dolar').val();
+
+                        fila.children('.valorprecio').html('$ '+parseFloat((datos.precio*dolar)/100).toFixed(2));
+                        fila.children('.valorprecio').data('valor',((datos.precio*dolar)/100));
                         calculaSubtotalesAstillero(fila);
 
                         var idfila = fila.data('id');
-                        var dolar = $('#appbundle_astillerocotizacion_dolar').val();
-                        var valormxn = (datos.precio/100) * dolar;
+
+                        var valormxn = (datos.precio/100);
                         $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').data('valor',valormxn);
                         $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat(valormxn).toFixed(2));
                         $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.td-producto').html(datos.nombre);
@@ -740,13 +744,14 @@
                     success: function(datos) {
                         JSON.stringify(datos);
                         var fila = $('.select-busca-servicio:focus option:selected').parent().parent().parent();
-                        fila.children('.valorprecio').html('$ '+(datos.precio/100));
-                        fila.children('.valorprecio').data('valor',(datos.precio/100));
+                        var dolar = $('#appbundle_astillerocotizacion_dolar').val();
+
+                        fila.children('.valorprecio').html('$ '+parseFloat(datos.precio*dolar/100).toFixed(2));
+                        fila.children('.valorprecio').data('valor',(datos.precio*dolar/100));
                         calculaSubtotalesAstillero(fila);
 
                         var idfila = fila.data('id');
-                        var dolar = $('#appbundle_astillerocotizacion_dolar').val();
-                        var valormxn = (datos.precio/100) * dolar;
+                        var valormxn = (datos.precio/100);
                         $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').data('valor',valormxn);
                         $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat(valormxn).toFixed(2));
                         $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.td-servicio').html(datos.nombre);

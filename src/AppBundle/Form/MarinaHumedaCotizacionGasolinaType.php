@@ -41,11 +41,6 @@ class MarinaHumedaCotizacionGasolinaType extends AbstractType
                 'attr' => ['class' => 'select-buscador selectclientebuscar'],
 
             ])
-            ->add('descuento', null, [
-                'empty_data' => 0,
-                'attr' => ['class' => 'esdecimal',
-                    'autocomplete' => 'off']
-            ])
             ->add('dolar', MoneyType::class, [
                 'required'=>false,
                 'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],

@@ -171,11 +171,11 @@ class Cliente
      */
     private $mhcotizacionesadicionales;
 
-    /**
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizacion", mappedBy="cliente")
-     */
-    private $astillerocotizaciones;
+//    /**
+//     *
+//     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizacion", mappedBy="cliente")
+//     */
+//    private $astillerocotizaciones;
 
 
     public function __construct() {
@@ -183,8 +183,7 @@ class Cliente
         $this->monederomovimientos = new ArrayCollection();
         $this->mhcotizaciones = new ArrayCollection();
         $this->mhcotizacionesadicionales = new ArrayCollection();
-        //$this->mhcservicios = new ArrayCollection();
-        $this->astillerocotizaciones = new ArrayCollection();
+//        $this->astillerocotizaciones = new ArrayCollection();
     }
     public function __toString()
     {
