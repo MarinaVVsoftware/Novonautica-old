@@ -276,18 +276,15 @@ class MarinaHumedaCotizacionController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $tiposervicio = 3; // gasolina
-//            $descuento = $marinaHumedaCotizacion->getDescuento();
             $dolar = $marinaHumedaCotizacion->getDolar();
-
             $cantidad = $marinaGasolina->getCantidad();
-            $precioMXN = $marinaGasolina->getPrecio();
-            $precioDll = $precioMXN / $dolar * 100;
-            $precioIva = ($precioDll * $iva)/100;
-            $precio = $precioDll - $precioIva;
-
-            $subTotal = $cantidad * $precio;
-            $ivaTot = ($subTotal * $iva)/100;
-            $total = $subTotal + $ivaTot;
+            $precioConIvaMXN = $marinaGasolina->getPrecio();
+            $precioConIvaUSD = ($precioConIvaMXN / $dolar) * 100;
+            $totalConIvaUSD = $cantidad * $precioConIvaUSD;
+            $ivaEquivalente = 100 + $iva; //116%
+            $totalSinIvaUSD = (100 * $totalConIvaUSD)/$ivaEquivalente; //subtotal
+            $ivaDelTotalUSD = $totalConIvaUSD - $totalSinIvaUSD;
+            $precioSinIvaUSD = $totalSinIvaUSD / $cantidad;
 
             $fechaHoraActual = new \DateTime('now');
             $foliobase = $sistema[0]['folioMarina'];
@@ -297,16 +294,16 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setTipo($tiposervicio)
                 ->setEstatus(1)
                 ->setCantidad($cantidad)
-                ->setPrecio($precio)
-                ->setSubtotal($subTotal)
-                ->setIva($ivaTot)
-                ->setTotal($total);
+                ->setPrecio($precioSinIvaUSD)
+                ->setSubtotal($totalSinIvaUSD)
+                ->setIva($ivaDelTotalUSD)
+                ->setTotal($totalConIvaUSD);
 
             $marinaHumedaCotizacion
                 ->setIva($iva)
-                ->setSubtotal($subTotal)
-                ->setIvatotal($ivaTot)
-                ->setTotal($total)
+                ->setSubtotal($totalSinIvaUSD)
+                ->setIvatotal($ivaDelTotalUSD)
+                ->setTotal($totalConIvaUSD)
                 ->setValidanovo(0)
                 ->setValidacliente(0)
                 ->setEstatus(1)
@@ -742,10 +739,11 @@ class MarinaHumedaCotizacionController extends Controller
             throw new NotFoundHttpException();
         }
         $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
-        $foliorecotizado = $marinaHumedaCotizacionAnterior->getFoliorecotiza()+1;
+
         $cliente = $marinaHumedaCotizacionAnterior->getCliente();
         $barco = $marinaHumedaCotizacionAnterior->getBarco();
         $dolar = $marinaHumedaCotizacionAnterior->getDolar();
+        $iva = $marinaHumedaCotizacionAnterior->getIva();
         $marinaHumedaCotizacion
             ->setCliente($cliente)
             ->setBarco($barco)
@@ -759,18 +757,18 @@ class MarinaHumedaCotizacionController extends Controller
             ->setValidanovo(0)
             ->setValidacliente(0)
             ->setFolio($marinaHumedaCotizacionAnterior->getFolio())
-            ->setFoliorecotiza($foliorecotizado)
+
             ->setMensaje($marinaHumedaCotizacionAnterior->getMensaje())
         ;
-
-
         $servicios = $marinaHumedaCotizacionAnterior->getMHCservicios();
-
+        $precioNoIncluyeIvaUSD = ($servicios[0]->getPrecio()*$dolar)/100;
+        $ivaDelPrecioGardardoUSD = ($precioNoIncluyeIvaUSD * $iva)/100;
+        $precioIncluyeIvaUSD = $precioNoIncluyeIvaUSD+$ivaDelPrecioGardardoUSD;
         $marinaGasolina = new MarinaHumedaCotizaServicios();
         $marinaGasolina
             ->setTipo($servicios[0]->getTipo())
             ->setCantidad($servicios[0]->getCantidad())
-            ->setPrecio(($servicios[0]->getPrecio()*$dolar)/100)
+            ->setPrecio($precioIncluyeIvaUSD)
             ->setSubtotal($servicios[0]->getSubtotal())
             ->setIva($servicios[0]->getIva())
             ->setDescuento($servicios[0]->getDescuento())
@@ -779,45 +777,43 @@ class MarinaHumedaCotizacionController extends Controller
         ;
         $marinaHumedaCotizacion
             ->addMarinaHumedaCotizaServicios($marinaGasolina);
-        $dolar = $marinaHumedaCotizacionAnterior->getDolar();
-        $iva = $marinaHumedaCotizacionAnterior->getIva();
+
+
 
         $form = $this->createForm(MarinaHumedaCotizacionGasolinaType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $foliorecotizado = $marinaHumedaCotizacionAnterior->getFoliorecotiza()+1;
             $descuento = $marinaHumedaCotizacion->getDescuento();
             $dolar = $marinaHumedaCotizacion->getDolar();
-
             $cantidad = $marinaGasolina->getCantidad();
-            $precioMXN = $marinaGasolina->getPrecio();
-            $precioDll = $precioMXN / $dolar * 100;
-            $precioIva = ($precioDll * $iva)/100;
-            $precio = $precioDll - $precioIva;
-
-            $subTotal = $cantidad * $precio;
-            $ivaTot = ($subTotal * $iva)/100;
-            $total = $subTotal + $ivaTot;
-
+            $precioConIvaMXN = $marinaGasolina->getPrecio();
+            $precioConIvaUSD = $precioConIvaMXN / $dolar * 100;
+            $totalConIvaUSD = $cantidad * $precioConIvaUSD;
+            $ivaEquivalente = 100 + $iva; //116%
+            $totalSinIvaUSD = (100 * $totalConIvaUSD)/$ivaEquivalente; //subtotal
+            $ivaDelTotalUSD = $totalConIvaUSD - $totalSinIvaUSD;
+            $precioSinIvaUSD = $totalSinIvaUSD / $cantidad;
             $fechaHoraActual = new \DateTime('now');
-
-
             $marinaGasolina
                 ->setCantidad($cantidad)
-                ->setPrecio($precio)
-                ->setSubtotal($subTotal)
-                ->setIva($ivaTot)
-                ->setTotal($total);
+                ->setPrecio($precioSinIvaUSD)
+                ->setSubtotal($totalSinIvaUSD)
+                ->setIva($ivaDelTotalUSD)
+                ->setTotal($totalConIvaUSD);
 
             $marinaHumedaCotizacion
                 ->setIva($iva)
-                ->setSubtotal($subTotal)
-                ->setIvatotal($ivaTot)
-                ->setTotal($total)
+                ->setSubtotal($totalSinIvaUSD)
+                ->setIvatotal($ivaDelTotalUSD)
+                ->setTotal($totalConIvaUSD)
                 ->setValidanovo(0)
                 ->setValidacliente(0)
                 ->setEstatus(1)
-                ->setFecharegistro($fechaHoraActual);
+                ->setFecharegistro($fechaHoraActual)
+                ->setFoliorecotiza($foliorecotizado)
+            ;
            $marinaHumedaCotizacionAnterior
                ->setEstatus(0);
             $em->persist($marinaGasolina);
@@ -831,6 +827,7 @@ class MarinaHumedaCotizacionController extends Controller
             'title' => 'Recotización',
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'form' => $form->createView(),
+            'precioSinIvaUSD' => $precioNoIncluyeIvaUSD
         ]);
 
     }

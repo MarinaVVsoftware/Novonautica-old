@@ -747,22 +747,29 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').keyup(function ()
 $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').keyup(function () {
     var iva = $('#valiva').data('valor');
     var dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-    var precioMXN = $(this).val();
-    var precioIva = (precioMXN * iva)/100;
-    var precio = precioMXN - precioIva;
-    $('#g_precio').data('valor', precio);
-    $('#g_precio').html('$ ' + parseFloat(precio).toFixed(2));
-    $('#g_precio_mxn').data('valor', precio / dolar);
-    $('#g_precio_mxn').html('$ ' + parseFloat(precio / dolar).toFixed(2));
+    var cantidad = $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').val();
+    var precioConIvaMXN = $(this).val();
+    var precioConIvaUSD = precioConIvaMXN/dolar;
+    var totalConIvaUSD =  cantidad * precioConIvaUSD;
+    var ivaEquivalente = 100 + iva;
+    var totalSinIvaUSD = (100*totalConIvaUSD)/ivaEquivalente;
+    var ivaDelTotalUSD = totalConIvaUSD - totalSinIvaUSD;
+    var precioSinIvaUSD = totalSinIvaUSD/cantidad;
+
+    $('#g_precio').data('valor', precioSinIvaUSD * dolar);
+    $('#g_precio').html('$ ' + parseFloat(precioSinIvaUSD * dolar).toFixed(2));
+    $('#g_precio_mxn').data('valor', precioSinIvaUSD);
+    $('#g_precio_mxn').html('$ ' + parseFloat(precioSinIvaUSD).toFixed(2));
     gasolinaCalculaSubtotales();
     gasolinaCalculaSubtotalesMxn();
 });
 
 $('#appbundle_marinahumedacotizacion_dolar').keyup(function () {
-    var dolar = $(this).val();
-    $('#g_precio_mxn').data('valor', $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / dolar);
-    $('#g_precio_mxn').html('$ ' + parseFloat($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / dolar).toFixed(2));
-    gasolinaCalculaSubtotalesMxn();
+     var dolar = $(this).val();
+
+     $('#g_precio_mxn').data('valor', $('#g_precio').data('valor') / dolar);
+     $('#g_precio_mxn').html('$ ' + parseFloat( $('#g_precio').data('valor') / dolar).toFixed(2));
+     gasolinaCalculaSubtotalesMxn();
 });
 
 function gasolinaCalculaSubtotales() {

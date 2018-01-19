@@ -95,7 +95,7 @@ class SidebarController extends Controller
                     ['name' => 'Nueva cotización', 'path' => $this->generateUrl('astillero_new')],
                     ['name' => 'Cotizaciones', 'path' => $this->generateUrl('astillero_index')],
                     ['name' => 'Aceptaciones', 'path' => $this->generateUrl('astillero-aceptaciones')],
-                    ['name' => 'ODT', 'path' => $this->generateUrl('astillero-odt')],
+                    ['name' => 'ODT', 'path' => $this->generateUrl('ordendetrabajo_index')],
                     [
                         'name' => 'Productos',
                         'path' => $this->generateUrl('astillero_producto_index'),

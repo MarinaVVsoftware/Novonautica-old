@@ -110,7 +110,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <small>Precios en MXN</small>
+                                    <small>Precios en USD</small>
                                 </div>
                             </div>
 
@@ -131,17 +131,15 @@
                                         <tr>
                                             <td id="g_cantidad" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</td>
                                             <td>Abastecimiento de gasolina</td>
-                                            <td id="g_precio" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.precio/100 }}">
-                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.precio/100)|number_format(2) }}
+                                            <td id="g_precio" data-valor="{{ ((precioSinIvaUSD)/100) }}">$ {{ ((precioSinIvaUSD)/100)|number_format(2) }}</td>
+                                            <td id="g_subtotal" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.0.subtotal * marinaHumedaCotizacion.dolar)/10000 }}">
+                                                $ {{ ((marinaHumedaCotizacion.mhcservicios.0.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
                                             </td>
-                                            <td id="g_subtotal" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.subtotal/100 }}">
-                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.subtotal/100)|number_format(2) }}
+                                            <td id="g_iva" data-valor="{{ ((marinaHumedaCotizacion.mhcservicios.0.iva * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}">
+                                                $ {{ ((marinaHumedaCotizacion.mhcservicios.0.iva * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
                                             </td>
-                                            <td id="g_iva" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.iva/100 }}">
-                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.iva/100)|number_format(2) }}
-                                            </td>
-                                            <td id="g_total" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.total/100 }}">
-                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.total/100)|number_format(2) }}
+                                            <td id="g_total" data-valor="{{ ((marinaHumedaCotizacion.mhcservicios.0.total * marinaHumedaCotizacion.dolar)/10000)}}">
+                                                $ {{ ((marinaHumedaCotizacion.mhcservicios.0.total * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -165,7 +163,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
-                                        $ <span id="gransubtot_g">{{ (marinaHumedaCotizacion.subtotal/100)|number_format(2) }}</span>
+                                        $ <span id="gransubtot_g">{{ ((marinaHumedaCotizacion.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -179,7 +177,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
-                                        $ <span id="graniva_g">{{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }}</span>
+                                        $ <span id="graniva_g">{{ ((marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -193,7 +191,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
-                                        $ <span id="grantot_g">{{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</span>
+                                        $ <span id="grantot_g">{{ ((marinaHumedaCotizacion.total * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -215,7 +213,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <small>Precios en USD</small>
+                                    <small>Precios en MXN</small>
                                 </div>
                             </div>
 
@@ -236,15 +234,17 @@
                                         <tr>
                                             <td id="g_cantidad_mxn" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</td>
                                             <td>Abastecimiento de gasolina</td>
-                                            <td id="g_precio_mxn" data-valor="{{ ((marinaHumedaCotizacion.mhcservicios.0.precio * marinaHumedaCotizacion.dolar)/10000) }}">$ {{ ((marinaHumedaCotizacion.mhcservicios.0.precio * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>
-                                            <td id="g_subtotal_mxn" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.0.subtotal * marinaHumedaCotizacion.dolar)/10000 }}">
-                                                $ {{ ((marinaHumedaCotizacion.mhcservicios.0.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
+                                            <td id="g_precio_mxn" data-valor="{{ ((precioSinIvaUSD / marinaHumedaCotizacion.dolar)) }}">
+                                                $ {{ ((precioSinIvaUSD / marinaHumedaCotizacion.dolar))|number_format(2) }}
                                             </td>
-                                            <td id="g_iva_mxn" data-valor="{{ ((marinaHumedaCotizacion.mhcservicios.0.iva * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}">
-                                                $ {{ ((marinaHumedaCotizacion.mhcservicios.0.iva * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
+                                            <td id="g_subtotal_mxn" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.subtotal/100 }}">
+                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.subtotal/100)|number_format(2) }}
                                             </td>
-                                            <td id="g_total_mxn" data-valor="{{ ((marinaHumedaCotizacion.mhcservicios.0.total * marinaHumedaCotizacion.dolar)/10000)}}">
-                                                $ {{ ((marinaHumedaCotizacion.mhcservicios.0.total * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
+                                            <td id="g_iva_mxn" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.iva/100 }}">
+                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.iva/100)|number_format(2) }}
+                                            </td>
+                                            <td id="g_total_mxn" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.total/100 }}">
+                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.total/100)|number_format(2) }}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -267,7 +267,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
-                                        $ <span id="gransubtot_g_mxn">{{ ((marinaHumedaCotizacion.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        $ <span id="gransubtot_g_mxn">{{ (marinaHumedaCotizacion.subtotal)/100|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -281,7 +281,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
-                                        $ <span id="graniva_g_mxn">{{ ((marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        $ <span id="graniva_g_mxn">{{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -295,7 +295,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
-                                        $ <span id="grantot_g_mxn">{{ ((marinaHumedaCotizacion.total * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        $ <span id="grantot_g_mxn">{{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>

@@ -244,11 +244,19 @@ class AstilleroCotizacion
      */
     private $fecharespuesta;
 
-
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\OrdenDeTrabajo", mappedBy="astilleroCotizacion")
+     */
+    private $odt;
 
     public function __construct() {
         $this->acservicios = new ArrayCollection();
         $this->pagos = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return 'Folio: '.$this->folio.'-'.$this->foliorecotiza.' Barco:'.$this->getBarco();
     }
 
     /**
@@ -891,5 +899,29 @@ class AstilleroCotizacion
     public function setDescuento($descuento)
     {
         $this->descuento = $descuento;
+    }
+
+    /**
+     * Set odt
+     *
+     * @param \AppBundle\Entity\OrdenDeTrabajo $odt
+     *
+     * @return AstilleroCotizacion
+     */
+    public function setOdt(\AppBundle\Entity\OrdenDeTrabajo $odt = null)
+    {
+        $this->odt = $odt;
+
+        return $this;
+    }
+
+    /**
+     * Get odt
+     *
+     * @return \AppBundle\Entity\OrdenDeTrabajo
+     */
+    public function getOdt()
+    {
+        return $this->odt;
     }
 }
