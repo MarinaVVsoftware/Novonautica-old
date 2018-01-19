@@ -37,7 +37,7 @@ class Solicitud
     private $embarcacion;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Producto", mappedBy="solicitud", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Peticion", mappedBy="solicitud", cascade={"persist"})
      */
     private $producto;
 
@@ -161,17 +161,16 @@ class Solicitud
         $this->estado = $estado;
     }
 
-
-
     /**
      * Add producto
      *
-     * @param \AppBundle\Entity\Tienda\Producto $producto
+     * @param Peticion $producto
      *
      * @return Solicitud
      */
-    public function addProducto(\AppBundle\Entity\Tienda\Producto $producto)
-    {   $producto->setSolicitud($this);
+    public function addProducto(Peticion $producto)
+    {
+        $producto->setSolicitud($this);
         $this->producto[] = $producto;
 
         return $this;
@@ -180,9 +179,9 @@ class Solicitud
     /**
      * Remove producto
      *
-     * @param \AppBundle\Entity\Tienda\Producto $producto
+     * @param Peticion $producto
      */
-    public function removeProducto(\AppBundle\Entity\Tienda\Producto $producto)
+    public function removeProducto(Peticion $producto)
     {
         $this->producto->removeElement($producto);
     }

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Tienda;
 
+use AppBundle\Entity\Tienda\Peticion;
 use AppBundle\Entity\Tienda\Producto;
 use AppBundle\Entity\Tienda\Solicitud;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -27,8 +28,12 @@ class SolicitudController extends Controller
 
         $solicituds = $em->getRepository('AppBundle:Tienda\Solicitud')->findAll();
 
+
+        $productos = $em->getRepository('AppBundle:Tienda\Peticion')->findAll();
+
         return $this->render('tienda/solicitud/index.html.twig', array(
             'solicituds' => $solicituds,
+            'productos' => $productos
         ));
     }
 
@@ -41,7 +46,7 @@ class SolicitudController extends Controller
     public function newAction(Request $request)
     {
         $solicitud = new Solicitud();
-        $producto = new Producto();
+        $producto = new Peticion();
 
         $solicitud->addProducto($producto);
         $form = $this->createForm('AppBundle\Form\Tienda\SolicitudType', $solicitud);
@@ -52,14 +57,14 @@ class SolicitudController extends Controller
             $em->persist($solicitud);
             $em->flush();
 
-            return $this->redirectToRoute('tienda_solicitud_show', array('id' => $solicitud->getId()));
+            return $this->redirectToRoute('tienda_solicitud_index');
         }
 
-        return $this->render('tienda/solicitud/new.html.twig', array(
-            'title' => 'Nueva Solicitud',
-            'solicitud' => $solicitud,
-            'form' => $form->createView(),
-        ));
+//        return $this->render('tienda/solicitud/new.html.twig', array(
+//            'title' => 'Nueva Solicitud',
+//            'solicitud' => $solicitud,
+//            'form' => $form->createView(),
+//        ));
     }
 
     /**

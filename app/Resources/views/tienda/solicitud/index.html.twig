@@ -33,7 +33,18 @@
                                     <td>{{ solicitud.embarcacion }}</td>
                                     <td>{{ solicitud.solicitudEspecial }}</td>
                                     <td>200 dineros</td>
-                                    <td>{{ solicitud.estado }}</td>
+                                    <td class="align-middle">
+                                        {% if solicitud.estado == 2 %}
+                                            <img src="{{ asset('img/status-pendiente-icon.svg') }}"
+                                                 class="center-block" title="Pendiente">
+                                        {% elseif solicitud.estado == 0 %}
+                                            <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                                 class="center-block" title="Rechazado">
+                                        {% elseif solicitud.estado == 1 %}
+                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                 class="center-block" title="Aceptado">
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>

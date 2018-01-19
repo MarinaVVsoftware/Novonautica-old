@@ -138,6 +138,7 @@ jQuery('.add-another-producto').click(function (e) {
     $(this).data('cantidad', totMotores);
     var newLi = jQuery('<div class="row"></div>').html(newWidget);
     newLi.appendTo(motorListPrimero);
+    $('.select-buscador').select2();
     newLi.before(newLi);
 });
 

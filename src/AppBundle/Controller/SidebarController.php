@@ -138,6 +138,17 @@ class SidebarController extends Controller
                     ['name' => 'Subcategorias', 'path' => $this->generateUrl('producto_subcategoria')],
                 ]
             ],
+            [
+                'name' => 'Tienda',
+                'icon' => 'th',
+                'path' => $this->generateUrl('tienda_producto_index'),
+                'submenu' => [
+                    ['name' => 'Productos', 'path' => $this->generateUrl('tienda_producto_index')],
+                    ['name' => 'Solicitudes', 'path' => $this->generateUrl('tienda_solicitud_index')],
+                    ['name' => 'Nueva Solicitud', 'path' => $this->generateUrl('tienda_solicitud_new')],
+                ]
+            ],
+
             ['name' => 'Recursos Humanos', 'icon' => 'address-book-o', 'path' => $this->generateUrl('recursos-humanos')],
             [
                 'name' => 'Contabilidad',
