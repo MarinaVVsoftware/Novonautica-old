@@ -60,11 +60,11 @@ class SolicitudController extends Controller
             return $this->redirectToRoute('tienda_solicitud_index');
         }
 
-//        return $this->render('tienda/solicitud/new.html.twig', array(
-//            'title' => 'Nueva Solicitud',
-//            'solicitud' => $solicitud,
-//            'form' => $form->createView(),
-//        ));
+        return $this->render('tienda/solicitud/new.html.twig', array(
+            'title' => 'Nueva Solicitud',
+            'solicitud' => $solicitud,
+            'form' => $form->createView(),
+        ));
     }
 
     /**
