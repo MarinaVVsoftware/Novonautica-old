@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Peticions list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Peticion</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for peticion in peticions %}
+            <tr>
+                <td><a href="{{ path('tienda_peticion_show', { 'id': peticion.id }) }}">{{ peticion.id }}</a></td>
+                <td>{{ peticion.peticion }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('tienda_peticion_show', { 'id': peticion.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('tienda_peticion_edit', { 'id': peticion.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('tienda_peticion_new') }}">Create a new peticion</a>
+        </li>
+    </ul>
+{% endblock %}

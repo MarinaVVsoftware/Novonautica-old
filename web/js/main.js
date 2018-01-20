@@ -125,6 +125,30 @@ function esNumeroDecimal(e, field) {
 
 }
 
+//////////////////////////////////////////////////////////////////
+//Collection al agregar productos a una solicitud
+jQuery('.add-another-producto').click(function (e) {
+    e.preventDefault();
+    var totMotores = $(this).data('cantidad');
+    var lista = $(this).data('idlista');
+    var motorListPrimero = jQuery('#motor-fields-list' + lista);
+    var newWidget = $(motorListPrimero).data('prototype');
+    newWidget = newWidget.replace(/__name__/g, totMotores);
+    totMotores++;
+    $(this).data('cantidad', totMotores);
+    var newLi = jQuery('<div class="row"></div>').html(newWidget);
+    newLi.appendTo(motorListPrimero);
+    $('.select-buscador').select2();
+    newLi.before(newLi);
+});
+
+$('.lista-productos').on('click', '.remove-producto', function (e) {
+    e.preventDefault();
+    $(this).parent().parent().parent().remove();
+    return false;
+});
+////////////////////////////////////////////////////////////////////
+
 //collectio al agregar motores a un barco
 jQuery('.add-another-motor').click(function (e) {
   e.preventDefault();
