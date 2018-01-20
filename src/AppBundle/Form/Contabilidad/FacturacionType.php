@@ -48,7 +48,7 @@ class FacturacionType extends AbstractType
             ->add('razonSocial')
             ->add('direccionFiscal')
             ->add('numeroTelefonico')
-            ->add('email')
+            ->add('email', TextType::class, ['label' => 'Emails de recepción (Separados por comas)'])
             ->add('conceptos', CollectionType::class, [
                 'label' => false,
                 'entry_type' => ConceptoType::class,
@@ -139,12 +139,11 @@ class FacturacionType extends AbstractType
             ->add('subtotal', MoneyType::class, $moneySetting)
             ->add('iva', MoneyType::class, $moneySetting)
             ->add('total', MoneyType::class, $moneySetting)
-            ->add('divisa', ChoiceType::class, [
-                'label' => 'Divisa a facturar',
-                'mapped' => false,
+            ->add('moneda', ChoiceType::class, [
+                'label' => 'Moneda a facturar',
                 'choices' => [
-                    'USD' => 1,
-                    'MXN' => 2
+                    'USD' => 'USD',
+                    'MXN' => 'MXN'
                 ]
             ])
             ->add('folioCotizacion', TextType::class, [

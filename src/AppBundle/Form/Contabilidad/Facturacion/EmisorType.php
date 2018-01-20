@@ -46,18 +46,18 @@ class EmisorType extends AbstractType
             ->add('nombre', TextType::class, ['label' => 'Razón social'])
             ->add('cerFile', VichFileType::class, [
                 'label' => 'Archivo CER',
-//                'download_uri' => false,
                 'allow_delete' => false,
                 'download_label' => '.cer',
                 'required' => false
             ])
             ->add('keyFile', VichFileType::class, [
                 'label' => 'Archivo KEY',
-//                'download_uri' => false,
                 'allow_delete' => false,
                 'download_label' => '.key',
                 'required' => false
             ])
+            ->add('usuarioPAC', TextType::class, ['label' => 'Usuario PAC'])
+            ->add('passwordPAC', TextType::class, ['label' => 'Password PAC'])
             ->add('emails', TextType::class, ['label' => 'Emails de recepción (Separados por comas)'])
             ->add('password')
             ->add('codigoPostal')

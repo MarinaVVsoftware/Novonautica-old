@@ -82,6 +82,14 @@ class Facturacion
     private $email;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="moneda", type="string", length=5)
+     *
+     */
+    private $moneda;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="tipo_cambio", type="integer")
@@ -421,6 +429,22 @@ class Facturacion
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMoneda()
+    {
+        return $this->moneda;
+    }
+
+    /**
+     * @param string $moneda
+     */
+    public function setMoneda($moneda)
+    {
+        $this->moneda = $moneda;
     }
 
     /**

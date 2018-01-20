@@ -105,10 +105,10 @@
                                             {{ form_row(form.pagos) }}
                                         </div>
                                         <div class="col-sm-3">
-                                            {{ form_row(form.tipoCambio) }}
+                                            {{ form_row(form.moneda) }}
                                         </div>
                                         <div class="col-sm-3">
-                                            {{ form_row(form.divisa) }}
+                                            {{ form_row(form.tipoCambio) }}
                                         </div>
                                     </div>
                                     <div class="row">
@@ -219,14 +219,6 @@
         }
       })();
 
-      (function () {
-        const divisaSelect = document.getElementById('appbundle_contabilidad_facturacion_divisa');
-        divisaSelect.addEventListener('change', function (e) {
-          console.log(e);
-          console.log(this.value);
-        })
-      })();
-
       /*
           JQUERY AUTOCOMPLETE && COLLECCION DE CONCEPTOS
       */
@@ -241,6 +233,7 @@
         const descuentoHolder = document.getElementById('appbundle_contabilidad_facturacion_descuento');
         const ivaHolder = document.getElementById('appbundle_contabilidad_facturacion_iva');
         const totalHolder = document.getElementById('appbundle_contabilidad_facturacion_total');
+        const monedaSelect = document.getElementById('appbundle_contabilidad_facturacion_moneda');
         let conceptoCounter = '{{ form.conceptos|length }}';
         const autocompleteSettings = {
           dataType: 'json',
@@ -254,6 +247,16 @@
         if (pagosHolder.selectedIndex && conceptoHolder.childElementCount) {
           addLink.classList.add('hidden');
         }
+
+        // Sugiere el tipo de cambio en base a la moneda elegida
+        monedaSelect.addEventListener('change', function () {
+          if (this.value === 'MXN') {
+            tipoCambioHolder.dataset.cambio = tipoCambioHolder.value;
+            tipoCambioHolder.value = 1.00;
+          } else {
+            tipoCambioHolder.value = tipoCambioHolder.dataset.cambio;
+          }
+        });
 
         // Autocomplete para rellenado de datos de cliente con RFC
         $rfcSelect.autocomplete({
@@ -287,7 +290,7 @@
             razon.value = cliente.data.empresa;
             direccion.value = cliente.data.direccionfiscal;
             nombre.value = cliente.data.nombre;
-            email.value = cliente.data.correo;
+            email.value = cliente.data.correofacturacion;
             telefono.value = cliente.data.telefono;
           }
         });

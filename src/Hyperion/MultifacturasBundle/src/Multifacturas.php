@@ -31,6 +31,12 @@ class Multifacturas
         $datos = [];
 
         /*
+         * PAC
+         */
+        $config['PAC']['usuario'] = $factura->getEmisor()->getUsuarioPAC(); // 'DEMO700101XXX';
+        $config['PAC']['pass'] = $factura->getEmisor()->getPasswordPAC(); // 'DEMO700101XXX';
+
+        /*
          * Factura
          */
         $datos['factura']['condicionesDePago'] = 'CONDICIONES'; // EX: '3 Meses'
@@ -40,7 +46,7 @@ class Multifacturas
         $datos['factura']['forma_pago'] = $factura->getFormaPago();
         $datos['factura']['LugarExpedicion'] = $factura->getEmisor()->getCodigoPostal();
         $datos['factura']['metodo_pago'] = $factura->getMetodoPago();
-        $datos['factura']['moneda'] = 'USD'; // Definido por defecto?
+        $datos['factura']['moneda'] = $factura->getMoneda(); // Definido por defecto?
         $datos['factura']['serie'] = ''; // ?? Número utilizado para control interno de su información, LENGTH = 1-25
         $datos['factura']['subtotal'] = ($factura->getSubtotal() / 100);
         $datos['factura']['tipocambio'] = ($factura->getTipoCambio() / 100);
@@ -112,13 +118,9 @@ class Multifacturas
     {
         $config = [];
 
-        if ($this->env === 'dev') {
-            $config['PAC']['usuario'] = 'DEMO700101XXX';
-            $config['PAC']['pass'] = 'DEMO700101XXX';
-            $config['PAC']['produccion'] = 'NO';
-        }
-
+        $config['PAC']['produccion'] = 'NO';
         $config['version_cfdi'] = '3.3';
+
         return $config;
     }
 }

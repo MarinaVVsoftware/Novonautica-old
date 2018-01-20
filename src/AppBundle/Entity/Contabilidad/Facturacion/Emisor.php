@@ -77,6 +77,8 @@ class Emisor
     /**
      * @var array
      *
+     * @Assert\NotBlank(message="Este campo no puede estar vacio")
+     *
      * @ORM\Column(name="emails", type="string", nullable=true)
      */
     private $emails;
@@ -100,6 +102,8 @@ class Emisor
     /**
      * @var File
      *
+     * @Assert\File()
+     *
      * @Vich\UploadableField(mapping="facturacion_emisor_key", fileNameProperty="key")
      */
     private $keyFile;
@@ -110,6 +114,24 @@ class Emisor
      * @ORM\Column(name="emisor_key", type="string")
      */
     private $key;
+
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank(message="Este campo no puede estar vacio")
+     *
+     * @ORM\Column(name="usuario_pac", type="string")
+     */
+    private $usuarioPAC;
+
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank(message="Este campo no puede estar vacio")
+     *
+     * @ORM\Column(name="password_pac", type="string")
+     */
+    private $passwordPAC;
 
     /**
      * @var string
@@ -338,6 +360,38 @@ class Emisor
     public function getKeyFile()
     {
         return $this->keyFile;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsuarioPAC()
+    {
+        return $this->usuarioPAC;
+    }
+
+    /**
+     * @param string $usuarioPAC
+     */
+    public function setUsuarioPAC($usuarioPAC)
+    {
+        $this->usuarioPAC = $usuarioPAC;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPasswordPAC()
+    {
+        return $this->passwordPAC;
+    }
+
+    /**
+     * @param string $passwordPAC
+     */
+    public function setPasswordPAC($passwordPAC)
+    {
+        $this->passwordPAC = $passwordPAC;
     }
 
     /**

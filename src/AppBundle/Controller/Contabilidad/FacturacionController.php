@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Contabilidad;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Extra\NumberToLetter;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -45,7 +46,7 @@ class FacturacionController extends Controller
      * @Route("/new", name="contabilidad_facturacion_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, \Swift_Mailer $mailer)
     {
         $em = $this->getDoctrine()->getManager();
         $factura = new Facturacion();
@@ -73,7 +74,8 @@ class FacturacionController extends Controller
                 return $this->redirectToRoute('contabilidad_facturacion_new');
             }
 
-            $factura->getPagos()->setFactura($factura);
+            // Si se eligio un pago de una cotizacion, entonces relacionarlo con la factura
+            if ($factura->getPagos()) { $factura->getPagos()->setFactura($factura); }
             $factura->setXml(trim($timbrado['cfdi']));
             $factura->setPng(trim($timbrado['png']));
             $factura->setXmlArchivo($timbrado['archivo_xml']);
@@ -85,6 +87,25 @@ class FacturacionController extends Controller
             $factura->setSelloCFDI((string) $timbrado['representacion_impresa_sello']);
             $factura->setSelloSAT((string) $timbrado['representacion_impresa_selloSAT']);
             $factura->setCertificadoSAT((string) $timbrado['representacion_impresa_certificadoSAT']);
+
+            $attachment = new Swift_Attachment(
+                $this->createFacturaPDF($factura),
+                'factura_' . $factura->getFolioCotizacion() . '.pdf',
+                'application/pdf'
+            );
+
+            // Enviar correo de confirmacion
+            $message = (new \Swift_Message('Factura de su pago realizado en ' . $factura->getFecha()->format('d/m/Y')))
+                ->setFrom('noresponder@novonautica.com')
+                ->setTo(explode(',', $factura->getEmail()))
+                ->setBcc(explode(',', $factura->getEmisor()->getEmails()))
+                ->setBody(
+                    $this->renderView('contabilidad/facturacion/email/factura-template.html.twig'),
+                    'text/html'
+                )
+                ->attach($attachment);
+
+            $mailer->send($message);
 
             $em->persist($factura);
             $em->flush();
@@ -108,6 +129,56 @@ class FacturacionController extends Controller
             ->getDoctrine()
             ->getRepository('AppBundle:Contabilidad\Facturacion')
             ->find($request->query->get('id'));
+
+        return $this->createFacturaPDF($factura);
+
+        /*$numToLetters = new NumberToLetter();
+        $numLetras = $numToLetters->to_word(($factura->getTotal() / 10), 'USD');
+        $formaPago = [
+            '01' => 'Efectivo',
+            '02' => 'Cheque nominativo',
+            '03' => 'Transferencia electrónica de fondos',
+            '04' => 'Tarjeta de crédito',
+            '05' => 'Monedero electrónico',
+            '06' => 'Dinero electrónico',
+            '08' => 'Vales de despensa',
+            '12' => 'Dación en pago',
+            '13' => 'Pago por subrogación',
+            '14' => 'Pago por consignación',
+            '15' => 'Condonación',
+            '17' => 'Compensación',
+            '23' => 'Novación',
+            '24' => 'Confusión',
+            '25' => 'Remisión de deuda',
+            '26' => 'Prescripción o caducidad',
+            '27' => 'A satisfacción del acreedor',
+            '28' => 'Tarjeta de débito',
+            '29' => 'Tarjeta de servicios',
+            '99' => 'Por definir',
+        ];
+
+        $metodoPago = [
+            'PUE' => 'Pago en una sola exhibición',
+            'PIP' => 'Pago inicial y parcialidades',
+            'PPD' => 'Pago en parcialidades o diferido',
+        ];
+
+        $html = $this->renderView(':contabilidad/facturacion/pdf:factura.html.twig', [
+            'title' => 'factura_' . $factura->getFolioCotizacion() . '.pdf',
+            'factura' => $factura,
+            'numLetras' => $numLetras,
+            'formaPago' => $formaPago[$factura->getFormaPago()],
+            'metodoPago' => $metodoPago[$factura->getMetodoPago()],
+        ]);
+
+        return new PdfResponse(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            'factura_' . $factura->getFolioCotizacion() . '.pdf', 'application/pdf', 'inline'
+        );*/
+    }
+
+    private function createFacturaPDF(Facturacion $factura)
+    {
         $numToLetters = new NumberToLetter();
         $numLetras = $numToLetters->to_word(($factura->getTotal() / 10), 'USD');
         $formaPago = [
