@@ -25,8 +25,8 @@ class AppKernel extends Kernel
             new Oneup\UploaderBundle\OneupUploaderBundle(),
             new Vich\UploaderBundle\VichUploaderBundle(),
             new DataTables\DataTablesBundle(),
-            new AppBundle\AppBundle(),
             new Hyperion\MultifacturasBundle\MultifacturasBundle(),
+            new AppBundle\AppBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

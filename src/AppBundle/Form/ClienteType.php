@@ -50,7 +50,7 @@ class ClienteType extends AbstractType
                 'required' => false
             ])
             ->add('correofacturacion', TextType::class, [
-                'label' => 'Correo Facturación',
+                'label' => 'Correos de Facturación (Separados por comas)',
                 'required' => false
             ])
             ->add('barcos', CollectionType::class, [

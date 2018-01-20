@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -92,6 +93,13 @@ class Pago
      * @ORM\JoinColumn(name="idcuentabancaria", referencedColumnName="id",onDelete="CASCADE")
      */
     private $cuentabancaria;
+
+    /**
+     * @var Facturacion
+     *
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="pagos")
+     */
+    private $factura;
 
     public function __toString()
     {
@@ -315,5 +323,29 @@ class Pago
     public function getAcotizacion()
     {
         return $this->acotizacion;
+    }
+
+    /**
+     * Set factura
+     *
+     * @param \AppBundle\Entity\Contabilidad\Facturacion $factura
+     *
+     * @return Pago
+     */
+    public function setFactura(\AppBundle\Entity\Contabilidad\Facturacion $factura = null)
+    {
+        $this->factura = $factura;
+
+        return $this;
+    }
+
+    /**
+     * Get factura
+     *
+     * @return \AppBundle\Entity\Contabilidad\Facturacion
+     */
+    public function getFactura()
+    {
+        return $this->factura;
     }
 }

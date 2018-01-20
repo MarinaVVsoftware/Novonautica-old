@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class EmisorType extends AbstractType
 {
@@ -42,7 +43,23 @@ class EmisorType extends AbstractType
                     'Régimen de los ingresos por obtención de premios' => '615',
                 ]
             ])
-            ->add('nombre')
+            ->add('nombre', TextType::class, ['label' => 'Razón social'])
+            ->add('cerFile', VichFileType::class, [
+                'label' => 'Archivo CER',
+                'allow_delete' => false,
+                'download_label' => '.cer',
+                'required' => false
+            ])
+            ->add('keyFile', VichFileType::class, [
+                'label' => 'Archivo KEY',
+                'allow_delete' => false,
+                'download_label' => '.key',
+                'required' => false
+            ])
+            ->add('usuarioPAC', TextType::class, ['label' => 'Usuario PAC'])
+            ->add('passwordPAC', TextType::class, ['label' => 'Password PAC'])
+            ->add('emails', TextType::class, ['label' => 'Emails de recepción (Separados por comas)'])
+            ->add('password')
             ->add('codigoPostal')
             ->add('direccion');
     }

@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -261,13 +260,6 @@ class MarinaHumedaCotizacion
      * @ORM\OneToOne(targetEntity="SlipMovimiento", mappedBy="marinahumedacotizacion")
      */
     private $slipmovimiento;
-
-    /**
-     * @var Facturacion
-     *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="cotizacionMarina")
-     */
-    private $factura;
 
     public function __construct() {
         $this->mhcservicios = new ArrayCollection();
@@ -1073,29 +1065,5 @@ class MarinaHumedaCotizacion
     public function getSlipmovimiento()
     {
         return $this->slipmovimiento;
-    }
-
-    /**
-     * Set factura
-     *
-     * @param Facturacion $factura
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setFactura(Facturacion $factura = null)
-    {
-        $this->factura = $factura;
-
-        return $this;
-    }
-
-    /**
-     * Get factura
-     *
-     * @return Facturacion
-     */
-    public function getFactura()
-    {
-        return $this->factura;
     }
 }

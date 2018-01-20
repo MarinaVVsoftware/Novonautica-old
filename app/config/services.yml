@@ -45,3 +45,7 @@ services:
         autowire: true
         public: false
         tags: [ datatable ]
+
+    AppBundle\Form\Contabilidad\FacturacionType:
+        arguments: ['@doctrine.orm.entity_manager']
+        tags: [form.type]

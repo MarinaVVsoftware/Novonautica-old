@@ -3,8 +3,6 @@
 namespace AppBundle\Entity\Contabilidad\Facturacion;
 
 use AppBundle\Entity\Contabilidad\Facturacion;
-use AppBundle\Entity\Contabilidad\Facturacion\Concepto\Impuesto;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -117,21 +115,6 @@ class Concepto
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="conceptos")
      */
     private $factura;
-
-    /**
-     * @var Impuesto
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\Impuesto", mappedBy="concepto")
-     */
-    private $impuestos;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->impuestos = new ArrayCollection();
-    }
 
     /**
      * Get id
@@ -285,40 +268,6 @@ class Concepto
     public function getClaveUnidad()
     {
         return $this->claveUnidad;
-    }
-
-    /**
-     * Add impuesto
-     *
-     * @param Impuesto $impuesto
-     *
-     * @return Concepto
-     */
-    public function addImpuesto(Impuesto $impuesto)
-    {
-        $this->impuestos[] = $impuesto;
-
-        return $this;
-    }
-
-    /**
-     * Remove impuesto
-     *
-     * @param Impuesto $impuesto
-     */
-    public function removeImpuesto(Impuesto $impuesto)
-    {
-        $this->impuestos->removeElement($impuesto);
-    }
-
-    /**
-     * Get impuestos
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getImpuestos()
-    {
-        return $this->impuestos;
     }
 
     /**

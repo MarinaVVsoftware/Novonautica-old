@@ -4,7 +4,7 @@
     <div class="content-wrapper">
         <section class="content">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
                             <h3 class="panel-title">
@@ -13,13 +13,27 @@
                         </div>
                         <div class="panel-body" style="min-height: initial">
                             {{ form_start(form) }}
+                            {{ form_errors(form) }}
+                            {{ form_row(form.nombre) }}
                             {{ form_row(form.rfc) }}
                             {{ form_row(form.regimenFiscal) }}
-                            {{ form_row(form.nombre) }}
                             {{ form_row(form.codigoPostal) }}
                             {{ form_row(form.direccion) }}
+                            {{ form_row(form.emails) }}
+                            {{ form_row(form.password) }}
+                            <div class="row text-center">
+                                <div class="col-sm-6">
+                                    {{ form_row(form.usuarioPAC) }}
+                                    {{ form_row(form.cerFile) }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ form_row(form.passwordPAC) }}
+                                    {{ form_row(form.keyFile) }}
+                                </div>
+                            </div>
+
                             {% if emisor.id is not null %}
-                                <a href="{{ path('producto_marca') }}"
+                                <a href="{{ path('contabilidad_facturacion_emisor') }}"
                                    class="btn btn-naranja">Cancelar</a>
                             {% endif %}
                             <button type="submit" class="btn btn-azul pull-right">
@@ -30,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
                             <h3 class="panel-title">Listado de emisores</h3>
@@ -49,7 +63,7 @@
                                     {% for i, item in emisors %}
                                         <tr>
                                             <td align="center" valign="middle">{{ item.nombre }}</td>
-                                            <td align="center" valign="middle">{{ item.rfc}}</td>
+                                            <td align="center" valign="middle">{{ item.rfc }}</td>
                                             <td align="center" valign="middle">
                                                 <ul class="list-inline">
                                                     <li>

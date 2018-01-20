@@ -31,6 +31,12 @@ class Multifacturas
         $datos = [];
 
         /*
+         * PAC
+         */
+        $config['PAC']['usuario'] = $factura->getEmisor()->getUsuarioPAC(); // 'DEMO700101XXX';
+        $config['PAC']['pass'] = $factura->getEmisor()->getPasswordPAC(); // 'DEMO700101XXX';
+
+        /*
          * Factura
          */
         $datos['factura']['condicionesDePago'] = 'CONDICIONES'; // EX: '3 Meses'
@@ -40,7 +46,7 @@ class Multifacturas
         $datos['factura']['forma_pago'] = $factura->getFormaPago();
         $datos['factura']['LugarExpedicion'] = $factura->getEmisor()->getCodigoPostal();
         $datos['factura']['metodo_pago'] = $factura->getMetodoPago();
-        $datos['factura']['moneda'] = 'USD'; // Definido por defecto?
+        $datos['factura']['moneda'] = $factura->getMoneda(); // Definido por defecto?
         $datos['factura']['serie'] = ''; // ?? Número utilizado para control interno de su información, LENGTH = 1-25
         $datos['factura']['subtotal'] = ($factura->getSubtotal() / 100);
         $datos['factura']['tipocambio'] = ($factura->getTipoCambio() / 100);
@@ -51,8 +57,11 @@ class Multifacturas
         /*
          * Emisor
          */
-        $datos['emisor']['rfc'] = $factura->getEmisor()->getRfc(); //RFC DE PRUEBA
-        $datos['emisor']['nombre'] = $factura->getEmisor()->getNombre();  // EMPRESA DE PRUEBA
+        $datos['emisor']['rfc'] = $factura->getEmisor()->getRfc();
+        $datos['emisor']['nombre'] = $factura->getEmisor()->getNombre();
+        $datos['conf']['cer'] = __DIR__ . '/certificados/' . $factura->getEmisor()->getCer();
+        $datos['conf']['key'] = __DIR__ . '/certificados/' . $factura->getEmisor()->getKey();
+        $datos['conf']['pass'] = $factura->getEmisor()->getPassword();
 
         /*
          * Receptor
@@ -69,7 +78,8 @@ class Multifacturas
         foreach ($factura->getConceptos() as $i => $concepto) {
             $datos['conceptos'][$i]['cantidad'] = $concepto->getCantidad();
             $datos['conceptos'][$i]['unidad'] = $concepto->getUnidad();
-            $datos['conceptos'][$i]['ID'] = $concepto->getId();
+            $datos['conceptos'][$i]['ID'] = $i;
+            $datos['conceptos'][$i]['Descuento'] = ($concepto->getDescuento() / 100);
             $datos['conceptos'][$i]['descripcion'] = $concepto->getDescripcion();
             $datos['conceptos'][$i]['valorunitario'] = ($concepto->getValorunitario() / 100);
             $datos['conceptos'][$i]['importe'] = ($concepto->getSubtotal() / 100);
@@ -108,17 +118,8 @@ class Multifacturas
     {
         $config = [];
 
-        if ($this->env === 'dev') {
-            $config['PAC']['usuario'] = 'DEMO700101XXX';
-            $config['PAC']['pass'] = 'DEMO700101XXX';
-            $config['PAC']['produccion'] = 'NO';
-        }
-
+        $config['PAC']['produccion'] = 'NO';
         $config['version_cfdi'] = '3.3';
-
-        $config['conf']['cer'] = __DIR__ . '/certificados/lan7008173r5.cer.pem';
-        $config['conf']['key'] = __DIR__ . '/certificados/lan7008173r5.key.pem';
-        $config['conf']['pass'] = '12345678a';
 
         return $config;
     }

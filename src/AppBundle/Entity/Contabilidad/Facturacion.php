@@ -4,7 +4,7 @@ namespace AppBundle\Entity\Contabilidad;
 
 use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto;
-use AppBundle\Entity\MarinaHumedaCotizacion;
+use AppBundle\Entity\Pago;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -80,6 +80,14 @@ class Facturacion
      * @ORM\Column(name="email", type="string", length=100)
      */
     private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="moneda", type="string", length=5)
+     *
+     */
+    private $moneda;
 
     /**
      * @var integer
@@ -247,10 +255,11 @@ class Facturacion
     private $conceptos;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\MarinaHumedaCotizacion", mappedBy="factura")
+     * @var Pago
+     *
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Pago", mappedBy="factura")
      */
-    private $cotizacionMarina;
-//    private $cotizacionAstillero
+    private $pagos;
 
     /**
      * @var string|null $folioCotizacion input de busqueda de cotizaciones
@@ -258,9 +267,6 @@ class Facturacion
      * @ORM\Column(name="folio_cotizacion", type="string", length=150, nullable=true)
      */
     private $folioCotizacion;
-
-    /** @var string|null $cotizacion El valor que reciba, se utilizaran para afectar las cotizaciones */
-    private $cotizacion;
 
     /**
      * Constructor
@@ -423,6 +429,22 @@ class Facturacion
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMoneda()
+    {
+        return $this->moneda;
+    }
+
+    /**
+     * @param string $moneda
+     */
+    public function setMoneda($moneda)
+    {
+        $this->moneda = $moneda;
     }
 
     /**
@@ -940,25 +962,9 @@ class Facturacion
     /**
      * @param null|string $folioCotizacion
      */
-    public function setFolioCotizacion(string $folioCotizacion)
+    public function setFolioCotizacion($folioCotizacion)
     {
         $this->folioCotizacion = $folioCotizacion;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getCotizacion()
-    {
-        return $this->cotizacion;
-    }
-
-    /**
-     * @param null|string $cotizacion
-     */
-    public function setCotizacion(string $cotizacion)
-    {
-        $this->cotizacion = $cotizacion;
     }
 
     /**
@@ -997,26 +1003,26 @@ class Facturacion
     }
 
     /**
-     * Set cotizacionMarina
+     * Set pagos
      *
-     * @param MarinaHumedaCotizacion $cotizacionMarina
+     * @param Pago $pagos
      *
      * @return Facturacion
      */
-    public function setCotizacionMarina(MarinaHumedaCotizacion $cotizacionMarina = null)
+    public function setPagos(Pago $pagos = null)
     {
-        $this->cotizacionMarina = $cotizacionMarina;
+        $this->pagos = $pagos;
 
         return $this;
     }
 
     /**
-     * Get cotizacionMarina
+     * Get pagos
      *
-     * @return MarinaHumedaCotizacion
+     * @return Pago
      */
-    public function getCotizacionMarina()
+    public function getPagos()
     {
-        return $this->cotizacionMarina;
+        return $this->pagos;
     }
 }

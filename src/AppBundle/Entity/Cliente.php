@@ -117,9 +117,6 @@ class Cliente
 
     /**
      * @var string
-     * @Assert\Email(
-     *     message = "El correo de facturación '{{ value }}' no es válido."
-     * )
      *
      * @ORM\Column(name="correofacturacion", type="string", length=255, nullable=true)
      */
