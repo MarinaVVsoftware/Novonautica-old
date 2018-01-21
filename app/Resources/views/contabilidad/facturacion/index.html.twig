@@ -33,7 +33,7 @@
                                             <td>{{ facturacion.emisor.rfc }} <br> {{ facturacion.emisor.nombre }}</td>
                                             <td>{{ facturacion.rfc }} <br> {{ facturacion.cliente }}</td>
                                             <td>{{ facturacion.razonSocial }}</td>
-                                            <td align="center">${{ facturacion.total / 100|number_format(2) }}</td>
+                                            <td align="center">${{ facturacion.total / 100|number_format(2) }} {{ facturacion.moneda }}</td>
                                             <td>{{ facturacion.fechaTimbrado }}</td>
                                             <td align="center">
                                                         <a href="{{ asset('timbrados') }}/{{ facturacion.xmlArchivo|split('/')|last }}"
