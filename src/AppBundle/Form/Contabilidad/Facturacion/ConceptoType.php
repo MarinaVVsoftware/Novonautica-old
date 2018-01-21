@@ -2,7 +2,13 @@
 
 namespace AppBundle\Form\Contabilidad\Facturacion;
 
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
+use AppBundle\Form\DataTransformer\ClaveProdServTransformer;
+use AppBundle\Form\DataTransformer\ClaveUnidadTransformer;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -11,6 +17,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConceptoType extends AbstractType
 {
+    private $cpsTransformer;
+    private $cuTransformer;
+
+    public function __construct(ClaveProdServTransformer $cpsTransformer, ClaveUnidadTransformer $cuTransformer)
+    {
+        $this->cpsTransformer = $cpsTransformer;
+        $this->cuTransformer = $cuTransformer;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -19,8 +34,10 @@ class ConceptoType extends AbstractType
         $builder
             ->add('cantidad', NumberType::class)
             ->add('unidad', TextType::class)
-            ->add('claveProdServ', TextType::class)
-            ->add('claveUnidad', TextType::class)
+            ->add('claveProdServAC', TextType::class, ['mapped' => false])
+            ->add('claveProdServ', HiddenType::class)
+            ->add('claveUnidadAC', TextType::class, ['mapped' => false])
+            ->add('claveUnidad', HiddenType::class)
             ->add('descripcion')
             ->add('valorunitario', MoneyType::class, [
                 'currency' => 'USD',
@@ -47,8 +64,14 @@ class ConceptoType extends AbstractType
                 'divisor' => 100,
                 'grouping' => true
             ]);
+
+
+        $builder->get('claveProdServ')
+            ->addModelTransformer($this->cpsTransformer);
+        $builder->get('claveUnidad')
+            ->addModelTransformer($this->cuTransformer);
     }
-    
+
     /**
      * {@inheritdoc}
      */

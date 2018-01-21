@@ -7,6 +7,7 @@
         .autocomplete-suggestions {
             background: #3e4766;
             overflow: auto;
+            width: auto !important;
         }
 
         .autocomplete-suggestion {
@@ -401,8 +402,8 @@
           if (data) {
             cantidadConcepto.value = data.cantidad || cantidadConcepto.value;
             unidadConcepto.value = data.unidad || unidadConcepto.value;
-            cpsConcepto.value = cpsConcepto.value || '01010101';
-            cuConcepto.value = cuConcepto.value || 'ACT';
+            cpsConcepto.value = cpsConcepto.value || '';
+            cuConcepto.value = cuConcepto.value || '';
             descripcionConcepto.value = data.descripcion || descripcionConcepto.value;
 
             vUnitarioConcepto.value = `${data.precio / 100}`;
@@ -429,6 +430,46 @@
 
             calculateTotals();
           }
+
+          const conceptoSettings = {
+            ...autocompleteSettings,
+            minChars: 1,
+            paramName: 'q',
+            params: {},
+            onSelect: function ({data}) {
+              this.nextElementSibling.value = data;
+            }
+          };
+
+          $(cpsConcepto).autocomplete({
+            ...conceptoSettings,
+            serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/claveprodserv.json`,
+            transformResult: function (claves) {
+              return {
+                suggestions: claves.map(clave => {
+                  return {
+                    value: `${clave.claveProdServ} / ${clave.descripcion}`,
+                    data: clave.id
+                  }
+                })
+              }
+            }
+          });
+
+          $(cuConcepto).autocomplete({
+            ...conceptoSettings,
+            serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/clave_unidad.json`,
+            transformResult: function (claves) {
+              return {
+                suggestions: claves.map(clave => {
+                  return {
+                    value: `${clave.claveUnidad} / ${clave.nombre}`,
+                    data: clave.id
+                  }
+                })
+              }
+            }
+          });
         }
 
         function calculateTotals() {

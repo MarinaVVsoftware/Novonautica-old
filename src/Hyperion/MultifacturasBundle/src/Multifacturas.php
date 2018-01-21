@@ -83,8 +83,8 @@ class Multifacturas
             $datos['conceptos'][$i]['descripcion'] = $concepto->getDescripcion();
             $datos['conceptos'][$i]['valorunitario'] = ($concepto->getValorunitario() / 100);
             $datos['conceptos'][$i]['importe'] = ($concepto->getSubtotal() / 100);
-            $datos['conceptos'][$i]['ClaveProdServ'] = $concepto->getClaveProdServ();
-            $datos['conceptos'][$i]['ClaveUnidad'] = $concepto->getClaveUnidad();
+            $datos['conceptos'][$i]['ClaveProdServ'] = $concepto->getClaveProdServ()->getClaveProdServ();
+            $datos['conceptos'][$i]['ClaveUnidad'] = $concepto->getClaveUnidad()->getClaveUnidad();
 
 
             $datos['conceptos'][$i]['Impuestos']['Traslados'][0]['Base'] = ($concepto->getSubtotal() / 100);

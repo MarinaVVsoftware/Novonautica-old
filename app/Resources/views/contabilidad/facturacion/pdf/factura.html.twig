@@ -14,6 +14,10 @@
         h6 {
             margin-bottom: 0;
         }
+
+        th {
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -27,11 +31,11 @@
             <p style="font-size: smaller">
                 RFC: {{ factura.emisor.rfc }}
                 <br>
-                Régimen fiscal: {{ factura.emisor.regimenFiscal }}
+                Régimen fiscal: {{ factura.emisor.regimenFiscal }} / {{ regimenFiscal }}
                 <br>
                 {{ factura.emisor.direccion }}
                 <br>
-                Tipo comprobante: {{ factura.tipoComprobante }}
+                Tipo comprobante: {{ factura.tipoComprobante }} / {{ tipoComprobante }}
                 <br>
                 Versión CFDI: 3.3
             </p>
@@ -64,12 +68,12 @@
             </tr>
             <tr>
                 <td rowspan="3" colspan="7">
-                    <h4>{{ factura.razonSocial }}</h4>
+                    <h4 style="margin: 0">{{ factura.razonSocial }}</h4>
                     RFC: {{ factura.rfc }}
                     <br>
                     {{ factura.direccionFiscal }}
                     <br>
-                    Uso CFDI: {{ factura.usoCFDI }}
+                    Uso CFDI: {{ factura.usoCFDI }} / {{ usoCFDI }}
                 </td>
                 <td colspan="3" class="text-center">{{ factura.folioFiscal }}</td>
             </tr>
@@ -97,8 +101,8 @@
             {% for concepto in factura.conceptos %}
                 <tr class="text-center">
                     <td>{{ concepto.cantidad }}</td>
-                    <td>{{ concepto.claveUnidad }}</td>
-                    <td>{{ concepto.claveProdServ }}</td>
+                    <td>{{ concepto.claveUnidad.claveUnidad ~ ' / ' ~ concepto.claveUnidad }}</td>
+                    <td>{{ concepto.claveProdServ.claveProdServ ~ ' / ' ~ concepto.claveProdServ.descripcion }}</td>
                     <td>{{ concepto.descripcion }}</td>
                     <td>${{ concepto.valorunitario / 100 }}</td>
                     <td>IVA ${{ concepto.iva / 100 }}</td>
@@ -110,24 +114,26 @@
         <table class="table table-bordered" style="margin-bottom: 0">
             <tr>
                 <td rowspan="3" colspan="6">
-                    TOTAL CON LETRA: <strong>{{ numLetras }}</strong>
+                    TOTAL CON LETRA:
                     <br>
-                    Moneda: USD - Dolar Americano
+                    <strong>{{ numLetras }}</strong>
+                    <br>
+                    Moneda: {{ factura.moneda }} - {{ moneda }}
                     <br>
                     Forma de pago: {{ factura.formaPago }} - {{ formaPago }}
                     <br>
                     Método de pago: {{ factura.metodoPago }} - {{ metodoPago }}
                 </td>
                 <td colspan="2">SUBTOTAL</td>
-                <td colspan="2">$ {{ factura.subtotal / 100|number_format(2) }} USD</td>
+                <td colspan="2">$ {{ factura.subtotal / 100|number_format(2) }} {{ factura.moneda }}</td>
             </tr>
             <tr>
                 <td colspan="2">IVA(16%)</td>
-                <td colspan="2">$ {{ factura.iva / 100|number_format(2) }} USD</td>
+                <td colspan="2">$ {{ factura.iva / 100|number_format(2) }} {{ factura.moneda }}</td>
             </tr>
             <tr>
                 <td colspan="2">TOTAL</td>
-                <td colspan="2">$ {{ factura.total / 100|number_format(2) }} USD</td>
+                <td colspan="2">$ {{ factura.total / 100|number_format(2) }} {{ factura.moneda }}</td>
             </tr>
         </table>
     </div>

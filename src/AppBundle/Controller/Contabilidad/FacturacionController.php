@@ -23,6 +23,97 @@ use Symfony\Component\Serializer\Serializer;
  */
 class FacturacionController extends Controller
 {
+    private $formaPago = [
+        '01' => 'Efectivo',
+        '02' => 'Cheque nominativo',
+        '03' => 'Transferencia electrónica de fondos',
+        '04' => 'Tarjeta de crédito',
+        '05' => 'Monedero electrónico',
+        '06' => 'Dinero electrónico',
+        '08' => 'Vales de despensa',
+        '12' => 'Dación en pago',
+        '13' => 'Pago por subrogación',
+        '14' => 'Pago por consignación',
+        '15' => 'Condonación',
+        '17' => 'Compensación',
+        '23' => 'Novación',
+        '24' => 'Confusión',
+        '25' => 'Remisión de deuda',
+        '26' => 'Prescripción o caducidad',
+        '27' => 'A satisfacción del acreedor',
+        '28' => 'Tarjeta de débito',
+        '29' => 'Tarjeta de servicios',
+        '99' => 'Por definir',
+    ];
+
+    private $metodoPago = [
+        'PUE' => 'Pago en una sola exhibición',
+        'PIP' => 'Pago inicial y parcialidades',
+        'PPD' => 'Pago en parcialidades o diferido',
+    ];
+
+    private $regimenFiscal = [
+        '601' => 'General de Ley Personas Morales',
+        '603' => 'Personas Morales con Fines no Lucrativos',
+        '605' => 'Sueldos y Salarios e Ingresos Asimilados a Salarios',
+        '606' => 'Arrendamiento',
+        '608' => 'Demás ingresos',
+        '609' => 'Consolidación',
+        '610' => 'Residentes en el Extranjero sin Establecimiento Permanente en México',
+        '611' => 'Ingresos por Dividendos (socios y accionistas)',
+        '612' => 'Personas Físicas con Actividades Empresariales y Profesionales',
+        '614' => 'Ingresos por intereses',
+        '616' => 'Sin obligaciones fiscales',
+        '620' => 'Sociedades Cooperativas de Producción que optan por diferir sus ingresos',
+        '621' => 'Incorporación Fiscal',
+        '622' => 'Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras',
+        '623' => 'Opcional para Grupos de Sociedades',
+        '624' => 'Coordinados',
+        '628' => 'Hidrocarburos',
+        '607' => 'Régimen de Enajenación o Adquisición de Bienes',
+        '629' => 'De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales',
+        '630' => 'Enajenación de acciones en bolsa de valores',
+        '615' => 'Régimen de los ingresos por obtención de premios',
+    ];
+
+    private $tipoComprobante = [
+        'I' => 'Ingreso',
+        'E' => 'Egreso',
+        'T' => 'Traslado',
+        'N' => 'Nómina',
+        'P' => 'Pago',
+    ];
+
+    private $cfdi = [
+        'G01' => 'Adquisición de mercancias',
+        'G02' => 'Devoluciones, descuentos o bonificaciones',
+        'G03' => 'Gastos en general',
+        'I01' => 'Construcciones',
+        'I02' => 'Mobilario y equipo de oficina por inversiones',
+        'I03' => 'Equipo de transporte',
+        'I04' => 'Equipo de computo y accesorios',
+        'I05' => 'Dados, troqueles, moldes, matrices y herramental',
+        'I06' => 'Comunicaciones telefónicas',
+        'I07' => 'Comunicaciones satelitales',
+        'I08' => 'Otra maquinaria y equipo',
+        'D01' => 'Honorarios médicos, dentales y gastos hospitalarios.',
+        'D02' => 'Gastos médicos por incapacidad o discapacidad',
+        'D03' => 'Gastos funerales.',
+        'D04' => 'Donativos.',
+        'D05' => 'Intereses reales efectivamente pagados por créditos hipotecarios (casa habitación).',
+        'D06' => 'Aportaciones voluntarias al SAR.',
+        'D07' => 'Primas por seguros de gastos médicos.',
+        'D08' => 'Gastos de transportación escolar obligatoria.',
+        'D09' => 'Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones.',
+        'D10' => 'Pagos por servicios educativos (colegiaturas)',
+        'P01' => 'Por definir',
+    ];
+
+    private $moneda = [
+        'USD' => 'Dolar Americano',
+        'MXN' => 'Peso Mexicano'
+    ];
+
     /**
      * Lists all facturacion entities.
      *
@@ -75,7 +166,9 @@ class FacturacionController extends Controller
             }
 
             // Si se eligio un pago de una cotizacion, entonces relacionarlo con la factura
-            if ($factura->getPagos()) { $factura->getPagos()->setFactura($factura); }
+            if ($factura->getPagos()) {
+                $factura->getPagos()->setFactura($factura);
+            }
             $factura->setXml(trim($timbrado['cfdi']));
             $factura->setPng(trim($timbrado['png']));
             $factura->setXmlArchivo($timbrado['archivo_xml']);
@@ -83,10 +176,10 @@ class FacturacionController extends Controller
             $factura->setFolioFiscal($timbrado['uuid']);
             $factura->setCadenaOriginal($timbrado['representacion_impresa_cadena']);
             $factura->setSerieCertificadoCSD($timbrado['representacion_impresa_certificado_no']);
-            $factura->setFechaTimbrado((string) $timbrado['representacion_impresa_fecha_timbrado']);
-            $factura->setSelloCFDI((string) $timbrado['representacion_impresa_sello']);
-            $factura->setSelloSAT((string) $timbrado['representacion_impresa_selloSAT']);
-            $factura->setCertificadoSAT((string) $timbrado['representacion_impresa_certificadoSAT']);
+            $factura->setFechaTimbrado((string)$timbrado['representacion_impresa_fecha_timbrado']);
+            $factura->setSelloCFDI((string)$timbrado['representacion_impresa_sello']);
+            $factura->setSelloSAT((string)$timbrado['representacion_impresa_selloSAT']);
+            $factura->setCertificadoSAT((string)$timbrado['representacion_impresa_certificadoSAT']);
 
             $attachment = new Swift_Attachment(
                 $this->createFacturaPDF($factura),
@@ -94,7 +187,9 @@ class FacturacionController extends Controller
                 'application/pdf'
             );
 
-            // Enviar correo de confirmacion
+            $em->persist($factura);
+            $em->flush();
+
             $message = (new \Swift_Message('Factura de su pago realizado en ' . $factura->getFecha()->format('d/m/Y')))
                 ->setFrom('noresponder@novonautica.com')
                 ->setTo(explode(',', $factura->getEmail()))
@@ -106,10 +201,6 @@ class FacturacionController extends Controller
                 ->attach($attachment);
 
             $mailer->send($message);
-
-            $em->persist($factura);
-            $em->flush();
-
             return $this->redirectToRoute('contabilidad_facturacion_index');
         }
 
@@ -131,91 +222,22 @@ class FacturacionController extends Controller
             ->find($request->query->get('id'));
 
         return $this->createFacturaPDF($factura);
-
-        /*$numToLetters = new NumberToLetter();
-        $numLetras = $numToLetters->to_word(($factura->getTotal() / 10), 'USD');
-        $formaPago = [
-            '01' => 'Efectivo',
-            '02' => 'Cheque nominativo',
-            '03' => 'Transferencia electrónica de fondos',
-            '04' => 'Tarjeta de crédito',
-            '05' => 'Monedero electrónico',
-            '06' => 'Dinero electrónico',
-            '08' => 'Vales de despensa',
-            '12' => 'Dación en pago',
-            '13' => 'Pago por subrogación',
-            '14' => 'Pago por consignación',
-            '15' => 'Condonación',
-            '17' => 'Compensación',
-            '23' => 'Novación',
-            '24' => 'Confusión',
-            '25' => 'Remisión de deuda',
-            '26' => 'Prescripción o caducidad',
-            '27' => 'A satisfacción del acreedor',
-            '28' => 'Tarjeta de débito',
-            '29' => 'Tarjeta de servicios',
-            '99' => 'Por definir',
-        ];
-
-        $metodoPago = [
-            'PUE' => 'Pago en una sola exhibición',
-            'PIP' => 'Pago inicial y parcialidades',
-            'PPD' => 'Pago en parcialidades o diferido',
-        ];
-
-        $html = $this->renderView(':contabilidad/facturacion/pdf:factura.html.twig', [
-            'title' => 'factura_' . $factura->getFolioCotizacion() . '.pdf',
-            'factura' => $factura,
-            'numLetras' => $numLetras,
-            'formaPago' => $formaPago[$factura->getFormaPago()],
-            'metodoPago' => $metodoPago[$factura->getMetodoPago()],
-        ]);
-
-        return new PdfResponse(
-            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-            'factura_' . $factura->getFolioCotizacion() . '.pdf', 'application/pdf', 'inline'
-        );*/
     }
 
     private function createFacturaPDF(Facturacion $factura)
     {
         $numToLetters = new NumberToLetter();
-        $numLetras = $numToLetters->to_word(($factura->getTotal() / 10), 'USD');
-        $formaPago = [
-            '01' => 'Efectivo',
-            '02' => 'Cheque nominativo',
-            '03' => 'Transferencia electrónica de fondos',
-            '04' => 'Tarjeta de crédito',
-            '05' => 'Monedero electrónico',
-            '06' => 'Dinero electrónico',
-            '08' => 'Vales de despensa',
-            '12' => 'Dación en pago',
-            '13' => 'Pago por subrogación',
-            '14' => 'Pago por consignación',
-            '15' => 'Condonación',
-            '17' => 'Compensación',
-            '23' => 'Novación',
-            '24' => 'Confusión',
-            '25' => 'Remisión de deuda',
-            '26' => 'Prescripción o caducidad',
-            '27' => 'A satisfacción del acreedor',
-            '28' => 'Tarjeta de débito',
-            '29' => 'Tarjeta de servicios',
-            '99' => 'Por definir',
-        ];
-
-        $metodoPago = [
-            'PUE' => 'Pago en una sola exhibición',
-            'PIP' => 'Pago inicial y parcialidades',
-            'PPD' => 'Pago en parcialidades o diferido',
-        ];
 
         $html = $this->renderView(':contabilidad/facturacion/pdf:factura.html.twig', [
             'title' => 'factura_' . $factura->getFolioCotizacion() . '.pdf',
             'factura' => $factura,
-            'numLetras' => $numLetras,
-            'formaPago' => $formaPago[$factura->getFormaPago()],
-            'metodoPago' => $metodoPago[$factura->getMetodoPago()],
+            'regimenFiscal' => $this->regimenFiscal[$factura->getEmisor()->getRegimenFiscal()],
+            'tipoComprobante' => $this->tipoComprobante[$factura->getTipoComprobante()],
+            'numLetras' => $numToLetters->toWord(($factura->getTotal() / 100), $factura->getMoneda()),
+            'usoCFDI' => $this->cfdi[$factura->getUsoCFDI()],
+            'formaPago' => $this->formaPago[$factura->getFormaPago()],
+            'metodoPago' => $this->metodoPago[$factura->getMetodoPago()],
+            'moneda' => $this->moneda[$factura->getMoneda()]
         ]);
 
         return new PdfResponse(
@@ -225,7 +247,7 @@ class FacturacionController extends Controller
     }
 
     /**
-     * @Route("/cotizaciones.{_format}", defaults={"_format" = "html"})
+     * @Route("/cotizaciones.{_format}", defaults={"_format" = "json"})
      *
      * @param Request $request
      *
@@ -241,6 +263,43 @@ class FacturacionController extends Controller
         $normalizer = new ObjectNormalizer();
         $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
         return new Response($serializer->serialize($marinaCotizaciones, $request->getRequestFormat()));
+    }
+
+    /**
+     * @Route("/clave_unidad.{_format}", defaults={"_format" = "json"})
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function getAllClavesUnidad(Request $request)
+    {
+        $query = $request->query->get('q');
+        $repo = $this->getDoctrine()
+            ->getRepository('AppBundle:Contabilidad\Facturacion\Concepto\ClaveUnidad');
+        $cus = $repo->findAllLike($query);
+
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+        return new Response($serializer->serialize($cus, $request->getRequestFormat()));
+    }
+
+    /**
+     * @Route("/claveprodserv.{_format}", defaults={"_format" = "json"})
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function getAllClaveProdServ(Request $request)
+    {
+        $query = $request->query->get('q');
+        $repo = $this->getDoctrine()
+            ->getRepository('AppBundle:Contabilidad\Facturacion\Concepto\ClaveProdServ');
+        $cps = $repo->findAllLike($query);
+
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+        return new Response($serializer->serialize($cps, $request->getRequestFormat()));
     }
 
     /**

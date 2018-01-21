@@ -98,14 +98,14 @@ class Concepto
     /**
      * @var string
      *
-     * @ORM\Column(name="clave_prod_serv", type="string", length=20)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ")
      */
     private $claveProdServ;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="clave_unidad", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
      */
     private $claveUnidad;
 
@@ -115,6 +115,11 @@ class Concepto
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="conceptos")
      */
     private $factura;
+
+    public function __construct()
+    {
+        $this->descuento = 0;
+    }
 
     /**
      * Get id
@@ -220,54 +225,6 @@ class Concepto
     public function getValorunitario()
     {
         return $this->valorunitario;
-    }
-
-    /**
-     * Set claveProdServ
-     *
-     * @param string $claveProdServ
-     *
-     * @return Concepto
-     */
-    public function setClaveProdServ($claveProdServ)
-    {
-        $this->claveProdServ = $claveProdServ;
-
-        return $this;
-    }
-
-    /**
-     * Get claveProdServ
-     *
-     * @return string
-     */
-    public function getClaveProdServ()
-    {
-        return $this->claveProdServ;
-    }
-
-    /**
-     * Set claveUnidad
-     *
-     * @param string $claveUnidad
-     *
-     * @return Concepto
-     */
-    public function setClaveUnidad($claveUnidad)
-    {
-        $this->claveUnidad = $claveUnidad;
-
-        return $this;
-    }
-
-    /**
-     * Get claveUnidad
-     *
-     * @return string
-     */
-    public function getClaveUnidad()
-    {
-        return $this->claveUnidad;
     }
 
     /**
@@ -388,5 +345,49 @@ class Concepto
     public function getTotal()
     {
         return $this->total;
+    }
+
+    /**
+     * Set claveProdServ
+     *
+     * @param Concepto\ClaveProdServ $claveProdServ
+     *
+     * @return Concepto
+     */
+    public function setClaveProdServ(Concepto\ClaveProdServ $claveProdServ = null)
+    {
+        $this->claveProdServ = $claveProdServ;
+
+        return $this;
+    }
+
+    /**
+     * Get claveProdServ
+     */
+    public function getClaveProdServ()
+    {
+        return $this->claveProdServ;
+    }
+
+    /**
+     * Set claveUnidad
+     *
+     * @param Concepto\ClaveUnidad $claveUnidad
+     *
+     * @return Concepto
+     */
+    public function setClaveUnidad(Concepto\ClaveUnidad $claveUnidad = null)
+    {
+        $this->claveUnidad = $claveUnidad;
+
+        return $this;
+    }
+
+    /**
+     * Get claveUnidad
+     */
+    public function getClaveUnidad()
+    {
+        return $this->claveUnidad;
     }
 }
