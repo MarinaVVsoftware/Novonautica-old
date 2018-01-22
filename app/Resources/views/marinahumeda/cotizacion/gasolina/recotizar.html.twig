@@ -97,6 +97,9 @@
                                     <label>Dolar</label>
                                     {{ form_widget(form.dolar) }}
                                 </div>
+                                <div class="col-sm-3">
+                                    {{ form_row(form.mhcservicios.children.0.tipo) }}
+                                </div>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="totalmxn">
@@ -130,7 +133,7 @@
                                         <tbody>
                                         <tr>
                                             <td id="g_cantidad" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</td>
-                                            <td>Abastecimiento de gasolina</td>
+                                            <td>Abastecimiento de combustible</td>
                                             <td id="g_precio" data-valor="{{ ((precioSinIvaUSD)/100) }}">$ {{ ((precioSinIvaUSD)/100)|number_format(2) }}</td>
                                             <td id="g_subtotal" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.0.subtotal * marinaHumedaCotizacion.dolar)/10000 }}">
                                                 $ {{ ((marinaHumedaCotizacion.mhcservicios.0.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
@@ -233,7 +236,7 @@
                                         <tbody>
                                         <tr>
                                             <td id="g_cantidad_mxn" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</td>
-                                            <td>Abastecimiento de gasolina</td>
+                                            <td>Abastecimiento de combustible</td>
                                             <td id="g_precio_mxn" data-valor="{{ ((precioSinIvaUSD / marinaHumedaCotizacion.dolar)) }}">
                                                 $ {{ ((precioSinIvaUSD / marinaHumedaCotizacion.dolar))|number_format(2) }}
                                             </td>

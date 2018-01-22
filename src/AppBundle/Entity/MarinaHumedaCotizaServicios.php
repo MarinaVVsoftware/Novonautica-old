@@ -22,6 +22,7 @@ class MarinaHumedaCotizaServicios
     private $id;
 
     /**
+     * Tipo de servicio 1=Estadia, 2=Electricidad, 3=Gasolina Magna, 4=Gasolina Premium, 5=Diesel
      * @var int
      *
      * @ORM\Column(name="tipo", type="integer", nullable=true)

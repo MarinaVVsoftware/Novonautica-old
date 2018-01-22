@@ -154,6 +154,22 @@
                                     </table>
                                 </div>
                             </div>
+                            {% if marinaHumedaCotizacion.validanovo == 1 %}
+                                <div class="row">
+                                    <div class="col-sm-10 col-sm-offset-1">
+                                        <label>Observaciones:</label>
+                                        <div class="info-input"><p>{{ marinaHumedaCotizacion.notasnovo }}</p></div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if marinaHumedaCotizacion.validacliente == 1 %}
+                                <div class="row">
+                                    <div class="col-sm-10 col-sm-offset-1">
+                                        <label>Observaciones:</label>
+                                        <div class="info-input"><p>{{ marinaHumedaCotizacion.notascliente }}</p></div>
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
                         <div role="tabpanel" class="tab-pane" id="totales">
                             <div class="row">
@@ -198,8 +214,12 @@
                                                             Días Estadia
                                                         {% elseif mhservicio.tipo == 2 %}
                                                             Conexión a electricidad
-                                                        {% else %}
-                                                            Abastecimiento de gasolina
+                                                        {% elseif mhservicio.tipo == 3 %}
+                                                            Abastecimiento de Gasolina Magna
+                                                        {% elseif mhservicio.tipo == 4 %}
+                                                            Abastecimiento de Gasolina Premium
+                                                        {% elseif mhservicio.tipo == 5 %}
+                                                            Abastecimiento de Diesel
                                                         {% endif %}
                                                     </td>
                                                     <td>$ {{ (mhservicio.precio/100)|number_format(2) }}</td>
@@ -330,9 +350,13 @@
                                                         {% if mhservicio.tipo == 1 %}
                                                             Días Estadia
                                                         {% elseif mhservicio.tipo == 2 %}
-                                                            Conexión a electricidad
-                                                        {% else %}
-                                                            Abastecimiento de gasolina
+                                                            Conexión a Electricidad
+                                                        {% elseif mhservicio.tipo == 3 %}
+                                                            Abastecimiento de Gasolina Magna
+                                                        {% elseif mhservicio.tipo == 4 %}
+                                                            Abastecimiento de Gasolina Premium
+                                                        {% elseif mhservicio.tipo == 5 %}
+                                                            Abastecimiento de Diesel
                                                         {% endif %}
                                                     </td>
                                                     <td>
@@ -498,6 +522,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row espacio-linea-arriba2">
+                                    <div class="col-sm-3">
+                                        <label>Saldo faltante</label>
+                                        <div class="info-input">
+                                            $ {{ ((marinaHumedaCotizacion.total-marinaHumedaCotizacion.pagado)/100)|number_format(2) }} USD
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         {% endif %}
                     </div>
@@ -527,10 +559,10 @@
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
                                 <a class="btn btn-naranja pull-right"
-                                   href="{% if marinaHumedaCotizacion.mhcservicios[0].tipo == 3 %}
-                                                {{ path('marina-humeda_gasolina_recotizar', { 'id': marinaHumedaCotizacion.id }) }}
-                                            {% else %}
+                                   href="{% if (marinaHumedaCotizacion.mhcservicios[0].tipo == 1 or marinaHumedaCotizacion.mhcservicios[0].tipo == 2) %}
                                                 {{ path('marina-humeda_estadia_recotizar', { 'id': marinaHumedaCotizacion.id }) }}
+                                            {% else %}
+                                                {{ path('marina-humeda_gasolina_recotizar', { 'id': marinaHumedaCotizacion.id }) }}
                                             {% endif %}">
                                     <i class="fa fa-pencil-square" aria-hidden="true"></i>
                                     Recotizar

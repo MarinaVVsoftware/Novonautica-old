@@ -47,26 +47,6 @@
                         <div role="tabpanel" class="tab-pane" id="generales">
                             <div class="row">
                                 <div class="col-sm-3">
-
-                                    <div id="info-cliente">
-                                        <label>Cliente</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.nombre }}</div>
-                                        <label>Correo electrónico</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.correo }}</div>
-                                        <label>Número de teléfono</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.telefono }}</div>
-                                        <label>Dirección</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.direccion }}</div>
-                                        <label>R.F.C.</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.rfc }}</div>
-                                        <label>Razón social</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.razonsocial }}</div>
-                                        <label>Dirección fiscal</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.direccionfiscal }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-
                                     <div id="info-barco">
                                         <label>Barco</label>
                                         <div class='info-input'>{{ astilleroCotizacion.barco.nombre }}</div>
@@ -82,6 +62,24 @@
                                         <div class='info-input'>{{ astilleroCotizacion.barco.telefonoCapitan }}</div>
                                         <label>Correo del capitán</label>
                                         <div class='info-input'>{{ astilleroCotizacion.barco.correoCapitan }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div id="info-cliente">
+                                        <label>Cliente</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.nombre }}</div>
+                                        <label>Correo electrónico</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.correo }}</div>
+                                        <label>Número de teléfono</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.telefono }}</div>
+                                        <label>Dirección</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.direccion }}</div>
+                                        <label>R.F.C.</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.rfc }}</div>
+                                        <label>Razón social</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.razonsocial }}</div>
+                                        <label>Dirección fiscal</label>
+                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.direccionfiscal }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -103,10 +101,18 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Días estadía</label>
+                                    <div class='info-input'>{{ astilleroCotizacion.diasEstadia }}</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
                                     <label>Dolar</label>
                                     <div class='info-input'>{{ (astilleroCotizacion.dolar/100)|number_format(2) }}</div>
-
                                 </div>
                             </div>
                         </div>
@@ -142,7 +148,12 @@
                                         {% for AstilleroServicio in astilleroCotizacion.acservicios %}
                                             {% if AstilleroServicio.estatus %}
                                                 <tr>
-                                                    <td>{{ AstilleroServicio.cantidad }}</td>
+                                                    <td>
+                                                        {{ AstilleroServicio.cantidad }}
+                                                        {% if AstilleroServicio.astilleroserviciobasico.id is defined and  AstilleroServicio.astilleroserviciobasico.id == 2 %}
+                                                            (pie por día)
+                                                        {% endif %}
+                                                    </td>
                                                     {% if AstilleroServicio.astilleroserviciobasico.nombre is defined %}
                                                         <td>{{ AstilleroServicio.astilleroserviciobasico.nombre }}</td>
                                                     {% elseif AstilleroServicio.otroservicio is not null %}
@@ -248,7 +259,12 @@
                                         {% for AstilleroServicio in astilleroCotizacion.acservicios %}
                                             {% if AstilleroServicio.estatus %}
                                                 <tr>
-                                                    <td>{{ AstilleroServicio.cantidad }}</td>
+                                                    <td>
+                                                        {{ AstilleroServicio.cantidad }}
+                                                        {% if AstilleroServicio.astilleroserviciobasico.id is defined and  AstilleroServicio.astilleroserviciobasico.id == 2 %}
+                                                            (pie por día)
+                                                        {% endif %}
+                                                    </td>
                                                     {% if AstilleroServicio.astilleroserviciobasico.nombre is defined %}
                                                         <td>{{ AstilleroServicio.astilleroserviciobasico.nombre }}</td>
                                                     {% elseif AstilleroServicio.otroservicio is not null %}

@@ -31,11 +31,13 @@ class SlipMovimientoType extends AbstractType
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('mhc')
                         ->select('mhc', 'servicios')
-                        ->join('mhc.mhcservicios','servicios')
+                        ->join('mhc.mhcservicios','servicios','slipmovimiento')
+                        ->leftJoin('mhc.slipmovimiento','slipmovimiento')
                         ->where($er->createQueryBuilder('mhc')
                                     ->expr()->andX(
                                         $er->createQueryBuilder('mhc')->expr()->neq('servicios.tipo', '3'),
-                                        $er->createQueryBuilder('mhc')->expr()->eq('mhc.validacliente', '2')
+                                        $er->createQueryBuilder('mhc')->expr()->eq('mhc.validacliente', '2'),
+                                        $er->createQueryBuilder('mhc')->expr()->isNull('slipmovimiento.id')
                             )
                         )
                         ->orderBy('mhc.folio', 'DESC')

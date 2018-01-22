@@ -160,8 +160,12 @@
                                     Días Estadia
                                 {% elseif mhservicio.tipo == 2 %}
                                     Conexión a electricidad
-                                {% else %}
-                                    Abastecimiento de gasolina
+                                {% elseif mhservicio.tipo == 3 %}
+                                    Abastecimiento de Gasolina Magna
+                                {% elseif mhservicio.tipo == 4 %}
+                                    Abastecimiento de Gasolina Premium
+                                {% elseif mhservicio.tipo == 5 %}
+                                    Abastecimiento de Diesel
                                 {% endif %}
                             </td>
                             <td>$ {{ (mhservicio.precio/100)|number_format(2) }}</td>
@@ -235,8 +239,12 @@
                                     Días Estadia
                                 {% elseif mhservicio.tipo == 2 %}
                                     Conexión a electricidad
-                                {% else %}
-                                    Abastecimiento de gasolina
+                                {% elseif mhservicio.tipo == 3 %}
+                                    Abastecimiento de Gasolina Magna
+                                {% elseif mhservicio.tipo == 4 %}
+                                    Abastecimiento de Gasolina Premium
+                                {% elseif mhservicio.tipo == 5 %}
+                                    Abastecimiento de Diesel
                                 {% endif %}
                             </td>
                             <td>$ {{ ((mhservicio.precio * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>

@@ -275,7 +275,7 @@ class MarinaHumedaCotizacionController extends Controller
         $form = $this->createForm(MarinaHumedaCotizacionGasolinaType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $tiposervicio = 3; // gasolina
+
             $dolar = $marinaHumedaCotizacion->getDolar();
             $cantidad = $marinaGasolina->getCantidad();
             $precioConIvaMXN = $marinaGasolina->getPrecio();
@@ -291,7 +291,6 @@ class MarinaHumedaCotizacionController extends Controller
             $folionuevo = $foliobase + 1;
 
             $marinaGasolina
-                ->setTipo($tiposervicio)
                 ->setEstatus(1)
                 ->setCantidad($cantidad)
                 ->setPrecio($precioSinIvaUSD)
@@ -541,6 +540,184 @@ class MarinaHumedaCotizacionController extends Controller
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     *
+     * @Route("/estadia/{id}/renovar", name="marina-humeda_estadia_renovar")
+     * @Method({"GET", "POST"})
+     */
+    public function renuevaEstadiaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacionAnterior)
+    {
+        if ($marinaHumedaCotizacionAnterior->getEstatus() == 0 ||
+            $marinaHumedaCotizacionAnterior->getValidanovo() == 0 ||
+            ($marinaHumedaCotizacionAnterior->getValidanovo() == 2 && $marinaHumedaCotizacionAnterior->getValidacliente() ==0)
+        ) {
+            throw new NotFoundHttpException();
+        }
+
+        $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
+        //       $marinaHumedaCotizacion = clone $marinaHumedaCotizacionAnterior;
+        $foliorecotizado = $marinaHumedaCotizacionAnterior->getFoliorecotiza()+1;
+        $cliente = $marinaHumedaCotizacionAnterior->getCliente();
+        $barco = $marinaHumedaCotizacionAnterior->getBarco();
+//        $marinaHumedaCotizacion
+//            ->setFoliorecotiza($foliorecotizado)
+//            ->setNotasnovo(null)
+//            ->setValidanovo(0)
+//            ->setFecharegistro(null)
+//            ->setNombrevalidanovo(null)
+//        ;
+
+
+
+        $marinaHumedaCotizacion
+            ->setCliente($cliente)
+            ->setBarco($barco)
+            ->setFechaLlegada($marinaHumedaCotizacionAnterior->getFechaLlegada())
+            ->setFechaSalida($marinaHumedaCotizacionAnterior->getFechaSalida())
+            ->setSlip($marinaHumedaCotizacionAnterior->getSlip())
+            ->setDescuento($marinaHumedaCotizacionAnterior->getDescuento())
+            ->setDolar($marinaHumedaCotizacionAnterior->getDolar())
+            ->setIva($marinaHumedaCotizacionAnterior->getIva())
+            ->setSubtotal($marinaHumedaCotizacionAnterior->getSubtotal())
+            ->setIvatotal($marinaHumedaCotizacionAnterior->getIvatotal())
+            ->setDescuentototal($marinaHumedaCotizacionAnterior->getDescuentototal())
+            ->setTotal($marinaHumedaCotizacionAnterior->getTotal())
+            ->setValidanovo(0)
+            ->setValidacliente(0)
+            ->setFolio($marinaHumedaCotizacionAnterior->getFolio())
+            ->setFoliorecotiza($foliorecotizado)
+            ->setMensaje($marinaHumedaCotizacionAnterior->getMensaje())
+        ;
+
+
+        $servicios = $marinaHumedaCotizacionAnterior->getMHCservicios();
+
+        $marinaDiasEstadia = new MarinaHumedaCotizaServicios();
+        $marinaDiasEstadia
+            ->setTipo($servicios[0]->getTipo())
+            ->setCantidad($servicios[0]->getCantidad())
+            ->setPrecio($servicios[0]->getPrecio())
+            ->setSubtotal($servicios[0]->getSubtotal())
+            ->setIva($servicios[0]->getIva())
+            ->setDescuento($servicios[0]->getDescuento())
+            ->setTotal($servicios[0]->getTotal())
+            ->setEstatus($servicios[0]->getEstatus())
+        ;
+
+        $marinaElectricidad = new MarinaHumedaCotizaServicios();
+        $marinaElectricidad
+            ->setTipo($servicios[1]->getTipo())
+            ->setCantidad($servicios[1]->getCantidad())
+            ->setPrecio($servicios[1]->getPrecio())
+            ->setSubtotal($servicios[1]->getSubtotal())
+            ->setIva($servicios[1]->getIva())
+            ->setDescuento($servicios[1]->getDescuento())
+            ->setTotal($servicios[1]->getTotal())
+            ->setEstatus($servicios[1]->getEstatus())
+        ;
+
+        $marinaHumedaCotizacion
+            ->addMarinaHumedaCotizaServicios($marinaDiasEstadia)
+            ->addMarinaHumedaCotizaServicios($marinaElectricidad);
+        $dolar = $marinaHumedaCotizacionAnterior->getDolar();
+        $iva = $marinaHumedaCotizacionAnterior->getIva();
+
+        $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em = $this->getDoctrine()->getManager();
+
+            $granSubtotal = 0;
+            $granIva = 0;
+            $granDescuento=0;
+            $granTotal = 0;
+            $descuento = $marinaHumedaCotizacion->getDescuento();
+            $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
+
+            $llegada = $marinaHumedaCotizacion->getFechaLlegada();
+            $salida = $marinaHumedaCotizacion->getFechaSalida();
+
+            $diferenciaDias = date_diff($llegada, $salida);
+
+            $cantidad = ($diferenciaDias->days);
+            // Días Estadía
+            $precio = $marinaDiasEstadia->getPrecio()->getCosto();
+
+            $subTotal = $cantidad * $precio * $eslora;
+            $descuentoTot = ($subTotal * $descuento) / 100;
+            $ivaTot = ($subTotal * $iva)/100;
+            $total = $subTotal - $descuentoTot + $ivaTot;
+
+            $marinaDiasEstadia
+                ->setEstatus(1)
+                ->setCantidad($cantidad)
+                ->setPrecio($precio)
+                ->setSubtotal($subTotal)
+                ->setDescuento($descuentoTot)
+                ->setIva($ivaTot)
+                ->setTotal($total);
+
+            $granSubtotal+=$subTotal;
+            $granIva+=$ivaTot;
+            $granDescuento+=$descuentoTot;
+            $granTotal+=$total;
+
+            // Conexión a electricidad
+            //$cantidad = $marinaElectricidad->getCantidad();
+            $precio = $marinaElectricidad->getPrecioAux()->getCosto();
+
+            $subTotal = $cantidad * $precio * $eslora;
+            $descuentoTot = ($subTotal * $descuento) / 100;
+            $ivaTot = ($subTotal * $iva)/100;
+            $total = $subTotal - $descuentoTot + $ivaTot;
+
+            $marinaElectricidad
+                ->setEstatus(1)
+                ->setCantidad($cantidad)
+                ->setPrecio($precio)
+                ->setSubtotal($subTotal)
+                ->setDescuento($descuentoTot)
+                ->setIva($ivaTot)
+                ->setTotal($total);
+
+            $granSubtotal+=$subTotal;
+            $granIva+=$ivaTot;
+            $granDescuento+=$descuentoTot;
+            $granTotal+=$total;
+
+            //-------------------------------------------------
+            $fechaHoraActual = new \DateTime('now');
+            $marinaHumedaCotizacion
+                ->setCliente($cliente)
+                ->setBarco($barco)
+                ->setDolar($dolar)
+                ->setIva($iva)
+                ->setSubtotal($granSubtotal)
+                ->setIvatotal($granIva)
+                ->setDescuentototal($granDescuento)
+                ->setTotal($granTotal)
+                ->setValidanovo(0)
+                ->setValidacliente(0)
+                ->setEstatus(1)
+                ->setFecharegistro($fechaHoraActual);
+            $marinaHumedaCotizacionAnterior
+                ->setEstatus(0);
+            $em->persist($marinaHumedaCotizacion);
+            $em->persist($marinaHumedaCotizacionAnterior);
+            $em->flush();
+
+            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
+
+        }
+        return $this->render('marinahumeda/cotizacion/estadia/recotizar.html.twig', [
+            'title' => 'Recotización',
+            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**

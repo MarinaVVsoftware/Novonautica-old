@@ -200,7 +200,12 @@
                     {% if unservicio.astilleroserviciobasico and unservicio.estatus%}
                         <tr>
                             <td>{{ unservicio.astilleroserviciobasico.nombre }}</td>
-                            <td>{{ unservicio.cantidad }}</td>
+                            <td>
+                                {{ unservicio.cantidad }}
+                                {% if unservicio.astilleroserviciobasico.id is defined and  unservicio.astilleroserviciobasico.id == 2 %}
+                                    (pie por día)
+                                {% endif %}
+                            </td>
                             <td></td>
                             <td>$ {{ ((unservicio.precio*astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>
                             <td>$ {{ ((unservicio.subtotal*astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>
