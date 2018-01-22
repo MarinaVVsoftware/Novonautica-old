@@ -53,7 +53,8 @@ class MHCGasolinaDataTable extends AbstractDataTableHandler
             ->leftJoin('mhce.barco', 'barco')
             ->leftJoin('mhce.cliente', 'cliente')
             ->leftJoin('mhce.slipmovimiento', 'movimiento')
-            ->leftJoin('mhce.slip', 'slip');
+            ->leftJoin('mhce.slip', 'slip')
+        ;
 
         if ($request->search->value) {
             $q->where('(LOWER(mhce.folio) LIKE :search OR ' .
@@ -141,7 +142,7 @@ class MHCGasolinaDataTable extends AbstractDataTableHandler
                 !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza(),
                 $cotizacion->getCliente()->getNombre(),
                 $cotizacion->getBarco()->getNombre(),
-                $cotizacion->getDescuento() . '%',
+                ($cotizacion->getDescuento() ?? 0 ) . '%',
                 '$' . number_format($cotizacion->getSubtotal() / 100, 2),
                 '$' . number_format($cotizacion->getIvatotal() / 100, 2),
                 '$' . number_format($cotizacion->getDescuentototal() / 100, 2),

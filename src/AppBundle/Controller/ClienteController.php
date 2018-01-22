@@ -106,18 +106,28 @@ class ClienteController extends Controller
         $cliente = new Cliente();
         $barco = new Barco();
         $motor = new Motor();
+        $razonSocial = new Cliente\RazonSocial();
 
         $cliente->setEstatus(true);
         $barco->setEstatus(true);
 
         $cliente->addBarco($barco);
         $barco->addMotore($motor);
+        $cliente->addRazonesSociale($razonSocial);
+
         $form = $this->createForm('AppBundle\Form\ClienteType', $cliente);
         $form->handleRequest($request);
 
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            $razonesSociales = $cliente->getRazonesSociales();
+
+            /** @var Cliente\RazonSocial $rs */
+            foreach ($razonesSociales as $rs) {
+                $rs->setCorreos(preg_replace('/;/', ',', $rs->getCorreos()));
+            }
 
             $fechaHoraActual = new \DateTime('now');
 
@@ -134,6 +144,7 @@ class ClienteController extends Controller
 
             $em->persist($cliente);
             $em->flush();
+
 
             // Enviar correo de confirmacion
             // FIXME Aun no se requiere enviar correos al cliente
@@ -206,32 +217,37 @@ class ClienteController extends Controller
             $barcomotores[$barco->getId()] = $originalMotores; //guardamos en el arreglo la coleccion de motores correspondiente a su id de barco
         }
 
+        $originalRs = new ArrayCollection();
+
+        foreach ($cliente->getRazonesSociales() as $rs) {
+            $originalRs->add($rs);
+        }
+
         $deleteForm = $this->createDeleteForm($cliente);
         $editForm = $this->createForm('AppBundle\Form\ClienteType', $cliente);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-
-
             foreach ($barcos as $barco){
                 $om = $barcomotores[$barco->getId()]; //extraemos la coleccion de motores del barco correspondiente
-
                 foreach ($om as $motor){
-
                     if (false === $barco->getMotores()->contains($motor)) {
                         // remove the Task from the Tag
                         $motor->getBarco()->removeMotore($motor);
-
                         // if it was a many-to-one relationship, remove the relationship like this
-                        //$motor->setBarco(null);
-
+                        $motor->setBarco(null);
                         $em->persist($motor);
-
                         // if you wanted to delete the Tag entirely, you can also do that
                         $em->remove($motor);
                     }
                     $em->persist($barco);
+                }
+            }
 
+            foreach ($originalRs as $ors) {
+                if ($cliente->getRazonesSociales()->contains($ors) === false) {
+                    $ors->setCliente(null);
+                    $em->remove($ors);
                 }
             }
 
@@ -239,8 +255,8 @@ class ClienteController extends Controller
 
             // redirect back to some edit page
             return $this->redirectToRoute('cliente_show', ['id' => $cliente->getId()]);
-
         }
+        
         return $this->render('cliente/edit.html.twig', [
             'title' => 'Editar cliente',
             'cliente' => $cliente,

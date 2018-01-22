@@ -1,6 +1,19 @@
 {% extends 'estructura/plantilla.twig' %}
 {% import 'estructura/modalborrar.twig' as modal %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root .content-wrapper hr {
+            margin: 1em 0 !important;
+        }
+
+        h3 {
+            margin-top: 0;
+        }
+    </style>
+{% endblock %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -39,7 +52,6 @@
                                 {{ form_errors(edit_form.correo) }}
                                 {{ form_errors(edit_form.telefono) }}
                                 {{ form_errors(edit_form.celular) }}
-                                {{ form_errors(edit_form.correofacturacion) }}
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane active" id="cliente">
@@ -59,30 +71,22 @@
 
                                     {{ form_row(edit_form.direccion) }}
                                 </div>
-                                <div class="col-sm-5">
-                                    {{ form_row(edit_form.empresa) }}
-                                    {{ form_row(edit_form.razonsocial) }}
-                                    {{ form_row(edit_form.rfc) }}
-                                    {{ form_row(edit_form.direccionfiscal) }}
-                                    {{ form_label(edit_form.correofacturacion) }}
-                                    {{ form_widget(edit_form.correofacturacion) }}
-                                    {#<div class="input-estatus">#}
-                                    {#Estatus#}
-                                    {#<span class="cont-label-novo">#}
-                                    {#{{ form_errors(edit_form.estatus) }}#}
-                                    {#{{ form_widget(edit_form.estatus) }}#}
-                                    {#{{ form_label(edit_form.estatus) }}#}
-                                    {#</span>#}
-                                    {#</div>#}
-                                </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12 espacio-linea">
-                                    <hr>
+                                <div class="col-sm-12">
+                                    <h4>Razones Sociales</h4>
+                                </div>
+                                <div class="col-sm-12">
+                                    {% form_theme edit_form.razonesSociales ':cliente/form-theme:razon-social.html.twig' %}
+                                    {{ form_row(edit_form.razonesSociales) }}
+                                    <a href="#" id="add-razon" class="letra-azul">
+                                        + Agregar Razón Social
+                                    </a>
                                 </div>
                             </div>
                         </div>
 
+                        <hr>
 
                         {% for i,barco in barcos %}
                             <div role="tabpanel" class="tab-pane" id="{{ barco.id }}">
@@ -93,15 +97,6 @@
                                         {{ form_row(edit_form.barcos[i].eslora) }}
                                         {{ form_row(edit_form.barcos[i].calado) }}
                                         {{ form_row(edit_form.barcos[i].manga) }}
-
-                                        {#<div class="input-estatus">#}
-                                        {#Estatus#}
-                                        {#<span class="cont-label-novo">#}
-                                        {#{{ form_errors(edit_form.barcos[i].estatus) }}#}
-                                        {#{{ form_widget(edit_form.barcos[i].estatus) }}#}
-                                        {#{{ form_label(edit_form.barcos[i].estatus) }}#}
-                                        {#</span>#}
-                                        {#</div>#}
                                     </div>
                                     <div class="col-sm-5">
                                         {{ form_row(edit_form.barcos[i].nombreResponsable) }}
@@ -180,4 +175,49 @@
 
 {% block modals %}
     {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+      /*
+            SYMFONY COLLECTION "MOTORES"
+      */
+      (function () {
+        const addLink = document.getElementById('add-razon');
+        const prototypeHolder = document.getElementById('appbundle_cliente_razonesSociales');
+        let counter = '{{ edit_form.razonesSociales|length }}';
+
+        Array
+            .from(prototypeHolder.children)
+            .forEach((element, i) => i >= 1 ? appendRemoveLink(element) : false);
+
+        addLink.addEventListener('click', function (e) {
+          e.preventDefault();
+          const prototype = prototypeHolder.dataset.prototype.replace(/__name__/g, counter);
+          const tempContainer = document.createElement('div');
+          tempContainer.innerHTML = prototype;
+
+          let element = tempContainer.firstElementChild;
+          appendRemoveLink(element);
+          prototypeHolder.appendChild(element);
+          counter++;
+        });
+
+        function appendRemoveLink(element) {
+          let removeContainer = element.querySelector('.remove-container');
+          let removeElementLink = document.createElement('a');
+
+          removeElementLink.className = 'btn btn-xs btn-naranja';
+          removeElementLink.innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> Remover`;
+          removeContainer.appendChild(removeElementLink);
+
+          removeElementLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            this.parentNode.parentNode.remove(this)
+          });
+        }
+      })();
+    </script>
 {% endblock %}

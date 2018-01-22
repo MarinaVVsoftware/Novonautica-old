@@ -33,8 +33,8 @@ class Multifacturas
         /*
          * PAC
          */
-        $config['PAC']['usuario'] = $factura->getEmisor()->getUsuarioPAC(); // 'DEMO700101XXX';
-        $config['PAC']['pass'] = $factura->getEmisor()->getPasswordPAC(); // 'DEMO700101XXX';
+        $config['PAC']['usuario'] = $factura->getEmisor()->getUsuarioPAC();
+        $config['PAC']['pass'] = $factura->getEmisor()->getPasswordPAC();
 
         /*
          * Factura
@@ -46,7 +46,7 @@ class Multifacturas
         $datos['factura']['forma_pago'] = $factura->getFormaPago();
         $datos['factura']['LugarExpedicion'] = $factura->getEmisor()->getCodigoPostal();
         $datos['factura']['metodo_pago'] = $factura->getMetodoPago();
-        $datos['factura']['moneda'] = $factura->getMoneda(); // Definido por defecto?
+        $datos['factura']['moneda'] = $factura->getMoneda();
         $datos['factura']['serie'] = ''; // ?? Número utilizado para control interno de su información, LENGTH = 1-25
         $datos['factura']['subtotal'] = ($factura->getSubtotal() / 100);
         $datos['factura']['tipocambio'] = ($factura->getTipoCambio() / 100);
@@ -67,8 +67,8 @@ class Multifacturas
          * Receptor
          */
         $datos['receptor']['rfc'] = $factura->getRfc();
-        $datos['receptor']['nombre'] = $factura->getRazonSocial(); // Este valor es muy ambiguo
-        $datos['receptor']['UsoCFDI'] = 'G03'; // Este valor deberia ser elegible en el formulario?
+        $datos['receptor']['nombre'] = $factura->getRazonSocial();
+        $datos['receptor']['UsoCFDI'] = $factura->getUsoCFDI();
 
         /**
          * Conceptos

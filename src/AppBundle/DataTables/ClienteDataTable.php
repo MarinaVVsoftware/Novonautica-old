@@ -47,7 +47,9 @@ class ClienteDataTable extends AbstractDataTableHandler
 
         $q = $qb
             ->select('cl', 'ba')
-            ->leftJoin('cl.barcos', 'ba');
+            ->leftJoin('cl.barcos', 'ba')
+            ->orderBy('cl.id', 'DESC')
+        ;
 
         if ($request->search->value) {
             $q->where('(LOWER(cl.nombre) LIKE :search OR ' .
@@ -55,17 +57,12 @@ class ClienteDataTable extends AbstractDataTableHandler
                 'LOWER(cl.telefono) LIKE :search OR ' .
                 'LOWER(cl.celular) LIKE :search OR ' .
                 'LOWER(cl.direccion) LIKE :search OR ' .
-                'LOWER(cl.empresa) LIKE :search OR ' .
-                'LOWER(cl.razonsocial) LIKE :search OR ' .
-                'LOWER(cl.rfc) LIKE :search OR ' .
-                'LOWER(cl.direccionfiscal) LIKE :search OR ' .
-                'LOWER(cl.correofacturacion) LIKE :search OR ' .
                 'LOWER(ba.nombre) LIKE :search)'
             )
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
         }
 
-        foreach ($request->columns as $column) {
+        /*foreach ($request->columns as $column) {
             if ($column->search->value) {
                 $value = strtolower($column->search->value);
 
@@ -74,15 +71,19 @@ class ClienteDataTable extends AbstractDataTableHandler
                         ->setParameter('empresa', "%{$value}%");
                 }
             }
-        }
+        }*/
 
         foreach ($request->order as $order) {
             if ($order->column === 0) {
                 $q->addOrderBy('cl.nombre', $order->dir);
             } elseif ($order->column === 1) {
                 $q->addOrderBy('cl.correo', $order->dir);
+            } elseif ($order->column === 2) {
+                $q->addOrderBy('cl.telefono', $order->dir);
+            } elseif ($order->column === 3) {
+                $q->addOrderBy('cl.direccion', $order->dir);
             } elseif ($order->column === 4) {
-                $q->addOrderBy('cl.empresa', $order->dir);
+                $q->addOrderBy('ba.nombre', $order->dir);
             }
         }
 
@@ -100,25 +101,16 @@ class ClienteDataTable extends AbstractDataTableHandler
             /** @var Cliente $cliente */
             $cliente = $clientes[$index];
             $barcos = $cliente->getBarcos()
-                ->map(function ($barco) {
-                    return [$barco->getId(), $barco->getNombre()];
-                })
+                ->map(function ($barco) { return [$barco->getId(), $barco->getNombre()]; })
                 ->toArray();
 
             $results->data[] = [
-                'nombre' => $cliente->getNombre(),
-                'correo' => $cliente->getCorreo(),
-                'telefono' => "{$cliente->getTelefono() } / {$cliente->getCelular()}",
-                'direccion' => $cliente->getDireccion(),
-                'empresa' => $cliente->getEmpresa() ?? 'Sin registrar',
-                'facturacion' => [
-                    $cliente->getRazonsocial(),
-                    $cliente->getRfc(),
-                    $cliente->getDireccionfiscal(),
-                    $cliente->getCorreofacturacion(),
-                ],
-                'barcos' => $barcos,
-                'id' => $cliente->getId()
+                $cliente->getNombre(),
+                $cliente->getCorreo(),
+                "{$cliente->getTelefono() } / {$cliente->getCelular()}",
+                $cliente->getDireccion(),
+                $barcos,
+                $cliente->getId()
             ];
         }
 
