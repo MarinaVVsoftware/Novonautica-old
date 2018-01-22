@@ -28,6 +28,13 @@ class Producto
      */
     private $nombre;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="precio", type="bigint", nullable=true)
+     */
+    private $precio;
+
     public function __toString()
     {
         return $this->nombre;
@@ -85,4 +92,28 @@ class Producto
 //        $this->solicitud = $solicitud;
 //        return $this;
 //    }
+
+    /**
+     * Set precio
+     *
+     * @param integer $precio
+     *
+     * @return Producto
+     */
+    public function setPrecio($precio)
+    {
+        $this->precio = $precio;
+
+        return $this;
+    }
+
+    /**
+     * Get precio
+     *
+     * @return integer
+     */
+    public function getPrecio()
+    {
+        return $this->precio;
+    }
 }

@@ -36,6 +36,7 @@
                         </div>
                         <div class="col-sm-4">
                             {{ form_row(form.solicitudEspecial) }}
+                            {{ form_row(form.preciosolespecial) }}
                         </div>
                     </div>
 
@@ -74,4 +75,17 @@
             </div>
         </section>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        var number = document.querySelector('#appbundle_tienda_solicitud_producto_0_cantidad');
+        number.onkeydown = function(e) {
+            if(!((e.keyCode > 95 && e.keyCode < 106)
+                    || (e.keyCode > 47 && e.keyCode < 58)
+                    || e.keyCode === 8)) {
+                return false;
+            }
+        };
+    </script>
 {% endblock %}

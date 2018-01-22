@@ -44,9 +44,15 @@ class Solicitud
     /**
      * @var string
      *
-     * @ORM\Column(name="solicitud_especial", type="string", length=255)
+     * @ORM\Column(name="solicitud_especial", type="string", length=255, nullable=true)
      */
     private $solicitudEspecial;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="preciosolespecial", type="integer", length=255)
+     */
+    private $preciosolespecial;
 
     /**
      * @var int
@@ -194,5 +200,29 @@ class Solicitud
     public function getProducto()
     {
         return $this->producto;
+    }
+
+    /**
+     * Set preciosolespecial
+     *
+     * @param integer $preciosolespecial
+     *
+     * @return Solicitud
+     */
+    public function setPreciosolespecial($preciosolespecial)
+    {
+        $this->preciosolespecial = $preciosolespecial;
+
+        return $this;
+    }
+
+    /**
+     * Get preciosolespecial
+     *
+     * @return integer
+     */
+    public function getPreciosolespecial()
+    {
+        return $this->preciosolespecial;
     }
 }

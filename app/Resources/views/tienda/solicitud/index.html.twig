@@ -32,7 +32,8 @@
                                     <td>Por definir</td>
                                     <td>{{ solicitud.embarcacion }}</td>
                                     <td>{{ solicitud.solicitudEspecial }}</td>
-                                    <td>200 dineros</td>
+                                    {% set dineros = 20000 %}
+                                    <td>$ {{ (dineros/100)|number_format(2,'.',',') }}</td>
                                     <td class="align-middle">
                                         {% if solicitud.estado == 2 %}
                                             <img src="{{ asset('img/status-pendiente-icon.svg') }}"

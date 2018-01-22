@@ -14,6 +14,7 @@
                         <div class="panel-body" style="min-height: initial">
                             {{ form_start(form) }}
                             {{ form_row(form.nombre) }}
+                            {{ form_row(form.precio) }}
                             {% if producto.id is not null %}
                                 <a href="{{ path('tienda_producto_index') }}"
                                    class="btn btn-naranja">Cancelar</a>
@@ -37,13 +38,15 @@
                                     <thead>
                                     <tr>
                                         <th>Nombre</th>
-                                        <th width="50%"></th>
+                                        <th>Precio</th>
+                                        <th width="33%"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {% for i, item in productos %}
                                         <tr>
                                             <td align="center" valign="middle">{{ item.nombre }}</td>
+                                            <td align="center" valign="middle">$ {{ (item.precio/100)|number_format(2,'.',',') }}</td>
                                             <td align="center" valign="middle">
                                                 <ul class="list-inline">
                                                     <li>

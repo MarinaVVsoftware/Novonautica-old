@@ -4,6 +4,7 @@ namespace AppBundle\Form\Tienda;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,7 +20,8 @@ class PeticionType extends AbstractType
             'class' => 'AppBundle:Tienda\Producto',
             'placeholder' => 'Seleccionar...',
             'attr' => ['class' => 'select-buscador selectclientebuscar']
-            ]);
+            ])
+        ->add('cantidad');
     }
     
     /**

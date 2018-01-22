@@ -153,6 +153,8 @@ $('.lista-productos').on('click', '.remove-producto', function (e) {
     $(this).parent().parent().parent().remove();
     return false;
 });
+
+
 ////////////////////////////////////////////////////////////////////
 
 //collectio al agregar motores a un barco

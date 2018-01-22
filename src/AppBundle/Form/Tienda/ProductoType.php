@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Tienda;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,6 +17,10 @@ class ProductoType extends AbstractType
     {
         $builder->add('nombre', TextType::class, [
             'label' => 'Producto',
+        ])
+        ->add('precio', MoneyType::class, [
+           'divisor' => 100,
+            'currency' => 'MXN'
         ]);
     }
     

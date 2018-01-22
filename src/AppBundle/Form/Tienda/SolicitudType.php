@@ -6,6 +6,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -34,6 +35,11 @@ class SolicitudType extends AbstractType
             ->add('solicitudEspecial', TextareaType::class, array(
                 'attr' => array('rows' => 8),
             ))
+            ->add('preciosolespecial', MoneyType::class, [
+                'divisor' => 100,
+                'label' => 'Precio de la Solicitud Especial',
+                'currency' => 'MXN'
+            ])
             ->add('producto', CollectionType::class, array(
             'entry_type' => PeticionType::class,
                 'label' => false,

@@ -30,9 +30,15 @@ class Peticion
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Solicitud", inversedBy="producto")
-     * @ORM\JoinColumn(name="idproducto", referencedColumnName="id",onDelete="CASCADE")
+     * @ORM\JoinColumn(name="idpeticion", referencedColumnName="id",onDelete="CASCADE")
      */
     private $solicitud;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="cantidad", type="integer", length=255)
+     */
+    private $cantidad;
 
     /**
      * Get id
@@ -71,11 +77,11 @@ class Peticion
     /**
      * Set solicitud
      *
-     * @param \AppBundle\Entity\Tienda\Solicitud $solicitud
+     * @param Solicitud $solicitud
      *
      * @return Peticion
      */
-    public function setSolicitud(\AppBundle\Entity\Tienda\Solicitud $solicitud = null)
+    public function setSolicitud(Solicitud $solicitud = null)
     {
         $this->solicitud = $solicitud;
 
@@ -85,10 +91,34 @@ class Peticion
     /**
      * Get solicitud
      *
-     * @return \AppBundle\Entity\Tienda\Solicitud
+     * @return Solicitud
      */
     public function getSolicitud()
     {
         return $this->solicitud;
+    }
+
+    /**
+     * Set cantidad
+     *
+     * @param integer $cantidad
+     *
+     * @return Peticion
+     */
+    public function setCantidad($cantidad)
+    {
+        $this->cantidad = $cantidad;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidad
+     *
+     * @return integer
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
     }
 }
