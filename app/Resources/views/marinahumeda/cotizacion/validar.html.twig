@@ -472,19 +472,27 @@
                         {% if edit_form.validacliente is defined %}
                             <div class="row">
                                 <div class="col-sm-12 espacio-linea">
-                                    <label>Validación Cliente</label>
+                                    <label>Aceptación como cliente</label>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                     <div class="middle">
                                         {{ form_widget(edit_form.validacliente) }}
                                     </div>
                                 </div>
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-azul pull-right">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
+                                </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-8 espacio-linea-arriba2">
-                                    {{ form_row(edit_form.notascliente) }}
+                            <div id="notarechazado">
+                                <div class="row">
+                                    <div class="col-sm-8 espacio-linea-arriba2">
+                                        {{ form_row(edit_form.notascliente) }}
+                                    </div>
                                 </div>
                             </div>
                         {% endif %}

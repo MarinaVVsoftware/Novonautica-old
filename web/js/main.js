@@ -86,6 +86,12 @@ $(document).ready(function () {
     $("#appbundle_marinahumedacotizacion_validanovo_1").click(function () {
         $('#notarechazado').show();
     });
+    $("#appbundle_marinahumedacotizacion_validacliente_0").click(function () {
+        $('#notarechazado').hide();
+    });
+    $("#appbundle_marinahumedacotizacion_validacliente_1").click(function () {
+        $('#notarechazado').show();
+    });
     $("#appbundle_astillerocotizacion_validanovo_0").click(function () {
         $('#notarechazado').hide();
     });

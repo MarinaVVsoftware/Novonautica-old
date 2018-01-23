@@ -553,6 +553,17 @@
                             </div>
                         </div>
                     {% endif %}
+                    {% if marinaHumedaCotizacion.validanovo == 2 and marinaHumedaCotizacion.validacliente == 0 %}
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <a class="btn btn-azul pull-right"
+                               href="{{ path('marina-humeda_validar', { 'id': marinaHumedaCotizacion.id }) }}">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                Aceptar Cliente
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
                     {% if (marinaHumedaCotizacion.validanovo == 1 or
                     marinaHumedaCotizacion.validacliente == 1) and
                     marinaHumedaCotizacion.estatus == 1 %}
@@ -589,6 +600,17 @@
                                 <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
                                 Reenviar
                             </button>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if marinaHumedaCotizacion.validacliente == 2 %}
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <a class="btn btn-azul pull-right"
+                               href="{{ path('marina-humeda_estadia_renovar',{'id': marinaHumedaCotizacion.id}) }}">
+                                <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                                Renovar
+                            </a>
                         </div>
                     </div>
                     {% endif %}

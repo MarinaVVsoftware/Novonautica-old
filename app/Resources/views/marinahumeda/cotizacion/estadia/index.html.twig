@@ -109,8 +109,10 @@
             <ul class="list-unstyled">
               <li><a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.requestUri ~ '../${item.id}' }}">Detalle</a></li>
               ${validacion === 0 ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '../${item.id}/validar' }}">Validar</a></li>` : ''}
+              ${(validacion === 2 && aceptacion === 0) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '../${item.id}/validar' }}">Aceptar</a></li>` : ''}
               ${(validacion === 1 || aceptacion === 1) && item.estatus ? `<li><a class="btn btn-xs btn-block btn-naranja" href="{{ app.request.requestUri ~ '${item.id}/recotizar' }}">Recotizar</a></li>` : ''}
               ${(aceptacion === 2 && pago !== 2) ? `<li><a class="btn btn-xs btn-block btn-verde" href="{{ app.request.requestUri ~ '../${item.id}/pago' }}">Pagos</a></li>` : ''}
+              ${(aceptacion === 2) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '../${item.id}/renovar' }}">Renovar</a></li>` : ''}
             </ul>
           </td>
         `;
