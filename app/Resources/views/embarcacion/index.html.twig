@@ -47,6 +47,7 @@
         $('.table-novo').DataTable({
           ...datatableSettings,
           ajax: '{{ path('embarcacion_index') }}',
+          order: [[7, 'desc']],
           createdRow: function (tr, data) {
             let lastTd = tr.querySelector('td:last-child');
             let entryPath = `{{ app.request.requestUri }}${data[7]}/edit`;

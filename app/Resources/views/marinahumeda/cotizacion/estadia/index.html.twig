@@ -55,6 +55,7 @@
           ...datatableSettings,
           ajax: '{{ path('marina-humeda_estadia_index') }}',
           autoWidth: false,
+          order: [[0, 'desc']],
           columns: [
             {responsivePriority: 1},
             {responsivePriority: 1},
@@ -72,7 +73,7 @@
             {responsivePriority: 1},
             {responsivePriority: 1},
           ],
-          rowCallback: function (row, data) {
+          createdRow: function (row, data) {
             for (let i of [11, 12, 13]) {
               if (!data[i]) row.children[i].innerHTML = pendiente;
               if (data[i] === 1) row.children[i].innerHTML = rechazado;

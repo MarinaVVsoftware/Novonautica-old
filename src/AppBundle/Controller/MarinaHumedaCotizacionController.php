@@ -64,7 +64,7 @@ class MarinaHumedaCotizacionController extends Controller
                 $results = $datatables->handle($request, 'cotizacionEstadia');
                 return $this->json($results);
             } catch (HttpException $e) {
-                return $this->json($e->getMessage(), $e->getCode());
+                return $this->json($e->getMessage(), $e->getStatusCode());
             }
         }
 
@@ -85,7 +85,7 @@ class MarinaHumedaCotizacionController extends Controller
                 $results = $datatables->handle($request, 'cotizacionGasolina');
                 return $this->json($results);
             } catch (HttpException $e) {
-                return $this->json($e->getMessage(), $e->getCode());
+                return $this->json($e->getMessage(), $e->getStatusCode());
             }
         }
 

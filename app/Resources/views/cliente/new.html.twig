@@ -1,7 +1,16 @@
 {% extends 'estructura/plantilla.twig' %}
 
-{% block title %}
-    Novonautiva | Agregar Cliente
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root .content-wrapper hr {
+            margin: 1em 0 !important;
+        }
+
+        h3 {
+            margin-top: 0;
+        }
+    </style>
 {% endblock %}
 
 {% block contwrapper %}
@@ -14,27 +23,42 @@
                 <div class="panel-body">
                     {{ form_start(form) }}
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-12">
+                            <h3>Datos de cliente</h3>
+                        </div>
+                        <div class="col-sm-3">
                             {{ form_row(form.nombre) }}
+                        </div>
+                        <div class="col-sm-3">
                             {{ form_row(form.correo) }}
+                        </div>
+                        <div class="col-sm-3">
                             {{ form_row(form.telefono) }}
+                        </div>
+                        <div class="col-sm-3">
                             {{ form_row(form.celular) }}
+                        </div>
+                        <div class="col-sm-6">
                             {{ form_row(form.direccion) }}
                         </div>
-                        <div class="col-sm-4">
-                            {{ form_row(form.empresa) }}
-                            {{ form_row(form.razonsocial) }}
-                            {{ form_row(form.rfc) }}
-                            {{ form_row(form.direccionfiscal) }}
-                            {{ form_row(form.correofacturacion) }}
-                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-12 espacio-linea">
-                            <hr>
+                        <div class="col-sm-12">
+                            <h4>Razones Sociales</h4>
+                        </div>
+                        <div class="col-sm-12">
+                            {% form_theme form.razonesSociales ':cliente/form-theme:razon-social.html.twig' %}
+                            {{ form_row(form.razonesSociales) }}
+                            <a href="#" id="add-razon" class="letra-azul">
+                                + Agregar Razón Social
+                            </a>
                         </div>
                     </div>
+                    <hr>
                     <div class="row">
+                        <div class="col-sm-12">
+                            <h3>Embarcación</h3>
+                        </div>
                         {% for barco in form.barcos %}
                             <div class="col-sm-4">
                                 {{ form_row(barco.nombre) }}
@@ -56,32 +80,29 @@
                         {% endfor %}
                     </div>
                     <div class="row">
-                        <div class="col-sm-12 espacio-linea">
-                            <hr>
+                        <div class="col-sm-12">
+                            <h4>Motores de la embarcación</h4>
                         </div>
-                    </div>
-                    <div id="motor-fields-list0"
-                         class="lista-motores"
-                         data-prototype="
+                        <div class="col-sm-12">
+                            <div id="motor-fields-list0"
+                                 class="lista-motores"
+                                 data-prototype="
                                     {% filter escape %}
                                     {{ include('motor/form-cliente.twig', { 'form': form.barcos.children[0].motores.vars.prototype }) }}
                                     {% endfilter %}
                                         ">
-                        {% for motorField in form.barcos.children[0].motores %}
-                            {% form_theme motorField 'motor/form-cliente.twig' %}
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        {{ form_row(motorField.marca) }}
-                                        {{ form_row(motorField.modelo) }}
+                                {% for motorField in form.barcos.children[0].motores %}
+                                    {% form_theme motorField 'motor/form-cliente.twig' %}
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                {{ form_row(motorField.marca) }}
+                                                {{ form_row(motorField.modelo) }}
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                {% endfor %}
                             </div>
-                        {% endfor %}
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 espacio-linea">
-                            <hr>
                         </div>
                     </div>
                     <div class="row">
@@ -113,4 +134,48 @@
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+      /*
+            SYMFONY COLLECTION "MOTORES"
+      */
+      (function () {
+        const addLink = document.getElementById('add-razon');
+        const prototypeHolder = document.getElementById('appbundle_cliente_razonesSociales');
+        let counter = '{{ form.razonesSociales|length }}';
+
+        Array
+            .from(prototypeHolder.children)
+            .forEach((element, i) => i >= 1 ? appendRemoveLink(element) : false);
+
+        addLink.addEventListener('click', function (e) {
+          e.preventDefault();
+          const prototype = prototypeHolder.dataset.prototype.replace(/__name__/g, counter);
+          const tempContainer = document.createElement('div');
+          tempContainer.innerHTML = prototype;
+
+          let element = tempContainer.firstElementChild;
+          appendRemoveLink(element);
+          prototypeHolder.appendChild(element);
+          counter++;
+        });
+
+        function appendRemoveLink(element) {
+          let removeContainer = element.querySelector('.remove-container');
+          let removeElementLink = document.createElement('a');
+
+          removeElementLink.className = 'btn btn-xs btn-naranja';
+          removeElementLink.innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> Remover`;
+          removeContainer.appendChild(removeElementLink);
+
+          removeElementLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            this.parentNode.parentNode.remove(this)
+          });
+        }
+      })();
+    </script>
 {% endblock %}

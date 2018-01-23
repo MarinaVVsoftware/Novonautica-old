@@ -52,7 +52,8 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
             ->leftJoin('mhce.barco', 'barco')
             ->leftJoin('mhce.cliente', 'cliente')
             ->leftJoin('mhce.slipmovimiento', 'movimiento')
-            ->leftJoin('mhce.slip', 'slip');
+            ->leftJoin('mhce.slip', 'slip')
+        ;
 
         if ($request->search->value) {
             $q->where('(LOWER(mhce.folio) LIKE :search OR ' .
@@ -108,7 +109,7 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
             } elseif ($order->column === 4) {
                 $q->addOrderBy('mhce.fechaSalida', $order->dir);
             } elseif ($order->column === 5) {
-                $q->addOrderBy('slip', $order->dir);
+                $q->addOrderBy('mhce.slip', $order->dir);
             } elseif ($order->column === 6) {
                 $q->addOrderBy('mhce.descuento', $order->dir);
             } elseif ($order->column === 7) {

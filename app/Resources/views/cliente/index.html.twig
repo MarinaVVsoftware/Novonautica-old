@@ -20,9 +20,7 @@
                             <th>Correo</th>
                             <th class="no-sort">Teléfono / Celular</th>
                             <th class="no-sort">Dirección</th>
-                            <th class="with-choices">Empresas</th>
-                            <th class="no-sort">Facturación</th>
-                            <th class="no-sort">Barcos</th>
+                            <th>Barcos</th>
                             <th class="no-sort"></th>
                         </tr>
                         </thead>
@@ -43,64 +41,17 @@
         $('.table-novo').DataTable({
           ...settings,
           ajax: '{{ path('cliente_index') }}',
-          columns: [
-            {
-              data: 'nombre'
-            },
-            {
-              data: 'correo'
-            },
-            {
-              data: 'telefono'
-            },
-            {
-              data: 'direccion'
-            },
-            {
-              data: 'empresa'
-            },
-            {
-              className: 'td-facturacion',
-              data: 'facturacion'
-            },
-            {
-              className: 'td-barcos',
-              data: 'barcos'
-            },
-            {
-              data: 'id'
-            },
-          ],
+          order: [[5, 'desc']],
           createdRow: function (tr, data) {
-            let facturacionTd = tr.querySelector('.td-facturacion');
-            let barcosTd = tr.querySelector('.td-barcos');
+            let barcosTd = tr.cells[4];
             let lastTd = tr.querySelector('td:last-child');
-            let entryPath = `{{ app.request.requestUri }}${data['id']}`;
-            let barcosList = data['barcos'].map(barco => `<li><a href="${entryPath}#${barco[0]}">${barco[1]}</a></li>`).join('');
+            let entryPath = `{{ app.request.requestUri }}${data[5]}`;
+            let barcosList = data[4].map(barco => `<li><a href="${entryPath}#${barco[0]}">${barco[1]}</a></li>`).join('');
             barcosTd.innerHTML = `
                 <ul class="list-unstyled text-left">
                 ${barcosList}
                 </ul>
             `.replace(',', '');
-
-            facturacionTd.innerHTML = `
-            <button class="btn btn-block btn-contorno-azul" data-toggle="collapse"
-            data-target="#facturacion-${data['id']}">
-                Mostrar datos
-            </button>
-            <div id="facturacion-${data['id']}" class="collapse">
-                <dl class="dl-horizontal text-left">
-                  <dt>Razon social</dt>
-                  <dd>${data.facturacion[0] || ''}</dd>
-                  <dt>RFC</dt>
-                  <dd>${data.facturacion[1] || ''}</dd>
-                  <dt>Direccion fiscal</dt>
-                  <dd>${data.facturacion[2] || ''}</dd>
-                  <dt>Correo de facturación</dt>
-                  <dd>${data.facturacion[3] || ''}</dd>
-                </dl>
-            </div>
-            `;
 
             lastTd.innerHTML = `
             <ul class="unstyled-list list-inline">

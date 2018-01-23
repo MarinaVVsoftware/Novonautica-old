@@ -24,13 +24,13 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-8 col-sm-offset-2">
+                        <div class="col-sm-3">
                             <label>Cliente:</label>
                             <div class='info-input'> {{ cliente.nombre }}</div>
                         </div>
                     </div>
                     <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-8 col-sm-offset-2">
+                        <div class="col-sm-12">
                             <table class="table text-center">
                                 <thead>
                                 <tr>
@@ -59,6 +59,10 @@
                                        <td>{{ movmon.descripcion }}</td>
                                     </tr>
                                     {% endif %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="5">Aun no existen movimientos</td>
+                                    </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>

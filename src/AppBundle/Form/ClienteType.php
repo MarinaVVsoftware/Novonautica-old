@@ -2,6 +2,8 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Cliente\RazonSocial;
+use AppBundle\Form\Cliente\RazonSocialType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,28 +36,17 @@ class ClienteType extends AbstractType
                 'label' => 'Dirección',
                 'required' => false
             ])
-            ->add('empresa', TextType::class, [
-                'required' => false
-            ])
-            ->add('razonsocial', TextType::class, [
-                'label' => 'Razón Social',
-                'required' => false
-            ])
-            ->add('rfc', TextType::class, [
-                'label' => 'RFC',
-                'required' => false
-            ])
-            ->add('direccionfiscal', TextType::class, [
-                'label' => 'Dirección facturación',
-                'required' => false
-            ])
-            ->add('correofacturacion', TextType::class, [
-                'label' => 'Correos de Facturación (Separados por comas)',
-                'required' => false
-            ])
             ->add('barcos', CollectionType::class, [
                 'entry_type' => BarcoType::class,
                 'label' => false,
+            ])
+            ->add('razonesSociales', CollectionType::class, [
+                'entry_type' => RazonSocialType::class,
+                'label' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'entry_options' => ['label' => false]
             ])
         ;
     }

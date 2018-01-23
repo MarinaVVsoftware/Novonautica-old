@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Cliente\RazonSocial;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -88,42 +89,6 @@ class Cliente
     private $fecharegistro;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="empresa", type="string", length=255, nullable=true)
-     */
-    private $empresa;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="razonsocial", type="string", length=255, nullable=true)
-     */
-    private $razonsocial;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="rfc", type="string", length=50, nullable=true)
-     */
-    private $rfc;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="direccionfiscal", type="string", length=255, nullable=true)
-     */
-    private $direccionfiscal;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="correofacturacion", type="string", length=255, nullable=true)
-     */
-    private $correofacturacion;
-
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="monederomarinahumeda", type="bigint", nullable=true)
@@ -147,7 +112,7 @@ class Cliente
     /**
      * @Assert\Valid()
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Barco", mappedBy="cliente",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Barco", mappedBy="cliente",cascade={"persist", "remove"})
      */
     private $barcos;
 
@@ -168,20 +133,23 @@ class Cliente
      */
     private $mhcotizacionesadicionales;
 
-//    /**
-//     *
-//     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizacion", mappedBy="cliente")
-//     */
-//    private $astillerocotizaciones;
-
+    /**
+     * @var RazonSocial
+     *
+     * @Assert\Valid()
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Cliente\RazonSocial", mappedBy="cliente", cascade={"persist", "remove"})
+     */
+    private $razonesSociales;
 
     public function __construct() {
         $this->barcos = new ArrayCollection();
         $this->monederomovimientos = new ArrayCollection();
         $this->mhcotizaciones = new ArrayCollection();
         $this->mhcotizacionesadicionales = new ArrayCollection();
-//        $this->astillerocotizaciones = new ArrayCollection();
+        $this->razonesSociales = new ArrayCollection();
     }
+
     public function __toString()
     {
         return $this->nombre;
@@ -342,128 +310,6 @@ class Cliente
     }
 
     /**
-     * Set empresa
-     *
-     * @param string $empresa
-     *
-     * @return Cliente
-     */
-    public function setEmpresa($empresa)
-    {
-        $this->empresa = $empresa;
-
-        return $this;
-    }
-
-    /**
-     * Get empresa
-     *
-     * @return string
-     */
-    public function getEmpresa()
-    {
-        return $this->empresa;
-    }
-
-    /**
-     * Set razonsocial
-     *
-     * @param string $razonsocial
-     *
-     * @return Cliente
-     */
-    public function setRazonsocial($razonsocial)
-    {
-        $this->razonsocial = $razonsocial;
-
-        return $this;
-    }
-
-    /**
-     * Get razonsocial
-     *
-     * @return string
-     */
-    public function getRazonsocial()
-    {
-        return $this->razonsocial;
-    }
-
-    /**
-     * Set rfc
-     *
-     * @param string $rfc
-     *
-     * @return Cliente
-     */
-    public function setRfc($rfc)
-    {
-        $this->rfc = $rfc;
-
-        return $this;
-    }
-
-    /**
-     * Get rfc
-     *
-     * @return string
-     */
-    public function getRfc()
-    {
-        return $this->rfc;
-    }
-
-    /**
-     * Set direccionfiscal
-     *
-     * @param string $direccionfiscal
-     *
-     * @return Cliente
-     */
-    public function setDireccionfiscal($direccionfiscal)
-    {
-        $this->direccionfiscal = $direccionfiscal;
-
-        return $this;
-    }
-
-    /**
-     * Get direccionfiscal
-     *
-     * @return string
-     */
-    public function getDireccionfiscal()
-    {
-        return $this->direccionfiscal;
-    }
-
-    /**
-     * Set correofacturacion
-     *
-     * @param string $correofacturacion
-     *
-     * @return Cliente
-     */
-    public function setCorreofacturacion($correofacturacion)
-    {
-        $this->correofacturacion = $correofacturacion;
-
-        return $this;
-    }
-
-    /**
-     * Get correofacturacion
-     *
-     * @return string
-     */
-    public function getCorreofacturacion()
-    {
-        return $this->correofacturacion;
-    }
-
-
-
-    /**
      * set password
      *
      * @param string $password
@@ -516,11 +362,11 @@ class Cliente
     /**
      * Add barco
      *
-     * @param \AppBundle\Entity\Barco $barco
+     * @param Barco $barco
      *
      * @return Cliente
      */
-    public function addBarco(\AppBundle\Entity\Barco $barco)
+    public function addBarco(Barco $barco)
     {
         $barco->setCliente($this);
         //$this->barcos->add($barco);
@@ -532,9 +378,9 @@ class Cliente
     /**
      * Remove barco
      *
-     * @param \AppBundle\Entity\Barco $barco
+     * @param Barco $barco
      */
-    public function removeBarco(\AppBundle\Entity\Barco $barco)
+    public function removeBarco(Barco $barco)
     {
         $this->barcos->removeElement($barco);
     }
@@ -552,11 +398,11 @@ class Cliente
     /**
      * Add marinahumedacotizacion
      *
-     * @param \AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion
+     * @param MarinaHumedaCotizacion $marinahumedacotizacion
      *
      * @return Cliente
      */
-    public function addMarinaHumedaCotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion)
+    public function addMarinaHumedaCotizacion(MarinaHumedaCotizacion $marinahumedacotizacion)
     {
         $marinahumedacotizacion->setCliente($this);
         $this->mhcotizaciones[] = $marinahumedacotizacion;
@@ -566,9 +412,9 @@ class Cliente
     /**
      * Remove marinahumedacotizacion
      *
-     * @param \AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion
+     * @param MarinaHumedaCotizacion $marinahumedacotizacion
      */
-    public function removeMarinaHumedaCotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $marinahumedacotizacion)
+    public function removeMarinaHumedaCotizacion(MarinaHumedaCotizacion $marinahumedacotizacion)
     {
         $this->mhcotizaciones->removeElement($marinahumedacotizacion);
     }
@@ -586,85 +432,15 @@ class Cliente
     /**
      * Add mhcotizacione
      *
-     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
+     * @param MarinaHumedaCotizacion $mhcotizacione
      *
      * @return Cliente
      */
-    public function addMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
+    public function addMhcotizacione(MarinaHumedaCotizacion $mhcotizacione)
     {
         $this->mhcotizaciones[] = $mhcotizacione;
 
         return $this;
-    }
-
-    /**
-     * Remove mhcotizacione
-     *
-     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione
-     */
-    public function removeMhcotizacione(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacione)
-    {
-        $this->mhcotizaciones->removeElement($mhcotizacione);
-    }
-
-
-
-    /**
-     * Add astillerocotizacione
-     *
-     * @param \AppBundle\Entity\AstilleroCotizacion $astillerocotizacione
-     *
-     * @return Cliente
-     */
-    public function addAstillerocotizacione(\AppBundle\Entity\AstilleroCotizacion $astillerocotizacione)
-    {
-        $this->astillerocotizaciones[] = $astillerocotizacione;
-
-        return $this;
-    }
-
-    /**
-     * Remove astillerocotizacione
-     *
-     * @param \AppBundle\Entity\AstilleroCotizacion $astillerocotizacione
-     */
-    public function removeAstillerocotizacione(\AppBundle\Entity\AstilleroCotizacion $astillerocotizacione)
-    {
-        $this->astillerocotizaciones->removeElement($astillerocotizacione);
-    }
-
-    /**
-     * Get astillerocotizaciones
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getAstillerocotizaciones()
-    {
-        return $this->astillerocotizaciones;
-    }
-
-    /**
-     * Add mhcotizacionesadicionale
-     *
-     * @param \AppBundle\Entity\MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale
-     *
-     * @return Cliente
-     */
-    public function addMhcotizacionesadicionale(\AppBundle\Entity\MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale)
-    {
-        $this->mhcotizacionesadicionales[] = $mhcotizacionesadicionale;
-
-        return $this;
-    }
-
-    /**
-     * Remove mhcotizacionesadicionale
-     *
-     * @param \AppBundle\Entity\MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale
-     */
-    public function removeMhcotizacionesadicionale(\AppBundle\Entity\MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale)
-    {
-        $this->mhcotizacionesadicionales->removeElement($mhcotizacionesadicionale);
     }
 
     /**
@@ -680,11 +456,11 @@ class Cliente
     /**
      * Add monederomovimiento
      *
-     * @param \AppBundle\Entity\MonederoMovimiento $monederomovimiento
+     * @param MonederoMovimiento $monederomovimiento
      *
      * @return Cliente
      */
-    public function addMonederomovimiento(\AppBundle\Entity\MonederoMovimiento $monederomovimiento)
+    public function addMonederomovimiento(MonederoMovimiento $monederomovimiento)
     {
         $this->monederomovimientos[] = $monederomovimiento;
 
@@ -694,9 +470,9 @@ class Cliente
     /**
      * Remove monederomovimiento
      *
-     * @param \AppBundle\Entity\MonederoMovimiento $monederomovimiento
+     * @param MonederoMovimiento $monederomovimiento
      */
-    public function removeMonederomovimiento(\AppBundle\Entity\MonederoMovimiento $monederomovimiento)
+    public function removeMonederomovimiento(MonederoMovimiento $monederomovimiento)
     {
         $this->monederomovimientos->removeElement($monederomovimiento);
     }
@@ -725,5 +501,40 @@ class Cliente
     public function setMonederomarinahumeda($monederomarinahumeda)
     {
         $this->monederomarinahumeda = $monederomarinahumeda;
+    }
+
+    /**
+     * Add razonesSociale
+     *
+     * @param RazonSocial $razonesSociale
+     *
+     * @return Cliente
+     */
+    public function addRazonesSociale(RazonSocial $razonesSociale)
+    {
+        $razonesSociale->setCliente($this);
+        $this->razonesSociales[] = $razonesSociale;
+
+        return $this;
+    }
+
+    /**
+     * Remove razonesSociale
+     *
+     * @param RazonSocial $razonesSociale
+     */
+    public function removeRazonesSociale(RazonSocial $razonesSociale)
+    {
+        $this->razonesSociales->removeElement($razonesSociale);
+    }
+
+    /**
+     * Get razonesSociales
+     *
+     * @return RazonSocial
+     */
+    public function getRazonesSociales()
+    {
+        return $this->razonesSociales;
     }
 }

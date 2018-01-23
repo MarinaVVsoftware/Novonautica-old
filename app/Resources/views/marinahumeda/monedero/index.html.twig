@@ -1,7 +1,8 @@
 {% extends 'estructura/plantilla.twig' %}
 
-{% block title %}
-    Novonautiva | Monederos Clientes Marina Humeda
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
 {% endblock %}
 
 {% block contwrapper %}
@@ -14,17 +15,16 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-8 col-sm-offset-2">
-                            <table class="table text-center">
+                        <div class="col-sm-12">
+                            <table class="table table-novo">
                                 <thead>
                                 <tr>
-                                    <th>Id</th>
                                     <th>Nombre</th>
                                     <th>Monto</th>
                                     <th></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                {#<tbody>
                                 {% for cliente in clientes %}
                                     <tr>
                                         <td>{{ cliente.id }}</td>
@@ -37,7 +37,7 @@
                                         </td>
                                     </tr>
                                 {% endfor %}
-                                </tbody>
+                                </tbody>#}
                             </table>
                         </div>
                     </div>
@@ -46,4 +46,35 @@
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, settings) {
+        $('.table-novo').DataTable({
+          ...settings,
+          ajax: '{{ path('mh_monedero_index') }}',
+          order: [[2, 'desc']],
+          createdRow: function (row, data) {
+            let actionsCell = row.cells[2];
+            actionsCell.innerHTML = `
+            <ul class="unstyled-list list-inline" style="margin: 0">
+                <li>
+                <a href="${data[2]}" class="btn btn-xs btn-morado-claro">
+                Detalle
+                </a>
+                </li>
+                <li>
+                <a href="${data[2]}/operacion" class="btn btn-xs btn-azul">
+                Operación
+                </a>
+                </li>
+            </ul>
+            `
+          },
+        });
+      })(jQuery, datatablesSettings);
+    </script>
 {% endblock %}
