@@ -25,7 +25,7 @@ class SolicitudType extends AbstractType
                 'readonly' => true],
             'format' => 'yyyy-MM-dd'
         ))
-            ->add('embarcacion',EntityType::class,[
+            ->add('nombrebarco',EntityType::class,[
                 'class' => 'AppBundle:Barco',
                 'label' => 'Embarcación',
                 'placeholder' => 'Seleccionar...',
@@ -47,7 +47,19 @@ class SolicitudType extends AbstractType
                 'allow_delete' => true,
                 'prototype' => true,
                 'by_reference' => false,
-        ));
+        ))
+            ->add('subtotal' , MoneyType::class, [
+                'divisor' => 100,
+                'label' => false,
+                'currency' => 'MXN',
+                'attr' => ['readonly' => true]
+            ])
+            ->add('total', MoneyType::class, [
+                'divisor' => 100,
+                'label' => false,
+                'currency' => 'MXN',
+                'attr' => ['readonly' => true]
+            ]);
     }
     
     /**

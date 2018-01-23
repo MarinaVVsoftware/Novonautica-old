@@ -30,11 +30,9 @@ class Solicitud
     private $fecha;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="embarcacion", type="string", length=150)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="embarcacion")
      */
-    private $embarcacion;
+    private $nombrebarco;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Peticion", mappedBy="solicitud", cascade={"persist"})
@@ -50,9 +48,21 @@ class Solicitud
 
     /**
      * @var integer
-     * @ORM\Column(name="preciosolespecial", type="integer", length=255)
+     * @ORM\Column(name="preciosolespecial", type="bigint", length=20)
      */
     private $preciosolespecial;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="subtotal", type="bigint", length=20)
+     */
+    private $subtotal;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="total", type="bigint", length=20)
+     */
+    private $total;
 
     /**
      * @var int
@@ -101,31 +111,6 @@ class Solicitud
     {
         return $this->fecha;
     }
-
-    /**
-     * Set embarcacion
-     *
-     * @param string $embarcacion
-     *
-     * @return Solicitud
-     */
-    public function setEmbarcacion($embarcacion)
-    {
-        $this->embarcacion = $embarcacion;
-
-        return $this;
-    }
-
-    /**
-     * Get embarcacion
-     *
-     * @return string
-     */
-    public function getEmbarcacion()
-    {
-        return $this->embarcacion;
-    }
-
 
     /**
      * Set solicitudEspecial
@@ -224,5 +209,77 @@ class Solicitud
     public function getPreciosolespecial()
     {
         return $this->preciosolespecial;
+    }
+
+    /**
+     * Set nombrebarco
+     *
+     * @param \AppBundle\Entity\Barco $nombrebarco
+     *
+     * @return Solicitud
+     */
+    public function setNombrebarco(\AppBundle\Entity\Barco $nombrebarco = null)
+    {
+        $this->nombrebarco = $nombrebarco;
+
+        return $this;
+    }
+
+    /**
+     * Get nombrebarco
+     *
+     * @return \AppBundle\Entity\Barco
+     */
+    public function getNombrebarco()
+    {
+        return $this->nombrebarco;
+    }
+
+    /**
+     * Set subtotal
+     *
+     * @param integer $subtotal
+     *
+     * @return Solicitud
+     */
+    public function setSubtotal($subtotal)
+    {
+        $this->subtotal = $subtotal;
+
+        return $this;
+    }
+
+    /**
+     * Get subtotal
+     *
+     * @return integer
+     */
+    public function getSubtotal()
+    {
+        return $this->subtotal;
+    }
+
+    /**
+     * Set total
+     *
+     * @param integer $total
+     *
+     * @return Solicitud
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
+
+        return $this;
+    }
+
+    /**
+     * Get total
+     *
+     * @return integer
+     */
+    public function getTotal()
+    {
+        return $this->total;
     }
 }

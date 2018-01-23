@@ -143,17 +143,37 @@ jQuery('.add-another-producto').click(function (e) {
     totMotores++;
     $(this).data('cantidad', totMotores);
     var newLi = jQuery('<div class="row"></div>').html(newWidget);
+
+    $(newLi).find(".selectclientebuscar").change(function () {
+        var precio = $(this).find(':selected').data('precio');
+        const can = $(newLi).find(".cantidad");
+        can.on('change', function() {
+            const cantidad = $(this).val();
+            const subtotal = cantidad/100 * precio;
+            $(newLi).find("#totalcantidad").val(subtotal) ;
+            calculateGrandTotal();
+            console.log(subtotal);
+        });
+    });
+    function calculateGrandTotal() {
+        let grandTotal = 0;
+        newLi.find('#totalcantidad').each(function () {
+            grandTotal += +$(this).val();
+            console.log(this);
+        });
+        $("#appbundle_tienda_solicitud_subtotal").val(grandTotal.toFixed(2));
+    }
     newLi.appendTo(motorListPrimero);
     $('.select-buscador').select2();
     newLi.before(newLi);
 });
 
+
 $('.lista-productos').on('click', '.remove-producto', function (e) {
     e.preventDefault();
-    $(this).parent().parent().parent().remove();
+    $(this).parent().parent().remove();
     return false;
 });
-
 
 ////////////////////////////////////////////////////////////////////
 

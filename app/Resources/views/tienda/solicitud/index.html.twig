@@ -30,7 +30,7 @@
                                 <tr>
                                     <td>{{ solicitud.fecha|date("m/d/Y") }}</td>
                                     <td>Por definir</td>
-                                    <td>{{ solicitud.embarcacion }}</td>
+                                    <td>{{ solicitud.nombrebarco }}</td>
                                     <td>{{ solicitud.solicitudEspecial }}</td>
                                     {% set dineros = 20000 %}
                                     <td>$ {{ (dineros/100)|number_format(2,'.',',') }}</td>

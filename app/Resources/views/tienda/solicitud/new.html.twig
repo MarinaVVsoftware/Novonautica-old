@@ -16,7 +16,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             {{ form_row(form.fecha) }}
-                            {{ form_row(form.embarcacion) }}
+                            {{ form_row(form.nombrebarco) }}
 
                             <div id="motor-fields-list0"
                                  class="lista-productos"
@@ -37,6 +37,10 @@
                         <div class="col-sm-4">
                             {{ form_row(form.solicitudEspecial) }}
                             {{ form_row(form.preciosolespecial) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.subtotal) }}
+                            {{ form_row(form.total) }}
                         </div>
                     </div>
 
@@ -79,13 +83,16 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        var number = document.querySelector('#appbundle_tienda_solicitud_producto_0_cantidad');
-        number.onkeydown = function(e) {
-            if(!((e.keyCode > 95 && e.keyCode < 106)
-                    || (e.keyCode > 47 && e.keyCode < 58)
-                    || e.keyCode === 8)) {
-                return false;
-            }
-        };
+        // $(document).on("change", ".selectclientebuscar", function () {
+        //     console.log(this);
+        // })
+        $(".selectclientebuscar").on("change", function () {
+            var precio = $(this).find(':selected').data('precio');
+            console.log(precio);
+
+            $("#appbundle_tienda_solicitud_subtotal").val(precio/100);
+        });
+
+
     </script>
 {% endblock %}

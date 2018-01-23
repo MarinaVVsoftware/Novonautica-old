@@ -24,7 +24,7 @@ class Peticion
     /**
      * @var string
      *
-     * @ORM\Column(name="peticion", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Producto", inversedBy="nombreproducto")
      */
     private $peticion;
 
@@ -50,29 +50,29 @@ class Peticion
         return $this->id;
     }
 
-    /**
-     * Set peticion
-     *
-     * @param string $peticion
-     *
-     * @return Peticion
-     */
-    public function setPeticion($peticion)
-    {
-        $this->peticion = $peticion;
-
-        return $this;
-    }
-
-    /**
-     * Get peticion
-     *
-     * @return string
-     */
-    public function getPeticion()
-    {
-        return $this->peticion;
-    }
+//    /**
+//     * Set peticion
+//     *
+//     * @param string $peticion
+//     *
+//     * @return Peticion
+//     */
+//    public function setPeticion($peticion)
+//    {
+//        $this->peticion = $peticion;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get peticion
+//     *
+//     * @return string
+//     */
+//    public function getPeticion()
+//    {
+//        return $this->peticion;
+//    }
 
     /**
      * Set solicitud
@@ -120,5 +120,29 @@ class Peticion
     public function getCantidad()
     {
         return $this->cantidad;
+    }
+
+    /**
+     * Set peticion
+     *
+     * @param \AppBundle\Entity\Tienda\Producto $peticion
+     *
+     * @return Peticion
+     */
+    public function setPeticion(\AppBundle\Entity\Tienda\Producto $peticion = null)
+    {
+        $this->peticion = $peticion;
+
+        return $this;
+    }
+
+    /**
+     * Get peticion
+     *
+     * @return \AppBundle\Entity\Tienda\Producto
+     */
+    public function getPeticion()
+    {
+        return $this->peticion;
     }
 }
