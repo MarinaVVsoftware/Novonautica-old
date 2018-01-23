@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Monedero controller.
@@ -30,15 +31,23 @@ class MarinaHumedaMonederoController extends Controller
      * @Route("/", name="mh_monedero_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'MHCMonedero');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getStatusCode());
+            }
+        }
 
-        $clientes = $em->getRepository('AppBundle:Cliente')->findAll();
+        /*$em = $this->getDoctrine()->getManager();
+        $clientes = $em->getRepository('AppBundle:Cliente')->findAll();*/
 
         return $this->render('marinahumeda/monedero/index.html.twig', [
             'title' => 'Monedero',
-            'clientes' => $clientes,
         ]);
     }
 

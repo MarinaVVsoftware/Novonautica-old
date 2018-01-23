@@ -20,7 +20,7 @@
                             <th>Correo</th>
                             <th class="no-sort">Teléfono / Celular</th>
                             <th class="no-sort">Dirección</th>
-                            <th class="no-sort">Barcos</th>
+                            <th>Barcos</th>
                             <th class="no-sort"></th>
                         </tr>
                         </thead>
@@ -41,7 +41,7 @@
         $('.table-novo').DataTable({
           ...settings,
           ajax: '{{ path('cliente_index') }}',
-          order: [[0, 'desc']],
+          order: [[5, 'desc']],
           createdRow: function (tr, data) {
             let barcosTd = tr.cells[4];
             let lastTd = tr.querySelector('td:last-child');

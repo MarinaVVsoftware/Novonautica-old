@@ -48,7 +48,6 @@ class ClienteDataTable extends AbstractDataTableHandler
         $q = $qb
             ->select('cl', 'ba')
             ->leftJoin('cl.barcos', 'ba')
-            ->orderBy('cl.id', 'DESC')
         ;
 
         if ($request->search->value) {
@@ -84,6 +83,8 @@ class ClienteDataTable extends AbstractDataTableHandler
                 $q->addOrderBy('cl.direccion', $order->dir);
             } elseif ($order->column === 4) {
                 $q->addOrderBy('ba.nombre', $order->dir);
+            } elseif ($order->column === 5) {
+                $q->addOrderBy('cl.id', $order->dir);
             }
         }
 

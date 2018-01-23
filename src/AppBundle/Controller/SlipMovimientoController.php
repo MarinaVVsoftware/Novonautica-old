@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -345,16 +346,19 @@ class SlipMovimientoController extends Controller
      * @Route("/ocupacion", name="slipmovimiento_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $smovRepositorio = $em->getRepository('AppBundle:SlipMovimiento');
-        $slipMovimientos = $smovRepositorio->ordenaDescendente();
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'SlipMovimiento');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getCode());
+            }
+        }
 
-        return $this->render('slipmovimiento/index.html.twig', array(
-            'slipMovimientos' => $slipMovimientos,
-            'title' => 'Movimientos Slip'
-        ));
+        return $this->render('slipmovimiento/index.html.twig', ['title' => 'Movimientos de Slips']);
     }
 
     /**
