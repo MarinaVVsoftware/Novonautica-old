@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -86,7 +87,27 @@ class Emisor
     /**
      * @var File
      *
-     * @Assert\File()
+     * @Assert\Image(
+     *     mimeTypes={"image/*"},
+     *     mimeTypesMessage="Solo se permiten imagenes",
+     *     maxSize="2M",
+     *     maxSizeMessage="El tamaño maximo es 2MB"
+     * )
+     *
+     * @Vich\UploadableField(mapping="facturacion_emisor_logo", fileNameProperty="logo")
+     */
+    private $logoFile;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="logo", type="string")
+     */
+    private $logo;
+
+    /**
+     * @var File
+     *
      *
      * @Vich\UploadableField(mapping="facturacion_emisor_cer", fileNameProperty="cer")
      */
@@ -284,6 +305,47 @@ class Emisor
     public function getDireccion()
     {
         return $this->direccion;
+    }
+
+    /**
+     * Set logo
+     *
+     * @param string $logo
+     *
+     * @return Emisor
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Get logo
+     *
+     * @return string
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * @param $logo
+     */
+    public function setLogoFile(File $logo)
+    {
+        $this->logoFile = $logo;
+
+        if (null !== $logo) {
+            $this->updateAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getLogoFile()
+    {
+        return $this->logoFile;
     }
 
     /**

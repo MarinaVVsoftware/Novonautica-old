@@ -21,7 +21,7 @@
             {%- endif -%}
         {%- endif -%}
         <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>
-        <i class="fa fa-plus" aria-hidden="true"></i> Agregar archivo
+        <i class="fa fa-plus" aria-hidden="true"></i> Agregar {{ label }}
         </{{ element|default('label') }}>
     {%- endif -%}
 {% endblock %}

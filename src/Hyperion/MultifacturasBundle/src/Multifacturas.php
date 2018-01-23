@@ -77,7 +77,7 @@ class Multifacturas
          */
         foreach ($factura->getConceptos() as $i => $concepto) {
             $datos['conceptos'][$i]['cantidad'] = $concepto->getCantidad();
-            $datos['conceptos'][$i]['unidad'] = $concepto->getUnidad();
+//            $datos['conceptos'][$i]['unidad'] = $concepto->getUnidad();
             $datos['conceptos'][$i]['ID'] = $i;
             $datos['conceptos'][$i]['Descuento'] = ($concepto->getDescuento() / 100);
             $datos['conceptos'][$i]['descripcion'] = $concepto->getDescripcion();

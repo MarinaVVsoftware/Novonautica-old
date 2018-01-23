@@ -119,7 +119,6 @@
                                                 <tr>
                                                     <th></th>
                                                     <th style="vertical-align: middle;">Cantidad</th>
-                                                    <th style="vertical-align: middle">Unidad</th>
                                                     <th style="vertical-align: middle">ClaveProdServ</th>
                                                     <th style="vertical-align: middle">Clave Unidad</th>
                                                     <th style="vertical-align: middle" width="25%">Descripción</th>
@@ -266,12 +265,12 @@
           paramName: 'rfc',
           serviceUrl: `{{ app.request.BaseUrl }}/cliente/listado.json`,
           params: {},
-          transformResult: function (clientes) {
+          transformResult: function (datos) {
             return {
-              suggestions: clientes.map(cliente => {
+              suggestions: datos.map(data => {
                 return {
-                  value: cliente.rfc,
-                  data: cliente
+                  value: data.rfc,
+                  data: data
                 }
               })
             }
@@ -279,20 +278,20 @@
           beforeRender: function (container, suggestions) {
             if (!suggestions.length) return;
             [...container[0].childNodes].map((suggestion, i) => {
-              suggestion.innerHTML = `${suggestion.innerHTML} <small>${suggestions[i].data.nombre.substring(0, 15)}...</small>`;
+              suggestion.innerHTML = `${suggestion.innerHTML} <small>(${suggestions[i].data.cliente.nombre.substring(0, 15)})</small>`;
             })
           },
-          onSelect: function (cliente) {
+          onSelect: function ({data}) {
             const razon = document.getElementById('appbundle_contabilidad_facturacion_razonSocial');
             const direccion = document.getElementById('appbundle_contabilidad_facturacion_direccionFiscal');
             const nombre = document.getElementById('appbundle_contabilidad_facturacion_cliente');
             const email = document.getElementById('appbundle_contabilidad_facturacion_email');
             const telefono = document.getElementById('appbundle_contabilidad_facturacion_numeroTelefonico');
-            razon.value = cliente.data.empresa;
-            direccion.value = cliente.data.direccionfiscal;
-            nombre.value = cliente.data.nombre;
-            email.value = cliente.data.correofacturacion;
-            telefono.value = cliente.data.telefono;
+            razon.value = data.razonSocial;
+            direccion.value = data.direccion;
+            nombre.value = data.cliente.nombre;
+            email.value = data.correos;
+            telefono.value = data.cliente.telefono;
           }
         });
 
@@ -384,15 +383,14 @@
         // Le agrega la funcion de calculo a una row y si recibe datos los calcula;
         function addRowListener(concepto, data) {
           let cantidadConcepto = concepto.children[1].firstElementChild;
-          let unidadConcepto = concepto.children[2].firstElementChild;
-          let cpsConcepto = concepto.children[3].firstElementChild;
-          let cuConcepto = concepto.children[4].firstElementChild;
-          let descripcionConcepto = concepto.children[5].firstElementChild;
-          let vUnitarioConcepto = concepto.children[6].querySelector('input');
-          let descuentoConcepto = concepto.children[7].querySelector('input');
-          let ivaConcepto = concepto.children[8].querySelector('input');
-          let subtotalConcepto = concepto.children[9].querySelector('input');
-          let totalConcepto = concepto.children[10].querySelector('input');
+          let cpsConcepto = concepto.children[2].firstElementChild;
+          let cuConcepto = concepto.children[3].firstElementChild;
+          let descripcionConcepto = concepto.children[4].firstElementChild;
+          let vUnitarioConcepto = concepto.children[5].querySelector('input');
+          let descuentoConcepto = concepto.children[6].querySelector('input');
+          let ivaConcepto = concepto.children[7].querySelector('input');
+          let subtotalConcepto = concepto.children[8].querySelector('input');
+          let totalConcepto = concepto.children[9].querySelector('input');
 
           cantidadConcepto.addEventListener('input', calculateConceptos);
           vUnitarioConcepto.addEventListener('input', calculateConceptos);

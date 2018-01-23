@@ -227,7 +227,6 @@ class FacturacionController extends Controller
     private function createFacturaPDF(Facturacion $factura)
     {
         $numToLetters = new NumberToLetter();
-
         $html = $this->renderView(':contabilidad/facturacion/pdf:factura.html.twig', [
             'title' => 'factura_' . $factura->getFolioCotizacion() . '.pdf',
             'factura' => $factura,

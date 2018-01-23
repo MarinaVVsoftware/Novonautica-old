@@ -18,16 +18,4 @@ class ClienteRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
-
-    public function findLike($key, $value)
-    {
-        $key = 'cl.' . $key;
-        $qb = $this->createQueryBuilder('cl');
-
-        return $qb
-            ->where('LOWER('. $key .') LIKE :value')
-            ->setParameter(':value', strtolower("%{$value}%"))
-            ->getQuery()
-            ->getResult();
-    }
 }
