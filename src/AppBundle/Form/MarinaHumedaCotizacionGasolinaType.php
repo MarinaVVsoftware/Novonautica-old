@@ -84,6 +84,7 @@ class MarinaHumedaCotizacionGasolinaType extends AbstractType
                 'attr' => ['rows' => 7],
                 'required' => false
             ])
+
            ;
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {

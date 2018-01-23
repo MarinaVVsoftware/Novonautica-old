@@ -93,7 +93,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'required' => false
             ])
             ->add('validacliente', ChoiceType::class, [
-                'choices' => ['Aceptar' => 2, 'Rechazar' => 1, 'Pendiente' => 0],
+                'choices' => ['Aceptar' => 2, 'Rechazar' => 1],
                 'expanded' => true,
                 'multiple' => false,
                 'choice_attr' => function ($val, $key, $index) {
@@ -140,7 +140,19 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('notasnovo')
                     ->remove('notascliente');
                 $formModifier($event->getForm(), $cotizacion->getCliente());
-            } else { //editando cotización, solo para validaciones
+            } elseif($cotizacion->getValidanovo() == 2) { //para validar por el cliente
+                $form
+                    ->remove('cliente')
+                    ->remove('fechaLlegada')
+                    ->remove('fechaSalida')
+                    ->remove('descuento')
+                    ->remove('dolar')
+                    ->remove('mensaje')
+                    ->remove('mhcservicios')
+                    ->remove('validanovo')
+                    ->remove('notasnovo')
+                    ->remove('slip');
+            } else { //para validar por novo
                 $form
                     ->remove('cliente')
 //                    ->remove('barco')
