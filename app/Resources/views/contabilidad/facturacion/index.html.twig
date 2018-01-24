@@ -14,7 +14,7 @@
                                 <table class="table table-novo">
                                     <thead>
                                     <tr>
-                                        <th>Folio de cotización</th>
+                                        <th>Folio de factura</th>
                                         <th>RFC Emisor / Emisor</th>
                                         <th>RFC Receptor / Receptor</th>
                                         <th>Razon social</th>
@@ -28,29 +28,30 @@
                                     {% for facturacion in facturacions %}
                                         <tr>
                                             <td>
-                                                {{ facturacion.folioCotizacion }}
+                                                {{ facturacion.folioFiscal }}
                                             </td>
                                             <td>{{ facturacion.emisor.rfc }} <br> {{ facturacion.emisor.nombre }}</td>
                                             <td>{{ facturacion.rfc }} <br> {{ facturacion.cliente }}</td>
                                             <td>{{ facturacion.razonSocial }}</td>
-                                            <td align="center">${{ facturacion.total / 100|number_format(2) }} {{ facturacion.moneda }}</td>
+                                            <td align="center">
+                                                ${{ facturacion.total / 100|number_format(2) }} {{ facturacion.moneda }}</td>
                                             <td>{{ facturacion.fechaTimbrado }}</td>
                                             <td align="center">
-                                                        <a href="{{ asset('timbrados') }}/{{ facturacion.xmlArchivo|split('/')|last }}"
-                                                           target="_blank"
-                                                           class="remove-motor btn btn-xs btn-azul"
-                                                           style="margin: 5px;"
-                                                        >
-                                                            XML
-                                                        </a>
+                                                <a href="{{ asset('timbrados') }}/{{ facturacion.xmlArchivo|split('/')|last }}"
+                                                   target="_blank"
+                                                   class="remove-motor btn btn-xs btn-azul"
+                                                   style="margin: 5px;"
+                                                >
+                                                    XML
+                                                </a>
                                                 <br>
-                                                        <a href="{{ path('contabilidad_factura_pdf', { 'id': facturacion.id }) }}"
-                                                           target="_blank"
-                                                           class="remove-motor btn btn-xs btn-azul"
-                                                           style="margin: 5px;"
-                                                        >
-                                                            PDF
-                                                        </a>
+                                                <a href="{{ path('contabilidad_factura_pdf', { 'id': facturacion.id }) }}"
+                                                   target="_blank"
+                                                   class="remove-motor btn btn-xs btn-azul"
+                                                   style="margin: 5px;"
+                                                >
+                                                    PDF
+                                                </a>
                                             </td>
                                             <td></td>
                                         </tr>

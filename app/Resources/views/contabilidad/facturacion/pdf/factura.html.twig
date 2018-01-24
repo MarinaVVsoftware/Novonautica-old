@@ -104,9 +104,9 @@
                     <td>{{ concepto.claveUnidad.claveUnidad ~ ' / ' ~ concepto.claveUnidad }}</td>
                     <td>{{ concepto.claveProdServ.claveProdServ ~ ' / ' ~ concepto.claveProdServ.descripcion }}</td>
                     <td>{{ concepto.descripcion }}</td>
-                    <td>${{ concepto.valorunitario / 100 }}</td>
-                    <td>IVA ${{ concepto.iva / 100 }}</td>
-                    <td>${{ concepto.subtotal / 100 }}</td>
+                    <td>${{ (concepto.valorunitario / 100)|number_format(2) }}</td>
+                    <td>IVA ${{ (concepto.iva / 100)|number_format(2) }}</td>
+                    <td>${{ (concepto.subtotal / 100)|number_format(2) }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -125,15 +125,15 @@
                     Método de pago: {{ factura.metodoPago }} - {{ metodoPago }}
                 </td>
                 <td colspan="2">SUBTOTAL</td>
-                <td colspan="2">$ {{ factura.subtotal / 100|number_format(2) }} {{ factura.moneda }}</td>
+                <td colspan="2">$ {{ (factura.subtotal / 100)|number_format(2) }} {{ factura.moneda }}</td>
             </tr>
             <tr>
                 <td colspan="2">IVA(16%)</td>
-                <td colspan="2">$ {{ factura.iva / 100|number_format(2) }} {{ factura.moneda }}</td>
+                <td colspan="2">$ {{ (factura.iva / 100)|number_format(2) }} {{ factura.moneda }}</td>
             </tr>
             <tr>
                 <td colspan="2">TOTAL</td>
-                <td colspan="2">$ {{ factura.total / 100|number_format(2) }} {{ factura.moneda }}</td>
+                <td colspan="2">$ {{ (factura.total / 100)|number_format(2) }} {{ factura.moneda }}</td>
             </tr>
         </table>
     </div>

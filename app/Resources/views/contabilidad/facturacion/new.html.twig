@@ -8,6 +8,8 @@
             background: #3e4766;
             overflow: auto;
             width: auto !important;
+            min-width: 100px;
+            max-width: 300px;
         }
 
         .autocomplete-suggestion {
@@ -140,7 +142,7 @@
                                     <div class="row">
                                         <div class="col-sm-3">
                                             <a href="#" id="add-servicio" class="btn btn-contorno-azul">
-                                                + Agregar servicio
+                                                + Agregar concepto
                                             </a>
                                         </div>
                                         <div class="col-sm-4 col-sm-push-5 text-right">
@@ -234,6 +236,7 @@
         const ivaHolder = document.getElementById('appbundle_contabilidad_facturacion_iva');
         const totalHolder = document.getElementById('appbundle_contabilidad_facturacion_total');
         const monedaSelect = document.getElementById('appbundle_contabilidad_facturacion_moneda');
+        let cotizacionData = {};
         let conceptoCounter = '{{ form.conceptos|length }}';
         const autocompleteSettings = {
           dataType: 'json',
@@ -244,9 +247,9 @@
         };
 
         // Si ya se cargo una cotizacion, entonces esconder 'agregar servicio'
-        if (pagosHolder.selectedIndex && conceptoHolder.childElementCount) {
-          addLink.classList.add('hidden');
-        }
+        // if (pagosHolder.selectedIndex && conceptoHolder.childElementCount) {
+        //   addLink.classList.add('hidden');
+        // }
 
         // Sugiere el tipo de cambio en base a la moneda elegida
         monedaSelect.addEventListener('change', function () {
@@ -306,7 +309,7 @@
             return {
               suggestions: cotizaciones.map(cotizacion => {
                 return {
-                  value: cotizacion.folio.toString(),
+                  value: cotizacion.foliorecotiza ? `${cotizacion.folio}-${cotizacion.foliorecotiza}` : `${cotizacion.folio}`,
                   data: cotizacion
                 }
               })
@@ -320,41 +323,15 @@
               let opt = new Option(`$${(pago.cantidad / 100).toFixed(2)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'), pago.id);
               pagosHolder.appendChild(opt);
             });
-
-            // if (conceptoHolder.children.length) return;
-            // suggestion.data.conceptos.forEach(concepto => appendRow(concepto)); // Rellena los conceptos
-            // Rellena los valores totales
-            /*
-            tipoCambioHolder.value = `${(suggestion.data.tipocambio / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            tipoCambioHolder.setAttribute('readonly', true);
-            subtotalHolder.value = `${(suggestion.data.subtotal / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            descuentoHolder.value = `${(suggestion.data.descuento / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            ivaHolder.value = `${(suggestion.data.iva / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            totalHolder.value = `${(suggestion.data.total / 100)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-
-            addLink.classList.add('hidden');*/
+            cotizacionData = data;
           }
         });
 
-        // Al seleccionar un pago, agrega una row con datos del pago
-        pagosHolder.addEventListener('change', function () {
-          if (!this.options[this.selectedIndex].value) {
-            $cotizacionSelect.val('');
-            addLink.classList.remove('hidden'); // Se permitiran mas servicios al seleccionar un pago?
-            conceptoHolder.innerHTML = '';
-            return;
-          }
-
-          $cotizacionSelect.val(this.dataset.folio || $cotizacionSelect.val());
-          addLink.classList.add('hidden');
-          let total = (clearPrice(this.options[this.selectedIndex].text)) * 100;
-          let iva = Math.round((total * 16) / 116);
-          let precio = Math.round(total - iva);
-
+        // Al seleccionar un pago, agrega una row con los conceptos de la cotizacion
+        pagosHolder.addEventListener('change', function (e) {
+          if (!this.options[this.selectedIndex].value) { clearData(e); return; }
           conceptoHolder.innerHTML = '';
-          if (![...conceptoHolder.children].length) {
-            appendRow({cantidad: 1, unidad: 'NA', descripcion: '', descuento: 0, total, iva, precio, subtotal: precio})
-          }
+          cotizacionData.conceptos.forEach(concepto => appendRow(concepto));
         });
 
         // Agrega una nueva row vacia
@@ -372,7 +349,6 @@
 
           conceptoHolder.appendChild(concepto);
           addRowListener(concepto, data);
-          calculateTotals();
 
           conceptoCounter++;
         }
@@ -399,32 +375,31 @@
 
           if (data) {
             cantidadConcepto.value = data.cantidad || cantidadConcepto.value;
-            unidadConcepto.value = data.unidad || unidadConcepto.value;
             cpsConcepto.value = cpsConcepto.value || '';
             cuConcepto.value = cuConcepto.value || '';
-            descripcionConcepto.value = data.descripcion || descripcionConcepto.value;
+            descripcionConcepto.value = data.nombre || data.serviciobasico || data.servicio || data.producto || data.otroservicio || descripcionConcepto.value;
 
-            vUnitarioConcepto.value = `${data.precio / 100}`;
-            descuentoConcepto.value = `${data.descuento / 100}`;
-            ivaConcepto.value = `${data.iva / 100}`;
-            subtotalConcepto.value = `${data.subtotal / 100}`;
-            totalConcepto.value = `${data.total / 100}`; // Agregarle comas a un precio .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            vUnitarioConcepto.value = data.precio ? `${data.precio / 100}` : 0;
+            descuentoConcepto.value = data.descuento ? `${data.descuento / 100}` : 0;
           }
+
+          calculateConceptos();
 
           function calculateConceptos() {
             if (!/^[\d,\s.\\$]+$/.test(this.value) && this.value) return;
-            let cantidad = (cantidadConcepto.value);
-            let precio = clearPrice(vUnitarioConcepto.value);
-            let descuento = clearPrice(descuentoConcepto.value);
-            let subtotal = (cantidad * precio);
-            let iva = (subtotal * .16);
-            let total = (subtotal - descuento) + iva;
+            // Valores definidos por el usuario
+            let cantidad = (cantidadConcepto.value * 1);
+            let precio = (vUnitarioConcepto.value * 100);
+            let descuento = (descuentoConcepto.value * 100);
 
-            vUnitarioConcepto.value = precio;
-            descuentoConcepto.value = descuento;
-            ivaConcepto.value = iva;
-            subtotalConcepto.value = subtotal;
-            totalConcepto.value = total;
+            // Calculo automatico
+            let subtotal = (cantidad * precio);
+            let iva = Math.round(subtotal * .16);
+            let total = ((subtotal - descuento) + iva);
+
+            subtotalConcepto.value = `${subtotal / 100}`;
+            ivaConcepto.value = `${iva / 100}`;
+            totalConcepto.value = `${total / 100}`;
 
             calculateTotals();
           }
@@ -499,8 +474,8 @@
           return textPrice.replace(/[,\\$]/g, '');
         }
 
-        $(document).on('keyup change', '#appbundle_contabilidad_facturacion_folioCotizacion', function (e) {
-          if ((e.keyCode === 8 && !this.value) || !this.value.trim() || e.type === 'change') {
+        function clearData(e) {
+          if ((e.keyCode === 8 && !this.value.trim()) || !e.target.value.trim()) {
             conceptoHolder.innerHTML = '';
             tipoCambioHolder.removeAttribute('readonly');
             pagosHolder.selectedIndex = 0;
@@ -508,9 +483,11 @@
             descuentoHolder.value = 0;
             ivaHolder.value = 0;
             totalHolder.value = 0;
-            addLink.classList.remove('hidden');
           }
-        });
+        }
+
+        $(document).on('keyup change', '#appbundle_contabilidad_facturacion_folioCotizacion', clearData);
+
 
         $(document).on('click', '.remove-concepto', function (e) {
           e.preventDefault();

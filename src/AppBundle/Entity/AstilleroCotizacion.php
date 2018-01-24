@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,6 +17,8 @@ class AstilleroCotizacion
 {
     /**
      * @var int
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -76,12 +79,16 @@ class AstilleroCotizacion
     /**
      * @var float
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="subtotal", type="float", nullable=true)
      */
     private $subtotal;
 
     /**
      * @var float
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="ivatotal", type="float", nullable=true)
      */
@@ -90,11 +97,16 @@ class AstilleroCotizacion
     /**
      * @var float
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="total", type="float", nullable=true)
      */
     private $total;
+
     /**
      * @var integer
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="adeudo", type="bigint", nullable=true)
      */
@@ -127,13 +139,6 @@ class AstilleroCotizacion
      */
     private $fecharegistro;
 
-//    /**
-//     *
-//     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="astillerocotizaciones")
-//     * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
-//     */
-//    private $cliente;
-
     /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="astillerocotizaciones")
@@ -143,11 +148,15 @@ class AstilleroCotizacion
 
     /**
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizaServicio", mappedBy="astillerocotizacion",cascade={"persist"})
      */
     private $acservicios;
 
     /**
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Pago", mappedBy="acotizacion",cascade={"persist","remove"})
      */
@@ -184,12 +193,16 @@ class AstilleroCotizacion
     /**
      * @var int
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="folio", type="integer", length=255)
      */
     private $folio;
 
     /**
      * @var int
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="foliorecotiza", type="integer", length=255)
      */

@@ -4,6 +4,9 @@ namespace AppBundle\Controller\Contabilidad;
 
 use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Extra\NumberToLetter;
+use AppBundle\Serializer\CotizacionNameConverter;
+use AppBundle\Serializer\NotNullObjectNormalizer;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -13,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -143,7 +148,6 @@ class FacturacionController extends Controller
         $factura = new Facturacion();
         $valorSistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
         $factura->setTipoCambio($valorSistema->getDolar());
-        $factura->setFolioCotizacion($valorSistema->getFolioMarina() + 1);
         $valorSistema->setFolioMarina($factura->getFolioCotizacion());
 
         $form = $this->createForm('AppBundle\Form\Contabilidad\FacturacionType', $factura);
@@ -226,9 +230,10 @@ class FacturacionController extends Controller
 
     private function createFacturaPDF(Facturacion $factura)
     {
+        $folio = $factura->getFolioCotizacion() ?? $factura->getFolioFiscal();
         $numToLetters = new NumberToLetter();
         $html = $this->renderView(':contabilidad/facturacion/pdf:factura.html.twig', [
-            'title' => 'factura_' . $factura->getFolioCotizacion() . '.pdf',
+            'title' => 'factura_' . $folio . '.pdf',
             'factura' => $factura,
             'regimenFiscal' => $this->regimenFiscal[$factura->getEmisor()->getRegimenFiscal()],
             'tipoComprobante' => $this->tipoComprobante[$factura->getTipoComprobante()],
@@ -241,7 +246,7 @@ class FacturacionController extends Controller
 
         return new PdfResponse(
             $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-            'factura_' . $factura->getFolioCotizacion() . '.pdf', 'application/pdf', 'inline'
+            'factura_' . $folio . '.pdf', 'application/pdf', 'inline'
         );
     }
 
@@ -251,17 +256,42 @@ class FacturacionController extends Controller
      * @param Request $request
      *
      * @return string
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function getAllCotizacionesAction(Request $request)
     {
         $em = $this->getDoctrine();
         $folio = $request->query->get('folio');
-        $marinaCotizaciones = $em->getRepository('AppBundle:Contabilidad\Facturacion')->getAllCotizacionesxFacturar($folio);
-        $marinaCotizaciones = $this->clearData($marinaCotizaciones);
+        $cotizaciones = $em->getRepository('AppBundle:Contabilidad\Facturacion')->getCotizaciones($folio);
 
-        $normalizer = new ObjectNormalizer();
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $nameConverter = new CotizacionNameConverter();
+        $normalizer = new NotNullObjectNormalizer($classMetadataFactory, $nameConverter);
+
+        $returnNombres = function ($servicio) {
+            if (null !== $servicio) {
+                return $servicio->getNombre();
+            }
+        };
+
+        $normalizer->setCallbacks([
+            'tipo' => function ($tipo) {
+                if ($tipo === 1) {
+                    return 'Días de estancia';
+                } else if ($tipo === 2) {
+                    return 'Conexión a electricidad';
+                } else {
+                    return 'Abastecimiento de combustible';
+                }
+            },
+            'astilleroserviciobasico' => $returnNombres,
+            'servicio' => $returnNombres,
+            'producto' => $returnNombres,
+        ]);
+
         $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
-        return new Response($serializer->serialize($marinaCotizaciones, $request->getRequestFormat()));
+        $response = $serializer->serialize($cotizaciones, $request->getRequestFormat(), ['groups' => ['facturacion']]);
+        return new Response($response);
     }
 
     /**
