@@ -73,7 +73,7 @@ class Concepto
      *
      * @Assert\NotBlank(message="No puede dejar vacio este valor")
      *
-     *@ORM\Column(name="subtotal", type="bigint")
+     * @ORM\Column(name="subtotal", type="bigint")
      */
     private $subtotal;
 

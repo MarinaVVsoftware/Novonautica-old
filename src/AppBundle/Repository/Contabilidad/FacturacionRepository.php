@@ -12,8 +12,10 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
 {
     public function getCotizaciones($folio)
     {
-        $marinaCotizaciones = $this->getMarinaCotizacionesByFolio($folio);
-        $astilleroCotizaciones = $this->getAstilleroCotizacionesByFolio($folio);
+        $folios = explode('-', $folio);
+
+        $marinaCotizaciones = $this->getMarinaCotizacionesByFolio($folios[0], $folios[1] ?? null);
+        $astilleroCotizaciones = $this->getAstilleroCotizacionesByFolio($folios[0], $folios[1] ?? null);
 
         return array_merge($marinaCotizaciones, $astilleroCotizaciones);
     }
@@ -43,7 +45,7 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         return $query->getResult();
     }
 
-    private function getMarinaCotizacionesByFolio($folio)
+    private function getMarinaCotizacionesByFolio($folio, $folioRecotizado = null)
     {
         $em = $this->getEntityManager();
         // Consume mas recursos ??
@@ -60,20 +62,23 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         WHERE cotizacion.validanovo = 2
         AND pagos.id IS NOT NULL
         AND pagos.factura IS NULL
+        AND cotizacion.folio LIKE :folio
         ';
 
-        if ($folio) {
-            $dql .= 'AND cotizacion.folio LIKE :folio';
+        if ($folioRecotizado) {
+            $dql .= 'AND cotizacion.foliorecotiza LIKE :foliorecotiza';
             $query = $em->createQuery($dql)
-                ->setParameter(':folio', "%{$folio}%");
+                ->setParameter('folio', "%{$folio}%")
+                ->setParameter('foliorecotiza', "%{$folioRecotizado}%");
         } else {
-            $query = $em->createQuery($dql);
+            $query = $em->createQuery($dql)
+                ->setParameter('folio', "%{$folio}%");
         }
 
         return $query->getResult();
     }
 
-    private function getAstilleroCotizacionesByFolio($folio)
+    private function getAstilleroCotizacionesByFolio($folio, $folioRecotizado = null)
     {
         $em = $this->getEntityManager();
         $dql = '
@@ -93,14 +98,17 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         WHERE cotizacion.validanovo = 2
         AND pagos.id IS NOT NULL
         AND pagos.factura IS NULL
+        AND cotizacion.folio LIKE :folio
         ';
 
-        if ($folio) {
-            $dql .= 'AND cotizacion.folio LIKE :folio';
+        if ($folioRecotizado) {
+            $dql .= 'AND cotizacion.foliorecotiza LIKE :foliorecotiza';
             $query = $em->createQuery($dql)
-                ->setParameter(':folio', "%{$folio}%");
+                ->setParameter('folio', "%{$folio}%")
+                ->setParameter('foliorecotiza', "%{$folioRecotizado}%");
         } else {
-            $query = $em->createQuery($dql);
+            $query = $em->createQuery($dql)
+                ->setParameter('folio', "%{$folio}%");
         }
 
         return $query->getResult();

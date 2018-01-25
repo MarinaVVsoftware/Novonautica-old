@@ -50,7 +50,7 @@ class ClaveProdServTransformer implements DataTransformerInterface
      */
     public function transform($claveProdServ)
     {
-        return $claveProdServ === null ? null : $claveProdServ->getId();
+        return $claveProdServ === null ? null : $claveProdServ->getClaveProdServ() . ' / ' .$claveProdServ->getDescripcion();
     }
 
     /**
@@ -71,21 +71,23 @@ class ClaveProdServTransformer implements DataTransformerInterface
      * By convention, reverseTransform() should return NULL if an empty string
      * is passed.
      *
-     * @param $claveProdServId
+     * @param $claveProdServString
      *
      * @return mixed The value in the original representation
      */
-    public function reverseTransform($claveProdServId)
+    public function reverseTransform($claveProdServString)
     {
-        if (!$claveProdServId) { return; }
+        if (!$claveProdServString) { return; }
+
+        $claveProdServCode = explode(' / ', $claveProdServString);
 
         $claveProdServ = $this->em
             ->getRepository(ClaveProdServ::class)
-            ->find($claveProdServId);
+            ->findOneBy(['claveProdServ' => $claveProdServCode[0]]);
 
         if ($claveProdServ === null) {
             throw new TransformationFailedException(sprintf(
-                'ClaveProdServ con numero "%s" no existe', $claveProdServId));
+                'ClaveProdServ con numero "%s" no existe', $claveProdServString));
         }
 
         return $claveProdServ;

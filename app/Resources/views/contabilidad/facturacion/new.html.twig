@@ -168,7 +168,6 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <button type="submit" class="btn btn-azul pull-right">
-                                        {#<i class="fa fa-floppy-o" aria-hidden="true"></i>#}
                                         Facturar
                                     </button>
                                     <div class="pull-left">
@@ -205,9 +204,12 @@
         const tabPanes = tabContent.querySelectorAll('.tab-pane');
         const tabs = document.querySelectorAll('.nav-tabs > li');
 
-        if (firstError) showErrors(firstError.parentNode.parentNode.parentNode);
+        if (firstError) {
+          showErrors(firstError.parentNode.parentNode.parentNode);
+        }
+
         fooForm.addEventListener('invalid', e => {
-          showErrors(e.target.parentNode.parentNode.parentNode.parentNode)
+          tabPanes.forEach(pane => pane.querySelector(`#${e.target.getAttribute('id')}`) ? showErrors(pane) : false);
         }, true);
 
         function showErrors(pane) {
@@ -236,7 +238,7 @@
         const ivaHolder = document.getElementById('appbundle_contabilidad_facturacion_iva');
         const totalHolder = document.getElementById('appbundle_contabilidad_facturacion_total');
         const monedaSelect = document.getElementById('appbundle_contabilidad_facturacion_moneda');
-        let cotizacionData = {};
+        let cotizacionData = null;
         let conceptoCounter = '{{ form.conceptos|length }}';
         const autocompleteSettings = {
           dataType: 'json',
@@ -324,14 +326,33 @@
               pagosHolder.appendChild(opt);
             });
             cotizacionData = data;
+
+            // Buscar datos si data esta vacio despues de regresar de un error
           }
         });
 
         // Al seleccionar un pago, agrega una row con los conceptos de la cotizacion
         pagosHolder.addEventListener('change', function (e) {
-          if (!this.options[this.selectedIndex].value) { clearData(e); return; }
-          conceptoHolder.innerHTML = '';
-          cotizacionData.conceptos.forEach(concepto => appendRow(concepto));
+          if (!this.options[this.selectedIndex].value) {
+            clearData(e);
+            return;
+          }
+
+          if (null === cotizacionData) {
+            $.ajax({ // Al regresar por un error, cotizacionData no tiene datos
+              url: `{{ app.request.BaseUrl }}/contabilidad/facturacion/cotizaciones.json`,
+              data: {folio: $cotizacionSelect.val()},
+              dataType: 'json',
+              success: function (data) {
+                cotizacionData = data[0];
+                conceptoHolder.innerHTML = '';
+                cotizacionData.conceptos.forEach(concepto => appendRow(concepto));
+              }
+            });
+          } else {
+            conceptoHolder.innerHTML = '';
+            cotizacionData.conceptos.forEach(concepto => appendRow(concepto));
+          }
         });
 
         // Agrega una nueva row vacia
@@ -379,7 +400,8 @@
             cuConcepto.value = cuConcepto.value || '';
             descripcionConcepto.value = data.nombre || data.serviciobasico || data.servicio || data.producto || data.otroservicio || descripcionConcepto.value;
 
-            vUnitarioConcepto.value = data.precio ? `${data.precio / 100}` : 0;
+            // vUnitarioConcepto.value = data.precio ? `${data.precio / 100}` : 0;
+            vUnitarioConcepto.value = 0;
             descuentoConcepto.value = data.descuento ? `${data.descuento / 100}` : 0;
           }
 
@@ -409,9 +431,13 @@
             minChars: 1,
             paramName: 'q',
             params: {},
-            onSelect: function ({data}) {
-              this.nextElementSibling.value = data;
-            }
+            autoSelectFirst: true,
+            onSearchStart: function (params) {
+              if (params.q.includes('/')) {
+                params.q = params.q.split(' / ')[1].trim();
+              }
+              return params;
+            },
           };
 
           $(cpsConcepto).autocomplete({
