@@ -41,7 +41,7 @@ class ClaveUnidadTransformer implements DataTransformerInterface
      * En este metodo se recibe el string tal cual escrito en el input
      * es aqui donde se debe transformar a una entidad para que symfony pueda usarla
      *
-     * @param $claveUnidadString
+     * @param $claveUnidadString string
      * @return mixed The value in the original representation
      *
      */
@@ -57,7 +57,7 @@ class ClaveUnidadTransformer implements DataTransformerInterface
 
         if ($entity === null) {
             throw new TransformationFailedException(sprintf(
-                'ClaveProdServ con numero "%s" no existe', $string));
+                'ClaveProdServ con numero "%s" no existe', $claveUnidadString));
         }
 
         return $entity;

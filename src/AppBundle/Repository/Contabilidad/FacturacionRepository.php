@@ -25,15 +25,16 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         $em = $this->getEntityManager();
         $dql = '
         SELECT 
-        pagos, mhc, movimiento
+        pagos, mhc, atc, movimiento
         FROM AppBundle:Pago AS pagos
         LEFT JOIN pagos.mhcotizacion AS mhc
+        LEFT JOIN pagos.acotizacion AS atc
         LEFT JOIN mhc.slipmovimiento AS movimiento
-        WHERE mhc.folio = :folio
+        WHERE mhc.folio = :folio OR atc.folio = :folio
         ';
 
         if ($folioRecotizado) {
-            $dql .= 'AND mhc.foliorecotiza = :foliorecotizado';
+            $dql .= 'AND mhc.foliorecotiza = :foliorecotizado OR atc.foliorecotiza = :foliorecotizado';
             $query = $em->createQuery($dql)
                 ->setParameter(':folio', $folio)
                 ->setParameter(':foliorecotizado', $folioRecotizado);
@@ -41,6 +42,7 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
             $query = $em->createQuery($dql)
                 ->setParameter(':folio', $folio);
         }
+
 
         return $query->getResult();
     }

@@ -8,6 +8,7 @@ use AppBundle\Entity\Pago;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Facturacion
@@ -1024,5 +1025,20 @@ class Facturacion
     public function getPagos()
     {
         return $this->pagos;
+    }
+
+    /**
+     * @Assert\Callback()
+     *
+     * @param ExecutionContextInterface $context
+     * @param $payload
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if ((null !== $this->getPagos()) && ($this->getTotal() > $this->getPagos()->getCantidad())) {
+            $context->buildViolation('El total es mayor que la cantidad del pago.')
+                ->atPath('total')
+                ->addViolation();
+        }
     }
 }

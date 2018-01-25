@@ -4,6 +4,10 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
+        .help-block {
+            color: #dd4b39;
+        }
+
         .autocomplete-suggestions {
             background: #3e4766;
             overflow: auto;
@@ -158,6 +162,7 @@
                                             <hr>
                                             <h4 class="letra-azul">Total</h4>
                                             {{ form_widget(form.total) }}
+                                            {{ form_errors(form.total) }}
                                             <hr>
                                         </div>
                                     </div>
@@ -170,13 +175,13 @@
                                     <button type="submit" class="btn btn-azul pull-right">
                                         Facturar
                                     </button>
-                                    <div class="pull-left">
-                                        {#{{ delete_form is defined ? modal.deleteButton() : '' }}#}
-                                    </div>
+                                    {{ form_end(form) }}
+                                    {#<div class="pull-left">
+                                        {{ delete_form is defined ? modal.deleteButton() : '' }}
+                                    </div>#}
                                 </div>
                             </div>
                         </div>
-                        {{ form_end(form) }}
                     </div>
                 </div>
             </div>
@@ -201,11 +206,13 @@
         const fooForm = document.querySelector('form');
         const tabContent = document.querySelector('.tab-content');
         const firstError = tabContent.querySelector('.has-error');
+        const helpBlocks = tabContent.querySelector('.help-block');
         const tabPanes = tabContent.querySelectorAll('.tab-pane');
         const tabs = document.querySelectorAll('.nav-tabs > li');
 
-        if (firstError) {
-          showErrors(firstError.parentNode.parentNode.parentNode);
+        if (firstError || helpBlocks) {
+          let errorElement = firstError || helpBlocks;
+          showErrors(errorElement.parentNode.parentNode.parentNode);
         }
 
         fooForm.addEventListener('invalid', e => {

@@ -160,13 +160,18 @@ class FacturacionController extends Controller
             // Verificar que la factura se haya timbrado correctamente
             if ($timbrado['codigo_mf_numero']) {
                 $this->addFlash('danger', $timbrado['codigo_mf_texto']);
-                return $this->redirectToRoute('contabilidad_facturacion_new');
+
+                return $this->render('contabilidad/facturacion/new.html.twig', [
+                    'facturacion' => $factura,
+                    'form' => $form->createView(),
+                ]);
             }
 
             // Si se eligio un pago de una cotizacion, entonces relacionarlo con la factura
             if ($factura->getPagos()) {
                 $factura->getPagos()->setFactura($factura);
             }
+
             $factura->setXml(trim($timbrado['cfdi']));
             $factura->setPng(trim($timbrado['png']));
             $factura->setXmlArchivo($timbrado['archivo_xml']);
@@ -198,13 +203,13 @@ class FacturacionController extends Controller
                 )
                 ->attach($attachment);
 
-//            $mailer->send($message);
+            $mailer->send($message);
             return $this->redirectToRoute('contabilidad_facturacion_index');
         }
 
         return $this->render('contabilidad/facturacion/new.html.twig', [
             'facturacion' => $factura,
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ]);
     }
 
@@ -257,7 +262,7 @@ class FacturacionController extends Controller
      * @Route("/{id}/factura", name="contabilidad_factura_pdf")
      * @Method("GET")
      */
-    public function showFacturaPDFAction(Request $request, Facturacion $factura)
+    public function showFacturaPDFAction(Facturacion $factura)
     {
         return $this->createFacturaPDF($factura);
     }
@@ -343,7 +348,13 @@ class FacturacionController extends Controller
         return new Response($serializer->serialize($cps, $request->getRequestFormat()));
     }
 
-    private function createFacturaPDF(Facturacion $factura)
+    /**
+     * Genera un PDF de una factura
+     *
+     * @param Facturacion $factura
+     * @return PdfResponse
+     */
+    private function createFacturaPDF($factura)
     {
         $folio = $factura->getFolioCotizacion() ?? $factura->getFolioFiscal();
         $numToLetters = new NumberToLetter();
