@@ -149,7 +149,7 @@ class ProductoController extends Controller
      *
      * @param Producto $producto The producto entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\FormInterface The form
      */
     private function createDeleteForm(Producto $producto)
     {

@@ -133,47 +133,73 @@ function esNumeroDecimal(e, field) {
 
 //////////////////////////////////////////////////////////////////
 //Collection al agregar productos a una solicitud
-jQuery('.add-another-producto').click(function (e) {
-    e.preventDefault();
-    var totMotores = $(this).data('cantidad');
-    var lista = $(this).data('idlista');
-    var motorListPrimero = jQuery('#motor-fields-list' + lista);
-    var newWidget = $(motorListPrimero).data('prototype');
-    newWidget = newWidget.replace(/__name__/g, totMotores);
-    totMotores++;
-    $(this).data('cantidad', totMotores);
-    var newLi = jQuery('<div class="row"></div>').html(newWidget);
+(function () {
+    jQuery('.add-another-producto').click(function (e) {
+        e.preventDefault();
+        var totMotores = $(this).data('cantidad');
+        var lista = $(this).data('idlista');
+        var motorListPrimero = jQuery('#motor-fields-list' + lista);
+        var newWidget = $(motorListPrimero).data('prototype');
+        newWidget = newWidget.replace(/__name__/g, totMotores);
+        totMotores++;
+        $(this).data('cantidad', totMotores);
+        var newLi = jQuery('<div class="row"></div>').html(newWidget);
 
-    $(newLi).find(".selectclientebuscar").change(function () {
+        newLi.appendTo(motorListPrimero);
+        $('.select-buscador').select2();
+        newLi.before(newLi);
+    });
+
+    $(document).on("change", ".selectclientebuscar", function () {
         var precio = $(this).find(':selected').data('precio');
-        const can = $(newLi).find(".cantidad");
-        can.on('change', function() {
-            const cantidad = $(this).val();
-            const subtotal = cantidad/100 * precio;
-            $(newLi).find("#totalcantidad").val(subtotal) ;
-            calculateGrandTotal();
-            console.log(subtotal);
+        var subtotalHolder = $(this.parentNode.parentNode.parentNode).find('.subtotal');
+        var can = $(this.parentNode.parentNode.parentNode).find('.cantidad');
+
+        calculateProducto(can, precio, subtotalHolder);
+
+        can.on('input', function () {
+            calculateProducto(this, precio, subtotalHolder);
         });
     });
+
+    $("#appbundle_tienda_solicitud_preciosolespecial").on("input", function() {
+        suma();
+    });
+
+    function suma() {
+            var sumar = $("#appbundle_tienda_solicitud_preciosolespecial").val();
+            var subesptotal = $("#appbundle_tienda_solicitud_subtotal").val();
+            var valfinal = Math.abs(sumar) + Math.abs(subesptotal);
+            $("#appbundle_tienda_solicitud_total").val(valfinal.toFixed(2));
+    }
+
+    function calculateProducto(can, precio, subtotalHolder) {
+        var cantidad = $(can).val();
+        var subtotal = cantidad / 100 * precio;
+        $(subtotalHolder).val(subtotal);
+        calculateGrandTotal();
+    }
+
     function calculateGrandTotal() {
-        let grandTotal = 0;
-        newLi.find('#totalcantidad').each(function () {
+        var grandTotal = 0;
+        $(document).find(".subtotal").each(function () {
             grandTotal += +$(this).val();
-            console.log(this);
         });
         $("#appbundle_tienda_solicitud_subtotal").val(grandTotal.toFixed(2));
+        suma();
     }
-    newLi.appendTo(motorListPrimero);
-    $('.select-buscador').select2();
-    newLi.before(newLi);
-});
 
-
-$('.lista-productos').on('click', '.remove-producto', function (e) {
-    e.preventDefault();
-    $(this).parent().parent().remove();
-    return false;
-});
+    $('.lista-productos').on('click', '.remove-producto', function (e) {
+        e.preventDefault();
+        var resta = $(this.parentNode.parentNode).find('.subtotal').val();
+        var subrestatotal = $("#appbundle_tienda_solicitud_subtotal").val();
+        var restatotal = Math.abs(subrestatotal - resta);
+        $("#appbundle_tienda_solicitud_subtotal").val(restatotal.toFixed(2));
+        suma();
+        $(this.parentNode.parentNode.remove());
+        return false;
+    });
+})();
 
 ////////////////////////////////////////////////////////////////////
 

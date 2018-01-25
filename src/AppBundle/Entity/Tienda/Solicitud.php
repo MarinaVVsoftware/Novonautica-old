@@ -48,7 +48,7 @@ class Solicitud
 
     /**
      * @var integer
-     * @ORM\Column(name="preciosolespecial", type="bigint", length=20)
+     * @ORM\Column(name="preciosolespecial", type="bigint", length=20, nullable=true)
      */
     private $preciosolespecial;
 

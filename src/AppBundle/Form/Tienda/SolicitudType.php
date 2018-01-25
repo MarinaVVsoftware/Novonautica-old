@@ -29,16 +29,20 @@ class SolicitudType extends AbstractType
                 'class' => 'AppBundle:Barco',
                 'label' => 'Embarcación',
                 'placeholder' => 'Seleccionar...',
-                'attr' => ['class' => 'select-buscador selectclientebuscar']
+                'attr' => ['class' => 'select-buscador']
             ])
 
             ->add('solicitudEspecial', TextareaType::class, array(
                 'attr' => array('rows' => 8),
+                'required' => false,
+                'empty_data' => ''
             ))
             ->add('preciosolespecial', MoneyType::class, [
                 'divisor' => 100,
+                'empty_data' => '',
                 'label' => 'Precio de la Solicitud Especial',
-                'currency' => 'MXN'
+                'currency' => 'MXN',
+                'required' => false
             ])
             ->add('producto', CollectionType::class, array(
             'entry_type' => PeticionType::class,
@@ -50,13 +54,13 @@ class SolicitudType extends AbstractType
         ))
             ->add('subtotal' , MoneyType::class, [
                 'divisor' => 100,
-                'label' => false,
+                'label' => 'Subtotal de los productos',
                 'currency' => 'MXN',
                 'attr' => ['readonly' => true]
             ])
             ->add('total', MoneyType::class, [
                 'divisor' => 100,
-                'label' => false,
+                'label' => 'Total',
                 'currency' => 'MXN',
                 'attr' => ['readonly' => true]
             ]);

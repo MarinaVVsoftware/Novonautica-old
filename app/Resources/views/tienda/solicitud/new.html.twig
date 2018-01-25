@@ -80,19 +80,3 @@
         </section>
     </div>
 {% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">
-        // $(document).on("change", ".selectclientebuscar", function () {
-        //     console.log(this);
-        // })
-        $(".selectclientebuscar").on("change", function () {
-            var precio = $(this).find(':selected').data('precio');
-            console.log(precio);
-
-            $("#appbundle_tienda_solicitud_subtotal").val(precio/100);
-        });
-
-
-    </script>
-{% endblock %}
