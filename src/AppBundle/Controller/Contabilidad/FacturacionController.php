@@ -148,7 +148,6 @@ class FacturacionController extends Controller
         $factura = new Facturacion();
         $valorSistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
         $factura->setTipoCambio($valorSistema->getDolar());
-        $valorSistema->setFolioMarina($factura->getFolioCotizacion());
 
         $form = $this->createForm('AppBundle\Form\Contabilidad\FacturacionType', $factura);
         $form->handleRequest($request);
