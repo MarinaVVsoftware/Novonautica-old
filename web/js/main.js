@@ -133,26 +133,78 @@ function esNumeroDecimal(e, field) {
 
 //////////////////////////////////////////////////////////////////
 //Collection al agregar productos a una solicitud
-jQuery('.add-another-producto').click(function (e) {
-    e.preventDefault();
-    var totMotores = $(this).data('cantidad');
-    var lista = $(this).data('idlista');
-    var motorListPrimero = jQuery('#motor-fields-list' + lista);
-    var newWidget = $(motorListPrimero).data('prototype');
-    newWidget = newWidget.replace(/__name__/g, totMotores);
-    totMotores++;
-    $(this).data('cantidad', totMotores);
-    var newLi = jQuery('<div class="row"></div>').html(newWidget);
-    newLi.appendTo(motorListPrimero);
-    $('.select-buscador').select2();
-    newLi.before(newLi);
-});
+(function () {
+    jQuery('.add-another-producto').click(function (e) {
+        e.preventDefault();
+        var totMotores = $(this).data('cantidad');
+        var lista = $(this).data('idlista');
+        var motorListPrimero = jQuery('#motor-fields-list' + lista);
+        var newWidget = $(motorListPrimero).data('prototype');
+        newWidget = newWidget.replace(/__name__/g, totMotores);
+        totMotores++;
+        $(this).data('cantidad', totMotores);
+        var newLi = jQuery('<div class="row"></div>').html(newWidget);
 
-$('.lista-productos').on('click', '.remove-producto', function (e) {
-    e.preventDefault();
-    $(this).parent().parent().parent().remove();
-    return false;
-});
+        newLi.appendTo(motorListPrimero);
+        $('.select-buscador').select2();
+        newLi.before(newLi);
+    });
+
+    $(document).on("change", ".selectclientebuscar", function () {
+        var precio = $(this).find(':selected').data('precio');
+        var subtotalHolder = $(this.parentNode.parentNode.parentNode).find('.subtotal');
+        var can = $(this.parentNode.parentNode.parentNode).find('.cantidad');
+
+        calculateProducto(can, precio, subtotalHolder);
+
+        can.on('input', function () {
+            calculateProducto(this, precio, subtotalHolder);
+        });
+    });
+
+    $("#appbundle_tienda_solicitud_preciosolespecial").on("input", function() {
+        suma();
+    });
+
+    function suma() {
+            var sumar = $("#appbundle_tienda_solicitud_preciosolespecial").val();
+            var subesptotal = $("#appbundle_tienda_solicitud_subtotal").val();
+            var valfinal = Math.abs(sumar) + Math.abs(subesptotal);
+            $("#appbundle_tienda_solicitud_total").val(valfinal.toFixed(2));
+    }
+
+    function calculateProducto(can, precio, subtotalHolder) {
+        var cantidad = $(can).val();
+        var subtotal = cantidad / 100 * precio;
+        $(subtotalHolder).val(subtotal.toFixed(2));
+        calculateGrandTotal();
+    }
+
+    function calculateGrandTotal() {
+        var grandTotal = 0;
+        $(document).find(".subtotal").each(function () {
+            grandTotal += +$(this).val();
+        });
+        $("#appbundle_tienda_solicitud_subtotal").val(grandTotal.toFixed(2));
+        suma();
+    }
+
+    // $("#appbundle_tienda_solicitud_solicitudEspecial").on("input", function () {
+    //     $("#appbundle_tienda_solicitud_preciosolespecial").removeAttr("readonly");
+    // });
+
+    $('.lista-productos').on('click', '.remove-producto', function (e) {
+        e.preventDefault();
+        var resta = $(this.parentNode.parentNode).find('.subtotal').val();
+        var subrestatotal = $("#appbundle_tienda_solicitud_subtotal").val();
+        var restatotal = Math.abs(subrestatotal - resta);
+        $("#appbundle_tienda_solicitud_subtotal").val(restatotal.toFixed(2));
+        suma();
+        $(this.parentNode.parentNode.remove());
+        return false;
+    });
+})();
+
 ////////////////////////////////////////////////////////////////////
 
 //collectio al agregar motores a un barco

@@ -16,7 +16,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             {{ form_row(form.fecha) }}
-                            {{ form_row(form.embarcacion) }}
+                            {{ form_row(form.nombrebarco) }}
 
                             <div id="motor-fields-list0"
                                  class="lista-productos"
@@ -36,6 +36,11 @@
                         </div>
                         <div class="col-sm-4">
                             {{ form_row(form.solicitudEspecial) }}
+                            {{ form_row(form.preciosolespecial) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.subtotal) }}
+                            {{ form_row(form.total) }}
                         </div>
                     </div>
 

@@ -1,13 +1,22 @@
 {% block form_widget %}
     {% spaceless %}
         <div class="col-sm-12">
-            <div class="form-group">
-                {{ form_row(form.peticion) }}
-                <a href="#" class="remove-producto btn btn-xs btn-naranja">
-                    <i class="fa fa-times" aria-hidden="true"></i>
-                    Remover Producto
-                </a>
+            <div class="row">
+                <div class="col-xs-9">
+                    {{ form_row(form.peticion) }}
+                </div>
+                <div class="col-xs-3">
+                    {{ form_row(form.cantidad) }}
+                </div>
+
+                <div class="col-xs-offset-8 col-xs-4">
+                    <input type="text" class="subtotal" title="subtotalprod" readonly>
+                </div>
             </div>
+            <a href="#" class="remove-producto btn btn-xs btn-naranja">
+                <i class="fa fa-times" aria-hidden="true"></i>
+                Remover Producto
+            </a>
         </div>
     {% endspaceless %}
 {% endblock form_widget %}

@@ -153,12 +153,18 @@ class Barco
      */
     private $astillerocotizaciones;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Solicitud", mappedBy="nombrebarco")
+     */
+    private $embarcacion;
+
     public function __construct()
     {
         $this->motores = new ArrayCollection();
         $this->mhcotizaciones = new ArrayCollection();
         $this->mhcotizacionesadicionales = new ArrayCollection();
         $this->astillerocotizaciones = new ArrayCollection();
+        $this->embarcacion = new ArrayCollection();
     }
 
     public function __toString()
@@ -650,5 +656,39 @@ class Barco
     public function getMhcotizacionesadicionales()
     {
         return $this->mhcotizacionesadicionales;
+    }
+
+    /**
+     * Add embarcacion
+     *
+     * @param \AppBundle\Entity\Tienda\Solicitud $embarcacion
+     *
+     * @return Barco
+     */
+    public function addEmbarcacion(\AppBundle\Entity\Tienda\Solicitud $embarcacion)
+    {
+        $this->embarcacion[] = $embarcacion;
+
+        return $this;
+    }
+
+    /**
+     * Remove embarcacion
+     *
+     * @param \AppBundle\Entity\Tienda\Solicitud $embarcacion
+     */
+    public function removeEmbarcacion(\AppBundle\Entity\Tienda\Solicitud $embarcacion)
+    {
+        $this->embarcacion->removeElement($embarcacion);
+    }
+
+    /**
+     * Get embarcacion
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEmbarcacion()
+    {
+        return $this->embarcacion;
     }
 }

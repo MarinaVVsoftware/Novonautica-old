@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Tienda;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,6 +28,18 @@ class Producto
      * @ORM\Column(name="solicitud", type="string", length=100)
      */
     private $nombre;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="precio", type="bigint", nullable=true)
+     */
+    private $precio;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Peticion", mappedBy="peticion")
+     */
+    private $nombreproducto;
 
     public function __toString()
     {
@@ -67,22 +80,68 @@ class Producto
         return $this->nombre;
     }
 
-//    /**
-//     * @return Solicitud
-//     */
-//    public function getSolicitud()
-//    {
-//        return $this->solicitud;
-//    }
-//
-//    /**
-//     * @param Solicitud $solicitud
-//     *
-//     * @return Producto
-//     */
-//    public function setSolicitud(Solicitud $solicitud = null)
-//    {
-//        $this->solicitud = $solicitud;
-//        return $this;
-//    }
+    /**
+     * Set precio
+     *
+     * @param integer $precio
+     *
+     * @return Producto
+     */
+    public function setPrecio($precio)
+    {
+        $this->precio = $precio;
+
+        return $this;
+    }
+
+    /**
+     * Get precio
+     *
+     * @return integer
+     */
+    public function getPrecio()
+    {
+        return $this->precio;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->nombreproducto = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add nombreproducto
+     *
+     * @param \AppBundle\Entity\Tienda\Peticion $nombreproducto
+     *
+     * @return Producto
+     */
+    public function addNombreproducto(\AppBundle\Entity\Tienda\Peticion $nombreproducto)
+    {
+        $this->nombreproducto[] = $nombreproducto;
+
+        return $this;
+    }
+
+    /**
+     * Remove nombreproducto
+     *
+     * @param \AppBundle\Entity\Tienda\Peticion $nombreproducto
+     */
+    public function removeNombreproducto(\AppBundle\Entity\Tienda\Peticion $nombreproducto)
+    {
+        $this->nombreproducto->removeElement($nombreproducto);
+    }
+
+    /**
+     * Get nombreproducto
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNombreproducto()
+    {
+        return $this->nombreproducto;
+    }
 }

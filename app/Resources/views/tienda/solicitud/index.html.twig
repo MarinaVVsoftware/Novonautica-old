@@ -18,7 +18,6 @@
                             <thead>
                             <tr>
                                 <th>Fecha</th>
-                                <th>Cliente</th>
                                 <th>Embarcación</th>
                                 <th>Solicitud Especial</th>
                                 <th>Total</th>
@@ -29,10 +28,9 @@
                             {% for solicitud in solicituds %}
                                 <tr>
                                     <td>{{ solicitud.fecha|date("m/d/Y") }}</td>
-                                    <td>Por definir</td>
-                                    <td>{{ solicitud.embarcacion }}</td>
+                                    <td>{{ solicitud.nombrebarco }}</td>
                                     <td>{{ solicitud.solicitudEspecial }}</td>
-                                    <td>200 dineros</td>
+                                    <td>$ {{ (solicitud.total/100)|number_format(2,'.',',') }}</td>
                                     <td class="align-middle">
                                         {% if solicitud.estado == 2 %}
                                             <img src="{{ asset('img/status-pendiente-icon.svg') }}"

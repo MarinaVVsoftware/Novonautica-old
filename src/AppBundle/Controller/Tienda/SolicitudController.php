@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Tienda;
 
 use AppBundle\Entity\Tienda\Peticion;
-use AppBundle\Entity\Tienda\Producto;
 use AppBundle\Entity\Tienda\Solicitud;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -67,46 +66,46 @@ class SolicitudController extends Controller
         ));
     }
 
-    /**
-     * Finds and displays a solicitud entity.
-     *
-     * @Route("/{id}", name="tienda_solicitud_show")
-     * @Method("GET")
-     */
-    public function showAction(Solicitud $solicitud)
-    {
-        $deleteForm = $this->createDeleteForm($solicitud);
-
-        return $this->render('tienda/solicitud/show.html.twig', array(
-            'solicitud' => $solicitud,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Displays a form to edit an existing solicitud entity.
-     *
-     * @Route("/{id}/edit", name="tienda_solicitud_edit")
-     * @Method({"GET", "POST"})
-     */
-    public function editAction(Request $request, Solicitud $solicitud)
-    {
-        $deleteForm = $this->createDeleteForm($solicitud);
-        $editForm = $this->createForm('AppBundle\Form\Tienda\SolicitudType', $solicitud);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('tienda_solicitud_edit', array('id' => $solicitud->getId()));
-        }
-
-        return $this->render('tienda/solicitud/edit.html.twig', array(
-            'solicitud' => $solicitud,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
+//    /**
+//     * Finds and displays a solicitud entity.
+//     *
+//     * @Route("/{id}", name="tienda_solicitud_show")
+//     * @Method("GET")
+//     */
+//    public function showAction(Solicitud $solicitud)
+//    {
+//        $deleteForm = $this->createDeleteForm($solicitud);
+//
+//        return $this->render('tienda/solicitud/show.html.twig', array(
+//            'solicitud' => $solicitud,
+//            'delete_form' => $deleteForm->createView(),
+//        ));
+//    }
+//
+//    /**
+//     * Displays a form to edit an existing solicitud entity.
+//     *
+//     * @Route("/{id}/edit", name="tienda_solicitud_edit")
+//     * @Method({"GET", "POST"})
+//     */
+//    public function editAction(Request $request, Solicitud $solicitud)
+//    {
+//        $deleteForm = $this->createDeleteForm($solicitud);
+//        $editForm = $this->createForm('AppBundle\Form\Tienda\SolicitudType', $solicitud);
+//        $editForm->handleRequest($request);
+//
+//        if ($editForm->isSubmitted() && $editForm->isValid()) {
+//            $this->getDoctrine()->getManager()->flush();
+//
+//            return $this->redirectToRoute('tienda_solicitud_edit', array('id' => $solicitud->getId()));
+//        }
+//
+//        return $this->render('tienda/solicitud/edit.html.twig', array(
+//            'solicitud' => $solicitud,
+//            'edit_form' => $editForm->createView(),
+//            'delete_form' => $deleteForm->createView(),
+//        ));
+//    }
 
     /**
      * Deletes a solicitud entity.

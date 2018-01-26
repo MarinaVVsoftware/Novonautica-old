@@ -58,73 +58,6 @@ class ProductoController extends Controller
     }
 
     /**
-     * Creates a new producto entity.
-     *
-     * @Route("/new", name="tienda_producto_new")
-     * @Method({"GET", "POST"})
-     */
-    public function newAction(Request $request)
-    {
-        $producto = new Producto();
-        $form = $this->createForm('AppBundle\Form\Tienda\ProductoType', $producto);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($producto);
-            $em->flush();
-
-            return $this->redirectToRoute('tienda_producto_show', array('id' => $producto->getId()));
-        }
-
-        return $this->render('tienda/producto/new.html.twig', array(
-            'producto' => $producto,
-            'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a producto entity.
-     *
-     * @Route("/{id}", name="tienda_producto_show")
-     * @Method("GET")
-     */
-    public function showAction(Producto $producto)
-    {
-        $deleteForm = $this->createDeleteForm($producto);
-
-        return $this->render('tienda/producto/show.html.twig', array(
-            'producto' => $producto,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Displays a form to edit an existing producto entity.
-     *
-     * @Route("/{id}/edit", name="tienda_producto_edit")
-     * @Method({"GET", "POST"})
-     */
-    public function editAction(Request $request, Producto $producto)
-    {
-        $deleteForm = $this->createDeleteForm($producto);
-        $editForm = $this->createForm('AppBundle\Form\Tienda\ProductoType', $producto);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('tienda_producto_edit', array('id' => $producto->getId()));
-        }
-
-        return $this->render('tienda/producto/edit.html.twig', array(
-            'producto' => $producto,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
      * Deletes a producto entity.
      *
      * @Route("/{id}", name="tienda_producto_delete")
@@ -149,7 +82,7 @@ class ProductoController extends Controller
      *
      * @param Producto $producto The producto entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\FormInterface The form
      */
     private function createDeleteForm(Producto $producto)
     {

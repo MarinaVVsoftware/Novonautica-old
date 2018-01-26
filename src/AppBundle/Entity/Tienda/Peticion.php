@@ -24,15 +24,21 @@ class Peticion
     /**
      * @var string
      *
-     * @ORM\Column(name="peticion", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Producto", inversedBy="nombreproducto")
      */
     private $peticion;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Solicitud", inversedBy="producto")
-     * @ORM\JoinColumn(name="idproducto", referencedColumnName="id",onDelete="CASCADE")
+     * @ORM\JoinColumn(name="idpeticion", referencedColumnName="id",onDelete="CASCADE")
      */
     private $solicitud;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="cantidad", type="integer", length=255)
+     */
+    private $cantidad;
 
     /**
      * Get id
@@ -44,38 +50,38 @@ class Peticion
         return $this->id;
     }
 
-    /**
-     * Set peticion
-     *
-     * @param string $peticion
-     *
-     * @return Peticion
-     */
-    public function setPeticion($peticion)
-    {
-        $this->peticion = $peticion;
-
-        return $this;
-    }
-
-    /**
-     * Get peticion
-     *
-     * @return string
-     */
-    public function getPeticion()
-    {
-        return $this->peticion;
-    }
+//    /**
+//     * Set peticion
+//     *
+//     * @param string $peticion
+//     *
+//     * @return Peticion
+//     */
+//    public function setPeticion($peticion)
+//    {
+//        $this->peticion = $peticion;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get peticion
+//     *
+//     * @return string
+//     */
+//    public function getPeticion()
+//    {
+//        return $this->peticion;
+//    }
 
     /**
      * Set solicitud
      *
-     * @param \AppBundle\Entity\Tienda\Solicitud $solicitud
+     * @param Solicitud $solicitud
      *
      * @return Peticion
      */
-    public function setSolicitud(\AppBundle\Entity\Tienda\Solicitud $solicitud = null)
+    public function setSolicitud(Solicitud $solicitud = null)
     {
         $this->solicitud = $solicitud;
 
@@ -85,10 +91,58 @@ class Peticion
     /**
      * Get solicitud
      *
-     * @return \AppBundle\Entity\Tienda\Solicitud
+     * @return Solicitud
      */
     public function getSolicitud()
     {
         return $this->solicitud;
+    }
+
+    /**
+     * Set cantidad
+     *
+     * @param integer $cantidad
+     *
+     * @return Peticion
+     */
+    public function setCantidad($cantidad)
+    {
+        $this->cantidad = $cantidad;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidad
+     *
+     * @return integer
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
+    }
+
+    /**
+     * Set peticion
+     *
+     * @param \AppBundle\Entity\Tienda\Producto $peticion
+     *
+     * @return Peticion
+     */
+    public function setPeticion(\AppBundle\Entity\Tienda\Producto $peticion = null)
+    {
+        $this->peticion = $peticion;
+
+        return $this;
+    }
+
+    /**
+     * Get peticion
+     *
+     * @return \AppBundle\Entity\Tienda\Producto
+     */
+    public function getPeticion()
+    {
+        return $this->peticion;
     }
 }
