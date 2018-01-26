@@ -176,7 +176,7 @@ function esNumeroDecimal(e, field) {
     function calculateProducto(can, precio, subtotalHolder) {
         var cantidad = $(can).val();
         var subtotal = cantidad / 100 * precio;
-        $(subtotalHolder).val(subtotal);
+        $(subtotalHolder).val(subtotal.toFixed(2));
         calculateGrandTotal();
     }
 
@@ -188,6 +188,10 @@ function esNumeroDecimal(e, field) {
         $("#appbundle_tienda_solicitud_subtotal").val(grandTotal.toFixed(2));
         suma();
     }
+
+    // $("#appbundle_tienda_solicitud_solicitudEspecial").on("input", function () {
+    //     $("#appbundle_tienda_solicitud_preciosolespecial").removeAttr("readonly");
+    // });
 
     $('.lista-productos').on('click', '.remove-producto', function (e) {
         e.preventDefault();

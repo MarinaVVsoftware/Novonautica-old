@@ -42,7 +42,7 @@ class SolicitudType extends AbstractType
                 'empty_data' => '',
                 'label' => 'Precio de la Solicitud Especial',
                 'currency' => 'MXN',
-                'required' => false
+                'required' => false,
             ])
             ->add('producto', CollectionType::class, array(
             'entry_type' => PeticionType::class,
