@@ -109,3 +109,6 @@ vich_uploader:
             uri_prefix: /../src/Hyperion/MultifacturasBundle/src/certificados
             upload_destination: '%kernel.project_dir%/src/Hyperion/MultifacturasBundle/src/certificados'
             namer: vich_uploader.namer_origname
+        facturacion_emisor_logo:
+            uri_prefix: /uploads/facturacion/emisor/logos
+            upload_destination: '%kernel.root_dir%/../web/uploads/facturacion/emisor/logos'

@@ -35,15 +35,6 @@ class Concepto
     /**
      * @var string
      *
-     * @Assert\NotBlank(message="Por favor indique una unidad")
-     *
-     * @ORM\Column(name="unidad", type="string", length=100)
-     */
-    private $unidad;
-
-    /**
-     * @var string
-     *
      * @Assert\NotBlank(message="No puede dejar vacio este valor")
      *
      * @ORM\Column(name="descripcion", type="string", length=255)
@@ -82,7 +73,7 @@ class Concepto
      *
      * @Assert\NotBlank(message="No puede dejar vacio este valor")
      *
-     *@ORM\Column(name="subtotal", type="bigint")
+     * @ORM\Column(name="subtotal", type="bigint")
      */
     private $subtotal;
 
@@ -153,30 +144,6 @@ class Concepto
     public function getCantidad()
     {
         return $this->cantidad;
-    }
-
-    /**
-     * Set unidad
-     *
-     * @param string $unidad
-     *
-     * @return Concepto
-     */
-    public function setUnidad($unidad)
-    {
-        $this->unidad = $unidad;
-
-        return $this;
-    }
-
-    /**
-     * Get unidad
-     *
-     * @return string
-     */
-    public function getUnidad()
-    {
-        return $this->unidad;
     }
 
     /**

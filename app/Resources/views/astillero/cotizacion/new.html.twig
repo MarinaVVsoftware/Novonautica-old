@@ -625,7 +625,6 @@
                     url: url,
                     dataType: 'json',
                     success: function (barco) {
-                        console.log(barco);
                         JSON.stringify(barco);
                         var html = "<label>Modelo</label>" + "<div class='info-input'>" + barco.modelo + "</div>" +
                             "<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>" +
@@ -658,9 +657,6 @@
                             "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
                             "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
                             "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>" +
-                            "<label>R.F.C.</label>" + "<div class='info-input'>" + cliente.rfc + "</div>" +
-                            "<label>Razón social</label>" + "<div class='info-input'>" + cliente.razonsocial + "</div>" +
-                            "<label>Dirección fiscal</label>" + "<div class='info-input'>" + cliente.direccionfiscal + "</div>";
                         $("#info-cliente").append(html);
                         $('#loading').hide();
                     }
@@ -683,9 +679,6 @@
                         var html = "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
                             "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
                             "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>" +
-                            "<label>R.F.C.</label>" + "<div class='info-input'>" + cliente.rfc + "</div>" +
-                            "<label>Razón social</label>" + "<div class='info-input'>" + cliente.razonsocial + "</div>" +
-                            "<label>Dirección fiscal</label>" + "<div class='info-input'>" + cliente.direccionfiscal + "</div>";
                         $("#info-cliente").append(html);
 
                         $('#loading').hide();

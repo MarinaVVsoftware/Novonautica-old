@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Contabilidad;
 
 use AppBundle\Entity\Contabilidad\Facturacion;
+use AppBundle\Entity\Pago;
 use AppBundle\Form\Contabilidad\Facturacion\ConceptoType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -152,16 +153,18 @@ class FacturacionType extends AbstractType
             ]);
 
         $formBuilder = function (FormInterface $form, $folioCotizacion = null) {
+            $folios = explode('-', $folioCotizacion);
             $facturacionRepo = $this->em->getRepository('AppBundle:Contabilidad\Facturacion');
-            $pagos = $folioCotizacion ? $facturacionRepo->getPagosByFolioCotizacion($folioCotizacion) : [];
+            $pagos = $folioCotizacion ? $facturacionRepo->getPagosByFolioCotizacion($folios[0], $folios[1] ?? null) : [];
 
             $form->add('pagos', EntityType::class, [
                 'class' => 'AppBundle\Entity\Pago',
                 'required' => false,
                 'placeholder' => '',
                 'choices' => $pagos,
-                'choice_label' => function ($value) {
-                    return '$' . number_format(($value->getCantidad() / 100), 2);
+                'choice_label' => function ($pago) {
+                    /** @var Pago $pago */
+                    return '$' . number_format(($pago->getCantidad() / 100), 2);
                 }
             ]);
         };

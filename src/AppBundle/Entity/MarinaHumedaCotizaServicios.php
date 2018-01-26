@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * MarinaHumedaCotizaServicios
@@ -25,6 +26,8 @@ class MarinaHumedaCotizaServicios
      * Tipo de servicio 1=Estadia, 2=Electricidad, 3=Gasolina Magna, 4=Gasolina Premium, 5=Diesel
      * @var int
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="tipo", type="integer", nullable=true)
      */
     private $tipo;
@@ -32,12 +35,16 @@ class MarinaHumedaCotizaServicios
     /**
      * @var float
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="cantidad", type="float", nullable=true)
      */
     private $cantidad;
 
     /**
      * @var int
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="precio", type="integer", nullable=true)
      */

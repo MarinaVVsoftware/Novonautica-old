@@ -164,8 +164,8 @@ class NumberToLetter
     /**
      * Evalua si el número contiene separadores o decimales
      * formatea y ejecuta la función conversora
-     * @param $number número a convertir
-     * @param $miMoneda clave de la moneda
+     * @param $number float|int a convertir
+     * @param $miMoneda string de la moneda
      * @return string completo
      */
     public function toWord($number, $miMoneda = null)

@@ -33,11 +33,8 @@ class ConceptoType extends AbstractType
     {
         $builder
             ->add('cantidad', NumberType::class)
-            ->add('unidad', TextType::class)
-            ->add('claveProdServAC', TextType::class, ['mapped' => false])
-            ->add('claveProdServ', HiddenType::class)
-            ->add('claveUnidadAC', TextType::class, ['mapped' => false])
-            ->add('claveUnidad', HiddenType::class)
+            ->add('claveProdServ', TextType::class)
+            ->add('claveUnidad', TextType::class)
             ->add('descripcion')
             ->add('valorunitario', MoneyType::class, [
                 'currency' => 'USD',

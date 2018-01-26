@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichFileType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class EmisorType extends AbstractType
 {
@@ -44,6 +45,12 @@ class EmisorType extends AbstractType
                 ]
             ])
             ->add('nombre', TextType::class, ['label' => 'Razón social'])
+            ->add('logoFile', VichImageType::class, [
+                'label' => 'Logo',
+                'download_label' => 'Ver Logo',
+                'allow_delete' => false,
+                'required' => false
+            ])
             ->add('cerFile', VichFileType::class, [
                 'label' => 'Archivo CER',
                 'allow_delete' => false,
@@ -61,7 +68,8 @@ class EmisorType extends AbstractType
             ->add('emails', TextType::class, ['label' => 'Emails de recepción (Separados por comas)'])
             ->add('password')
             ->add('codigoPostal')
-            ->add('direccion');
+            ->add('direccion')
+        ;
     }
 
     /**

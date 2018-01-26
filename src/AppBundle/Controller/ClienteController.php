@@ -76,23 +76,26 @@ class ClienteController extends Controller
      */
     public function getClientesLike(Request $request)
     {
-        $query = $request->query->all();
-        $repo = $this->getDoctrine()->getRepository('AppBundle:Cliente');
-        $clientes = $repo->findLike(key($query), $query[key($query)]);
+        $q = $request->query->get('rfc');
+        $rfcs = $this->getDoctrine()->getRepository('AppBundle:Cliente\RazonSocial')->findLikeRfc($q);
 
-        $ignoredAttributes = [
-            'barcos',
-            'fecharegistro',
-            'monederomovimientos',
-            'mHcotizaciones',
-            'mhcotizacionesadicionales',
-            'astillerocotizaciones',
-            'monederomarinahumeda',
-            'estatus',
-            'password'
-        ];
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
 
-        return new Response($this->serializeEntities($clientes, $request->getRequestFormat(), $ignoredAttributes));
+        $obj = $serializer->serialize($rfcs, $request->getRequestFormat(), [
+            'attributes' => [
+                'rfc',
+                'razonSocial',
+                'direccion',
+                'correos',
+                'cliente' => [
+                    'nombre',
+                    'telefono'
+                ]
+            ]
+        ]);
+
+        return new Response($obj);
     }
 
     /**
@@ -101,7 +104,7 @@ class ClienteController extends Controller
      * @Route("/nuevo", name="cliente_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request,\Swift_Mailer $mailer)
+    public function newAction(Request $request, \Swift_Mailer $mailer)
     {
         $cliente = new Cliente();
         $barco = new Barco();
@@ -140,7 +143,7 @@ class ClienteController extends Controller
 
             $barco->setFecharegistro($fechaHoraActual);
             $cliente->setFecharegistro($fechaHoraActual)
-                    ->setPassword($randomString);
+                ->setPassword($randomString);
 
             $em->persist($cliente);
             $em->flush();
@@ -203,11 +206,11 @@ class ClienteController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        foreach ($barcos as $barco){
+        foreach ($barcos as $barco) {
             $barco = $em->getRepository(Barco::class)->find($barco->getId());
             $cliente = $barco->getCliente();
             if (!$barco) {
-                throw $this->createNotFoundException('No hay barcos encontrados para el id '.$barco->getId());
+                throw $this->createNotFoundException('No hay barcos encontrados para el id ' . $barco->getId());
             }
             $originalMotores = new ArrayCollection();
 
@@ -228,9 +231,9 @@ class ClienteController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach ($barcos as $barco){
+            foreach ($barcos as $barco) {
                 $om = $barcomotores[$barco->getId()]; //extraemos la coleccion de motores del barco correspondiente
-                foreach ($om as $motor){
+                foreach ($om as $motor) {
                     if (false === $barco->getMotores()->contains($motor)) {
                         // remove the Task from the Tag
                         $motor->getBarco()->removeMotore($motor);
@@ -256,7 +259,7 @@ class ClienteController extends Controller
             // redirect back to some edit page
             return $this->redirectToRoute('cliente_show', ['id' => $cliente->getId()]);
         }
-        
+
         return $this->render('cliente/edit.html.twig', [
             'title' => 'Editar cliente',
             'cliente' => $cliente,

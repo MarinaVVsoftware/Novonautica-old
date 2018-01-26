@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Astillero;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Producto
@@ -23,6 +24,8 @@ class Producto
 
     /**
      * @var string
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="nombre", type="string", length=255, nullable=true)
      */

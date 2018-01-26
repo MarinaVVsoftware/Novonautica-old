@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Pago
@@ -15,6 +16,8 @@ class Pago
 {
     /**
      * @var int
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -32,12 +35,16 @@ class Pago
     /**
      * @var float
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="cantidad", type="float", nullable=true)
      */
     private $cantidad;
 
     /**
      * @var float
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="dolar", type="float", nullable=true)
      */

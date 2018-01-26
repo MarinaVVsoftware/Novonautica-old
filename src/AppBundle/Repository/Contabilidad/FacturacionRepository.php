@@ -2,8 +2,6 @@
 
 namespace AppBundle\Repository\Contabilidad;
 
-use Doctrine\ORM\Query;
-
 /**
  * FacturacionRepository
  *
@@ -12,51 +10,14 @@ use Doctrine\ORM\Query;
  */
 class FacturacionRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function getAllCotizacionesxFacturar($folio)
+    public function getCotizaciones($folio)
     {
-        $em = $this->getEntityManager();
-        // Consume mas recursos ??
-        $dql = '
-        SELECT 
-        cotizacion,
-        pagos
-        FROM AppBundle:MarinaHumedaCotizacion AS cotizacion
-        LEFT JOIN cotizacion.pagos AS pagos
-        WHERE cotizacion.validanovo = 2
-        AND pagos.id IS NOT NULL
-        AND pagos.factura IS NULL
-        ';
-        /*$dql = '
-        SELECT 
-        cotizacion,
-        servicio,
-        barco
-        FROM AppBundle:MarinaHumedaCotizacion AS cotizacion
-        LEFT JOIN cotizacion.mhcservicios AS servicio
-        LEFT JOIN cotizacion.slipmovimiento AS movimiento
-        LEFT JOIN cotizacion.barco AS barco
-        WHERE cotizacion.validanovo = 2
-        AND cotizacion.factura IS null
-        ';*/
-        // o esta consume mas recursos?
-        /*$dql = '
-        SELECT 
-        partial cotizacion.{id, folio, foliorecotiza, iva, subtotal, total},
-        partial servicio.{id, tipo, cantidad, precio, iva, descuento, subtotal, total}
-        FROM AppBundle:MarinaHumedaCotizacion AS cotizacion
-        LEFT JOIN cotizacion.mhcservicios AS servicio
-        WHERE cotizacion.validanovo = 2
-        ';*/
+        $folios = explode('-', $folio);
 
-        if ($folio) {
-            $dql .= 'AND cotizacion.folio LIKE :folio';
-            $query = $em->createQuery($dql)
-                ->setParameter(':folio', "%{$folio}%");
-        } else {
-            $query = $em->createQuery($dql);
-        }
+        $marinaCotizaciones = $this->getMarinaCotizacionesByFolio($folios[0], $folios[1] ?? null);
+        $astilleroCotizaciones = $this->getAstilleroCotizacionesByFolio($folios[0], $folios[1] ?? null);
 
-        return $query->getResult(Query::HYDRATE_ARRAY);
+        return array_merge($marinaCotizaciones, $astilleroCotizaciones);
     }
 
     public function getPagosByFolioCotizacion($folio, $folioRecotizado = null)
@@ -64,21 +25,92 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         $em = $this->getEntityManager();
         $dql = '
         SELECT 
-        pagos, mhc, movimiento
+        pagos, mhc, atc, movimiento
         FROM AppBundle:Pago AS pagos
         LEFT JOIN pagos.mhcotizacion AS mhc
+        LEFT JOIN pagos.acotizacion AS atc
         LEFT JOIN mhc.slipmovimiento AS movimiento
-        WHERE mhc.folio = :folio
+        WHERE mhc.folio = :folio OR atc.folio = :folio
         ';
 
         if ($folioRecotizado) {
-            $dql .= 'AND mhc.foliorecotiza = :foliorecotizado';
+            $dql .= 'AND mhc.foliorecotiza = :foliorecotizado OR atc.foliorecotiza = :foliorecotizado';
             $query = $em->createQuery($dql)
                 ->setParameter(':folio', $folio)
                 ->setParameter(':foliorecotizado', $folioRecotizado);
         } else {
             $query = $em->createQuery($dql)
                 ->setParameter(':folio', $folio);
+        }
+
+
+        return $query->getResult();
+    }
+
+    private function getMarinaCotizacionesByFolio($folio, $folioRecotizado = null)
+    {
+        $em = $this->getEntityManager();
+        // Consume mas recursos ??
+        $dql = '
+        SELECT 
+        cotizacion,
+        pagos,
+        servicio,
+        movimiento
+        FROM AppBundle:MarinaHumedaCotizacion AS cotizacion
+        LEFT JOIN cotizacion.pagos AS pagos
+        LEFT JOIN cotizacion.mhcservicios AS servicio
+        LEFT JOIN cotizacion.slipmovimiento AS movimiento
+        WHERE cotizacion.validanovo = 2
+        AND pagos.id IS NOT NULL
+        AND pagos.factura IS NULL
+        AND cotizacion.folio LIKE :folio
+        ';
+
+        if ($folioRecotizado) {
+            $dql .= 'AND cotizacion.foliorecotiza LIKE :foliorecotiza';
+            $query = $em->createQuery($dql)
+                ->setParameter('folio', "%{$folio}%")
+                ->setParameter('foliorecotiza', "%{$folioRecotizado}%");
+        } else {
+            $query = $em->createQuery($dql)
+                ->setParameter('folio', "%{$folio}%");
+        }
+
+        return $query->getResult();
+    }
+
+    private function getAstilleroCotizacionesByFolio($folio, $folioRecotizado = null)
+    {
+        $em = $this->getEntityManager();
+        $dql = '
+        SELECT
+        cotizacion,
+        pagos,
+        servicios,
+        servicioBasico,
+        servicioProducto,
+        servicioRegular
+        FROM AppBundle:AstilleroCotizacion AS cotizacion
+        LEFT JOIN cotizacion.pagos AS pagos
+        LEFT JOIN cotizacion.acservicios AS servicios
+        LEFT JOIN servicios.astilleroserviciobasico AS servicioBasico
+        LEFT JOIN servicios.producto AS servicioProducto
+        LEFT JOIN servicios.servicio AS servicioRegular
+        WHERE cotizacion.validanovo = 2
+        AND pagos.id IS NOT NULL
+        AND pagos.factura IS NULL
+        AND cotizacion.folio LIKE :folio
+        ';
+
+        if ($folioRecotizado) {
+            $dql .= 'AND cotizacion.foliorecotiza LIKE :foliorecotiza';
+            $query = $em->createQuery($dql)
+                ->setParameter('folio', "%{$folio}%")
+                ->setParameter('foliorecotiza', "%{$folioRecotizado}%");
+        } else {
+            $query = $em->createQuery($dql)
+                ->setParameter('folio', "%{$folio}%");
         }
 
         return $query->getResult();

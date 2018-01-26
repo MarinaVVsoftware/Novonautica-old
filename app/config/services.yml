@@ -49,3 +49,11 @@ services:
     AppBundle\Form\Contabilidad\FacturacionType:
         arguments: ['@doctrine.orm.entity_manager']
         tags: [form.type]
+
+    AppBundle\Serializer\CotizacionNameConverter:
+        alias: 'Symfony\Component\Serializer\NameConverter\NameConverterInterface'
+        public: false
+
+    doctrine.orm.default_entity_manager.property_info_extractor:
+        alias: 'Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface'
+        public: false

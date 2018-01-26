@@ -484,17 +484,23 @@ class MarinaHumedaCotizacionController extends Controller
     /**
      * @Route("/{id}/pago", name="marina_cotizacion_pago_edit")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param MarinaHumedaCotizacion $marinaHumedaCotizacion
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function editPagoAction(Request $request,MarinaHumedaCotizacion $marinaHumedaCotizacion)
+    public function editPagoAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
-
         //$pago = new Pago();
         //$marinaHumedaCotizacion->addPago($pago);
         $totPagado = 0;
         $listaPagos = new ArrayCollection();
+
         foreach ($marinaHumedaCotizacion->getPagos() as $pago){
             $listaPagos->add($pago);
         }
+
         $form = $this->createForm('AppBundle\Form\MarinaHumedaRegistraPagoType', $marinaHumedaCotizacion);
         $form->handleRequest($request);
 
@@ -502,29 +508,27 @@ class MarinaHumedaCotizacionController extends Controller
             $total = $marinaHumedaCotizacion->getTotal();
             $pagado = $marinaHumedaCotizacion->getPagado();
 
-
             $em = $this->getDoctrine()->getManager();
 
-                foreach ($listaPagos as $pago) {
-                    if (false === $marinaHumedaCotizacion->getPagos()->contains($pago)) {
-                        $pago->getMhcotizacion()->removePago($pago);
-                        $em->persist($pago);
-                        $em->remove($pago);
-                    }
+            foreach ($listaPagos as $pago) {
+                if (false === $marinaHumedaCotizacion->getPagos()->contains($pago)) {
+                    $pago->getMhcotizacion()->removePago($pago);
+                    $em->persist($pago);
+                    $em->remove($pago);
                 }
-            foreach ($marinaHumedaCotizacion->getPagos() as $pago) {
-                $totPagado+=$pago->getCantidad();
             }
-            if($total < $totPagado) {
-                $this->addFlash(
-                    'notice',
-                    'Error! Se ha intentado pagar más del total'
-                );
-            }else{
+
+            foreach ($marinaHumedaCotizacion->getPagos() as $pago) {
+                $totPagado += $pago->getCantidad();
+            }
+
+            if ($total < $totPagado) {
+                $this->addFlash('notice','Error! Se ha intentado pagar más del total');
+            } else {
                 $faltante = $total - $totPagado;
-                    if($faltante==0){
+                    if ($faltante==0) {
                         $marinaHumedaCotizacion->setEstatuspago(2);
-                    }else{
+                    } else {
                         $marinaHumedaCotizacion->setEstatuspago(1);
                     }
                 $marinaHumedaCotizacion
@@ -533,13 +537,12 @@ class MarinaHumedaCotizacionController extends Controller
                 $em->flush();
                 return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
             }
-
         }
 
-        return $this->render('marinahumeda/cotizacion/pago/edit.html.twig', array(
+        return $this->render('marinahumeda/cotizacion/pago/edit.html.twig', [
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     /**

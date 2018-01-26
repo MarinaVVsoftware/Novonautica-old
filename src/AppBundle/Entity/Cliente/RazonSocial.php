@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Cliente;
 
 use AppBundle\Entity\Cliente;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -31,6 +32,8 @@ class RazonSocial
      *     message="El RFC es invalido"
      *     )
      *
+     * @Groups({"group1"})
+     *
      * @ORM\Column(name="rfc", type="string", length=50)
      */
     private $rfc;
@@ -39,6 +42,8 @@ class RazonSocial
      * @var string
      *
      * @Assert\NotBlank(message="Este campo no puede estar vacio")
+     *
+     * @Groups({"group1"})
      *
      * @ORM\Column(name="razon_social", type="string", length=255)
      */
@@ -49,6 +54,8 @@ class RazonSocial
      *
      * @Assert\NotBlank(message="Este campo no puede estar vacio")
      *
+     * @Groups({"group1"})
+     *
      * @ORM\Column(name="direccion", type="string", length=255)
      */
     private $direccion;
@@ -58,12 +65,15 @@ class RazonSocial
      *
      * @Assert\NotBlank(message="Este campo no puede estar vacio")
      *
+     * @Groups({"group1"})
+     *
      * @ORM\Column(name="correos", type="string", nullable=true)
      */
     private $correos;
 
     /**
      * @var Cliente
+     *
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="razonesSociales")
      */

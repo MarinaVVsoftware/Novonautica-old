@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -21,6 +22,8 @@ class MarinaHumedaCotizacion
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Groups({"facturacion"})
      */
     private $id;
 
@@ -70,12 +73,16 @@ class MarinaHumedaCotizacion
     /**
      * @var integer
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="subtotal", type="bigint", nullable=true)
      */
     private $subtotal;
 
     /**
      * @var integer
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="ivatotal", type="bigint", nullable=true)
      */
@@ -84,6 +91,8 @@ class MarinaHumedaCotizacion
     /**
      * @var integer
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="descuentototal", type="bigint", nullable=true)
      */
     private $descuentototal;
@@ -91,12 +100,16 @@ class MarinaHumedaCotizacion
     /**
      * @var integer
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="total", type="bigint", nullable=true)
      */
     private $total;
 
     /**
      * @var integer
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="adeudo", type="bigint", nullable=true)
      */
@@ -177,12 +190,16 @@ class MarinaHumedaCotizacion
     /**
      * @var int
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="folio", type="integer", length=255)
      */
     private $folio;
 
     /**
      * @var int
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="foliorecotiza", type="integer", length=255)
      */
@@ -224,14 +241,12 @@ class MarinaHumedaCotizacion
     private $fecharespuesta;
 
     /**
-     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="mhcotizaciones")
      * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
      */
     private $cliente;
 
     /**
-     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="mhcotizaciones")
      * @ORM\JoinColumn(name="idbarco", referencedColumnName="id",onDelete="CASCADE")
      */
@@ -245,12 +260,14 @@ class MarinaHumedaCotizacion
     private $slip;
 
     /**
+     * @Groups({"facturacion"})
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaCotizaServicios", mappedBy="marinahumedacotizacion",cascade={"persist"})
      */
     private $mhcservicios;
 
     /**
+     * @Groups({"facturacion"})
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Pago", mappedBy="mhcotizacion",cascade={"persist","remove"})
      */

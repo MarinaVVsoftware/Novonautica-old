@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * AstilleroCotizaServicio
@@ -23,14 +24,9 @@ class AstilleroCotizaServicio
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="otroservicio", type="string", length=255, nullable=true)
-     */
-    private $otroservicio;
-
-    /**
      * @var float
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="cantidad", type="float", nullable=true)
      */
@@ -38,6 +34,8 @@ class AstilleroCotizaServicio
 
     /**
      * @var int
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="precio", type="integer", nullable=true)
      */
@@ -65,6 +63,15 @@ class AstilleroCotizaServicio
     private $total;
 
     /**
+     * @var string
+     *
+     * @Groups({"facturacion"})
+     *
+     * @ORM\Column(name="otroservicio", type="string", length=255, nullable=true)
+     */
+    private $otroservicio;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="estatus", type="boolean")
@@ -80,18 +87,26 @@ class AstilleroCotizaServicio
 
     /**
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\AstilleroServicioBasico")
      * @ORM\JoinColumn(name="idserviciobasico", referencedColumnName="id")
      */
     private $astilleroserviciobasico;
 
     /**
+     *
+     * @Groups({"facturacion"})
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Astillero\Producto", inversedBy="ACotizacionesServicios")
      * @ORM\JoinColumn(name="idproducto", referencedColumnName="id")
      */
     private $producto;
 
     /**
+     *
+     * @Groups({"facturacion"})
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Astillero\Servicio")
      * @ORM\JoinColumn(name="idservicio", referencedColumnName="id")
      */
