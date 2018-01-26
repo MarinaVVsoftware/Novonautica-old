@@ -10,26 +10,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-4">
-                            <table class="tabla-info">
-                                <tbody class="sin-encabezado">
-                                <tr>
-                                    <td>Fecha:</td>
-                                    <td> {{ fechaBuscar|date('Y-m-d') }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Total de Slips:</td>
-                                    <td>{{ totSlips }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Slips ocupados:</td>
-                                    <td>{{ numOcupados }}</td>
-                                </tr>
-                                <tr>
-                                    <td>% Ocupación:</td>
-                                    <td>{{ porcentajeOcupado }}%</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            Fecha: {{ fechaBuscar|date('Y-m-d') }}
                         </div>
                     </div>
                     <div class="row">
@@ -3296,6 +3277,36 @@
                                     </g>
                                 </g>
                             </svg>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Amarres en pies</th>
+                                    <th>Total de amarres</th>
+                                    <th>Amarres ocupados</th>
+                                    <th>% ocupación</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for tipoSlip in ocupacionTiposSlips %}
+                                    <tr>
+                                        <td>{{ tipoSlip.tipo }}</td>
+                                        <td>{{ tipoSlip.total }}</td>
+                                        <td>{{ tipoSlip.num }}</td>
+                                        <td>{{ tipoSlip.porcentaje|number_format(2) }} %</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td>Total</td>
+                                    <td>{{ totSlips }}</td>
+                                    <td>{{ numOcupados }}</td>
+                                    <td>{{ porcentajeOcupado|number_format(2) }} %</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

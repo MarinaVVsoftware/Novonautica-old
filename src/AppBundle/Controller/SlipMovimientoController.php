@@ -33,48 +33,21 @@ class SlipMovimientoController extends Controller
     public function displayZonaAAdministracion()
     {
         $fechaBuscar = new \DateTime('now');
-        $em = $this->getDoctrine()->getManager();
-        $qbcs = $em->getRepository('AppBundle:Slip')->createQueryBuilder('s');
-        $totSlips = $qbcs->select('count(s.id)')->getQuery()->getSingleScalarResult();
-        $qbbe = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
-        $slipsOcupados = $qbbe
-            ->select('sm','slip','marinahumedacotizacion','barco','cliente')
-            ->join('sm.slip','slip')
-            ->join('sm.marinahumedacotizacion','marinahumedacotizacion')
-            ->join('marinahumedacotizacion.barco','barco')
-            ->join('marinahumedacotizacion.cliente','cliente')
-            ->where(':fecha_buscar BETWEEN sm.fechaLlegada AND sm.fechaSalida')
-            ->getQuery()
-            ->setParameter('fecha_buscar',$fechaBuscar->format('Y-m-d'))
-            ->getArrayResult();
+        $em = $this->getDoctrine()->getManager()->getRepository('AppBundle:SlipMovimiento');
+        $totSlips = 176;
+        $slipsOcupados = $em->granTotalSlipsOcupados($fechaBuscar);
         $numOcupados = count($slipsOcupados);
-
         $porcentajeOcupado = ($numOcupados*100)/$totSlips;
-        $dibujoSlip=[];
-        $slipInicial=1;
-        $slipFinal=36;
-        for($i=$slipInicial;$i<=$slipFinal;$i++){
-            $dibujoSlip[$i] = ['color'=>'rgb(29, 105, 19)','embarcacion'=>'','cliente'=>'','eslora'=>'','fechaLlegada'=>'','fechaSalida'=>''];
-        }
-        for($i=$slipInicial;$i<=$slipFinal;$i++){
-            foreach ($slipsOcupados as $slip){
-                if($i == $slip['slip']['id']){
-                    $dibujoSlip[$i]['color'] = '#FF6600';
-                    $dibujoSlip[$i]['embarcacion'] = $slip['marinahumedacotizacion']['barco']['nombre'];
-                    $dibujoSlip[$i]['cliente'] = $slip['marinahumedacotizacion']['cliente']['nombre'];
-                    $dibujoSlip[$i]['eslora'] = $slip['marinahumedacotizacion']['barco']['eslora'];
-                    $dibujoSlip[$i]['fechaLlegada'] = $slip['fechaLlegada'];
-                    $dibujoSlip[$i]['fechaSalida'] = $slip['fechaSalida'];
-                }
-            }
-        }
+        $dibujoSlip = $em->pintaSlipsMapa($slipsOcupados);
+        $ocupacionTiposSlips = $em->calculoOcupaciones($fechaBuscar);
         return $this->render('marinahumeda/mapa/slip-zona-a.twig', [
             'title' => 'Slip Zona A',
             'fechaBuscar'=>$fechaBuscar,
             'totSlips'=>$totSlips,
             'numOcupados'=>$numOcupados,
             'porcentajeOcupado'=>$porcentajeOcupado,
-            'dibujoSlip'=>$dibujoSlip
+            'dibujoSlip'=>$dibujoSlip,
+            'ocupacionTiposSlips'=>$ocupacionTiposSlips
         ]);
     }
     /**
@@ -83,48 +56,21 @@ class SlipMovimientoController extends Controller
     public function displayZonaBAdministracion()
     {
         $fechaBuscar = new \DateTime('now');
-        $em = $this->getDoctrine()->getManager();
-        $qbcs = $em->getRepository('AppBundle:Slip')->createQueryBuilder('s');
-        $totSlips = $qbcs->select('count(s.id)')->getQuery()->getSingleScalarResult();
-        $qbbe = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
-        $slipsOcupados = $qbbe
-            ->select('sm','slip','marinahumedacotizacion','barco','cliente')
-            ->join('sm.slip','slip')
-            ->join('sm.marinahumedacotizacion','marinahumedacotizacion')
-            ->join('marinahumedacotizacion.barco','barco')
-            ->join('marinahumedacotizacion.cliente','cliente')
-            ->where(':fecha_buscar BETWEEN sm.fechaLlegada AND sm.fechaSalida')
-            ->getQuery()
-            ->setParameter('fecha_buscar',$fechaBuscar->format('Y-m-d'))
-            ->getArrayResult();
+        $em = $this->getDoctrine()->getManager()->getRepository('AppBundle:SlipMovimiento');
+        $totSlips = 176;
+        $slipsOcupados = $em->granTotalSlipsOcupados($fechaBuscar);
         $numOcupados = count($slipsOcupados);
-
         $porcentajeOcupado = ($numOcupados*100)/$totSlips;
-        $dibujoSlip=[];
-        $slipInicial=37;
-        $slipFinal=87;
-        for($i=$slipInicial;$i<=$slipFinal;$i++){
-            $dibujoSlip[$i] = ['color'=>'rgb(29, 105, 19)','embarcacion'=>'','cliente'=>'','eslora'=>'','fechaLlegada'=>'','fechaSalida'=>''];
-        }
-        for($i=$slipInicial;$i<=$slipFinal;$i++){
-            foreach ($slipsOcupados as $slip){
-                if($i == $slip['slip']['id']){
-                    $dibujoSlip[$i]['color'] = '#FF6600';
-                    $dibujoSlip[$i]['embarcacion'] = $slip['marinahumedacotizacion']['barco']['nombre'];
-                    $dibujoSlip[$i]['cliente'] = $slip['marinahumedacotizacion']['cliente']['nombre'];
-                    $dibujoSlip[$i]['eslora'] = $slip['marinahumedacotizacion']['barco']['eslora'];
-                    $dibujoSlip[$i]['fechaLlegada'] = $slip['fechaLlegada'];
-                    $dibujoSlip[$i]['fechaSalida'] = $slip['fechaSalida'];
-                }
-            }
-        }
+        $dibujoSlip = $em->pintaSlipsMapa($slipsOcupados);
+        $ocupacionTiposSlips = $em->calculoOcupaciones($fechaBuscar);
         return $this->render('marinahumeda/mapa/slip-zona-b.twig', [
             'title' => 'Slip Zona B',
             'fechaBuscar'=>$fechaBuscar,
             'totSlips'=>$totSlips,
             'numOcupados'=>$numOcupados,
             'porcentajeOcupado'=>$porcentajeOcupado,
-            'dibujoSlip'=>$dibujoSlip
+            'dibujoSlip'=>$dibujoSlip,
+            'ocupacionTiposSlips'=>$ocupacionTiposSlips
         ]);
     }
     /**
@@ -133,48 +79,21 @@ class SlipMovimientoController extends Controller
     public function displayZonaCAdministracion()
     {
         $fechaBuscar = new \DateTime('now');
-        $em = $this->getDoctrine()->getManager();
-        $qbcs = $em->getRepository('AppBundle:Slip')->createQueryBuilder('s');
-        $totSlips = $qbcs->select('count(s.id)')->getQuery()->getSingleScalarResult();
-        $qbbe = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
-        $slipsOcupados = $qbbe
-            ->select('sm','slip','marinahumedacotizacion','barco','cliente')
-            ->join('sm.slip','slip')
-            ->join('sm.marinahumedacotizacion','marinahumedacotizacion')
-            ->join('marinahumedacotizacion.barco','barco')
-            ->join('marinahumedacotizacion.cliente','cliente')
-            ->where(':fecha_buscar BETWEEN sm.fechaLlegada AND sm.fechaSalida')
-            ->getQuery()
-            ->setParameter('fecha_buscar',$fechaBuscar->format('Y-m-d'))
-            ->getArrayResult();
+        $em = $this->getDoctrine()->getManager()->getRepository('AppBundle:SlipMovimiento');
+        $totSlips = 176;
+        $slipsOcupados = $em->granTotalSlipsOcupados($fechaBuscar);
         $numOcupados = count($slipsOcupados);
-
         $porcentajeOcupado = ($numOcupados*100)/$totSlips;
-        $dibujoSlip=[];
-        $slipInicial=88;
-        $slipFinal=126;
-        for($i=$slipInicial;$i<=$slipFinal;$i++){
-            $dibujoSlip[$i] = ['color'=>'rgb(29, 105, 19)','embarcacion'=>'','cliente'=>'','eslora'=>'','fechaLlegada'=>'','fechaSalida'=>''];
-        }
-        for($i=$slipInicial;$i<=$slipFinal;$i++){
-            foreach ($slipsOcupados as $slip){
-                if($i == $slip['slip']['id']){
-                    $dibujoSlip[$i]['color'] = '#FF6600';
-                    $dibujoSlip[$i]['embarcacion'] = $slip['marinahumedacotizacion']['barco']['nombre'];
-                    $dibujoSlip[$i]['cliente'] = $slip['marinahumedacotizacion']['cliente']['nombre'];
-                    $dibujoSlip[$i]['eslora'] = $slip['marinahumedacotizacion']['barco']['eslora'];
-                    $dibujoSlip[$i]['fechaLlegada'] = $slip['fechaLlegada'];
-                    $dibujoSlip[$i]['fechaSalida'] = $slip['fechaSalida'];
-                }
-            }
-        }
+        $dibujoSlip = $em->pintaSlipsMapa($slipsOcupados);
+        $ocupacionTiposSlips = $em->calculoOcupaciones($fechaBuscar);
         return $this->render('marinahumeda/mapa/slip-zona-c.twig', [
             'title' => 'Slip Zona C',
             'fechaBuscar'=>$fechaBuscar,
             'totSlips'=>$totSlips,
             'numOcupados'=>$numOcupados,
             'porcentajeOcupado'=>$porcentajeOcupado,
-            'dibujoSlip'=>$dibujoSlip
+            'dibujoSlip'=>$dibujoSlip,
+            'ocupacionTiposSlips'=>$ocupacionTiposSlips
         ]);
     }
     /**
@@ -183,47 +102,21 @@ class SlipMovimientoController extends Controller
     public function displayZonaDAdministracion()
     {
         $fechaBuscar = new \DateTime('now');
-        $em = $this->getDoctrine()->getManager();
-        $qbcs = $em->getRepository('AppBundle:Slip')->createQueryBuilder('s');
-        $totSlips = $qbcs->select('count(s.id)')->getQuery()->getSingleScalarResult();
-        $qbbe = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
-        $slipsOcupados = $qbbe
-            ->select('sm','slip','marinahumedacotizacion','barco','cliente')
-            ->join('sm.slip','slip')
-            ->join('sm.marinahumedacotizacion','marinahumedacotizacion')
-            ->join('marinahumedacotizacion.barco','barco')
-            ->join('marinahumedacotizacion.cliente','cliente')
-            ->where(':fecha_buscar BETWEEN sm.fechaLlegada AND sm.fechaSalida')
-            ->getQuery()
-            ->setParameter('fecha_buscar',$fechaBuscar->format('Y-m-d'))
-            ->getArrayResult();
-        $numOcupados = count($slipsOcupados);;
+        $em = $this->getDoctrine()->getManager()->getRepository('AppBundle:SlipMovimiento');
+        $totSlips = 176;
+        $slipsOcupados = $em->granTotalSlipsOcupados($fechaBuscar);
+        $numOcupados = count($slipsOcupados);
         $porcentajeOcupado = ($numOcupados*100)/$totSlips;
-        $dibujoSlip=[];
-        $slipInicial=127;
-        $slipFinal=176;
-        for($i=$slipInicial;$i<=$slipFinal;$i++){
-            $dibujoSlip[$i] = ['color'=>'rgb(29, 105, 19)','embarcacion'=>'','cliente'=>'','eslora'=>'','fechaLlegada'=>'','fechaSalida'=>''];
-        }
-        for($i=$slipInicial;$i<=$slipFinal;$i++){
-            foreach ($slipsOcupados as $slip){
-                if($i == $slip['slip']['id']){
-                    $dibujoSlip[$i]['color'] = '#FF6600';
-                    $dibujoSlip[$i]['embarcacion'] = $slip['marinahumedacotizacion']['barco']['nombre'];
-                    $dibujoSlip[$i]['cliente'] = $slip['marinahumedacotizacion']['cliente']['nombre'];
-                    $dibujoSlip[$i]['eslora'] = $slip['marinahumedacotizacion']['barco']['eslora'];
-                    $dibujoSlip[$i]['fechaLlegada'] = $slip['fechaLlegada'];
-                    $dibujoSlip[$i]['fechaSalida'] = $slip['fechaSalida'];
-                }
-            }
-        }
+        $dibujoSlip = $em->pintaSlipsMapa($slipsOcupados);
+        $ocupacionTiposSlips = $em->calculoOcupaciones($fechaBuscar);
         return $this->render('marinahumeda/mapa/slip-zona-d.twig', [
             'title' => 'Slip Zona D',
             'fechaBuscar'=>$fechaBuscar,
             'totSlips'=>$totSlips,
             'numOcupados'=>$numOcupados,
             'porcentajeOcupado'=>$porcentajeOcupado,
-            'dibujoSlip'=>$dibujoSlip
+            'dibujoSlip'=>$dibujoSlip,
+            'ocupacionTiposSlips'=>$ocupacionTiposSlips
         ]);
     }
     /**
@@ -232,49 +125,27 @@ class SlipMovimientoController extends Controller
     public function displayMarinaAdministracion()
     {
         $fechaBuscar = new \DateTime('now');
-        $em = $this->getDoctrine()->getManager();
-        $qbcs = $em->getRepository('AppBundle:Slip')->createQueryBuilder('s');
-        $totSlips = $qbcs->select('count(s.id)')->getQuery()->getSingleScalarResult();
-        $qbbe = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
-        $slipsOcupados = $qbbe
-            ->select('sm','slip','marinahumedacotizacion','barco','cliente')
-            ->join('sm.slip','slip')
-            ->join('sm.marinahumedacotizacion','marinahumedacotizacion')
-            ->join('marinahumedacotizacion.barco','barco')
-            ->join('marinahumedacotizacion.cliente','cliente')
-            ->where(':fecha_buscar BETWEEN sm.fechaLlegada AND sm.fechaSalida')
-            ->getQuery()
-            ->setParameter('fecha_buscar',$fechaBuscar->format('Y-m-d'))
-            ->getArrayResult();
-        $numOcupados = count($slipsOcupados);;
+        $em = $this->getDoctrine()->getManager()->getRepository('AppBundle:SlipMovimiento');
+        $totSlips = 176;
+        $slipsOcupados = $em->granTotalSlipsOcupados($fechaBuscar);
+        $numOcupados = count($slipsOcupados);
         $porcentajeOcupado = ($numOcupados*100)/$totSlips;
-        $dibujoSlip=[];
-        $slipInicial=1;
-        $slipFinal=176;
-        for($i=$slipInicial;$i<=$slipFinal;$i++){
-            $dibujoSlip[$i] = ['color'=>'rgb(29, 105, 19)','embarcacion'=>'','cliente'=>'','eslora'=>'','fechaLlegada'=>'','fechaSalida'=>''];
-        }
-        for($i=$slipInicial;$i<=$slipFinal;$i++){
-            foreach ($slipsOcupados as $slip){
-                if($i == $slip['slip']['id']){
-                    $dibujoSlip[$i]['color'] = '#FF6600';
-                    $dibujoSlip[$i]['embarcacion'] = $slip['marinahumedacotizacion']['barco']['nombre'];
-                    $dibujoSlip[$i]['cliente'] = $slip['marinahumedacotizacion']['cliente']['nombre'];
-                    $dibujoSlip[$i]['eslora'] = $slip['marinahumedacotizacion']['barco']['eslora'];
-                    $dibujoSlip[$i]['fechaLlegada'] = $slip['fechaLlegada'];
-                    $dibujoSlip[$i]['fechaSalida'] = $slip['fechaSalida'];
-                }
-            }
-        }
+        $dibujoSlip = $em->pintaSlipsMapa($slipsOcupados);
+        $ocupacionTiposSlips = $em->calculoOcupaciones($fechaBuscar);
+
         return $this->render('marinahumeda/mapa/marina-administracion.twig', [
             'title' => 'Slips',
             'fechaBuscar'=>$fechaBuscar,
             'totSlips'=>$totSlips,
             'numOcupados'=>$numOcupados,
             'porcentajeOcupado'=>$porcentajeOcupado,
-            'dibujoSlip'=>$dibujoSlip
+            'dibujoSlip'=>$dibujoSlip,
+            'ocupacionTiposSlips'=>$ocupacionTiposSlips
         ]);
     }
+
+
+
     /**
      * @Route("/buscar/{eslora}/{id}.{_format}", name="ajax_buscar_slips", defaults={"_format"="JSON"})
      * @Method({"GET"})

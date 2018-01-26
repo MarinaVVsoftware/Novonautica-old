@@ -19,26 +19,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-4">
-                            <table class="tabla-info">
-                                <tbody class="sin-encabezado">
-                                <tr>
-                                    <td>Fecha:</td>
-                                    <td> {{ fechaBuscar|date('Y-m-d') }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Total de Slips:</td>
-                                    <td>{{ totSlips }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Slips ocupados:</td>
-                                    <td>{{ numOcupados }}</td>
-                                </tr>
-                                <tr>
-                                    <td>% Ocupación:</td>
-                                    <td>{{ porcentajeOcupado }}%</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            Fecha: {{ fechaBuscar|date('Y-m-d') }}
                         </div>
                     </div>
                     <div class="row">
@@ -108,6 +89,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 -170.87 250.395)" class="barcoespacio" id="126">
                                             <title></title>
                                             <desc></desc>
@@ -121,6 +103,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 -149.585 250.007)" class="barcoespacio"
                                               id="125"></path>
                                         {% set i = 124 %}
@@ -132,6 +115,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 -118.044 250.607)" class="barcoespacio"
                                               id="124"></path>
                                         {% set i = 123 %}
@@ -143,6 +127,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 -97.7848 250.553)" class="barcoespacio"
                                               id="123"></path>
                                         <rect transform="matrix(1 0 0 1 -31.9249 244.941)" width="6.04315"
@@ -162,6 +147,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 -70.5143 251.242)" class="barcoespacio"
                                               id="122"></path>
                                         {% set i = 121 %}
@@ -173,6 +159,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 -50.4753 250.854)" class="barcoespacio"
                                               id="121"></path>
                                         {% set i = 120 %}
@@ -184,6 +171,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 -21.4325 250.1)" class="barcoespacio"
                                               id="120"></path>
                                         {% set i = 119 %}
@@ -195,6 +183,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 -1.17344 250.047)" class="barcoespacio"
                                               id="119"></path>
                                         <rect transform="matrix(1 0 0 1 65.7157 243.44)" width="6.04315"
@@ -214,6 +203,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 27.1265 249.741)" class="barcoespacio"
                                               id="118"></path>
                                         {% set i = 117 %}
@@ -225,6 +215,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 47.1635 249.353)" class="barcoespacio"
                                               id="117"></path>
                                         {% set i = 116 %}
@@ -236,6 +227,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 77.4564 249.953)" class="barcoespacio"
                                               id="116"></path>
                                         {% set i = 115 %}
@@ -247,6 +239,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 97.7155 249.9)" class="barcoespacio"
                                               id="115"></path>
                                         <rect transform="matrix(1 0 0 1 164.634 245.544)" width="6.04315"
@@ -266,6 +259,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 126.047 250.493)" class="barcoespacio"
                                               id="114"></path>
                                         {% set i = 113 %}
@@ -277,6 +271,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 146.084 250.105)" class="barcoespacio"
                                               id="113"></path>
                                         {% set i = 112 %}
@@ -288,6 +283,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 175.127 250.705)" class="barcoespacio"
                                               id="112"></path>
                                         {% set i = 111 %}
@@ -299,6 +295,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 195.386 250.649)" class="barcoespacio"
                                               id="111"></path>
                                         <rect transform="matrix(1 0 0 1 261.983 244.975)" width="6.04315"
@@ -314,6 +311,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 223.528 250.114)" class="barcoespacio"
                                               id="110"></path>
                                         {% set i = 109 %}
@@ -325,6 +323,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 243.787 250.06)" class="barcoespacio"
                                               id="109"></path>
                                         <rect transform="matrix(1 0 0 1 310.677 243.454)" width="6.04315"
@@ -344,6 +343,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 272.089 249.757)" class="barcoespacio"
                                               id="108"></path>
                                         {% set i = 107 %}
@@ -355,6 +355,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 292.126 249.367)" class="barcoespacio"
                                               id="107"></path>
                                         {% set i = 106 %}
@@ -366,6 +367,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 322.417 249.967)" class="barcoespacio"
                                               id="106"></path>
                                         {% set i = 105 %}
@@ -377,6 +379,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 342.676 249.913)" class="barcoespacio"
                                               id="105"></path>
                                         <rect transform="matrix(1 0 0 1 409.595 245.559)" width="6.04315"
@@ -396,6 +399,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 371.008 250.506)" class="barcoespacio"
                                               id="104"></path>
                                         {% set i = 103 %}
@@ -407,6 +411,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 391.045 250.118)" class="barcoespacio"
                                               id="103"></path>
                                         {% set i = 102 %}
@@ -418,6 +423,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 420.087 250.718)" class="barcoespacio"
                                               id="102"></path>
                                         {% set i = 101 %}
@@ -429,6 +435,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 440.347 250.665)" class="barcoespacio"
                                               id="101"></path>
                                         <rect transform="matrix(1 0 0 1 505.773 245.229)" width="6.04315"
@@ -444,6 +451,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 467.318 250.368)" class="barcoespacio"
                                               id="100"></path>
                                         {% set i = 99 %}
@@ -455,6 +463,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 487.577 250.314)" class="barcoespacio"
                                               id="99"></path>
                                         <rect transform="matrix(1 0 0 1 554.467 243.708)" width="6.04315"
@@ -474,6 +483,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 515.879 250.011)" class="barcoespacio"
                                               id="98"></path>
                                         {% set i = 97 %}
@@ -485,6 +495,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 535.916 249.623)" class="barcoespacio"
                                               id="97"></path>
                                         {% set i = 96 %}
@@ -496,6 +507,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 566.207 250.223)" class="barcoespacio"
                                               id="96"></path>
                                         {% set i = 95 %}
@@ -507,6 +519,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 586.466 250.167)" class="barcoespacio"
                                               id="95"></path>
                                         <rect transform="matrix(1 0 0 1 653.385 245.814)" width="6.04315"
@@ -526,6 +539,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 614.797 250.761)" class="barcoespacio"
                                               id="94"></path>
                                         {% set i = 93 %}
@@ -537,6 +551,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 634.834 250.372)" class="barcoespacio"
                                               id="93"></path>
                                         {% set i = 92 %}
@@ -548,6 +563,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 663.877 250.972)" class="barcoespacio"
                                               id="92"></path>
                                         {% set i = 91 %}
@@ -559,6 +575,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 684.136 250.919)" class="barcoespacio"
                                               id="91"></path>
                                         <g transform="matrix(0.00252441 -0.999997 0.999997 0.00252441 -107.808 337.213)">
@@ -809,6 +826,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 777.071 207.578)" class="barcoespacio"
                                               data-mantain-aspect-ratio="false" id="89"></path>
                                         {% set i = 88 %}
@@ -820,6 +838,7 @@
                                               data-eslora="{{ dibujoSlip[i].eslora }}"
                                               data-llegada="{% if dibujoSlip[i].fechaLlegada %}{{ dibujoSlip[i].fechaLlegada|date('Y-m-d') }}{% endif %}"
                                               data-salida="{% if dibujoSlip[i].fechaSalida %}{{ dibujoSlip[i].fechaSalida|date('Y-m-d') }}{% endif %}"
+                                              data-idcotizacion="{{ dibujoSlip[i].idcotizacion }}"
                                               transform="matrix(1 0 0 1 827.017 207.293)" class="barcoespacio"
                                               data-mantain-aspect-ratio="false" id="88"></path>
 
@@ -857,6 +876,36 @@
                                     </g>
                                 </g>
                             </svg>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Amarres en pies</th>
+                                    <th>Total de amarres</th>
+                                    <th>Amarres ocupados</th>
+                                    <th>% ocupación</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for tipoSlip in ocupacionTiposSlips %}
+                                    <tr>
+                                        <td>{{ tipoSlip.tipo }}</td>
+                                        <td>{{ tipoSlip.total }}</td>
+                                        <td>{{ tipoSlip.num }}</td>
+                                        <td>{{ tipoSlip.porcentaje|number_format(2) }} %</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td>Total</td>
+                                    <td>{{ totSlips }}</td>
+                                    <td>{{ numOcupados }}</td>
+                                    <td>{{ porcentajeOcupado|number_format(2) }} %</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -906,8 +955,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <!--<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>-->
-                    <button type="button" class="btn btn-primary center-block">Ver detalles</button>
+                    <div class="row">
+                        <div class="col-sm-12 text-center">
+                            <a id="linkdetalle" href="{{ path('marina-humeda_show',{id:'comodinIdCotizacion'}) }}" class="btn btn-primary">Ver detalles</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

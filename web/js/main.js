@@ -10,7 +10,23 @@ $(document).ready(function () {
         $('#esloraInfo').html($(this).data('eslora'));
         $('#llegadaInfo').html($(this).data('llegada'));
         $('#salidaInfo').html($(this).data('salida'));
+        var url = $('#linkdetalle').attr('href');
+        var urlnueva = url.replace("comodinIdCotizacion", $(this).data('idcotizacion'));
+        $('#linkdetalle').attr('href',urlnueva);
+        $('#linkdetalle').data('id',$(this).data('idcotizacion'));
+
+        if($(this).data('idcotizacion') == 0){
+            $('#linkdetalle').hide();
+        }else{
+            $('#linkdetalle').show();
+        }
         $('#modalinfobarco').modal('toggle');
+    });
+    $('#modalinfobarco').on('hidden.bs.modal', function (e) {
+        console.log($('#linkdetalle').data('id'));
+        var url = $('#linkdetalle').attr('href');
+        var urlnueva = url.replace($('#linkdetalle').data('id'),"comodinIdCotizacion");
+        $('#linkdetalle').attr('href',urlnueva);
     });
     $('.select-buscador').select2();
     $.fn.datepicker.dates['es'] = {
