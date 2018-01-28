@@ -82,24 +82,33 @@
                                         <div class="col-sm-3">
                                             {{ form_row(form.emisor) }}
                                         </div>
+                                        <div class="col-sm-3">
+                                            {{ form_row(form.rfc) }}
+                                        </div>
+                                        <div class="col-sm-3">
+                                            {{ form_row(form.cliente) }}
+                                        </div>
                                     </div>
                                     <hr style="margin: 1em 0 !important;">
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            {{ form_row(form.rfc) }}
-                                            {{ form_row(form.cliente) }}
                                             {{ form_row(form.numeroTelefonico) }}
+                                            {{ form_row(form.razonSocial) }}
+                                            {{ form_row(form.direccionFiscal) }}
                                             {{ form_row(form.email) }}
                                         </div>
                                         <div class="col-sm-3">
-                                            {{ form_row(form.razonSocial) }}
-                                            {{ form_row(form.direccionFiscal) }}
+                                            <div class="pago">
+                                                {{ form_row(form.metodoPago) }}
+                                                {{ form_row(form.formaPago) }}
+                                            </div>
+                                            {{ form_row(form.usoCFDI) }}
                                         </div>
                                         <div class="col-sm-3">
-                                            {{ form_row(form.metodoPago) }}
-                                            {{ form_row(form.formaPago) }}
                                             {{ form_row(form.tipoComprobante) }}
-                                            {{ form_row(form.usoCFDI) }}
+                                            <div class="pago">
+                                                {{ form_row(form.condicionesPago) }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -129,8 +138,8 @@
                                                     <th style="vertical-align: middle">Clave Unidad</th>
                                                     <th style="vertical-align: middle" width="25%">Descripción</th>
                                                     <th style="vertical-align: middle">Valor unitario</th>
-                                                    <th style="vertical-align: middle">Descuento</th>
-                                                    <th style="vertical-align: middle">IVA</th>
+                                                    <th class="pago" style="vertical-align: middle">Descuento</th>
+                                                    <th class="pago" style="vertical-align: middle">IVA</th>
                                                     <th style="vertical-align: middle">Sub-total</th>
                                                     <th style="vertical-align: middle">Total</th>
                                                 </tr>
@@ -154,12 +163,14 @@
                                             <h4 class="letra-azul">Sub-total</h4>
                                             {{ form_widget(form.subtotal) }}
                                             <hr>
-                                            <h4 class="letra-azul">Descuento</h4>
-                                            {{ form_widget(form.descuento) }}
-                                            <hr>
-                                            <h4 class="letra-azul">IVA</h4>
-                                            {{ form_widget(form.iva) }}
-                                            <hr>
+                                            <div class="pago">
+                                                <h4 class="letra-azul">Descuento</h4>
+                                                {{ form_widget(form.descuento) }}
+                                                <hr>
+                                                <h4 class="letra-azul">IVA</h4>
+                                                {{ form_widget(form.iva) }}
+                                                <hr>
+                                            </div>
                                             <h4 class="letra-azul">Total</h4>
                                             {{ form_widget(form.total) }}
                                             {{ form_errors(form.total) }}
@@ -234,8 +245,10 @@
           JQUERY AUTOCOMPLETE && COLLECCION DE CONCEPTOS
       */
       (function ($) {
+        const theForm = document.querySelector('[name="appbundle_contabilidad_facturacion"');
         const $rfcSelect = $('#appbundle_contabilidad_facturacion_rfc');
         const $cotizacionSelect = $('#appbundle_contabilidad_facturacion_folioCotizacion');
+        const tipoComprobanteHolder = document.getElementById('appbundle_contabilidad_facturacion_tipoComprobante');
         const addLink = document.getElementById('add-servicio');
         const conceptoHolder = document.getElementById('prototype-holder');
         const pagosHolder = document.getElementById('appbundle_contabilidad_facturacion_pagos');
@@ -255,10 +268,12 @@
           triggerSelectOnValidInput: false,
         };
 
-        // Si ya se cargo una cotizacion, entonces esconder 'agregar servicio'
-        // if (pagosHolder.selectedIndex && conceptoHolder.childElementCount) {
-        //   addLink.classList.add('hidden');
-        // }
+        /*
+         En caso de que el tipo de comprobante sea "P"
+         Remover todas las dependecias de "I" y "E"
+        */
+        checkTipoComprobante();
+        tipoComprobanteHolder.addEventListener('change', checkTipoComprobante);
 
         // Sugiere el tipo de cambio en base a la moneda elegida
         monedaSelect.addEventListener('change', function () {
@@ -375,6 +390,15 @@
           unaTabla.innerHTML = prototype;
           let concepto = unaTabla.querySelector('.concepto-item');
 
+          // Esconder descuento si el tipo de comprobante es "P"
+          if (tipoComprobanteHolder.value === 'P') {
+            let pagoCell = concepto.querySelectorAll('.pago');
+            pagoCell.forEach(cell => {
+              cell.querySelector('input').removeAttribute('required');
+              cell.classList.add('hidden');
+            });
+          }
+
           conceptoHolder.appendChild(concepto);
           addRowListener(concepto, data);
 
@@ -415,20 +439,31 @@
           calculateConceptos();
 
           function calculateConceptos() {
-            if (!/^[\d,\s.\\$]+$/.test(this.value) && this.value) return;
             // Valores definidos por el usuario
-            let cantidad = (cantidadConcepto.value * 1);
-            let precio = (vUnitarioConcepto.value * 100);
-            let descuento = (descuentoConcepto.value * 100);
+            let cantidad = (clearPrice(cantidadConcepto.value) * 1);
+            let precio = (clearPrice(vUnitarioConcepto.value) * 100);
+            let descuento = (clearPrice(descuentoConcepto.value) * 100);
+
+            if (precio <= descuento) {
+              descuentoConcepto.value = `${precio / 100}`;
+              descuento = (clearPrice(descuentoConcepto.value) * 100);
+            }
 
             // Calculo automatico
             let subtotal = (cantidad * precio);
             let iva = Math.round(subtotal * .16);
             let total = ((subtotal - descuento) + iva);
 
-            subtotalConcepto.value = `${subtotal / 100}`;
-            ivaConcepto.value = `${iva / 100}`;
-            totalConcepto.value = `${total / 100}`;
+            if (tipoComprobanteHolder.value === 'P') {
+              vUnitarioConcepto.value = '0';
+              subtotalConcepto.value = '0';
+              ivaConcepto.value = '0';
+              totalConcepto.value = '0';
+            } else {
+              subtotalConcepto.value = `${subtotal / 100}`;
+              ivaConcepto.value = `${iva / 100}`;
+              totalConcepto.value = `${total / 100}`;
+            }
 
             calculateTotals();
           }
@@ -478,6 +513,16 @@
           });
         }
 
+        // Comprobar que tipo de comprobante antes del submit
+        theForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const pagoRemovable = document.querySelectorAll('.pago');
+          if (tipoComprobanteHolder.value === 'P') {
+            pagoRemovable.forEach(item => item.parentNode.removeChild(item));
+          }
+          this.submit();
+        });
+
         function calculateTotals() {
           if (!conceptoHolder.childElementCount) return;
           let subtotalColumn = conceptoHolder.getElementsByClassName('subtotal-column');
@@ -485,26 +530,35 @@
           let ivaColumn = conceptoHolder.getElementsByClassName('iva-column');
           let totalColumn = conceptoHolder.getElementsByClassName('total-column');
 
-          subtotalHolder.value = [...subtotalColumn]
-              .map(row => Number(clearPrice(row.value)))
-              .reduce((a, b) => a + b)
-              .toFixed(2);
-          descuentoHolder.value = [...descuentoColumn]
-              .map(row => Number(clearPrice(row.value)))
-              .reduce((a, b) => a + b)
-              .toFixed(2);
-          ivaHolder.value = [...ivaColumn]
-              .map(row => Number(clearPrice(row.value)))
-              .reduce((a, b) => a + b)
-              .toFixed(2);
-          totalHolder.value = [...totalColumn]
-              .map(row => Number(clearPrice(row.value)))
-              .reduce((a, b) => a + b)
-              .toFixed(2);
+          if (tipoComprobanteHolder.value === 'P') {
+            subtotalHolder.value = '0';
+            descuentoHolder.value = '0';
+            ivaHolder.value = '0';
+            totalHolder.value = '0';
+          } else {
+            subtotalHolder.value = [...subtotalColumn]
+                .map(row => Number(clearPrice(row.value)))
+                .reduce((a, b) => a + b)
+                .toFixed(2);
+            descuentoHolder.value = [...descuentoColumn]
+                .map(row => Number(clearPrice(row.value)))
+                .reduce((a, b) => a + b)
+                .toFixed(2);
+            ivaHolder.value = [...ivaColumn]
+                .map(row => Number(clearPrice(row.value)))
+                .reduce((a, b) => a + b)
+                .toFixed(2);
+            totalHolder.value = [...totalColumn]
+                .map(row => Number(clearPrice(row.value)))
+                .reduce((a, b) => a + b)
+                .toFixed(2);
+          }
         }
 
+
         function clearPrice(textPrice) {
-          return textPrice.replace(/[,\\$]/g, '');
+          // return textPrice.replace(/[,\\$]/g, '');
+          return textPrice.replace(/(?!-)[^0-9.]/g, '');
         }
 
         function clearData(e) {
@@ -516,6 +570,31 @@
             descuentoHolder.value = 0;
             ivaHolder.value = 0;
             totalHolder.value = 0;
+          }
+        }
+
+        function checkTipoComprobante() {
+          const pagoRemovable = document.querySelectorAll('.pago');
+          if (tipoComprobanteHolder.value === 'P') {
+            pagoRemovable.forEach(function (item) {
+              let hasInput = item.querySelector('input');
+              if (hasInput) {
+                hasInput.value = '';
+                hasInput.removeAttribute('required');
+                hasInput.dispatchEvent(new Event('input'));
+              }
+
+              item.classList.add('hidden');
+            });
+          } else {
+            pagoRemovable.forEach(function (item) {
+              let hasInput = item.querySelector('input');
+              if (hasInput) {
+                hasInput.setAttribute('required', 'required');
+              }
+              item.classList.remove('hidden');
+            });
+
           }
         }
 

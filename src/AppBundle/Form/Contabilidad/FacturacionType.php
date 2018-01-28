@@ -60,7 +60,7 @@ class FacturacionType extends AbstractType
                 'by_reference' => false,
             ])
             ->add('formaPago', ChoiceType::class, [
-                'label' => 'Método de pago',
+                'label' => 'Forma de pago',
                 'choices' => [
                     'Efectivo' => '01',
                     'Cheque nominativo' => '02',
@@ -88,7 +88,6 @@ class FacturacionType extends AbstractType
                 'label' => 'Método de pago',
                 'choices' => [
                     'Pago en una sola exhibición' => 'PUE',
-                    'Pago inicial y parcialidades' => 'PIP',
                     'Pago en parcialidades o diferido' => 'PPD',
                 ]
             ])
@@ -97,10 +96,14 @@ class FacturacionType extends AbstractType
                 'choices' => [
                     'Ingreso' => 'I',
                     'Egreso' => 'E',
-                    'Traslado' => 'T',
-                    'Nómina' => 'N',
+//                    'Traslado' => 'T',
+//                    'Nómina' => 'N',
                     'Pago' => 'P',
                 ]
+            ])
+            ->add('condicionesPago', TextType::class, [
+                'label' => 'Condiciones de pago',
+                'attr' => ['placeholder' => 'Contado']
             ])
             ->add('usoCFDI', ChoiceType::class, [
                 'label' => 'Uso CFDI',

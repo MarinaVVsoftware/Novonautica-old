@@ -161,6 +161,13 @@ class Facturacion
     private $usoCFDI;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="condiciones_pago", type="string", nullable=true)
+     */
+    private $condicionesPago;
+
+    /**
      * @var string $folioFiscal = uuid;
      *
      * @ORM\Column(name="folio_fiscal", type="string")
@@ -238,6 +245,22 @@ class Facturacion
     private $pngArchivo;
 
     /**
+     * @var string|null $folioCotizacion input de busqueda de cotizaciones
+     *
+     * @ORM\Column(name="folio_cotizacion", type="string", length=150, nullable=true)
+     */
+    private $folioCotizacion;
+
+    /**
+     * @var int $estatus
+     * 1 = Creada [default],
+     * 0 = Cancelada
+     *
+     * @ORM\Column(name="estatus", type="smallint")
+     */
+    private $estatus;
+
+    /**
      * @var Emisor
      *
      * @Assert\NotNull(message="Por favor elige una opción")
@@ -263,17 +286,11 @@ class Facturacion
     private $pagos;
 
     /**
-     * @var string|null $folioCotizacion input de busqueda de cotizaciones
-     *
-     * @ORM\Column(name="folio_cotizacion", type="string", length=150, nullable=true)
-     */
-    private $folioCotizacion;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
+        $this->estatus = 1;
         $this->fecha = new \DateTimeImmutable();
         $this->conceptos = new ArrayCollection();
     }
@@ -665,6 +682,22 @@ class Facturacion
     }
 
     /**
+     * @return string
+     */
+    public function getCondicionesPago()
+    {
+        return $this->condicionesPago;
+    }
+
+    /**
+     * @param string $condicionesPago
+     */
+    public function setCondicionesPago($condicionesPago)
+    {
+        $this->condicionesPago = $condicionesPago;
+    }
+
+    /**
      * Set emisor
      *
      * @param Emisor $emisor
@@ -1040,5 +1073,21 @@ class Facturacion
                 ->atPath('total')
                 ->addViolation();
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function getEstatus()
+    {
+        return $this->estatus;
+    }
+
+    /**
+     * @param int $estatus
+     */
+    public function setEstatus($estatus)
+    {
+        $this->estatus = $estatus;
     }
 }

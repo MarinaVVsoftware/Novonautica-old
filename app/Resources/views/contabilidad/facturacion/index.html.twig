@@ -5,6 +5,15 @@
         <section class="content">
             <div class="row">
                 <div class="col-md-12">
+                    {% for message in app.flashes('danger') %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
                             <h3 class="panel-title">Listado de categorías</h3>
@@ -25,7 +34,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for facturacion in facturacions %}
+                                    {% for i, facturacion in facturacions %}
                                         <tr>
                                             <td>
                                                 {{ facturacion.folioFiscal }}
@@ -53,7 +62,11 @@
                                                     PDF
                                                 </a>
                                             </td>
-                                            <td></td>
+                                            <td>
+                                                {{ form_start(delete_forms[i]) }}
+                                                <input type="submit" value="Cancelar" class="btn btn-xs btn-naranja">
+                                                {{ form_end(delete_forms[i]) }}
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

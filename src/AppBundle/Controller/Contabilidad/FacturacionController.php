@@ -130,9 +130,15 @@ class FacturacionController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $facturacions = $em->getRepository('AppBundle:Contabilidad\Facturacion')->findAll();
+        $deleteForms = [];
+
+        foreach ($facturacions as $factura) {
+            $deleteForms[] = $this->createDeleteForm($factura)->createView();
+        }
 
         return $this->render('contabilidad/facturacion/index.html.twig', [
             'facturacions' => $facturacions,
+            'delete_forms' => $deleteForms
         ]);
     }
 
@@ -213,47 +219,33 @@ class FacturacionController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing facturacion entity.
-     *
-     * @Route("/{id}/edit", name="contabilidad_facturacion_edit")
-     * @Method({"GET", "POST"})
-     */
-    public function editAction(Request $request, Facturacion $facturacion)
-    {
-        $deleteForm = $this->createDeleteForm($facturacion);
-        $editForm = $this->createForm('AppBundle\Form\Contabilidad\FacturacionType', $facturacion);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('contabilidad_facturacion_edit', array('id' => $facturacion->getId()));
-        }
-
-        return $this->render('contabilidad/facturacion/edit.html.twig', array(
-            'facturacion' => $facturacion,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
      * Deletes a facturacion entity.
      *
-     * @Route("/{id}", name="contabilidad_facturacion_delete")
+     * @Route("/{id}", name="contabilidad_facturacion_cancel")
      * @Method("DELETE")
+     *
+     * @param Request $request
+     * @param Facturacion $factura
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteAction(Request $request, Facturacion $facturacion)
+    public function deleteAction(Request $request, Facturacion $factura)
     {
-        $form = $this->createDeleteForm($facturacion);
+        $form = $this->createDeleteForm($factura);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($facturacion);
-            $em->flush();
-        }
+            $facturador = $this->container->get('multifacturas');
+            $timbrado = $facturador->cancela($factura);
 
+            if ($timbrado['codigo_mf_numero']) {
+                $this->addFlash('danger', $timbrado['codigo_mf_texto']);
+            } else {
+                $factura->setEstatus(0);
+                $em = $this->getDoctrine()->getManager();
+                $em->flush();
+            }
+        }
         return $this->redirectToRoute('contabilidad_facturacion_index');
     }
 
@@ -385,7 +377,7 @@ class FacturacionController extends Controller
     private function createDeleteForm(Facturacion $facturacion)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('contabilidad_facturacion_delete', ['id' => $facturacion->getId()]))
+            ->setAction($this->generateUrl('contabilidad_facturacion_cancel', ['id' => $facturacion->getId()]))
             ->setMethod('DELETE')
             ->getForm();
     }
