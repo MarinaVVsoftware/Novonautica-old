@@ -20,6 +20,57 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         return array_merge($marinaCotizaciones, $astilleroCotizaciones);
     }
 
+    public function getPagosFacturaGlobal()
+    {
+        $em = $this->getEntityManager();
+        $dql = '
+        SELECT
+        cotizacion,
+        pagos,
+        servicios,
+        servicioBasico,
+        servicioProducto,
+        servicioRegular
+        FROM AppBundle:AstilleroCotizacion AS cotizacion
+        LEFT JOIN cotizacion.pagos AS pagos
+        LEFT JOIN cotizacion.acservicios AS servicios
+        LEFT JOIN cotizacion.cliente AS cliente
+        LEFT JOIN cliente.razonesSociales AS razonSocial
+        LEFT JOIN servicios.astilleroserviciobasico AS servicioBasico
+        LEFT JOIN servicios.producto AS servicioProducto
+        LEFT JOIN servicios.servicio AS servicioRegular
+        WHERE cotizacion.validanovo = 2
+        AND pagos.id IS NOT NULL
+        AND pagos.factura IS NULL
+        AND razonSocial.id IS NULL
+        ';
+
+        $atQuery = $em->createQuery($dql)->getResult();
+
+        $dql = '
+        SELECT 
+        cotizacion,
+        pagos,
+        servicio,
+        movimiento
+        FROM AppBundle:MarinaHumedaCotizacion AS cotizacion
+        LEFT JOIN cotizacion.pagos AS pagos
+        LEFT JOIN cotizacion.mhcservicios AS servicio
+        LEFT JOIN cotizacion.slipmovimiento AS movimiento
+        LEFT JOIN cotizacion.cliente AS cliente
+        LEFT JOIN cliente.razonesSociales AS razonSocial
+        WHERE cotizacion.validanovo = 2
+        AND pagos.id IS NOT NULL
+        AND pagos.factura IS NULL
+        AND razonSocial.id IS NULL
+        ';
+
+        $mhQuery = $em->createQuery($dql)->getResult();
+
+
+        return array_merge($mhQuery, $atQuery);
+    }
+
     public function getPagosByFolioCotizacion($folio, $folioRecotizado = null)
     {
         $em = $this->getEntityManager();

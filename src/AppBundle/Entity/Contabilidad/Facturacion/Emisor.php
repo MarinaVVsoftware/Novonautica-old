@@ -76,7 +76,7 @@ class Emisor
     private $direccion;
 
     /**
-     * @var array
+     * @var string
      *
      * @Assert\NotBlank(message="Este campo no puede estar vacio")
      *
@@ -521,7 +521,7 @@ class Emisor
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function getEmails()
     {

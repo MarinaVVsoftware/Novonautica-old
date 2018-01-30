@@ -104,7 +104,7 @@ class Pago
     /**
      * @var Facturacion
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="pagos")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="pagos")
      */
     private $factura;
 
@@ -167,11 +167,11 @@ class Pago
     /**
      * Set cuentabancaria
      *
-     * @param \AppBundle\Entity\CuentaBancaria $cuentabancaria
+     * @param CuentaBancaria $cuentabancaria
      *
      * @return Pago
      */
-    public function setCuentabancaria(\AppBundle\Entity\CuentaBancaria $cuentabancaria = null)
+    public function setCuentabancaria(CuentaBancaria $cuentabancaria = null)
     {
         $this->cuentabancaria = $cuentabancaria;
 
@@ -181,7 +181,7 @@ class Pago
     /**
      * Get cuentabancaria
      *
-     * @return \AppBundle\Entity\CuentaBancaria
+     * @return CuentaBancaria
      */
     public function getCuentabancaria()
     {
@@ -271,11 +271,11 @@ class Pago
     /**
      * Set mhcotizacion
      *
-     * @param \AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacion
+     * @param MarinaHumedaCotizacion $mhcotizacion
      *
      * @return Pago
      */
-    public function setMhcotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacion = null)
+    public function setMhcotizacion(MarinaHumedaCotizacion $mhcotizacion = null)
     {
         $this->mhcotizacion = $mhcotizacion;
 
@@ -285,7 +285,7 @@ class Pago
     /**
      * Get mhcotizacion
      *
-     * @return \AppBundle\Entity\MarinaHumedaCotizacion
+     * @return MarinaHumedaCotizacion
      */
     public function getMhcotizacion()
     {
@@ -311,11 +311,11 @@ class Pago
     /**
      * Set acotizacion
      *
-     * @param \AppBundle\Entity\AstilleroCotizacion $acotizacion
+     * @param AstilleroCotizacion $acotizacion
      *
      * @return Pago
      */
-    public function setAcotizacion(\AppBundle\Entity\AstilleroCotizacion $acotizacion = null)
+    public function setAcotizacion(AstilleroCotizacion $acotizacion = null)
     {
         $this->acotizacion = $acotizacion;
 
@@ -325,7 +325,7 @@ class Pago
     /**
      * Get acotizacion
      *
-     * @return \AppBundle\Entity\AstilleroCotizacion
+     * @return AstilleroCotizacion
      */
     public function getAcotizacion()
     {
@@ -335,11 +335,11 @@ class Pago
     /**
      * Set factura
      *
-     * @param \AppBundle\Entity\Contabilidad\Facturacion $factura
+     * @param Facturacion $factura
      *
      * @return Pago
      */
-    public function setFactura(\AppBundle\Entity\Contabilidad\Facturacion $factura = null)
+    public function setFactura(Facturacion $factura = null)
     {
         $this->factura = $factura;
 
@@ -349,7 +349,7 @@ class Pago
     /**
      * Get factura
      *
-     * @return \AppBundle\Entity\Contabilidad\Facturacion
+     * @return Facturacion
      */
     public function getFactura()
     {

@@ -1,9 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
 
-{% block title %}
-    Novonautiva | Nueva cotización Gasolina
-{% endblock %}
-
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -316,7 +312,6 @@
             url: url,
             dataType: 'json',
             success: function (cliente) {
-              JSON.stringify(cliente);
               var html = "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
                   "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
                   "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>" +

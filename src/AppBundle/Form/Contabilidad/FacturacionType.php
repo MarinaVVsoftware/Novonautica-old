@@ -2,12 +2,12 @@
 
 namespace AppBundle\Form\Contabilidad;
 
-use AppBundle\Entity\Contabilidad\Facturacion;
-use AppBundle\Entity\Pago;
 use AppBundle\Form\Contabilidad\Facturacion\ConceptoType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Form\DataTransformer\CollectionToArrayTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -46,6 +46,7 @@ class FacturacionType extends AbstractType
             ])
             ->add('rfc', TextType::class, ['label' => 'RFC'])
             ->add('cliente')
+            ->add('facturaGlobal')
             ->add('razonSocial')
             ->add('direccionFiscal')
             ->add('numeroTelefonico')
@@ -153,7 +154,8 @@ class FacturacionType extends AbstractType
             ->add('folioCotizacion', TextType::class, [
                 'label' => 'Folio de cotización',
                 'required' => false
-            ]);
+            ])
+        ;
 
         $formBuilder = function (FormInterface $form, $folioCotizacion = null) {
             $folios = explode('-', $folioCotizacion);
@@ -162,11 +164,11 @@ class FacturacionType extends AbstractType
 
             $form->add('pagos', EntityType::class, [
                 'class' => 'AppBundle\Entity\Pago',
+                'multiple' => true,
                 'required' => false,
-                'placeholder' => '',
+                'placeholder' => false,
                 'choices' => $pagos,
                 'choice_label' => function ($pago) {
-                    /** @var Pago $pago */
                     return '$' . number_format(($pago->getCantidad() / 100), 2);
                 }
             ]);
@@ -184,6 +186,7 @@ class FacturacionType extends AbstractType
                 $formBuilder($form, $event->getForm()->getData());
             }
         );
+
 
     }
 

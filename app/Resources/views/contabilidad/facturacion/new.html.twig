@@ -20,6 +20,7 @@
             padding: 2px 5px;
             white-space: nowrap;
             overflow: hidden;
+
         }
 
         .autocomplete-selected {
@@ -43,6 +44,66 @@
             display: block;
             border-bottom: 1px solid #000;
         }
+
+        .novo-checkbox-container .checkbox {
+            position: relative;
+            padding: 20px 0 20px 20px;
+            text-align: left;
+        }
+
+        .novo-checkbox-container .checkbox label {
+            cursor: pointer;
+            padding-left: 10px;
+        }
+
+        .novo-checkbox-container .checkbox label:before,
+        .novo-checkbox-container .checkbox label:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+        }
+
+        .novo-checkbox-container .checkbox label:before {
+            left: 0;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0;
+            border-radius: 4px;
+            background: #3e4766;
+            -webkit-box-shadow: 0 0 1px grey;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .novo-checkbox-container .checkbox label:after {
+            width: 14px;
+            height: 8px;
+            top: 24px;
+            left: 3px;
+            border: 3px solid #0097f6;
+            border-top: none;
+            border-right: none;
+            background: transparent;
+            opacity: 0;
+            -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+
+        .novo-checkbox-container .checkbox label:hover:after {
+            opacity: .5;
+        }
+
+        .novo-checkbox-container .checkbox input[type="radio"],
+        .novo-checkbox-container .checkbox input[type="checkbox"] {
+            position: absolute;
+            top: 0;
+            left: -9999px;
+            visibility: hidden;
+        }
+
+        .novo-checkbox-container .checkbox input[type="radio"]:checked + label:after,
+        .novo-checkbox-container .checkbox input[type="checkbox"]:checked + label:after {
+            opacity: 1;
+        }
     </style>
 {% endblock %}
 
@@ -54,6 +115,11 @@
                     {% for message in app.flashes('danger') %}
                         <div class="alert alert-danger">
                             {{ message }}
+                        </div>
+                    {% endfor %}
+                    {% for error in form.vars.errors %}
+                        <div class="alert alert-danger">
+                            {{ error.message }}
                         </div>
                     {% endfor %}
                 </div>
@@ -87,6 +153,11 @@
                                         </div>
                                         <div class="col-sm-3">
                                             {{ form_row(form.cliente) }}
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="novo-checkbox-container">
+                                                {{ form_row(form.facturaGlobal) }}
+                                            </div>
                                         </div>
                                     </div>
                                     <hr style="margin: 1em 0 !important;">
@@ -251,6 +322,7 @@
         const tipoComprobanteHolder = document.getElementById('appbundle_contabilidad_facturacion_tipoComprobante');
         const addLink = document.getElementById('add-servicio');
         const conceptoHolder = document.getElementById('prototype-holder');
+        const facturaGlobal = document.getElementById('appbundle_contabilidad_facturacion_facturaGlobal');
         const pagosHolder = document.getElementById('appbundle_contabilidad_facturacion_pagos');
         const tipoCambioHolder = document.getElementById('appbundle_contabilidad_facturacion_tipoCambio');
         const subtotalHolder = document.getElementById('appbundle_contabilidad_facturacion_subtotal');
@@ -259,6 +331,7 @@
         const totalHolder = document.getElementById('appbundle_contabilidad_facturacion_total');
         const monedaSelect = document.getElementById('appbundle_contabilidad_facturacion_moneda');
         let cotizacionData = null;
+        let cotizacionesData = null;
         let conceptoCounter = '{{ form.conceptos|length }}';
         const autocompleteSettings = {
           dataType: 'json',
@@ -268,10 +341,48 @@
           triggerSelectOnValidInput: false,
         };
 
-        /*
-         En caso de que el tipo de comprobante sea "P"
-         Remover todas las dependecias de "I" y "E"
-        */
+        // Realizar factura global
+        facturaGlobal.addEventListener('change', function (e) {
+          if (this.checked) {
+            $cotizacionSelect.prop('readonly', 'readonly');
+            if (!cotizacionesData) {
+              $.ajax({url: 'factura-global.json', success: data => { cotizacionesData = data; rollFacturaGlobal(cotizacionesData);  } });
+            } else {
+              rollFacturaGlobal(cotizacionesData)
+            }
+          } else {
+            $cotizacionSelect.removeAttr('readonly');
+            pagosHolder.innerHTML = '';
+            conceptoHolder.innerHTML = '';
+            appendRow();
+          }
+
+          // Rellenar datos del receptor
+          function rollFacturaGlobal(cotizacionesData) {
+            conceptoHolder.innerHTML = '';
+            const receptor = {
+              rfc: 'das',
+              cliente: 'asd',
+              telefono: 1,
+              razonSocial: 'SA DE CV',
+            };
+
+            $rfcSelect.val(receptor.rfc);
+
+            cotizacionesData.forEach(function (cotizacion) {
+              cotizacion.pagos.forEach(function (pago) {
+                let opt = new Option(`$${(pago.cantidad / 100).toFixed(2)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'), pago.id);
+                opt.setAttribute('selected', 'selected');
+                pagosHolder.appendChild(opt);
+              });
+              cotizacion.conceptos.forEach(function (concepto) {
+                appendRow(concepto);
+              });
+            });
+          }
+        });
+
+        // En caso de que el tipo de comprobante sea "P", remover todas las dependecias de "I" y "E"
         checkTipoComprobante();
         tipoComprobanteHolder.addEventListener('change', checkTipoComprobante);
 
@@ -322,6 +433,16 @@
           }
         });
 
+        if ($cotizacionSelect.val().trim()) {
+          pagosHolder.setAttribute('required', 'required');
+        }
+
+        $cotizacionSelect.on('input', function () {
+          if (this.value.trim()) {
+            pagosHolder.setAttribute('required', 'required');
+          }
+        });
+
         // Autocomplete para agregar filas a la tabla de conceptos
         $cotizacionSelect.autocomplete({
           ...autocompleteSettings,
@@ -341,7 +462,7 @@
           },
           onSelect: function ({data}) {
             pagosHolder.innerHTML = '';
-            pagosHolder.appendChild(new Option());
+            // pagosHolder.appendChild(new Option());
             pagosHolder.dataset.folio = data.folio;
             data.pagos.forEach(function (pago) {
               let opt = new Option(`$${(pago.cantidad / 100).toFixed(2)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'), pago.id);
@@ -389,6 +510,28 @@
           let unaTabla = document.createElement('table');
           unaTabla.innerHTML = prototype;
           let concepto = unaTabla.querySelector('.concepto-item');
+          let removeButton = document.createElement('a');
+          removeButton.className = 'badge btn-xs btn-naranja';
+          removeButton.innerHTML = '<i class="fa fa-times"></i>';
+
+          removeButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            this.parentNode.parentNode.remove(this);
+            if (!conceptoHolder.children.length) {
+              addLink.classList.remove('hidden');
+              pagosHolder.selectedIndex = 0;
+              pagosHolder.innerHTML = '';
+              $cotizacionSelect.val('');
+              subtotalHolder.value = 0;
+              descuentoHolder.value = 0;
+              ivaHolder.value = 0;
+              totalHolder.value = 0;
+            }
+          });
+
+          if (conceptoHolder.childElementCount > 0) {
+            concepto.cells[0].appendChild(removeButton);
+          }
 
           // Esconder descuento si el tipo de comprobante es "P"
           if (tipoComprobanteHolder.value === 'P') {
@@ -469,7 +612,11 @@
           }
 
           const conceptoSettings = {
-            ...autocompleteSettings,
+            dataType: 'json',
+            deferRequestBy: 150,
+            showNoSuggestionNotice: true,
+            noSuggestionNotice: 'No se encontraron resultados',
+            triggerSelectOnValidInput: true,
             minChars: 1,
             paramName: 'q',
             params: {},
@@ -557,15 +704,17 @@
 
 
         function clearPrice(textPrice) {
-          // return textPrice.replace(/[,\\$]/g, '');
           return textPrice.replace(/(?!-)[^0-9.]/g, '');
         }
 
         function clearData(e) {
           if ((e.keyCode === 8 && !this.value.trim()) || !e.target.value.trim()) {
             conceptoHolder.innerHTML = '';
+            appendRow();
             tipoCambioHolder.removeAttribute('readonly');
             pagosHolder.selectedIndex = 0;
+            pagosHolder.removeAttribute('required');
+            pagosHolder.innerHTML = '';
             subtotalHolder.value = 0;
             descuentoHolder.value = 0;
             ivaHolder.value = 0;
@@ -583,7 +732,6 @@
                 hasInput.removeAttribute('required');
                 hasInput.dispatchEvent(new Event('input'));
               }
-
               item.classList.add('hidden');
             });
           } else {
@@ -594,26 +742,26 @@
               }
               item.classList.remove('hidden');
             });
-
           }
         }
 
         $(document).on('keyup change', '#appbundle_contabilidad_facturacion_folioCotizacion', clearData);
 
 
-        $(document).on('click', '.remove-concepto', function (e) {
+        /*$(document).on('click', '.remove-concepto', function (e) {
           e.preventDefault();
           this.parentNode.parentNode.remove(this);
           if (!conceptoHolder.children.length) {
             addLink.classList.remove('hidden');
             pagosHolder.selectedIndex = 0;
+            pagosHolder.innerHTML = '';
             $cotizacionSelect.val('');
             subtotalHolder.value = 0;
             descuentoHolder.value = 0;
             ivaHolder.value = 0;
             totalHolder.value = 0;
           }
-        });
+        });*/
       })(jQuery);
     </script>
 {% endblock %}

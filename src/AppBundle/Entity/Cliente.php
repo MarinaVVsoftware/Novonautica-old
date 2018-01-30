@@ -29,6 +29,7 @@ class Cliente
 
     /**
      * @var string
+     *
      * @Assert\NotBlank(
      *     message="Nombre no puede quedar vacío"
      * )
@@ -135,6 +136,13 @@ class Cliente
     private $mhcotizacionesadicionales;
 
     /**
+     * @var AstilleroCotizacion
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizacion", mappedBy="cliente")
+     */
+    private $astilleroCotizaciones;
+
+    /**
      * @var RazonSocial
      *
      * @Assert\Valid()
@@ -149,6 +157,7 @@ class Cliente
         $this->mhcotizaciones = new ArrayCollection();
         $this->mhcotizacionesadicionales = new ArrayCollection();
         $this->razonesSociales = new ArrayCollection();
+        $this->astilleroCotizaciones = new ArrayCollection();
     }
 
     public function __toString()
@@ -537,5 +546,73 @@ class Cliente
     public function getRazonesSociales()
     {
         return $this->razonesSociales;
+    }
+
+    /**
+     * Remove mhcotizacione
+     *
+     * @param MarinaHumedaCotizacion $mhcotizacione
+     */
+    public function removeMhcotizacione(MarinaHumedaCotizacion $mhcotizacione)
+    {
+        $this->mhcotizaciones->removeElement($mhcotizacione);
+    }
+
+    /**
+     * Add mhcotizacionesadicionale
+     *
+     * @param MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale
+     *
+     * @return Cliente
+     */
+    public function addMhcotizacionesadicionale(MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale)
+    {
+        $this->mhcotizacionesadicionales[] = $mhcotizacionesadicionale;
+
+        return $this;
+    }
+
+    /**
+     * Remove mhcotizacionesadicionale
+     *
+     * @param MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale
+     */
+    public function removeMhcotizacionesadicionale(MarinaHumedaCotizacionAdicional $mhcotizacionesadicionale)
+    {
+        $this->mhcotizacionesadicionales->removeElement($mhcotizacionesadicionale);
+    }
+
+    /**
+     * Add astilleroCotizacione
+     *
+     * @param AstilleroCotizacion $astilleroCotizacione
+     *
+     * @return Cliente
+     */
+    public function addAstilleroCotizacione(AstilleroCotizacion $astilleroCotizacione)
+    {
+        $this->astilleroCotizaciones[] = $astilleroCotizacione;
+
+        return $this;
+    }
+
+    /**
+     * Remove astilleroCotizacione
+     *
+     * @param AstilleroCotizacion $astilleroCotizacione
+     */
+    public function removeAstilleroCotizacione(AstilleroCotizacion $astilleroCotizacione)
+    {
+        $this->astilleroCotizaciones->removeElement($astilleroCotizacione);
+    }
+
+    /**
+     * Get astilleroCotizaciones
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAstilleroCotizaciones()
+    {
+        return $this->astilleroCotizaciones;
     }
 }
