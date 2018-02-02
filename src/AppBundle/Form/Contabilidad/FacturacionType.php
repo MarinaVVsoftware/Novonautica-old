@@ -2,12 +2,12 @@
 
 namespace AppBundle\Form\Contabilidad;
 
-use AppBundle\Entity\Contabilidad\Facturacion;
-use AppBundle\Entity\Pago;
 use AppBundle\Form\Contabilidad\Facturacion\ConceptoType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Form\DataTransformer\CollectionToArrayTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -46,6 +46,7 @@ class FacturacionType extends AbstractType
             ])
             ->add('rfc', TextType::class, ['label' => 'RFC'])
             ->add('cliente')
+            ->add('facturaGlobal')
             ->add('razonSocial')
             ->add('direccionFiscal')
             ->add('numeroTelefonico')
@@ -60,7 +61,7 @@ class FacturacionType extends AbstractType
                 'by_reference' => false,
             ])
             ->add('formaPago', ChoiceType::class, [
-                'label' => 'Método de pago',
+                'label' => 'Forma de pago',
                 'choices' => [
                     'Efectivo' => '01',
                     'Cheque nominativo' => '02',
@@ -88,7 +89,6 @@ class FacturacionType extends AbstractType
                 'label' => 'Método de pago',
                 'choices' => [
                     'Pago en una sola exhibición' => 'PUE',
-                    'Pago inicial y parcialidades' => 'PIP',
                     'Pago en parcialidades o diferido' => 'PPD',
                 ]
             ])
@@ -97,10 +97,14 @@ class FacturacionType extends AbstractType
                 'choices' => [
                     'Ingreso' => 'I',
                     'Egreso' => 'E',
-                    'Traslado' => 'T',
-                    'Nómina' => 'N',
+//                    'Traslado' => 'T',
+//                    'Nómina' => 'N',
                     'Pago' => 'P',
                 ]
+            ])
+            ->add('condicionesPago', TextType::class, [
+                'label' => 'Condiciones de pago',
+                'attr' => ['placeholder' => 'Contado']
             ])
             ->add('usoCFDI', ChoiceType::class, [
                 'label' => 'Uso CFDI',
@@ -150,20 +154,27 @@ class FacturacionType extends AbstractType
             ->add('folioCotizacion', TextType::class, [
                 'label' => 'Folio de cotización',
                 'required' => false
-            ]);
+            ])
+        ;
 
-        $formBuilder = function (FormInterface $form, $folioCotizacion = null) {
-            $folios = explode('-', $folioCotizacion);
+        $formBuilder = function (FormInterface $form, $folioCotizacion = null, $preset) {
             $facturacionRepo = $this->em->getRepository('AppBundle:Contabilidad\Facturacion');
-            $pagos = $folioCotizacion ? $facturacionRepo->getPagosByFolioCotizacion($folios[0], $folios[1] ?? null) : [];
+
+            if (null === $folioCotizacion && $preset) {
+                $pagos = $facturacionRepo->getPagosFacturaGlobal();
+            } else {
+                $folios = explode('-', $folioCotizacion);
+                $pagos = $folioCotizacion ? $facturacionRepo->getPagosByFolioCotizacion($folios[0], $folios[1] ?? null) : [];
+            }
+
 
             $form->add('pagos', EntityType::class, [
                 'class' => 'AppBundle\Entity\Pago',
+                'by_reference' => false,
+                'multiple' => true,
                 'required' => false,
-                'placeholder' => '',
                 'choices' => $pagos,
                 'choice_label' => function ($pago) {
-                    /** @var Pago $pago */
                     return '$' . number_format(($pago->getCantidad() / 100), 2);
                 }
             ]);
@@ -172,15 +183,16 @@ class FacturacionType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($formBuilder) {
                 $form = $event->getForm();
-                $formBuilder($form, $event->getData()->getFolioCotizacion());
+                $formBuilder($form, $event->getData()->getFolioCotizacion(), false);
             });
 
         $builder->get('folioCotizacion')->addEventListener(FormEvents::POST_SUBMIT,
             function (FormEvent $event) use ($formBuilder) {
                 $form = $event->getForm()->getParent();
-                $formBuilder($form, $event->getForm()->getData());
+                $formBuilder($form, $event->getForm()->getData(), true);
             }
         );
+
 
     }
 

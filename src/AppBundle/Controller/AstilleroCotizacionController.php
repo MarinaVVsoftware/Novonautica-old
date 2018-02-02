@@ -319,6 +319,11 @@ class AstilleroCotizacionController extends Controller
                 ->getRepository(ValorSistema::class)
                 ->find(1)
                 ->setFolioMarina($folionuevo);
+
+            $cliente = $astilleroCotizacion->getBarco()->getCliente();
+            $cliente->addAstilleroCotizacione($astilleroCotizacion);
+            $astilleroCotizacion->setCliente($cliente);
+
             $em->persist($astilleroCotizacion);
             $em->flush();
 

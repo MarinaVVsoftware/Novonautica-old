@@ -74,9 +74,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h4>Razones Sociales</h4>
-                                </div>
-                                <div class="col-sm-12">
                                     {% form_theme edit_form.razonesSociales ':cliente/form-theme:razon-social.html.twig' %}
                                     {{ form_row(edit_form.razonesSociales) }}
                                     <a href="#" id="add-razon" class="letra-azul">
@@ -141,9 +138,8 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <a href="{{ path('barco_new',{'cliente':cliente.id}) }}" class="btn btn-azul">
-                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                Agregar Barco
+                            <a href="{{ path('barco_new',{'cliente':cliente.id}) }}" class="letra-azul">
+                                + Agregar Barco
                             </a>
                         </div>
                     </div>
@@ -157,7 +153,7 @@
                                 Guardar
                             </button>
                             <a class="btn btn-naranja pull-right"
-
+                               style="margin-right: 1rem"
                                href="{{ path('cliente_show',{ 'id': cliente.id }) }}">
                                 <i class="fa fa-ban" aria-hidden="true"></i>
                                 Cancelar
@@ -191,7 +187,7 @@
 
         Array
             .from(prototypeHolder.children)
-            .forEach((element, i) => i >= 1 ? appendRemoveLink(element) : false);
+            .forEach((element) => appendRemoveLink(element));
 
         addLink.addEventListener('click', function (e) {
           e.preventDefault();

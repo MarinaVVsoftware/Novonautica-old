@@ -262,6 +262,13 @@ class AstilleroCotizacion
      */
     private $odt;
 
+    /**
+     * @var Cliente
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="astilleroCotizaciones")
+     */
+    private $cliente;
+
     public function __construct() {
         $this->acservicios = new ArrayCollection();
         $this->pagos = new ArrayCollection();
@@ -936,5 +943,29 @@ class AstilleroCotizacion
     public function getOdt()
     {
         return $this->odt;
+    }
+
+    /**
+     * Set cliente
+     *
+     * @param Cliente $cliente
+     *
+     * @return AstilleroCotizacion
+     */
+    public function setCliente(Cliente $cliente = null)
+    {
+        $this->cliente = $cliente;
+
+        return $this;
+    }
+
+    /**
+     * Get cliente
+     *
+     * @return Cliente
+     */
+    public function getCliente()
+    {
+        return $this->cliente;
     }
 }

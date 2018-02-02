@@ -53,16 +53,12 @@ class Concepto
     /**
      * @var int
      *
-     * @Assert\NotBlank(message="Por favor indique un descuento")
-     *
      * @ORM\Column(name="descuento", type="bigint")
      */
     private $descuento;
 
     /**
      * @var int
-     *
-     * @Assert\NotBlank(message="No puede dejar vacio este valor")
      *
      * @ORM\Column(name="iva", type="bigint")
      */
@@ -106,11 +102,6 @@ class Concepto
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="conceptos")
      */
     private $factura;
-
-    public function __construct()
-    {
-        $this->descuento = 0;
-    }
 
     /**
      * Get id

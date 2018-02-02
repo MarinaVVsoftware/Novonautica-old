@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller\Contabilidad;
 
+use AppBundle\Entity\Astillero\Servicio;
 use AppBundle\Entity\Contabilidad\Facturacion;
+use AppBundle\Entity\MarinaHumedaServicio;
 use AppBundle\Extra\NumberToLetter;
 use AppBundle\Serializer\CotizacionNameConverter;
 use AppBundle\Serializer\NotNullObjectNormalizer;
@@ -14,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
@@ -125,15 +128,32 @@ class FacturacionController extends Controller
      * @Route("/", name="contabilidad_facturacion_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'facturas');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getCode());
+            }
+        }
+        return $this->render('contabilidad/facturacion/index.html.twig', ['title' => 'Listado de facturas']);
+
+        /*$em = $this->getDoctrine()->getManager();
 
         $facturacions = $em->getRepository('AppBundle:Contabilidad\Facturacion')->findAll();
+        $deleteForms = [];
+
+        foreach ($facturacions as $factura) {
+            $deleteForms[] = $this->createDeleteForm($factura)->createView();
+        }
 
         return $this->render('contabilidad/facturacion/index.html.twig', [
             'facturacions' => $facturacions,
-        ]);
+            'delete_forms' => $deleteForms
+        ]);*/
     }
 
     /**
@@ -141,6 +161,11 @@ class FacturacionController extends Controller
      *
      * @Route("/new", name="contabilidad_facturacion_new")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param \Swift_Mailer $mailer
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function newAction(Request $request, \Swift_Mailer $mailer)
     {
@@ -148,6 +173,8 @@ class FacturacionController extends Controller
         $factura = new Facturacion();
         $valorSistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
         $factura->setTipoCambio($valorSistema->getDolar());
+        $unConcepto = new Facturacion\Concepto();
+        $factura->addConcepto($unConcepto);
 
         $form = $this->createForm('AppBundle\Form\Contabilidad\FacturacionType', $factura);
         $form->handleRequest($request);
@@ -166,11 +193,6 @@ class FacturacionController extends Controller
                 ]);
             }
 
-            // Si se eligio un pago de una cotizacion, entonces relacionarlo con la factura
-            if ($factura->getPagos()) {
-                $factura->getPagos()->setFactura($factura);
-            }
-
             $factura->setXml(trim($timbrado['cfdi']));
             $factura->setPng(trim($timbrado['png']));
             $factura->setXmlArchivo($timbrado['archivo_xml']);
@@ -184,7 +206,7 @@ class FacturacionController extends Controller
             $factura->setCertificadoSAT((string)$timbrado['representacion_impresa_certificadoSAT']);
 
             $attachment = new Swift_Attachment(
-                $this->createFacturaPDF($factura),
+                $this->getFacturaPDF($factura),
                 'factura_' . $factura->getFolioCotizacion() . '.pdf',
                 'application/pdf'
             );
@@ -213,57 +235,132 @@ class FacturacionController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing facturacion entity.
+     * @Route("/{id}/reenviar", name="contabilidad_facturacion_reenvio")
+     * @Method("GET")
      *
-     * @Route("/{id}/edit", name="contabilidad_facturacion_edit")
-     * @Method({"GET", "POST"})
+     * @param Facturacion $factura
+     * @param \Swift_Mailer $mailer
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function editAction(Request $request, Facturacion $facturacion)
+    public function reenviarAction(Facturacion $factura, \Swift_Mailer $mailer)
     {
-        $deleteForm = $this->createDeleteForm($facturacion);
-        $editForm = $this->createForm('AppBundle\Form\Contabilidad\FacturacionType', $facturacion);
-        $editForm->handleRequest($request);
+        $attachment = new Swift_Attachment(
+            $this->getFacturaPDF($factura),
+            'factura_' . $factura->getFolioCotizacion() . '.pdf',
+            'application/pdf'
+        );
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+        $message = (new \Swift_Message('Factura de su pago realizado en ' . $factura->getFecha()->format('d/m/Y')))
+            ->setFrom('noresponder@novonautica.com')
+            ->setTo(explode(',', $factura->getEmail()))
+            ->setBcc(explode(',', $factura->getEmisor()->getEmails()))
+            ->setBody(
+                $this->renderView('contabilidad/facturacion/email/factura-template.html.twig'),
+                'text/html'
+            )
+            ->attach($attachment);
 
-            return $this->redirectToRoute('contabilidad_facturacion_edit', array('id' => $facturacion->getId()));
-        }
+        $mailer->send($message);
 
-        return $this->render('contabilidad/facturacion/edit.html.twig', array(
-            'facturacion' => $facturacion,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return $this->redirectToRoute('contabilidad_facturacion_index');
     }
 
     /**
-     * Deletes a facturacion entity.
+     * @Route("/{id}/pdf", name="contabilidad_factura_pdf")
+     * @Method("GET")
      *
-     * @Route("/{id}", name="contabilidad_facturacion_delete")
-     * @Method("DELETE")
+     * @param Facturacion $factura
+     *
+     * @return PdfResponse
      */
-    public function deleteAction(Request $request, Facturacion $facturacion)
+    public function getFacturaPDF(Facturacion $factura)
     {
-        $form = $this->createDeleteForm($facturacion);
-        $form->handleRequest($request);
+        $folio = $factura->getFolioCotizacion() ?? $factura->getFolioFiscal();
+        $numToLetters = new NumberToLetter();
+        $html = $this->renderView(':contabilidad/facturacion/pdf:factura.html.twig', [
+            'title' => 'factura_' . $folio . '.pdf',
+            'factura' => $factura,
+            'regimenFiscal' => $this->regimenFiscal[$factura->getEmisor()->getRegimenFiscal()],
+            'tipoComprobante' => $this->tipoComprobante[$factura->getTipoComprobante()],
+            'numLetras' => $numToLetters->toWord(($factura->getTotal() / 100), $factura->getMoneda()),
+            'usoCFDI' => $this->cfdi[$factura->getUsoCFDI()],
+            'formaPago' => $this->formaPago[$factura->getFormaPago()],
+            'metodoPago' => $this->metodoPago[$factura->getMetodoPago()],
+            'moneda' => $this->moneda[$factura->getMoneda()]
+        ]);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($facturacion);
-            $em->flush();
+        return new PdfResponse(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            'factura_' . $folio . '.pdf', 'application/pdf', 'inline'
+        );
+    }
+
+    /**
+     * @Route("/{id}/cancelar", name="contabilidad_facturacion_cancel")
+     * @Method({"GET"})
+     *
+     * @param Request $request
+     * @param Facturacion $factura
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function cancelAction(Request $request, Facturacion $factura)
+    {
+        $facturador = $this->container->get('multifacturas');
+        $timbrado = $facturador->cancela($factura);
+
+        if ($timbrado['codigo_mf_numero']) {
+            $this->addFlash('danger', $timbrado['codigo_mf_texto']);
+        } else {
+            $factura->setEstatus(0);
+            $this->getDoctrine()->getManager()->flush();
         }
 
         return $this->redirectToRoute('contabilidad_facturacion_index');
     }
 
     /**
-     * @Route("/{id}/factura", name="contabilidad_factura_pdf")
-     * @Method("GET")
+     * @Route("/factura-global.{_format}", defaults={"_format" = "json"})
+     *
+     * @param Request $request
+     *
+     * @return string
+     *
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
-    public function showFacturaPDFAction(Facturacion $factura)
+    public function getFacturaGlobal(Request $request)
     {
-        return $this->createFacturaPDF($factura);
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Contabilidad\Facturacion');
+        $pagos = $repo->getFacturaGlobal();
+
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $nameConverter = new CotizacionNameConverter();
+        $normalizer = new NotNullObjectNormalizer($classMetadataFactory, $nameConverter);
+
+        $returnNombres = function ($servicio) {
+            /** @var Servicio|MarinaHumedaServicio $servicio */
+            return null !== $servicio ? $servicio->getNombre() : null;
+        };
+
+        $normalizer->setCallbacks([
+            'tipo' => function ($tipo) {
+                if ($tipo === 1) {
+                    return 'Días de estancia';
+                } else if ($tipo === 2) {
+                    return 'Conexión a electricidad';
+                } else {
+                    return 'Abastecimiento de combustible';
+                }
+            },
+            'astilleroserviciobasico' => $returnNombres,
+            'servicio' => $returnNombres,
+            'producto' => $returnNombres,
+        ]);
+
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+        $response = $serializer->serialize($pagos, $request->getRequestFormat(), ['groups' => ['facturacion']]);
+        return new Response($response);
     }
 
     /**
@@ -272,6 +369,7 @@ class FacturacionController extends Controller
      * @param Request $request
      *
      * @return string
+     *
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function getAllCotizacionesAction(Request $request)
@@ -285,9 +383,8 @@ class FacturacionController extends Controller
         $normalizer = new NotNullObjectNormalizer($classMetadataFactory, $nameConverter);
 
         $returnNombres = function ($servicio) {
-            if (null !== $servicio) {
-                return $servicio->getNombre();
-            }
+            /** @var Servicio|MarinaHumedaServicio $servicio */
+            return null !== $servicio ? $servicio->getNombre() : null;
         };
 
         $normalizer->setCallbacks([
@@ -348,36 +445,6 @@ class FacturacionController extends Controller
     }
 
     /**
-     * Genera un PDF de una factura
-     *
-     * @param Facturacion $factura
-     * @return PdfResponse
-     */
-    private function createFacturaPDF($factura)
-    {
-        $folio = $factura->getFolioCotizacion() ?? $factura->getFolioFiscal();
-        $numToLetters = new NumberToLetter();
-        $html = $this->renderView(':contabilidad/facturacion/pdf:factura.html.twig', [
-            'title' => 'factura_' . $folio . '.pdf',
-            'factura' => $factura,
-            'regimenFiscal' => $this->regimenFiscal[$factura->getEmisor()->getRegimenFiscal()],
-            'tipoComprobante' => $this->tipoComprobante[$factura->getTipoComprobante()],
-            'numLetras' => $numToLetters->toWord(($factura->getTotal() / 100), $factura->getMoneda()),
-            'usoCFDI' => $this->cfdi[$factura->getUsoCFDI()],
-            'formaPago' => $this->formaPago[$factura->getFormaPago()],
-            'metodoPago' => $this->metodoPago[$factura->getMetodoPago()],
-            'moneda' => $this->moneda[$factura->getMoneda()]
-        ]);
-
-        return new PdfResponse(
-            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-            'factura_' . $folio . '.pdf', 'application/pdf', 'inline'
-        );
-    }
-
-    /**
-     * Creates a form to delete a facturacion entity.
-     *
      * @param Facturacion $facturacion The facturacion entity
      *
      * @return \Symfony\Component\Form\FormInterface
@@ -385,7 +452,7 @@ class FacturacionController extends Controller
     private function createDeleteForm(Facturacion $facturacion)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('contabilidad_facturacion_delete', ['id' => $facturacion->getId()]))
+            ->setAction($this->generateUrl('contabilidad_facturacion_cancel', ['id' => $facturacion->getId()]))
             ->setMethod('DELETE')
             ->getForm();
     }

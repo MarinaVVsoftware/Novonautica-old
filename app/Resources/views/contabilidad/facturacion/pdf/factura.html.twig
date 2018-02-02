@@ -24,7 +24,10 @@
 <div class="container-fluid">
     <div id="header" class="row">
         <div class="col-xs-4 text-center">
-            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('uploads/facturacion/emisor/logos/') ~ factura.emisor.logo }}" alt="" class="img-responsive center-block">
+            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('uploads/facturacion/emisor/logos/') ~ factura.emisor.logo }}"
+                 alt="" class="img-responsive center-block"
+                 style="max-height: 150px;"
+            >
         </div>
         <div class="col-xs-4">
             <h4 style="font-weight: bold;margin-top: 0">{{ factura.emisor.nombre }}</h4>
@@ -44,13 +47,13 @@
             <table class="table table-bordered table-striped table-condensed text-center">
                 <tbody>
                 <tr style="background: #CCCCCC">
-                    <td> FOLIO </td>
+                    <td> FOLIO</td>
                 </tr>
                 <tr>
                     <td>  {{ factura.folioCotizacion }} </td>
                 </tr>
                 <tr style="background: #CCCCCC">
-                    <td> LUGAR Y FECHA </td>
+                    <td> LUGAR Y FECHA</td>
                 </tr>
                 <tr>
                     <td> {{ factura.emisor.codigoPostal }}, {{ factura.fechaTimbrado }} </td>
@@ -64,7 +67,9 @@
             <tbody>
             <tr>
                 <td colspan="7">RECEPTOR DEL COMPROBANTE FISCAL</td>
-                <td colspan="3" class="text-center"><small>FOLIO FISCAL</small></td>
+                <td colspan="3" class="text-center">
+                    <small>FOLIO FISCAL</small>
+                </td>
             </tr>
             <tr>
                 <td rowspan="3" colspan="7">
@@ -78,7 +83,9 @@
                 <td colspan="3" class="text-center">{{ factura.folioFiscal }}</td>
             </tr>
             <tr class="text-center">
-                <td colspan="3"><small>SERIE CERTIFICADO CSD</small></td>
+                <td colspan="3">
+                    <small>SERIE CERTIFICADO CSD</small>
+                </td>
             </tr>
             <tr class="text-center">
                 <td colspan="3">{{ factura.serieCertificadoCSD }}</td>
@@ -155,7 +162,8 @@
             </div>
         </div>
         <div class="col-xs-4" style="padding: 25px 0;">
-            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('timbrados/') ~ factura.pngArchivo|split('/')|last }}" alt="" class="img-responsive center-block">
+            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('timbrados/') ~ factura.pngArchivo|split('/')|last }}"
+                 alt="" class="img-responsive center-block">
         </div>
         <div class="col-xs-12" style="border: 1px solid #000;">
             <h6>NÚMERO DE SERIE DEL CERTIFICADO DEL SAT:</h6>

@@ -44,9 +44,6 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <h4>Razones Sociales</h4>
-                        </div>
-                        <div class="col-sm-12">
                             {% form_theme form.razonesSociales ':cliente/form-theme:razon-social.html.twig' %}
                             {{ form_row(form.razonesSociales) }}
                             <a href="#" id="add-razon" class="letra-azul">
@@ -140,7 +137,7 @@
     {{ parent() }}
     <script type="text/javascript">
       /*
-            SYMFONY COLLECTION "MOTORES"
+            SYMFONY COLLECTION
       */
       (function () {
         const addLink = document.getElementById('add-razon');
@@ -149,7 +146,7 @@
 
         Array
             .from(prototypeHolder.children)
-            .forEach((element, i) => i >= 1 ? appendRemoveLink(element) : false);
+            .forEach((element) => appendRemoveLink(element));
 
         addLink.addEventListener('click', function (e) {
           e.preventDefault();

@@ -109,14 +109,12 @@ class ClienteController extends Controller
         $cliente = new Cliente();
         $barco = new Barco();
         $motor = new Motor();
-        $razonSocial = new Cliente\RazonSocial();
 
         $cliente->setEstatus(true);
         $barco->setEstatus(true);
 
         $cliente->addBarco($barco);
         $barco->addMotore($motor);
-        $cliente->addRazonesSociale($razonSocial);
 
         $form = $this->createForm('AppBundle\Form\ClienteType', $cliente);
         $form->handleRequest($request);

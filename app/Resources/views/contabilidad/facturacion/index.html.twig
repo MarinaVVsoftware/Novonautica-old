@@ -1,15 +1,29 @@
 {% extends 'estructura/plantilla.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    {{ parent() }}
+{% endblock %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    {% for message in app.flashes('danger') %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
                             <h3 class="panel-title">Listado de categorías</h3>
                         </div>
-                        <div class="panel-body no-padding">
+                        <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-novo">
                                     <thead>
@@ -20,12 +34,12 @@
                                         <th>Razon social</th>
                                         <th>Monto facturado</th>
                                         <th>Fecha</th>
-                                        <th>Archivos</th>
-                                        <th></th>
+                                        <th width="10%">Archivos</th>
+                                        <th width="10%" class="no-sort"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for facturacion in facturacions %}
+                                    {#{% for i, facturacion in facturacions %}
                                         <tr>
                                             <td>
                                                 {{ facturacion.folioFiscal }}
@@ -53,9 +67,23 @@
                                                     PDF
                                                 </a>
                                             </td>
-                                            <td></td>
+                                            <td style="vertical-align: middle">
+                                                <ul class="list-unstyled">
+                                                    <li style="margin-bottom: 5px;">
+                                                        <a href="{{ path('contabilidad_facturacion_reenvio', {'id': facturacion.id}) }}"
+                                                           class="btn btn-xs btn-azul"
+                                                        >Reenviar
+                                                        </a>
+                                                    </li>
+                                                   <li>
+                                                       {{ form_start(delete_forms[i]) }}
+                                                       <input type="submit" value="Cancelar" class="btn btn-xs btn-naranja">
+                                                       {{ form_end(delete_forms[i]) }}
+                                                   </li>
+                                                </ul>
+                                            </td>
                                         </tr>
-                                    {% endfor %}
+                                    {% endfor %}#}
                                     </tbody>
                                 </table>
                             </div>
@@ -65,4 +93,52 @@
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, datatableSettings) {
+        $('.table-novo').DataTable({
+          ...datatableSettings,
+          ajax: '{{ path('contabilidad_facturacion_index') }}',
+          order: [[7, 'desc']],
+          createdRow: function (row, data) {
+            row.classList.add('text-center');
+            let filesCell = row.cells[6];
+            let actionsCell = row.cells[7];
+            let url = '{{ app.request.requestUri }}';
+            let xmlRoute = '{{ asset('timbrados/') }}';
+
+            filesCell.innerHTML = `
+            <a href="${xmlRoute}${data[6]['xml']}"
+             target="_blank" class="btn btn-xs btn-azul"
+             style="margin: 5px;">XML</a>
+            <br>
+            <a href="${url}${data[6]['pdf']}/pdf"
+             target="_blank" class="remove-motor btn btn-xs btn-azul"
+             style="margin: 5px;">PDF</a>
+            `;
+
+            let actionsInner = `
+            <a href="${url}${data[7]['id']}/reenviar"
+             class="btn btn-xs btn-azul"
+             style="margin: 5px;">Reenviar</a>
+            <br>
+            `;
+
+            if (data[7]['status']) {
+              actionsInner += `
+                <a href="${url}${data[7]['id']}/cancelar"
+                 class="btn btn-xs btn-naranja"
+                 style="margin: 5px;">Cancelar</a>
+              `;
+            }
+            actionsCell.innerHTML = actionsInner;
+
+          },
+        });
+      })(jQuery, datatablesSettings)
+    </script>
 {% endblock %}

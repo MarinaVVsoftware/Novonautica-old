@@ -161,6 +161,13 @@ class Facturacion
     private $usoCFDI;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="condiciones_pago", type="string", nullable=true)
+     */
+    private $condicionesPago;
+
+    /**
      * @var string $folioFiscal = uuid;
      *
      * @ORM\Column(name="folio_fiscal", type="string")
@@ -238,6 +245,29 @@ class Facturacion
     private $pngArchivo;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="factura_global", type="boolean")
+     */
+    private $facturaGlobal;
+
+    /**
+     * @var string|null $folioCotizacion input de busqueda de cotizaciones
+     *
+     * @ORM\Column(name="folio_cotizacion", type="string", length=150, nullable=true)
+     */
+    private $folioCotizacion;
+
+    /**
+     * @var int $estatus
+     * 1 = Creada [default],
+     * 0 = Cancelada
+     *
+     * @ORM\Column(name="estatus", type="smallint")
+     */
+    private $estatus;
+
+    /**
      * @var Emisor
      *
      * @Assert\NotNull(message="Por favor elige una opción")
@@ -258,24 +288,19 @@ class Facturacion
     /**
      * @var Pago
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Pago", mappedBy="factura")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Pago", mappedBy="factura")
      */
     private $pagos;
-
-    /**
-     * @var string|null $folioCotizacion input de busqueda de cotizaciones
-     *
-     * @ORM\Column(name="folio_cotizacion", type="string", length=150, nullable=true)
-     */
-    private $folioCotizacion;
 
     /**
      * Constructor
      */
     public function __construct()
     {
+        $this->estatus = 1;
         $this->fecha = new \DateTimeImmutable();
         $this->conceptos = new ArrayCollection();
+        $this->pagos = new ArrayCollection();
     }
 
     /**
@@ -665,6 +690,22 @@ class Facturacion
     }
 
     /**
+     * @return string
+     */
+    public function getCondicionesPago()
+    {
+        return $this->condicionesPago;
+    }
+
+    /**
+     * @param string $condicionesPago
+     */
+    public function setCondicionesPago($condicionesPago)
+    {
+        $this->condicionesPago = $condicionesPago;
+    }
+
+    /**
      * Set emisor
      *
      * @param Emisor $emisor
@@ -953,6 +994,22 @@ class Facturacion
     }
 
     /**
+     * @return bool
+     */
+    public function isFacturaGlobal()
+    {
+        return $this->facturaGlobal;
+    }
+
+    /**
+     * @param bool $facturaGlobal
+     */
+    public function setFacturaGlobal($facturaGlobal)
+    {
+        $this->facturaGlobal = $facturaGlobal;
+    }
+
+    /**
      * @return null|string
      */
     public function getFolioCotizacion()
@@ -966,6 +1023,22 @@ class Facturacion
     public function setFolioCotizacion($folioCotizacion)
     {
         $this->folioCotizacion = $folioCotizacion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEstatus()
+    {
+        return $this->estatus;
+    }
+
+    /**
+     * @param int $estatus
+     */
+    public function setEstatus($estatus)
+    {
+        $this->estatus = $estatus;
     }
 
     /**
@@ -1004,23 +1077,34 @@ class Facturacion
     }
 
     /**
-     * Set pagos
+     * Add pago
      *
-     * @param Pago $pagos
+     * @param Pago $pago
      *
      * @return Facturacion
      */
-    public function setPagos(Pago $pagos = null)
+    public function addPago(Pago $pago)
     {
-        $this->pagos = $pagos;
+        $pago->setFactura($this);
+        $this->pagos->add($pago);
 
         return $this;
     }
 
     /**
+     * Remove pago
+     *
+     * @param Pago $pago
+     */
+    public function removePago(Pago $pago)
+    {
+        $this->pagos->removeElement($pago);
+    }
+
+    /**
      * Get pagos
      *
-     * @return Pago
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPagos()
     {
@@ -1031,12 +1115,23 @@ class Facturacion
      * @Assert\Callback()
      *
      * @param ExecutionContextInterface $context
-     * @param $payload
      */
-    public function validate(ExecutionContextInterface $context, $payload)
+    public function validate(ExecutionContextInterface $context)
     {
-        if ((null !== $this->getPagos()) && ($this->getTotal() > $this->getPagos()->getCantidad())) {
-            $context->buildViolation('El total es mayor que la cantidad del pago.')
+        $cantidad = 0;
+
+        if (!$this->getConceptos()->count()) {
+            $context->buildViolation('Debe agregar al menos un concepto.')
+                ->atPath('conceptos')
+                ->addViolation();
+        }
+
+        foreach ($this->getPagos() as $pago) {
+            $cantidad = $cantidad + $pago->getCantidad();
+        }
+
+        if ($this->getPagos()->count() && ($this->getTotal() > $cantidad)) {
+            $context->buildViolation('El total de la factura es mayor a la cantidad se pagos seleccionados.')
                 ->atPath('total')
                 ->addViolation();
         }
