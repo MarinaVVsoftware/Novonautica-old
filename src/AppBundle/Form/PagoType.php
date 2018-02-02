@@ -26,11 +26,11 @@ class PagoType extends AbstractType
                     ],
                 'placeholder' => 'Seleccionar...',
                 'label' => 'Método de pago',
-                'required' => false
+//                'required' => false
             ])
             ->add('cantidad',MoneyType::class,[
                 'label' => 'Pago',
-                'required' => false,
+//                'required' => false,
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
@@ -46,7 +46,7 @@ class PagoType extends AbstractType
             ])
             ->add('dolar',MoneyType::class,[
                 'label' => 'Valor del dolar',
-                'required' => false,
+//                'required' => false,
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,

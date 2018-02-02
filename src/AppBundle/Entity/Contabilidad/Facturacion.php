@@ -1085,7 +1085,8 @@ class Facturacion
      */
     public function addPago(Pago $pago)
     {
-        $this->pagos[] = $pago;
+        $pago->setFactura($this);
+        $this->pagos->add($pago);
 
         return $this;
     }

@@ -330,6 +330,12 @@
         const ivaHolder = document.getElementById('appbundle_contabilidad_facturacion_iva');
         const totalHolder = document.getElementById('appbundle_contabilidad_facturacion_total');
         const monedaSelect = document.getElementById('appbundle_contabilidad_facturacion_moneda');
+        const razon = document.getElementById('appbundle_contabilidad_facturacion_razonSocial');
+        const direccion = document.getElementById('appbundle_contabilidad_facturacion_direccionFiscal');
+        const nombre = document.getElementById('appbundle_contabilidad_facturacion_cliente');
+        const email = document.getElementById('appbundle_contabilidad_facturacion_email');
+        const telefono = document.getElementById('appbundle_contabilidad_facturacion_numeroTelefonico');
+
         let cotizacionData = null;
         let cotizacionesData = null;
         let conceptoCounter = '{{ form.conceptos|length }}';
@@ -340,17 +346,36 @@
           noSuggestionNotice: 'No se encontraron resultados',
           triggerSelectOnValidInput: false,
         };
-
+        // Checar si se esta cargando una factura global
+        if (facturaGlobal.checked) {
+          $cotizacionSelect.parent().addClass('hidden');
+        }
         // Realizar factura global
-        facturaGlobal.addEventListener('change', function (e) {
+        facturaGlobal.addEventListener('change', function () {
+          const receptor = {
+            rfc: 'XAXX010101000',
+            cliente: 'PUBLICO EN GENERAL',
+          };
+
           if (this.checked) {
+            $rfcSelect.val(receptor.rfc);
+            razon.value = nombre.value = direccion.value = receptor.cliente;
+            telefono.value = '00000000';
+
             $cotizacionSelect.prop('readonly', 'readonly');
+            $cotizacionSelect.parent().addClass('hidden');
+
             if (!cotizacionesData) {
               $.ajax({url: 'factura-global.json', success: data => { cotizacionesData = data; rollFacturaGlobal(cotizacionesData);  } });
             } else {
               rollFacturaGlobal(cotizacionesData)
             }
           } else {
+            $rfcSelect.val('');
+            razon.value = nombre.value = direccion.value = '';
+            telefono.value = '';
+
+            $cotizacionSelect.parent().removeClass('hidden');
             $cotizacionSelect.removeAttr('readonly');
             pagosHolder.innerHTML = '';
             conceptoHolder.innerHTML = '';
@@ -359,26 +384,23 @@
 
           // Rellenar datos del receptor
           function rollFacturaGlobal(cotizacionesData) {
+            let precio = 0;
             conceptoHolder.innerHTML = '';
-            const receptor = {
-              rfc: 'das',
-              cliente: 'asd',
-              telefono: 1,
-              razonSocial: 'SA DE CV',
-            };
-
-            $rfcSelect.val(receptor.rfc);
 
             cotizacionesData.forEach(function (cotizacion) {
               cotizacion.pagos.forEach(function (pago) {
+                precio = pago.cantidad + precio;
                 let opt = new Option(`$${(pago.cantidad / 100).toFixed(2)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'), pago.id);
                 opt.setAttribute('selected', 'selected');
                 pagosHolder.appendChild(opt);
               });
-              cotizacion.conceptos.forEach(function (concepto) {
+              /*cotizacion.conceptos.forEach(function (concepto) {
                 appendRow(concepto);
-              });
+              });*/
             });
+
+            precio = ((precio / 116) * 100).toFixed(2);
+            appendRow({ cantidad: 1, servicio: 'VENTA', precio, cps: '01010101 / No existe en el catálogo', cu: 'ACT / Actividad' }, true);
           }
         });
 
@@ -420,11 +442,6 @@
             })
           },
           onSelect: function ({data}) {
-            const razon = document.getElementById('appbundle_contabilidad_facturacion_razonSocial');
-            const direccion = document.getElementById('appbundle_contabilidad_facturacion_direccionFiscal');
-            const nombre = document.getElementById('appbundle_contabilidad_facturacion_cliente');
-            const email = document.getElementById('appbundle_contabilidad_facturacion_email');
-            const telefono = document.getElementById('appbundle_contabilidad_facturacion_numeroTelefonico');
             razon.value = data.razonSocial;
             direccion.value = data.direccion;
             nombre.value = data.cliente.nombre;
@@ -505,7 +522,7 @@
         });
 
         // Agrega un row
-        function appendRow(data) {
+        function appendRow(data, writePrice) {
           let prototype = conceptoHolder.dataset.prototype.replace(/__name__/g, conceptoCounter);
           let unaTabla = document.createElement('table');
           unaTabla.innerHTML = prototype;
@@ -543,7 +560,7 @@
           }
 
           conceptoHolder.appendChild(concepto);
-          addRowListener(concepto, data);
+          addRowListener(concepto, data, writePrice);
 
           conceptoCounter++;
         }
@@ -552,7 +569,7 @@
         [...conceptoHolder.children].forEach(row => addRowListener(row));
 
         // Le agrega la funcion de calculo a una row y si recibe datos los calcula;
-        function addRowListener(concepto, data) {
+        function addRowListener(concepto, data, writePrice) {
           let cantidadConcepto = concepto.children[1].firstElementChild;
           let cpsConcepto = concepto.children[2].firstElementChild;
           let cuConcepto = concepto.children[3].firstElementChild;
@@ -570,12 +587,11 @@
 
           if (data) {
             cantidadConcepto.value = data.cantidad || cantidadConcepto.value;
-            cpsConcepto.value = cpsConcepto.value || '';
-            cuConcepto.value = cuConcepto.value || '';
+            cpsConcepto.value = data.cps || cpsConcepto.value || '';
+            cuConcepto.value = data.cu || cuConcepto.value || '';
             descripcionConcepto.value = data.nombre || data.serviciobasico || data.servicio || data.producto || data.otroservicio || descripcionConcepto.value;
 
-            // vUnitarioConcepto.value = data.precio ? `${data.precio / 100}` : 0;
-            vUnitarioConcepto.value = 0;
+            vUnitarioConcepto.value = true === writePrice ? `${(data.precio / 100).toFixed(2)}` : 0;
             descuentoConcepto.value = data.descuento ? `${data.descuento / 100}` : 0;
           }
 

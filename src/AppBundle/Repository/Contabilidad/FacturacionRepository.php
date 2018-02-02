@@ -20,7 +20,7 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         return array_merge($marinaCotizaciones, $astilleroCotizaciones);
     }
 
-    public function getPagosFacturaGlobal()
+    public function getFacturaGlobal()
     {
         $em = $this->getEntityManager();
         $dql = '
@@ -57,6 +57,43 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         LEFT JOIN cotizacion.pagos AS pagos
         LEFT JOIN cotizacion.mhcservicios AS servicio
         LEFT JOIN cotizacion.slipmovimiento AS movimiento
+        LEFT JOIN cotizacion.cliente AS cliente
+        LEFT JOIN cliente.razonesSociales AS razonSocial
+        WHERE cotizacion.validanovo = 2
+        AND pagos.id IS NOT NULL
+        AND pagos.factura IS NULL
+        AND razonSocial.id IS NULL
+        ';
+
+        $mhQuery = $em->createQuery($dql)->getResult();
+
+
+        return array_merge($mhQuery, $atQuery);
+    }
+
+    public function getPagosFacturaGlobal()
+    {
+        $em = $this->getEntityManager();
+        $dql = '
+        SELECT
+        pagos
+        FROM AppBundle:Pago AS pagos
+        LEFT JOIN pagos.acotizacion AS cotizacion
+        LEFT JOIN cotizacion.cliente AS cliente
+        LEFT JOIN cliente.razonesSociales AS razonSocial
+        WHERE cotizacion.validanovo = 2
+        AND pagos.id IS NOT NULL
+        AND pagos.factura IS NULL
+        AND razonSocial.id IS NULL
+        ';
+
+        $atQuery = $em->createQuery($dql)->getResult();
+
+        $dql = '
+        SELECT
+        pagos
+        FROM AppBundle:Pago AS pagos
+        LEFT JOIN pagos.mhcotizacion AS cotizacion
         LEFT JOIN cotizacion.cliente AS cliente
         LEFT JOIN cliente.razonesSociales AS razonSocial
         WHERE cotizacion.validanovo = 2

@@ -269,6 +269,8 @@ class MarinaHumedaCotizacion
     /**
      * @Groups({"facturacion"})
      *
+     * @Assert\Valid()
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Pago", mappedBy="mhcotizacion",cascade={"persist","remove"})
      */
     private $pagos;

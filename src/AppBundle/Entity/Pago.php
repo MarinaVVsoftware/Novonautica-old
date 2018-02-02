@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Pago
@@ -27,6 +28,9 @@ class Pago
 
     /**
      * @var string
+     *
+     * @Assert\NotNull(message="Por favor elija un metodo de pago.")
+     * @Assert\NotBlank(message="Por favor elija un metodo de pago.")
      *
      * @ORM\Column(name="metodopago", type="string", length=100)
      */
@@ -104,13 +108,13 @@ class Pago
     /**
      * @var Facturacion
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="pagos")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="pagos", cascade={"persist"})
      */
     private $factura;
 
     public function __toString()
     {
-      return $this->metodopago;
+        return $this->metodopago;
     }
 
     /**

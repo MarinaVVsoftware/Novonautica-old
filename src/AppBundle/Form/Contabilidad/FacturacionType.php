@@ -157,16 +157,22 @@ class FacturacionType extends AbstractType
             ])
         ;
 
-        $formBuilder = function (FormInterface $form, $folioCotizacion = null) {
-            $folios = explode('-', $folioCotizacion);
+        $formBuilder = function (FormInterface $form, $folioCotizacion = null, $preset) {
             $facturacionRepo = $this->em->getRepository('AppBundle:Contabilidad\Facturacion');
-            $pagos = $folioCotizacion ? $facturacionRepo->getPagosByFolioCotizacion($folios[0], $folios[1] ?? null) : [];
+
+            if (null === $folioCotizacion && $preset) {
+                $pagos = $facturacionRepo->getPagosFacturaGlobal();
+            } else {
+                $folios = explode('-', $folioCotizacion);
+                $pagos = $folioCotizacion ? $facturacionRepo->getPagosByFolioCotizacion($folios[0], $folios[1] ?? null) : [];
+            }
+
 
             $form->add('pagos', EntityType::class, [
                 'class' => 'AppBundle\Entity\Pago',
+                'by_reference' => false,
                 'multiple' => true,
                 'required' => false,
-                'placeholder' => false,
                 'choices' => $pagos,
                 'choice_label' => function ($pago) {
                     return '$' . number_format(($pago->getCantidad() / 100), 2);
@@ -177,13 +183,13 @@ class FacturacionType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($formBuilder) {
                 $form = $event->getForm();
-                $formBuilder($form, $event->getData()->getFolioCotizacion());
+                $formBuilder($form, $event->getData()->getFolioCotizacion(), false);
             });
 
         $builder->get('folioCotizacion')->addEventListener(FormEvents::POST_SUBMIT,
             function (FormEvent $event) use ($formBuilder) {
                 $form = $event->getForm()->getParent();
-                $formBuilder($form, $event->getForm()->getData());
+                $formBuilder($form, $event->getForm()->getData(), true);
             }
         );
 

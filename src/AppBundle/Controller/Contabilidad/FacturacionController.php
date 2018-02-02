@@ -180,8 +180,7 @@ class FacturacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($factura);
-            /*$facturador = $this->container->get('multifacturas');
+            $facturador = $this->container->get('multifacturas');
             $timbrado = $facturador->procesa($factura);
 
             // Verificar que la factura se haya timbrado correctamente
@@ -192,11 +191,6 @@ class FacturacionController extends Controller
                     'facturacion' => $factura,
                     'form' => $form->createView(),
                 ]);
-            }
-
-            // Si se eligio un pago de una cotizacion, entonces relacionarlo con la factura
-            if ($factura->getPagos()) {
-                $factura->getPagos()->setFactura($factura);
             }
 
             $factura->setXml(trim($timbrado['cfdi']));
@@ -231,7 +225,7 @@ class FacturacionController extends Controller
                 ->attach($attachment);
 
             $mailer->send($message);
-            return $this->redirectToRoute('contabilidad_facturacion_index');*/
+            return $this->redirectToRoute('contabilidad_facturacion_index');
         }
 
         return $this->render('contabilidad/facturacion/new.html.twig', [
@@ -280,7 +274,7 @@ class FacturacionController extends Controller
      *
      * @return PdfResponse
      */
-    private function getFacturaPDF($factura)
+    public function getFacturaPDF(Facturacion $factura)
     {
         $folio = $factura->getFolioCotizacion() ?? $factura->getFolioFiscal();
         $numToLetters = new NumberToLetter();
@@ -338,7 +332,7 @@ class FacturacionController extends Controller
     public function getFacturaGlobal(Request $request)
     {
         $repo = $this->getDoctrine()->getRepository('AppBundle:Contabilidad\Facturacion');
-        $pagos = $repo->getPagosFacturaGlobal();
+        $pagos = $repo->getFacturaGlobal();
 
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $nameConverter = new CotizacionNameConverter();
