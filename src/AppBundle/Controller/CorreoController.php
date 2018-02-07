@@ -59,10 +59,11 @@ class CorreoController extends Controller
         $tipo = $request->query->get('tipo');
 
         $mhc = $this->getDoctrine()
-                ->getRepository('AppBundle:MarinaHumedaCotizacion')
-                ->getCotizacionByFolio($folio);
+            ->getRepository('AppBundle:MarinaHumedaCotizacion')
+            ->getCotizacionByFolio($folio);
 
-        if ($mhc) {
+        // Si existe una cotizacion de marina humeda entonces despliega el archivo
+        if (null !== $mhc) {
             $html = $this->renderView('marinahumeda/cotizacion/pdf/cotizacionpdf.html.twig', [
                 'title' => 'Cotizacion-' . $mhc->getFolio() . '.pdf',
                 'marinaHumedaCotizacion' => $mhc
@@ -77,41 +78,38 @@ class CorreoController extends Controller
             $options = [
                 'margin-top' => 23,
                 'margin-right' => 0,
-                'margin-bottom' => 33,
+                'margin-bottom' => 25,
                 'margin-left' => 0,
                 'header-html' => utf8_decode($header),
                 'footer-html' => utf8_decode($footer)
             ];
+
+            /*return $this->render(':marinahumeda/cotizacion/pdf:cotizacionpdf.html.twig', [
+                'marinaHumedaCotizacion' => $mhc
+            ]);*/
             return new PdfResponse(
                 $hojapdf->getOutputFromHtml($html, $options),
                 'Cotizacion-' . $mhc
                     ->getFolio() . '-' . $mhc
                     ->getFoliorecotiza() . '.pdf', 'application/pdf', 'inline'
             );
-        }
+        } // En el caso de que no exista una cotizacion de marina humeda entonce es de astillero
         else {
             $ac = $this->getDoctrine()
                 ->getRepository('AppBundle:AstilleroCotizacion')
                 ->getCotizacionByFolio($folio);
 
-            if ($tipo == 1) { //dolares
-                $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
-                    'title' => 'Cotizacion-0.pdf',
-                    'astilleroCotizacion' => $ac
-                ]);
-            } else { //pesos
-                $html = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
-                    'title' => 'Cotizacion-0.pdf',
-                    'astilleroCotizacion' => $ac
-                ]);
-            }
-
+            $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
+                'title' => 'Cotizacion-0.pdf',
+                'astilleroCotizacion' => $ac
+            ]);
             $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
                 'astilleroCotizacion' => $ac
             ]);
             $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig', [
                 'astilleroCotizacion' => $ac
             ]);
+
             $hojapdf = $this->get('knp_snappy.pdf');
             $options = [
                 'margin-top' => 30,

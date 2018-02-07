@@ -5,47 +5,52 @@
       href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"
 >
 <style type="text/css">
-    .texto1 {
-        font-size: 20px;
+    body {
+        font-size: 10px;
     }
+
     .letra-blanca {
         color: #ffffff;
     }
+
     .imagenlogo {
         min-width: 200px;
         padding: 10px;
     }
+
     .fondo-bicolor-arriba {
         background: url("{{ absolute_url(asset('img/imagen-03.jpg')) }}") no-repeat;
-        background-size: cover;
+        background-position: top right;
+        background-size: 100% auto;
+        padding-top: 1rem;
     }
 </style>
 <body>
+
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-3 ">
+        <div class="col-xs-3">
             <img src="{{ absolute_url(asset('img/cotizacion-03.png') ) }}" class="img-responsive imagenlogo">
         </div>
-        <div class="col-xs-9 text-right letra-blanca fondo-bicolor-arriba">
-            <div class="row">
-                <div class="col-xs-11">
-                    <p class="texto1"><strong>Cotización</strong></p>
-                    <p>Folio:
-                        {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
-                            {{ marinaHumedaCotizacion.folio }}
-                        {% else %}
-                            {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
-                        {% endif %}
-                        <br>
-                        Fecha: {{ marinaHumedaCotizacion.fecharegistro|date('d-m-Y') }}
-                        <br>
-                        Moneda: USD (US Dollar)
-                    </p>
-                </div>
-            </div>
-
+        <div class="col-xs-9 text-right letra-blanca fondo-bicolor-arriba" style="height: 80px">
+            <h4 style="margin: 0">
+                <strong>Cotización</strong>
+            </h4>
+            <p>
+                Folio:
+                {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
+                    {{ marinaHumedaCotizacion.folio }}
+                {% else %}
+                    {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
+                {% endif %}
+                <br>
+                Fecha: {{ marinaHumedaCotizacion.fecharegistro|date('d-m-Y') }}
+                <br>
+                Moneda: USD (US Dollar)
+            </p>
         </div>
     </div>
 </div>
+
 </body>
 </html>

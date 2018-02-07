@@ -9,40 +9,49 @@
         color: #666666;
         width: 100% !important;
         height: 100%;
-        font-size: 16px;
+        font-size: 10px;
     }
-    .fondo-morado{
-       background-color: #292e41;
-    }
-    .imagen-logo{
-        width: 120px;
-        padding: 5px;
-        margin-right: 5px;
+
+    img {
+        position: absolute;
+        bottom: 0;
+        right: 2rem;
     }
 </style>
 <body>
-<div class="row">
-    <div class="col-xs-3 col-xs-offset-1">
-        <p>
-            <strong>MARINA V&V</strong><br>
-            Calle Vialidad Paseo Mujeres<br>
-            Mza 1 L-1<br>
-            Isla Mujeres. Quintana Roo.<br>
-        </p>
-    </div>
-    <div class="col-xs-4">
-        <p>
-            C.P. 77400<br>
-            (999)-000-0000<br>
-            info@tucompañia.com
-        </p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-12">
-        <div class="imagen-logo fondo-morado pull-right">
-            <img src="{{ absolute_url(asset('img/logo.png')) }}" alt="" class="img-responsive">
+<div class="container-fluid">
+    <img src="{{ absolute_url(asset('img/logo-transparent.svg')) }}" alt="" class="img-responsive">
+    <div class="row">
+        <div class="col-xs-10">
+            <div class="row">
+                <div class="col-xs-6">
+                    <p>
+                        <strong>
+                            MARINA V&V
+                        </strong>
+                    </p>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>
+                                Calle Vialidad Paseo Mujeres<br>
+                                Mza 1 L-1<br>
+                                Isla Mujeres. Quintana Roo.<br>
+                            </p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>
+                                C.P. 77400<br>
+                                (999)-000-0000<br>
+                                info@tucompañia.com
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        {#<div class="col-xs-2">
+            <img src="{{ absolute_url(asset('img/logo-transparent.svg')) }}" alt="" class="img-responsive pull-right">
+        </div>#}
     </div>
 </div>
 </body>
