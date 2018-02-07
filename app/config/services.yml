@@ -3,6 +3,8 @@
 parameters:
     #parameter_name: value
     embarcacion_brochures: '%kernel.project_dir%/web/uploads/embarcacion'
+    # Este parametro esta activo por default en symfony 4.0, pero no en 3.4, por lo que genera warnings de autowiring
+    container.autowiring.strict_mode: true
 
 services:
     # default configuration for services in *this* file

@@ -320,6 +320,7 @@ class AstilleroCotizacionController extends Controller
                 ->find(1)
                 ->setFolioMarina($folionuevo);
 
+            // Asignacion de cotizacion al cliente y viceversa
             $cliente = $astilleroCotizacion->getBarco()->getCliente();
             $cliente->addAstilleroCotizacione($astilleroCotizacion);
             $astilleroCotizacion->setCliente($cliente);
@@ -612,13 +613,20 @@ class AstilleroCotizacionController extends Controller
             )
             ->attach($attachment)
             ->attach($attachmentMXN);
+
         $mailer->send($message);
 
         $historialCorreo = new Correo();
-        $historialCorreo->setFecha(new \DateTime('now'))->setTipo(3)->setDescripcion('Reenvio de cotización de Astillero');
+        $historialCorreo
+            ->setFecha(new \DateTime('now'))
+            ->setTipo('Cotización servicio Astillero')
+            ->setDescripcion('Reenvio de cotización de Astillero')
+            ->setFolioCotizacion($astilleroCotizacion->getFolio());
+
         $em->persist($historialCorreo);
 
         $em->flush();
+
         return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
     }
 
@@ -1028,13 +1036,18 @@ class AstilleroCotizacionController extends Controller
 
                 if($astilleroCotizacion->getFoliorecotiza() == 0){
                     $folio = $astilleroCotizacion->getFolio();
-                    $tipoCorreo = 3;
+                    $tipoCorreo = 'Cotización servicio Astillero';
                 }else{
                     $folio = $astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza();
-                    $tipoCorreo = 4;
+                    $tipoCorreo = 'Recotización Servicio Astillero';
                 }
                 $historialCorreo = new Correo();
-                $historialCorreo->setFecha(new \DateTime('now'))->setTipo($tipoCorreo)->setDescripcion('Envio de cotización de Astillero con folio: '.$folio);
+                $historialCorreo
+                    ->setFecha(new \DateTime('now'))
+                    ->setTipo($tipoCorreo)
+                    ->setDescripcion('Envio de cotización de Astillero con folio: ' . $folio)
+                    ->setFolioCotizacion($folio);
+
                 $em->persist($historialCorreo);
             }
             else{

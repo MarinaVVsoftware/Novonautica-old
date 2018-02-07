@@ -70,7 +70,7 @@ class EmbarcacionMarcaController extends Controller
     }
 
     /**
-     * @Route("/{id}/modelos.{_format}", name="embarcacion_marca_modelos_ajax", defaults={"_format" = "json"})
+     * @Route("/{id}/modelos.{_format}", name="embarcacion_marca_modelos", defaults={"_format" = "json"})
      */
     public function ajaxModelosAction(Request $request, EmbarcacionMarca $marca)
     {
@@ -106,7 +106,7 @@ class EmbarcacionMarcaController extends Controller
     /**
      * @param EmbarcacionMarca $embarcacionMarca
      *
-     * @return Form The form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function createDeleteForm($embarcacionMarca)
     {

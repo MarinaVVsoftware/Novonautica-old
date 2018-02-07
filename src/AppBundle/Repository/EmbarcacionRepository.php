@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class EmbarcacionRepository extends EntityRepository
 {
-    public function findAllLight() : array
+    public function findAllLight()
     {
         $qb = $this->createQueryBuilder('em');
 

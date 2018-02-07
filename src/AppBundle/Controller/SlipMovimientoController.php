@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 /**
  * Slipmovimiento controller.
  *
- * @Route("marina/slip", name="marina-slip")
+ * @Route("marina/slip")
  */
 class SlipMovimientoController extends Controller
 {
