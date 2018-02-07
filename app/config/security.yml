@@ -14,6 +14,7 @@ security:
             security: false
 
         main:
+            logout_on_user_change: true
             pattern: .*
             methods: [GET, POST]
             provider: Usuario
@@ -44,13 +45,11 @@ security:
 
                 # Guarda la sesion para evitar doble login
                 require_previous_session: true
-
             logout:
                 path: logout
                 target: login
                 invalidate_session: false
-
-#            security: true
+            security: true
             anonymous: ~
 
     access_control:
