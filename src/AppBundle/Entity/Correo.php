@@ -29,9 +29,9 @@ class Correo
     private $fecha;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="tipo", type="smallint", nullable=true)
+     * @ORM\Column(name="tipo", type="string", nullable=true)
      */
     private $tipo;
 
@@ -42,6 +42,12 @@ class Correo
      */
     private $descripcion;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="folio_cotizacion", type="text", length=10)
+     */
+    private $folioCotizacion;
 
     /**
      * Get id
@@ -94,7 +100,7 @@ class Correo
     /**
      * Get tipo
      *
-     * @return int
+     * @return string
      */
     public function getTipo()
     {
@@ -123,5 +129,29 @@ class Correo
     public function getDescripcion()
     {
         return $this->descripcion;
+    }
+
+    /**
+     * Set folioCotizacion
+     *
+     * @param string $folioCotizacion
+     *
+     * @return Correo
+     */
+    public function setFolioCotizacion($folioCotizacion)
+    {
+        $this->folioCotizacion = $folioCotizacion;
+
+        return $this;
+    }
+
+    /**
+     * Get folioCotizacion
+     *
+     * @return string
+     */
+    public function getFolioCotizacion()
+    {
+        return $this->folioCotizacion;
     }
 }

@@ -20,4 +20,21 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getCotizacionByFolio($folio)
+    {
+        $folios = explode('-', $folio);
+
+        $qb = $this->createQueryBuilder('atc');
+
+        $qb->where('atc.folio = :folio')
+            ->setParameter('folio', $folios[0]);
+
+        if (isset($folios[1])) {
+            $qb->andWhere('atc.foliorecotiza = :foliorecotiza')
+                ->setParameter('foliorecotiza', $folios[1]);
+        }
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
 }

@@ -148,7 +148,8 @@ class ClienteController extends Controller
 
 
             // Enviar correo de confirmacion
-            $message = (new \Swift_Message('¡Has sido dado de alta en NovoNautica!'))
+            // FIXME Aun no se requiere enviar correos al cliente
+            /*$message = (new \Swift_Message('¡Has sido dado de alta en NovoNautica!'))
                 ->setFrom('noresponder@novonautica.com')
                 ->setTo($cliente->getCorreo())
                 ->setBcc('admin@novonautica.com')
@@ -159,7 +160,7 @@ class ClienteController extends Controller
                     ]),
                     'text/html'
                 );
-            $mailer->send($message);
+            $mailer->send($message);*/
 
             return $this->redirectToRoute('cliente_show', ['id' => $cliente->getId()]);
 
@@ -300,12 +301,12 @@ class ClienteController extends Controller
      *
      * @param Cliente $cliente The cliente entity
      *
-     * @return \Symfony\Component\Form\FormInterface
+     * @return \Symfony\Component\Form\Form The form
      */
     private function createDeleteForm(Cliente $cliente)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('cliente_delete', ['id' => $cliente->getId()]))
+            ->setAction($this->generateUrl('cliente_delete', array('id' => $cliente->getId())))
             ->setMethod('DELETE')
             ->getForm();
     }

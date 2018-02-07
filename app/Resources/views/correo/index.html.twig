@@ -1,5 +1,10 @@
 {% extends 'estructura/plantilla.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+{% endblock %}
+
 {% block contwrapper %}
 <div class="content-wrapper">
     <section class="content">
@@ -9,38 +14,17 @@
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-sm-8">
-                        <table class="table">
+                    <div class="col-sm-12">
+                        <table class="table table-novo">
                             <thead>
                             <tr>
-                                <th>#</th>
                                 <th>Fecha</th>
                                 <th>Tipo</th>
                                 <th>Descripción</th>
+                                <th class="no-sort"></th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% set i=1 %}
-                            {% for correo in correos %}
-                                <tr>
-                                    <td>{{ i }}</td>
-                                    <td>{% if correo.fecha %}{{ correo.fecha|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                    <td>{% if correo.tipo == 1 %}
-                                            Cotización Servicio Marina Humeda
-                                        {% elseif correo.tipo == 2%}
-                                            Recotización Servicio Marina Humeda
-                                        {% elseif correo.tipo == 3%}
-                                            Cootización Servicio Astillero
-                                        {% elseif correo.tipo == 4%}
-                                            Recotización Servicio Astillero
-                                        {% else %}
-                                            Otros
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ correo.descripcion }}</td>
-                                </tr>
-                                {% set i = i+1 %}
-                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -50,4 +34,27 @@
         </div>
     </section>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, settings) {
+        $('.table-novo').DataTable({
+          ...settings,
+          ajax: '{{ path('historial-correo_index') }}',
+          order: [[3, 'desc']],
+          createdRow: function (row, data) {
+            let actionCell = row.cells[3];
+            actionCell.classList.add('text-center');
+            actionCell.innerHTML = `
+             <a href="cotizacion-pdf?folio=${data[3].folio}"
+             target="_blank" class="btn btn-xs btn-azul"
+             style="margin: 5px;">PDF</a>
+            `;
+          }
+        });
+      })(jQuery, datatablesSettings);
+    </script>
 {% endblock %}

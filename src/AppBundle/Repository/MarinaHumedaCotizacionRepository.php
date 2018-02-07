@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+use AppBundle\Entity\MarinaHumedaCotizacion;
 
 /**
  * MarinaHumedaCotizacionRepository
@@ -73,5 +74,22 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->distinct()
             ->getQuery()
             ->getResult();
+    }
+
+    public function getCotizacionByFolio($folio)
+    {
+        $folios = explode('-', $folio);
+
+        $qb = $this->createQueryBuilder('mhc');
+
+        $qb->where('mhc.folio = :folio')
+            ->setParameter('folio', $folios[0]);
+
+        if (isset($folios[1])) {
+            $qb->andWhere('mhc.foliorecotiza = :foliorecotiza')
+                ->setParameter('foliorecotiza', $folios[1]);
+        }
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }
