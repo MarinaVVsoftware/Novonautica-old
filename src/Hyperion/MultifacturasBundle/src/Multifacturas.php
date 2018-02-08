@@ -9,9 +9,6 @@
 namespace Hyperion\MultifacturasBundle\src;
 
 use AppBundle\Entity\Contabilidad\Facturacion;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-
-error_reporting(~(E_WARNING | E_NOTICE));
 
 class Multifacturas
 {
@@ -156,7 +153,7 @@ class Multifacturas
         /**
          * Ubicacion del timbrado
          */
-        $xmlname = $factura->getFolioCotizacion() ?: md5(uniqid(rand(time()), true));
+        $xmlname = $factura->getFolioCotizacion() ?: md5(uniqid(rand(time(), date('dmY')), true));
         $datos['cfdi'] = $this->dir . '/web/timbrados/factura_' .  $xmlname  . '.xml';
         $datos['xml_debug'] = $this->dir . '/web/timbrados/factura_' . $factura->getFolioCotizacion() . '_sintimbrar.xml';
 

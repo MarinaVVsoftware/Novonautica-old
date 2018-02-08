@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(~(E_WARNING | E_NOTICE));
+
 function mf_phpversion()
 {
     $version = phpversion();

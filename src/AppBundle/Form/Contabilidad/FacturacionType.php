@@ -3,7 +3,11 @@
 namespace AppBundle\Form\Contabilidad;
 
 use AppBundle\Form\Contabilidad\Facturacion\ConceptoType;
+use AppBundle\Form\Contabilidad\Facturacion\FacturaPagoType;
+use AppBundle\Form\DataTransformer\FacturaPagosDataTransformer;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Proxies\__CG__\AppBundle\Entity\Contabilidad\Facturacion;
 use Symfony\Bridge\Doctrine\Form\DataTransformer\CollectionToArrayTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -21,10 +25,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class FacturacionType extends AbstractType
 {
     private $em;
+    private $pagosDataTransformer;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, FacturaPagosDataTransformer $pagosDataTransformer)
     {
         $this->em = $em;
+        $this->pagosDataTransformer = $pagosDataTransformer;
     }
 
     /**
@@ -157,16 +163,13 @@ class FacturacionType extends AbstractType
             ])
         ;
 
-        $formBuilder = function (FormInterface $form, $folioCotizacion = null, $preset) {
+        $formBuilder = function (FormInterface $form, $folioCotizacion = null, $pagos = []) {
             $facturacionRepo = $this->em->getRepository('AppBundle:Contabilidad\Facturacion');
 
-            if (null === $folioCotizacion && $preset) {
-                $pagos = $facturacionRepo->getPagosFacturaGlobal();
-            } else {
+            if ($folioCotizacion) {
                 $folios = explode('-', $folioCotizacion);
-                $pagos = $folioCotizacion ? $facturacionRepo->getPagosByFolioCotizacion($folios[0], $folios[1] ?? null) : [];
+                $pagos = $facturacionRepo->getPagosByFolioCotizacion($folios[0], $folios[1] ?? null);
             }
-
 
             $form->add('pagos', EntityType::class, [
                 'class' => 'AppBundle\Entity\Pago',
@@ -183,17 +186,29 @@ class FacturacionType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($formBuilder) {
                 $form = $event->getForm();
-                $formBuilder($form, $event->getData()->getFolioCotizacion(), false);
-            });
+                $formBuilder($form, $event->getData()->getFolioCotizacion());
+            }
+        );
 
         $builder->get('folioCotizacion')->addEventListener(FormEvents::POST_SUBMIT,
             function (FormEvent $event) use ($formBuilder) {
                 $form = $event->getForm()->getParent();
-                $formBuilder($form, $event->getForm()->getData(), true);
+
+                if ($event->getData() !== '') {
+                    $formBuilder($form, $event->getForm()->getData());
+                }
             }
         );
 
-
+        $builder->get('facturaGlobal')->addEventListener(FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($formBuilder) {
+                $facturacionRepo = $this->em->getRepository('AppBundle:Contabilidad\Facturacion');
+                $form = $event->getForm()->getParent();
+                if ($event->getData() === '1') {
+                    $formBuilder($form, null, $facturacionRepo->getPagosFacturaGlobal());
+                }
+            }
+        );
     }
 
     /**
