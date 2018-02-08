@@ -140,20 +140,6 @@ class FacturacionController extends Controller
             }
         }
         return $this->render('contabilidad/facturacion/index.html.twig', ['title' => 'Listado de facturas']);
-
-        /*$em = $this->getDoctrine()->getManager();
-
-        $facturacions = $em->getRepository('AppBundle:Contabilidad\Facturacion')->findAll();
-        $deleteForms = [];
-
-        foreach ($facturacions as $factura) {
-            $deleteForms[] = $this->createDeleteForm($factura)->createView();
-        }
-
-        return $this->render('contabilidad/facturacion/index.html.twig', [
-            'facturacions' => $facturacions,
-            'delete_forms' => $deleteForms
-        ]);*/
     }
 
     /**
@@ -180,7 +166,7 @@ class FacturacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $facturador = $this->container->get('multifacturas');
+            /*$facturador = $this->container->get('multifacturas');
             $timbrado = $facturador->procesa($factura);
 
             // Verificar que la factura se haya timbrado correctamente
@@ -204,8 +190,10 @@ class FacturacionController extends Controller
             $factura->setSelloCFDI((string)$timbrado['representacion_impresa_sello']);
             $factura->setSelloSAT((string)$timbrado['representacion_impresa_selloSAT']);
             $factura->setCertificadoSAT((string)$timbrado['representacion_impresa_certificadoSAT']);
+            */
+            dump($factura);
 
-            $attachment = new Swift_Attachment(
+            /*$attachment = new Swift_Attachment(
                 $this->getFacturaPDF($factura),
                 'factura_' . $factura->getFolioCotizacion() . '.pdf',
                 'application/pdf'
@@ -225,7 +213,7 @@ class FacturacionController extends Controller
                 ->attach($attachment);
 
             $mailer->send($message);
-            return $this->redirectToRoute('contabilidad_facturacion_index');
+            return $this->redirectToRoute('contabilidad_facturacion_index');*/
         }
 
         return $this->render('contabilidad/facturacion/new.html.twig', [
@@ -342,6 +330,7 @@ class FacturacionController extends Controller
             /** @var Servicio|MarinaHumedaServicio $servicio */
             return null !== $servicio ? $servicio->getNombre() : null;
         };
+
 
         $normalizer->setCallbacks([
             'tipo' => function ($tipo) {

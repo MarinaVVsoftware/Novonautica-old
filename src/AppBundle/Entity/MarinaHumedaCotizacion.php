@@ -241,6 +241,9 @@ class MarinaHumedaCotizacion
     private $fecharespuesta;
 
     /**
+     *
+     * @Groups({"facturacion"})
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="mhcotizaciones")
      * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
      */

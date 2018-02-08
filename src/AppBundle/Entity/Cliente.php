@@ -21,6 +21,8 @@ class Cliente
     /**
      * @var int
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -29,6 +31,8 @@ class Cliente
 
     /**
      * @var string
+     *
+     * @Groups({"facturacion"})
      *
      * @Assert\NotBlank(
      *     message="Nombre no puede quedar vacío"

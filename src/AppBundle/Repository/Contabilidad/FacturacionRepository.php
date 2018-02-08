@@ -30,7 +30,8 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         servicios,
         servicioBasico,
         servicioProducto,
-        servicioRegular
+        servicioRegular,
+        cliente
         FROM AppBundle:AstilleroCotizacion AS cotizacion
         LEFT JOIN cotizacion.pagos AS pagos
         LEFT JOIN cotizacion.acservicios AS servicios
@@ -41,6 +42,7 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         LEFT JOIN servicios.servicio AS servicioRegular
         WHERE cotizacion.validanovo = 2
         AND pagos.id IS NOT NULL
+        AND cliente.id IS NOT NULL
         AND pagos.factura IS NULL
         AND razonSocial.id IS NULL
         ';
@@ -52,7 +54,8 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         cotizacion,
         pagos,
         servicio,
-        movimiento
+        movimiento,
+        cliente
         FROM AppBundle:MarinaHumedaCotizacion AS cotizacion
         LEFT JOIN cotizacion.pagos AS pagos
         LEFT JOIN cotizacion.mhcservicios AS servicio
@@ -61,6 +64,7 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         LEFT JOIN cliente.razonesSociales AS razonSocial
         WHERE cotizacion.validanovo = 2
         AND pagos.id IS NOT NULL
+        AND cliente.id IS NOT NULL
         AND pagos.factura IS NULL
         AND razonSocial.id IS NULL
         ';
