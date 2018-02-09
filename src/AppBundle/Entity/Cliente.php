@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Cliente\RazonSocial;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,8 +20,6 @@ class Cliente
     /**
      * @var int
      *
-     * @Groups({"facturacion"})
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -31,8 +28,6 @@ class Cliente
 
     /**
      * @var string
-     *
-     * @Groups({"facturacion"})
      *
      * @Assert\NotBlank(
      *     message="Nombre no puede quedar vacío"

@@ -127,6 +127,9 @@ class FacturacionController extends Controller
      *
      * @Route("/", name="contabilidad_facturacion_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
      */
     public function indexAction(Request $request)
     {
@@ -166,7 +169,7 @@ class FacturacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /*$facturador = $this->container->get('multifacturas');
+            $facturador = $this->container->get('multifacturas');
             $timbrado = $facturador->procesa($factura);
 
             // Verificar que la factura se haya timbrado correctamente
@@ -190,10 +193,8 @@ class FacturacionController extends Controller
             $factura->setSelloCFDI((string)$timbrado['representacion_impresa_sello']);
             $factura->setSelloSAT((string)$timbrado['representacion_impresa_selloSAT']);
             $factura->setCertificadoSAT((string)$timbrado['representacion_impresa_certificadoSAT']);
-            */
-            dump($factura);
 
-            /*$attachment = new Swift_Attachment(
+            $attachment = new Swift_Attachment(
                 $this->getFacturaPDF($factura),
                 'factura_' . $factura->getFolioCotizacion() . '.pdf',
                 'application/pdf'
@@ -213,7 +214,7 @@ class FacturacionController extends Controller
                 ->attach($attachment);
 
             $mailer->send($message);
-            return $this->redirectToRoute('contabilidad_facturacion_index');*/
+            return $this->redirectToRoute('contabilidad_facturacion_index');
         }
 
         return $this->render('contabilidad/facturacion/new.html.twig', [
@@ -288,12 +289,10 @@ class FacturacionController extends Controller
      * @Route("/{id}/cancelar", name="contabilidad_facturacion_cancel")
      * @Method({"GET"})
      *
-     * @param Request $request
      * @param Facturacion $factura
-     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function cancelAction(Request $request, Facturacion $factura)
+    public function cancelAction(Facturacion $factura)
     {
         $facturador = $this->container->get('multifacturas');
         $timbrado = $facturador->cancela($factura);
@@ -312,10 +311,7 @@ class FacturacionController extends Controller
      * @Route("/factura-global.{_format}", defaults={"_format" = "json"})
      *
      * @param Request $request
-     *
      * @return string
-     *
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function getFacturaGlobal(Request $request)
     {
@@ -356,10 +352,7 @@ class FacturacionController extends Controller
      * @Route("/cotizaciones.{_format}", defaults={"_format" = "json"})
      *
      * @param Request $request
-     *
      * @return string
-     *
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function getAllCotizacionesAction(Request $request)
     {
@@ -431,18 +424,5 @@ class FacturacionController extends Controller
         $normalizer = new ObjectNormalizer();
         $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
         return new Response($serializer->serialize($cps, $request->getRequestFormat()));
-    }
-
-    /**
-     * @param Facturacion $facturacion The facturacion entity
-     *
-     * @return \Symfony\Component\Form\FormInterface
-     */
-    private function createDeleteForm(Facturacion $facturacion)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('contabilidad_facturacion_cancel', ['id' => $facturacion->getId()]))
-            ->setMethod('DELETE')
-            ->getForm();
     }
 }

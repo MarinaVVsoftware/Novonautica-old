@@ -265,8 +265,6 @@ class AstilleroCotizacion
     /**
      * @var Cliente
      *
-     * @Groups({"facturacion"})
-     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="astilleroCotizaciones")
      */
     private $cliente;
