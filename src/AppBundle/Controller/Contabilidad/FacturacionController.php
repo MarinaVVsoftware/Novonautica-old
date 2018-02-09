@@ -155,6 +155,7 @@ class FacturacionController extends Controller
      * @param \Swift_Mailer $mailer
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function newAction(Request $request, \Swift_Mailer $mailer)
     {
@@ -169,8 +170,18 @@ class FacturacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $facturador = $this->container->get('multifacturas');
+            dump($factura);
+            /*$facturador = $this->container->get('multifacturas');
             $timbrado = $facturador->procesa($factura);
+
+            // Asignar folio en base al total de facturas existentes
+            $folioFactura = $em->getRepository('AppBundle:Contabilidad\Facturacion')
+                ->createQueryBuilder('f')
+                ->select('COUNT(f.id)')
+                ->getQuery()
+                ->getSingleScalarResult();
+
+            $factura->setFolio($folioFactura);
 
             // Verificar que la factura se haya timbrado correctamente
             if ($timbrado['codigo_mf_numero']) {
@@ -215,6 +226,7 @@ class FacturacionController extends Controller
 
             $mailer->send($message);
             return $this->redirectToRoute('contabilidad_facturacion_index');
+            */
         }
 
         return $this->render('contabilidad/facturacion/new.html.twig', [
@@ -300,6 +312,7 @@ class FacturacionController extends Controller
         if ($timbrado['codigo_mf_numero']) {
             $this->addFlash('danger', $timbrado['codigo_mf_texto']);
         } else {
+            $this->addFlash('danger', $timbrado['codigo_mf_texto']);
             $factura->setEstatus(0);
             $this->getDoctrine()->getManager()->flush();
         }
@@ -312,6 +325,7 @@ class FacturacionController extends Controller
      *
      * @param Request $request
      * @return string
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function getFacturaGlobal(Request $request)
     {
@@ -353,6 +367,7 @@ class FacturacionController extends Controller
      *
      * @param Request $request
      * @return string
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function getAllCotizacionesAction(Request $request)
     {

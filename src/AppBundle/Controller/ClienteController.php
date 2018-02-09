@@ -299,12 +299,12 @@ class ClienteController extends Controller
      *
      * @param Cliente $cliente The cliente entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function createDeleteForm(Cliente $cliente)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('cliente_delete', array('id' => $cliente->getId())))
+            ->setAction($this->generateUrl('cliente_delete', ['id' => $cliente->getId()]))
             ->setMethod('DELETE')
             ->getForm();
     }
