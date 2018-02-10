@@ -168,11 +168,25 @@ class Facturacion
     private $condicionesPago;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="folio", type="string", length=20)
+     */
+    private $folio;
+
+    /**
      * @var string $folioFiscal = uuid;
      *
      * @ORM\Column(name="folio_fiscal", type="string")
      */
     private $folioFiscal;
+
+    /**
+     * @var string|null $folioCotizacion input de busqueda de cotizaciones
+     *
+     * @ORM\Column(name="folio_cotizacion", type="string", length=150, nullable=true)
+     */
+    private $folioCotizacion;
 
     /**
      * @var string $cadenaOriginal = representacion_impresa_cadena
@@ -250,13 +264,6 @@ class Facturacion
      * @ORM\Column(name="factura_global", type="boolean")
      */
     private $facturaGlobal;
-
-    /**
-     * @var string|null $folioCotizacion input de busqueda de cotizaciones
-     *
-     * @ORM\Column(name="folio_cotizacion", type="string", length=150, nullable=true)
-     */
-    private $folioCotizacion;
 
     /**
      * @var int $estatus
@@ -730,6 +737,22 @@ class Facturacion
     }
 
     /**
+     * @return string
+     */
+    public function getFolio()
+    {
+        return $this->folio;
+    }
+
+    /**
+     * @param string $folio
+     */
+    public function setFolio($folio)
+    {
+        $this->folio = $folio;
+    }
+
+    /**
      * Set folioFiscal
      *
      * @param string $folioFiscal
@@ -751,6 +774,22 @@ class Facturacion
     public function getFolioFiscal()
     {
         return $this->folioFiscal;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getFolioCotizacion()
+    {
+        return $this->folioCotizacion;
+    }
+
+    /**
+     * @param null|string $folioCotizacion
+     */
+    public function setFolioCotizacion($folioCotizacion)
+    {
+        $this->folioCotizacion = $folioCotizacion;
     }
 
     /**
@@ -1010,22 +1049,6 @@ class Facturacion
     }
 
     /**
-     * @return null|string
-     */
-    public function getFolioCotizacion()
-    {
-        return $this->folioCotizacion;
-    }
-
-    /**
-     * @param null|string $folioCotizacion
-     */
-    public function setFolioCotizacion($folioCotizacion)
-    {
-        $this->folioCotizacion = $folioCotizacion;
-    }
-
-    /**
      * @return int
      */
     public function getEstatus()
@@ -1130,8 +1153,8 @@ class Facturacion
             $cantidad = $cantidad + $pago->getCantidad();
         }
 
-        if ($this->getPagos()->count() && ($this->getTotal() > $cantidad)) {
-            $context->buildViolation('El total de la factura es mayor a la cantidad se pagos seleccionados.')
+        if ($this->getPagos()->count() && ($this->getTotal() !== $cantidad)) {
+            $context->buildViolation('El total de la factura es diferente a la cantidad total de pagos seleccionados.')
                 ->atPath('total')
                 ->addViolation();
         }

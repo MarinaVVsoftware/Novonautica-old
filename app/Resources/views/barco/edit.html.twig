@@ -1,4 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
+{% import 'estructura/modalborrar.twig' as modal %}
 
 {% block title %}
     Novonautiva | Editar Barco
@@ -90,46 +91,27 @@
                             </a>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="margin-top: 2rem">
                         <div class="col-sm-12">
+                            {{ delete_form is defined ? modal.deleteButton('Embarcacion') : '' }}
+
                             <button type="submit" class="btn btn-azul pull-right">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 Guardar
                             </button>
-                        </div>
-                    </div>
-                    {{ form_end(edit_form) }}
-                    <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-12">
-                            <a href="{{ path('cliente_show',{'id':cliente.id}) }}" class="btn btn-naranja pull-right">
+                            <a href="{{ path('cliente_show',{'id':cliente.id}) }}" class="btn btn-naranja pull-right" style="margin-right: 1rem">
                                 <i class="fa fa-ban" aria-hidden="true"></i>
                                 Cancelar
                             </a>
                         </div>
                     </div>
-                    <div class="row  espacio-linea-arriba2">
-                        <div class="col-sm-12">
-                            <button type="button" class="btn btn-borrar pull-right" data-toggle="modal"
-                                    data-target="#modalBorrar">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                Borrar
-                            </button>
-                        </div>
-                    </div>
+                    {{ form_end(edit_form) }}
                 </div>
             </div>
         </section>
     </div>
 {% endblock %}
+
 {% block modals %}
-    {% embed 'estructura/modalborrar.twig' %}
-        {% block botonborra %}
-            {{ form_start(delete_form) }}
-            <button type="submit" class="btn btn-borrar">
-                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                Borrar
-            </button>
-            {{ form_end(delete_form) }}
-        {% endblock %}
-    {% endembed %}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}

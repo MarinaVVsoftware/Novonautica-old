@@ -134,7 +134,12 @@
                  class="btn btn-xs btn-naranja"
                  style="margin: 5px;">Cancelar</a>
               `;
+            } else {
+              actionsInner += `
+                <span class="label fondo-morado">Cancelada</span>
+              `;
             }
+
             actionsCell.innerHTML = actionsInner;
 
           },

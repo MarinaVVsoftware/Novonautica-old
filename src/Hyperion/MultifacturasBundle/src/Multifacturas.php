@@ -14,13 +14,13 @@ class Multifacturas
 {
     private $env;
     private $dir;
-    private $config;
+    private $prod;
 
     public function __construct($env, $dir)
     {
         $this->env = $env;
         $this->dir = $dir;
-        $this->config = $this->setConfig();
+        $this->prod = 'NO';
     }
 
     public function procesa(Facturacion $factura)
@@ -31,8 +31,10 @@ class Multifacturas
         /*
          * PAC
          */
-        $config['PAC']['usuario'] = $factura->getEmisor()->getUsuarioPAC();
-        $config['PAC']['pass'] = $factura->getEmisor()->getPasswordPAC();
+        $datos['version_cfdi'] = '3.3';
+        $datos['PAC']['produccion'] = $this->prod;
+        $datos['PAC']['usuario'] = $factura->getEmisor()->getUsuarioPAC();
+        $datos['PAC']['pass'] = $factura->getEmisor()->getPasswordPAC();
 
 
         /*
@@ -100,7 +102,8 @@ class Multifacturas
             unset($datos['impuestos']['translados'][0]['importe']);
             unset($datos['impuestos']['translados'][0]['TipoFactor']);
             unset($datos['impuestos']['TotalImpuestosTrasladados']);
-        } else {
+        }
+        else {
             /*
              * Factura
              * */
@@ -157,34 +160,26 @@ class Multifacturas
         $datos['cfdi'] = $this->dir . '/web/timbrados/factura_' .  $xmlname  . '.xml';
         $datos['xml_debug'] = $this->dir . '/web/timbrados/factura_' . $factura->getFolioCotizacion() . '_sintimbrar.xml';
 
-        $cotizacion = array_merge($this->config, $datos);
-
-        return mf_genera_cfdi($cotizacion);
+        return mf_genera_cfdi($datos);
     }
 
     public function cancela(Facturacion $factura)
     {
         require_once 'sdk2.php';
 
-        $datos['cancelar'] = 'SI';
+        /**
+         * PAC
+         */
+        $datos['PAC']['usuario'] = $factura->getEmisor()->getUsuarioPAC();
+        $datos['PAC']['pass'] = $factura->getEmisor()->getPasswordPAC();
+        $datos['PAC']['produccion'] = $this->prod;
+
+        $datos['cancelar'] = 'NO';
         $datos['cfdi'] = $factura->getXmlArchivo();
-        $config['PAC']['usuario'] = $factura->getEmisor()->getUsuarioPAC();
-        $config['PAC']['pass'] = $factura->getEmisor()->getPasswordPAC();
         $datos['conf']['cer'] = __DIR__ . '/certificados/' . $factura->getEmisor()->getCer();
         $datos['conf']['key'] = __DIR__ . '/certificados/' . $factura->getEmisor()->getKey();
         $datos['conf']['pass'] = $factura->getEmisor()->getPassword();
 
-        $oldFactura = array_merge($this->config, $datos);
-
-        return cfdi_cancelar($oldFactura);
-    }
-
-    private function setConfig(): array
-    {
-        $config = [];
-        $config['PAC']['produccion'] = 'NO';
-        $config['version_cfdi'] = '3.3';
-
-        return $config;
+        return cfdi_cancelar($datos);
     }
 }

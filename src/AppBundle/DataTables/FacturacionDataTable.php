@@ -94,10 +94,9 @@ class FacturacionDataTable extends AbstractDataTableHandler
             $emisor = $factura->getEmisor();
             $nombreXML = explode('/', $factura->getXmlArchivo());
             $nombreXML = end($nombreXML);
-            $nombrePDF =
 
             $results->data[] = [
-                $factura->getFolioFiscal(),
+                $factura->getFolio(),
                 $emisor->getRfc() . ' / ' . $emisor->getNombre(),
                 $factura->getRfc() . ' / ' . $factura->getCliente(),
                 $factura->getRazonSocial(),
