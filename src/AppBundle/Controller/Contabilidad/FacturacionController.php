@@ -170,8 +170,7 @@ class FacturacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($factura);
-            /*$facturador = $this->container->get('multifacturas');
+            $facturador = $this->container->get('multifacturas');
             $timbrado = $facturador->procesa($factura);
 
             // Asignar folio en base al total de facturas existentes
@@ -226,7 +225,6 @@ class FacturacionController extends Controller
 
             $mailer->send($message);
             return $this->redirectToRoute('contabilidad_facturacion_index');
-            */
         }
 
         return $this->render('contabilidad/facturacion/new.html.twig', [
