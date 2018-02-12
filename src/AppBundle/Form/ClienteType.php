@@ -21,7 +21,10 @@ class ClienteType extends AbstractType
         $builder
             ->add('nombre', TextType::class)
             ->add('correo', TextType::class)
-            ->add('telefono', TextType::class, ['required' => false])
+            ->add('telefono', TextType::class, [
+                'label' => 'Télefono',
+                'required' => false
+            ])
             ->add('celular', TextType::class)
             ->add('direccion', TextType::class, ['label' => 'Dirección'])
             ->add('barcos', CollectionType::class, ['entry_type' => BarcoType::class, 'label' => false])
@@ -30,7 +33,7 @@ class ClienteType extends AbstractType
                 'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'by_reference' => false,
+                'by_reference' => false,g
                 'entry_options' => ['label' => false]
             ])
         ;
