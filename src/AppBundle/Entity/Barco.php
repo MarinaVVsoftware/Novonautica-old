@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -17,6 +18,8 @@ class Barco
     /**
      * @var int
      *
+     * @Groups({"currentOcupation"})
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -25,6 +28,8 @@ class Barco
 
     /**
      * @var string
+     *
+     * @Groups({"currentOcupation"})
      *
      * @Assert\NotBlank(message="Nombre del barco no puede quedar vacío")
      *

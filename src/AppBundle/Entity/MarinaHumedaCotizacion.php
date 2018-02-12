@@ -241,12 +241,16 @@ class MarinaHumedaCotizacion
     private $fecharespuesta;
 
     /**
+     * @Groups({"currentOcupation"})
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="mhcotizaciones")
      * @ORM\JoinColumn(name="idcliente", referencedColumnName="id",onDelete="CASCADE")
      */
     private $cliente;
 
     /**
+     * @Groups({"currentOcupation"})
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="mhcotizaciones")
      * @ORM\JoinColumn(name="idbarco", referencedColumnName="id",onDelete="CASCADE")
      */
