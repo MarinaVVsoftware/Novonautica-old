@@ -24,34 +24,26 @@ class BarcoType extends AbstractType
         $builder
             ->add('nombre',TextType::class,[
                 'label' => 'Nombre de la embarcación',
-                'required' => false
             ])
             ->add('modelo',TextType::class,[
-                'required' => false
             ])
             ->add('calado',TextType::class,[
-                'required' => false,
                 'attr' => ['class' => 'esdecimal']
             ])
             ->add('manga',TextType::class,[
-                'required' => false,
                 'attr' => ['class' => 'esdecimal']
             ])
             ->add('eslora',TextType::class,[
-                'required' => false,
                 'attr' => ['class' => 'esdecimal']
             ])
             ->add('nombreResponsable',TextType::class,[
                 'label' => 'Nombre del responsable',
-                'required' => false
             ])
             ->add('telefonoResponsable',TextType::class,[
                 'label' => 'Teléfono del responsable',
-                'required' => false
             ])
             ->add('correoResponsable',TextType::class,[
                 'label' => 'Correo del responsable',
-                'required' => false
             ])
             ->add('nombreCapitan',TextType::class,[
                 'label' => 'Nombre del capitán',
@@ -65,10 +57,6 @@ class BarcoType extends AbstractType
                 'label' => 'Correo del capitán',
                 'required' => false
             ])
-//            ->add('estatus',null,[
-//                'label' => ' ',
-//                'required' => false
-//            ])
             ->add('motores',CollectionType::class,[
                 'entry_type' => MotorType::class,
                 'label' => false,

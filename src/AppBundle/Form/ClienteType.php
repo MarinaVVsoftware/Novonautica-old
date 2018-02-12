@@ -19,33 +19,21 @@ class ClienteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nombre', TextType::class, [
-                'required' => false
-            ])
-            ->add('correo', TextType::class, [
-                'required' => false
-            ])
+            ->add('nombre', TextType::class)
+            ->add('correo', TextType::class)
             ->add('telefono', TextType::class, [
-                'label' => 'Teléfono',
+                'label' => 'Télefono',
                 'required' => false
             ])
-            ->add('celular', TextType::class, [
-                'required' => false
-            ])
-            ->add('direccion', TextType::class, [
-                'label' => 'Dirección',
-                'required' => false
-            ])
-            ->add('barcos', CollectionType::class, [
-                'entry_type' => BarcoType::class,
-                'label' => false,
-            ])
+            ->add('celular', TextType::class)
+            ->add('direccion', TextType::class, ['label' => 'Dirección'])
+            ->add('barcos', CollectionType::class, ['entry_type' => BarcoType::class, 'label' => false])
             ->add('razonesSociales', CollectionType::class, [
                 'entry_type' => RazonSocialType::class,
                 'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'by_reference' => false,
+                'by_reference' => false,g
                 'entry_options' => ['label' => false]
             ])
         ;

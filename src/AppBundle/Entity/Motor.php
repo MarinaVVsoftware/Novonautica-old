@@ -36,7 +36,7 @@ class Motor
      *
      * @Assert\NotBlank(message="Modelo del motor no puede quedar vacío")
      *
-     * @ORM\Column(name="modelo", type="string", length=100, nullable=true)
+     * @ORM\Column(name="modelo", type="string", length=100)
      */
     private $modelo;
 

@@ -68,7 +68,7 @@ class Cliente
      * )
      * @Assert\Length(
      *      min = 10,
-     *      minMessage = "Error, número de celular no válido"
+     *      minMessage = "El número celular no puede ser mayor a 10 digitos"
      * )
      *
      * @ORM\Column(name="celular", type="string", length=255)

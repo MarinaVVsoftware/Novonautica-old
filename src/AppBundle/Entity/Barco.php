@@ -35,42 +35,42 @@ class Barco
     /**
      * @var string
      *
-     * @ORM\Column(name="modelo", type="string", length=100, nullable=true)
+     * @ORM\Column(name="modelo", type="string", length=100)
      */
     private $modelo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="calado", type="string", length=100, nullable=true)
+     * @ORM\Column(name="calado", type="string", length=100)
      */
     private $calado;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="manga", type="string", length=100, nullable=true)
+     * @ORM\Column(name="manga", type="string", length=100)
      */
     private $manga;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="eslora", type="string", length=100, nullable=true)
+     * @ORM\Column(name="eslora", type="string", length=100)
      */
     private $eslora;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="nombre_responsable", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre_responsable", type="string")
      */
     private $nombreResponsable;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="telefono_responsable", type="string", length=255, nullable=true)
+     * @ORM\Column(name="telefono_responsable", type="string")
      */
     private $telefonoResponsable;
 
@@ -81,7 +81,7 @@ class Barco
      *     message = "El correo '{{ value }}' no es válido."
      * )
      *
-     * @ORM\Column(name="correo_responsable", type="string", length=255, nullable=true)
+     * @ORM\Column(name="correo_responsable", type="string", length=255)
      */
     private $correoResponsable;
 
@@ -134,7 +134,7 @@ class Barco
     /**
      * @Assert\Valid()
      *
-     * @ORM\OneToMany(targetEntity="Motor", mappedBy="barco",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Motor", mappedBy="barco", cascade={"persist"})
      */
     private $motores;
 
