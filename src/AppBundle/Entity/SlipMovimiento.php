@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -31,6 +32,8 @@ class SlipMovimiento
     /**
      * @var \DateTime
      *
+     * @Groups({"currentOcupation"})
+     *
      * @ORM\Column(name="fecha_llegada", type="date", nullable=true)
      */
     private $fechaLlegada;
@@ -38,12 +41,16 @@ class SlipMovimiento
     /**
      * @var \DateTime
      *
+     * @Groups({"currentOcupation"})
+     *
      * @ORM\Column(name="fecha_salida", type="date", nullable=true)
      */
     private $fechaSalida;
 
     /**
      * @var int
+     *
+     * @Groups({"currentOcupation"})
      *
      * @ORM\Column(name="estatus", type="smallint")
      */
@@ -57,6 +64,9 @@ class SlipMovimiento
     private $createdAt;
 
     /**
+     *
+     * @Groups({"currentOcupation"})
+     *
      * @ORM\OneToOne(targetEntity="MarinaHumedaCotizacion", inversedBy="slipmovimiento")
      * @ORM\JoinColumn(name="idmarinahumedacotizacion", referencedColumnName="id")
      */
@@ -65,6 +75,8 @@ class SlipMovimiento
 
     /**
      * @var Slip 0 = Desocupado, 1 = Ocupado
+     *
+     * @Groups({"currentOcupation"})
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Slip", inversedBy="movimientos")
      */

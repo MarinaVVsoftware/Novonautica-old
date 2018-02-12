@@ -2,10 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Slip;
 use AppBundle\Entity\SlipMovimiento;
-use Doctrine\DBAL\Types\DateType;
+use AppBundle\Serializer\NotNullObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -14,10 +13,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Slipmovimiento controller.
@@ -37,19 +38,20 @@ class SlipMovimientoController extends Controller
         $totSlips = 176;
         $slipsOcupados = $em->granTotalSlipsOcupados($fechaBuscar);
         $numOcupados = count($slipsOcupados);
-        $porcentajeOcupado = ($numOcupados*100)/$totSlips;
+        $porcentajeOcupado = ($numOcupados * 100) / $totSlips;
         $dibujoSlip = $em->pintaSlipsMapa($slipsOcupados);
         $ocupacionTiposSlips = $em->calculoOcupaciones($fechaBuscar);
-        return $this->render('marinahumeda/mapa/slip-zona-a.twig', [
+        return $this->render(':marinahumeda/mapa:slip-zona-a.html.twig', [
             'title' => 'Slip Zona A',
-            'fechaBuscar'=>$fechaBuscar,
-            'totSlips'=>$totSlips,
-            'numOcupados'=>$numOcupados,
-            'porcentajeOcupado'=>$porcentajeOcupado,
-            'dibujoSlip'=>$dibujoSlip,
-            'ocupacionTiposSlips'=>$ocupacionTiposSlips
+            'fechaBuscar' => $fechaBuscar,
+            'totSlips' => $totSlips,
+            'numOcupados' => $numOcupados,
+            'porcentajeOcupado' => $porcentajeOcupado,
+            'dibujoSlip' => $dibujoSlip,
+            'ocupacionTiposSlips' => $ocupacionTiposSlips
         ]);
     }
+
     /**
      * @Route("/mapa/zona-b", name="slip_zona_b")
      */
@@ -60,19 +62,20 @@ class SlipMovimientoController extends Controller
         $totSlips = 176;
         $slipsOcupados = $em->granTotalSlipsOcupados($fechaBuscar);
         $numOcupados = count($slipsOcupados);
-        $porcentajeOcupado = ($numOcupados*100)/$totSlips;
+        $porcentajeOcupado = ($numOcupados * 100) / $totSlips;
         $dibujoSlip = $em->pintaSlipsMapa($slipsOcupados);
         $ocupacionTiposSlips = $em->calculoOcupaciones($fechaBuscar);
-        return $this->render('marinahumeda/mapa/slip-zona-b.twig', [
+        return $this->render(':marinahumeda/mapa:slip-zona-b.html.twig', [
             'title' => 'Slip Zona B',
-            'fechaBuscar'=>$fechaBuscar,
-            'totSlips'=>$totSlips,
-            'numOcupados'=>$numOcupados,
-            'porcentajeOcupado'=>$porcentajeOcupado,
-            'dibujoSlip'=>$dibujoSlip,
-            'ocupacionTiposSlips'=>$ocupacionTiposSlips
+            'fechaBuscar' => $fechaBuscar,
+            'totSlips' => $totSlips,
+            'numOcupados' => $numOcupados,
+            'porcentajeOcupado' => $porcentajeOcupado,
+            'dibujoSlip' => $dibujoSlip,
+            'ocupacionTiposSlips' => $ocupacionTiposSlips
         ]);
     }
+
     /**
      * @Route("/mapa/zona-c", name="slip_zona_c")
      */
@@ -83,19 +86,20 @@ class SlipMovimientoController extends Controller
         $totSlips = 176;
         $slipsOcupados = $em->granTotalSlipsOcupados($fechaBuscar);
         $numOcupados = count($slipsOcupados);
-        $porcentajeOcupado = ($numOcupados*100)/$totSlips;
+        $porcentajeOcupado = ($numOcupados * 100) / $totSlips;
         $dibujoSlip = $em->pintaSlipsMapa($slipsOcupados);
         $ocupacionTiposSlips = $em->calculoOcupaciones($fechaBuscar);
-        return $this->render('marinahumeda/mapa/slip-zona-c.twig', [
+        return $this->render(':marinahumeda/mapa:slip-zona-c.html.twig', [
             'title' => 'Slip Zona C',
-            'fechaBuscar'=>$fechaBuscar,
-            'totSlips'=>$totSlips,
-            'numOcupados'=>$numOcupados,
-            'porcentajeOcupado'=>$porcentajeOcupado,
-            'dibujoSlip'=>$dibujoSlip,
-            'ocupacionTiposSlips'=>$ocupacionTiposSlips
+            'fechaBuscar' => $fechaBuscar,
+            'totSlips' => $totSlips,
+            'numOcupados' => $numOcupados,
+            'porcentajeOcupado' => $porcentajeOcupado,
+            'dibujoSlip' => $dibujoSlip,
+            'ocupacionTiposSlips' => $ocupacionTiposSlips
         ]);
     }
+
     /**
      * @Route("/mapa/zona-d", name="slip_zona_d")
      */
@@ -106,19 +110,20 @@ class SlipMovimientoController extends Controller
         $totSlips = 176;
         $slipsOcupados = $em->granTotalSlipsOcupados($fechaBuscar);
         $numOcupados = count($slipsOcupados);
-        $porcentajeOcupado = ($numOcupados*100)/$totSlips;
+        $porcentajeOcupado = ($numOcupados * 100) / $totSlips;
         $dibujoSlip = $em->pintaSlipsMapa($slipsOcupados);
         $ocupacionTiposSlips = $em->calculoOcupaciones($fechaBuscar);
-        return $this->render('marinahumeda/mapa/slip-zona-d.twig', [
+        return $this->render(':marinahumeda/mapa:slip-zona-d.html.twig', [
             'title' => 'Slip Zona D',
-            'fechaBuscar'=>$fechaBuscar,
-            'totSlips'=>$totSlips,
-            'numOcupados'=>$numOcupados,
-            'porcentajeOcupado'=>$porcentajeOcupado,
-            'dibujoSlip'=>$dibujoSlip,
-            'ocupacionTiposSlips'=>$ocupacionTiposSlips
+            'fechaBuscar' => $fechaBuscar,
+            'totSlips' => $totSlips,
+            'numOcupados' => $numOcupados,
+            'porcentajeOcupado' => $porcentajeOcupado,
+            'dibujoSlip' => $dibujoSlip,
+            'ocupacionTiposSlips' => $ocupacionTiposSlips
         ]);
     }
+
     /**
      * @Route("/mapa", name="marina-administracion")
      */
@@ -129,48 +134,101 @@ class SlipMovimientoController extends Controller
         $totSlips = 176;
         $slipsOcupados = $em->granTotalSlipsOcupados($fechaBuscar);
         $numOcupados = count($slipsOcupados);
-        $porcentajeOcupado = ($numOcupados*100)/$totSlips;
+        $porcentajeOcupado = ($numOcupados * 100) / $totSlips;
         $dibujoSlip = $em->pintaSlipsMapa($slipsOcupados);
         $ocupacionTiposSlips = $em->calculoOcupaciones($fechaBuscar);
 
-        return $this->render('marinahumeda/mapa/marina-administracion.twig', [
+        return $this->render('marinahumeda/mapa/marina-administracion.html.twig', [
             'title' => 'Slips',
-            'fechaBuscar'=>$fechaBuscar,
-            'totSlips'=>$totSlips,
-            'numOcupados'=>$numOcupados,
-            'porcentajeOcupado'=>$porcentajeOcupado,
-            'dibujoSlip'=>$dibujoSlip,
-            'ocupacionTiposSlips'=>$ocupacionTiposSlips
+            'fechaBuscar' => $fechaBuscar,
+            'totSlips' => $totSlips,
+            'numOcupados' => $numOcupados,
+            'porcentajeOcupado' => $porcentajeOcupado,
+            'dibujoSlip' => $dibujoSlip,
+            'ocupacionTiposSlips' => $ocupacionTiposSlips
         ]);
     }
 
+    /**
+     * @Route("/mapa-slips", name="mapa-slips")
+     *
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
+    public function currentSlips(Request $request)
+    {
+        $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
+        $currentSlips = $smRepo->getCurrentOcupation();
+
+        $porcentajes = [
+            46 => [
+                'total' => 109,
+                'ocupacion' => 0,
+                'porcentaje' => 0
+            ],
+            61 => [
+                'total' => 46,
+                'ocupacion' => 0,
+                'porcentaje' => 0
+            ],
+            72 =>[
+                'total' => 13,
+                'ocupacion' => 0,
+                'porcentaje' => 0
+            ],
+            120 => [
+                'total' => 8,
+                'ocupacion' => 0,
+                'porcentaje' => 0
+            ]
+        ];
+
+        foreach ($currentSlips as $slip) {
+            $pies = $slip->getSlip()->getPies();
+            $porcentajes[$pies]['ocupacion']++;
+            $porcentajes[$pies]['porcentaje'] = round(($porcentajes[$pies]['ocupacion'] * 100) / $porcentajes[$pies]['total'], 2);
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+            $normalizer = new ObjectNormalizer($classMetadataFactory);
+
+            $serializer = new Serializer([new DateTimeNormalizer(), $normalizer], [new JsonEncoder(), new XmlEncoder()]);
+            $response = $serializer->serialize($currentSlips, 'json', ['groups' => ['currentOcupation']]);
+            return new Response($response);
+        }
+
+        return $this->render('marinahumeda/mapa/mapa.html.twig', [
+            'title' => 'Slips',
+            'porcentajes' => $porcentajes
+        ]);
+    }
 
 
     /**
      * @Route("/buscar/{eslora}/{id}.{_format}", name="ajax_buscar_slips", defaults={"_format"="JSON"})
      * @Method({"GET"})
      */
-    public function buscaSlipActionTodo($eslora,Request $request, Slip $slip)
+    public function buscaSlipActionTodo($eslora, Request $request, Slip $slip)
     {
         $em = $this->getDoctrine()->getManager();
         //$slipsProbables = $em->getRepository('AppBundle:Slip')->findBy(['pies'=>$eslora]);
         $qb = $em->getRepository('AppBundle:Slip')->createQueryBuilder('s');
         $slipsProbables = $qb
-                            ->where('s.pies >= '.$eslora)
-                            ->getQuery()
-                            ->getResult();
+            ->where('s.pies >= ' . $eslora)
+            ->getQuery()
+            ->getResult();
         $encoders = [new XmlEncoder(), new JsonEncoder()];
         $normalizer = new ObjectNormalizer();
 //        $normalizer->setCircularReferenceLimit(1);
 //        $normalizer->setCircularReferenceHandler(function ($object) {
 //            return $object->getId();
 //        });
-        $normalizer->setIgnoredAttributes(['mhcotizaciones','movimientos']);
+        $normalizer->setIgnoredAttributes(['mhcotizaciones', 'movimientos']);
         $normalizers = [$normalizer];
         $serializer = new Serializer($normalizers, $encoders);
         //dump($slipsProbables);
         //dump($serializer->serialize($slipsProbables,$request->getRequestFormat()));
-        return new Response($serializer->serialize($slipsProbables,$request->getRequestFormat()));
+        return new Response($serializer->serialize($slipsProbables, $request->getRequestFormat()));
         //return new Response('');
     }
 
@@ -178,7 +236,7 @@ class SlipMovimientoController extends Controller
      * @Route("/buscar-movimiento/{slip}/{llegada}/{salida}/{id}.{_format}", name="ajax_buscar__movimientos_slip", defaults={"_format"="JSON"})
      * @Method({"GET"})
      */
-    public function buscaMovimientoSlipActionTodo($slip,$llegada,$salida,Request $request)
+    public function buscaMovimientoSlipActionTodo($slip, $llegada, $salida, Request $request)
     {
         $dateTime = new DateTimeNormalizer();
 
@@ -188,11 +246,10 @@ class SlipMovimientoController extends Controller
         $slipsProbables = $qb
             ->where('sm.slip = :slipcomparar AND ((:fecha_llegada BETWEEN sm.fechaLlegada AND sm.fechaSalida) OR (:fecha_salida BETWEEN sm.fechaLlegada AND sm.fechaSalida))')
             ->getQuery()
-            ->setParameter('slipcomparar',$slip)
+            ->setParameter('slipcomparar', $slip)
             ->setParameter('fecha_llegada', new \DateTime($llegada), \Doctrine\DBAL\Types\Type::DATETIME)
             ->setParameter('fecha_salida', new \DateTime($salida), \Doctrine\DBAL\Types\Type::DATETIME)
-            ->getResult()
-        ;
+            ->getResult();
 
 
         $encoders = [new XmlEncoder(), new JsonEncoder()];
@@ -202,12 +259,12 @@ class SlipMovimientoController extends Controller
 //        $normalizer->setCircularReferenceHandler(function ($object) {
 //            return $object->getId();
 //        });
-        $normalizer->setIgnoredAttributes(['marinahumedacotizacion','slip']);
+        $normalizer->setIgnoredAttributes(['marinahumedacotizacion', 'slip']);
 
         $serializer = new Serializer([new DateTimeNormalizer('Y-m-d'), $normalizer], $encoders);
         //dump($slipsProbables);
         //dump($serializer->serialize($slipsProbables,$request->getRequestFormat()));
-        return new Response($serializer->serialize($slipsProbables,$request->getRequestFormat()));
+        return new Response($serializer->serialize($slipsProbables, $request->getRequestFormat()));
         //return new Response('');
     }
 
@@ -248,12 +305,12 @@ class SlipMovimientoController extends Controller
 
             $esloraBarco = $slipMovimiento->getMarinahumedacotizacion()->getBarco()->getEslora();
             $esloraSlip = $slipMovimiento->getSlip()->getPies();
-            if($esloraSlip<$esloraBarco){
+            if ($esloraSlip < $esloraBarco) {
                 $this->addFlash(
                     'notice',
                     'Error, el tamaño del slip es menor que la eslora de la embarcación'
                 );
-            }else{
+            } else {
                 $em = $this->getDoctrine()->getManager();
                 $slip = $slipMovimiento->getSlip()->getId();
                 $llegada = $slipMovimiento->getMarinahumedacotizacion()->getFechaLlegada();
@@ -262,17 +319,16 @@ class SlipMovimientoController extends Controller
                 $slipsProbables = $qb
                     ->where('sm.slip = :slipcomparar AND ((:fecha_llegada BETWEEN sm.fechaLlegada AND sm.fechaSalida) OR (:fecha_salida BETWEEN sm.fechaLlegada AND sm.fechaSalida))')
                     ->getQuery()
-                    ->setParameter('slipcomparar',$slip)
+                    ->setParameter('slipcomparar', $slip)
                     ->setParameter('fecha_llegada', $llegada)
                     ->setParameter('fecha_salida', $salida)
-                    ->getResult()
-                ;
-                if(empty($slipsProbables)){
+                    ->getResult();
+                if (empty($slipsProbables)) {
                     $slipMovimiento->setFechaLlegada($llegada)->setFechaSalida($salida);
                     $em->persist($slipMovimiento);
                     $em->flush();
                     return $this->redirectToRoute('slipmovimiento_index');
-                }else{
+                } else {
                     $this->addFlash(
                         'notice',
                         'Error, el slip que intenta asignar ya esta ocupado'
@@ -320,12 +376,12 @@ class SlipMovimientoController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $esloraBarco = $slipMovimiento->getMarinahumedacotizacion()->getBarco()->getEslora();
             $esloraSlip = $slipMovimiento->getSlip()->getPies();
-            if($esloraSlip<$esloraBarco){
+            if ($esloraSlip < $esloraBarco) {
                 $this->addFlash(
                     'notice',
                     'Error, el tamaño del slip es menor que la eslora de la embarcación'
                 );
-            }else{
+            } else {
                 $em = $this->getDoctrine()->getManager();
                 $slip = $slipMovimiento->getSlip()->getId();
                 $llegada = $slipMovimiento->getMarinahumedacotizacion()->getFechaLlegada();
@@ -334,17 +390,16 @@ class SlipMovimientoController extends Controller
                 $slipsProbables = $qb
                     ->where('sm.slip = :slipcomparar AND ((:fecha_llegada BETWEEN sm.fechaLlegada AND sm.fechaSalida) OR (:fecha_salida BETWEEN sm.fechaLlegada AND sm.fechaSalida))')
                     ->getQuery()
-                    ->setParameter('slipcomparar',$slip)
+                    ->setParameter('slipcomparar', $slip)
                     ->setParameter('fecha_llegada', $llegada)
                     ->setParameter('fecha_salida', $salida)
-                    ->getResult()
-                ;
-                if(empty($slipsProbables)){
+                    ->getResult();
+                if (empty($slipsProbables)) {
                     $slipMovimiento->setFechaLlegada($llegada)->setFechaSalida($salida);
                     $em->persist($slipMovimiento);
                     $em->flush();
                     return $this->redirectToRoute('slipmovimiento_index');
-                }else{
+                } else {
                     $this->addFlash(
                         'notice',
                         'Error, el slip que intenta asignar ya esta ocupado'
@@ -394,7 +449,6 @@ class SlipMovimientoController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('slipmovimiento_delete', array('id' => $slipMovimiento->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

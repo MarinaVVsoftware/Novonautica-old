@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Slip
@@ -24,6 +25,8 @@ class Slip
 
     /**
      * @var int
+     *
+     * @Groups({"currentOcupation"})
      *
      * @ORM\Column(name="num", type="integer", unique=true)
      */
