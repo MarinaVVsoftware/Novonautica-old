@@ -14,6 +14,7 @@
                         <div class="panel-body" style="min-height: initial">
                             {{ form_start(form) }}
                             {{ form_errors(form) }}
+                            {{ form_row(form.alias) }}
                             {{ form_row(form.nombre) }}
                             {{ form_row(form.rfc) }}
                             {{ form_row(form.regimenFiscal) }}
@@ -55,16 +56,22 @@
                                 <table class="table table-novo">
                                     <thead>
                                     <tr>
+                                        <th>Alias</th>
                                         <th>Nombre</th>
                                         <th>RFC</th>
+                                        <th>Logo</th>
                                         <th width="30%"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {% for i, item in emisors %}
                                         <tr>
+                                            <td align="center" valign="middle">{{ item.alias }}</td>
                                             <td align="center" valign="middle">{{ item.nombre }}</td>
                                             <td align="center" valign="middle">{{ item.rfc }}</td>
+                                            <td align="center" valign="middle">
+                                                <img src="{{ asset('uploads/facturacion/emisor/logos/') ~ item.logo }}" alt="" class="img-responsive" style="max-width: 60px;">
+                                            </td>
                                             <td align="center" valign="middle">
                                                 <ul class="list-inline">
                                                     <li>
