@@ -38,7 +38,7 @@ class Cliente
      *     message="Nombre no puede quedar vacío"
      * )
      *
-     * @ORM\Column(name="nombre", type="string", length=255, unique=true)
+     * @ORM\Column(name="nombre", type="string", length=255)
      */
     private $nombre;
 
