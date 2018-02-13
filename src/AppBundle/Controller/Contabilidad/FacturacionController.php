@@ -219,7 +219,9 @@ class FacturacionController extends Controller
                 ->setTo(explode(',', $factura->getEmail()))
                 ->setBcc(explode(',', $factura->getEmisor()->getEmails()))
                 ->setBody(
-                    $this->renderView('contabilidad/facturacion/email/factura-template.html.twig'),
+                    $this->renderView('contabilidad/facturacion/email/factura-template.html.twig', [
+                        'cuerpo' => $factura->getCuerpoCorreo()
+                    ]),
                     'text/html'
                 )
                 ->attach($attachment);
