@@ -41,7 +41,7 @@ class SidebarController extends Controller
             ],
             [
                 'name' => 'Marina Humeda',
-                'path' => $this->removeOneRoute($this->removeOneRoute($this->generateUrl('marina-humeda-cotizacion-adicional_index'))),
+                'path' => $this->removeOneRoute($this->generateUrl('marina-humeda-cotizacion-adicional_index')),
                 'icon' => 'ship',
                 'submenu' => [
                     [
