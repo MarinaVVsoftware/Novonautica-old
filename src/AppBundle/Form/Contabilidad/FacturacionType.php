@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -161,7 +162,17 @@ class FacturacionType extends AbstractType
                 'label' => 'Folio de cotización',
                 'required' => false
             ])
-        ;
+            ->add('cuerpoCorreo', TextareaType::class, [
+                'label' => 'Mensaje del correo',
+                'attr' => ['class' => 'editorwy'],
+                'data' => '
+                Estimado, _________
+                <br>
+                Por este medio nos gustaría entregarle la factura de los servicios cotizados.
+                <br>
+                A continuación adjuntamos el documento PDF de la factura.
+                '
+            ]);
 
         $formBuilder = function (FormInterface $form, $folioCotizacion = null, $pagos = []) {
             $facturacionRepo = $this->em->getRepository('AppBundle:Contabilidad\Facturacion');

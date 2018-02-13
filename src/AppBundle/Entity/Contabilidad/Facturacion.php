@@ -265,6 +265,8 @@ class Facturacion
      */
     private $facturaGlobal;
 
+    private $cuerpoCorreo;
+
     /**
      * @var int $estatus
      * 1 = Creada [default],
@@ -1046,6 +1048,22 @@ class Facturacion
     public function setFacturaGlobal($facturaGlobal)
     {
         $this->facturaGlobal = $facturaGlobal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuerpoCorreo()
+    {
+        return $this->cuerpoCorreo;
+    }
+
+    /**
+     * @param mixed $cuerpoCorreo
+     */
+    public function setCuerpoCorreo($cuerpoCorreo)
+    {
+        $this->cuerpoCorreo = $cuerpoCorreo;
     }
 
     /**
