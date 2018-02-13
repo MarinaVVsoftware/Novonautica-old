@@ -192,17 +192,18 @@ class FacturacionController extends Controller
                 ]);
             }
 
-            $factura->setXml(trim($timbrado['cfdi']));
-            $factura->setPng(trim($timbrado['png']));
-            $factura->setXmlArchivo($timbrado['archivo_xml']);
-            $factura->setPngArchivo($timbrado['archivo_png']);
-            $factura->setFolioFiscal($timbrado['uuid']);
-            $factura->setCadenaOriginal($timbrado['representacion_impresa_cadena']);
-            $factura->setSerieCertificadoCSD($timbrado['representacion_impresa_certificado_no']);
-            $factura->setFechaTimbrado((string)$timbrado['representacion_impresa_fecha_timbrado']);
-            $factura->setSelloCFDI((string)$timbrado['representacion_impresa_sello']);
-            $factura->setSelloSAT((string)$timbrado['representacion_impresa_selloSAT']);
-            $factura->setCertificadoSAT((string)$timbrado['representacion_impresa_certificadoSAT']);
+            $factura
+                ->setXml(trim($timbrado['cfdi']))
+                ->setPng(trim($timbrado['png']))
+                ->setXmlArchivo($timbrado['archivo_xml'])
+                ->setPngArchivo($timbrado['archivo_png'])
+                ->setFolioFiscal($timbrado['uuid'])
+                ->setCadenaOriginal($timbrado['representacion_impresa_cadena'])
+                ->setSerieCertificadoCSD($timbrado['representacion_impresa_certificado_no'])
+                ->setFechaTimbrado((string)$timbrado['representacion_impresa_fecha_timbrado'])
+                ->setSelloCFDI((string)$timbrado['representacion_impresa_sello'])
+                ->setSelloSAT((string)$timbrado['representacion_impresa_selloSAT'])
+                ->setCertificadoSAT((string)$timbrado['representacion_impresa_certificadoSAT']);
 
             $attachment = new Swift_Attachment(
                 $this->getFacturaPDF($factura),

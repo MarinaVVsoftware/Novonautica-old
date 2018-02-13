@@ -18,7 +18,11 @@ class EmisorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('rfc', TextType::class, ['label' => 'RFC'])
+            ->add('alias')
+            ->add('rfc', TextType::class, [
+                'label' => 'RFC',
+                'attr' => ['placeholder' => 'AAA010101AAA']
+            ])
             ->add('regimenFiscal', ChoiceType::class, [
                 'choices' => [
                     'General de Ley Personas Morales' => '601',
@@ -44,7 +48,10 @@ class EmisorType extends AbstractType
                     'Régimen de los ingresos por obtención de premios' => '615',
                 ]
             ])
-            ->add('nombre', TextType::class, ['label' => 'Razón social'])
+            ->add('nombre', TextType::class, [
+                'label' => 'Razón social',
+                'attr' => ['placeholder' => 'SERVICIOS EMPRESARIALES SC']
+            ])
             ->add('logoFile', VichImageType::class, [
                 'label' => 'Logo',
                 'download_label' => 'Ver Logo',
@@ -65,7 +72,10 @@ class EmisorType extends AbstractType
             ])
             ->add('usuarioPAC', TextType::class, ['label' => 'Usuario PAC'])
             ->add('passwordPAC', TextType::class, ['label' => 'Password PAC'])
-            ->add('emails', TextType::class, ['label' => 'Emails de recepción (Separados por comas)'])
+            ->add('emails', TextType::class, [
+                'label' => 'Emails de recepción (Separados por comas)',
+                'attr' => ['placeholder' => 'john@marina.com, jperez@novonautica.com']
+            ])
             ->add('password')
             ->add('codigoPostal')
             ->add('direccion')

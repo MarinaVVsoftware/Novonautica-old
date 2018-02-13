@@ -30,6 +30,15 @@ class Emisor
     /**
      * @var string
      *
+     * @Assert\NotBlank(message="Este campo no puede estar vacio")
+     *
+     * @ORM\Column(name="alias", type="string", length=100)
+     */
+    private $alias;
+
+    /**
+     * @var string
+     *
      * @Assert\Regex(
      *     pattern="/^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))((-)?([A-Z\d]{3}))?$/",
      *     message="El RFC es invalido"
@@ -108,6 +117,8 @@ class Emisor
     /**
      * @var File
      *
+     * @Assert\NotNull(message="Por favor agregue un archivo .cer")
+     * @Assert\File()
      *
      * @Vich\UploadableField(mapping="facturacion_emisor_cer", fileNameProperty="cer")
      */
@@ -123,6 +134,7 @@ class Emisor
     /**
      * @var File
      *
+     * @Assert\NotNull(message="Por favor agregue un archivo .key")
      * @Assert\File()
      *
      * @Vich\UploadableField(mapping="facturacion_emisor_key", fileNameProperty="key")
@@ -182,7 +194,7 @@ class Emisor
 
     public function __toString()
     {
-        return $this->nombre;
+        return $this->alias . ' - ' . $this->nombre;
     }
 
     /**
@@ -193,6 +205,22 @@ class Emisor
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
+    /**
+     * @param string $alias
+     */
+    public function setAlias($alias)
+    {
+        $this->alias = $alias;
     }
 
     /**
