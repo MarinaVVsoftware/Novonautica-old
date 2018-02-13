@@ -20,28 +20,22 @@ class SlipMovimientoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-//            ->add('fechaLlegada')
-//            ->add('fechaSalida')
-//            ->add('estatus')
-//            ->add('createdAt')
-            ->add('marinahumedacotizacion',EntityType::class,[
+            ->add('marinahumedacotizacion', EntityType::class, [
                 'class' => 'AppBundle:MarinaHumedaCotizacion',
                 'label' => 'Cotización Marina Húmeda',
                 'placeholder' => 'Seleccionar...',
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('mhc')
+                    $qb = $er->createQueryBuilder('mhc');
+                    return $qb
                         ->select('mhc', 'servicios')
-                        ->join('mhc.mhcservicios','servicios','slipmovimiento')
-                        ->leftJoin('mhc.slipmovimiento','slipmovimiento')
-                        ->where($er->createQueryBuilder('mhc')
-                                    ->expr()->andX(
-                                        $er->createQueryBuilder('mhc')->expr()->neq('servicios.tipo', '3'),
-                                        $er->createQueryBuilder('mhc')->expr()->eq('mhc.validacliente', '2'),
-                                        $er->createQueryBuilder('mhc')->expr()->isNull('slipmovimiento.id')
-                            )
+                        ->join('mhc.mhcservicios', 'servicios', 'slipmovimiento')
+                        ->leftJoin('mhc.slipmovimiento', 'slipmovimiento')
+                        ->andWhere(
+                            $qb->expr()->neq('servicios.tipo', '3'),
+                            $qb->expr()->eq('mhc.validacliente', '2'),
+                            $qb->expr()->isNull('slipmovimiento.id')
                         )
-                        ->orderBy('mhc.folio', 'DESC')
-                        ;
+                        ->orderBy('mhc.folio', 'DESC');
                 },
                 'choice_attr' => function ($mhc) {
                     /** @var MarinaHumedaCotizacion $mhc */
@@ -49,17 +43,14 @@ class SlipMovimientoType extends AbstractType
                         'data-llegada' => date('Y-m-d', strtotime($mhc->getFechaLlegada()->format('Y-m-d'))),
                         'data-salida' => date('Y-m-d', strtotime($mhc->getFechaSalida()->format('Y-m-d')))];
                 }
-            ])->add('slip',EntityType::class,[
+            ])/*->add('slip',EntityType::class,[
                 'class' => 'AppBundle:Slip',
                 'label' => 'Slip',
                 'placeholder' => 'Seleccionar...',
-                'choice_attr' => function ($slip) {
-                    /** @var Slip $slip */
-                    return ['data-eslora' => $slip->getPies(),'style'=>'display:none;'];
-                }
-            ]);
+            ])*/
+        ;
     }
-    
+
     /**
      * {@inheritdoc}
      */

@@ -68,14 +68,14 @@ class Barco
     /**
      * @var string
      *
-     * @ORM\Column(name="nombre_responsable", type="string")
+     * @ORM\Column(name="nombre_responsable", type="string", nullable=true)
      */
     private $nombreResponsable;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="telefono_responsable", type="string")
+     * @ORM\Column(name="telefono_responsable", type="string", nullable=true)
      */
     private $telefonoResponsable;
 
@@ -86,7 +86,7 @@ class Barco
      *     message = "El correo '{{ value }}' no es válido."
      * )
      *
-     * @ORM\Column(name="correo_responsable", type="string", length=255)
+     * @ORM\Column(name="correo_responsable", type="string", length=255, nullable=true)
      */
     private $correoResponsable;
 

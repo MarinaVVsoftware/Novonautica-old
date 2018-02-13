@@ -27,7 +27,11 @@ class ClienteType extends AbstractType
             ])
             ->add('celular', TextType::class)
             ->add('direccion', TextType::class, ['label' => 'Dirección'])
-            ->add('barcos', CollectionType::class, ['entry_type' => BarcoType::class, 'label' => false])
+            ->add('barcos', CollectionType::class, [
+                'entry_type' => BarcoType::class,
+                'label' => false,
+                'entry_options' => ['label' => false]
+            ])
             ->add('razonesSociales', CollectionType::class, [
                 'entry_type' => RazonSocialType::class,
                 'label' => false,
@@ -35,8 +39,7 @@ class ClienteType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'entry_options' => ['label' => false]
-            ])
-        ;
+            ]);
     }
 
     /**
