@@ -150,11 +150,32 @@ class SlipMovimientoController extends Controller
     }
 
     /**
+     * Lists all slipMovimiento entities.
+     *
+     * @Route("/ocupacion", name="slipmovimiento_index")
+     * @Method("GET")
+     */
+    public function indexAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'SlipMovimiento');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getCode());
+            }
+        }
+
+        return $this->render('slipmovimiento/index.html.twig', ['title' => 'Movimientos de Slips']);
+    }
+
+    /**
      * @Route("/mapa-slips", name="mapa-slips")
      *
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
-    public function currentSlips(Request $request)
+    public function currentSlipsAction(Request $request)
     {
         $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
         $currentSlips = $smRepo->getCurrentOcupation();
@@ -170,7 +191,7 @@ class SlipMovimientoController extends Controller
                 'ocupacion' => 0,
                 'porcentaje' => 0
             ],
-            72 =>[
+            72 => [
                 'total' => 13,
                 'ocupacion' => 0,
                 'porcentaje' => 0
@@ -203,6 +224,63 @@ class SlipMovimientoController extends Controller
         ]);
     }
 
+
+    /**
+     * @Route("/mapa-slips/{id}/detail", name="detalle-slip")
+     *
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
+    public function showSlipDetailAction(Request $request, Slip $slip)
+    {
+        $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
+        $currentSlips = $smRepo->getCurrentOcupation($slip->getId());
+
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $normalizer = new ObjectNormalizer($classMetadataFactory);
+
+        $serializer = new Serializer([new DateTimeNormalizer(), $normalizer], [new JsonEncoder(), new XmlEncoder()]);
+        $response = $serializer->serialize($currentSlips, 'json', ['groups' => ['currentOcupation']]);
+        return new Response($response);
+    }
+
+    /**
+     * @Route("/mapa-slips/{id}/assign", name="assign-slip")
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function createAssignSlipAction(Request $request, Slip $slip)
+    {
+        $slipMovimiento = new Slipmovimiento();
+        $form = $this->createForm('AppBundle\Form\SlipMovimientoType', $slipMovimiento, [
+            'action' => $this->generateUrl('assign-slip', ['id' => $slip->getId()])
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $slipMovimiento
+                ->setFechaLlegada($slipMovimiento->getMarinahumedacotizacion()->getFechaLlegada())
+                ->setFechaSalida($slipMovimiento->getMarinahumedacotizacion()->getFechaSalida())
+                ->setSlip($slip);
+
+            $em->persist($slipMovimiento);
+            $em->flush();
+
+            return $this->redirect($request->headers->get('referer'));
+        }
+        /*
+         * En este caso se hace una validacion para no reasignarle un slip a una cotizacion
+         * La validacion se hace desde la entidad SlipMovimiento
+         * else {
+            dump($slipMovimiento);
+            return $this->render('marinahumeda/mapa/form/assign-slip.html.twig');
+        }*/
+
+        return $this->render('marinahumeda/mapa/form/assign-slip.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
 
     /**
      * @Route("/buscar/{eslora}/{id}.{_format}", name="ajax_buscar_slips", defaults={"_format"="JSON"})
@@ -269,27 +347,6 @@ class SlipMovimientoController extends Controller
     }
 
     /**
-     * Lists all slipMovimiento entities.
-     *
-     * @Route("/ocupacion", name="slipmovimiento_index")
-     * @Method("GET")
-     */
-    public function indexAction(Request $request)
-    {
-        if ($request->isXmlHttpRequest()) {
-            try {
-                $datatables = $this->get('datatables');
-                $results = $datatables->handle($request, 'SlipMovimiento');
-                return $this->json($results);
-            } catch (HttpException $e) {
-                return $this->json($e->getMessage(), $e->getCode());
-            }
-        }
-
-        return $this->render('slipmovimiento/index.html.twig', ['title' => 'Movimientos de Slips']);
-    }
-
-    /**
      * Creates a new slipMovimiento entity.
      *
      * @Route("/ocupacion/nuevo", name="slipmovimiento_new")
@@ -341,22 +398,6 @@ class SlipMovimientoController extends Controller
             'slipMovimiento' => $slipMovimiento,
             'form' => $form->createView(),
             'title' => 'Asignar Slip'
-        ));
-    }
-
-    /**
-     * Finds and displays a slipMovimiento entity.
-     *
-     * @Route("/ocupacion/{id}", name="slipmovimiento_show")
-     * @Method("GET")
-     */
-    public function showAction(SlipMovimiento $slipMovimiento)
-    {
-        $deleteForm = $this->createDeleteForm($slipMovimiento);
-
-        return $this->render('slipmovimiento/show.html.twig', array(
-            'slipMovimiento' => $slipMovimiento,
-            'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -420,8 +461,8 @@ class SlipMovimientoController extends Controller
     /**
      * Deletes a slipMovimiento entity.
      *
-     * @Route("/ocupacion/{id}", name="slipmovimiento_delete")
-     * @Method("DELETE")
+//     * @Route("/ocupacion/{id}", name="slipmovimiento_delete")
+//     * @Method("DELETE")
      */
     public function deleteAction(Request $request, SlipMovimiento $slipMovimiento)
     {
@@ -442,7 +483,7 @@ class SlipMovimientoController extends Controller
      *
      * @param SlipMovimiento $slipMovimiento The slipMovimiento entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
      */
     private function createDeleteForm(SlipMovimiento $slipMovimiento)
     {

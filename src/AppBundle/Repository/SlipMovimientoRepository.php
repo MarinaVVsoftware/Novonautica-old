@@ -112,17 +112,24 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
         return $num;
     }
 
-    public function getCurrentOcupation()
+    public function getCurrentOcupation($slip = null)
     {
         $qb = $this->createQueryBuilder('sm');
 
-        return $qb
+        $qb
             ->select('sm', 'slip', 'cotizacion', 'cliente', 'barco')
             ->join('sm.slip', 'slip')
             ->join('sm.marinahumedacotizacion', 'cotizacion')
             ->join('cotizacion.cliente', 'cliente')
             ->join('cotizacion.barco', 'barco')
-            ->where('CURRENT_DATE() BETWEEN sm.fechaLlegada AND sm.fechaSalida')
+            ->where('CURRENT_DATE() BETWEEN sm.fechaLlegada AND sm.fechaSalida');
+
+        if (null !== $slip) {
+            $qb->andWhere('slip.id = :slip')
+                ->setParameter('slip', $slip);
+        }
+
+        return $qb
             ->getQuery()
             ->getResult();
     }

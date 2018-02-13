@@ -78,9 +78,6 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <h4>Motores de la embarcación</h4>
-                        </div>
-                        <div class="col-sm-12">
                             <div id="motor-fields-list0"
                                  class="lista-motores"
                                  data-prototype="
@@ -88,17 +85,6 @@
                                     {{ include('motor/form-cliente.twig', { 'form': form.barcos.children[0].motores.vars.prototype }) }}
                                     {% endfilter %}
                                         ">
-                                {% for motorField in form.barcos.children[0].motores %}
-                                    {% form_theme motorField 'motor/form-cliente.twig' %}
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <div class="form-group">
-                                                {{ form_row(motorField.marca) }}
-                                                {{ form_row(motorField.modelo) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
                             </div>
                         </div>
                     </div>

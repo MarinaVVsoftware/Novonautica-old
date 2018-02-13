@@ -23,7 +23,7 @@ class MarinaHumedaCotizacion
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @Groups({"facturacion"})
+     * @Groups({"facturacion", "currentOcupation"})
      */
     private $id;
 

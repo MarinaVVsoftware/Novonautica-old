@@ -16,7 +16,7 @@ class MotorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('marca',TextType::class, ['label' => 'Marca del motor',])
+            ->add('marca',TextType::class)
             ->add('modelo',TextType::class);
     }
     

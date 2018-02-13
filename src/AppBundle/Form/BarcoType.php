@@ -38,12 +38,15 @@ class BarcoType extends AbstractType
             ])
             ->add('nombreResponsable',TextType::class,[
                 'label' => 'Nombre del responsable',
+                'required' => false
             ])
             ->add('telefonoResponsable',TextType::class,[
                 'label' => 'Teléfono del responsable',
+                'required' => false
             ])
             ->add('correoResponsable',TextType::class,[
                 'label' => 'Correo del responsable',
+                'required' => false
             ])
             ->add('nombreCapitan',TextType::class,[
                 'label' => 'Nombre del capitán',
