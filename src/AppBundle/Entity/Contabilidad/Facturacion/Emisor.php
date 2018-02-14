@@ -117,7 +117,6 @@ class Emisor
     /**
      * @var File
      *
-     * @Assert\NotNull(message="Por favor agregue un archivo .cer")
      * @Assert\File()
      *
      * @Vich\UploadableField(mapping="facturacion_emisor_cer", fileNameProperty="cer")
@@ -134,7 +133,6 @@ class Emisor
     /**
      * @var File
      *
-     * @Assert\NotNull(message="Por favor agregue un archivo .key")
      * @Assert\File()
      *
      * @Vich\UploadableField(mapping="facturacion_emisor_key", fileNameProperty="key")
