@@ -3,12 +3,6 @@
 namespace AppBundle\Form;
 
 
-//use Doctrine\DBAL\Types\FloatType;
-use AppBundle\Entity\MarinaHumedaCotizaServicios;
-use AppBundle\Entity\Slip;
-use Doctrine\DBAL\Types\IntegerType;
-use Doctrine\DBAL\Types\TextType;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -23,7 +17,6 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormInterface;
 use AppBundle\Entity\Cliente;
-use AppBundle\Entity\ValorSistema;
 
 class MarinaHumedaCotizacionType extends AbstractType
 {
@@ -104,15 +97,6 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'label' => 'Observaciones',
                 'attr' => ['rows' => 7],
                 'required' => false
-            ])
-            ->add('slip', EntityType::class, [
-                'class' => 'AppBundle:Slip',
-                'label' => 'Slip',
-                'placeholder' => 'Seleccionar...',
-                'choice_attr' => function ($slip) {
-                    /** @var Slip $slip */
-                    return ['data-feet' => $slip->getPies()];
-                }
             ]);
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {

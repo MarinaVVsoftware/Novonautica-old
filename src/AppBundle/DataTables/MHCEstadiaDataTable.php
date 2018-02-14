@@ -32,7 +32,6 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
      *
      * @return DataTableResults
      *
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function handle(DataTableQuery $request): DataTableResults

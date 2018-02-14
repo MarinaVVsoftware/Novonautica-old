@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -35,13 +36,12 @@ class AjaxController extends Controller
 {
 
     /**
-    * @Route("/buscacliente", name="ajax_busca_cliente")
-    * @Method({"GET"})
-    */
+     * @Route("/buscacliente", name="ajax_busca_cliente")
+     * @Method({"GET"})
+     */
     public function buscaClienteAction(Request $request)
     {
-        if($request->isXmlHttpRequest())
-        {
+        if ($request->isXmlHttpRequest()) {
             $encoders = array(new JsonEncoder());
 //            $normalizers = array(new ObjectNormalizer());
 
@@ -56,7 +56,7 @@ class AjaxController extends Controller
             $serializer = new Serializer($normalizers, $encoders);
 
             $em = $this->getDoctrine()->getManager();
-            $clientes =  $em->getRepository('AppBundle:Cliente')->find($request->get('id'));
+            $clientes = $em->getRepository('AppBundle:Cliente')->find($request->get('id'));
 
 
             $response = new JsonResponse();
@@ -66,7 +66,7 @@ class AjaxController extends Controller
                 'posts' => $serializer->serialize($clientes, 'json')
             ));
             return $response;
-        }else{
+        } else {
             return 'no';
         }
     }
@@ -77,8 +77,7 @@ class AjaxController extends Controller
      */
     public function buscaBarcoAction(Request $request)
     {
-        if($request->isXmlHttpRequest())
-        {
+        if ($request->isXmlHttpRequest()) {
             $encoders = array(new JsonEncoder());
             //$normalizers = array(new ObjectNormalizer());
 
@@ -93,7 +92,7 @@ class AjaxController extends Controller
             $serializer = new Serializer($normalizers, $encoders);
 
             $em = $this->getDoctrine()->getManager();
-            $barcos =  $em->getRepository('AppBundle:Barco')->find($request->get('id'));
+            $barcos = $em->getRepository('AppBundle:Barco')->find($request->get('id'));
 
             $response = new JsonResponse();
             $response->setStatusCode(200);
@@ -111,14 +110,13 @@ class AjaxController extends Controller
      */
     public function buscaEventosAction(Request $request)
     {
-        if($request->isXmlHttpRequest())
-        {
+        if ($request->isXmlHttpRequest()) {
             $encoders = array(new JsonEncoder());
             $normalizers = array(new ObjectNormalizer());
             $serializer = new Serializer($normalizers, $encoders);
 
             $em = $this->getDoctrine()->getManager();
-            $eventos =  $em->getRepository('AppBundle:Evento')->findAll();
+            $eventos = $em->getRepository('AppBundle:Evento')->findAll();
 
             $response = new JsonResponse();
             $response->setStatusCode(200);
@@ -126,7 +124,7 @@ class AjaxController extends Controller
                 'response' => 'success',
                 'posts' => $serializer->serialize($eventos, 'json')
             ));
-         return $response;
+            return $response;
         }
     }
 
@@ -139,14 +137,25 @@ class AjaxController extends Controller
         $encoders = [new XmlEncoder(), new JsonEncoder()];
 
         $normalizer = new ObjectNormalizer();
-        $normalizer->setCircularReferenceLimit(1);
-        $normalizer->setCircularReferenceHandler(function ($object) {
-            return $object->getId();
-        });
-        $normalizer->setIgnoredAttributes(['barcos','monederomovimientos','mhcotizaciones','mhcotizacionesadicionales','astillerocotizaciones']);
-        $normalizers = [$normalizer];
+
+        $normalizer->setIgnoredAttributes([
+            'cliente',
+            'barco',
+            'password',
+            'estatus',
+            'razonesSociales',
+            'monederomovimientos',
+            'monederomarinahumeda',
+            'mHcotizaciones',
+            'mhcotizacionesadicionales',
+            'astilleroCotizaciones',
+            'astillerocotizaciones',
+            'embarcacion',
+        ]);
+
+        $normalizers = [new DateTimeNormalizer(), $normalizer];
         $serializer = new Serializer($normalizers, $encoders);
-        return new Response($cliente = $serializer->serialize($cliente,$request->getRequestFormat()));
+        return new Response($serializer->serialize($cliente, $request->getRequestFormat()));
     }
 
     /**
@@ -158,14 +167,18 @@ class AjaxController extends Controller
         $encoders = [new XmlEncoder(), new JsonEncoder()];
 
         $normalizer = new ObjectNormalizer();
-        $normalizer->setCircularReferenceLimit(1);
-        $normalizer->setCircularReferenceHandler(function ($object) {
-            return $object->getId();
-        });
-        $normalizer->setIgnoredAttributes(['motores','mHcotizaciones','mhcotizacionesadicionales','astillerocotizaciones']); //'cliente',
-        $normalizers = [$normalizer];
+        $normalizer->setIgnoredAttributes([
+            'cliente',
+            'motores',
+            'mHcotizaciones',
+            'mhcotizacionesadicionales',
+            'astillerocotizaciones',
+            'embarcacion'
+        ]);
+
+        $normalizers = [new DateTimeNormalizer(), $normalizer];
         $serializer = new Serializer($normalizers, $encoders);
-        return new Response($barco = $serializer->serialize($barco,$request->getRequestFormat()));
+        return new Response($serializer->serialize($barco, $request->getRequestFormat()));
     }
 
 }
