@@ -45,7 +45,7 @@ services:
     AppBundle\DataTables\:
         resource: '../../src/AppBundle/DataTables'
         autowire: true
-        public: false
+        public: true
         tags: [ datatable ]
 
     AppBundle\Form\Contabilidad\FacturacionType:

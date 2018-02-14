@@ -255,6 +255,7 @@ class SlipMovimientoController extends Controller
         $form = $this->createForm('AppBundle\Form\SlipMovimientoType', $slipMovimiento, [
             'action' => $this->generateUrl('assign-slip', ['id' => $slip->getId()])
         ]);
+        $form->remove('slip'); // Remover hasta que se acepte este controlador
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -262,7 +263,8 @@ class SlipMovimientoController extends Controller
             $slipMovimiento
                 ->setFechaLlegada($slipMovimiento->getMarinahumedacotizacion()->getFechaLlegada())
                 ->setFechaSalida($slipMovimiento->getMarinahumedacotizacion()->getFechaSalida())
-                ->setSlip($slip);
+                ->setSlip($slip)
+                ->getMarinahumedacotizacion()->setSlip($slip);
 
             $em->persist($slipMovimiento);
             $em->flush();
@@ -272,8 +274,8 @@ class SlipMovimientoController extends Controller
         /*
          * En este caso se hace una validacion para no reasignarle un slip a una cotizacion
          * La validacion se hace desde la entidad SlipMovimiento
+         *
          * else {
-            dump($slipMovimiento);
             return $this->render('marinahumeda/mapa/form/assign-slip.html.twig');
         }*/
 
@@ -360,18 +362,20 @@ class SlipMovimientoController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $esloraBarco = $slipMovimiento->getMarinahumedacotizacion()->getBarco()->getEslora();
-            $esloraSlip = $slipMovimiento->getSlip()->getPies();
-            if ($esloraSlip < $esloraBarco) {
+//            $esloraBarco = $slipMovimiento->getMarinahumedacotizacion()->getBarco()->getEslora();
+//            $esloraSlip = $slipMovimiento->getSlip()->getPies();
+            // Ya no se requiere verificar el tamaño del slip
+            /*if ($esloraSlip < $esloraBarco) {
                 $this->addFlash(
                     'notice',
                     'Error, el tamaño del slip es menor que la eslora de la embarcación'
                 );
-            } else {
+            } else {*/
                 $em = $this->getDoctrine()->getManager();
                 $slip = $slipMovimiento->getSlip()->getId();
                 $llegada = $slipMovimiento->getMarinahumedacotizacion()->getFechaLlegada();
                 $salida = $slipMovimiento->getMarinahumedacotizacion()->getFechaSalida();
+                $slipMovimiento->getMarinahumedacotizacion()->setSlip($slipMovimiento->getSlip());
                 $qb = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
                 $slipsProbables = $qb
                     ->where('sm.slip = :slipcomparar AND ((:fecha_llegada BETWEEN sm.fechaLlegada AND sm.fechaSalida) OR (:fecha_salida BETWEEN sm.fechaLlegada AND sm.fechaSalida))')
@@ -391,7 +395,7 @@ class SlipMovimientoController extends Controller
                         'Error, el slip que intenta asignar ya esta ocupado'
                     );
                 }
-            }
+//            }
         }
 
         return $this->render('slipmovimiento/new.html.twig', array(

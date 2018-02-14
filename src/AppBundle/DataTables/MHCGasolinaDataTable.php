@@ -32,7 +32,6 @@ class MHCGasolinaDataTable extends AbstractDataTableHandler
      *
      * @return DataTableResults
      *
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function handle(DataTableQuery $request): DataTableResults
@@ -43,8 +42,8 @@ class MHCGasolinaDataTable extends AbstractDataTableHandler
 
         $qb = $mhcRepo->createQueryBuilder('mhce');
         $results->recordsTotal = $qb->select('COUNT(mhce.id)')
-            ->join('mhce.mhcservicios', 'servicios')
-            ->where($qb->expr()->eq('servicios.tipo','3'))
+            ->leftJoin('mhce.mhcservicios', 'servicios')
+            ->where($qb->expr()->eq('servicios.tipo',3))
             ->getQuery()
             ->getSingleScalarResult();
 

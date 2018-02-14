@@ -31,23 +31,30 @@ class SlipMovimientoType extends AbstractType
                         ->join('mhc.mhcservicios', 'servicios', 'slipmovimiento')
                         ->leftJoin('mhc.slipmovimiento', 'slipmovimiento')
                         ->andWhere(
-                            $qb->expr()->neq('servicios.tipo', '3'),
-                            $qb->expr()->eq('mhc.validacliente', '2'),
+                            $qb->expr()->eq('servicios.tipo', 1),
+                            $qb->expr()->eq('mhc.validacliente', 2),
+                            $qb->expr()->isNull('mhc.slip'),
                             $qb->expr()->isNull('slipmovimiento.id')
                         )
                         ->orderBy('mhc.folio', 'DESC');
                 },
                 'choice_attr' => function ($mhc) {
-                    /** @var MarinaHumedaCotizacion $mhc */
                     return ['data-eslora' => $mhc->getBarco()->getEslora(),
                         'data-llegada' => date('Y-m-d', strtotime($mhc->getFechaLlegada()->format('Y-m-d'))),
                         'data-salida' => date('Y-m-d', strtotime($mhc->getFechaSalida()->format('Y-m-d')))];
                 }
-            ])/*->add('slip',EntityType::class,[
+            ])->add('slip',EntityType::class,[
                 'class' => 'AppBundle:Slip',
                 'label' => 'Slip',
                 'placeholder' => 'Seleccionar...',
-            ])*/
+                'query_builder' => function (EntityRepository $er) {
+                    $qb = $er->createQueryBuilder('s');
+                    return $qb
+                        ->select('s')
+                        ->leftJoin('s.movimientos', 'sm')
+                        ->where('sm.id IS NULL');
+                }
+            ])
         ;
     }
 

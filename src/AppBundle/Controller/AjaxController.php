@@ -168,13 +168,16 @@ class AjaxController extends Controller
 
         $normalizer = new ObjectNormalizer();
         $normalizer->setIgnoredAttributes([
-            'cliente',
             'motores',
             'mHcotizaciones',
             'mhcotizacionesadicionales',
             'astillerocotizaciones',
             'embarcacion'
         ]);
+
+        $normalizer->setCircularReferenceHandler(function ($entity) {
+            return $entity->getId();
+        });
 
         $normalizers = [new DateTimeNormalizer(), $normalizer];
         $serializer = new Serializer($normalizers, $encoders);
