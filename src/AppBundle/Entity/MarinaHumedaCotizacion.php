@@ -238,6 +238,13 @@ class MarinaHumedaCotizacion
     private $fecharespuesta;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="notificar_cliente", type="boolean")
+     */
+    private $notificarCliente;
+
+    /**
      * @Groups({"currentOcupation"})
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="mhcotizaciones")
@@ -281,22 +288,26 @@ class MarinaHumedaCotizacion
      */
     private $slipmovimiento;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->mhcservicios = new ArrayCollection();
         $this->pagos = new ArrayCollection();
+        $this->notificarCliente = true;
     }
+
     public function __toString()
     {
         $folioTot = '';
         $f = $this->folio;
         $fre = $this->foliorecotiza;
-        if($fre == 0){
-            $folioTot=$f;
-        }else{
-            $folioTot=$f.'-'.$fre;
+        if ($fre == 0) {
+            $folioTot = $f;
+        } else {
+            $folioTot = $f . '-' . $fre;
         }
-        return 'Folio: '.$folioTot.' - Barco: '.$this->getBarco().' - Eslora: '.$this->getBarco()->getEslora();
+        return 'Folio: ' . $folioTot . ' - Barco: ' . $this->getBarco() . ' - Eslora: ' . $this->getBarco()->getEslora();
     }
+
     public function __clone()
     {
         $this->id = null;
@@ -816,7 +827,7 @@ class MarinaHumedaCotizacion
      *
      * @return MarinaHumedaCotizacion
      */
-    public function setBarco(\AppBundle\Entity\Barco $barco= null)
+    public function setBarco(\AppBundle\Entity\Barco $barco = null)
     {
         $this->barco = $barco;
         return $this;
@@ -905,7 +916,6 @@ class MarinaHumedaCotizacion
     {
         $this->mensaje = $mensaje;
     }
-
 
 
     /**
@@ -1085,5 +1095,21 @@ class MarinaHumedaCotizacion
     public function getSlipmovimiento()
     {
         return $this->slipmovimiento;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNotificarCliente()
+    {
+        return $this->notificarCliente;
+    }
+
+    /**
+     * @param bool $notificarCliente
+     */
+    public function setNotificarCliente($notificarCliente)
+    {
+        $this->notificarCliente = $notificarCliente;
     }
 }

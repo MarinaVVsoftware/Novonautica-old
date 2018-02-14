@@ -122,7 +122,8 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         LEFT JOIN pagos.mhcotizacion AS mhc
         LEFT JOIN pagos.acotizacion AS atc
         LEFT JOIN mhc.slipmovimiento AS movimiento
-        WHERE mhc.folio = :folio OR atc.folio = :folio
+        WHERE pagos.factura IS NULL
+        AND mhc.folio = :folio OR atc.folio = :folio
         ';
 
         if ($folioRecotizado) {

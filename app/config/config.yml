@@ -70,7 +70,6 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
-    port: 587
 
 oneup_uploader:
     mappings:

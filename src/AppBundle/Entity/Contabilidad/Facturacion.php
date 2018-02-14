@@ -1161,6 +1161,8 @@ class Facturacion
     {
         $cantidad = 0;
 
+        // FIXME Facturacion en base a la divisa
+
         if (!$this->getConceptos()->count()) {
             $context->buildViolation('Debe agregar al menos un concepto.')
                 ->atPath('conceptos')

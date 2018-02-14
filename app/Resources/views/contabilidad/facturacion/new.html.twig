@@ -415,14 +415,15 @@
         tipoComprobanteHolder.addEventListener('change', checkTipoComprobante);
 
         // Sugiere el tipo de cambio en base a la moneda elegida
-        monedaSelect.addEventListener('change', function () {
+        // FIXME Facturacion en base a la divisa
+        /*monedaSelect.addEventListener('change', function () {
           if (this.value === 'MXN') {
             tipoCambioHolder.dataset.cambio = tipoCambioHolder.value;
             tipoCambioHolder.value = 1.00;
           } else {
             tipoCambioHolder.value = tipoCambioHolder.dataset.cambio;
           }
-        });
+        });*/
 
         // Autocomplete para rellenado de datos de cliente con RFC
         $rfcSelect.autocomplete({

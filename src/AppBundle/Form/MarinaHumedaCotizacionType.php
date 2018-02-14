@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -97,7 +98,12 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'label' => 'Observaciones',
                 'attr' => ['rows' => 7],
                 'required' => false
-            ]);
+            ])
+            ->add('notificarCliente', CheckboxType::class, [
+                'label' => '¿Notificar al cliente?',
+                'required' => false
+            ])
+        ;
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();
@@ -135,7 +141,8 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('mhcservicios')
                     ->remove('validanovo')
                     ->remove('notasnovo')
-                    ->remove('slip');
+                    ->remove('slip')
+                    ->remove('notificarCliente');
             } else { //para validar por novo
                 $form
                     ->remove('cliente')
@@ -148,6 +155,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('mhcservicios')
                     ->remove('validacliente')
                     ->remove('notascliente')
+                    ->remove('notificarCliente')
                     ->remove('slip');
             }
         });
