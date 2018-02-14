@@ -45,10 +45,10 @@ class SidebarController extends Controller
                 'icon' => 'ship',
                 'submenu' => [
                     [
-                        'name' => 'Slip',
-                        'path' => $this->removeOneRoute($this->generateUrl('marina-administracion')),
+                        'name' => 'Slips',
+                        'path' => $this->removeOneRoute($this->generateUrl('mapa')),
                         'submenu' => [
-                            ['name' => 'Mapa', 'path' => $this->generateUrl('marina-administracion')],
+                            ['name' => 'Mapa', 'path' => $this->generateUrl('mapa')],
                             ['name' => 'Ocupacion', 'path' => $this->generateUrl('slipmovimiento_index')],
                         ]
                     ],

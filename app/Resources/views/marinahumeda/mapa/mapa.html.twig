@@ -10,12 +10,25 @@
         .ventanainfomapa .modal-header {
             border: none;
         }
+
+        .dl-horizontal dt {
+            text-align: left;
+        }
     </style>
 {% endblock %}
 
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    {% for message in app.flashes('danger') %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
             <div class="panel panel-novo">
                 <div class="panel-heading">
                     <h3 class="panel-title">Slip</h3>
@@ -1139,12 +1152,6 @@
                                         <td>{{ porcentaje['porcentaje'] }} %</td>
                                     </tr>
                                 {% endfor %}
-                                <tr>
-                                    {#<td>Total</td>
-                                    <td>{{ totSlips }}</td>
-                                    <td>{{ numOcupados }}</td>
-                                    <td>{{ porcentajeOcupado|number_format(2) }} %</td>#}
-                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1181,21 +1188,22 @@
         const $modal = $('#slip-info');
         const $modalBody = $modal.find('.modal-body');
         const $modalTitle = $modal.find('.modal-title');
+        let slip = null;
 
         $.ajax({
-          url: '{{ path('mapa-slips') }}',
+          url: '{{ path('mapa-data') }}',
           dataType: 'json',
         })
-          .done(function (ocupados) {
-            embarcaciones.forEach(function (embarcacion) {
-              ocupados.forEach(function (ocupacion) {
-                if (`e${ocupacion.slip.num}` === embarcacion.id) {
-                  embarcacion.children[0].classList = 'st4';
-                  embarcacion.classList.add('busy');
-                }
+            .done(function (ocupados) {
+              embarcaciones.forEach(function (embarcacion) {
+                ocupados.forEach(function (ocupacion) {
+                  if (`e${ocupacion.slip.num}` === embarcacion.id) {
+                    embarcacion.children[0].classList = 'st4';
+                    embarcacion.classList.add('busy');
+                  }
+                });
               });
             });
-          });
 
         svgPanZoom('#mapa', {
           zoomEnabled: true,
@@ -1211,7 +1219,7 @@
             let rightLimit = sizes.width - gutterWidth - (sizes.viewBox.x * sizes.realZoom);
             let topLimit = -((sizes.viewBox.y + sizes.viewBox.height) * sizes.realZoom) + gutterHeight;
             let bottomLimit = sizes.height - gutterHeight - (sizes.viewBox.y * sizes.realZoom);
-            return customPan = {
+            return {
               x: Math.max(leftLimit, Math.min(rightLimit, newPan.x)),
               y: Math.max(topLimit, Math.min(bottomLimit, newPan.y))
             };
@@ -1219,19 +1227,20 @@
         });
 
         $(document).on('click', '#embarcaciones > g', function () {
-          let slipId = this.id.replace('e', '');
+          slip = this.id.replace('e', '');
+
           if (this.classList.contains('busy')) {
             $
-              .ajax({
-                url: `{{ app.request.requestUri }}/${slipId}/detail`,
-                dataType: 'json'
-              })
-              .done(function (slip) {
-                let llegada = new Date(slip[0].fechaLlegada);
-                let salida = new Date(slip[0].fechaSalida);
-                $modalTitle.text('Detalles');
-                $modalBody.html(`
-                    <dl>
+                .ajax({
+                  url: `{{ app.request.requestUri }}/${slip}/detail`,
+                  dataType: 'json'
+                })
+                .done(function (slip) {
+                  let llegada = new Date(slip[0].fechaLlegada);
+                  let salida = new Date(slip[0].fechaSalida);
+                  $modalTitle.text('Detalles');
+                  $modalBody.html(`
+                    <dl class="dl-horizontal">
                         <dt>Cliente</dt>
                         <dd>${slip[0].marinahumedacotizacion.cliente.nombre}</dd>
                         <dt>Barco</dt>
@@ -1244,21 +1253,57 @@
                     <br>
                     <a href="{{ app.request.baseUrl }}/marina/cotizacion/${slip[0].marinahumedacotizacion.id}" class="btn btn-block btn-azul">Ver cotización</a>
                 `);
-              })
-              .done(function () {
-                $modal.modal('show');
-              })
+                })
+                .done(function () {
+                  $modal.modal('show');
+                })
           } else {
             $
-              .get(`{{ app.request.requestUri }}/${slipId}/assign`)
-              .done(function (form) {
-                $modalTitle.text('Asignacion de Slip #' + slipId);
-                $modalBody.html(form);
-              })
-              .done(function () {
-                $modal.modal('show');
-              })
+                .get(`{{ app.request.requestUri }}/${slip}/assign`)
+                .done(function (form) {
+                  $modalTitle.text('Asignacion de Slip #' + slip);
+                  $modalBody.html(form);
+                })
+                .done(function () {
+                  $modal.modal('show');
+                })
           }
+        });
+
+        $(document).on('change', '#appbundle_slipmovimiento_marinahumedacotizacion', function (e) {
+          $
+              .ajax({
+                url: `{{ app.request.requestUri }}/${this.value}/isopen`,
+                dataType: 'json',
+                data: {'slip': slip}
+              })
+              .done(function (slip) {
+                const $infoContainer = $('#slipClosed');
+                const $submitBtn = $modalBody.find('.btn-azul');
+                if (slip.length) {
+                  let llegada = new Date(slip[0].fechaLlegada);
+                  let salida = new Date(slip[0].fechaSalida);
+                  $infoContainer.html(`
+                    <div class="alert alert-danger text-center" role="alert">
+                    La fecha de la cotización coincide con una cotizacion asignada en este Slip
+                    </div>
+                    <dl class="dl-horizontal">
+                        <dt>Cliente</dt>
+                        <dd>${slip[0].marinahumedacotizacion.cliente.nombre}</dd>
+                        <dt>Barco</dt>
+                        <dd>${slip[0].marinahumedacotizacion.barco.nombre}</dd>
+                        <dt>Fecha de llegada</dt>
+                        <dd>${llegada.toLocaleDateString('es-MX')}</dd>
+                        <dt>Fecha de salida</dt>
+                        <dd>${salida.toLocaleDateString('es-MX')}</dd>
+                    </dl>
+                `);
+                  $submitBtn.attr('disabled', 'disabled')
+                } else {
+                  $infoContainer.html('');
+                  $submitBtn.removeAttr('disabled');
+                }
+              })
         });
 
       })(jQuery);

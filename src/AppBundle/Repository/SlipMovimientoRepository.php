@@ -2,6 +2,9 @@
 
 namespace AppBundle\Repository;
 
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+
 /**
  * SlipMovimientoRepository
  *
@@ -110,6 +113,24 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
             ->getArrayResult();
         $num = count($slipsOcupados);
         return $num;
+    }
+
+    public function isSlipOpen($slipId, $fechaLlegada, $fechaSalida)
+    {
+        $qb = $this->createQueryBuilder('sm');
+        return $qb
+            ->where('
+                    sm.slip = :slip AND 
+                    ((:fechaLlegada BETWEEN sm.fechaLlegada AND sm.fechaSalida) OR
+                     (:fechaSalida BETWEEN sm.fechaLlegada AND sm.fechaSalida))
+                ')
+            ->setParameters([
+                'slip' => $slipId,
+                'fechaLlegada' => $fechaLlegada,
+                'fechaSalida' => $fechaSalida,
+            ])
+            ->getQuery()
+            ->getResult();
     }
 
     public function getCurrentOcupation($slip = null)

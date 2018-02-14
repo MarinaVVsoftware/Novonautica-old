@@ -28,7 +28,7 @@ class SlipMovimientoType extends AbstractType
                     $qb = $er->createQueryBuilder('mhc');
                     return $qb
                         ->select('mhc', 'servicios')
-                        ->join('mhc.mhcservicios', 'servicios', 'slipmovimiento')
+                        ->leftJoin('mhc.mhcservicios', 'servicios', 'slipmovimiento')
                         ->leftJoin('mhc.slipmovimiento', 'slipmovimiento')
                         ->andWhere(
                             $qb->expr()->eq('servicios.tipo', 1),
@@ -43,17 +43,11 @@ class SlipMovimientoType extends AbstractType
                         'data-llegada' => date('Y-m-d', strtotime($mhc->getFechaLlegada()->format('Y-m-d'))),
                         'data-salida' => date('Y-m-d', strtotime($mhc->getFechaSalida()->format('Y-m-d')))];
                 }
-            ])->add('slip',EntityType::class,[
+            ])
+            ->add('slip',EntityType::class,[
                 'class' => 'AppBundle:Slip',
                 'label' => 'Slip',
                 'placeholder' => 'Seleccionar...',
-                'query_builder' => function (EntityRepository $er) {
-                    $qb = $er->createQueryBuilder('s');
-                    return $qb
-                        ->select('s')
-                        ->leftJoin('s.movimientos', 'sm')
-                        ->where('sm.id IS NULL');
-                }
             ])
         ;
     }

@@ -179,7 +179,7 @@ class FacturacionType extends AbstractType
 
             if ($folioCotizacion) {
                 $folios = explode('-', $folioCotizacion);
-                $pagos = $facturacionRepo->getPagosByFolioCotizacion($folios[0], $folios[1] ?? null);
+                $pagos = $facturacionRepo->getPagosByFolioCotizacion($folios[0], isset($folios[1]) ? $folios[1] : null);
             }
 
             $form->add('pagos', EntityType::class, [

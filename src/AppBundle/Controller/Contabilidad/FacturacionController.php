@@ -170,7 +170,9 @@ class FacturacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $facturador = $this->container->get('multifacturas');
+            dump($factura);
+            // FIXME Facturacion en base a la divisa
+            /*$facturador = $this->container->get('multifacturas');
             $timbrado = $facturador->procesa($factura);
 
             // Asignar folio en base al total de facturas existentes
@@ -227,7 +229,7 @@ class FacturacionController extends Controller
                 ->attach($attachment);
 
             $mailer->send($message);
-            return $this->redirectToRoute('contabilidad_facturacion_index');
+            return $this->redirectToRoute('contabilidad_facturacion_index');*/
         }
 
         return $this->render('contabilidad/facturacion/new.html.twig', [

@@ -1,5 +1,70 @@
 {% extends 'estructura/plantilla.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .novo-checkbox-container .checkbox {
+            position: relative;
+            padding: 20px 0 20px 20px;
+            text-align: left;
+        }
+
+        .novo-checkbox-container .checkbox label {
+            cursor: pointer;
+            padding-left: 10px;
+        }
+
+        .novo-checkbox-container .checkbox label:before,
+        .novo-checkbox-container .checkbox label:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+        }
+
+        .novo-checkbox-container .checkbox label:before {
+            left: 0;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0;
+            border-radius: 4px;
+            background: #3e4766;
+            -webkit-box-shadow: 0 0 1px grey;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .novo-checkbox-container .checkbox label:after {
+            width: 14px;
+            height: 8px;
+            top: 24px;
+            left: 3px;
+            border: 3px solid #0097f6;
+            border-top: none;
+            border-right: none;
+            background: transparent;
+            opacity: 0;
+            -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+
+        .novo-checkbox-container .checkbox label:hover:after {
+            opacity: .5;
+        }
+
+        .novo-checkbox-container .checkbox input[type="radio"],
+        .novo-checkbox-container .checkbox input[type="checkbox"] {
+            position: absolute;
+            top: 0;
+            left: -9999px;
+            visibility: hidden;
+        }
+
+        .novo-checkbox-container .checkbox input[type="radio"]:checked + label:after,
+        .novo-checkbox-container .checkbox input[type="checkbox"]:checked + label:after {
+            opacity: 1;
+        }
+    </style>
+{% endblock %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -10,7 +75,8 @@
                             <h3 class="panel-title">Nueva Cotización</h3>
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_estadia_index') }}">Regresar</a>
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('marina-humeda_estadia_index') }}">Regresar</a>
                         </div>
                     </div>
                 </div>
@@ -239,19 +305,19 @@
                         </div>
                         <div role="tabpanel" class="tab-pane" id="totalmxn">
                             <div class="row">
-                                <div class="col-sm-12 text-right">
+                                <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
                                     <div id="" class="valdolar">{{ (valdolar/100)|number_format(2) }} MXN</div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-sm-9">
                                     <small>Precios en MXN</small>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-sm-9">
                                     <table id="" class="table text-center">
                                         <thead>
                                         <tr>
@@ -299,12 +365,12 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
+                                <div class="col-sm-4 col-sm-offset-5">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
+                                <div class="col-sm-4 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
                                         $ <span id="gransubtot_mxn">00.00</span>
@@ -313,12 +379,12 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
+                                <div class="col-sm-4 col-sm-offset-5">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
+                                <div class="col-sm-4 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
                                         $ <span id="graniva_mxn">00.00</span>
@@ -365,29 +431,30 @@
                                 <div class="col-sm-10">
                                     {{ form_row(form.mensaje) }}
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="submit" class="btn btn-azul">
-                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                        Guardar
-                                    </button>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="novo-checkbox-container">
+                                        {{ form_row(form.notificarCliente) }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {{ form_widget(form.mhcservicios.children.0.precioAux,{'attr':{'class':'hidden'}}) }}
                     {{ form_widget(form.mhcservicios.children.1.precio,{'attr':{'class':'hidden'}}) }}
-                    {{ form_end(form) }}
                 </div>
-                {#<div class="panel-footer">#}
-                {#<div class="row">#}
-                {#<div class="col-sm-12">#}
-                {#<a href="{{ path('marina-humeda_index') }}" class="btn btn-naranja pull-right">#}
-                {#<i class="fa fa-ban" aria-hidden="true"></i>#}
-                {#Cancelar#}
-                {#</a>#}
-                {#</div>#}
-                {#</div>#}
-                {#</div>#}
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(form) }}
             </div>
         </section>
     </div>
@@ -413,7 +480,7 @@
               var html = "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
                   "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
                   "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>" +
-              $("#info-cliente").append(html);
+                  $("#info-cliente").append(html);
 
               $('#loading').hide();
             },
@@ -465,7 +532,9 @@
               $("#e_eslora_mxn").html(barco.eslora);
               recalculaSubtotalesYtotal();
             },
-            complete: () => { $("#loading").hide(); }
+            complete: () => {
+              $("#loading").hide();
+            }
           })
         }
 
