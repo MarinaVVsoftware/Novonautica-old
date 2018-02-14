@@ -38,9 +38,6 @@ class MarinaHumedaCotizacion
      */
     private $fechaLlegada;
 
-//* @Assert\NotBlank(
-//*     message="Fecha de salida no puede quedar vacío"
-//* )
     /**
      * @var \DateTime
      * @Assert\Date()
@@ -259,7 +256,7 @@ class MarinaHumedaCotizacion
     /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Slip", inversedBy="mhcotizaciones")
-     * @ORM\JoinColumn(name="idslip", referencedColumnName="id",onDelete="CASCADE")
+     * @ORM\JoinColumn(name="idslip", referencedColumnName="id", onDelete="CASCADE")
      */
     private $slip;
 

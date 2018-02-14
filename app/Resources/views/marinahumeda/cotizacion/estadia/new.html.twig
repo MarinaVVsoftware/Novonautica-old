@@ -91,8 +91,6 @@
                                     {{ form_widget(form.descuento,{'value':0}) }}
                                     <label>Dolar</label>
                                     {{ form_widget(form.dolar,{'value':(valdolar/100)}) }}
-                                    <label>Slip</label>
-                                    {{ form_widget(form.slip) }}
                                 </div>
 
                                 <div class="col-sm-6">
@@ -466,12 +464,6 @@
               $("#de_eslora_mxn").html(barco.eslora);
               $("#e_eslora_mxn").html(barco.eslora);
               recalculaSubtotalesYtotal();
-
-              // Filtrado de opcions de slip por tamaño de eslora
-              const slipOptions = [...document.querySelectorAll('#appbundle_marinahumedacotizacion_slip > option')]
-                  .filter((slip) => barco.eslora >= Number(slip.dataset.feet)
-                      ? slip.style.display = 'none'
-                      : slip.style.display = 'block');
             },
             complete: () => { $("#loading").hide(); }
           })
