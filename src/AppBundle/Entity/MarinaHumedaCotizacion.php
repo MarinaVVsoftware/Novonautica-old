@@ -27,9 +27,6 @@ class MarinaHumedaCotizacion
      */
     private $id;
 
-//* @Assert\NotBlank(
-//*     message="Fecha de llegada no puede quedar vacío"
-//* )
     /**
      * @var \DateTime
      * @Assert\Date()
@@ -187,7 +184,7 @@ class MarinaHumedaCotizacion
     /**
      * @var int
      *
-     * @Groups({"facturacion"})
+     * @Groups({"facturacion", "currentOcupation"})
      *
      * @ORM\Column(name="folio", type="integer", length=255)
      */
@@ -196,7 +193,7 @@ class MarinaHumedaCotizacion
     /**
      * @var int
      *
-     * @Groups({"facturacion"})
+     * @Groups({"facturacion", "currentOcupation"})
      *
      * @ORM\Column(name="foliorecotiza", type="integer", length=255)
      */
@@ -297,15 +294,8 @@ class MarinaHumedaCotizacion
 
     public function __toString()
     {
-        $folioTot = '';
-        $f = $this->folio;
-        $fre = $this->foliorecotiza;
-        if ($fre == 0) {
-            $folioTot = $f;
-        } else {
-            $folioTot = $f . '-' . $fre;
-        }
-        return 'Folio: ' . $folioTot . ' - Barco: ' . $this->getBarco() . ' - Eslora: ' . $this->getBarco()->getEslora();
+        $f = $this->folio . ($this->foliorecotiza ? '-'.$this->foliorecotiza : '');
+        return 'Folio: ' . $f . ' - Barco: ' . $this->getBarco() . ' - Eslora: ' . $this->getBarco()->getEslora();
     }
 
     public function __clone()

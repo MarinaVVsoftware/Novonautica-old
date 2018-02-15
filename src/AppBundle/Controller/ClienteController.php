@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Barco;
 use AppBundle\Entity\Cliente;
-use AppBundle\Entity\Motor;
+use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -30,11 +30,10 @@ class ClienteController extends Controller
      * @Route("/", name="cliente_index")
      * @Method("GET")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, DataTablesInterface $datatables)
     {
         if ($request->isXmlHttpRequest()) {
             try {
-                $datatables = $this->get('datatables');
                 $results = $datatables->handle($request, 'cliente');
                 return $this->json($results);
             } catch (HttpException $e) {

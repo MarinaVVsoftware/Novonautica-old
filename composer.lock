@@ -2810,33 +2810,33 @@
         },
         {
             "name": "webinarium/datatables-bundle",
-            "version": "2.2.2",
+            "version": "2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinarium/DataTablesBundle.git",
-                "reference": "78e9fedba3343911cc1a974b73013f0bf4d559a7"
+                "reference": "c2cb6849927fb52a8453e011e93acc523973abdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinarium/DataTablesBundle/zipball/78e9fedba3343911cc1a974b73013f0bf4d559a7",
-                "reference": "78e9fedba3343911cc1a974b73013f0bf4d559a7",
+                "url": "https://api.github.com/repos/webinarium/DataTablesBundle/zipball/c2cb6849927fb52a8453e011e93acc523973abdb",
+                "reference": "c2cb6849927fb52a8453e011e93acc523973abdb",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0",
                 "psr/log": "^1.0",
-                "roave/security-advisories": "dev-master",
-                "symfony/config": "^2.7|^3.0",
-                "symfony/dependency-injection": "^2.7|^3.0",
-                "symfony/http-foundation": "^2.7|^3.0",
-                "symfony/http-kernel": "^2.7|^3.0",
-                "symfony/validator": "^2.7|^3.0"
+                "symfony/config": "^2.7|^3.0|^4.0",
+                "symfony/dependency-injection": "^2.7|^3.0|^4.0",
+                "symfony/http-foundation": "^2.7|^3.0|^4.0",
+                "symfony/http-kernel": "^2.7|^3.0|^4.0",
+                "symfony/validator": "^2.7|^3.0|^4.0"
             },
             "require-dev": {
                 "doctrine/annotations": "^1.4",
                 "doctrine/cache": "^1.6",
                 "friendsofphp/php-cs-fixer": "^2.8",
-                "phpunit/phpunit": "^5.6"
+                "phpunit/phpunit": "^5.6",
+                "roave/security-advisories": "dev-master"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -2857,7 +2857,7 @@
                 "datatable",
                 "datatables"
             ],
-            "time": "2017-11-26T21:10:29+00:00"
+            "time": "2018-02-14T07:45:37+00:00"
         }
     ],
     "packages-dev": [

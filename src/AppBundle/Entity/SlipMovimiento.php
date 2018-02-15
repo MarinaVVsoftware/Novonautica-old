@@ -23,6 +23,8 @@ class SlipMovimiento
     /**
      * @var int
      *
+     * @Groups({"currentOcupation"})
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
