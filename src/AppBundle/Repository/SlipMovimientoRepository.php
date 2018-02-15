@@ -154,4 +154,18 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getCurrentOcupationStats()
+    {
+        $qb = $this->createQueryBuilder('sm')
+            ->leftJoin('sm.slip', 's');
+
+        return $qb
+            ->select('s.pies', 'COUNT(sm.id) AS ocupados')
+            ->where('CURRENT_DATE() BETWEEN sm.fechaLlegada AND sm.fechaSalida')
+            ->groupBy('s.pies')
+            ->getQuery()
+            ->getResult();
+
+    }
 }

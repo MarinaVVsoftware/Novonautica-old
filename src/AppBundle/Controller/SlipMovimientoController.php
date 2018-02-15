@@ -54,59 +54,8 @@ class SlipMovimientoController extends Controller
      */
     public function currentSlipsAction(Request $request)
     {
-        $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
-        $currentSlips = $smRepo->getCurrentOcupation();
-
-        $porcentajes = [
-            46 => [
-                'total' => 109,
-                'ocupacion' => 0,
-                'porcentaje' => 0
-            ],
-            61 => [
-                'total' => 46,
-                'ocupacion' => 0,
-                'porcentaje' => 0
-            ],
-            72 => [
-                'total' => 13,
-                'ocupacion' => 0,
-                'porcentaje' => 0
-            ],
-            120 => [
-                'total' => 8,
-                'ocupacion' => 0,
-                'porcentaje' => 0
-            ],
-            1000 => [
-                'total' => 392,
-                'ocupacion' => 0,
-                'porcentaje' => 0
-            ]
-        ];
-
-        foreach ($currentSlips as $slip) {
-            $pies = $slip->getSlip()->getPies();
-            $porcentajes[$pies]['ocupacion']++;
-            $porcentajes[$pies]['porcentaje'] = round(($porcentajes[$pies]['ocupacion'] * 100) / $porcentajes[$pies]['total'], 2);
-        }
-
-        $statOcupacion = 0;
-        $statPorcentaje = 0;
-        foreach ($porcentajes as $porcentaje) {
-            $statOcupacion += $porcentaje['ocupacion'];
-            $statPorcentaje += $porcentaje['porcentaje'];
-        }
-
-        $porcentajes['Total'] = [
-            'total' => 392,
-            'ocupacion' => $statOcupacion,
-            'porcentaje' => $statPorcentaje
-        ];
-
         return $this->render('marinahumeda/mapa/mapa.html.twig', [
             'title' => 'Slips',
-            'porcentajes' => $porcentajes
         ]);
     }
 
@@ -120,11 +69,29 @@ class SlipMovimientoController extends Controller
     {
         try {
             $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
+            $slipRepo = $this->getDoctrine()->getRepository('AppBundle:Slip');
+
             $currentSlips = $smRepo->getCurrentOcupation();
+            $filledSlips = $smRepo->getCurrentOcupationStats();
+            $allSlips = $slipRepo->getAllByGroupFeet();
+
+            foreach ($allSlips as $i => $slip) {
+                $allSlips[$i]['amarres'] = (int) $allSlips[$i]['amarres'];
+                $allSlips[$i]['ocupacion'] = (int) $filledSlips[$i]['ocupados'];
+                $allSlips[$i]['porcentaje'] = (float) number_format((($filledSlips[$i]['ocupados'] * 100) / $allSlips[$i]['amarres']), 1);
+            }
+
             $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
             $normalizer = new ObjectNormalizer($classMetadataFactory);
             $serializer = new Serializer([new DateTimeNormalizer(), $normalizer], [new JsonEncoder()]);
-            $response = $serializer->serialize($currentSlips, 'json', ['groups' => ['currentOcupation']]);
+
+            $data = [
+                'data' => $allSlips,
+                'slips' => $currentSlips,
+            ];
+
+            $response = $serializer->serialize($data, 'json', ['groups' => ['currentOcupation']]);
+
             return new Response($response);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
@@ -190,11 +157,8 @@ class SlipMovimientoController extends Controller
         }
         /*
          * En este caso se hace una validacion para no reasignarle un slip a una cotizacion
-         * La validacion se hace desde la entidad SlipMovimiento
-         *
-         * else {
-            return $this->render('marinahumeda/mapa/form/assign-slip.html.twig');
-        }*/
+         * La validacion se hace desde la entidad SlipMovimiento y el slip asignado en la MHC
+        */
 
         return $this->render('marinahumeda/mapa/form/assign-slip.html.twig', [
             'form' => $form->createView()

@@ -11,6 +11,10 @@
             border: none;
         }
 
+        dl {
+            margin-bottom: 1rem;
+        }
+
         .dl-horizontal dt {
             text-align: left;
         }
@@ -1133,8 +1137,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-4">
-                            <table class="table">
+                        <div class="col-sm-12">
+                            <table id="map-data" class="table table-condensed text-center">
                                 <thead>
                                 <tr>
                                     <th>Amarres en pies</th>
@@ -1144,14 +1148,14 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for key, porcentaje in porcentajes %}
+                                {#{% for key, porcentaje in porcentajes %}
                                     <tr>
                                         <td>{{ key }}</td>
                                         <td>{{ porcentaje['total'] }}</td>
                                         <td>{{ porcentaje['ocupacion'] }}</td>
                                         <td>{{ porcentaje['porcentaje'] }} %</td>
                                     </tr>
-                                {% endfor %}
+                                {% endfor %}#}
                                 </tbody>
                             </table>
                         </div>
@@ -1176,7 +1180,6 @@
             </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block javascripts %}
@@ -1184,25 +1187,39 @@
     <script type="text/javascript" src="{{ asset('js/svg-pan-zoom.min.js') }}"></script>
     <script type="text/javascript">
       (function ($) {
+
         const embarcaciones = document.querySelectorAll('#embarcaciones > g');
+        const $mapData = $('#map-data');
         const $modal = $('#slip-info');
         const $modalBody = $modal.find('.modal-body');
         const $modalTitle = $modal.find('.modal-title');
         let slip = null;
 
-        $.ajax({
-          url: '{{ path('mapa-data') }}',
-          dataType: 'json',
-        })
-            .done(function (ocupados) {
+        $
+            .ajax({
+              url: '{{ path('mapa-data') }}',
+              dataType: 'json',
+            })
+            .done(function ({data, slips}) {
+              let totalRow = {pies: 'Total', amarres: 0, ocupacion: 0, porcentaje: 0};
+
               embarcaciones.forEach(function (embarcacion) {
-                ocupados.forEach(function (ocupacion) {
-                  if (`e${ocupacion.slip.num}` === embarcacion.id) {
+                slips.forEach(function ({slip}) {
+                  if (`e${slip.num}` === embarcacion.id) {
                     embarcacion.children[0].classList = 'st4';
                     embarcacion.classList.add('busy');
                   }
                 });
               });
+
+              data.forEach(function (item) {
+                totalRow.amarres += Number(item.amarres);
+                totalRow.ocupacion += Number(item.ocupacion);
+                createDataMapRow(item);
+              });
+
+              totalRow.porcentaje = ((totalRow.ocupacion * 100) / totalRow.amarres);
+              createDataMapRow(totalRow);
             });
 
         svgPanZoom('#mapa', {
@@ -1236,23 +1253,8 @@
                   dataType: 'json'
                 })
                 .done(function (slip) {
-                  let llegada = new Date(slip[0].fechaLlegada);
-                  let salida = new Date(slip[0].fechaSalida);
                   $modalTitle.text('Detalles');
-                  $modalBody.html(`
-                    <dl class="dl-horizontal">
-                        <dt>Cliente</dt>
-                        <dd>${slip[0].marinahumedacotizacion.cliente.nombre}</dd>
-                        <dt>Barco</dt>
-                        <dd>${slip[0].marinahumedacotizacion.barco.nombre}</dd>
-                        <dt>Fecha de llegada</dt>
-                        <dd>${llegada.toLocaleDateString('es-MX')}</dd>
-                        <dt>Fecha de salida</dt>
-                        <dd>${salida.toLocaleDateString('es-MX')}</dd>
-                    </dl>
-                    <br>
-                    <a href="{{ app.request.baseUrl }}/marina/cotizacion/${slip[0].marinahumedacotizacion.id}" class="btn btn-block btn-azul">Ver cotización</a>
-                `);
+                  $modalBody.html(createSlipDetails(slip[0], false));
                 })
                 .done(function () {
                   $modal.modal('show');
@@ -1270,7 +1272,11 @@
           }
         });
 
-        $(document).on('change', '#appbundle_slipmovimiento_marinahumedacotizacion', function (e) {
+        $(document).on('change', '#appbundle_slipmovimiento_marinahumedacotizacion', function () {
+          let $that = $(this);
+          let llegada = $that.find(':selected').data('llegada');
+          let salida = $that.find(':selected').data('salida');
+
           $
               .ajax({
                 url: `{{ app.request.requestUri }}/${this.value}/isopen`,
@@ -1278,33 +1284,71 @@
                 data: {'slip': slip}
               })
               .done(function (slip) {
-                const $infoContainer = $('#slipClosed');
+                const $detail = $('#cotizacion-detail');
+                const $closed = $('#slipClosed');
                 const $submitBtn = $modalBody.find('.btn-azul');
-                if (slip.length) {
-                  let llegada = new Date(slip[0].fechaLlegada);
-                  let salida = new Date(slip[0].fechaSalida);
-                  $infoContainer.html(`
-                    <div class="alert alert-danger text-center" role="alert">
-                    La fecha de la cotización coincide con una cotizacion asignada en este Slip
-                    </div>
-                    <dl class="dl-horizontal">
-                        <dt>Cliente</dt>
-                        <dd>${slip[0].marinahumedacotizacion.cliente.nombre}</dd>
-                        <dt>Barco</dt>
-                        <dd>${slip[0].marinahumedacotizacion.barco.nombre}</dd>
-                        <dt>Fecha de llegada</dt>
-                        <dd>${llegada.toLocaleDateString('es-MX')}</dd>
-                        <dt>Fecha de salida</dt>
-                        <dd>${salida.toLocaleDateString('es-MX')}</dd>
-                    </dl>
+
+                $detail.html(`
+                <dl class="dl-horizontal">
+                  <dt>Fecha de llegada</dt>
+                  <dd>${llegada.replace(/-/g, '/')}</dd>
+                  <dt>Fecha de salida</dt>
+                  <dd>${salida.replace(/-/g, '/')}</dd>
+                </dl>
                 `);
+
+                if (slip.length) {
+                  $closed.html(createSlipDetails(slip[0], {llegada, salida}));
                   $submitBtn.attr('disabled', 'disabled')
                 } else {
-                  $infoContainer.html('');
+                  $closed.html('');
                   $submitBtn.removeAttr('disabled');
                 }
               })
         });
+
+        function createDataMapRow(dataRow) {
+          let row = `
+                <tr>
+                  <td>${dataRow.pies}</td>
+                  <td>${dataRow.amarres}</td>
+                  <td>${dataRow.ocupacion}</td>
+                  <td>${dataRow.porcentaje.toFixed(1)}%</td>
+                </tr>
+                `;
+          $mapData.append(row);
+        }
+
+        function createSlipDetails(slip, shouldWarn) {
+          let llegada = new Date(slip.fechaLlegada);
+          let salida = new Date(slip.fechaSalida);
+          let folio = slip.marinahumedacotizacion.folio + (slip.marinahumedacotizacion.foliorecotiza ? '-' + slip.marinahumedacotizacion.foliorecotiza : '');
+          let warnTemplate = `
+          <div class="alert alert-danger text-center" role="alert">
+            La fecha de la cotización elegida coincide con la cotización:
+          </div>
+          `;
+
+          let template = `
+            <dl class="dl-horizontal">
+              <dt>Folio</dt>
+              <dd>${folio}</dd>
+              <dt>Cliente</dt>
+              <dd>${slip.marinahumedacotizacion.cliente.nombre}</dd>
+              <dt>Barco</dt>
+              <dd>${slip.marinahumedacotizacion.barco.nombre}</dd>
+              <dt>Fecha de llegada</dt>
+              <dd>${llegada.toLocaleDateString('es-MX')}</dd>
+              <dt>Fecha de salida</dt>
+              <dd>${salida.toLocaleDateString('es-MX')}</dd>
+            </dl>
+            <div class="text-center">
+              <a href="{{ app.request.baseUrl }}/marina/cotizacion/${slip.marinahumedacotizacion.id}" class="btn btn-xs btn-morado-claro margin-bottom" target="_blank">Ver Cotización</a>
+            </div>
+          `;
+
+          return shouldWarn ? warnTemplate + template : template;
+        }
 
       })(jQuery);
     </script>

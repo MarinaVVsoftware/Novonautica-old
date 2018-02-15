@@ -10,4 +10,12 @@ namespace AppBundle\Repository;
  */
 class SlipRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getAllByGroupFeet()
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.pies', 'COUNT(s.id) AS amarres')
+            ->groupBy('s.pies')
+            ->getQuery()
+            ->getResult();
+    }
 }

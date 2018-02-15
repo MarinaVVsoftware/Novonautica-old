@@ -40,8 +40,8 @@ class SlipMovimientoType extends AbstractType
                 },
                 'choice_attr' => function ($mhc) {
                     return ['data-eslora' => $mhc->getBarco()->getEslora(),
-                        'data-llegada' => date('Y-m-d', strtotime($mhc->getFechaLlegada()->format('Y-m-d'))),
-                        'data-salida' => date('Y-m-d', strtotime($mhc->getFechaSalida()->format('Y-m-d')))];
+                        'data-llegada' => $mhc->getFechaLlegada()->format('d-m-Y'),
+                        'data-salida' => $mhc->getFechaSalida()->format('d-m-Y')];
                 }
             ])
             ->add('slip',EntityType::class,[
