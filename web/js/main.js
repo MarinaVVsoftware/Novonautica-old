@@ -705,14 +705,14 @@ function calculaSubtotales(cantidad, precio, tdsubtot, tdiva, tddesc, tdtot) {
     var desctot = (subtotal * descuento) / 100;
     var total = (subtotal + ivatot - desctot).toFixed(2);
 
-    tdsubtot.html('$ ' + (subtotal).toFixed(2));
-    tdiva.html('$ ' + (ivatot).toFixed(2));
-    tddesc.html('$ ' + (desctot).toFixed(2));
-    tdtot.html('$ ' + total);
+    tdsubtot.html('$ ' + (subtotal).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    tdiva.html('$ ' + (ivatot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    tddesc.html('$ ' + (desctot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    tdtot.html('$ ' + total.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 
     tdsubtot.data('valor', subtotal);
     tdiva.data('valor', ivatot);
-    tddesc.data('valor', desctot)
+    tddesc.data('valor', desctot);
     tdtot.data('valor', total);
 }
 
@@ -738,20 +738,20 @@ function calculaTotales() {
         parseFloat($('#e_total').data('valor'))
     ).toFixed(2);
 
-    $('#gransubtot').html(gransubtotal);
-    $('#graniva').html(graniva);
-    $('#grandecuento').html(grandescuento);
-    $('#grantot').html(grantotal);
+    $('#gransubtot').html(gransubtotal.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#graniva').html(graniva.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#grandecuento').html(grandescuento.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#grantot').html(grantotal.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 
     dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
     var gransubtotalmxn = (gransubtotal * dolar).toFixed(2);
     var granivamxn = (graniva * dolar).toFixed(2);
     var grandescuentomxn = (grandescuento * dolar).toFixed(2);
     var grantotalmxn = (grantotal * dolar).toFixed(2);
-    $('#gransubtot_mxn').html(gransubtotalmxn);
-    $('#graniva_mxn').html(granivamxn);
-    $('#grandecuento_mxn').html(grandescuentomxn);
-    $('#grantot_mxn').html(grantotalmxn);
+    $('#gransubtot_mxn').html(gransubtotalmxn.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#graniva_mxn').html(granivamxn.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#grandecuento_mxn').html(grandescuentomxn.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#grantot_mxn').html(grantotalmxn.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 }
 
 // $('#appbundle_marinahumedacotizacion_mhcservicios_4_estatus').on('click',function () {
@@ -878,13 +878,13 @@ function gasolinaCalculaSubtotales() {
     var ivatot = (subtotal * iva) / 100;
     var total = subtotal + ivatot;
 
-    $('#g_subtotal').html('$ ' + parseFloat(subtotal).toFixed(2));
-    $('#g_iva').html('$ ' + parseFloat(ivatot).toFixed(2));
-    $('#g_total').html('$ ' + parseFloat(total).toFixed(2));
+    $('#g_subtotal').html('$ ' + parseFloat(subtotal).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#g_iva').html('$ ' + parseFloat(ivatot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#g_total').html('$ ' + parseFloat(total).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 
-    $('#gransubtot_g').html(parseFloat(subtotal).toFixed(2));
-    $('#graniva_g').html(parseFloat(ivatot).toFixed(2));
-    $('#grantot_g').html(parseFloat(total).toFixed(2));
+    $('#gransubtot_g').html(parseFloat(subtotal).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#graniva_g').html(parseFloat(ivatot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#grantot_g').html(parseFloat(total).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 }
 
 function gasolinaCalculaSubtotalesMxn() {
@@ -895,13 +895,13 @@ function gasolinaCalculaSubtotalesMxn() {
     var ivatot = (subtotal * iva) / 100;
     var total = subtotal + ivatot;
 
-    $('#g_subtotal_mxn').html('$ ' + parseFloat(subtotal).toFixed(2));
-    $('#g_iva_mxn').html('$ ' + parseFloat(ivatot).toFixed(2));
-    $('#g_total_mxn').html('$ ' + parseFloat(total).toFixed(2));
+    $('#g_subtotal_mxn').html('$ ' + parseFloat(subtotal).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#g_iva_mxn').html('$ ' + parseFloat(ivatot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#g_total_mxn').html('$ ' + parseFloat(total).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 
-    $('#gransubtot_g_mxn').html(parseFloat(subtotal).toFixed(2));
-    $('#graniva_g_mxn').html(parseFloat(ivatot).toFixed(2));
-    $('#grantot_g_mxn').html(parseFloat(total).toFixed(2));
+    $('#gransubtot_g_mxn').html(parseFloat(subtotal).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#graniva_g_mxn').html(parseFloat(ivatot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#grantot_g_mxn').html(parseFloat(total).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 }
 
 //--- fin marina humeda nueva cotización gasolina ---
