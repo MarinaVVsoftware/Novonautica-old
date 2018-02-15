@@ -10,6 +10,7 @@ use Doctrine\DBAL\Types\IntegerType;
 use Doctrine\DBAL\Types\TextType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -84,7 +85,10 @@ class MarinaHumedaCotizacionGasolinaType extends AbstractType
                 'attr' => ['rows' => 7],
                 'required' => false
             ])
-
+            ->add('notificarCliente', CheckboxType::class, [
+                'label' => '¿Notificar al cliente?',
+                'required' => false
+            ])
            ;
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
@@ -114,6 +118,7 @@ class MarinaHumedaCotizacionGasolinaType extends AbstractType
                 $formModifier($event->getForm(), $cotizacion->getCliente());
             } else { //editando cotización, solo para validaciones
                 $form
+                    ->remove('notificarCliente')
                     ->remove('cliente')
 //                    ->remove('barco')
                     ->remove('fechaLlegada')

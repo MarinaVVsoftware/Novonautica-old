@@ -1,9 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
 
-{% block title %}
-    Novonautiva | Ver Cotización Marina Humeda
-{% endblock %}
-
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -21,7 +17,8 @@
                             </span>
                         </div>
                         <div class="col-sm-6">
-                                <a class="btn btn-contorno-azul pull-right" href="{% if marinaHumedaCotizacion.mhcservicios[0].tipo == 3 %}
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{% if marinaHumedaCotizacion.mhcservicios[0].tipo == 3 %}
                                                                                         {{ path('marina-humeda_gasolina_index') }}
                                                                                     {% else %}
                                                                                         {{ path('marina-humeda_estadia_index') }}
@@ -41,9 +38,11 @@
                             <a href="#totalesmxn" aria-controls="totalesmxn" role="tab" data-toggle="tab">Totales
                                 (MXN)</a>
                         </li>
+                        {% if marinaHumedaCotizacion.notificarCliente %}
                         <li role="presentation">
                             <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
                         </li>
+                        {% endif %}
                         {% if marinaHumedaCotizacion.validacliente == 2 %}
                             <li role="presentation">
                                 <a href="#pagos" aria-controls="pagos" role="tab" data-toggle="tab">Pagos</a>
@@ -89,22 +88,22 @@
                                             <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
                                         </tr>
                                         {% if marinaHumedaCotizacion.fechaLlegada %}
-                                        <tr>
-                                            <th>Fecha llegada</th>
-                                            <td>{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}</td>
-                                        </tr>
+                                            <tr>
+                                                <th>Fecha llegada</th>
+                                                <td>{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}</td>
+                                            </tr>
                                         {% endif %}
                                         {% if marinaHumedaCotizacion.fechaSalida %}
-                                        <tr>
-                                            <th>Fecha salida</th>
-                                            <td>{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}</td>
-                                        </tr>
+                                            <tr>
+                                                <th>Fecha salida</th>
+                                                <td>{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}</td>
+                                            </tr>
                                         {% endif %}
                                         {% if marinaHumedaCotizacion.slip %}
-                                        <tr>
-                                            <th>Slip</th>
-                                            <td>{{ marinaHumedaCotizacion.slip }}</td>
-                                        </tr>
+                                            <tr>
+                                                <th>Slip</th>
+                                                <td>{{ marinaHumedaCotizacion.slip }}</td>
+                                            </tr>
                                         {% endif %}
                                         <tr>
                                             <th>Descuento %</th>
@@ -180,7 +179,9 @@
                             <div class="row">
                                 <div class="col-sm-10 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="tipocambio" class="">{{ (marinaHumedaCotizacion.dolar/100)|number_format(2)}} MXN</div>
+                                    <div id="tipocambio"
+                                         class="">{{ (marinaHumedaCotizacion.dolar/100)|number_format(2) }} MXN
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -317,7 +318,9 @@
                             <div class="row">
                                 <div class="col-sm-10 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="tipocambio" class="">{{ (marinaHumedaCotizacion.dolar/100)|number_format(2) }} MXN</div>
+                                    <div id="tipocambio"
+                                         class="">{{ (marinaHumedaCotizacion.dolar/100)|number_format(2) }} MXN
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -497,7 +500,9 @@
                                                             {{ pago.fechaRealPago|date('d-m-Y') }}
                                                         {% endif %}</td>
                                                     <td>$ {{ (pago.dolar/100)|number_format(2) }} MXN</td>
-                                                    <td>$ {{ ((pago.cantidad * pago.dolar)/10000)|number_format(2) }} MXN</td>
+                                                    <td>$ {{ ((pago.cantidad * pago.dolar)/10000)|number_format(2) }}
+                                                        MXN
+                                                    </td>
                                                     <td>
                                                         {% if factura %}
                                                             <a href="{{ path('contabilidad_factura_pdf', { 'id': factura.id }) }}"
@@ -510,7 +515,7 @@
                                                         {% endif %}
                                                     </td>
                                                 </tr>
-                                                {% set totMxn = totMxn + (pago.cantidad * pago.dolar)  %}
+                                                {% set totMxn = totMxn + (pago.cantidad * pago.dolar) %}
                                             {% endfor %}
                                             </tbody>
                                         </table>
@@ -539,7 +544,8 @@
                                     <div class="col-sm-3">
                                         <label>Saldo faltante</label>
                                         <div class="info-input">
-                                            $ {{ ((marinaHumedaCotizacion.total-marinaHumedaCotizacion.pagado)/100)|number_format(2) }} USD
+                                            $ {{ ((marinaHumedaCotizacion.total-marinaHumedaCotizacion.pagado)/100)|number_format(2) }}
+                                            USD
                                         </div>
                                     </div>
                                 </div>
@@ -567,19 +573,19 @@
                         </div>
                     {% endif %}
                     {% if marinaHumedaCotizacion.validanovo == 2 and marinaHumedaCotizacion.validacliente == 0 %}
-                    <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-12">
-                            <a class="btn btn-azul pull-right"
-                               href="{{ path('marina-humeda_validar', { 'id': marinaHumedaCotizacion.id }) }}">
-                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                Aceptar Cliente
-                            </a>
+                        <div class="row espacio-linea-arriba2">
+                            <div class="col-sm-12">
+                                <a class="btn btn-azul pull-right"
+                                   href="{{ path('marina-humeda_validar', { 'id': marinaHumedaCotizacion.id }) }}">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    Aceptar Cliente
+                                </a>
+                            </div>
                         </div>
-                    </div>
                     {% endif %}
                     {% if (marinaHumedaCotizacion.validanovo == 1 or
-                    marinaHumedaCotizacion.validacliente == 1) and
-                    marinaHumedaCotizacion.estatus == 1 %}
+                        marinaHumedaCotizacion.validacliente == 1) and
+                        marinaHumedaCotizacion.estatus == 1 %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
                                 <a class="btn btn-naranja pull-right"
@@ -606,26 +612,26 @@
                         </div>
                     {% endif %}
                     {% if marinaHumedaCotizacion.validanovo == 2 %}
-                    <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-12">
-                            <button class="btn btn-naranja pull-right loadpage" id="reenviar"
-                                    data-idcotizacion="{{ marinaHumedaCotizacion.id }}">
-                                <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
-                                Reenviar
-                            </button>
+                        <div class="row espacio-linea-arriba2">
+                            <div class="col-sm-12">
+                                <button class="btn btn-naranja pull-right loadpage" id="reenviar"
+                                        data-idcotizacion="{{ marinaHumedaCotizacion.id }}">
+                                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                    Reenviar
+                                </button>
+                            </div>
                         </div>
-                    </div>
                     {% endif %}
                     {% if marinaHumedaCotizacion.validacliente == 2 %}
-                    <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-12">
-                            <a class="btn btn-azul pull-right"
-                               href="{{ path('marina-humeda_estadia_renovar',{'id': marinaHumedaCotizacion.id}) }}">
-                                <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-                                Renovar
-                            </a>
+                        <div class="row espacio-linea-arriba2">
+                            <div class="col-sm-12">
+                                <a class="btn btn-azul pull-right"
+                                   href="{{ path('marina-humeda_estadia_renovar',{'id': marinaHumedaCotizacion.id}) }}">
+                                    <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                                    Renovar
+                                </a>
+                            </div>
                         </div>
-                    </div>
                     {% endif %}
                 </div>
             </div>
@@ -636,19 +642,21 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        $('#reenviar').on('click',function () {
-            var url = "{{ path('marina-humeda_reenviar',{'id':'idcotizacion'}) }}";
-            url = url.replace("idcotizacion", $(this).data('idcotizacion'));
-            $.ajax({
-                method: "POST",
-                url: url,
-                success: function () {
-                    $('#loading').hide();
-                    $('#estatusEnvio').modal('show');
-                    setTimeout(function(){  $('#estatusEnvio').modal('hide'); }, 3000);
-                }
-            });
+      $('#reenviar').on('click', function () {
+        var url = "{{ path('marina-humeda_reenviar',{'id':'idcotizacion'}) }}";
+        url = url.replace("idcotizacion", $(this).data('idcotizacion'));
+        $.ajax({
+          method: "POST",
+          url: url,
+          success: function () {
+            $('#loading').hide();
+            $('#estatusEnvio').modal('show');
+            setTimeout(function () {
+              $('#estatusEnvio').modal('hide');
+            }, 3000);
+          }
         });
+      });
     </script>
 {% endblock %}
 {% block modals %}
@@ -656,7 +664,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Mensaje</h4>
                 </div>
                 <div class="modal-body">
