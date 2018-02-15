@@ -115,9 +115,9 @@ class Multifacturas
             $datos['factura']['LugarExpedicion'] = $factura->getEmisor()->getCodigoPostal();
             $datos['factura']['metodo_pago'] = $factura->getMetodoPago();
             $datos['factura']['moneda'] = $factura->getMoneda();
+            $datos['factura']['tipocambio'] = $factura->getMoneda() === 'MXN' ? 1.00 : ($factura->getTipoCambio() / 100);
 //        $datos['factura']['serie'] = ''; // No requerido
             $datos['factura']['subtotal'] = ($factura->getSubtotal() / 100);
-            $datos['factura']['tipocambio'] = ($factura->getTipoCambio() / 100);
             $datos['factura']['tipocomprobante'] = $factura->getTipoComprobante();
             $datos['factura']['total'] = ($factura->getTotal() / 100);
             $datos['factura']['RegimenFiscal'] = $factura->getEmisor()->getRegimenFiscal();
