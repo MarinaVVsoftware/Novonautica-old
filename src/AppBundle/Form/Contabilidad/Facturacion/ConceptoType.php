@@ -39,7 +39,7 @@ class ConceptoType extends AbstractType
             ->add('valorunitario', MoneyType::class, [
                 'currency' => 'USD',
                 'divisor' => 100,
-                'grouping' => true
+                'grouping' => true,
             ])
             ->add('descuento', MoneyType::class, [
                 'currency' => 'USD',

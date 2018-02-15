@@ -133,7 +133,6 @@ class SlipMovimientoController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            // FIXME Agregar validacion para evitar coincidencias con fechas futuras
             $cotizacion = $slipMovimiento->getMarinahumedacotizacion();
             $fechaLlegada = $cotizacion->getFechaLlegada();
             $fechaSalida = $cotizacion->getFechaSalida();
@@ -177,7 +176,6 @@ class SlipMovimientoController extends Controller
      */
     public function checkOpenSlipAction(Request $request, MarinaHumedaCotizacion $mhc)
     {
-        // FIXME Cotizacion erronea, envia la que se selecciona
         $slip = $request->query->get('slip');
         $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
         $openSlip = $smRepo->isSlipOpen($slip, $mhc->getFechaLlegada(), $mhc->getFechaSalida());

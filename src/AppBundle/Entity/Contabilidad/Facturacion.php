@@ -1161,8 +1161,6 @@ class Facturacion
     {
         $cantidad = 0;
 
-        // FIXME Facturacion en base a la divisa
-
         if (!$this->getConceptos()->count()) {
             $context->buildViolation('Debe agregar al menos un concepto.')
                 ->atPath('conceptos')
@@ -1173,10 +1171,24 @@ class Facturacion
             $cantidad = $cantidad + $pago->getCantidad();
         }
 
-        if ($this->getPagos()->count() && ($this->getTotal() !== $cantidad)) {
-            $context->buildViolation('El total de la factura es diferente a la cantidad total de pagos seleccionados.')
-                ->atPath('total')
-                ->addViolation();
+        $cantidadMXN = ($cantidad * $this->getTipoCambio()) / 100;
+        $totalMXN = $this->getTotal();
+        $min = $cantidadMXN - 1;
+        $max = $cantidadMXN + 1;
+
+        if ($this->getMoneda() === 'MXN') {
+            if ($this->getPagos()->count() && !($min <= $totalMXN && $totalMXN <= $max)) {
+                $context->buildViolation('El total de la factura es diferente a la cantidad total de pagos seleccionados multiplicado por el tipo de cambio.')
+                    ->atPath('total')
+                    ->addViolation();
+            }
+        }
+        else {
+            if ($this->getPagos()->count() && !($this->getTotal() === $cantidad)) {
+                $context->buildViolation('El total de la factura es diferente a la cantidad total de pagos seleccionados.')
+                    ->atPath('total')
+                    ->addViolation();
+            }
         }
     }
 }
