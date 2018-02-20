@@ -23,7 +23,7 @@ class MarinaHumedaRegistraPagoType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
 //            ->add('estatuspago',ChoiceType::class,[

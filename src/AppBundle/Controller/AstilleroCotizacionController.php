@@ -10,7 +10,9 @@ use AppBundle\Entity\Correo;
 use AppBundle\Form\AstilleroCotizacionAceptadaType;
 use AppBundle\Form\AstilleroCotizacionRechazadaType;
 use AppBundle\Form\AstilleroCotizacionType;
+use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use SensioLabs\Security\Exception\HttpException;
 use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -35,15 +37,21 @@ class AstilleroCotizacionController extends Controller
      * @Route("/", name="astillero_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
+//        if($request->isXmlHttpRequest()){
+//            try{
+//                $results = $dataTables->handle($request,'astillerocotizacion');
+//                return $this->json($results);
+//            } catch (HttpException $e){
+//                return $this->json($e->getMessage(), $e->getCode());
+//            }
+//        }
         $em = $this->getDoctrine()->getManager();
-
-        $astilleroCotizacions = $em->getRepository('AppBundle:AstilleroCotizacion')->findAll();
-
+        $astilleroCotizacion = $em->getRepository('AppBundle:AstilleroCotizacion')->findAll();
         return $this->render('astillero/cotizacion/index.html.twig', [
             'title' => 'Cotizaciones',
-            'astilleroCotizacions' => $astilleroCotizacions,
+            'astilleroCotizacions' => $astilleroCotizacion
         ]);
     }
     /**
@@ -602,6 +610,7 @@ class AstilleroCotizacionController extends Controller
             ->setFrom('noresponder@novonautica.com')
             ->setTo($astilleroCotizacion->getBarco()->getCliente()->getCorreo())
             ->setBcc('admin@novonautica.com')
+            ->setCc([$astilleroCotizacion->getBarco()->getCorreoCapitan(),$astilleroCotizacion->getBarco()->getCorreoResponsable()])
             ->setBody(
                 $this->renderView('astillero/cotizacion/correo-clientevalida.twig', [
                         'astilleroCotizacion' => $astilleroCotizacion,
@@ -621,7 +630,9 @@ class AstilleroCotizacionController extends Controller
             ->setFecha(new \DateTime('now'))
             ->setTipo('Cotización servicio Astillero')
             ->setDescripcion('Reenvio de cotización de Astillero')
-            ->setFolioCotizacion($astilleroCotizacion->getFolio());
+            ->setFolioCotizacion($astilleroCotizacion->getFolio())
+            ->setAcotizacion($astilleroCotizacion)
+        ;
 
         $em->persist($historialCorreo);
 
@@ -1020,6 +1031,7 @@ class AstilleroCotizacionController extends Controller
                     ->setFrom('noresponder@novonautica.com')
                     ->setTo($astilleroCotizacion->getBarco()->getCliente()->getCorreo())
                     ->setBcc('admin@novonautica.com')
+                    ->setCc([$astilleroCotizacion->getBarco()->getCorreoCapitan(),$astilleroCotizacion->getBarco()->getCorreoResponsable()])
                     ->setBody(
                         $this->renderView('astillero/cotizacion/correo-clientevalida.twig', [
                                 'astilleroCotizacion' => $astilleroCotizacion,
@@ -1046,7 +1058,9 @@ class AstilleroCotizacionController extends Controller
                     ->setFecha(new \DateTime('now'))
                     ->setTipo($tipoCorreo)
                     ->setDescripcion('Envio de cotización de Astillero con folio: ' . $folio)
-                    ->setFolioCotizacion($folio);
+                    ->setFolioCotizacion($folio)
+                    ->setAcotizacion($astilleroCotizacion)
+                ;
 
                 $em->persist($historialCorreo);
             }

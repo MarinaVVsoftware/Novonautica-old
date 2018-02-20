@@ -39,13 +39,18 @@
                                 (MXN)</a>
                         </li>
                         {% if marinaHumedaCotizacion.notificarCliente %}
-                        <li role="presentation">
-                            <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
-                        </li>
+                            <li role="presentation">
+                                <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
+                            </li>
                         {% endif %}
                         {% if marinaHumedaCotizacion.validacliente == 2 %}
                             <li role="presentation">
                                 <a href="#pagos" aria-controls="pagos" role="tab" data-toggle="tab">Pagos</a>
+                            </li>
+                        {% endif %}
+                        {% if marinaHumedaCotizacion.cotizacionnotas %}
+                            <li role="presentation">
+                                <a href="#notas" aria-controls="notas" role="tab" data-toggle="tab">Notas</a>
                             </li>
                         {% endif %}
                     </ul>
@@ -551,6 +556,24 @@
                                 </div>
                             </div>
                         {% endif %}
+                        {% if marinaHumedaCotizacion.cotizacionnotas %}
+                            <div role="tabpanel" class="tab-pane" id="notas">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <ul class="timeline sin-linea">
+                                            {% for nota in marinaHumedaCotizacion.cotizacionnotas %}
+                                                <li>
+                                                    <div class="timeline-item">
+                                                        <span class="time">{{ nota.fechahoraregistro|date('d M. Y H:s') }}</span>
+                                                        <h3 class="timeline-header">{{ nota.descripcion }}</h3>
+                                                    </div>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
@@ -633,6 +656,15 @@
                             </div>
                         </div>
                     {% endif %}
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('marina-humeda_nota',{'id': marinaHumedaCotizacion.id}) }}">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                Nota
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -642,21 +674,21 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-      $('#reenviar').on('click', function () {
-        var url = "{{ path('marina-humeda_reenviar',{'id':'idcotizacion'}) }}";
-        url = url.replace("idcotizacion", $(this).data('idcotizacion'));
-        $.ajax({
-          method: "POST",
-          url: url,
-          success: function () {
-            $('#loading').hide();
-            $('#estatusEnvio').modal('show');
-            setTimeout(function () {
-              $('#estatusEnvio').modal('hide');
-            }, 3000);
-          }
+        $('#reenviar').on('click', function () {
+            var url = "{{ path('marina-humeda_reenviar',{'id':'idcotizacion'}) }}";
+            url = url.replace("idcotizacion", $(this).data('idcotizacion'));
+            $.ajax({
+                method: "POST",
+                url: url,
+                success: function () {
+                    $('#loading').hide();
+                    $('#estatusEnvio').modal('show');
+                    setTimeout(function () {
+                        $('#estatusEnvio').modal('hide');
+                    }, 3000);
+                }
+            });
         });
-      });
     </script>
 {% endblock %}
 {% block modals %}

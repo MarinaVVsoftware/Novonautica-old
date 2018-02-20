@@ -27,7 +27,7 @@
                                 Básicos</a>
                         </li>
                         <li role="presentation">
-                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Servicios</a>
+                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Servicios (MXN)</a>
                         </li>
                         <li role="presentation">
                             <a href="#totalusd" aria-controls="totalusd" role="tab" data-toggle="tab">Total (USD)</a>
@@ -329,11 +329,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <a href="#" class="add-producto btn btn-contorno-azul">
-                                        + Agrega Producto
-                                    </a>
                                     <a href="#" class="add-servicio btn btn-contorno-azul">
                                         + Agrega Servicio
+                                    </a>
+                                    <a href="#" class="add-producto btn btn-contorno-azul">
+                                        + Agrega Producto
                                     </a>
                                     <a href="#" id="" class="add-another-servicio btn btn-contorno-azul" data-cantidad="{{ form.acservicios|length }}" data-idlista="0">
                                         + Agregar Otro
@@ -621,7 +621,7 @@
                     url: url,
                     dataType: 'json',
                     success: function (barco) {
-                        JSON.stringify(barco);
+                        //JSON.stringify(barco);
                         var html = "<label>Modelo</label>" + "<div class='info-input'>" + barco.modelo + "</div>" +
                             "<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>" +
                             "<label>Manga</label>" + "<div class='info-input'>" + barco.manga + "</div>" +
@@ -652,7 +652,7 @@
                         var html = "<label>Cliente</label>" + "<div class='info-input'>" + cliente.nombre + "</div>" +
                             "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
                             "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
-                            "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>" +
+                            "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>";
                         $("#info-cliente").append(html);
                         $('#loading').hide();
                     }

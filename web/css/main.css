@@ -1113,3 +1113,14 @@ input[type="file"] + label * {
 .tabla-info td{
     padding: 3px;
 }
+.timeline > li > .timeline-item {
+    border-radius: 0;
+    background-color: #292e41;
+}
+.timeline > li > .timeline-item > .timeline-header {
+    color: #fff;
+    border-bottom-color: #0097f6;
+}
+.sin-linea:before{
+    width: 0px;
+}

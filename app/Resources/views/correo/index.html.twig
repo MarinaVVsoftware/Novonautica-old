@@ -19,6 +19,10 @@
                             <thead>
                             <tr>
                                 <th>Fecha</th>
+                                <th>Barco</th>
+                                <th>Cliente</th>
+                                <th>Capitán</th>
+                                <th>Responsable</th>
                                 <th>Tipo</th>
                                 <th>Descripción</th>
                                 <th class="no-sort"></th>
@@ -44,12 +48,12 @@
         $('.table-novo').DataTable({
           ...settings,
           ajax: '{{ path('historial-correo_index') }}',
-          order: [[3, 'desc']],
+          order: [[0, 'desc']],
           createdRow: function (row, data) {
-            let actionCell = row.cells[3];
+            let actionCell = row.cells[7];
             actionCell.classList.add('text-center');
             actionCell.innerHTML = `
-             <a href="cotizacion-pdf?folio=${data[3].folio}"
+             <a href="cotizacion-pdf?folio=${data[7].folio}"
              target="_blank" class="btn btn-xs btn-azul"
              style="margin: 5px;">PDF</a>
             `;

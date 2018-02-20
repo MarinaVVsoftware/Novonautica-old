@@ -44,6 +44,13 @@ class MarinaHumedaCotizacion
     private $fechaSalida;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="diasEstadia", type="integer", nullable=true)
+     */
+    private $diasEstadia;
+
+    /**
      * @var float
      *
      * @ORM\Column(name="descuento", type="float", nullable=true)
@@ -285,11 +292,19 @@ class MarinaHumedaCotizacion
      */
     private $slipmovimiento;
 
+    /**
+     * @Assert\Valid()
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CotizacionNota", mappedBy="mhcotizacion",cascade={"persist","remove"})
+     */
+    private $cotizacionnotas;
+
     public function __construct()
     {
         $this->mhcservicios = new ArrayCollection();
         $this->pagos = new ArrayCollection();
         $this->notificarCliente = true;
+        $this->cotizacionnotas = new ArrayCollection();
     }
 
     public function __toString()
@@ -1101,5 +1116,68 @@ class MarinaHumedaCotizacion
     public function setNotificarCliente($notificarCliente)
     {
         $this->notificarCliente = $notificarCliente;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDiasEstadia()
+    {
+        return $this->diasEstadia;
+    }
+
+    /**
+     * @param int $diasEstadia
+     */
+    public function setDiasEstadia($diasEstadia)
+    {
+        $this->diasEstadia = $diasEstadia;
+    }
+
+    /**
+     * Get notificarCliente.
+     *
+     * @return bool
+     */
+    public function getNotificarCliente()
+    {
+        return $this->notificarCliente;
+    }
+
+    /**
+     * Add cotizacionnota.
+     *
+     * @param \AppBundle\Entity\CotizacionNota $cotizacionnota
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function addCotizacionnota(\AppBundle\Entity\CotizacionNota $cotizacionnota)
+    {
+        $cotizacionnota->setMhcotizacion($this);
+        $this->cotizacionnotas[] = $cotizacionnota;
+
+        return $this;
+    }
+
+    /**
+     * Remove cotizacionnota.
+     *
+     * @param \AppBundle\Entity\CotizacionNota $cotizacionnota
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeCotizacionnota(\AppBundle\Entity\CotizacionNota $cotizacionnota)
+    {
+        return $this->cotizacionnotas->removeElement($cotizacionnota);
+    }
+
+    /**
+     * Get cotizacionnotas.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCotizacionnotas()
+    {
+        return $this->cotizacionnotas;
     }
 }

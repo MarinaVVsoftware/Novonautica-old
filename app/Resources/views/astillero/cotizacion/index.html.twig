@@ -13,7 +13,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive scroll-novo">
-                    <table class="table text-center">
+                    <table class="table-novo table text-center">
                         <thead>
                         <tr>
                             <th>Folio</th>
@@ -111,3 +111,21 @@
         </section>
     </div>
 {% endblock %}
+{#{% block javascripts %}#}
+    {#{{ parent() }}#}
+    {#<script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>#}
+    {#<script type="text/javascript">#}
+        {#(function ($, settings) {#}
+            {#$('.table-novo').DataTable({#}
+                    {#...settings,#}
+                {#ajax: '{{ path('astillero_index') }}',#}
+                {#order: [[0, 'desc']],#}
+                {#createdRow: function (tr, data) {#}
+                {#let lastTd = tr.querySelector('td:last-child');#}
+                {#let entryPath = `{{ app.request.requestUri }}${data[2]}`;#}
+
+           {#z> },#}
+        {#});#}
+        {#})(jQuery, datatablesSettings);#}
+    {#</script>#}
+{#{% endblock %}#}
