@@ -5,7 +5,9 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\OrdenDeTrabajo;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Ordendetrabajo controller.
@@ -25,7 +27,7 @@ class OrdenDeTrabajoController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $ordenDeTrabajos = $em->getRepository('AppBundle:OrdenDeTrabajo')->findAll();
-
+dump($ordenDeTrabajos);
         return $this->render('ordendetrabajo/index.html.twig', array(
             'ordenDeTrabajos' => $ordenDeTrabajos,
             'title' => 'Ordenes de trabajo'
@@ -57,6 +59,29 @@ class OrdenDeTrabajoController extends Controller
             'form' => $form->createView(),
             'title' => 'Nueva Orden de Trabajo'
         ));
+    }
+
+    /**
+     * @Route("/buscarcotizacion", name="odt_busca_cotizacion")
+     * @Method({"GET"})
+     */
+    public function buscarCotizacionAction(Request $request){
+        $idcotizacion=$request->get('idcotizacion');
+        $em = $this->getDoctrine()->getManager();
+
+        $cotizacion = $em->getRepository('AppBundle:AstilleroCotizacion')
+            ->createQueryBuilder('ac')
+            ->select('ac','cliente','barco','AstilleroCotizaServicio','AstilleroServicioBasico','AstilleroProducto','AstilleroServicio')
+            ->join('ac.cliente','cliente')
+            ->join('ac.barco','barco')
+            ->join('ac.acservicios','AstilleroCotizaServicio')
+            ->leftJoin('AstilleroCotizaServicio.astilleroserviciobasico','AstilleroServicioBasico')
+            ->leftJoin('AstilleroCotizaServicio.producto','AstilleroProducto')
+            ->leftJoin('AstilleroCotizaServicio.servicio','AstilleroServicio')
+            ->andWhere('ac.id = '.$idcotizacion)
+            ->getQuery()
+            ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        return $this->json($cotizacion);
     }
 
     /**

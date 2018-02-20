@@ -7,12 +7,60 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">{{ title }}</h3>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body panel-pestanias">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="primero active">
+                            <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#fotografias" aria-controls="fotografias" role="tab" data-toggle="tab">Fotografías</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#asignacion" aria-controls="asignacion" role="tab" data-toggle="tab">Asignación</a>
+                        </li>
+                    </ul>
                     {{ form_start(form) }}
-                    <div class="row">
-                        <div class="col-sm-6">
-                            {{ form_widget(form) }}
-                            <button class="btn btn-azul" type="submit">Guardar</button>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="generales">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    {{ form_widget(form) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div id="datos-cotizacion"></div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <small class="pull-left">Precios en USD</small>
+                                    <small class="pull-right">Tipo de cambio: <span id="precio-dolar">0</span> MXN</small>
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Cantidad</th>
+                                            <th>Producto / Servicio</th>
+                                            <th>Prec. Unid.</th>
+                                            <th>Sub-Total</th>
+                                            <th>IVA</th>
+                                            <th>Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="servicios-cotizacion">
+
+                                        </tbody>
+                                    </table>
+                                    <small>Iva: <span id="porcentaje-iva">-</span>%</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="fotografias">
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="asignacion">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button class="btn btn-azul" type="submit">Guardar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     {{ form_end(form) }}
@@ -20,4 +68,72 @@
             </div>
         </section>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+<script type="text/javascript">
+    (function ($) {
+        $('.buscarfolio').change(function (e) {
+            $('#datos-cotizacion').empty();
+            $('#servicios-cotizacion').empty();
+            $('#porcentaje-iva').html('-');
+            $('#precio-dolar').html('0');
+            $.ajax({
+                method: "GET",
+                url: '{{ path('odt_busca_cotizacion') }}',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                type: "POST",
+                data: {
+                  'idcotizacion':$(this).val()
+                },
+                success: function (cotizacion) {
+                    console.log(cotizacion);
+                    $('#datos-cotizacion').html('<div class="row"><div class="col-sm-12"><div class="letra-azul">Nombre:</div><ul>'+cotizacion[0].cliente.nombre+'</ul></div></div>'+
+                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Teléfono:</div><ul>'+cotizacion[0].cliente.telefono+'</ul></div></div>'+
+                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Celular:</div><ul>'+cotizacion[0].cliente.celular+'</ul></div></div>'+
+                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">E-mail:</div><ul>'+cotizacion[0].cliente.correo+'</ul></div></div>'+
+                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Embarcación:</div><ul>'+cotizacion[0].barco.nombre+'</ul></div></div>'+
+                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Modelo:</div><ul>'+cotizacion[0].barco.modelo+'</ul></div></div>'+
+                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Calado:</div><ul>'+cotizacion[0].barco.calado+'</ul></div></div>'+
+                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Manga:</div><ul>'+cotizacion[0].barco.manga+'</ul></div></div>'+
+                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Eslora:</div><ul>'+cotizacion[0].barco.eslora+'</ul></div></div>'
+                    );
+
+                    for(var i=0;i<cotizacion[0].acservicios.length;i++){
+                        var elemento = '';
+                        var unidad = '';
+                        if(cotizacion[0].acservicios[i].servicio){
+                            elemento = cotizacion[0].acservicios[i].servicio.nombre;
+                        }
+                        if(cotizacion[0].acservicios[i].producto){
+                            elemento = cotizacion[0].acservicios[i].producto.nombre;
+                        }
+                        if(cotizacion[0].acservicios[i].astilleroserviciobasico){
+                            elemento = cotizacion[0].acservicios[i].astilleroserviciobasico.nombre;
+                        }
+                        $('#servicios-cotizacion').append('<tr><td>'+cotizacion[0].acservicios[i].cantidad+'</td>' +
+                                                                '<td>'+elemento+'</td>' +
+                                                                '<td>$ '+(cotizacion[0].acservicios[i].precio/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
+                                                                '<td>$ '+(cotizacion[0].acservicios[i].subtotal/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
+                                                                '<td>$ '+(cotizacion[0].acservicios[i].iva/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
+                                                                '<td>$ '+(cotizacion[0].acservicios[i].total/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td></tr>');
+                    }
+                    $('#porcentaje-iva').html(cotizacion[0].iva);
+                    $('#precio-dolar').html((cotizacion[0].dolar/100).toFixed(2));
+                    $('#loading').hide();
+                },
+                error: function (jqXHR, exception) {
+                    if (jqXHR.status === 405) {
+                        console.error("METHOD NOT ALLOWED!");
+                    }
+                    $('#loading').hide();
+                }
+            }).fail(function () {
+                $('#loading').hide();
+            });
+
+        });
+    })(jQuery);
+</script>
 {% endblock %}

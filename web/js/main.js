@@ -563,8 +563,9 @@ $('#appbundle_marinahumedacotizacion_fechaLlegada').on("change", function () {
     var llegada = $(this).val();
     var salida = $('#appbundle_marinahumedacotizacion_fechaSalida').val();
     dias_estadia = diasEntreFechas(llegada, salida);
-    $('#dias_estadia_cantidad').html(dias_estadia);
-    $('#dias_estadia_cantidad').data('valor', dias_estadia);
+    // $('#dias_estadia_cantidad').html(dias_estadia);
+    // $('#dias_estadia_cantidad').data('valor', dias_estadia);
+    $('#appbundle_marinahumedacotizacion_diasEstadia').val(dias_estadia);
 
 
     de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100);
@@ -593,8 +594,9 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on("change", function () {
     var llegada = $('#appbundle_marinahumedacotizacion_fechaLlegada').val();
     var salida = $(this).val();
     dias_estadia = diasEntreFechas(llegada, salida);
-    $('#dias_estadia_cantidad').html(dias_estadia);
-    $('#dias_estadia_cantidad').data('valor', dias_estadia);
+    // $('#dias_estadia_cantidad').html(dias_estadia);
+    // $('#dias_estadia_cantidad').data('valor', dias_estadia);
+    $('#appbundle_marinahumedacotizacion_diasEstadia').val(dias_estadia);
 
     de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100);
     de_precio_mxn = de_precio * dolar;
@@ -618,9 +620,27 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on("change", function () {
 });
 
 //-- Días estadía --
+$('#appbundle_marinahumedacotizacion_diasEstadia').keyup(function () {
+    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+    dias_estadia = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
+    de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100);
+    de_precio_mxn = de_precio * dolar;
+    $('#de_cantidad').html(dias_estadia);
+    $('#de_cantidad_mxn').html(dias_estadia);
+    calculaSubtotales(dias_estadia, de_precio, $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
+    calculaSubtotales(dias_estadia, de_precio_mxn, $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
+    e_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
+    e_precio_mxn = e_precio * dolar;
+    $('#e_cantidad').html(dias_estadia);
+    $('#e_cantidad_mxn').html(dias_estadia);
+    calculaSubtotales(dias_estadia, e_precio, $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+    calculaSubtotales(dias_estadia, e_precio_mxn, $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+    calculaTotales();
+});
 $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change', function () {
     dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-    de_cantidad = $('#dias_estadia_cantidad').data('valor');
+    //de_cantidad = $('#dias_estadia_cantidad').data('valor');
+    de_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
     de_precio = ($(this).val() / 100);
     de_precio_mxn = (de_precio * dolar).toFixed(2);
 
@@ -647,7 +667,8 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change', functi
 
 $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').on('change', function () {
     dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-    e_cantidad = $('#dias_estadia_cantidad').data('valor');
+    //e_cantidad = $('#dias_estadia_cantidad').data('valor');
+    e_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
     e_precio = ($(this).val() / 100);
     e_precio_mxn = (e_precio * dolar).toFixed(2);
 
@@ -673,7 +694,8 @@ $('#appbundle_marinahumedacotizacion_dolar').keyup(function () {
 function recalculaSubtotalesYtotal() {
     dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
 
-    dias_estadia = $('#dias_estadia_cantidad').data('valor');
+    // dias_estadia = $('#dias_estadia_cantidad').data('valor');
+    dias_estadia = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
 
     de_cantidad = dias_estadia;
     de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100;
@@ -803,13 +825,13 @@ function calculaSubtotalesAdicionales(fila) {
     var ivaAd = (subtotalAd * iva) / 100
     var totalAd = subtotalAd + ivaAd;
 
-    fila.children('.valorsubtotal').html('$ ' + parseFloat(subtotalAd).toFixed(2));
+    fila.children('.valorsubtotal').html('$ ' + (subtotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     fila.children('.valorsubtotal').data('valor', subtotalAd);
 
-    fila.children('.valoriva').html('$ ' + parseFloat(ivaAd).toFixed(2));
+    fila.children('.valoriva').html('$ ' + (ivaAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     fila.children('.valoriva').data('valor', ivaAd);
 
-    fila.children('.valortotal').html('$ ' + parseFloat(totalAd).toFixed(2));
+    fila.children('.valortotal').html('$ ' + (totalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     fila.children('.valortotal').data('valor', totalAd);
     calculaTotalesAdicionales();
 }
@@ -825,9 +847,9 @@ function calculaTotalesAdicionales() {
         granTotalAd += $(this).children('.valortotal').data('valor');
     });
 
-    $('#gransubtot').html(parseFloat(granSubtotalAd).toFixed(2));
-    $('#graniva').html(parseFloat(granIvaAd).toFixed(2));
-    $('#grantot').html(parseFloat(granTotalAd).toFixed(2));
+    $('#gransubtot').html((granSubtotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#graniva').html((granIvaAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#grantot').html((granTotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 
 }
 
@@ -1154,13 +1176,13 @@ function calculaSubtotalesAstillero(fila) {
     var subtotalAd = cantidadAd * precioAd;
     var ivaAd = (subtotalAd * iva) / 100;
     var totalAd = subtotalAd + ivaAd;
-    fila.children('.valorsubtotal').html('$ ' + parseFloat(subtotalAd).toFixed(2));
+    fila.children('.valorsubtotal').html('$ ' + (subtotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     fila.children('.valorsubtotal').data('valor', subtotalAd);
 
-    fila.children('.valoriva').html('$ ' + parseFloat(ivaAd).toFixed(2));
+    fila.children('.valoriva').html('$ ' + (ivaAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     fila.children('.valoriva').data('valor', ivaAd);
 
-    fila.children('.valortotal').html('$ ' + parseFloat(totalAd).toFixed(2));
+    fila.children('.valortotal').html('$ ' + (totalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     fila.children('.valortotal').data('valor', totalAd);
     calculaTotalesAstillero();
     calculaTotalesAstilleroMXN();
@@ -1179,9 +1201,9 @@ function calculaTotalesAstillero() {
         }
     });
 
-    $('#gransubtot').html(parseFloat(granSubtotalAd).toFixed(2));
-    $('#graniva').html(parseFloat(granIvaAd).toFixed(2));
-    $('#grantot').html(parseFloat(granTotalAd).toFixed(2));
+    $('#gransubtot').html((granSubtotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#graniva').html((granIvaAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#grantot').html((granTotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 
 }
 
@@ -1198,12 +1220,11 @@ function calculaTotalesAstilleroMXN() {
         }
     });
 
-    $('#gransubtot_mxn').html(parseFloat(granSubtotalAd).toFixed(2));
-    $('#graniva_mxn').html(parseFloat(granIvaAd).toFixed(2));
-    $('#grantot_mxn').html(parseFloat(granTotalAd).toFixed(2));
+    $('#gransubtot_mxn').html((granSubtotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#graniva_mxn').html((granIvaAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#grantot_mxn').html((granTotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 
 }
-
 /*
     Mostrar nombre de archivos en input file
  */
@@ -1232,7 +1253,7 @@ const datatablesSettings = {
     language: {
         lengthMenu: 'Mostrar _MENU_ entradas',
         zeroRecords: 'No hay entradas',
-        info: 'Mostrando la pagina _PAGE_ of _PAGES_',
+        info: 'Mostrando la pagina _PAGE_ de _PAGES_',
         infoEmpty: 'No hay entradas disponibles',
         infoFiltered: '(filtados de _MAX_ total de entradas)',
         processing: 'Procesando...',

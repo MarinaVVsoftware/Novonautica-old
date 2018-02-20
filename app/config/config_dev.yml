@@ -38,11 +38,11 @@ monolog:
         #    level: info
 
 swiftmailer:
-    delivery_addresses: ['me@example.com']
-    disable_delivery: true
+#    delivery_addresses: ['me@example.com']
+#    disable_delivery: true
 
 knp_snappy:
     pdf:
         enabled:    true
-#        binary: "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-        binary: /usr/local/bin/wkhtmltopdf
+        binary: "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+#        binary: /usr/local/bin/wkhtmltopdf

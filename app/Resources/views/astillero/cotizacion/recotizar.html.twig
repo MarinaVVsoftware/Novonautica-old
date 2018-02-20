@@ -31,7 +31,7 @@
                                 Básicos</a>
                         </li>
                         <li role="presentation">
-                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Servicios</a>
+                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Servicios (MXN)</a>
                         </li>
                         <li role="presentation">
                             <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (USD)</a>
@@ -307,7 +307,7 @@
                                         </tr>
                                         <tr id="fila_estadia" class="servicio-agregado">
                                             <td id="estadia_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios.1.cantidad }}" data-dias="{{ astilleroCotizacion.diasEstadia }}" data-eslora="{{ astilleroCotizacion.barco.eslora }}">
-                                                {{ astilleroCotizacion.acservicios.1.cantidad }}
+                                                {{ astilleroCotizacion.acservicios.1.cantidad }} (pie por día)
                                             </td>
                                             <td>Estadía</td>
                                             <td id="estadia_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios.1.precio/100 }}">$ {{ (astilleroCotizacion.acservicios.1.precio/100)|number_format(2) }}</td>

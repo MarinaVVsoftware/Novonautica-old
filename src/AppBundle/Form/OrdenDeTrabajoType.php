@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,7 +20,14 @@ class OrdenDeTrabajoType extends AbstractType
                 'class' => 'AppBundle\Entity\AstilleroCotizacion',
                 'label' => 'Cotización',
                 'placeholder' => 'Seleccionar...',
-                'attr' => ['class' => 'select-buscador'],
+                'attr' => ['class' => 'select-buscador buscarfolio'],
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('ac')
+                        ->select('ac')
+                        ->andWhere('ac.validacliente = 2')
+                        ->andWhere('ac.estatus = 1')
+                        ->orderBy('ac.folio');
+                }
             ]);
     }
     

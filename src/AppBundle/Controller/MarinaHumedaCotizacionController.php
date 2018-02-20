@@ -3,12 +3,15 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Correo;
+use AppBundle\Entity\CotizacionNota;
 use AppBundle\Entity\CuentaBancaria;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Entity\ValorSistema;
+use AppBundle\Form\CotizacionNotaType;
 use AppBundle\Form\MarinaHumedaCotizacionAceptadaType;
 use AppBundle\Form\MarinaHumedaCotizacionGasolinaType;
+use AppBundle\Form\MarinaHumedaCotizacionNotaType;
 use AppBundle\Form\MarinaHumedaCotizacionRechazadaType;
 use AppBundle\Form\MarinaHumedaCotizacionType;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -130,10 +133,11 @@ class MarinaHumedaCotizacionController extends Controller
             $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
             $dolar = $marinaHumedaCotizacion->getDolar();
 
-            $llegada = $marinaHumedaCotizacion->getFechaLlegada();
-            $salida = $marinaHumedaCotizacion->getFechaSalida();
-            $diferenciaDias = date_diff($llegada, $salida);
-            $cantidadDias = ($diferenciaDias->days);
+//            $llegada = $marinaHumedaCotizacion->getFechaLlegada();
+//            $salida = $marinaHumedaCotizacion->getFechaSalida();
+//            $diferenciaDias = date_diff($llegada, $salida);
+//            $cantidadDias = ($diferenciaDias->days);
+            $cantidadDias = $marinaHumedaCotizacion->getDiasEstadia();
 
             // Días Estadía
             $tiposervicio = 1;
@@ -199,7 +203,7 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setFecharegistro($fechaHoraActual)
                 ->setFolio($folionuevo)
                 ->setFoliorecotiza(0);
-            $folioactualiza = $this->getDoctrine()
+            $this->getDoctrine()
                 ->getRepository(ValorSistema::class)
                 ->find(1)
                 ->setFolioMarina($folionuevo);
@@ -277,7 +281,7 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setFecharegistro($fechaHoraActual)
                 ->setFolio($folionuevo)
                 ->setFoliorecotiza(0);
-            $folioactualiza = $this->getDoctrine()
+            $this->getDoctrine()
                 ->getRepository(ValorSistema::class)
                 ->find(1)
                 ->setFolioMarina($folionuevo);
@@ -507,6 +511,32 @@ class MarinaHumedaCotizacionController extends Controller
         }
 
         return $this->render('marinahumeda/cotizacion/pago/edit.html.twig', [
+            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     *
+     * @Route("/{id}/nota", name="marina-humeda_nota")
+     * @Method({"GET", "POST"})
+     */
+    public function agregaNotaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $cotizacionnota = new CotizacionNota();
+        $marinaHumedaCotizacion->addCotizacionnota($cotizacionnota);
+        $form = $this->createForm(CotizacionNotaType::class, $cotizacionnota);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $fechaHoraActual = new \DateTimeImmutable('now');
+            $cotizacionnota->setFechahoraregistro($fechaHoraActual);
+            $em->persist($marinaHumedaCotizacion);
+            $em->flush();
+            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
+        }
+        return $this->render('marinahumeda/cotizacion/nota/new.html.twig', [
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'form' => $form->createView(),
         ]);
@@ -1015,6 +1045,7 @@ class MarinaHumedaCotizacionController extends Controller
                             ->setFrom('noresponder@novonautica.com')
                             ->setTo($marinaHumedaCotizacion->getCliente()->getCorreo())
                             ->setBcc('admin@novonautica.com')
+                            ->setCc([$marinaHumedaCotizacion->getBarco()->getCorreoCapitan(),$marinaHumedaCotizacion->getBarco()->getCorreoResponsable()])
                             ->setBody(
                                 $this->renderView('marinahumeda/cotizacion/correo-clientevalida.twig', [
                                     'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
@@ -1026,22 +1057,25 @@ class MarinaHumedaCotizacionController extends Controller
                             ->attach($attachment);
 
                         $mailer->send($message);
+                        if ($marinaHumedaCotizacion->getFoliorecotiza() == 0) {
+                            $folio = $marinaHumedaCotizacion->getFolio();
+                            $tipoCorreo = 'Cotización servicio Marina Humeda';
+                        } else {
+                            $folio = $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza();
+                            $tipoCorreo = 'Recotización servicio Marina Humeda';
+                        }
+                        $historialCorreo = new Correo();
+                        $historialCorreo
+                            ->setFecha(new \DateTime('now'))
+                            ->setTipo($tipoCorreo)
+                            ->setDescripcion('Envio de cotización con folio: ' . $folio)
+                            ->setFolioCotizacion($folio)
+                            ->setMhcotizacion($marinaHumedaCotizacion)
+                        ;
+                        $em->persist($historialCorreo);
                     }
 
-                    if ($marinaHumedaCotizacion->getFoliorecotiza() == 0) {
-                        $folio = $marinaHumedaCotizacion->getFolio();
-                        $tipoCorreo = 'Cotización servicio Marina Humeda';
-                    } else {
-                        $folio = $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza();
-                        $tipoCorreo = 'Recotización servicio Marina Humeda';
-                    }
-                    $historialCorreo = new Correo();
-                    $historialCorreo
-                        ->setFecha(new \DateTime('now'))
-                        ->setTipo($tipoCorreo)
-                        ->setDescripcion('Envio de cotización con folio: ' . $folio)
-                        ->setFolioCotizacion($folio);
-                    $em->persist($historialCorreo);
+
 
                 } else {
                     if ($marinaHumedaCotizacion->getValidanovo() == 1) {
@@ -1108,6 +1142,7 @@ class MarinaHumedaCotizacionController extends Controller
             ->setFrom('noresponder@novonautica.com')
             ->setTo($marinaHumedaCotizacion->getCliente()->getCorreo())
             ->setBcc('admin@novonautica.com')
+
             ->setBody(
                 $this->renderView('marinahumeda/cotizacion/correo-clientevalida.twig', [
                     'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
@@ -1133,7 +1168,9 @@ class MarinaHumedaCotizacionController extends Controller
             ->setFecha(new \DateTime('now'))
             ->setTipo($tipoCorreo)
             ->setDescripcion('Reenvio de cotización con Folio: ' . $folio)
-            ->setFolioCotizacion($folio);
+            ->setFolioCotizacion($folio)
+            ->setMhcotizacion($marinaHumedaCotizacion)
+        ;
 
         $em->persist($historialCorreo);
         $em->persist($marinaHumedaCotizacion);

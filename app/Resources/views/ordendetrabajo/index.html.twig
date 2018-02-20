@@ -13,16 +13,24 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>Id</th>
-                                <th>Observaciones</th>
+                                <th>Folio</th>
+                                <th>Barco</th>
+                                <th>Cliente</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for ordenDeTrabajo in ordenDeTrabajos %}
                                 <tr>
-                                    <td>{{ ordenDeTrabajo.id }}</td>
-                                    <td>{{ ordenDeTrabajo.observaciones }}</td>
+                                    <td>
+                                        {% if ordenDeTrabajo.astilleroCotizacion.foliorecotiza == 0 %}
+                                            {{ ordenDeTrabajo.astilleroCotizacion.folio }}
+                                        {% else %}
+                                            {{ ordenDeTrabajo.astilleroCotizacion.folio }}-{{ ordenDeTrabajo.astilleroCotizacion.foliorecotiza }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ ordenDeTrabajo.astilleroCotizacion.barco.nombre }}</td>
+                                    <td>{{ ordenDeTrabajo.astilleroCotizacion.cliente.nombre }}</td>
                                     <td>
                                         {#<a class="btn btn-morado-claro" href="{{ path('ordendetrabajo_show', { 'id': ordenDeTrabajo.id }) }}">Ver</a>#}
                                         {#<a class="btn btn-azul" href="{{ path('ordendetrabajo_edit', { 'id': ordenDeTrabajo.id }) }}">Editar</a>#}
@@ -35,7 +43,9 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <a class="btn btn-azul" href="{{ path('ordendetrabajo_new') }}">Nuevo ODT</a>
+                <a class="btn btn-azul" href="{{ path('ordendetrabajo_new') }}">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Nuevo ODT
+                </a>
             </div>
         </div>
     </section>

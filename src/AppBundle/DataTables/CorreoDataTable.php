@@ -89,9 +89,13 @@ class CorreoDataTable extends AbstractDataTableHandler
 
             /** @var Correo $correo */
             $correo = $correos[$index];
-
+            $cotizacion = $correo->getMhcotizacion() ? $correo->getMhcotizacion() : $correo->getAcotizacion();
             $results->data[] = [
                 $correo->getFecha()->format('Y/m/d'),
+                $cotizacion ? $cotizacion->getBarco()->getNombre() : '',
+                $cotizacion ? $cotizacion->getCliente()->getNombre() : '',
+                $cotizacion ? $cotizacion->getBarco()->getNombreCapitan() : '',
+                $cotizacion ? $cotizacion->getBarco()->getNombreResponsable() : '',
                 $correo->getTipo(),
                 $correo->getDescripcion(),
                 [

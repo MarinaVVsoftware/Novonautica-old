@@ -163,7 +163,8 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <label>Días Estadía:</label>
-                                            <div id="dias_estadia_cantidad" class='info-input' data-valor="0">0</div>
+                                            {#<div id="dias_estadia_cantidad" class='info-input' data-valor="0">0</div>#}
+                                            {{ form_widget(form.diasEstadia) }}
                                         </div>
 
                                         <div class="col-sm-6">
@@ -476,12 +477,11 @@
             url: url,
             dataType: 'json',
             success: function (cliente) {
-              JSON.stringify(cliente);
+              //JSON.stringify(cliente);
               var html = "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
                   "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
-                  "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>" +
+                  "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>";
                   $("#info-cliente").append(html);
-
               $('#loading').hide();
             },
             error: function (jqXHR, exception) {

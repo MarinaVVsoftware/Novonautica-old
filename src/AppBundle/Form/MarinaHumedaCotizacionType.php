@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -50,6 +51,10 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'attr' => ['class' => 'datepicker input-calendario',
                     'readonly' => true],
                 'format' => 'yyyy-MM-dd'
+            ])
+            ->add('diasEstadia',TextType::class,[
+                'label'=>'Días Estadia',
+                'attr' => ['class' => 'esnumero'],
             ])
             ->add('descuento', null, [
                 'empty_data' => 0,
@@ -135,6 +140,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('cliente')
                     ->remove('fechaLlegada')
                     ->remove('fechaSalida')
+                    ->remove('diasEstadia')
                     ->remove('descuento')
                     ->remove('dolar')
                     ->remove('mensaje')
@@ -149,6 +155,7 @@ class MarinaHumedaCotizacionType extends AbstractType
 //                    ->remove('barco')
                     ->remove('fechaLlegada')
                     ->remove('fechaSalida')
+                    ->remove('diasEstadia')
                     ->remove('descuento')
                     ->remove('dolar')
                     ->remove('mensaje')

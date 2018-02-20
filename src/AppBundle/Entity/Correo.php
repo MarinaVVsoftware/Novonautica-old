@@ -50,6 +50,18 @@ class Correo
     private $folioCotizacion;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\MarinaHumedaCotizacion")
+     * @ORM\JoinColumn(name="idmhcotizacion", referencedColumnName="id")
+     */
+    private $mhcotizacion;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\AstilleroCotizacion")
+     * @ORM\JoinColumn(name="idacotizacion", referencedColumnName="id")
+     */
+    private $acotizacion;
+
+    /**
      * Get id
      *
      * @return int
@@ -153,5 +165,53 @@ class Correo
     public function getFolioCotizacion()
     {
         return $this->folioCotizacion;
+    }
+
+    /**
+     * Set mhcotizacion.
+     *
+     * @param \AppBundle\Entity\MarinaHumedaCotizacion|null $mhcotizacion
+     *
+     * @return Correo
+     */
+    public function setMhcotizacion(\AppBundle\Entity\MarinaHumedaCotizacion $mhcotizacion = null)
+    {
+        $this->mhcotizacion = $mhcotizacion;
+
+        return $this;
+    }
+
+    /**
+     * Get mhcotizacion.
+     *
+     * @return \AppBundle\Entity\MarinaHumedaCotizacion|null
+     */
+    public function getMhcotizacion()
+    {
+        return $this->mhcotizacion;
+    }
+
+    /**
+     * Set acotizacion.
+     *
+     * @param \AppBundle\Entity\AstilleroCotizacion|null $acotizacion
+     *
+     * @return Correo
+     */
+    public function setAcotizacion(\AppBundle\Entity\AstilleroCotizacion $acotizacion = null)
+    {
+        $this->acotizacion = $acotizacion;
+
+        return $this;
+    }
+
+    /**
+     * Get acotizacion.
+     *
+     * @return \AppBundle\Entity\AstilleroCotizacion|null
+     */
+    public function getAcotizacion()
+    {
+        return $this->acotizacion;
     }
 }
