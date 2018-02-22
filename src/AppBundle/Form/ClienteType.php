@@ -25,8 +25,14 @@ class ClienteType extends AbstractType
                 'label' => 'Télefono',
                 'required' => false
             ])
-            ->add('celular', TextType::class)
-            ->add('direccion', TextType::class, ['label' => 'Dirección'])
+            ->add('celular', TextType::class, [
+                'label' => 'Dirección',
+                'required' => false
+            ])
+            ->add('direccion', TextType::class, [
+                'label' => 'Dirección',
+                'required' => false
+            ])
             ->add('barcos', CollectionType::class, [
                 'entry_type' => BarcoType::class,
                 'label' => false,

@@ -47,14 +47,14 @@ class Barco
     /**
      * @var string
      *
-     * @ORM\Column(name="calado", type="string", length=100)
+     * @ORM\Column(name="calado", type="string", length=100, nullable=true)
      */
     private $calado;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="manga", type="string", length=100)
+     * @ORM\Column(name="manga", type="string", length=100, nullable=true)
      */
     private $manga;
 

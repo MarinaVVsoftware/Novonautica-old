@@ -68,15 +68,8 @@ class Cliente
 
     /**
      * @var string
-     * @Assert\NotBlank(
-     *     message="Celular no pude quedar vacío"
-     * )
-     * @Assert\Length(
-     *      min = 10,
-     *      minMessage = "El número celular no puede ser mayor a 10 digitos"
-     * )
      *
-     * @ORM\Column(name="celular", type="string", length=255)
+     * @ORM\Column(name="celular", type="string", length=255, nullable=true)
      */
     private $celular;
 
