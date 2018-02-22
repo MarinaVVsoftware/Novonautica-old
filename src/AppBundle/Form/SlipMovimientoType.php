@@ -33,6 +33,7 @@ class SlipMovimientoType extends AbstractType
                         ->andWhere(
                             $qb->expr()->eq('servicios.tipo', 1),
                             $qb->expr()->eq('mhc.validacliente', 2),
+                            $qb->expr()->gt('mhc.fechaLlegada', 'CURRENT_DATE()'),
                             $qb->expr()->isNull('mhc.slip'),
                             $qb->expr()->isNull('slipmovimiento.id')
                         )
