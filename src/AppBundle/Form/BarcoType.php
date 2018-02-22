@@ -28,10 +28,12 @@ class BarcoType extends AbstractType
             ->add('modelo',TextType::class,[
             ])
             ->add('calado',TextType::class,[
-                'attr' => ['class' => 'esdecimal']
+                'attr' => ['class' => 'esdecimal'],
+                'required' => false
             ])
             ->add('manga',TextType::class,[
-                'attr' => ['class' => 'esdecimal']
+                'attr' => ['class' => 'esdecimal'],
+                'required' => false
             ])
             ->add('eslora',TextType::class,[
                 'attr' => ['class' => 'esdecimal']
