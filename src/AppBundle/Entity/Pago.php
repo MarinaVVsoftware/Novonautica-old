@@ -106,11 +106,23 @@ class Pago
     private $cuentabancaria;
 
     /**
+     * @var \DateTimeImmutable
+     *
+     * @ORM\Column(name="fecha_registro", type="datetime_immutable", nullable=true)
+     */
+    private $fechaRegistro;
+
+    /**
      * @var Facturacion
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="pagos", cascade={"persist"})
      */
     private $factura;
+
+    public function __construct()
+    {
+        $this->fechaRegistro = new \DateTimeImmutable();
+    }
 
     public function __toString()
     {
@@ -334,6 +346,30 @@ class Pago
     public function getAcotizacion()
     {
         return $this->acotizacion;
+    }
+
+    /**
+     * Set fechaRegistro.
+     *
+     * @param \DateTimeImmutable|null $fechaRegistro
+     *
+     * @return Pago
+     */
+    public function setFechaRegistro($fechaRegistro = null)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro.
+     *
+     * @return \DateTimeImmutable|null
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
     }
 
     /**

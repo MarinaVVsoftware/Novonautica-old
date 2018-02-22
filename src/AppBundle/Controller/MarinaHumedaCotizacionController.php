@@ -387,12 +387,17 @@ class MarinaHumedaCotizacionController extends Controller
             } else {
                 $folio = $cotizacionAceptar->getFolio() . '-' . $cotizacionAceptar->getFoliorecotiza();
             }
+
             $valorSistema = new ValorSistema();
             $codigoSeguimiento = $folio . '-' . $valorSistema->generaToken(10);
 
             $cotizacionAceptar
                 ->setValidacliente(2)
                 ->setCodigoseguimiento($codigoSeguimiento);
+
+            // Fecha en la que acepto el cliente
+            $cotizacionAceptar->setRegistroValidaCliente(new \DateTimeImmutable());
+
             $em->persist($cotizacionAceptar);
             $em->flush();
 
@@ -402,12 +407,14 @@ class MarinaHumedaCotizacionController extends Controller
 
             $editForm = $this->createForm(MarinaHumedaCotizacionAceptadaType::class, $cotizacionAceptar);
             $editForm->handleRequest($request);
+
             if ($editForm->isSubmitted() && $editForm->isValid()) {
                 $cotizacionAceptar->setFecharespuesta(new \DateTime('now'));
                 $em->persist($cotizacionAceptar);
                 $em->flush();
                 return $this->redirectToRoute('marina-humeda_gracias');
             }
+
             return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', [
                 'mensaje1' => $mensaje1,
                 'mensaje2' => $mensaje2,
@@ -417,18 +424,23 @@ class MarinaHumedaCotizacionController extends Controller
                 'form' => $editForm->createView(),
                 'marinaHumedaCotizacion' => $cotizacionAceptar
             ]);
-        } else {
+        }
+        else {
             $cotizacionRechazar = $em->getRepository(MarinaHumedaCotizacion::class)
                 ->findOneBy(['tokenrechaza' => $token]);
+
             if ($cotizacionRechazar) {
                 $cotizacionRechazar->setValidacliente(1);
+                $cotizacionRechazar->setRegistroValidaCliente(new \DateTimeImmutable());
                 $em->persist($cotizacionRechazar);
                 $em->flush();
+
                 if ($cotizacionRechazar->getFoliorecotiza() == 0) {
                     $folio = $cotizacionRechazar->getFolio();
                 } else {
                     $folio = $cotizacionRechazar->getFolio() . '-' . $cotizacionRechazar->getFoliorecotiza();
                 }
+
                 $mensaje1 = '¡Oh-oh!';
                 $mensaje2 = 'La cotización ' . $folio . ' no ha sido aprobada.';
                 $mensaje3 = 'Nos gustaría saber su opinión o comentarios del motivo de su rechazo.';
@@ -436,12 +448,14 @@ class MarinaHumedaCotizacionController extends Controller
 
                 $editForm = $this->createForm(MarinaHumedaCotizacionRechazadaType::class, $cotizacionRechazar);
                 $editForm->handleRequest($request);
+
                 if ($editForm->isSubmitted() && $editForm->isValid()) {
                     $em->flush();
                     return $this->redirectToRoute('marina-humeda_gracias');
                 }
 
             }
+
             return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', [
                 'mensaje1' => $mensaje1,
                 'mensaje2' => $mensaje2,
@@ -498,6 +512,7 @@ class MarinaHumedaCotizacionController extends Controller
             } else {
                 $faltante = $total - $totPagado;
                 if ($faltante == 0) {
+                    $marinaHumedaCotizacion->setRegistroPagoCompletado(new \DateTimeImmutable());
                     $marinaHumedaCotizacion->setEstatuspago(2);
                 } else {
                     $marinaHumedaCotizacion->setEstatuspago(1);
@@ -1057,6 +1072,7 @@ class MarinaHumedaCotizacionController extends Controller
                             ->attach($attachment);
 
                         $mailer->send($message);
+
                         if ($marinaHumedaCotizacion->getFoliorecotiza() == 0) {
                             $folio = $marinaHumedaCotizacion->getFolio();
                             $tipoCorreo = 'Cotización servicio Marina Humeda';
@@ -1064,6 +1080,8 @@ class MarinaHumedaCotizacionController extends Controller
                             $folio = $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza();
                             $tipoCorreo = 'Recotización servicio Marina Humeda';
                         }
+
+                        // Guardar correo en el log de correos
                         $historialCorreo = new Correo();
                         $historialCorreo
                             ->setFecha(new \DateTime('now'))
@@ -1072,6 +1090,7 @@ class MarinaHumedaCotizacionController extends Controller
                             ->setFolioCotizacion($folio)
                             ->setMhcotizacion($marinaHumedaCotizacion)
                         ;
+
                         $em->persist($historialCorreo);
                     }
 
@@ -1083,6 +1102,9 @@ class MarinaHumedaCotizacionController extends Controller
                     }
                 }
             }
+
+            // Guardar la fecha en la que se valido la cotizacion por novonautica
+            $marinaHumedaCotizacion->setRegistroValidaNovo(new \DateTimeImmutable());
 
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
@@ -1142,7 +1164,6 @@ class MarinaHumedaCotizacionController extends Controller
             ->setFrom('noresponder@novonautica.com')
             ->setTo($marinaHumedaCotizacion->getCliente()->getCorreo())
             ->setBcc('admin@novonautica.com')
-
             ->setBody(
                 $this->renderView('marinahumeda/cotizacion/correo-clientevalida.twig', [
                     'marinaHumedaCotizacion' => $marinaHumedaCotizacion,

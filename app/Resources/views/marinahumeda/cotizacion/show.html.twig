@@ -1,5 +1,25 @@
 {% extends 'estructura/plantilla.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+        .timeline > li > .timeline-item {
+            border-radius: 0;
+            background-color: #292e41;
+        }
+
+        .timeline > li > .timeline-item > .timeline-header {
+            color: #fff;
+            border-bottom-color: #0097f6;
+        }
+
+        .timeline > li > .timeline-item > .timeline-body {
+            color: #fff;
+        }
+    </style>
+{% endblock %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -53,6 +73,11 @@
                                 <a href="#notas" aria-controls="notas" role="tab" data-toggle="tab">Notas</a>
                             </li>
                         {% endif %}
+                        <li role="timeline">
+                            <a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">
+                                Timeline
+                            </a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="generales">
@@ -574,6 +599,134 @@
                                 </div>
                             </div>
                         {% endif %}
+                        <div role="tabpanel" class="tab-pane" id="timeline">
+                            {% set mhfolio = marinaHumedaCotizacion.foliorecotiza ? marinaHumedaCotizacion.folio ~ marinaHumedaCotizacion.foliorecotiza : marinaHumedaCotizacion.folio %}
+                            <ul class="timeline">
+                                <li class="time-label">
+                                    <span class="bg-blue">{{ marinaHumedaCotizacion.fecharegistro|date('d M. Y') }}</span>
+                                </li>
+                                <li>
+                                    <i class="fa fa-file"></i>
+                                    <div class="timeline-item">
+                                        <h3 class="timeline-header">Se creo la cotizacion Folio: #{{ mhfolio }}</h3>
+                                    </div>
+                                </li>
+                                {% if marinaHumedaCotizacion.validanovo != 0 %}
+                                    {% if marinaHumedaCotizacion.validanovo == 2 %}
+                                        <li>
+                                            <i class="fa fa-check-circle bg-green"></i>
+                                            <div class="timeline-item">
+                                            <span class="time">
+                                                {{ marinaHumedaCotizacion.registroValidaNovo ? marinaHumedaCotizacion.registroValidaNovo|date('d M. Y H:s') : '' }}
+                                            </span>
+                                                <h3 class="timeline-header">Aceptada por novonautica</h3>
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <i class="fa fa-times bg-red"></i>
+                                            <div class="timeline-item">
+                                            <span class="time">
+                                                {{ marinaHumedaCotizacion.registroValidaNovo ? marinaHumedaCotizacion.registroValidaNovo|date('d M. Y H:s') : '' }}
+                                            </span>
+                                                <h3 class="timeline-header">Rechazada por novonautica</h3>
+                                                {% if marinaHumedaCotizacion.notasnovo %}
+                                                    <div class="timeline-body">
+                                                        {{ marinaHumedaCotizacion.notasnovo }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                                {% if marinaHumedaCotizacion.validacliente != 0 %}
+                                    {% if marinaHumedaCotizacion.validacliente == 2 %}
+                                        <li>
+                                            <i class="fa fa-check-square bg-green"></i>
+                                            <div class="timeline-item">
+                                                <span class="time">
+                                                    {{ marinaHumedaCotizacion.registroValidaCliente ? marinaHumedaCotizacion.registroValidaCliente|date('d M. Y H:s') : '' }}
+                                                </span>
+                                                <h3 class="timeline-header">Aceptada por el cliente</h3>
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <i class="fa fa-times bg-red"></i>
+                                            <div class="timeline-item">
+                                                <span class="time">
+                                                    {{ marinaHumedaCotizacion.registroValidaCliente ? marinaHumedaCotizacion.registroValidaCliente|date('d M. Y H:s') : '' }}
+                                                </span>
+                                                <h3 class="timeline-header">Rechazada por el cliente</h3>
+                                                {% if marinaHumedaCotizacion.notascliente %}
+                                                    <div class="timeline-body">
+                                                        {{ marinaHumedaCotizacion.notascliente }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                                {% if marinaHumedaCotizacion.estatuspago != 0 %}
+                                    {% set total = marinaHumedaCotizacion.total %}
+                                    {% set pagado = 0 %}
+                                    <li>
+                                        <i class="fa fa-usd bg-yellow"></i>
+                                        <div class="timeline-item">
+                                            <span class="time">
+                                                    {{ marinaHumedaCotizacion.fecharegistro ? marinaHumedaCotizacion.fecharegistro|date('d M. Y H:s') : '' }}
+                                                </span>
+                                            <h3 class="timeline-header">Nuevo saldo pendiente</h3>
+                                            <div class="timeline-body">
+                                                $ {{ (marinaHumedaCotizacion.total / 100)|number_format(2) }}
+                                                USD
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% for pago in marinaHumedaCotizacion.pagos %}
+                                        {% set pagado = pagado + pago.cantidad %}
+                                        <li>
+                                            <i class="fa fa-envelope bg-green"></i>
+                                            <div class="timeline-item">
+                                                <span class="time">
+                                                    {{ pago.fechaRegistro ? pago.fechaRegistro|date('d M. Y H:s') : '' }}
+                                                </span>
+                                                <h3 class="timeline-header">Nuevo abono</h3>
+                                                <div class="timeline-body">
+                                                    ${{ (pago.cantidad / 100)|number_format(2) }} USD
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {% if pago.factura %}
+                                            <li>
+                                                <i class="fa fa-file-pdf-o bg-blue"></i>
+                                                <div class="timeline-item">
+                                                <span class="time">
+                                                    {{ pago.factura.fecha|date('d M. Y H:s') }}
+                                                </span>
+                                                    <h3 class="timeline-header">Facturado</h3>
+                                                </div>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if marinaHumedaCotizacion.estatuspago == 2 %}
+                                        <li>
+                                            <i class="fa fa-dollar bg-green"></i>
+                                            <div class="timeline-item">
+                                                <h3 class="timeline-header">Pagado</h3>
+                                            </div>
+                                        </li>
+
+                                        <li class="time-label">
+                                            <span class="bg-blue">
+                                                {{ marinaHumedaCotizacion.registroPagoCompletado ? marinaHumedaCotizacion.registroPagoCompletado|date('d M. Y') : '' }}
+                                            </span>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+
+                            </ul>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">

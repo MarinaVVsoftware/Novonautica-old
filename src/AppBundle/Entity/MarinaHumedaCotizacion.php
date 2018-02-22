@@ -124,7 +124,7 @@ class MarinaHumedaCotizacion
     private $pagado;
 
     /**
-     * @var int
+     * @var int 0 = No ha pagado, 1 = Tiene adeudos, 2 = Ya pago
      *
      * @ORM\Column(name="estatuspago", type="smallint", nullable=true)
      */
@@ -139,18 +139,32 @@ class MarinaHumedaCotizacion
 
 
     /**
-     * @var int
+     * @var int Estatus: 1 Rechazado, 2 Aceptado
      *
      * @ORM\Column(name="validanovo", type="smallint")
      */
     private $validanovo;
 
     /**
-     * @var int
+     * @var \DateTimeImmutable
+     *
+     * @ORM\Column(name="registro_valida_novo", type="datetime_immutable", nullable=true)
+     */
+    private $registroValidaNovo;
+
+    /**
+     * @var int Estatus: 1 aceptado, 2 Rechazado
      *
      * @ORM\Column(name="validacliente", type="smallint")
      */
     private $validacliente;
+
+    /**
+     * @var \DateTimeImmutable
+     *
+     * @ORM\Column(name="registro_valida_cliente", type="datetime_immutable", nullable=true)
+     */
+    private $registroValidaCliente;
 
     /**
      * @var string
@@ -249,6 +263,13 @@ class MarinaHumedaCotizacion
     private $notificarCliente;
 
     /**
+     * @var \DateTimeImmutable
+     *
+     * @ORM\Column(name="registro_pago_completado", type="datetime_immutable", nullable=true)
+     */
+    private $registroPagoCompletado;
+
+    /**
      * @Groups({"currentOcupation"})
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="mhcotizaciones")
@@ -305,6 +326,9 @@ class MarinaHumedaCotizacion
         $this->pagos = new ArrayCollection();
         $this->notificarCliente = true;
         $this->cotizacionnotas = new ArrayCollection();
+        $this->registroValidaNovo = null;
+        $this->registroValidaCliente = null;
+        $this->registroPagoCompletado = null;
     }
 
     public function __toString()
@@ -569,6 +593,30 @@ class MarinaHumedaCotizacion
     }
 
     /**
+     * Set registroValidaNovo.
+     *
+     * @param \DateTimeImmutable|null $registroValidaNovo
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setRegistroValidaNovo($registroValidaNovo = null)
+    {
+        $this->registroValidaNovo = $registroValidaNovo;
+
+        return $this;
+    }
+
+    /**
+     * Get registroValidaNovo.
+     *
+     * @return \DateTimeImmutable|null
+     */
+    public function getRegistroValidaNovo()
+    {
+        return $this->registroValidaNovo;
+    }
+
+    /**
      * Set validacliente
      *
      * @param integer $validacliente
@@ -590,6 +638,30 @@ class MarinaHumedaCotizacion
     public function getValidacliente()
     {
         return $this->validacliente;
+    }
+
+    /**
+     * Set registroValidaCliente.
+     *
+     * @param \DateTimeImmutable|null $registroValidaCliente
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setRegistroValidaCliente($registroValidaCliente = null)
+    {
+        $this->registroValidaCliente = $registroValidaCliente;
+
+        return $this;
+    }
+
+    /**
+     * Get registroValidaCliente.
+     *
+     * @return \DateTimeImmutable|null
+     */
+    public function getRegistroValidaCliente()
+    {
+        return $this->registroValidaCliente;
     }
 
     /**
@@ -1119,6 +1191,16 @@ class MarinaHumedaCotizacion
     }
 
     /**
+     * Get notificarCliente.
+     *
+     * @return bool
+     */
+    public function getNotificarCliente()
+    {
+        return $this->notificarCliente;
+    }
+
+    /**
      * @return int
      */
     public function getDiasEstadia()
@@ -1134,15 +1216,6 @@ class MarinaHumedaCotizacion
         $this->diasEstadia = $diasEstadia;
     }
 
-    /**
-     * Get notificarCliente.
-     *
-     * @return bool
-     */
-    public function getNotificarCliente()
-    {
-        return $this->notificarCliente;
-    }
 
     /**
      * Add cotizacionnota.
@@ -1179,5 +1252,30 @@ class MarinaHumedaCotizacion
     public function getCotizacionnotas()
     {
         return $this->cotizacionnotas;
+    }
+
+
+    /**
+     * Set registroPagoCompletado.
+     *
+     * @param \DateTimeImmutable|null $registroPagoCompletado
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setRegistroPagoCompletado($registroPagoCompletado = null)
+    {
+        $this->registroPagoCompletado = $registroPagoCompletado;
+
+        return $this;
+    }
+
+    /**
+     * Get registroPagoCompletado.
+     *
+     * @return \DateTimeImmutable|null
+     */
+    public function getRegistroPagoCompletado()
+    {
+        return $this->registroPagoCompletado;
     }
 }
