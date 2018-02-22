@@ -27,7 +27,7 @@ class OrdenDeTrabajoController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $ordenDeTrabajos = $em->getRepository('AppBundle:OrdenDeTrabajo')->findAll();
-dump($ordenDeTrabajos);
+
         return $this->render('ordendetrabajo/index.html.twig', array(
             'ordenDeTrabajos' => $ordenDeTrabajos,
             'title' => 'Ordenes de trabajo'
