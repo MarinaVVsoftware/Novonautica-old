@@ -2,6 +2,8 @@
 
 namespace AppBundle\Form\Tienda;
 
+use AppBundle\Form\DataTransformer\ClaveProdServTransformer;
+use AppBundle\Form\DataTransformer\ClaveUnidadTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -10,20 +12,40 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductoType extends AbstractType
 {
+    private $cpsTransformer;
+    private $cuTransformer;
+
+    public function __construct(ClaveProdServTransformer $cpsTransformer, ClaveUnidadTransformer $cuTransformer)
+    {
+        $this->cpsTransformer = $cpsTransformer;
+        $this->cuTransformer = $cuTransformer;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('nombre', TextType::class, [
-            'label' => 'Producto',
-        ])
-        ->add('precio', MoneyType::class, [
-           'divisor' => 100,
-            'currency' => 'MXN'
-        ]);
+        $builder
+            ->add('nombre', TextType::class, [
+                'label' => 'Producto',
+            ])
+            ->add('precio', MoneyType::class, [
+                'divisor' => 100,
+                'currency' => 'MXN'
+            ])
+            ->add('claveUnidad', TextType::class)
+            ->add('claveProdServ', TextType::class, [
+                'label' => 'Clave Producto'
+            ])
+        ;
+
+        $builder->get('claveProdServ')
+            ->addModelTransformer($this->cpsTransformer);
+        $builder->get('claveUnidad')
+            ->addModelTransformer($this->cuTransformer);
     }
-    
+
     /**
      * {@inheritdoc}
      */

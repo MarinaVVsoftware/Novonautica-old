@@ -1,5 +1,47 @@
 {% extends 'estructura/plantilla.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .autocomplete-suggestions {
+            background: #3e4766;
+            overflow: auto;
+            width: auto !important;
+            min-width: 100px;
+            max-width: 300px;
+        }
+
+        .autocomplete-suggestion {
+            padding: 2px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+
+        }
+
+        .autocomplete-selected {
+            background: #0097f6;
+        }
+
+        .autocomplete-suggestions strong {
+            font-weight: normal;
+            color: #3399FF;
+        }
+
+        .autocomplete-suggestion:hover strong {
+            color: #363c52;
+        }
+
+        .autocomplete-group {
+            padding: 2px 5px;
+        }
+
+        .autocomplete-group strong {
+            display: block;
+            border-bottom: 1px solid #000;
+        }
+    </style>
+{% endblock %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -15,6 +57,8 @@
                             {{ form_start(form) }}
                             {{ form_row(form.nombre) }}
                             {{ form_row(form.precio) }}
+                            {{ form_row(form.claveProdServ) }}
+                            {{ form_row(form.claveUnidad) }}
                             {% if producto.id is not null %}
                                 <a href="{{ path('tienda_producto_index') }}"
                                    class="btn btn-naranja">Cancelar</a>
@@ -46,7 +90,8 @@
                                     {% for i, item in productos %}
                                         <tr>
                                             <td align="center" valign="middle">{{ item.nombre }}</td>
-                                            <td align="center" valign="middle">$ {{ (item.precio/100)|number_format(2,'.',',') }}</td>
+                                            <td align="center" valign="middle">
+                                                $ {{ (item.precio/100)|number_format(2,'.',',') }}</td>
                                             <td align="center" valign="middle">
                                                 <ul class="list-inline">
                                                     <li>
@@ -67,33 +112,65 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="panel-footer">
-                            <nav>
-                                {#<ul class="pager">#}
-                                    {#{% if page > 1 %}#}
-                                        {#<li class="previous">#}
-                                            {#<a href="{{ path('contabilidad_facturacion_emisor', {'page': page - 1}) }}">#}
-                                                {#<span aria-hidden="true">&larr;</span> Anterior#}
-                                            {#</a>#}
-                                        {#</li>#}
-                                    {#{% endif %}#}
-                                    {#<li>#}
-                                        {#Estas viendo la pagina {{ page }} de {{ pages ?: 1 }} paginas#}
-                                    {#</li>#}
-                                    {#{% if page < pages %}#}
-                                        {#<li class="next">#}
-                                            {#<a href="{{ path('contabilidad_facturacion_emisor', {'page': page + 1}) }}">Siguiente#}
-                                                {#<span aria-hidden="true">&rarr;</span>#}
-                                            {#</a>#}
-                                        {#</li>#}
-                                    {#{% endif %}#}
-                                {#</ul>#}
-                                <span>:(</span>
-                            </nav>
-                        </div>
                     </div>
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/jquery.autocomplete.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($) {
+        const conceptoSettings = {
+          dataType: 'json',
+          deferRequestBy: 150,
+          showNoSuggestionNotice: true,
+          noSuggestionNotice: 'No se encontraron resultados',
+          triggerSelectOnValidInput: true,
+          minChars: 1,
+          paramName: 'q',
+          params: {},
+          autoSelectFirst: true,
+          onSearchStart: function (params) {
+            if (params.q.includes('/')) {
+              params.q = params.q.split(' / ')[1].trim();
+            }
+            return params;
+          },
+        };
+
+        $('#appbundle_tienda_producto_claveProdServ').autocomplete({
+          ...conceptoSettings,
+          serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/claveprodserv.json`,
+          transformResult: function (claves) {
+            return {
+              suggestions: claves.map(clave => {
+                return {
+                  value: `${clave.claveProdServ} / ${clave.descripcion}`,
+                  data: clave.id
+                }
+              })
+            }
+          }
+        });
+
+        $('#appbundle_tienda_producto_claveUnidad').autocomplete({
+          ...conceptoSettings,
+          serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/clave_unidad.json`,
+          transformResult: function (claves) {
+            return {
+              suggestions: claves.map(clave => {
+                return {
+                  value: `${clave.claveUnidad} / ${clave.nombre}`,
+                  data: clave.id
+                }
+              })
+            }
+          }
+        });
+      })(jQuery);
+    </script>
 {% endblock %}
