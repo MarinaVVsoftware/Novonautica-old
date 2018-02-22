@@ -528,7 +528,7 @@ class MarinaHumedaCotizacionController extends Controller
         $marinaHumedaCotizacion->addCotizacionnota($cotizacionnota);
         $form = $this->createForm(CotizacionNotaType::class, $cotizacionnota);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $fechaHoraActual = new \DateTimeImmutable('now');
             $cotizacionnota->setFechahoraregistro($fechaHoraActual);
