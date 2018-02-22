@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\Tienda;
 
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,14 +34,37 @@ class Producto
     /**
      * @var integer
      *
-     * @ORM\Column(name="precio", type="bigint", nullable=true)
+     * @ORM\Column(name="precio", type="bigint")
      */
     private $precio;
+
+    /**
+     * @var ClaveProdServ
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ")
+     */
+    private $claveProdServ;
+
+    /**
+     * @var ClaveUnidad
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
+     */
+    private $claveUnidad;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Peticion", mappedBy="peticion")
      */
     private $nombreproducto;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->nombreproducto = new ArrayCollection();
+    }
 
     public function __toString()
     {
@@ -103,36 +128,55 @@ class Producto
     {
         return $this->precio;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->nombreproducto = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+
+
 
     /**
-     * Add nombreproducto
+     * Set claveProdServ.
      *
-     * @param \AppBundle\Entity\Tienda\Peticion $nombreproducto
+     * @param ClaveProdServ|null $claveProdServ
      *
      * @return Producto
      */
-    public function addNombreproducto(\AppBundle\Entity\Tienda\Peticion $nombreproducto)
+    public function setClaveProdServ(ClaveProdServ $claveProdServ = null)
     {
-        $this->nombreproducto[] = $nombreproducto;
+        $this->claveProdServ = $claveProdServ;
 
         return $this;
     }
 
     /**
-     * Remove nombreproducto
+     * Get claveProdServ.
      *
-     * @param \AppBundle\Entity\Tienda\Peticion $nombreproducto
+     * @return ClaveProdServ|null
      */
-    public function removeNombreproducto(\AppBundle\Entity\Tienda\Peticion $nombreproducto)
+    public function getClaveProdServ()
     {
-        $this->nombreproducto->removeElement($nombreproducto);
+        return $this->claveProdServ;
+    }
+
+    /**
+     * Set claveUnidad.
+     *
+     * @param ClaveUnidad|null $claveUnidad
+     *
+     * @return Producto
+     */
+    public function setClaveUnidad(ClaveUnidad $claveUnidad = null)
+    {
+        $this->claveUnidad = $claveUnidad;
+
+        return $this;
+    }
+
+    /**
+     * Get claveUnidad.
+     *
+     * @return ClaveUnidad|null
+     */
+    public function getClaveUnidad()
+    {
+        return $this->claveUnidad;
     }
 
     /**
@@ -143,5 +187,29 @@ class Producto
     public function getNombreproducto()
     {
         return $this->nombreproducto;
+    }
+
+    /**
+     * Add nombreproducto
+     *
+     * @param Peticion $nombreproducto
+     *
+     * @return Producto
+     */
+    public function addNombreproducto(Peticion $nombreproducto)
+    {
+        $this->nombreproducto[] = $nombreproducto;
+
+        return $this;
+    }
+
+    /**
+     * Remove nombreproducto
+     *
+     * @param Peticion $nombreproducto
+     */
+    public function removeNombreproducto(Peticion $nombreproducto)
+    {
+        $this->nombreproducto->removeElement($nombreproducto);
     }
 }
