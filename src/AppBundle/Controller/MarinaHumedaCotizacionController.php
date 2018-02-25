@@ -1060,7 +1060,7 @@ class MarinaHumedaCotizacionController extends Controller
                             ->setFrom('noresponder@novonautica.com')
                             ->setTo($marinaHumedaCotizacion->getCliente()->getCorreo())
                             ->setBcc('admin@novonautica.com')
-                            ->setCc([$marinaHumedaCotizacion->getBarco()->getCorreoCapitan(),$marinaHumedaCotizacion->getBarco()->getCorreoResponsable()])
+                            ->setCc($marinaHumedaCotizacion->getBarco()->getCorreoCapitan(),$marinaHumedaCotizacion->getBarco()->getCorreoResponsable())
                             ->setBody(
                                 $this->renderView('marinahumeda/cotizacion/correo-clientevalida.twig', [
                                     'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
