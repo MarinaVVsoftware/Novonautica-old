@@ -17,12 +17,17 @@ use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\ValorSistema;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Astillerocotizacion controller.
@@ -39,21 +44,18 @@ class AstilleroCotizacionController extends Controller
      */
     public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
-//        if($request->isXmlHttpRequest()){
-//            try{
-//                $results = $dataTables->handle($request,'astillerocotizacion');
-//                return $this->json($results);
-//            } catch (HttpException $e){
-//                return $this->json($e->getMessage(), $e->getCode());
-//            }
-//        }
-        $em = $this->getDoctrine()->getManager();
-        $astilleroCotizacion = $em->getRepository('AppBundle:AstilleroCotizacion')->findAll();
-        return $this->render('astillero/cotizacion/index.html.twig', [
-            'title' => 'Cotizaciones',
-            'astilleroCotizacions' => $astilleroCotizacion
-        ]);
+        if($request->isXmlHttpRequest()){
+            try{
+                $results = $dataTables->handle($request,'cotizacionAstillero');
+                return $this->json($results);
+            } catch (HttpException $e){
+                return $this->json($e->getMessage(), $e->getCode());
+            }
+        }
+
+        return $this->render('astillero/cotizacion/index.html.twig', ['title' => 'Cotizaciones']);
     }
+
     /**
      * @Route("/gracias", name="astillero_gracias")
      * @Method("GET")
@@ -63,6 +65,7 @@ class AstilleroCotizacionController extends Controller
         return $this->render('marinahumeda/cotizacion/gracias.twig', [
         ]);
     }
+
     /**
      * @Route("/aceptaciones", name="astillero-aceptaciones")
      */
@@ -349,6 +352,35 @@ class AstilleroCotizacionController extends Controller
     }
 
     /**
+     * @Route("/cliente.json")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getClientesAction(Request $request)
+    {
+        $clientes = $this->getDoctrine()->getRepository('AppBundle:AstilleroCotizacion')->getAllClientes();
+
+        return new JsonResponse($clientes);
+    }
+
+    /**
+     * @Route("/barco.json")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getBarcosAction(Request $request)
+    {
+        $barcos = $this->getDoctrine()->getRepository('AppBundle:AstilleroCotizacion')->getAllBarcos();
+
+        return new JsonResponse($barcos);
+    }
+
+
+    /**
      * Muestra una cotizacion de astillero
      *
      * @Route("/{id}", name="astillero_show")
@@ -364,8 +396,6 @@ class AstilleroCotizacionController extends Controller
             'delete_form' => $deleteForm->createView(),
         ]);
     }
-
-
     /**
      * Genera el pdf de una cotizacion en base a su id
      *
@@ -410,6 +440,7 @@ class AstilleroCotizacionController extends Controller
             'Cotizacion-'.$ac->getFolio().'-'.$ac->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
         );
     }
+
     /**
      * Confirma la respuesta de un cliente a una cotizacion
      *
@@ -666,6 +697,7 @@ class AstilleroCotizacionController extends Controller
             'delete_form' => $deleteForm->createView(),
         ]);
     }
+
     /**
      * Muestra una cotizacion para recotizar
      *
@@ -961,6 +993,7 @@ class AstilleroCotizacionController extends Controller
             'form' => $form->createView()
         ]);
     }
+
     /**
      *
      * @Route("/{id}/validar", name="astillero_validar")
@@ -1081,7 +1114,14 @@ class AstilleroCotizacionController extends Controller
         ]);
     }
 
+    private function serializeEntities($entity, $format, $ignoredAttributes = []): string
+    {
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+        $normalizer->setIgnoredAttributes($ignoredAttributes);
 
+        return $serializer->serialize($entity, $format);
+    }
 
     /**
      * Elimina una cotizacion
@@ -1108,12 +1148,12 @@ class AstilleroCotizacionController extends Controller
      *
      * @param AstilleroCotizacion $astilleroCotizacion The astilleroCotizacion entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
      */
     private function createDeleteForm(AstilleroCotizacion $astilleroCotizacion)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('astillero_delete', array('id' => $astilleroCotizacion->getId())))
+            ->setAction($this->generateUrl('astillero_delete', ['id' => $astilleroCotizacion->getId()]))
             ->setMethod('DELETE')
             ->getForm();
     }

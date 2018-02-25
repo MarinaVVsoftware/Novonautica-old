@@ -1,7 +1,13 @@
 {% extends 'estructura/plantilla.twig' %}
 
-{% block title %}
-    Novonautica | Cotizaciones Astillero
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        .list-unstyled li {
+            margin-bottom: .5rem;
+        }
+    </style>
 {% endblock %}
 
 {% block contwrapper %}
@@ -13,119 +19,102 @@
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive scroll-novo">
-                    <table class="table-novo table text-center">
-                        <thead>
-                        <tr>
-                            <th>Folio</th>
-                            <th>Cliente</th>
-                            <th>Barco</th>
-                            <th>Fecha llegada</th>
-                            <th>Fecha salida</th>
-                            <th>Subtotal</th>
-                            <th>Ivatotal</th>
-                            <th>Total</th>
-                            <th>Validación</th>
-                            <th>Aceptación</th>
-                            <th>Pago</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for astilleroCotizacion in astilleroCotizacions|reverse %}
+                        <table class="table-novo table text-center">
+                            <thead>
                             <tr>
-                                <td>
-                                    {% if astilleroCotizacion.foliorecotiza == 0 %}
-                                        {{astilleroCotizacion.folio }}
-                                    {% else %}
-                                        {{ astilleroCotizacion.folio }}-{{ astilleroCotizacion.foliorecotiza }}
-                                    {% endif %}
-                                </td>
-                                <td>{{ astilleroCotizacion.barco.cliente }}</td>
-                                <td>{{ astilleroCotizacion.barco }}</td>
-
-                                <td>{% if astilleroCotizacion.fechaLlegada %}{{ astilleroCotizacion.fechaLlegada|date('Y-m-d') }}{% endif %}</td>
-                                <td>{% if astilleroCotizacion.fechaSalida %}{{ astilleroCotizacion.fechaSalida|date('Y-m-d') }}{% endif %}</td>
-                                <td>$ {{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</td>
-                                <td>$ {{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</td>
-                                <td>$ {{ (astilleroCotizacion.total/100)|number_format(2) }}</td>
-                                <td class="align-middle">
-                                    {% if astilleroCotizacion.validanovo == 0 %}
-                                        <img src="{{ asset('img/status-pendiente-icon.svg') }}"
-                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Pendiente">
-                                    {% elseif astilleroCotizacion.validanovo == 1 %}
-                                        <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Rechazado">
-                                    {% elseif astilleroCotizacion.validanovo == 2 %}
-                                        <img src="{{ asset('img/status-aprobado-icon.svg') }}"
-                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
-                                    {% endif %}
-                                </td>
-                                <td class="align-middle">
-                                    {% if astilleroCotizacion.validacliente == 0 %}
-                                        <img src="{{ asset('img/status-pendiente-icon.svg') }}"
-                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Pendiente">
-                                    {% elseif astilleroCotizacion.validacliente == 1 %}
-                                        <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Rechazado">
-                                    {% elseif astilleroCotizacion.validacliente == 2 %}
-                                        <img src="{{ asset('img/status-aprobado-icon.svg') }}"
-                                             class="center-block" data-toggle="tooltip" data-placement="left" title="Aceptado">
-                                    {% endif %}
-                                </td>
-                                <td class="align-middle">
-                                    {% if astilleroCotizacion.validacliente == 2 %}
-                                        {% if astilleroCotizacion.estatuspago == 2 %}
-                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
-                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Pagado">
-                                        {% elseif astilleroCotizacion.estatuspago == 1 %}
-                                            <img src="{{ asset('img/status-pendiente-icon.svg') }}"
-                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="Con adeudo">
-                                        {% else %}
-                                            <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                                 class="center-block" data-toggle="tooltip" data-placement="left" title="No pagado">
-                                        {% endif %}
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <a class="btn btn-morado-claro" href="{{ path('astillero_show', { 'id': astilleroCotizacion.id }) }}">Detalle</a>
-                                    {% if astilleroCotizacion.validanovo == 0 %}
-                                        <a class="btn btn-azul" href="{{ path('astillero_validar', { 'id': astilleroCotizacion.id }) }}">Validar</a>
-                                    {% endif %}
-                                    {% if (astilleroCotizacion.validanovo == 1 or
-                                        astilleroCotizacion.validacliente == 1) and
-                                        astilleroCotizacion.estatus == 1
-                                    %}
-                                        <a class="btn btn-naranja" href="{{ path('astillero_recotizar', { 'id': astilleroCotizacion.id }) }}">Recotizar</a>
-                                    {% endif %}
-                                    {% if astilleroCotizacion.validacliente == 2 and astilleroCotizacion.estatusPago != 2 %}
-                                        <a class="btn btn-verde" href="{{ path('astillero_cotizacion_pago_edit',{'id': astilleroCotizacion.id}) }}">Pagos</a>
-                                    {% endif %}
-                                </td>
+                                <th>Folio</th>
+                                <th class="with-choices">Cliente</th>
+                                <th class="with-choices">Barco</th>
+                                <th>Fecha llegada</th>
+                                <th>Fecha salida</th>
+                                <th>Subtotal</th>
+                                <th>Ivatotal</th>
+                                <th>Total</th>
+                                <th class="with-options">Validación</th>
+                                <th class="with-options">Aceptación</th>
+                                <th class="with-options">Pago</th>
+                                <th>Acciones</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
         </section>
     </div>
 {% endblock %}
-{#{% block javascripts %}#}
-    {#{{ parent() }}#}
-    {#<script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>#}
-    {#<script type="text/javascript">#}
-        {#(function ($, settings) {#}
-            {#$('.table-novo').DataTable({#}
-                    {#...settings,#}
-                {#ajax: '{{ path('astillero_index') }}',#}
-                {#order: [[0, 'desc']],#}
-                {#createdRow: function (tr, data) {#}
-                {#let lastTd = tr.querySelector('td:last-child');#}
-                {#let entryPath = `{{ app.request.requestUri }}${data[2]}`;#}
 
-           {#z> },#}
-        {#});#}
-        {#})(jQuery, datatablesSettings);#}
-    {#</script>#}
-{#{% endblock %}#}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, settings) {
+        const aceptado = `<img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">`;
+        const rechazado = `<img src="{{ asset('img/status-desaprovado-icon.svg') }}" class="center-block">`;
+        const pendiente = `<img src="{{ asset('img/status-pendiente-icon.svg') }}" class="center-block">`;
+
+        const $tabla = $('.table-novo').DataTable({
+          ...settings,
+          ajax: '{{ path('astillero_index') }}',
+          order: [[0, 'desc']],
+          columns: [
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 3},
+            {responsivePriority: 3},
+            {responsivePriority: 3},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+          ],
+          createdRow: function (row, data) {
+            for (let i of [8, 9, 10]) {
+              if (!data[i]) row.children[i].innerHTML = pendiente;
+              if (data[i] === 1) row.children[i].innerHTML = rechazado;
+              if (data[i] === 2) row.children[i].innerHTML = aceptado;
+            }
+
+            row.lastElementChild.innerHTML = writeLastChild(data[8], data[9], data[10], data[11]);
+          }
+        });
+
+        $tabla.columns('.with-options').every(function () {
+          const column = this;
+          const columnHeader = column.header();
+          const select = document.createElement('select');
+
+          select.add(new Option(columnHeader.innerHTML, ''));
+          columnHeader.innerHTML = '';
+          columnHeader.appendChild(select);
+
+          select.addEventListener('click', e => e.stopPropagation());
+          select.addEventListener('change', function () {
+            let val = $.fn.dataTable.util.escapeRegex(this.value);
+            column.search(val, true, true).draw();
+          });
+
+          select.add(new Option('Aceptada', '2'));
+          select.add(new Option('Rechazada', '1'));
+          select.add(new Option('Pendiente', null));
+        });
+
+        function writeLastChild(validacion, aceptacion, pago, item) {
+          const btnClass = 'btn btn-xs btn-block btn-';
+          return `
+          <td>
+            <ul class="list-unstyled">
+              <li><a class="${btnClass}morado-claro" href="{{ app.request.requestUri ~ '${item.id}' }}">Detalle</a></li>
+              ${validacion === 0 ? `<li><a class="${btnClass}azul" href="{{ app.request.requestUri ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
+              ${(validacion === 1 || aceptacion === 1) && item.estatus ? `<li><a class="${btnClass}naranja" href="{{ app.request.requestUri ~ '${item.id}/recotizar' }}">Recotizar</a></li>` : ''}
+              ${(aceptacion === 2 && pago !== 2) ? `<li><a class="${btnClass}verde" href="{{ app.request.requestUri ~ '${item.id}/pago' }}">Pagos</a></li>` : ''}
+            </ul>
+          </td>
+        `;
+        }
+      })(jQuery, datatablesSettings);
+    </script>
+{% endblock %}

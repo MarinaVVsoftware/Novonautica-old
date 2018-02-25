@@ -37,4 +37,28 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getOneOrNullResult();
     }
+
+    public function getAllClientes()
+    {
+        $qb = $this->createQueryBuilder('ac');
+
+        return $qb
+            ->select('cliente.nombre AS nombre')
+            ->leftJoin('ac.cliente', 'cliente')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getAllBarcos()
+    {
+        $qb = $this->createQueryBuilder('ac');
+
+        return $qb
+            ->select('barco.nombre AS nombre')
+            ->leftJoin('ac.barco', 'barco')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
 }
