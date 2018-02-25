@@ -1230,6 +1230,15 @@ class MarinaHumedaCotizacionController extends Controller
         return new Response($this->serializeEntities($barcos, $request->getRequestFormat()));
     }
 
+    private function serializeEntities($entity, $format, $ignoredAttributes = []): string
+    {
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+        $normalizer->setIgnoredAttributes($ignoredAttributes);
+
+        return $serializer->serialize($entity, $format);
+    }
+
     /**
      * Deletes a marinaHumedaCotizacion entity.
      *
@@ -1249,15 +1258,6 @@ class MarinaHumedaCotizacionController extends Controller
         }
 
         return $this->redirectToRoute('marina-humeda_index');
-    }
-
-    private function serializeEntities($entity, $format, $ignoredAttributes = []): string
-    {
-        $normalizer = new ObjectNormalizer();
-        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
-        $normalizer->setIgnoredAttributes($ignoredAttributes);
-
-        return $serializer->serialize($entity, $format);
     }
 
     /**
