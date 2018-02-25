@@ -26,7 +26,7 @@ class SlipMovimientoType extends AbstractType
                 'placeholder' => 'Seleccionar...',
                 'query_builder' => function (EntityRepository $er) {
                     $qb = $er->createQueryBuilder('mhc');
-                    $q = $qb
+                    return $qb
                         ->select('mhc', 'servicios')
                         ->leftJoin('mhc.mhcservicios', 'servicios', 'slipmovimiento')
                         ->leftJoin('mhc.slipmovimiento', 'slipmovimiento')
@@ -38,8 +38,6 @@ class SlipMovimientoType extends AbstractType
                             $qb->expr()->isNull('slipmovimiento.id')
                         )
                         ->orderBy('mhc.folio', 'DESC');
-                    dump($q);
-                    return $q;
                 },
                 'choice_attr' => function ($mhc) {
                     return ['data-eslora' => $mhc->getBarco()->getEslora(),
