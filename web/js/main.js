@@ -895,7 +895,7 @@ $('#appbundle_marinahumedacotizacion_dolar').keyup(function () {
 function gasolinaCalculaSubtotales() {
     var iva = $('#valiva').data('valor');
     var cantidad = $('#g_cantidad').data('valor');
-    var precio = $('#g_precio').data('valor');
+    var precio = Number($('#g_precio').text().replace(/\$/g, ''));
     var subtotal = cantidad * precio;
     var ivatot = (subtotal * iva) / 100;
     var total = subtotal + ivatot;
