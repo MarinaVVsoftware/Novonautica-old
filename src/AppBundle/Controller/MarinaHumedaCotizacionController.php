@@ -502,9 +502,15 @@ class MarinaHumedaCotizacionController extends Controller
                     $em->remove($pago);
                 }
             }
-
+            $unpago = 0;
             foreach ($marinaHumedaCotizacion->getPagos() as $pago) {
-                $totPagado += $pago->getCantidad();
+                if($pago->getDivisa()=='MXN'){
+                    $unpago = ($pago->getCantidad()/$pago->getDolar())*100;
+                    $pago->setCantidad($unpago);
+                }else{
+                    $unpago = $pago->getCantidad();
+                }
+                $totPagado += $unpago;
             }
 
             if ($total < $totPagado) {

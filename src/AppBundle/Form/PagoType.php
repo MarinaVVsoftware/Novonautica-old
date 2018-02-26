@@ -28,6 +28,10 @@ class PagoType extends AbstractType
                 'label' => 'Método de pago',
 //                'required' => false
             ])
+            ->add('divisa',ChoiceType::class,[
+                    'choices'  => ['USD' => 'USD','MXN' => 'MXN'],
+                    'label' => 'Divisa',
+            ])
             ->add('cantidad',MoneyType::class,[
                 'label' => 'Pago',
 //                'required' => false,
@@ -52,15 +56,8 @@ class PagoType extends AbstractType
                 'grouping' => true,
                 'attr' => ['class' => 'esdecimal']
             ])
-//            ->add('fechalimitepago')
-//            ->add('titular')
-//            ->add('banco')
-//            ->add('numcuenta')
-//            ->add('codigoseguimiento')
-//            ->add('fecharealpago')
-//            ->add('mhcotizacion')
-//            ->add('cuentabancaria')
         ;
+
     }
     
     /**
