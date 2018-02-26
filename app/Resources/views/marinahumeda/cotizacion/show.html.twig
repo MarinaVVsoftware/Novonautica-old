@@ -68,7 +68,7 @@
                                 <a href="#pagos" aria-controls="pagos" role="tab" data-toggle="tab">Pagos</a>
                             </li>
                         {% endif %}
-                        {% if marinaHumedaCotizacion.cotizacionnotas %}
+                        {% if  marinaHumedaCotizacion.cotizacionnotas[0] is defined %}
                             <li role="presentation">
                                 <a href="#notas" aria-controls="notas" role="tab" data-toggle="tab">Notas</a>
                             </li>
@@ -507,7 +507,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-12">
                                         <table class="table text-center">
                                             <thead>
                                             <tr>
@@ -581,7 +581,7 @@
                                 </div>
                             </div>
                         {% endif %}
-                        {% if marinaHumedaCotizacion.cotizacionnotas %}
+                        {% if marinaHumedaCotizacion.cotizacionnotas[0] is defined %}
                             <div role="tabpanel" class="tab-pane" id="notas">
                                 <div class="row">
                                     <div class="col-sm-12">

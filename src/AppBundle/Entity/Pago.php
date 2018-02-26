@@ -37,6 +37,13 @@ class Pago
     private $metodopago;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="divisa", type="string", length=3)
+     */
+    private $divisa;
+
+    /**
      * @var float
      *
      * @Groups({"facturacion"})
@@ -394,5 +401,21 @@ class Pago
     public function getFactura()
     {
         return $this->factura;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDivisa()
+    {
+        return $this->divisa;
+    }
+
+    /**
+     * @param string $divisa
+     */
+    public function setDivisa($divisa)
+    {
+        $this->divisa = $divisa;
     }
 }

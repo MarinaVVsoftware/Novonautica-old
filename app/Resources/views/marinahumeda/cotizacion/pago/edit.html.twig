@@ -62,11 +62,11 @@
                             <div class='info-input'>{{ marinaHumedaCotizacion.cliente }}</div>
                             <label>Barco</label>
                             <div class='info-input'>{{ marinaHumedaCotizacion.barco }}</div>
-                            <label>Total Cotización</label>
+                            <label>Total Cotización (USD)</label>
                             <div class='info-input'>$ {{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</div>
-                            <label>Pagado hasta el momento</label>
+                            <label>Pagado hasta el momento (USD)</label>
                             <div class='info-input'>$ {{ (marinaHumedaCotizacion.pagado/100)|number_format(2) }}</div>
-                            <label>Faltante</label>
+                            <label>Faltante (USD)</label>
                             <div class='info-input'>
                                 $ {{ ((marinaHumedaCotizacion.total-marinaHumedaCotizacion.pagado)/100)|number_format(2) }}</div>
                         </div>
@@ -81,7 +81,8 @@
                                         <thead>
                                         <tr>
                                             <th>Método de pago</th>
-                                            <th>Pago (USD)</th>
+                                            <th>Divisa</th>
+                                            <th>Pago</th>
                                             <th>Fecha de pago</th>
                                             <th>Valor del dolar</th>
                                             <th>Factura</th>
@@ -100,6 +101,7 @@
                                             {% form_theme pagoField 'marinahumeda/cotizacion/pago/coleccion-pago.twig' %}
                                             <tr class="pago-agregado">
                                                 <td>{{ form_widget(pagoField.metodopago) }}</td>
+                                                <td>{{ form_widget(pagoField.divisa) }}</td>
                                                 <td>{{ form_widget(pagoField.cantidad) }} </td>
                                                 <td>{{ form_widget(pagoField.fecharealpago) }} </td>
                                                 <td>{{ form_widget(pagoField.dolar) }}</td>
