@@ -6,12 +6,14 @@ namespace AppBundle\Form;
 //use Doctrine\DBAL\Types\IntegerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Validator\Constraints\Email;
 
 
 class BarcoType extends AbstractType
@@ -46,7 +48,7 @@ class BarcoType extends AbstractType
                 'label' => 'Teléfono del responsable',
                 'required' => false
             ])
-            ->add('correoResponsable',TextType::class,[
+            ->add('correoResponsable',EmailType::class,[
                 'label' => 'Correo del responsable',
                 'required' => false
             ])
@@ -58,7 +60,7 @@ class BarcoType extends AbstractType
                 'label' => 'Teléfono del capitán',
                 'required' => false
                 ])
-            ->add('correoCapitan',TextType::class,[
+            ->add('correoCapitan',EmailType::class,[
                 'label' => 'Correo del capitán',
                 'required' => false
             ])
