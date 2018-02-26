@@ -6,6 +6,7 @@ use AppBundle\Entity\Cliente\RazonSocial;
 use AppBundle\Form\Cliente\RazonSocialType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,7 +21,7 @@ class ClienteType extends AbstractType
     {
         $builder
             ->add('nombre', TextType::class)
-            ->add('correo', TextType::class)
+            ->add('correo', EmailType::class)
             ->add('telefono', TextType::class, [
                 'label' => 'Télefono',
                 'required' => false
