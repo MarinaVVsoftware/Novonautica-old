@@ -140,7 +140,7 @@ class ClienteController extends Controller
             $cliente->setFecharegistro($fechaHoraActual)
                 ->setPassword($randomString);
 
-            /*$em->persist($cliente);
+            $em->persist($cliente);
             $em->flush();
 
 
@@ -158,8 +158,6 @@ class ClienteController extends Controller
             $mailer->send($message);
 
             return $this->redirectToRoute('cliente_show', ['id' => $cliente->getId()]);
-            */
-            dump($cliente);
         }
 
         return $this->render('cliente/new.html.twig', [
