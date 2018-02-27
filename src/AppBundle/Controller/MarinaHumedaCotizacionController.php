@@ -1066,7 +1066,6 @@ class MarinaHumedaCotizacionController extends Controller
                             ->setFrom('noresponder@novonautica.com')
                             ->setTo($marinaHumedaCotizacion->getCliente()->getCorreo())
                             ->setBcc('admin@novonautica.com')
-                            ->setCc($marinaHumedaCotizacion->getBarco()->getCorreoCapitan(),$marinaHumedaCotizacion->getBarco()->getCorreoResponsable())
                             ->setBody(
                                 $this->renderView('marinahumeda/cotizacion/correo-clientevalida.twig', [
                                     'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
@@ -1076,7 +1075,12 @@ class MarinaHumedaCotizacionController extends Controller
                                 'text/html'
                             )
                             ->attach($attachment);
-
+                        if($marinaHumedaCotizacion->getBarco()->getCorreoCapitan()){
+                            $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoCapitan());
+                        }
+                        if($marinaHumedaCotizacion->getBarco()->getCorreoResponsable()){
+                            $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoResponsable());
+                        }
                         $mailer->send($message);
 
                         if ($marinaHumedaCotizacion->getFoliorecotiza() == 0) {
@@ -1165,6 +1169,9 @@ class MarinaHumedaCotizacionController extends Controller
                 ->getFoliorecotiza() . '.pdf', 'application/pdf', 'inline'
         );
         $attachment = new Swift_Attachment($pdfEnviar, 'Cotizacion-' . $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza() . '.pdf', 'application/pdf');
+
+
+
         // Enviar correo de confirmacion
         $message = (new \Swift_Message('¡Cotizacion de servicios!'))
             ->setFrom('noresponder@novonautica.com')
@@ -1180,6 +1187,12 @@ class MarinaHumedaCotizacionController extends Controller
             )
             ->attach($attachment);
 
+        if($marinaHumedaCotizacion->getBarco()->getCorreoCapitan()){
+            $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoCapitan());
+        }
+        if($marinaHumedaCotizacion->getBarco()->getCorreoResponsable()){
+            $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoResponsable());
+        }
         $mailer->send($message);
 
         if ($marinaHumedaCotizacion->getFoliorecotiza() == 0) {
@@ -1203,7 +1216,7 @@ class MarinaHumedaCotizacionController extends Controller
         $em->persist($marinaHumedaCotizacion);
         $em->flush();
 
-        return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
+        //return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
     }
 
     /**
