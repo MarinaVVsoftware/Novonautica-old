@@ -546,13 +546,17 @@ class AstilleroCotizacionController extends Controller
         $totPagado = 0;
         $listaPagos = new ArrayCollection();
         foreach ($astilleroCotizacion->getPagos() as $pago){
+            if($pago->getDivisa()=='MXN'){
+                $pesos = ($pago->getCantidad()*$pago->getDolar())/100;
+                $pago->setCantidad($pesos);
+            }
             $listaPagos->add($pago);
         }
         $form = $this->createForm('AppBundle\Form\AstilleroRegistraPagoType', $astilleroCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $total = $astilleroCotizacion->getTotal();
-            $pagado = $astilleroCotizacion->getPagado();
+            //$pagado = $astilleroCotizacion->getPagado();
 
             $em = $this->getDoctrine()->getManager();
 
@@ -564,7 +568,13 @@ class AstilleroCotizacionController extends Controller
                 }
             }
             foreach ($astilleroCotizacion->getPagos() as $pago) {
-                $totPagado+=$pago->getCantidad();
+                if($pago->getDivisa()=='MXN'){
+                    $unpago = ($pago->getCantidad()/$pago->getDolar())*100;
+                    $pago->setCantidad($unpago);
+                }else{
+                    $unpago = $pago->getCantidad();
+                }
+                $totPagado += $unpago;
             }
             if($total < $totPagado) {
                 $this->addFlash(

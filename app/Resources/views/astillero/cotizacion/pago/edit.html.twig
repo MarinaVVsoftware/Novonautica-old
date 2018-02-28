@@ -80,7 +80,8 @@
                                         <thead>
                                         <tr>
                                             <th>Método de pago</th>
-                                            <th>Pago (USD)</th>
+                                            <th>Divisa</th>
+                                            <th>Pago</th>
                                             <th>Fecha de pago</th>
                                             <th>Valor del dolar</th>
                                             <th>Factura</th>
@@ -99,6 +100,7 @@
                                             {% form_theme pagoField 'marinahumeda/cotizacion/pago/coleccion-pago.twig' %}
                                             <tr class="pago-agregado">
                                                 <td>{{ form_widget(pagoField.metodopago) }}</td>
+                                                <td>{{ form_widget(pagoField.divisa) }}</td>
                                                 <td>{{ form_widget(pagoField.cantidad) }} </td>
                                                 <td>{{ form_widget(pagoField.fecharealpago) }} </td>
                                                 <td>{{ form_widget(pagoField.dolar) }}</td>

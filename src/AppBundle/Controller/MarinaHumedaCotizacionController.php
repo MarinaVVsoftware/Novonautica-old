@@ -483,6 +483,10 @@ class MarinaHumedaCotizacionController extends Controller
         $listaPagos = new ArrayCollection();
 
         foreach ($marinaHumedaCotizacion->getPagos() as $pago) {
+            if($pago->getDivisa()=='MXN'){
+                $pesos = ($pago->getCantidad()*$pago->getDolar())/100;
+                $pago->setCantidad($pesos);
+            }
             $listaPagos->add($pago);
         }
 
