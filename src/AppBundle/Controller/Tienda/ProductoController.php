@@ -67,14 +67,22 @@ class ProductoController extends Controller
     {
         $form = $this->createDeleteForm($producto);
         $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
 
+        $encontrar = $em->getRepository('AppBundle:Tienda\Peticion')->findby(array('peticion' => $producto->getId()));
+
+        if (empty($encontrar)){
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($producto);
             $em->flush();
         }
-
-        return $this->redirectToRoute('tienda_producto_index');
+            $this->addFlash('notice', 'El producto ha sido eliminado');
+            return $this->redirectToRoute('tienda_producto_index');
+        }else{
+            $this->addFlash('notice', 'No puede eliminar este producto hasta que se elimine la solicitud que la contiene');
+            return $this->redirectToRoute('tienda_producto_index');
+        }
     }
 
     /**
