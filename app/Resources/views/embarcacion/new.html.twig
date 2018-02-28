@@ -4,7 +4,6 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
 {% endblock %}
 
 {% form_theme form 'embarcacion/form-themes/_embarcacion.html.twig' %}
@@ -66,7 +65,7 @@
                                             {{ form_row(form.pasajerosDormidos) }}
                                             {{ form_row(form.generador) }}
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-12">
                                             {{ form_row(form.descripcion) }}
                                         </div>
                                         <hr style="width: 100%; margin: 10px 0 !important;">
@@ -141,7 +140,6 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/dropzone.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
       /*
           CAMBIAR TAB CUANDO EXISTAN ERRORES
@@ -235,23 +233,32 @@
 
         embarcacionForm.addEventListener('submit', function (e) {
           e.preventDefault();
-          if (!imagenes.getQueuedFiles().length && !layouts.getQueuedFiles().length) {
+          if (imagenes.getQueuedFiles().length === 0 && layouts.getQueuedFiles().length === 0) {
             this.submit();
-          } else {
-            if (imagenes.getQueuedFiles().length) {
-              imagenes.processQueue();
-              if (layouts.getQueuedFiles().length) {
-                layouts.processQueue();
-                layouts.on('queuecomplete', () => {
-                  this.submit();
-                });
-              } else {
-                imagenes.on('queuecomplete', () => {
-                  this.submit();
-                });
-              }
-            }
           }
+
+          if (imagenes.getQueuedFiles().length) {
+            imagenes.processQueue();
+
+            imagenes.on('queuecomplete', () => {
+              if (layouts.getQueuedFiles().length === 0) { this.submit(); return; }
+
+              layouts.processQueue();
+              layouts.on('queuecomplete', () => { this.submit(); });
+            });
+          }
+
+          if (layouts.getQueuedFiles().length) {
+            layouts.processQueue();
+
+            layouts.on('queuecomplete', () => {
+              if (imagenes.getQueuedFiles().length === 0) { this.submit(); return; }
+
+              imagenes.processQueue();
+              imagenes.on('queuecomplete', () => { this.submit(); });
+            });
+          }
+
         });
 
         let dropzoneParameters = {

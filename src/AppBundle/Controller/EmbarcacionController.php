@@ -6,6 +6,7 @@ use AppBundle\Entity\Embarcacion;
 use AppBundle\Entity\EmbarcacionImagen;
 use AppBundle\Entity\EmbarcacionLayout;
 use Doctrine\Common\Collections\ArrayCollection;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use SensioLabs\Security\Exception\HttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -148,6 +149,36 @@ class EmbarcacionController extends Controller
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/{id}/brochure", name="embarcacion_brochure")
+     *
+     * @return PdfResponse|Response
+     */
+    public function showBrochureAction(Embarcacion $embarcacion)
+    {
+        $head = $this->renderView('embarcacion/pdf/head.html.twig');
+        $body = $this->renderView('embarcacion/pdf/body.html.twig', [
+//            'title' => strtolower(str_replace(' ', '-', $embarcacion->getNombre())) . '-brochure.pdf',
+            'title' => 'brochure.pdf',
+            'embarcacion' => $embarcacion
+        ]);
+
+        $options = [
+            'margin-top' => 24,
+            'margin-right' => 5,
+            'margin-left' => 5,
+            'margin-bottom' => 5,
+            'header-html' => utf8_decode($head),
+        ];
+
+        return new PdfResponse(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($body, $options),
+            'brochure.pdf', 'application/pdf', 'inline'
+        );
+
+//        return $this->render('embarcacion/pdf/body.html.twig', ['title' => 'asd', 'embarcacion' => $embarcacion]);
     }
 
     /**

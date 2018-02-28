@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -70,19 +71,19 @@ class EmbarcacionType extends AbstractType
                 'attr' => ['placeholder' => '4.7']
             ])
             ->add('peso', NumberType::class, [
-                'label' => 'Peso (kg)',
+                'label' => 'Peso (lbs)',
                 'attr' => ['placeholder' => '29,000']
             ])
             ->add('capacidadCombustible', NumberType::class, [
-                'label' => 'Capacidad de combustible (litros)',
+                'label' => 'Capacidad de combustible (galones)',
                 'attr' => ['placeholder' => '4,200']
             ])
             ->add('capacidadAgua', NumberType::class, [
-                'label' => 'Capacidad de agua (litros)',
+                'label' => 'Capacidad de agua (galones)',
                 'attr' => ['placeholder' => '800']
             ])
             ->add('capacidadDeposito', NumberType::class, [
-                'label' => 'Capacidad de deposito (litros)',
+                'label' => 'Capacidad de deposito (galones)',
                 'attr' => ['placeholder' => '300']
             ])
             ->add('cabinas', NumberType::class, [
@@ -96,7 +97,7 @@ class EmbarcacionType extends AbstractType
             ->add('generador', TextType::class, [
                 'attr' => ['placeholder' => 'CUMMINS ONAN 17.5 KW']
             ])
-            ->add('descripcion')
+            ->add('descripcion', TextareaType::class, ['attr' => ['class' => 'editorwy']])
             ->add('video', TextType::class, [
                 'label' => 'Video (Youtube)',
                 'attr' => ['placeholder' => 'https://www.youtube.com/watch?v=SstAlDGCcIk'],
@@ -113,7 +114,7 @@ class EmbarcacionType extends AbstractType
                 'required' => false,
                 'label' => 'Brochure',
                 'download_label' => 'Ver brochure',
-                'delete_label' => '¿Eliminar brochure?'
+                'allow_delete' => false
             ])
             ->add('layouts', CollectionType::class, [
                 'entry_type' => EmbarcacionLayoutType::class,
