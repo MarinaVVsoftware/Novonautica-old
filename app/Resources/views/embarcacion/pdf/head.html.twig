@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet"
+          type="text/css"
+          href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"
+    >
+    <style>
+        html {
+            font-family: Helvetica, Arial, serif;
+            font-size: 10px;
+        }
+
+        body {
+            margin: 0;
+            color: #6a6a6a;
+        }
+
+        #head {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: .3rem solid #2765a2;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div id="head" class="row">
+        <div class="col-xs-5">
+            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('img/od-logo.png') }}" alt="" class="img-responsive">
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ title }}</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"
+    >
+    <style>
+        html {
+            font-family: Helvetica, Arial, serif;
+            font-size: 10px;
+        }
+
+        body {
+            margin: 0;
+            color: #6a6a6a;
+        }
+
+        .container-fluid {
+            page-break-after: always;
+        }
+
+        .nomargin {
+            margin: 0;
+        }
+
+        .vertical-space-1 {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        h3 {
+            color: #2765a2;
+            font-weight: 700;
+        }
+
+        h5 {
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        th, td {
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div id="body" class="row">
+
+        <div id="title" class="vertical-space-1">
+            <div class="col-xs-5 text-left">
+                <h4 class="nomargin">{{ embarcacion.nombre }}</h4>
+                <p>
+                    {{ embarcacion.eslora is null ? '' : embarcacion.eslora ~ 'ft / ' ~ (embarcacion.eslora * '.3048')|round(2) ~ 'm |' }}
+                    {{ embarcacion.marca is null ? embarcacion.builder ~ ' / ' ~ embarcacion.interiorDesigner ~ ' / ' ~ embarcacion.exteriorDesigner ~ ' | ' : embarcacion.marca.nombre ~ ' | ' }}
+                    {{ embarcacion.modelo is null ? '' : embarcacion.modelo.nombre }}
+                </p>
+            </div>
+            <div class="col-xs-4 col-xs-offset-3 text-right">
+                <h4 class="nomargin">
+                    <small>$</small>
+                    {{ (embarcacion.precio / 100)|number_format(2) }} USD
+                </h4>
+            </div>
+        </div>
+
+        {% if embarcacion.imagenes[0] %}
+            <div class="col-xs-12">
+                <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ app.request.basePath ~ asset('/uploads/embarcacion/' ~ embarcacion.imagenes[0].basename) }}"
+                     alt="" class="img-responsive"
+                     style="width: 100%; max-height: 350px">
+            </div>
+        {% endif %}
+
+        <div id="descripcion" class="col-xs-12">
+            <h3>Descripción</h3>
+            {{ embarcacion.descripcion|raw }}
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="text-center">Especificaciones</h3>
+            <table class="table table-bordered">
+                <tbody>
+                {% if embarcacion.nombre %}
+                    <tr>
+                        <th>NOMBRE</th>
+                        <td>{{ embarcacion.nombre }}</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.precio %}
+                    <tr>
+                        <th>PRECIO</th>
+                        <td>{{ (embarcacion.precio / 100)|number_format(2) }}</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.pais %}
+                    <tr>
+                        <th>PAÍS DE UBICACIÓN</th>
+                        <td>{{ embarcacion.pais.name }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>CONSTRUCCIÓN</th>
+                    <td>{{ embarcacion.construccion|capitalize }}</td>
+                </tr>
+                {% if embarcacion.marca %}
+                    <tr>
+                        <th>MARCA</th>
+                        <td>{{ embarcacion.marca.nombre }}</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.modelo %}
+                    <tr>
+                        <th>MODELO</th>
+                        <td>{{ embarcacion.modelo.nombre }}</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.builder %}
+                    <tr>
+                        <th>BUILDER</th>
+                        <td>{{ embarcacion.builder }}</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.interiorDesigner %}
+                    <tr>
+                        <th>INTERIOR DESIGNER</th>
+                        <td>{{ embarcacion.interiorDesigner }}</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.exteriorDesigner %}
+                    <tr>
+                        <th>EXTERIOR DESIGNER</th>
+                        <td>{{ embarcacion.exteriorDesigner }}</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.ano %}
+                    <tr>
+                        <th>AÑO</th>
+                        <td>{{ embarcacion.ano }}</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.longitud %}
+                    <tr>
+                        <th>LONGITUD</th>
+                        <td>{{ embarcacion.longitud }}ft / {{ (embarcacion.longitud * '.3048')|round(2) }}m</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.eslora %}
+                    <tr>
+                        <th>ESLORA</th>
+                        <td>{{ embarcacion.eslora }}ft / {{ (embarcacion.eslora * '.3048')|round(2) }}m</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.manga %}
+                    <tr>
+                        <th>MANGA</th>
+                        <td>{{ embarcacion.manga }}ft / {{ (embarcacion.manga * '.3048')|round(2) }}m</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.calado %}
+                    <tr>
+                        <th>CALADO</th>
+                        <td>{{ embarcacion.calado }}ft / {{ (embarcacion.calado * '.3048')|round(2) }}m</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.peso %}
+                    <tr>
+                        <th>PESO</th>
+                        <td>{{ embarcacion.peso }}lbs / {{ (embarcacion.peso * '.453592')|round(2) }}kg</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.capacidadCombustible %}
+                    <tr>
+                        <th>CAPACIDAD DE COMBUSTIBLE</th>
+                        <td>{{ embarcacion.capacidadCombustible }}gal
+                            / {{ (embarcacion.capacidadCombustible * 3.78541)|round(2) }}lt
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.capacidadAgua %}
+                    <tr>
+                        <th>CAPACIDAD DE AGUA</th>
+                        <td>{{ embarcacion.capacidadAgua }}gal / {{ (embarcacion.capacidadAgua * 3.78541)|round(2) }}
+                            lt
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.capacidadDeposito %}
+                    <tr>
+                        <th>CAPACIDAD DE DEPOSITO</th>
+                        <td>{{ embarcacion.capacidadDeposito }}gal
+                            / {{ (embarcacion.capacidadDeposito * 3.78541)|round(2) }}lt
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.cabinas %}
+                    <tr>
+                        <th>CABINAS</th>
+                        <td>{{ embarcacion.cabinas }}</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.pasajerosDormidos %}
+                    <tr>
+                        <th>MAX. PASAJEROS POR CABINA</th>
+                        <td>{{ embarcacion.pasajerosDormidos }}</td>
+                    </tr>
+                {% endif %}
+                {% if embarcacion.generador %}
+                    <tr>
+                        <th>GENERADOR</th>
+                        <td>{{ embarcacion.generador }}</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% if embarcacion.imagenes is not empty %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="text-center">Fotografías</h3>
+            <div class="row">
+                {% for img in embarcacion.imagenes %}
+                    <div class="col-xs-6 vertical-space-1">
+                        <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ app.request.basePath ~ asset('/uploads/embarcacion/' ~ img.basename) }}"
+                             class="img-responsive" style="width: 100%; height: 22rem">
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% if embarcacion.layouts is not empty %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="text-center">Layout</h3>
+            <div class="row">
+                {% for lay in embarcacion.layouts %}
+                    <div class="col-xs-12 vertical-space-1">
+                        <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ app.request.basePath ~ asset('/uploads/embarcacion/' ~ lay.basename) }}"
+                             class="img-responsive" style="width: 100%;">
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+</body>
+</html>
