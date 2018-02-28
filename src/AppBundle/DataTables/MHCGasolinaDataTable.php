@@ -56,7 +56,7 @@ class MHCGasolinaDataTable extends AbstractDataTableHandler
         ;
 
         if ($request->search->value) {
-            $q->where('(LOWER(mhce.folio) LIKE :search OR ' .
+            $q->andWhere('(LOWER(mhce.folio) LIKE :search OR ' .
                 'LOWER(cliente.nombre) LIKE :search OR ' .
                 'LOWER(barco.nombre) LIKE :search)'
             )

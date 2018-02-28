@@ -42,7 +42,7 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
         $qb = $mhcRepo->createQueryBuilder('mhce');
         $results->recordsTotal = $qb->select('COUNT(mhce.id)')
             ->leftJoin('mhce.mhcservicios', 'servicios')
-            ->where($qb->expr()->eq('servicios.tipo',1))
+            ->where('servicios.tipo = 1')
             ->getQuery()
             ->getSingleScalarResult();
 
@@ -55,7 +55,7 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
         ;
 
         if ($request->search->value) {
-            $q->where('(LOWER(mhce.folio) LIKE :search OR ' .
+            $q->andWhere('(LOWER(mhce.folio) LIKE :search OR ' .
                 'LOWER(cliente.nombre) LIKE :search OR ' .
                 'LOWER(barco.nombre) LIKE :search)'
             )
@@ -143,19 +143,21 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
             $cotizacion = $cotizaciones[$index];
 
             $servicioEstadia = $cotizacion->getMHCservicios()->filter(function ($servicio) {
+                dump($servicio);
                 if ($servicio->getTipo() === 1) {
                     return $servicio;
                 }
             });
 
+
             $results->data[] = [
                 !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza(),
                 $cotizacion->getCliente()->getNombre(),
                 $cotizacion->getBarco()->getNombre(),
-                $cotizacion->getFechaLlegada()->format('d/m/Y') ?? '',
-                $cotizacion->getFechaSalida()->format('d/m/Y') ?? '',
+                $cotizacion->getFechaLlegada() ? $cotizacion->getFechaLlegada()->format('d/m/Y') : '',
+                $cotizacion->getFechaSalida() ? $cotizacion->getFechaSalida()->format('d/m/Y') : '',
                 $cotizacion->getSlip() ? $cotizacion->getSlip()->__toString() : 'Sin asignar',
-                $servicioEstadia->first()->getCantidad(),
+                $servicioEstadia ? $servicioEstadia->first()->getCantidad() : '',
                 '$' . number_format($cotizacion->getSubtotal() / 100, 2),
                 '$' . number_format($cotizacion->getIvatotal() / 100, 2),
                 '$' . number_format($cotizacion->getDescuentototal() / 100, 2),
