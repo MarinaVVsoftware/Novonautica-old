@@ -34,6 +34,10 @@
             padding-bottom: 1rem;
         }
 
+        .top-space-1 {
+            padding-top: 1rem;
+        }
+
         h3 {
             color: #2765a2;
             font-weight: 700;
@@ -232,7 +236,7 @@
             <h3 class="text-center">Fotografías</h3>
             <div class="row">
                 {% for img in embarcacion.imagenes %}
-                    <div class="col-xs-6 vertical-space-1">
+                    <div class="col-xs-6 top-space-1">
                         <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ app.request.basePath ~ asset('/uploads/embarcacion/' ~ img.basename) }}"
                              class="img-responsive" style="width: 100%; height: 22rem">
                     </div>
@@ -249,7 +253,7 @@
             <h3 class="text-center">Layout</h3>
             <div class="row">
                 {% for lay in embarcacion.layouts %}
-                    <div class="col-xs-12 vertical-space-1">
+                    <div class="col-xs-12 top-space-1">
                         <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ app.request.basePath ~ asset('/uploads/embarcacion/' ~ lay.basename) }}"
                              class="img-responsive" style="width: 100%;">
                     </div>
