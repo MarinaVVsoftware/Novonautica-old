@@ -37,7 +37,8 @@ class ProductoType extends AbstractType
             ])
             ->add('preciocolaborador', MoneyType::class, [
                 'divisor' => 100,
-                'currency' => 'MXN'
+                'currency' => 'MXN',
+                'label' => 'Precio Colaborador'
             ])
             ->add('claveUnidad', TextType::class)
             ->add('claveProdServ', TextType::class, [
