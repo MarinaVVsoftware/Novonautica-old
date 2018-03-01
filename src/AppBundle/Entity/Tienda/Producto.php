@@ -39,6 +39,13 @@ class Producto
     private $precio;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="preciocolaborador", type="bigint")
+     */
+    private $preciocolaborador;
+
+    /**
      * @var ClaveProdServ
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ")
@@ -211,5 +218,29 @@ class Producto
     public function removeNombreproducto(Peticion $nombreproducto)
     {
         $this->nombreproducto->removeElement($nombreproducto);
+    }
+
+    /**
+     * Set preciocolaborador
+     *
+     * @param integer $preciocolaborador
+     *
+     * @return Producto
+     */
+    public function setPreciocolaborador($preciocolaborador)
+    {
+        $this->preciocolaborador = $preciocolaborador;
+
+        return $this;
+    }
+
+    /**
+     * Get preciocolaborador
+     *
+     * @return integer
+     */
+    public function getPreciocolaborador()
+    {
+        return $this->preciocolaborador;
     }
 }

@@ -68,6 +68,7 @@
                             {{ form_start(form) }}
                             {{ form_row(form.nombre) }}
                             {{ form_row(form.precio) }}
+                            {{ form_row(form.preciocolaborador) }}
                             {{ form_row(form.claveProdServ) }}
                             {{ form_row(form.claveUnidad) }}
                             {% if producto.id is not null %}
@@ -92,9 +93,10 @@
                                 <table class="table table-novo">
                                     <thead>
                                     <tr>
-                                        <th>Nombre</th>
-                                        <th>Precio</th>
-                                        <th width="33%"></th>
+                                        <th class="text-center">Nombre</th>
+                                        <th class="text-center">Precio Público</th>
+                                        <th class="text-center">Precio Colaborador</th>
+                                        <th class="text-center" width="25%">Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -103,6 +105,8 @@
                                             <td align="center" valign="middle">{{ item.nombre }}</td>
                                             <td align="center" valign="middle">
                                                 $ {{ (item.precio/100)|number_format(2,'.',',') }}</td>
+                                            <td align="center" valign="middle">
+                                                $ {{ (item.preciocolaborador/100)|number_format(2,'.',',') }}</td>
                                             <td align="center" valign="middle">
                                                 <ul class="list-inline">
                                                     <li>

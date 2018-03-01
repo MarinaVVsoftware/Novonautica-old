@@ -67,15 +67,22 @@ class Solicitud
     /**
      * @var int
      *
-     * @ORM\Column(name="estado", type="integer")
+     * @ORM\Column(name="entregado", type="smallint")
      */
-    private $estado;
+    private $entregado;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="pagado", type="smallint")
+     */
+    private $pagado;
 
     public function __construct()
     {
         $this->producto = new ArrayCollection();
-        $this->estado = 2;
-
+        $this->entregado = 2;
+        $this->pagado = 2;
     }
 
     /**
@@ -134,22 +141,6 @@ class Solicitud
     public function getSolicitudEspecial()
     {
         return $this->solicitudEspecial;
-    }
-
-    /**
-     * @return int
-     */
-    public function getEstado(): int
-    {
-        return $this->estado;
-    }
-
-    /**
-     * @param int $estado
-     */
-    public function setEstado(int $estado): void
-    {
-        $this->estado = $estado;
     }
 
     /**
@@ -281,5 +272,53 @@ class Solicitud
     public function getTotal()
     {
         return $this->total;
+    }
+
+    /**
+     * Set entregado.
+     *
+     * @param int $entregado
+     *
+     * @return Solicitud
+     */
+    public function setEntregado($entregado)
+    {
+        $this->entregado = $entregado;
+
+        return $this;
+    }
+
+    /**
+     * Get entregado.
+     *
+     * @return int
+     */
+    public function getEntregado()
+    {
+        return $this->entregado;
+    }
+
+    /**
+     * Set pagado.
+     *
+     * @param int $pagado
+     *
+     * @return Solicitud
+     */
+    public function setPagado($pagado)
+    {
+        $this->pagado = $pagado;
+
+        return $this;
+    }
+
+    /**
+     * Get pagado.
+     *
+     * @return int
+     */
+    public function getPagado()
+    {
+        return $this->pagado;
     }
 }

@@ -10,4 +10,16 @@ namespace AppBundle\Repository\Tienda;
  */
 class SolicitudRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function validarSolicitud($estado, $validacion, $columna)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->update('AppBundle:Tienda\Solicitud', 's')
+            ->set($columna, ':uno')
+            ->where('s.id = :var')
+            ->setParameter('var', $estado)
+            ->setParameter('uno', $validacion)
+            ->getQuery()
+            ->execute();
+    }
 }
