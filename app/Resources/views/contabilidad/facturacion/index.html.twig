@@ -39,51 +39,6 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {#{% for i, facturacion in facturacions %}
-                                        <tr>
-                                            <td>
-                                                {{ facturacion.folioFiscal }}
-                                            </td>
-                                            <td>{{ facturacion.emisor.rfc }} <br> {{ facturacion.emisor.nombre }}</td>
-                                            <td>{{ facturacion.rfc }} <br> {{ facturacion.cliente }}</td>
-                                            <td>{{ facturacion.razonSocial }}</td>
-                                            <td align="center">
-                                                ${{ facturacion.total / 100|number_format(2) }} {{ facturacion.moneda }}</td>
-                                            <td>{{ facturacion.fechaTimbrado }}</td>
-                                            <td align="center">
-                                                <a href="{{ asset('timbrados') }}/{{ facturacion.xmlArchivo|split('/')|last }}"
-                                                   target="_blank"
-                                                   class="remove-motor btn btn-xs btn-azul"
-                                                   style="margin: 5px;"
-                                                >
-                                                    XML
-                                                </a>
-                                                <br>
-                                                <a href="{{ path('contabilidad_factura_pdf', { 'id': facturacion.id }) }}"
-                                                   target="_blank"
-                                                   class="remove-motor btn btn-xs btn-azul"
-                                                   style="margin: 5px;"
-                                                >
-                                                    PDF
-                                                </a>
-                                            </td>
-                                            <td style="vertical-align: middle">
-                                                <ul class="list-unstyled">
-                                                    <li style="margin-bottom: 5px;">
-                                                        <a href="{{ path('contabilidad_facturacion_reenvio', {'id': facturacion.id}) }}"
-                                                           class="btn btn-xs btn-azul"
-                                                        >Reenviar
-                                                        </a>
-                                                    </li>
-                                                   <li>
-                                                       {{ form_start(delete_forms[i]) }}
-                                                       <input type="submit" value="Cancelar" class="btn btn-xs btn-naranja">
-                                                       {{ form_end(delete_forms[i]) }}
-                                                   </li>
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}#}
                                     </tbody>
                                 </table>
                             </div>
@@ -95,11 +50,37 @@
     </div>
 {% endblock %}
 
+{% block modals %}
+    <div class="modal ventanaborrar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-center" id="myModalLabel">¿Está realmente seguro que desea borrarlo?</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 text-center">
+                            <a href="#" class="btn btn-naranja confirm-cancel">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
+        // Datatables & confirmacion de cancelacion
       (function ($, datatableSettings) {
+        const $eliminar = $('.ventanaborrar');
+
         $('.table-novo').DataTable({
           ...datatableSettings,
           ajax: '{{ path('contabilidad_facturacion_index') }}',
@@ -130,9 +111,11 @@
 
             if (data[7]['status']) {
               actionsInner += `
-                <a href="${url}${data[7]['id']}/cancelar"
-                 class="btn btn-xs btn-naranja"
-                 style="margin: 5px;">Cancelar</a>
+                <button data-url="${url}${data[7]['id']}/cancelar"
+                 class="btn btn-xs btn-naranja cancel-action"
+                 data-toggle="modal"
+                 data-target=".ventanaborrar"
+                 style="margin: 5px;">Cancelar</button>
               `;
             } else {
               actionsInner += `
@@ -141,9 +124,15 @@
             }
 
             actionsCell.innerHTML = actionsInner;
-
           },
         });
-      })(jQuery, datatablesSettings)
+
+
+        $eliminar.on('show.bs.modal', function (e) {
+          let url = $(e.relatedTarget).data('url');
+          $(this).find('.confirm-cancel').attr('href', url);
+        });
+
+      })(jQuery, datatablesSettings);
     </script>
 {% endblock %}
