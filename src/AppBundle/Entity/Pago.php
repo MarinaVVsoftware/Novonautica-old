@@ -39,6 +39,8 @@ class Pago
     /**
      * @var string
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="divisa", type="string", length=3)
      */
     private $divisa;

@@ -246,48 +246,47 @@ class MarinaHumedaCotizacionController extends Controller
             ->setMensaje($mensaje);
         $form = $this->createForm(MarinaHumedaCotizacionGasolinaType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
 
+        if ($form->isSubmitted() && $form->isValid()) {
             $dolar = $marinaHumedaCotizacion->getDolar();
             $cantidad = $marinaGasolina->getCantidad();
-            $precioConIvaMXN = $marinaGasolina->getPrecio();
-            $precioConIvaUSD = ($precioConIvaMXN / $dolar) * 100;
-            $totalConIvaUSD = $cantidad * $precioConIvaUSD;
-            $ivaEquivalente = 100 + $iva; //116%
-            $totalSinIvaUSD = (100 * $totalConIvaUSD) / $ivaEquivalente; //subtotal
-            $ivaDelTotalUSD = $totalConIvaUSD - $totalSinIvaUSD;
-            $precioSinIvaUSD = $totalSinIvaUSD / $cantidad;
+            $precioUSD = (round(((($marinaGasolina->getPrecio() / $dolar) * 100) / ($iva + 100)), 2)) * 100;
+            $subtotalUSD = ($cantidad * $precioUSD);
+            $ivaUSD = ($subtotalUSD * ($iva / 100));
+            $totalUSD = ($subtotalUSD + $ivaUSD);
 
-            $fechaHoraActual = new \DateTime('now');
             $foliobase = $sistema[0]['folioMarina'];
             $folionuevo = $foliobase + 1;
 
             $marinaGasolina
                 ->setEstatus(1)
                 ->setCantidad($cantidad)
-                ->setPrecio($precioSinIvaUSD)
-                ->setSubtotal($totalSinIvaUSD)
-                ->setIva($ivaDelTotalUSD)
-                ->setTotal($totalConIvaUSD);
-
+                ->setPrecio($precioUSD) // Precio sin iva
+                ->setSubtotal($subtotalUSD) // Total sin iva
+                ->setIva($ivaUSD) // El iva del total
+                ->setTotal($totalUSD); // Total con iva
+            ;
             $marinaHumedaCotizacion
                 ->setIva($iva)
-                ->setSubtotal($totalSinIvaUSD)
-                ->setIvatotal($ivaDelTotalUSD)
-                ->setTotal($totalConIvaUSD)
+                ->setSubtotal($subtotalUSD)
+                ->setIvatotal($ivaUSD)
+                ->setTotal($totalUSD)
                 ->setValidanovo(0)
                 ->setValidacliente(0)
                 ->setEstatus(1)
-                ->setFecharegistro($fechaHoraActual)
+                ->setFecharegistro(new \DateTime())
                 ->setFolio($folionuevo)
                 ->setFoliorecotiza(0);
+
             $this->getDoctrine()
                 ->getRepository(ValorSistema::class)
                 ->find(1)
                 ->setFolioMarina($folionuevo);
+
             $em->persist($marinaGasolina);
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
+
             return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
 
         }
