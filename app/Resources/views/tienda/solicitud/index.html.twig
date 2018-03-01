@@ -21,7 +21,9 @@
                                 <th>Embarcación</th>
                                 <th>Solicitud Especial</th>
                                 <th>Total</th>
-                                <th>Status</th>
+                                <th>Pagado</th>
+                                <th>Entregado</th>
+                                <th>Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -32,16 +34,64 @@
                                     <td>{{ solicitud.solicitudEspecial }}</td>
                                     <td>$ {{ (solicitud.total/100)|number_format(2,'.',',') }}</td>
                                     <td class="align-middle">
-                                        {% if solicitud.estado == 2 %}
+                                        {% if solicitud.pagado >= 2 %}
                                             <img src="{{ asset('img/status-pendiente-icon.svg') }}"
                                                  class="center-block" title="Pendiente">
-                                        {% elseif solicitud.estado == 0 %}
+                                        {% elseif solicitud.pagado == 0 %}
                                             <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
                                                  class="center-block" title="Rechazado">
-                                        {% elseif solicitud.estado == 1 %}
+                                        {% elseif solicitud.pagado == 1 %}
                                             <img src="{{ asset('img/status-aprobado-icon.svg') }}"
                                                  class="center-block" title="Aceptado">
                                         {% endif %}
+                                    </td>
+                                    <td class="align-middle">
+                                        {% if solicitud.entregado >= 2 %}
+                                            <img src="{{ asset('img/status-pendiente-icon.svg') }}"
+                                                 class="center-block" title="Pendiente">
+                                        {% elseif solicitud.entregado == 0 %}
+                                            <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
+                                                 class="center-block" title="Rechazado">
+                                        {% elseif solicitud.entregado == 1 %}
+                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
+                                                 class="center-block" title="Aceptado">
+                                        {% endif %}
+                                    </td>
+                                    <td align="center" valign="middle">
+                                        <ul class="list-inline">
+                                            <li style="width: 100%;">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                {% if solicitud.pagado >= 2 %}
+                                                            <a href="pagar/{{ solicitud.id }}" class="btn btn-xs btn-azul">
+                                                                Pagado</a>
+                                                            <a href="nopagado/{{ solicitud.id }}" class="btn btn-xs btn-naranja">
+                                                                No pagado</a>
+                                                {% elseif solicitud.pagado == 1 %}
+                                                    <a href="pagar/{{ solicitud.id }}" class="btn btn-xs btn-naranja">
+                                                        No pagado</a>
+                                                {% elseif solicitud.pagado == 0 %}
+                                                    <a href="pagar/{{ solicitud.id }}" class="btn btn-xs btn-azul">
+                                                        Pagado</a>
+                                                {% endif %}
+                                                    </div>
+                                                    <div class="col-xs-6">
+                                                {% if solicitud.entregado >= 2 %}
+                                                            <a href="entregar/{{ solicitud.id }}" class="btn btn-xs btn-azul">
+                                                                Entregado</a>
+                                                            <a href="noentregado/{{ solicitud.id }}" class="btn btn-xs btn-naranja">
+                                                                No entregado</a>
+                                                {% elseif solicitud.entregado == 1 %}
+                                                    <a href="entregar/{{ solicitud.id }}" class="btn btn-xs btn-naranja">
+                                                        No entregado</a>
+                                                {% elseif solicitud.entregado == 0 %}
+                                                    <a href="entregar/{{ solicitud.id }}" class="btn btn-xs btn-azul">
+                                                        Entregado</a>
+                                                {% endif %}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </td>
                                 </tr>
                             {% endfor %}

@@ -32,13 +32,17 @@ class ProductoType extends AbstractType
             ])
             ->add('precio', MoneyType::class, [
                 'divisor' => 100,
+                'currency' => 'MXN',
+                'label' => 'Precio Público'
+            ])
+            ->add('preciocolaborador', MoneyType::class, [
+                'divisor' => 100,
                 'currency' => 'MXN'
             ])
             ->add('claveUnidad', TextType::class)
             ->add('claveProdServ', TextType::class, [
                 'label' => 'Clave Producto'
-            ])
-        ;
+            ]);
 
         $builder->get('claveProdServ')
             ->addModelTransformer($this->cpsTransformer);

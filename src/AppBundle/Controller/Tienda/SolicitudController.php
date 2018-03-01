@@ -6,7 +6,8 @@ use AppBundle\Entity\Tienda\Peticion;
 use AppBundle\Entity\Tienda\Solicitud;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Solicitud controller.
@@ -66,22 +67,70 @@ class SolicitudController extends Controller
         ));
     }
 
-//    /**
-//     * Finds and displays a solicitud entity.
-//     *
-//     * @Route("/{id}", name="tienda_solicitud_show")
-//     * @Method("GET")
-//     */
-//    public function showAction(Solicitud $solicitud)
-//    {
-//        $deleteForm = $this->createDeleteForm($solicitud);
-//
-//        return $this->render('tienda/solicitud/show.html.twig', array(
-//            'solicitud' => $solicitud,
-//            'delete_form' => $deleteForm->createView(),
-//        ));
-//    }
-//
+    /**
+     * @Route("/nopagado/{id}", name="tienda_solicitud_nopagado")
+     * @Method({"GET", "POST"})
+     */
+    public function rechazarrAction(Solicitud $solicitud)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $solicitudes = $em->getRepository('AppBundle:Tienda\Solicitud');
+        if ($solicitud->getPagado() >= 2){
+            $solicitudes->validarSolicitud($solicitud->getId(), 0, 's.pagado');
+        }
+        return $this->redirectToRoute('tienda_solicitud_index');
+    }
+
+    /**
+     * @Route("/pagar/{id}", name="tienda_solicitud_pagar")
+     * @Method({"GET", "POST"})
+     */
+    public function pagarAction(Solicitud $solicitud)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $solicitudes = $em->getRepository('AppBundle:Tienda\Solicitud');
+        if ($solicitud->getPagado() >= 2){
+            $solicitudes->validarSolicitud($solicitud->getId(), 1, 's.pagado');
+        }elseif ($solicitud->getPagado() == 1) {
+            $solicitudes->validarSolicitud($solicitud->getId(), 0, 's.pagado');
+        }elseif ($solicitud->getPagado() == 0) {
+            $solicitudes->validarSolicitud($solicitud->getId(), 1, 's.pagado');
+        }
+        return $this->redirectToRoute('tienda_solicitud_index');
+    }
+
+    /**
+     * @Route("/noentregado/{id}", name="tienda_solicitud_noentregado")
+     * @Method({"GET", "POST"})
+     */
+    public function noentregadorAction(Solicitud $solicitud)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $solicitudes = $em->getRepository('AppBundle:Tienda\Solicitud');
+        if ($solicitud->getEntregado() >= 2){
+            $solicitudes->validarSolicitud($solicitud->getId(), 0, 's.entregado');
+        }
+        return $this->redirectToRoute('tienda_solicitud_index');
+    }
+
+    /**
+     * @Route("/entregar/{id}", name="tienda_solicitud_entregar")
+     * @Method({"GET", "POST"})
+     */
+    public function entregarAction(Solicitud $solicitud)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $solicitudes = $em->getRepository('AppBundle:Tienda\Solicitud');
+        if ($solicitud->getEntregado() >= 2){
+            $solicitudes->validarSolicitud($solicitud->getId(), 1, 's.entregado');
+        }elseif ($solicitud->getEntregado() == 1) {
+            $solicitudes->validarSolicitud($solicitud->getId(), 0, 's.entregado');
+        }elseif ($solicitud->getEntregado() == 0) {
+            $solicitudes->validarSolicitud($solicitud->getId(), 1, 's.entregado');
+        }
+        return $this->redirectToRoute('tienda_solicitud_index');
+    }
+
 //    /**
 //     * Displays a form to edit an existing solicitud entity.
 //     *
@@ -139,7 +188,6 @@ class SolicitudController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('tienda_solicitud_delete', array('id' => $solicitud->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }
