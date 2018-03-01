@@ -65,6 +65,8 @@ class AstilleroCotizacion
     /**
      * @var float
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="dolar", type="float", nullable=true)
      */
     private $dolar;

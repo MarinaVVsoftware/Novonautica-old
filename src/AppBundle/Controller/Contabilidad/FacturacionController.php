@@ -4,7 +4,9 @@ namespace AppBundle\Controller\Contabilidad;
 
 use AppBundle\Entity\Astillero\Servicio;
 use AppBundle\Entity\Contabilidad\Facturacion;
+use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaServicio;
+use AppBundle\Entity\Pago;
 use AppBundle\Extra\NumberToLetter;
 use AppBundle\Serializer\CotizacionNameConverter;
 use AppBundle\Serializer\NotNullObjectNormalizer;
@@ -170,7 +172,7 @@ class FacturacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $facturador = $this->container->get('multifacturas');
+            /*$facturador = $this->container->get('multifacturas');
             $timbrado = $facturador->procesa($factura);
 
             // Asignar folio en base al total de facturas existentes
@@ -227,7 +229,8 @@ class FacturacionController extends Controller
                 ->attach($attachment);
 
             $mailer->send($message);
-            return $this->redirectToRoute('contabilidad_facturacion_index');
+            return $this->redirectToRoute('contabilidad_facturacion_index');*/
+            dump($factura);
         }
 
         return $this->render('contabilidad/facturacion/new.html.twig', [
@@ -342,7 +345,6 @@ class FacturacionController extends Controller
             return null !== $servicio ? $servicio->getNombre() : null;
         };
 
-
         $normalizer->setCallbacks([
             'tipo' => function ($tipo) {
                 if ($tipo === 1) {
@@ -385,16 +387,20 @@ class FacturacionController extends Controller
             return null !== $servicio ? $servicio->getNombre() : null;
         };
 
-        $normalizer->setCallbacks([
-            'tipo' => function ($tipo) {
-                if ($tipo === 1) {
-                    return 'Días de estancia';
-                } else if ($tipo === 2) {
-                    return 'Conexión a electricidad';
-                } else {
-                    return 'Abastecimiento de combustible';
+        $usdTomxn = function ($pagos) {
+            /** @var Pago[] $pagos */
+            foreach ($pagos as $pago) {
+                if ($pago->getDivisa() === 'MXN') {
+//                    $pago->setCantidad(round((($pago->getCantidad() * $pago->getDolar()) / 100) / 100) * 100);
+                    $pago->setCantidad($pago->getCantidad() * $pago->getDolar() / 100);
                 }
-            },
+            }
+
+            return $pagos;
+        };
+
+        $normalizer->setCallbacks([
+            'pagos' => $usdTomxn,
             'astilleroserviciobasico' => $returnNombres,
             'servicio' => $returnNombres,
             'producto' => $returnNombres,

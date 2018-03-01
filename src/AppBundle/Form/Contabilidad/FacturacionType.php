@@ -189,7 +189,10 @@ class FacturacionType extends AbstractType
                 'required' => false,
                 'choices' => $pagos,
                 'choice_label' => function ($pago) {
-                    return '$' . number_format(($pago->getCantidad() / 100), 2);
+                if ($pago->getDivisa() === 'MXN') {
+                    $pago->setCantidad(($pago->getCantidad() * $pago->getDolar()) / 100);
+                }
+                    return '$' . number_format(($pago->getCantidad() / 100), 2) . ' ' . $pago->getDivisa();
                 }
             ]);
         };

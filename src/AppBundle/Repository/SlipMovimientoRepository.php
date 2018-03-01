@@ -99,6 +99,32 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
         array_push($ocupacionTiposSlips, ['tipo' => $tipoSlip, 'num' => $numTiposSlip, 'total' => $total, 'porcentaje' => $porcentaje]);
         return $ocupacionTiposSlips;
     }
+    // FIXME
+    public function calculoOcupaciones2($fechaBuscar)
+    {
+        $ocupacionTiposSlips = [];
+        $tipoSlip = 46;
+        $total = 109;
+        $numTiposSlip = $this->ocupacionSlip($fechaBuscar, $tipoSlip);
+        $porcentaje = ($numTiposSlip * 100) / $total;
+        array_push($ocupacionTiposSlips, ['pies' => $tipoSlip, 'amarres' => $numTiposSlip, 'ocupacion' => $total, 'porcentaje' => $porcentaje]);
+        $tipoSlip = 61;
+        $total = 46;
+        $numTiposSlip = $this->ocupacionSlip($fechaBuscar, $tipoSlip);
+        $porcentaje = ($numTiposSlip * 100) / $total;
+        array_push($ocupacionTiposSlips, ['pies' => $tipoSlip, 'amarres' => $numTiposSlip, 'ocupacion' => $total, 'porcentaje' => $porcentaje]);
+        $tipoSlip = 72;
+        $total = 13;
+        $numTiposSlip = $this->ocupacionSlip($fechaBuscar, $tipoSlip);
+        $porcentaje = ($numTiposSlip * 100) / $total;
+        array_push($ocupacionTiposSlips, ['pies' => $tipoSlip, 'amarres' => $numTiposSlip, 'ocupacion' => $total, 'porcentaje' => $porcentaje]);
+        $tipoSlip = 120;
+        $total = 8;
+        $numTiposSlip = $this->ocupacionSlip($fechaBuscar, $tipoSlip);
+        $porcentaje = ($numTiposSlip * 100) / $total;
+        array_push($ocupacionTiposSlips, ['pies' => $tipoSlip, 'amarres' => $numTiposSlip, 'ocupacion' => $total, 'porcentaje' => $porcentaje]);
+        return $ocupacionTiposSlips;
+    }
 
     public function ocupacionSlip($fechaBuscar, $slipBuscado)
     {
@@ -161,7 +187,7 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin('sm.slip', 's');
 
         return $qb
-            ->select('s.pies', 'COUNT(sm.id) AS ocupados')
+            ->select('s.pies', 'COALESCE(COUNT(sm.id), 0) AS ocupados')
             ->where('CURRENT_DATE() BETWEEN sm.fechaLlegada AND sm.fechaSalida')
             ->groupBy('s.pies')
             ->getQuery()

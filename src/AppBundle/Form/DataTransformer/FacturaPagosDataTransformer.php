@@ -42,7 +42,7 @@ class FacturaPagosDataTransformer implements DataTransformerInterface
 
         $data = [];
         foreach ($pagos as $pago) {
-            $data[] = '$' . number_format($pago->getCantidad() / 100, 2);
+            $data[] = '$' . number_format($pago->getCantidad() / 100, 2) . ' ' . $pago->getDivisa();
         }
 
         return $data;

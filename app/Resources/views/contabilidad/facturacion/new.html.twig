@@ -290,7 +290,7 @@
       /*
           MOSTRAR TAB ACTIVA DONDE HAY ERRORES
       */
-      (function () {
+      (function ($) {
         const fooForm = document.querySelector('form');
         const tabContent = document.querySelector('.tab-content');
         const firstError = tabContent.querySelector('.has-error');
@@ -300,7 +300,8 @@
 
         if (firstError || helpBlocks) {
           let errorElement = firstError || helpBlocks;
-          showErrors(errorElement.parentNode.parentNode.parentNode);
+          const paneWithError = $(tabPanes).has(errorElement);
+          showErrors(paneWithError[0]);
         }
 
         fooForm.addEventListener('invalid', e => {
@@ -316,7 +317,7 @@
           tab.classList.add('active');
           pane.classList.add('active')
         }
-      })();
+      })(jQuery);
 
       /*
           JQUERY AUTOCOMPLETE && COLLECCION DE CONCEPTOS
@@ -352,6 +353,12 @@
           noSuggestionNotice: 'No se encontraron resultados',
           triggerSelectOnValidInput: false,
         };
+
+        // Checar si se regreso con un folio de cotizacion
+        if ($cotizacionSelect.val()) {
+          pagosHolder.removeAttribute('multiple');
+        }
+
         // Checar si se esta cargando una factura global
         if (facturaGlobal.checked) {
           $cotizacionSelect.parent().addClass('hidden');
@@ -369,7 +376,10 @@
             telefono.value = '00000000';
 
             $cotizacionSelect.prop('readonly', 'readonly');
+            $cotizacionSelect.val('');
             $cotizacionSelect.parent().addClass('hidden');
+            pagosHolder.setAttribute('multiple', 'multiple');
+            pagosHolder.innerHTML = '';
 
             if (!cotizacionesData) {
               $.ajax({url: 'factura-global.json', success: data => { cotizacionesData = data; rollFacturaGlobal(cotizacionesData);  } });
@@ -380,7 +390,7 @@
             $rfcSelect.val('');
             razon.value = nombre.value = direccion.value = '';
             telefono.value = '';
-
+            pagosHolder.removeAttribute('multiple');
             $cotizacionSelect.parent().removeClass('hidden');
             $cotizacionSelect.removeAttr('readonly');
             pagosHolder.innerHTML = '';
@@ -396,13 +406,10 @@
             cotizacionesData.forEach(function (cotizacion) {
               cotizacion.pagos.forEach(function (pago) {
                 precio = pago.cantidad + precio;
-                let opt = new Option(`$${(pago.cantidad / 100).toFixed(2)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'), pago.id);
+                let opt = new Option(`$${(pago.cantidad / 100).toFixed(2)} USD`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'), pago.id);
                 opt.setAttribute('selected', 'selected');
                 pagosHolder.appendChild(opt);
               });
-              /*cotizacion.conceptos.forEach(function (concepto) {
-                appendRow(concepto);
-              });*/
             });
 
             precio = ((precio / 116) * 100).toFixed(2);
@@ -417,12 +424,6 @@
         // Sugiere el tipo de cambio en base a la moneda elegida
         // Facturacion en base a la divisa
         /*monedaSelect.addEventListener('change', function () {
-          if (this.value === 'MXN') {
-            tipoCambioHolder.dataset.cambio = tipoCambioHolder.value;
-            tipoCambioHolder.value = 1.00;
-          } else {
-            tipoCambioHolder.value = tipoCambioHolder.dataset.cambio;
-          }
         });*/
 
         // Autocomplete para rellenado de datos de cliente con RFC
@@ -464,6 +465,7 @@
         $cotizacionSelect.on('input', function () {
           if (this.value.trim()) {
             pagosHolder.setAttribute('required', 'required');
+            pagosHolder.removeAttribute('multiple');
           }
         });
 
@@ -485,11 +487,14 @@
             }
           },
           onSelect: function ({data}) {
+            pagosHolder.removeAttribute('multiple');
+            conceptoHolder.innerHTML = '';
+            appendRow();
             pagosHolder.innerHTML = '';
-            // pagosHolder.appendChild(new Option());
+            pagosHolder.appendChild(new Option('Seleccione un pago', ''));
             pagosHolder.dataset.folio = data.folio;
             data.pagos.forEach(function (pago) {
-              let opt = new Option(`$${(pago.cantidad / 100).toFixed(2)}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'), pago.id);
+              let opt = new Option(`$${(pago.cantidad / 100).toFixed(2)} ${pago.divisa}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'), pago.id);
               pagosHolder.appendChild(opt);
             });
             cotizacionData = data;
@@ -501,7 +506,8 @@
         // Al seleccionar un pago, agrega una row con los conceptos de la cotizacion
         pagosHolder.addEventListener('change', function (e) {
           if (!this.options[this.selectedIndex].value) {
-            clearData(e);
+            conceptoHolder.innerHTML = '';
+            appendRow();
             return;
           }
 
@@ -512,14 +518,25 @@
               dataType: 'json',
               success: function (data) {
                 cotizacionData = data[0];
+
+                let pago = cotizacionData.pagos.filter(v => v.id === Number(pagosHolder.value));
+                monedaSelect.value = pago[0].divisa;
+                tipoCambioHolder.value = `${pago[0].dolar / 100}`;
+
                 conceptoHolder.innerHTML = '';
-                cotizacionData.conceptos.forEach(concepto => appendRow(concepto));
+                cotizacionData.conceptos.forEach(concepto => appendRow(concepto, concepto.tipo === 3));
               }
             });
           } else {
+            // Cambiar la moneda a facturar en base al pago realizado
+            let pago = cotizacionData.pagos.filter(v => v.id === Number(this.value));
+            monedaSelect.value = pago[0].divisa;
+            tipoCambioHolder.value = `${pago[0].dolar / 100}`;
+
             conceptoHolder.innerHTML = '';
-            cotizacionData.conceptos.forEach(concepto => appendRow(concepto));
+            cotizacionData.conceptos.forEach(concepto => appendRow(concepto, concepto.tipo === 3));
           }
+
         });
 
         // Agrega una nueva row vacia
@@ -593,6 +610,13 @@
           ivaConcepto.addEventListener('input', calculateConceptos);
 
           if (data) {
+            // Convertir el tipo para MHC de numero a descripcion
+            switch (data.tipo) {
+              case 1: data.nombre = 'Días de estancia'; break;
+              case 2: data.nombre = 'Conexión a electricidad'; break;
+              case 3: data.nombre = 'Abastecimiento de combustible'; break;
+            }
+
             cantidadConcepto.value = data.cantidad || cantidadConcepto.value;
             cpsConcepto.value = data.cps || cpsConcepto.value || '';
             cuConcepto.value = data.cu || cuConcepto.value || '';
@@ -600,6 +624,11 @@
 
             vUnitarioConcepto.value = true === writePrice ? `${(data.precio / 100).toFixed(2)}` : 0;
             descuentoConcepto.value = data.descuento ? `${data.descuento / 100}` : 0;
+
+            // Si el pago esta en MXN y existe un valor unitario, entonces multiplicarlo por el valor del dolar cotizado
+            if (data.tipo === 3 && monedaSelect.value === 'MXN' && writePrice) {
+              vUnitarioConcepto.value = true === writePrice ? `${((data.precio / 100) * (cotizacionData.dolar / 100)).toFixed(2)}` : 0;
+            }
           }
 
           calculateConceptos();
@@ -769,22 +798,6 @@
         }
 
         $(document).on('keyup change', '#appbundle_contabilidad_facturacion_folioCotizacion', clearData);
-
-
-        /*$(document).on('click', '.remove-concepto', function (e) {
-          e.preventDefault();
-          this.parentNode.parentNode.remove(this);
-          if (!conceptoHolder.children.length) {
-            addLink.classList.remove('hidden');
-            pagosHolder.selectedIndex = 0;
-            pagosHolder.innerHTML = '';
-            $cotizacionSelect.val('');
-            subtotalHolder.value = 0;
-            descuentoHolder.value = 0;
-            ivaHolder.value = 0;
-            totalHolder.value = 0;
-          }
-        });*/
       })(jQuery);
     </script>
 {% endblock %}

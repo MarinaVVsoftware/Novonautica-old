@@ -25,8 +25,6 @@ class CotizacionNameConverter implements NameConverterInterface
     {
         if (preg_match('/servicios/', $propertyName)) {
             return 'conceptos';
-        } else if (preg_match('/tipo/', $propertyName)) {
-            return 'nombre';
         } else if (preg_match('/astilleroserviciobasico/', $propertyName)) {
             return 'serviciobasico';
         }

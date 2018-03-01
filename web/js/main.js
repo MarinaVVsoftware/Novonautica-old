@@ -912,7 +912,7 @@ function gasolinaCalculaSubtotales() {
 function gasolinaCalculaSubtotalesMxn() {
     var iva = $('#valiva').data('valor');
     var cantidad = $('#g_cantidad_mxn').data('valor');
-    var precio = $('#g_precio_mxn').data('valor');
+    var precio = Number($('#g_precio_mxn').text().replace(/\$/g, ''));
     var subtotal = cantidad * precio;
     var ivatot = (subtotal * iva) / 100;
     var total = subtotal + ivatot;

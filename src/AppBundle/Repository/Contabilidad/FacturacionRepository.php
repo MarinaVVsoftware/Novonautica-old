@@ -143,7 +143,6 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
     private function getMarinaCotizacionesByFolio($folio, $folioRecotizado = null)
     {
         $em = $this->getEntityManager();
-        // Consume mas recursos ??
         $dql = '
         SELECT 
         cotizacion,
