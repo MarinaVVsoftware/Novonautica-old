@@ -589,7 +589,8 @@ class MarinaHumedaCotizacionController extends Controller
             ->setBarco($barco)
             ->setFechaLlegada($marinaHumedaCotizacionAnterior->getFechaLlegada())
             ->setFechaSalida($marinaHumedaCotizacionAnterior->getFechaSalida())
-            ->setSlip($marinaHumedaCotizacionAnterior->getSlip())
+//            ->setSlip($marinaHumedaCotizacionAnterior->getSlip())
+            ->setSlip(null)
             ->setDescuento($marinaHumedaCotizacionAnterior->getDescuento())
             ->setDolar($dolar)
             ->setIva($iva)
@@ -624,6 +625,9 @@ class MarinaHumedaCotizacionController extends Controller
         $marinaHumedaCotizacion
             ->addMarinaHumedaCotizaServicios($marinaDiasEstadia)
             ->addMarinaHumedaCotizaServicios($marinaElectricidad);
+        $marinaHumedaCotizacion
+            ->setDiasEstadia($marinaHumedaCotizacionAnterior->getDiasEstadia());
+
         $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -757,7 +761,8 @@ class MarinaHumedaCotizacionController extends Controller
             ->setBarco($barco)
             ->setFechaLlegada($marinaHumedaCotizacionAnterior->getFechaLlegada())
             ->setFechaSalida($marinaHumedaCotizacionAnterior->getFechaSalida())
-            ->setSlip($marinaHumedaCotizacionAnterior->getSlip())
+//            ->setSlip($marinaHumedaCotizacionAnterior->getSlip())
+            ->setSlip(null)
             ->setDescuento($marinaHumedaCotizacionAnterior->getDescuento())
             ->setDolar($marinaHumedaCotizacionAnterior->getDolar())
             ->setIva($marinaHumedaCotizacionAnterior->getIva())
@@ -770,6 +775,8 @@ class MarinaHumedaCotizacionController extends Controller
             ->setFolio($marinaHumedaCotizacionAnterior->getFolio())
             ->setFoliorecotiza($foliorecotizado)
             ->setMensaje($marinaHumedaCotizacionAnterior->getMensaje());
+        $marinaHumedaCotizacion
+            ->setDiasEstadia($marinaHumedaCotizacionAnterior->getDiasEstadia());
 
 
         $servicios = $marinaHumedaCotizacionAnterior->getMHCservicios();
