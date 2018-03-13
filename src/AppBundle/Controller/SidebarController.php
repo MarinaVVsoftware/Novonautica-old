@@ -141,19 +141,6 @@ class SidebarController extends Controller
                     ['name' => 'Modelos', 'path' => $this->generateUrl('embarcacion_modelo')]
                 ]
             ],
-            ['name' => 'Eventos', 'icon' => 'address-book', 'path' => $this->generateUrl('marina-agenda')],
-            [
-                'name' => 'Productos',
-                'icon' => 'th',
-                'path' => $this->generateUrl('producto_index'),
-                'submenu' => [
-                    ['name' => 'Listado', 'path' => $this->generateUrl('producto_index')],
-                    ['name' => 'Nuevo Producto', 'path' => $this->generateUrl('producto_new')],
-                    ['name' => 'Marcas', 'path' => $this->generateUrl('producto_marca')],
-                    ['name' => 'Categorias', 'path' => $this->generateUrl('producto_categoria')],
-                    ['name' => 'Subcategorias', 'path' => $this->generateUrl('producto_subcategoria')],
-                ]
-            ],
             [
                 'name' => 'Tienda',
                 'icon' => 'th',
@@ -164,8 +151,6 @@ class SidebarController extends Controller
                     ['name' => 'Nueva Solicitud', 'path' => $this->generateUrl('tienda_solicitud_new')],
                 ]
             ],
-
-            ['name' => 'Recursos Humanos', 'icon' => 'address-book-o', 'path' => $this->generateUrl('recursos-humanos')],
             [
                 'name' => 'Contabilidad',
                 'icon' => 'archive',
@@ -182,16 +167,32 @@ class SidebarController extends Controller
                     ]
                 ]
             ],
-            ['name' => 'Reportes', 'icon' => 'file-text-o', 'path' => $this->generateUrl('reportes')],
             ['name' => 'Historial Correos', 'icon' => 'envelope', 'path' => $this->generateUrl('historial-correo_index')],
+            /*['name' => 'Reportes', 'icon' => 'file-text-o', 'path' => $this->generateUrl('reportes')],
+            ['name' => 'Eventos', 'icon' => 'address-book', 'path' => $this->generateUrl('marina-agenda')],
+            [
+                'name' => 'Productos',
+                'icon' => 'th',
+                'path' => $this->generateUrl('producto_index'),
+                'submenu' => [
+                    ['name' => 'Listado', 'path' => $this->generateUrl('producto_index')],
+                    ['name' => 'Nuevo Producto', 'path' => $this->generateUrl('producto_new')],
+                    ['name' => 'Marcas', 'path' => $this->generateUrl('producto_marca')],
+                    ['name' => 'Categorias', 'path' => $this->generateUrl('producto_categoria')],
+                    ['name' => 'Subcategorias', 'path' => $this->generateUrl('producto_subcategoria')],
+                ]
+            ],*/
         ]);
     }
 
     private function admin()
     {
         $this->add([
-//            ['name' => 'Usuarios', 'icon' => 'user-o', 'path' => $this->generateUrl('usuario_index')],
-//            ['name' => 'Ajustes', 'icon' => 'cog', 'path' => $this->generateUrl('ajustes_index')],
+            [
+                'name' => 'Recursos Humanos',
+                'icon' => 'user-o',
+                'path' => $this->generateUrl('usuario_index')
+            ],
             [
                 'name' => 'Ajustes',
                 'icon' => 'cog',

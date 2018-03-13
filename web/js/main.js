@@ -1373,9 +1373,11 @@ const datatablesSettings = {
   const tabPanes = tabContent ? tabContent.querySelectorAll('.tab-pane') : undefined;
   const tabs = document.querySelectorAll('.nav-tabs > li') || undefined;
 
-  fooForm.addEventListener('invalid', e => {
-    tabPanes.forEach(pane => pane.querySelector(`#${e.target.getAttribute('id')}`) ? showErrors(pane) : false);
-  }, true);
+  if (fooForm && tabPanes) {
+    fooForm.addEventListener('invalid', e => {
+      tabPanes.forEach(pane => pane.querySelector(`#${e.target.getAttribute('id')}`) ? showErrors(pane) : false);
+    }, true);
+  }
 
   if (fooForm && tabContent && (firstError || helpBlocks) && tabPanes && tabs) {
     let errorElement = firstError || helpBlocks;

@@ -5,7 +5,11 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Usuario;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Usuario controller.
@@ -26,9 +30,9 @@ class UsuarioController extends Controller
 
         $usuarios = $em->getRepository('AppBundle:Usuario')->findAll();
 
-        return $this->render('usuario/index.html.twig', array(
+        return $this->render('usuario/index.html.twig', [
             'usuarios' => $usuarios,
-        ));
+        ]);
     }
 
     /**
@@ -36,6 +40,10 @@ class UsuarioController extends Controller
      *
      * @Route("/new", name="usuario_new")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
@@ -48,13 +56,13 @@ class UsuarioController extends Controller
             $em->persist($usuario);
             $em->flush();
 
-            return $this->redirectToRoute('usuario_show', array('id' => $usuario->getId()));
+            return $this->redirectToRoute('usuario_index');
         }
 
-        return $this->render('usuario/new.html.twig', array(
+        return $this->render('usuario/new.html.twig', [
             'usuario' => $usuario,
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -62,15 +70,18 @@ class UsuarioController extends Controller
      *
      * @Route("/{id}", name="usuario_show")
      * @Method("GET")
+     *
+     * @param Usuario $usuario
+     * @return Response
      */
     public function showAction(Usuario $usuario)
     {
         $deleteForm = $this->createDeleteForm($usuario);
 
-        return $this->render('usuario/show.html.twig', array(
+        return $this->render('usuario/show.html.twig', [
             'usuario' => $usuario,
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -78,24 +89,29 @@ class UsuarioController extends Controller
      *
      * @Route("/{id}/edit", name="usuario_edit")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param Usuario $usuario
+     *
+     * @return RedirectResponse|Response
      */
     public function editAction(Request $request, Usuario $usuario)
     {
+        dump($this->getUser()->getRoles());
         $deleteForm = $this->createDeleteForm($usuario);
         $editForm = $this->createForm('AppBundle\Form\UsuarioType', $usuario);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('usuario_edit', array('id' => $usuario->getId()));
+            return $this->redirectToRoute('usuario_edit', ['id' => $usuario->getId()]);
         }
 
-        return $this->render('usuario/edit.html.twig', array(
+        return $this->render('usuario/new.html.twig', [
             'usuario' => $usuario,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -103,6 +119,11 @@ class UsuarioController extends Controller
      *
      * @Route("/{id}", name="usuario_delete")
      * @Method("DELETE")
+     *
+     * @param Request $request
+     * @param Usuario $usuario
+     *
+     * @return RedirectResponse
      */
     public function deleteAction(Request $request, Usuario $usuario)
     {
@@ -123,12 +144,12 @@ class UsuarioController extends Controller
      *
      * @param Usuario $usuario The usuario entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
      */
     private function createDeleteForm(Usuario $usuario)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('usuario_delete', array('id' => $usuario->getId())))
+            ->setAction($this->generateUrl('usuario_delete', ['id' => $usuario->getId()]))
             ->setMethod('DELETE')
             ->getForm()
         ;

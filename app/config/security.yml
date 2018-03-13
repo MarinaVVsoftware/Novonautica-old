@@ -6,7 +6,6 @@ security:
         Usuario:
             entity:
                 class: AppBundle:Usuario
-                property: correo
 
     firewalls:
         dev:
@@ -14,10 +13,12 @@ security:
             security: false
 
         main:
-            logout_on_user_change: true
+            anonymous: ~
             pattern: .*
-            methods: [GET, POST]
+            security: true
             provider: Usuario
+            logout_on_user_change: true
+            methods: [GET, POST]
             form_login:
                 check_path: login
                 login_path: login
@@ -49,8 +50,6 @@ security:
                 path: logout
                 target: login
                 invalidate_session: false
-            security: true
-            anonymous: ~
 
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -58,5 +57,9 @@ security:
         - { path: ^/marina/cotizacion/.*/confirma, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/astillero/gracias, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/astillero/.*/confirma, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/.*, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/usuario, roles: ROLE_RH }
+        - { path: ^/historial-correo, roles: ROLE_CORREOS }
+        - { path: ^/.*, roles: ROLE_USER }
+
+    role_hierarchy:
+            ROLE_ADMIN: [ROLE_USER, ROLE_CLIENTE, ROLE_MARINA, ROLE_ASTILLERO, ROLE_EMBARCACION, ROLE_CONTABILIDAD, ROLE_CORREOS, ROLE_RH, ROLE_AJUSTES]
