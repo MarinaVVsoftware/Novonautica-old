@@ -1310,3 +1310,37 @@ const datatablesSettings = {
         });
     },
 };
+
+/*
+    MOSTRAR TAB ACTIVA DONDE HAY ERRORES
+*/
+(function ($) {
+  const fooForm = document.querySelector('form') || undefined;
+  const tabContent = document.querySelector('.tab-content')  || undefined;
+  const firstError = tabContent ? tabContent.querySelector('.has-error') : undefined;
+  const helpBlocks = tabContent ? tabContent.querySelector('.help-block') : undefined;
+  const tabPanes = tabContent ? tabContent.querySelectorAll('.tab-pane') : undefined;
+  const tabs = document.querySelectorAll('.nav-tabs > li') || undefined;
+
+  if (fooForm && tabContent && (firstError || helpBlocks) && tabPanes && tabs) {
+    if (firstError || helpBlocks) {
+      let errorElement = firstError || helpBlocks;
+      const paneWithError = $(tabPanes).has(errorElement);
+      showErrors(paneWithError[0]);
+    }
+
+    fooForm.addEventListener('invalid', e => {
+      tabPanes.forEach(pane => pane.querySelector(`#${e.target.getAttribute('id')}`) ? showErrors(pane) : false);
+    }, true);
+
+    function showErrors(pane) {
+      const tabId = pane.getAttribute('id');
+      const tab = document.querySelector(`[href="#${tabId}"]`).parentNode;
+
+      tabs.forEach(elem => elem.classList.remove('active'));
+      tabPanes.forEach(elem => elem.classList.remove('active'));
+      tab.classList.add('active');
+      pane.classList.add('active')
+    }
+  }
+})(jQuery);
