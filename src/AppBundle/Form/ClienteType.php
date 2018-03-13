@@ -27,7 +27,7 @@ class ClienteType extends AbstractType
                 'required' => false
             ])
             ->add('celular', TextType::class, [
-                'label' => 'Dirección',
+                'label' => 'Celular',
                 'required' => false
             ])
             ->add('direccion', TextType::class, [
