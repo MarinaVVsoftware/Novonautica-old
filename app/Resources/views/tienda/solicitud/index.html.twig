@@ -24,6 +24,7 @@
                                 <th>Pagado</th>
                                 <th>Entregado</th>
                                 <th>Acciones</th>
+                                <th>Productos</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -31,7 +32,11 @@
                                 <tr>
                                     <td>{{ solicitud.fecha|date("m/d/Y") }}</td>
                                     <td>{{ solicitud.nombrebarco }}</td>
-                                    <td>{{ solicitud.solicitudEspecial }}</td>
+                                    {% if solicitud.solicitudEspecial is empty %}
+                                        <td>N/A</td>
+                                    {% else %}
+                                        <td> {{ solicitud.solicitudEspecial }}</td>
+                                    {% endif %}
                                     <td>$ {{ (solicitud.total/100)|number_format(2,'.',',') }}</td>
                                     <td class="align-middle">
                                         {% if solicitud.pagado >= 2 %}
@@ -59,39 +64,36 @@
                                     </td>
                                     <td align="center" valign="middle">
                                         <ul class="list-inline">
-                                            <li style="width: 100%;">
-                                                <div class="row">
-                                                    <div class="col-xs-6">
+                                            <li>
                                                 {% if solicitud.pagado >= 2 %}
-                                                            <a href="pagar/{{ solicitud.id }}" class="btn btn-xs btn-azul">
+                                                            <a href="pagar/{{ solicitud.id }}" class="btn btn-block btn-xs btn-azul">
                                                                 Pagado</a>
-                                                            <a href="nopagado/{{ solicitud.id }}" class="btn btn-xs btn-naranja">
+                                                            <a href="nopagado/{{ solicitud.id }}" class="btn btn-block btn-xs btn-naranja">
                                                                 No pagado</a>
                                                 {% elseif solicitud.pagado == 1 %}
-                                                    <a href="pagar/{{ solicitud.id }}" class="btn btn-xs btn-naranja">
+                                                    <a href="pagar/{{ solicitud.id }}" class="btn btn-block btn-xs btn-naranja">
                                                         No pagado</a>
                                                 {% elseif solicitud.pagado == 0 %}
-                                                    <a href="pagar/{{ solicitud.id }}" class="btn btn-xs btn-azul">
+                                                    <a href="pagar/{{ solicitud.id }}" class="btn btn-block btn-xs btn-azul">
                                                         Pagado</a>
                                                 {% endif %}
-                                                    </div>
-                                                    <div class="col-xs-6">
                                                 {% if solicitud.entregado >= 2 %}
-                                                            <a href="entregar/{{ solicitud.id }}" class="btn btn-xs btn-azul">
+                                                            <a href="entregar/{{ solicitud.id }}" class="btn btn-block btn-xs btn-azul">
                                                                 Entregado</a>
-                                                            <a href="noentregado/{{ solicitud.id }}" class="btn btn-xs btn-naranja">
+                                                            <a href="noentregado/{{ solicitud.id }}" class="btn btn-block btn-xs btn-naranja">
                                                                 No entregado</a>
                                                 {% elseif solicitud.entregado == 1 %}
-                                                    <a href="entregar/{{ solicitud.id }}" class="btn btn-xs btn-naranja">
+                                                    <a href="entregar/{{ solicitud.id }}" class="btn btn-block btn-xs btn-naranja">
                                                         No entregado</a>
                                                 {% elseif solicitud.entregado == 0 %}
-                                                    <a href="entregar/{{ solicitud.id }}" class="btn btn-xs btn-azul">
+                                                    <a href="entregar/{{ solicitud.id }}" class="btn btn-block btn-xs btn-azul">
                                                         Entregado</a>
                                                 {% endif %}
-                                                    </div>
-                                                </div>
                                             </li>
                                         </ul>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('tienda_solicitud_ver', {'id' : solicitud.id}) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                     </td>
                                 </tr>
                             {% endfor %}

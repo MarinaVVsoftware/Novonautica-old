@@ -103,7 +103,7 @@ class SolicitudController extends Controller
      * @Route("/noentregado/{id}", name="tienda_solicitud_noentregado")
      * @Method({"GET", "POST"})
      */
-    public function noentregadorAction(Solicitud $solicitud)
+    public function noentregadoAction(Solicitud $solicitud)
     {
         $em = $this->getDoctrine()->getManager();
         $solicitudes = $em->getRepository('AppBundle:Tienda\Solicitud');
@@ -155,6 +155,22 @@ class SolicitudController extends Controller
 //            'delete_form' => $deleteForm->createView(),
 //        ));
 //    }
+
+    /**
+     * Displays a form to edit an existing solicitud entity.
+     *
+     * @Route("/{id}", name="tienda_solicitud_ver")
+     * @Method({"GET"})
+     */
+    public function editAction(Solicitud $solicitud)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $solicitud = $em->getRepository('AppBundle:Tienda\Solicitud')->find($solicitud->getId());
+
+        return $this->render('tienda/solicitud/show.html.twig', array(
+            'solicitud' => $solicitud,
+        ));
+    }
 
     /**
      * Deletes a solicitud entity.

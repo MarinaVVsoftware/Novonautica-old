@@ -173,6 +173,11 @@ class Barco
      */
     private $embarcacion;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaSolicitudGasolina", mappedBy="idbarco")
+     */
+    private $gasolinabarco;
+
     public function __construct()
     {
         $this->motores = new ArrayCollection();
@@ -705,5 +710,41 @@ class Barco
     public function getEmbarcacion()
     {
         return $this->embarcacion;
+    }
+
+    /**
+     * Add gasolinabarco.
+     *
+     * @param \AppBundle\Entity\MarinaHumedaSolicitudGasolina $gasolinabarco
+     *
+     * @return Barco
+     */
+    public function addGasolinabarco(\AppBundle\Entity\MarinaHumedaSolicitudGasolina $gasolinabarco)
+    {
+        $this->gasolinabarco[] = $gasolinabarco;
+
+        return $this;
+    }
+
+    /**
+     * Remove gasolinabarco.
+     *
+     * @param \AppBundle\Entity\MarinaHumedaSolicitudGasolina $gasolinabarco
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeGasolinabarco(\AppBundle\Entity\MarinaHumedaSolicitudGasolina $gasolinabarco)
+    {
+        return $this->gasolinabarco->removeElement($gasolinabarco);
+    }
+
+    /**
+     * Get gasolinabarco.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGasolinabarco()
+    {
+        return $this->gasolinabarco;
     }
 }

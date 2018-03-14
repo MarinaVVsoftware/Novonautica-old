@@ -88,6 +88,13 @@ class Cliente
     private $direccion;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="idioma", type="smallint")
+     */
+    private $idioma;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="fecharegistro", type="datetime", nullable=true)
@@ -162,6 +169,7 @@ class Cliente
         $this->mhcotizacionesadicionales = new ArrayCollection();
         $this->razonesSociales = new ArrayCollection();
         $this->astilleroCotizaciones = new ArrayCollection();
+        $this->idioma = 1;
     }
 
     public function __toString()
@@ -618,5 +626,29 @@ class Cliente
     public function getAstilleroCotizaciones()
     {
         return $this->astilleroCotizaciones;
+    }
+
+    /**
+     * Set idioma.
+     *
+     * @param int $idioma
+     *
+     * @return Cliente
+     */
+    public function setIdioma($idioma)
+    {
+        $this->idioma = $idioma;
+
+        return $this;
+    }
+
+    /**
+     * Get idioma.
+     *
+     * @return int
+     */
+    public function getIdioma()
+    {
+        return $this->idioma;
     }
 }

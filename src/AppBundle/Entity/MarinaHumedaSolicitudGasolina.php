@@ -22,16 +22,7 @@ class MarinaHumedaSolicitudGasolina
     private $id;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="idcliente", type="integer")
-     */
-    private $idcliente;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="idbarco", type="integer")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="gasolinabarco")
      */
     private $idbarco;
 
@@ -58,30 +49,6 @@ class MarinaHumedaSolicitudGasolina
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set idcliente.
-     *
-     * @param int $idcliente
-     *
-     * @return MarinaHumedaSolicitudGasolina
-     */
-    public function setIdcliente($idcliente)
-    {
-        $this->idcliente = $idcliente;
-
-        return $this;
-    }
-
-    /**
-     * Get idcliente.
-     *
-     * @return int
-     */
-    public function getIdcliente()
-    {
-        return $this->idcliente;
     }
 
     /**
