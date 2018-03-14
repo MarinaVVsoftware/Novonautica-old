@@ -31,7 +31,7 @@ class EventoType extends AbstractType
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
                     'readonly' => true],
-                'format' => 'dd-MM-yyyy'
+                'format' => 'yyyy-MM-dd'
             ])
             ->add('fechafin',DateType::class,[
             'label' => 'Fecha fin',
@@ -39,7 +39,7 @@ class EventoType extends AbstractType
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
                     'readonly' => true],
-                'format' => 'dd-MM-yyyy'
+                'format' => 'yyyy-MM-dd'
                 ])
             ->add('horainicio',TimeType::class,[
                 'label' => 'Hora inicio',

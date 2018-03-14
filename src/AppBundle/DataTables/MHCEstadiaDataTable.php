@@ -42,7 +42,8 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
         $qb = $mhcRepo->createQueryBuilder('mhce');
         $results->recordsTotal = $qb->select('COUNT(mhce.id)')
             ->leftJoin('mhce.mhcservicios', 'servicios')
-            ->where('servicios.tipo = 1')
+            ->where($qb->expr()->eq('servicios.tipo',1))
+            ->orWhere($qb->expr()->eq('servicios.tipo',2))
             ->getQuery()
             ->getSingleScalarResult();
 
@@ -114,9 +115,9 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
             } elseif ($order->column === 7) {
                 $q->addOrderBy('mhce.subtotal', $order->dir);
             } elseif ($order->column === 8) {
-                $q->addOrderBy('mhce.ivatotal', $order->dir);
-            } elseif ($order->column === 9) {
                 $q->addOrderBy('mhce.descuentototal', $order->dir);
+            } elseif ($order->column === 9) {
+                $q->addOrderBy('mhce.ivatotal', $order->dir);
             } elseif ($order->column === 10) {
                 $q->addOrderBy('mhce.total', $order->dir);
             } elseif ($order->column === 11) {
@@ -158,8 +159,8 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
                 $cotizacion->getSlip() ? $cotizacion->getSlip()->__toString() : 'Sin asignar',
                 $servicioEstadia ? $servicioEstadia->first()->getCantidad() : '',
                 '$' . number_format($cotizacion->getSubtotal() / 100, 2),
-                '$' . number_format($cotizacion->getIvatotal() / 100, 2),
                 '$' . number_format($cotizacion->getDescuentototal() / 100, 2),
+                '$' . number_format($cotizacion->getIvatotal() / 100, 2),
                 '$' . number_format($cotizacion->getTotal() / 100, 2),
                 $cotizacion->getValidanovo(),
                 $cotizacion->getValidacliente(),

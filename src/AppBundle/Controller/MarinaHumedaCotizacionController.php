@@ -144,8 +144,9 @@ class MarinaHumedaCotizacionController extends Controller
             $precio = $marinaDiasEstadia->getPrecio()->getCosto();
             $subTotal = $cantidadDias * $precio * $eslora;
             $descuentoTot = ($subTotal * $descuento) / 100;
-            $ivaTot = ($subTotal * $iva) / 100;
-            $total = $subTotal - $descuentoTot + $ivaTot;
+            $subTotal_descuento = $subTotal - $descuentoTot;
+            $ivaTot = ($subTotal_descuento * $iva) / 100;
+            $total = $subTotal_descuento + $ivaTot;
 
             $marinaDiasEstadia
                 ->setTipo($tiposervicio)
@@ -167,8 +168,9 @@ class MarinaHumedaCotizacionController extends Controller
             $precio = $marinaElectricidad->getPrecioAux()->getCosto();
             $subTotal = $cantidadDias * $precio * $eslora;
             $descuentoTot = ($subTotal * $descuento) / 100;
-            $ivaTot = ($subTotal * $iva) / 100;
-            $total = $subTotal - $descuentoTot + $ivaTot;
+            $subTotal_descuento = $subTotal - $descuentoTot;
+            $ivaTot = ($subTotal_descuento * $iva) / 100;
+            $total = $subTotal_descuento + $ivaTot;
 
             $marinaElectricidad
                 ->setTipo($tiposervicio)
@@ -304,6 +306,8 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @Route("/{id}", name="marina-humeda_show")
      * @Method("GET")
+     * @param MarinaHumedaCotizacion $marinaHumedaCotizacion
+     * @return Response
      */
     public function showAction(MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
@@ -1273,20 +1277,32 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @Route("/{id}", name="marina-humeda_delete")
      * @Method("DELETE")
+     * @param Request $request
+     * @param MarinaHumedaCotizacion $marinaHumedaCotizacion
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
         $form = $this->createDeleteForm($marinaHumedaCotizacion);
         $form->handleRequest($request);
-
+        $tipo = $marinaHumedaCotizacion->getMHCservicios()->first()->getTipo();
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($marinaHumedaCotizacion);
-
-            $em->flush();
+//            dump($marinaHumedaCotizacion->getMHCservicios()->first()->getTipo());
+            if ($marinaHumedaCotizacion->getValidanovo() == 0) {
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($marinaHumedaCotizacion);
+                $em->flush();
+            }
         }
-
-        return $this->redirectToRoute('marina-humeda_index');
+        if($tipo == 1 || $tipo == 2){
+            return $this->redirectToRoute('marina-humeda_estadia_index');
+        }else{
+            if($tipo == 3 || $tipo == 4 || $tipo == 5){
+                return $this->redirectToRoute('marina-humeda_gasolina_index');
+            }else{
+                return $this->redirectToRoute('inicio');
+            }
+        }
     }
 
     /**

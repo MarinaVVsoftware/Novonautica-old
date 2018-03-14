@@ -3,6 +3,8 @@
 namespace AppBundle\Form;
 
 
+
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -56,10 +58,13 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'label'=>'Días Estadia',
                 'attr' => ['class' => 'esnumero'],
             ])
-            ->add('descuento', null, [
+            ->add('descuento', NumberType::class, [
                 'empty_data' => 0,
-                'attr' => ['class' => 'esdecimal',
-                    'autocomplete' => 'off']
+                'attr' => ['class' => 'esdecimal limite100',
+                    'autocomplete' => 'off',
+                    'max' => 100,
+                    'min' => 0
+                    ]
             ])
             ->add('dolar', MoneyType::class, [
                 'required'=>false,

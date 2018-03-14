@@ -76,6 +76,7 @@ $(document).ready(function () {
     window.location.href = direc;
   });
 
+
 //---- seleccionar choice al recotizar------
   var diasestadiaprecio = $('#de_precio').data('valor');
   var electricidadprecio = $('#e_precio').data('valor');
@@ -90,30 +91,43 @@ $(document).ready(function () {
     }
   });
 //-- fin seleccionar choice al recotizar----
-  $(".esnumero").keypress(function () {
-    return isNumberKey(event);
-  });
-  $(".esdecimal").keypress(function () {
-    return esNumeroDecimal(event, this);
-  });
-  $("#appbundle_marinahumedacotizacion_validanovo_0").click(function () {
-    $('#notarechazado').hide();
-  });
-  $("#appbundle_marinahumedacotizacion_validanovo_1").click(function () {
-    $('#notarechazado').show();
-  });
-  $("#appbundle_marinahumedacotizacion_validacliente_0").click(function () {
-    $('#notarechazado').hide();
-  });
-  $("#appbundle_marinahumedacotizacion_validacliente_1").click(function () {
-    $('#notarechazado').show();
-  });
-  $("#appbundle_astillerocotizacion_validanovo_0").click(function () {
-    $('#notarechazado').hide();
-  });
-  $("#appbundle_astillerocotizacion_validanovo_1").click(function () {
-    $('#notarechazado').show();
-  });
+    $(".esnumero").keypress(function () {
+        return isNumberKey(event);
+    });
+    $(".esdecimal").keypress(function () {
+        return esNumeroDecimal(event, this);
+    });
+    $("#appbundle_marinahumedacotizacion_validanovo_0").click(function () {
+        $('#notarechazado').hide();
+    });
+    $("#appbundle_marinahumedacotizacion_validanovo_1").click(function () {
+        $('#notarechazado').show();
+    });
+    $("#appbundle_marinahumedacotizacion_validacliente_0").click(function () {
+        $('#notarechazado').hide();
+    });
+    $("#appbundle_marinahumedacotizacion_validacliente_1").click(function () {
+        $('#notarechazado').show();
+    });
+    $("#appbundle_astillerocotizacion_validanovo_0").click(function () {
+        $('#notarechazado').hide();
+    });
+    $("#appbundle_astillerocotizacion_validanovo_1").click(function () {
+        $('#notarechazado').show();
+    });
+    // $(".limite100").keypress(function () {
+    //     if(parseFloat($(this).val())<=100){
+    //         return true;
+    //     }else{
+    //         return false;
+    //     }
+    // });
+    $('.limite100').on('input', function () {
+        var value = $(this).val();
+            if ((value !== '') && (value.indexOf('.') === -1)) {
+                $(this).val(Math.max(Math.min(value, 100), 0));
+            }
+    });
 });
 
 function isNumberKey(evt) {
@@ -716,16 +730,17 @@ function recalculaSubtotalesYtotal() {
 function calculaSubtotales(cantidad, precio, tdsubtot, tdiva, tddesc, tdtot) {
 
 
-  var eslora = 0;
-  if ($('#de_eslora').data('valor')) {
-    eslora = $('#de_eslora').data('valor');
-  }
-  var iva = ($('#valiva').data('valor')) / 100;
-  var descuento = $('#appbundle_marinahumedacotizacion_descuento').val();
-  var subtotal = cantidad * precio * eslora;
-  var ivatot = subtotal * iva;
-  var desctot = (subtotal * descuento) / 100;
-  var total = (subtotal + ivatot - desctot).toFixed(2);
+    var eslora = 0;
+    if ($('#de_eslora').data('valor')) {
+        eslora = $('#de_eslora').data('valor');
+    }
+    var iva = ($('#valiva').data('valor')) / 100;
+    var descuento = $('#appbundle_marinahumedacotizacion_descuento').val();
+    var subtotal = cantidad * precio * eslora;
+    var desctot = (subtotal * descuento) / 100;
+    var subtotal_descuento = subtotal - desctot;
+    var ivatot = subtotal_descuento * iva;
+    var total = (subtotal_descuento + ivatot).toFixed(2);
 
   tdsubtot.html('$ ' + (subtotal).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
   tdiva.html('$ ' + (ivatot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));

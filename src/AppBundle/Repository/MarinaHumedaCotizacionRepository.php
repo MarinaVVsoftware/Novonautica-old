@@ -31,6 +31,8 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->select('mhc', 'servicios')
             ->join('mhc.mhcservicios', 'servicios')
             ->where($qb->expr()->eq('servicios.tipo','3'))
+            ->orWhere($qb->expr()->eq('servicios.tipo','4'))
+            ->orWhere($qb->expr()->eq('servicios.tipo','5'))
             ->getQuery()
             ->getResult();
     }

@@ -141,7 +141,7 @@ class MarinaHumedaCotizacion
 
 
     /**
-     * @var int Estatus: 1 Rechazado, 2 Aceptado
+     * @var int Estatus: 0 Pendiente, 1 Rechazado, 2 Aceptado
      *
      * @ORM\Column(name="validanovo", type="smallint")
      */
@@ -155,7 +155,7 @@ class MarinaHumedaCotizacion
     private $registroValidaNovo;
 
     /**
-     * @var int Estatus: 1 aceptado, 2 Rechazado
+     * @var int Estatus: 0 Pendiente, 1 Rechazado, 2 Aceptado
      *
      * @ORM\Column(name="validacliente", type="smallint")
      */
