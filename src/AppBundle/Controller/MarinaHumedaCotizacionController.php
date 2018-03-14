@@ -7,6 +7,7 @@ use AppBundle\Entity\CotizacionNota;
 use AppBundle\Entity\CuentaBancaria;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
+use AppBundle\Entity\MonederoMovimiento;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Form\CotizacionNotaType;
 use AppBundle\Form\MarinaHumedaCotizacionAceptadaType;
@@ -483,6 +484,7 @@ class MarinaHumedaCotizacionController extends Controller
         //$pago = new Pago();
         //$marinaHumedaCotizacion->addPago($pago);
         $totPagado = 0;
+        $totPagadoMonedero = 0;
         $listaPagos = new ArrayCollection();
 
         foreach ($marinaHumedaCotizacion->getPagos() as $pago) {
@@ -497,8 +499,11 @@ class MarinaHumedaCotizacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $continuarpago = true;
             $total = $marinaHumedaCotizacion->getTotal();
             $pagado = $marinaHumedaCotizacion->getPagado();
+            $monedero = $marinaHumedaCotizacion->getCliente()->getMonederomarinahumeda();
 
             $em = $this->getDoctrine()->getManager();
 
@@ -509,32 +514,64 @@ class MarinaHumedaCotizacionController extends Controller
                     $em->remove($pago);
                 }
             }
-            $unpago = 0;
+
             foreach ($marinaHumedaCotizacion->getPagos() as $pago) {
                 if($pago->getDivisa()=='MXN'){
                     $unpago = ($pago->getCantidad()/$pago->getDolar())*100;
                     $pago->setCantidad($unpago);
+
                 }else{
                     $unpago = $pago->getCantidad();
                 }
                 $totPagado += $unpago;
-            }
 
-            if ($total < $totPagado) {
+                if($pago->getMetodopago() == 'Monedero' && $pago->getId() == null){
+                    $totPagadoMonedero += $unpago;
+                    $monederotot = $monedero - $totPagadoMonedero;
+                    if($marinaHumedaCotizacion->getFoliorecotiza()){
+                        $folioCotizacion = $marinaHumedaCotizacion->getFolio().'-'.$marinaHumedaCotizacion->getFoliorecotiza();
+                    }else{
+                        $folioCotizacion = $marinaHumedaCotizacion->getFolio();
+                    }
+                    if($marinaHumedaCotizacion->getMHCservicios()->first()->getTipo() == 1 || $marinaHumedaCotizacion->getMHCservicios()->first()->getTipo() == 2){
+                        $notaMonedero = 'Pago de servicio de estadía y electricidad. Folio cotización: '.$folioCotizacion;
+                    }else{
+                        $notaMonedero = 'Pago de servicio de gasolina. Folio cotización: '.$folioCotizacion;
+                    }
+                    $fechaHoraActual = new \DateTime('now');
+                    $monederoMovimiento = new MonederoMovimiento();
+                    $monederoMovimiento
+                        ->setCliente($marinaHumedaCotizacion->getCliente())
+                        ->setFecha($fechaHoraActual)
+                        ->setMonto($unpago)
+                        ->setOperacion(2)
+                        ->setResultante($monederotot)
+                        ->setTipo(1)
+                        ->setDescripcion($notaMonedero);
+                    $em->persist($monederoMovimiento);
+                }
+
+            }
+            if (($total + 1) < $totPagado) {
                 $this->addFlash('notice', 'Error! Se ha intentado pagar más del total');
             } else {
-                $faltante = $total - $totPagado;
-                if ($faltante == 0) {
-                    $marinaHumedaCotizacion->setRegistroPagoCompletado(new \DateTimeImmutable());
-                    $marinaHumedaCotizacion->setEstatuspago(2);
+                if ($monedero < $totPagadoMonedero) {
+                    $this->addFlash('notice', 'Error! Fondos insuficientes en el monedero');
                 } else {
-                    $marinaHumedaCotizacion->setEstatuspago(1);
+                    $faltante = $total - $totPagado;
+                    if ($faltante <= 0.5) {
+                        $marinaHumedaCotizacion->setRegistroPagoCompletado(new \DateTimeImmutable());
+                        $marinaHumedaCotizacion->setEstatuspago(2);
+                    } else {
+                        $marinaHumedaCotizacion->setEstatuspago(1);
+                    }
+                    $monederoRestante =  $monedero - $totPagadoMonedero;
+                    $marinaHumedaCotizacion->setPagado($totPagado);
+                    $marinaHumedaCotizacion->getCliente()->setMonederomarinahumeda($monederoRestante);
+                    $em->persist($marinaHumedaCotizacion);
+                    $em->flush();
+                    return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
                 }
-                $marinaHumedaCotizacion
-                    ->setPagado($totPagado);
-                $em->persist($marinaHumedaCotizacion);
-                $em->flush();
-                return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
             }
         }
 

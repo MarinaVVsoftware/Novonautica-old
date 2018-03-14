@@ -56,6 +56,7 @@
                     </div>
                 </div>
                 <div class="panel-body">
+
                     <div class="row">
                         <div class="col-sm-3">
                             <label>Cliente</label>
@@ -74,6 +75,12 @@
                         {% form_theme form 'estructura/temaerror.html.twig' %}
                         {{ form_start(form) }}
                         <div class="col-sm-9">
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-8">
+                                    <label>Monedero actual</label>
+                                    <div class='info-input'>$ {{ (marinaHumedaCotizacion.cliente.monederomarinahumeda/100)|number_format(2) }} USD</div>
+                                </div>
+                            </div>
                             <p style="margin-bottom: 5px">Listado de pagos</p>
                             <div class="row">
                                 <div class="col-sm-12">

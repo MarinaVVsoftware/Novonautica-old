@@ -22,7 +22,8 @@ class PagoType extends AbstractType
             ->add('metodopago',ChoiceType::class,[
                 'choices'  => ['Efectivo' => 'Efectivo',
                     'Transferencia' => 'Transferencia',
-                    'Tarjeta de crédito' => 'Tarjeta de crédito'
+                    'Tarjeta de crédito' => 'Tarjeta de crédito',
+                    'Monedero' => 'Monedero',
                     ],
                 'placeholder' => 'Seleccionar...',
                 'label' => 'Método de pago',

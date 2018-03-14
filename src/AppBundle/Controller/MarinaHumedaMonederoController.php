@@ -84,7 +84,7 @@ class MarinaHumedaMonederoController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('mh_monedero_index');
+            return $this->redirectToRoute('mh_monedero_ver',['cliente'=>$cliente]);
         }
         return $this->render('marinahumeda/monedero/edit.html.twig', array(
             'cliente' => $cliente,
@@ -144,7 +144,7 @@ class MarinaHumedaMonederoController extends Controller
                 $em->flush();
 
 
-                return $this->redirectToRoute('mh_monedero_index');
+                return $this->redirectToRoute('mh_monedero_ver',['id'=>$cliente->getId()]);
             }
 
 
