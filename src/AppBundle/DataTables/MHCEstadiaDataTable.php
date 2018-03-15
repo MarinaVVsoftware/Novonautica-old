@@ -144,6 +144,7 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
             $cotizacion = $cotizaciones[$index];
 
             $servicioEstadia = $cotizacion->getMHCservicios()->filter(function ($servicio) {
+                //dump($servicio);
                 if ($servicio->getTipo() === 1) {
                     return $servicio;
                 }

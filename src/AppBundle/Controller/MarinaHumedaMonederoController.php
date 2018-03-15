@@ -57,10 +57,20 @@ class MarinaHumedaMonederoController extends Controller
      * @Route("/{id}", name="mh_monedero_ver")
      * @Method("GET")
      */
-    public function showAction(Cliente $cliente)
+    public function showAction(Request $request, Cliente $cliente)
     {
+        if($request->isXmlHttpRequest()){
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'MHCMonederoMovimiento');
+                return $this->json($results);
+            } catch (HttpException $e){
+                return $this->json($e->getMessage(),$e->getStatusCode());
+            }
+        }
         return $this->render('marinahumeda/monedero/show.html.twig', [
             'cliente' => $cliente,
+            'title' => 'Movimientos Monedero Cliente'
         ]);
     }
 
