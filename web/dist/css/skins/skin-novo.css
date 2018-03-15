@@ -4,8 +4,7 @@
  */
 /* skin-novo navbar */
 .skin-novo .main-header {
-    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .2);
 }
 
 .skin-novo .main-header .navbar-toggle {
@@ -110,6 +109,10 @@
     color: #fff;
 }
 
+.skin-novo .sidebar-menu .treeview-menu > li {
+    background-color: hsla(228, 23%, 21%, .5);
+}
+
 .skin-novo .sidebar-menu > li.header {
     color: #4b646f;
     background: #1a2226;
@@ -153,6 +156,15 @@
     color: #ffffff;
     background: #0097f6;
 }
+
+.skin-novo .sidebar-menu .treeview.menu-open > .treeview-menu > li:last-child > a {
+    box-shadow: inset 0 -1px 1px 0 rgba(0, 0, 0, .10), inset 0 -1px 1px 0 rgba(0, 0, 0, .08), inset 0 -1px 1px -2px rgba(0, 0, 0, .15);
+}
+.skin-novo .sidebar-menu .treeview.menu-open > .treeview-menu > li:nth-child(1) > a {
+    box-shadow: inset 0 1px 1px 0 rgba(0, 0, 0, .14), inset 0 1px 1px 0 rgba(0, 0, 0, .12), inset 0 1px 1px -2px rgba(0, 0, 0, .2);
+}
+
+
 
 .skin-novo .sidebar-form {
     border-radius: 3px;
@@ -225,10 +237,6 @@
 .skin-novo .main-header {
     max-height: 140px;
     background: #292e41;
-}
-
-.skin-novo .main-header {
-    box-shadow: 0 4px 8px #191919;
 }
 
 .skin-novo .main-footer {

@@ -1,52 +1,380 @@
-{% macro submenu(menus, current_path, start) %}
-    {% import _self as macros %}
-    {% set start = start + 1 %}
+{% import _self as path %}
 
-    <ul class="treeview-menu">
-        {% for menu in menus %}
-            <li class="{% spaceless %}
-                       {{ menu.submenu is defined ? 'treeview' }}
-                       {{ menu.submenu is defined and menu.path in current_path or menu.path == current_path ? 'active' }}
-                       {% endspaceless %}">
-                <a href="{{ menu.path|default('#') }}">
-                    <i class="fa fa-{{ start % 2 ? 'minus' : 'circle-o' }}"></i> {{ menu.name }}
-                    {% if menu.submenu is defined %}
-                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                    {% endif %}
-                </a>
-                {% if menu.submenu is defined %}
-                    {{ macros.submenu(menu.submenu, current_path, start) }}
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-
-{% endmacro %}
-
-{% import _self as macros %}
+{% macro check(path) %}
+    {% set route = app.request.get('_route') %}
+    {% set direct = app.request.pathinfo|split('/')[1] %}
+    {{ route in path or path in route or path in direct ? 'active menu-open' : '' }}
+{% endmacro check %}
 
 <aside class="main-sidebar">
-    <section class="sidebar clearfix">
-        <ul class="sidebar-menu" data-widget="tree">
-            {% for menu in menus %}
-                <li class="{% spaceless %}
-                           {{ menu.submenu is defined ? 'treeview' }}
-                           {{ menu.submenu is defined and menu.path in current_path or menu.path == current_path ? 'active' }}
-                           {% endspaceless %}">
-                    <a href="{{ menu.path|default('#') }}">
-                        <i class="fa fa-{{ menu.icon|default('asterisk') }}"></i>
-                        <span>{{ menu.name }}</span>
-                        {% if menu.submenu is defined %}
+    <section class="sidebar">
+        <ul class="sidebar-menu tree" data-widget="tree">
+            <!-- START CLIENTES -->
+            {% if is_granted('ROLE_CLIENTES') %}
+                <li class="treeview {{ path.check('cliente') }}">
+                <a href="#">
+                    <i class="fa fa-users"></i> <span>Clientes</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{ path.check('cliente_index') }}">
+                        <a href="{{ path('cliente_index') }}">
+                            <i class="fa fa-circle-o"></i> Listado
+                        </a>
+                    </li>
+                    <li class="{{ path.check('cliente_new') }}">
+                        <a href="{{ path('cliente_new') }}">
+                            <i class="fa fa-circle-o"></i> Nuevo
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            <!-- END CLIENTES -->
+
+            <!-- START MARINA -->
+            {% if is_granted('ROLE_MARINA') %}
+            <li class="treeview {{ path.check('marina') }}">
+                <a href="#">
+                    <i class="fa fa-ship"></i> <span>Marina</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <!-- START MARINA/MONEDERO -->
+                    <li class="{{ path.check('mh_monedero_index') }}">
+                        <a href="{{ path('mh_monedero_index') }}">
+                            <i class="fa fa-circle-o"></i> Monedero
+                        </a>
+                    </li>
+                    <!-- END MARINA/MONEDERO -->
+
+                    <!-- START MARINA/SLIPS -->
+                    <li class="treeview {{ path.check(['mapa', 'slipmovimiento_index']) }}">
+                        <a href="#">
+                            <i class="fa fa-circle-o"></i> Slips
                             <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                        {% endif %}
-                    </a>
-                    {% if menu.submenu is defined %}
-                        {{ macros.submenu(menu.submenu, current_path, 0) }}
-                    {% endif %}
-                </li>
-                <hr>
-            {% endfor %}
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ path.check('mapa') }}">
+                                <a href="{{ path('mapa') }}">
+                                    <i class="fa fa-minus"></i> Mapa
+                                </a>
+                            </li>
+                            <li class="{{ path.check('slipmovimiento_index') }}">
+                                <a href="{{ path('slipmovimiento_index') }}">
+                                    <i class="fa fa-minus"></i> Ocupación
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- END MARINA/SLIPS -->
+
+                    <!-- START MARINA/COTIZACIONES -->
+                    <li class="treeview {{ path.check('marina-humeda') }} {{ path.check('marinahumeda') }}">
+                        <a href="#">
+                            <i class="fa fa-circle-o"></i> Cotizaciónes
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <!-- START MARINA/COTIZACION/ESTADIA -->
+                            <li class="treeview {{ path.check('marina-humeda') }} {{ path.check('marinahumeda') }}">
+                                <a href="#">
+                                    <i class="fa fa-minus"></i> Estadía
+                                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ path.check('marina-humeda_estadia_index') }}">
+                                        <a href="{{ path('marina-humeda_estadia_index') }}">
+                                            <i class="fa fa-circle-o"></i> Listado
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('marina-humeda_estadia_new') }}">
+                                        <a href="{{ path('marina-humeda_estadia_new') }}">
+                                            <i class="fa fa-circle-o"></i> Nueva
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('marinahumeda-tarifas_index') }}">
+                                        <a href="{{ path('marinahumeda-tarifas_index') }}">
+                                            <i class="fa fa-circle-o"></i> Tarifas
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- END MARINA/COTIZACION/ESTADIA -->
+
+                            <!-- START MARINA/COTIZACION/GASOLINA -->
+                            <li class="treeview {{ path.check('_gasolina_') }}">
+                                <a href="#">
+                                    <i class="fa fa-minus"></i> Gasolina
+                                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ path.check('marina-humeda_gasolina_index') }}">
+                                        <a href="{{ path('marina-humeda_gasolina_index') }}">
+                                            <i class="fa fa-circle-o"></i> Listado
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('marina-humeda_gasolina_new') }}">
+                                        <a href="{{ path('marina-humeda_gasolina_new') }}">
+                                            <i class="fa fa-circle-o"></i> Nueva
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- END MARINA/COTIZACION/GASOLINA -->
+                        </ul>
+
+                    </li>
+                    <!-- END MARINA/COTIZACIONES -->
+
+                    <!-- START MARINA/COTIZACION/SERVICIOS ADICIONALES -->
+                    <li class="treeview {{ path.check('cotizacion-adicional_') }}">
+                        <a href="#">
+                            <i class="fa fa-circle-o"></i> Servicios adicionales
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ path.check('marina-humeda-cotizacion-adicional_index') }}">
+                                <a href="{{ path('marina-humeda-cotizacion-adicional_index') }}">
+                                    <i class="fa fa-minus"></i> Listado
+                                </a>
+                            </li>
+                            <li class="{{ path.check('marina-humeda-cotizacion-adicional_new') }}">
+                                <a href="{{ path('marina-humeda-cotizacion-adicional_new') }}">
+                                    <i class="fa fa-minus"></i> Nueva
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- END MARINA/COTIZACION/SERVICIOS ADICIONALES -->
+                </ul>
+            </li>
+            {% endif %}
+            <!-- END MARINA -->
+
+            <!-- START ASTILLERO -->
+            {% if is_granted('ROLE_ASTILLERO') %}
+            <li class="treeview {{ path.check('astillero') }}">
+                <a href="#">
+                    <i class="fa fa-anchor"></i> <span>Astillero</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{ path.check('astillero_index') }}">
+                        <a href="{{ path('astillero_index') }}">
+                            <i class="fa fa-circle-o"></i> Listado
+                        </a>
+                    </li>
+                    <li class="{{ path.check('astillero_new') }}">
+                        <a href="{{ path('astillero_new') }}">
+                            <i class="fa fa-circle-o"></i> Nueva
+                        </a>
+                    </li>
+                    <li class="{{ path.check('astillero-aceptaciones') }}">
+                        <a href="{{ path('astillero-aceptaciones') }}">
+                            <i class="fa fa-circle-o"></i> Aceptaciones
+                        </a>
+                    </li>
+
+                    <!-- START ASTILLERO/ODT -->
+                    <li class="{{ path.check('ordendetrabajo_index') }}">
+                        <a href="{{ path('ordendetrabajo_index') }}">
+                            <i class="fa fa-circle-o"></i> ODT
+                        </a>
+                    </li>
+                    <!-- END ASTILLERO/ODT -->
+
+                    <!-- START ASTILLERO/PRODUCTOS -->
+                    <li class="treeview {{ path.check('astillero_producto') }}">
+                        <a href="#">
+                            <i class="fa fa-circle-o"></i> Productos
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ path.check('astillero_producto_index') }}">
+                                <a href="{{ path('astillero_producto_index') }}">
+                                    <i class="fa fa-minus"></i> Listado
+                                </a>
+                            </li>
+                            <li class="{{ path.check('astillero_producto_new') }}">
+                                <a href="{{ path('astillero_producto_new') }}">
+                                    <i class="fa fa-minus"></i> Nuevo
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- END ASTILLERO/PRODUCTOS -->
+
+                    <!-- START ASTILLERO/SERVICIOS -->
+                    <li class="treeview {{ path.check('astillero_servicio') }}">
+                        <a href="#">
+                            <i class="fa fa-circle-o"></i> Servicios
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ path.check('astillero_servicio_index') }}">
+                                <a href="{{ path('astillero_servicio_index') }}">
+                                    <i class="fa fa-minus"></i> Listado
+                                </a>
+                            </li>
+                            <li class="{{ path.check('astillero_servicio_new') }}">
+                                <a href="{{ path('astillero_servicio_new') }}">
+                                    <i class="fa fa-minus"></i> Nuevo
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- END ASTILLERO/PRODUCTOS -->
+                </ul>
+            </li>
+            {% endif %}
+            <!-- END ASTILLERO -->
+
+            <!-- START EMBARCACION|OCEANDEAL -->
+            {% if is_granted('ROLE_EMBARCACION') %}
+            <li class="treeview {{ path.check('embarcacion_') }}">
+                <a href="#">
+                    <i class="fa fa-life-buoy"></i> <span>Ocean Deal</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{ path.check('embarcacion_index') }}">
+                        <a href="{{ path('embarcacion_index') }}">
+                            <i class="fa fa-circle-o"></i> Listado
+                        </a>
+                    </li>
+                    <li class="{{ path.check('embarcacion_new') }}">
+                        <a href="{{ path('embarcacion_new') }}">
+                            <i class="fa fa-circle-o"></i> Nueva
+                        </a>
+                    </li>
+                    <li class="{{ path.check('embarcacion_marca_new') }}">
+                        <a href="{{ path('embarcacion_marca_new') }}">
+                            <i class="fa fa-circle-o"></i> Marcas
+                        </a>
+                    </li>
+                    <li class="{{ path.check('embarcacion_modelo') }}">
+                        <a href="{{ path('embarcacion_modelo') }}">
+                            <i class="fa fa-circle-o"></i> Modelos
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            <!-- END EMBARCACION|OCEANDEAL -->
+
+            <!-- START TIENDA -->
+            {% if is_granted('ROLE_TIENDA') %}
+            <li class="treeview {{ path.check('tienda_') }}">
+                <a href="#">
+                    <i class="fa fa-th"></i> <span>Tienda</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{ path.check('tienda_solicitud_index') }}">
+                        <a href="{{ path('tienda_solicitud_index') }}">
+                            <i class="fa fa-circle-o"></i> Solicitudes
+                        </a>
+                    </li>
+                    <li class="{{ path.check('tienda_solicitud_new') }}">
+                        <a href="{{ path('tienda_solicitud_new') }}">
+                            <i class="fa fa-circle-o"></i> Nueva
+                        </a>
+                    </li>
+                    <li class="{{ path.check('tienda_producto_index') }}">
+                        <a href="{{ path('tienda_producto_index') }}">
+                            <i class="fa fa-circle-o"></i> Productos
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            <!-- END TIENDA -->
+
+            <!-- START CONTABILIDAD -->
+            {% if is_granted('ROLE_CONTABILIDAD') %}
+            <li class="treeview {{ path.check('contabilidad_') }}">
+                <a href="#">
+                    <i class="fa fa-archive"></i> <span>Contabilidad</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{ path.check('contabilidad_facturacion_index') }}">
+                        <a href="{{ path('contabilidad_facturacion_index') }}">
+                            <i class="fa fa-circle-o"></i> Facturas
+                        </a>
+                    </li>
+                    <li class="{{ path.check('contabilidad_facturacion_new') }}">
+                        <a href="{{ path('contabilidad_facturacion_new') }}">
+                            <i class="fa fa-circle-o"></i> Nueva
+                        </a>
+                    </li>
+                    <li class="{{ path.check('contabilidad_facturacion_emisor') }}">
+                        <a href="{{ path('contabilidad_facturacion_emisor') }}">
+                            <i class="fa fa-circle-o"></i> Emisores
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            <!-- END CONTABILIDAD -->
+
+            <!-- START HISTORIAL CORREOS -->
+            {% if is_granted('ROLE_CORREOS') %}
+            <li class="{{ path.check('historial-correo') }}">
+                <a href="{{ path('historial-correo_index') }}">
+                    <i class="fa fa-book"></i> <span>Correos Historial</span>
+                </a>
+            </li>
+            {% endif %}
+            <!-- END HISTORIAL CORREOS -->
+
+            <!-- START RECURSOS HUMANOS -->
+            {% if is_granted('ROLE_RH') %}
+            <li class="treeview {{ path.check('usuario_') }}">
+                <a href="#">
+                    <i class="fa fa-user-o"></i> <span>Recursos Humanos</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{ path.check('usuario_index') }}">
+                        <a href="{{ path('usuario_index') }}">
+                            <i class="fa fa-circle-o"></i> Listado
+                        </a>
+                    </li>
+                    <li class="{{ path.check('usuario_new') }}">
+                        <a href="{{ path('usuario_new') }}">
+                            <i class="fa fa-circle-o"></i> Nuevo
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            <!-- END RECURSOS HUMANOS -->
+
+            <!-- START AJUSTES -->
+            {% if is_granted('ROLE_ADMIN') %}
+            <li class="treeview {{ path.check('ajustes_') }} {{ path.check('cuenta-bancaria_') }}">
+                <a href="#">
+                    <i class="fa fa-cog"></i> <span>Ajustes</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{ path.check('ajustes_index') }}">
+                        <a href="{{ path('ajustes_index') }}">
+                            <i class="fa fa-circle-o"></i> Valores
+                        </a>
+                    </li>
+                    <li class="{{ path.check('cuenta-bancaria_index') }}">
+                        <a href="{{ path('cuenta-bancaria_index') }}">
+                            <i class="fa fa-circle-o"></i> Cuentas Bancarias
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            <!-- END AJUSTES -->
         </ul>
     </section>
-</aside>
 
+</aside>

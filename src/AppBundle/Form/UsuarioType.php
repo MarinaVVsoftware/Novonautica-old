@@ -28,7 +28,7 @@ class UsuarioType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
                 'choices' => [
-                    'Clientes' => 'ROLE_CLIENTE',
+                    'Clientes' => 'ROLE_CLIENTES',
                     'Marina Humeda' => 'ROLE_MARINA',
                     'Astillero' => 'ROLE_ASTILLERO',
                     'Ocean Deal' => 'ROLE_EMBARCACION',

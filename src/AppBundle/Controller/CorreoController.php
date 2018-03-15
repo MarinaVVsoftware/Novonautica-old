@@ -28,9 +28,6 @@ class CorreoController extends Controller
      */
     public function indexAction(Request $request)
     {
-
-//        $this->denyAccessUnlessGranted('ROLE_CORREOS');
-
         if ($request->isXmlHttpRequest()) {
             try {
                 $datatables = $this->get('datatables');

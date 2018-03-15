@@ -31,15 +31,6 @@ class SidebarController extends Controller
     {
         $this->add([
             [
-                'name' => 'Clientes',
-                'icon' => 'users',
-                'path' => $this->generateUrl('cliente_index'),
-                'submenu' => [
-                    ['name' => 'Nuevo', 'path' => $this->generateUrl('cliente_new')],
-                    ['name' => 'Listado', 'path' => $this->generateUrl('cliente_index')]
-                ]
-            ],
-            [
                 'name' => 'Marina Humeda',
                 'path' => $this->removeOneRoute($this->generateUrl('marina-humeda_index')),
                 'icon' => 'ship',

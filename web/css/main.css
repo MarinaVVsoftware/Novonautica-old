@@ -658,12 +658,16 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
 
 .fixed .content-wrapper,
 .fixed .right-side {
-    padding-top: 97px;
+    /*padding-top: 97px;*/
+}
+
+.navbar-nav>.user-menu>.dropdown-menu>.user-body a {
+    color: #fff !important;
 }
 
 @media (min-width: 768px) {
     .skin-novo .main-sidebar {
-        padding-top: 98px;
+        /*padding-top: 98px;*/
     }
 
     nav hr {

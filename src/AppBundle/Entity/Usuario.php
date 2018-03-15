@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -12,8 +14,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="usuario")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UsuarioRepository")
  * @ORM\EntityListeners({"UsuarioListener"})
+ * @ORM\HasLifecycleCallbacks
  */
-class Usuario implements AdvancedUserInterface, \Serializable
+class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterface
 {
     /**
      * @var int
@@ -65,11 +68,11 @@ class Usuario implements AdvancedUserInterface, \Serializable
     private $password;
 
     /**
-     * @var \DateTime
+     * @var array
      *
-     * @ORM\Column(name="registro", type="datetime")
+     * @ORM\Column(name="roles", type="simple_array")
      */
-    private $registro;
+    private $roles;
 
     /**
      * @var int
@@ -79,16 +82,23 @@ class Usuario implements AdvancedUserInterface, \Serializable
     private $isActive;
 
     /**
-     * @var array
+     * @var \DateTime
      *
-     * @ORM\Column(name="roles", type="simple_array")
+     * @ORM\Column(name="registro", type="datetime_immutable")
      */
-    private $roles;
+    private $registro;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_at", type="datetime_immutable")
+     */
+    private $updateAt;
 
     public function __construct()
     {
         $this->isActive = true;
-        $this->registro = new \DateTime();
+        $this->registro = new \DateTimeImmutable();
     }
 
     /**
@@ -207,54 +217,6 @@ class Usuario implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set registro.
-     *
-     * @param \DateTime $registro
-     *
-     * @return Usuario
-     */
-    public function setRegistro($registro)
-    {
-        $this->registro = $registro;
-
-        return $this;
-    }
-
-    /**
-     * Get registro.
-     *
-     * @return \DateTime
-     */
-    public function getRegistro()
-    {
-        return $this->registro;
-    }
-
-    /**
-     * Set isActive.
-     *
-     * @param bool $isActive
-     *
-     * @return Usuario
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
-
-    /**
-     * Get isActive.
-     *
-     * @return bool
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
-
-    /**
      * Set roles.
      *
      * @param array $roles
@@ -282,6 +244,71 @@ class Usuario implements AdvancedUserInterface, \Serializable
         }
 
         return $roles;
+    }
+
+    /**
+     * Set isActive.
+     *
+     * @param bool $isActive
+     *
+     * @return Usuario
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive.
+     *
+     * @return bool
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Set registro.
+     *
+     * @param \DateTime $registro
+     *
+     * @return Usuario
+     */
+    public function setRegistro($registro)
+    {
+        $this->registro = $registro;
+
+        return $this;
+    }
+
+    /**
+     * Get registro.
+     *
+     * @return \DateTime
+     */
+    public function getRegistro()
+    {
+        return $this->registro;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdateAt()
+    {
+        return $this->updateAt;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function setUpdateAt()
+    {
+        $this->updateAt = new \DateTimeImmutable();
     }
 
     /**
@@ -389,7 +416,7 @@ class Usuario implements AdvancedUserInterface, \Serializable
             $this->nombreUsuario,
             $this->password,
             $this->isActive,
-            $this->roles
+            $this->updateAt
         ]);
     }
 
@@ -407,7 +434,20 @@ class Usuario implements AdvancedUserInterface, \Serializable
             $this->nombreUsuario,
             $this->password,
             $this->isActive,
-            $this->roles
+            $this->updateAt
             ) = unserialize($serialized);
+    }
+
+    /**
+     * The equality comparison should neither be done by referential equality
+     *
+     * @param UserInterface $user
+     *
+     * @return bool
+     */
+    public function isEqualTo(UserInterface $user)
+    {
+        // Si el usuario ha sido actualizado entonces, desloguearlo
+        return $user instanceof Usuario ? $user->getUpdateAt() == $this->getUpdateAt() : false;
     }
 }
