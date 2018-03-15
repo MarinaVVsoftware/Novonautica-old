@@ -29,7 +29,7 @@ class MonederoMovimiento
     private $monto;
 
     /**
-     * @var string
+     * @var string Operacion Matemarica: 1 suma, 2 resta
      *
      * @ORM\Column(name="operacion", type="string", length=4)
      */
@@ -45,7 +45,7 @@ class MonederoMovimiento
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha", type="date", nullable=true)
+     * @ORM\Column(name="fecha", type="datetime", nullable=true)
      */
     private $fecha;
 
@@ -57,7 +57,7 @@ class MonederoMovimiento
     private $resultante;
 
     /**
-     * @var int
+     * @var int Tipo: 1 Marina Humeda, 2 Astillero
      *
      * @ORM\Column(name="tipo", type="integer")
      */

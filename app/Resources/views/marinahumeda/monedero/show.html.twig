@@ -1,7 +1,8 @@
 {% extends 'estructura/plantilla.twig' %}
 
-{% block title %}
-    Novonautiva | Movimientos Monedero Cliente
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
 {% endblock %}
 
 {% block contwrapper %}
@@ -28,10 +29,14 @@
                             <label>Cliente:</label>
                             <div class='info-input'> {{ cliente.nombre }}</div>
                         </div>
+                        <div class="col-sm-3 col-sm-offset-3">
+                            <label>Monedero actual:</label>
+                            <div class='info-input'>$ {{ (cliente.monederomarinahumeda/100)|number_format(2) }} USD</div>
+                        </div>
                     </div>
                     <div class="row espacio-linea-arriba2">
                         <div class="col-sm-12">
-                            <table class="table text-center">
+                            <table class="table table-novo">
                                 <thead>
                                 <tr>
                                     <th>Fecha</th>
@@ -41,36 +46,76 @@
                                     <th>Descripción</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                {% for movmon in cliente.monederomovimientos|reverse %}
-                                    {% if movmon.tipo == 1 %}
-                                    <tr>
-                                        <td>{% if movmon.fecha %}{{ movmon.fecha|date('d-m-Y') }}{% endif %}</td>
-                                        <td>$ {{ (movmon.monto/100)|number_format(2) }}</td>
-                                        <td>{% if movmon.operacion == 1 %}
-                                                Suma
-                                            {% elseif movmon.operacion == 2 %}
-                                                Resta
-                                            {% else %}
-                                                Indefinido
-                                            {% endif %}
-                                        </td>
-                                        <td>$ {{ (movmon.resultante/100)|number_format(2) }}</td>
-                                       <td>{{ movmon.descripcion }}</td>
-                                    </tr>
-                                    {% endif %}
-                                    {% else %}
-                                    <tr>
-                                        <td colspan="5">Aun no existen movimientos</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
+                                {#<tbody>#}
+                                {#{% for movmon in cliente.monederomovimientos|reverse %}#}
+                                    {#{% if movmon.tipo == 1 %}#}
+                                    {#<tr>#}
+                                        {#<td>{% if movmon.fecha %}{{ movmon.fecha|date('d-m-Y') }}{% endif %}</td>#}
+                                        {#<td>$ {{ (movmon.monto/100)|number_format(2) }}</td>#}
+                                        {#<td>{% if movmon.operacion == 1 %}#}
+                                                {#Suma#}
+                                            {#{% elseif movmon.operacion == 2 %}#}
+                                                {#Resta#}
+                                            {#{% else %}#}
+                                                {#Indefinido#}
+                                            {#{% endif %}#}
+                                        {#</td>#}
+                                        {#<td>$ {{ (movmon.resultante/100)|number_format(2) }}</td>#}
+                                       {#<td>{{ movmon.descripcion }}</td>#}
+                                    {#</tr>#}
+                                    {#{% endif %}#}
+                                    {#{% else %}#}
+                                    {#<tr>#}
+                                        {#<td colspan="5">Aun no existen movimientos</td>#}
+                                    {#</tr>#}
+                                {#{% endfor %}#}
+                                {#</tbody>#}
                             </table>
                         </div>
                     </div>
                 </div>
-
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a class="btn btn-azul pull-right"
+                               href="{{ path('mh_monedero_operacion', { 'id': cliente.id }) }}">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                Operación
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+        (function ($, settings) {
+            $('.table-novo').DataTable({
+                    ...settings,
+                ajax: '{{ path('mh_monedero_ver', { 'id': cliente.id }) }}',
+                order: [[0, 'desc']],
+                // createdRow: function (row, data) {
+            //     let actionsCell = row.cells[2];
+            //     actionsCell.innerHTML = `
+            // <ul class="unstyled-list list-inline" style="margin: 0">
+            //     <li>
+            //     <a href="${data[2]}" class="btn btn-xs btn-morado-claro">
+            //     Detalle
+            //     </a>
+            //     </li>
+            //     <li>
+            //     <a href="${data[2]}/operacion" class="btn btn-xs btn-azul">
+            //     Operación
+            //     </a>
+            //     </li>
+            // </ul>
+            // `
+            // },
+        });
+        })(jQuery, datatablesSettings);
+    </script>
 {% endblock %}

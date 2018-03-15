@@ -57,10 +57,20 @@ class MarinaHumedaMonederoController extends Controller
      * @Route("/{id}", name="mh_monedero_ver")
      * @Method("GET")
      */
-    public function showAction(Cliente $cliente)
+    public function showAction(Request $request, Cliente $cliente)
     {
+        if($request->isXmlHttpRequest()){
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'MHCMonederoMovimiento');
+                return $this->json($results);
+            } catch (HttpException $e){
+                return $this->json($e->getMessage(),$e->getStatusCode());
+            }
+        }
         return $this->render('marinahumeda/monedero/show.html.twig', [
             'cliente' => $cliente,
+            'title' => 'Movimientos Monedero Cliente'
         ]);
     }
 
@@ -84,7 +94,7 @@ class MarinaHumedaMonederoController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('mh_monedero_index');
+            return $this->redirectToRoute('mh_monedero_ver',['cliente'=>$cliente]);
         }
         return $this->render('marinahumeda/monedero/edit.html.twig', array(
             'cliente' => $cliente,
@@ -144,7 +154,7 @@ class MarinaHumedaMonederoController extends Controller
                 $em->flush();
 
 
-                return $this->redirectToRoute('mh_monedero_index');
+                return $this->redirectToRoute('mh_monedero_ver',['id'=>$cliente->getId()]);
             }
 
 

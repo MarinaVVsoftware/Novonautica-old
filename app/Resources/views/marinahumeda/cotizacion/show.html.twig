@@ -1,4 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
+{% import 'estructura/modalborrar.twig' as modal %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -38,10 +39,10 @@
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right"
-                               href="{% if marinaHumedaCotizacion.mhcservicios[0].tipo == 3 %}
-                                                                                        {{ path('marina-humeda_gasolina_index') }}
-                                                                                    {% else %}
+                               href="{% if marinaHumedaCotizacion.mhcservicios[0].tipo == 1 or marinaHumedaCotizacion.mhcservicios[0].tipo == 2 %}
                                                                                         {{ path('marina-humeda_estadia_index') }}
+                                                                                    {% else %}
+                                                                                         {{ path('marina-humeda_gasolina_index') }}
                                                                                      {% endif %}">Regresar</a>
                         </div>
                     </div>
@@ -229,8 +230,8 @@
                                             <th>Servicio</th>
                                             <th>Prec. Unid.</th>
                                             <th>Sub-Total</th>
-                                            <th>IVA</th>
                                             <th>Descuento</th>
+                                            <th>IVA</th>
                                             <th>Total</th>
                                         </tr>
                                         </thead>
@@ -255,8 +256,8 @@
                                                     </td>
                                                     <td>$ {{ (mhservicio.precio/100)|number_format(2) }}</td>
                                                     <td>$ {{ (mhservicio.subtotal/100)|number_format(2) }}</td>
-                                                    <td>$ {{ (mhservicio.iva/100)|number_format(2) }}</td>
                                                     <td>$ {{ (mhservicio.descuento/100)|number_format(2) }}</td>
+                                                    <td>$ {{ (mhservicio.iva/100)|number_format(2) }}</td>
                                                     <td>$ {{ (mhservicio.total/100)|number_format(2) }}</td>
                                                 </tr>
                                             {% endif %}
@@ -368,8 +369,8 @@
                                             <th>Servicio</th>
                                             <th>Prec. Unid.</th>
                                             <th>Sub-Total</th>
-                                            <th>IVA</th>
                                             <th>Descuento</th>
+                                            <th>IVA</th>
                                             <th>Total</th>
                                         </tr>
                                         </thead>
@@ -392,16 +393,11 @@
                                                             Abastecimiento de Diesel
                                                         {% endif %}
                                                     </td>
-                                                    <td>
-                                                        $ {{ ((mhservicio.precio/100)* (marinaHumedaCotizacion.dolar/100))|number_format(2) }}</td>
-                                                    <td>
-                                                        $ {{ ((mhservicio.subtotal/100) * (marinaHumedaCotizacion.dolar/100))|number_format(2) }}</td>
-                                                    <td>
-                                                        $ {{ ((mhservicio.iva/100)* (marinaHumedaCotizacion.dolar/100))|number_format(2) }}</td>
-                                                    <td>
-                                                        $ {{ ((mhservicio.descuento/100)* (marinaHumedaCotizacion.dolar/100))|number_format(2) }}</td>
-                                                    <td>
-                                                        $ {{ ((mhservicio.total/100) * (marinaHumedaCotizacion.dolar/100))|number_format(2) }}</td>
+                                                    <td>$ {{ ((mhservicio.precio/100)* (marinaHumedaCotizacion.dolar/100))|number_format(2) }}</td>
+                                                    <td>$ {{ ((mhservicio.subtotal/100) * (marinaHumedaCotizacion.dolar/100))|number_format(2) }}</td>
+                                                    <td>$ {{ ((mhservicio.descuento/100)* (marinaHumedaCotizacion.dolar/100))|number_format(2) }}</td>
+                                                    <td>$ {{ ((mhservicio.iva/100)* (marinaHumedaCotizacion.dolar/100))|number_format(2) }}</td>
+                                                    <td>$ {{ ((mhservicio.total/100) * (marinaHumedaCotizacion.dolar/100))|number_format(2) }}</td>
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}
@@ -818,6 +814,13 @@
                             </a>
                         </div>
                     </div>
+                    {% if marinaHumedaCotizacion.validanovo == 0 %}
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            {{ delete_form is defined ? modal.deleteButton('Cotización') : '' }}
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </section>
@@ -862,4 +865,5 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}
