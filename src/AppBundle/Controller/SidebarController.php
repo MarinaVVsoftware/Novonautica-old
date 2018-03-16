@@ -94,8 +94,16 @@ class SidebarController extends Controller
                 'submenu' => [
                     ['name' => 'Nueva cotización', 'path' => $this->generateUrl('astillero_new')],
                     ['name' => 'Cotizaciones', 'path' => $this->generateUrl('astillero_index')],
-                    ['name' => 'Aceptaciones', 'path' => $this->generateUrl('astillero-aceptaciones')],
-                    ['name' => 'ODT', 'path' => $this->generateUrl('ordendetrabajo_index')],
+//                    ['name' => 'Aceptaciones', 'path' => $this->generateUrl('astillero-aceptaciones')],
+//                    ['name' => 'ODT', 'path' => $this->generateUrl('ordendetrabajo_index')],
+                    [
+                        'name' => 'ODT',
+                        'path' => $this->generateUrl('ordendetrabajo_index'),
+                        'submenu' => [
+                            ['name' => 'Listado', 'path' => $this->generateUrl('ordendetrabajo_index')],
+                            ['name' => 'Nuevo', 'path' => $this->generateUrl('ordendetrabajo_new')],
+                        ]
+                    ],
                     [
                         'name' => 'Productos',
                         'path' => $this->generateUrl('astillero_producto_index'),
@@ -110,6 +118,14 @@ class SidebarController extends Controller
                         'submenu' => [
                             ['name' => 'Listado', 'path' => $this->generateUrl('astillero_servicio_index')],
                             ['name' => 'Nuevo', 'path' => $this->generateUrl('astillero_servicio_new')],
+                        ]
+                    ],
+                    [
+                        'name' => 'Proveedores',
+                        'path' => $this->generateUrl('astillero_proveedor_index'),
+                        'submenu' => [
+                            ['name' => 'Listado', 'path' => $this->generateUrl('astillero_proveedor_index')],
+                            ['name' => 'Nuevo', 'path' => $this->generateUrl('astillero_proveedor_new')],
                         ]
                     ]
                 ]

@@ -4,6 +4,7 @@ namespace AppBundle\Form\Astillero;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -22,9 +23,13 @@ class ServicioType extends AbstractType
                 'divisor' => 100,
                 'grouping' => true,
                 'empty_data' => 0,
+                'label' => 'Precio (USD)'
             ])
             ->add('unidad')
-            ->add('descripcion');
+            ->add('descripcion',TextareaType::class,[
+                'label' => 'Descripción',
+                'attr' => ['rows'=>5]
+            ]);
     }
     
     /**

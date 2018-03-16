@@ -34,6 +34,8 @@ class OrdenDeTrabajo
      */
     private $astilleroCotizacion;
 
+
+
     /**
      * Get id
      *

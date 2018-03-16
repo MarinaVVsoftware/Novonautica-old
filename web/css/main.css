@@ -424,12 +424,14 @@ form > .btn-borrar:hover, .btn-borrar:hover {
 }
 
 .dataTable.table-novo thead tr th.with-options select:focus,
-.dataTable.table-novo thead tr th.with-choices select:focus {
+.dataTable.table-novo thead tr th.with-choices select:focus,
+.dataTable.table-novo thead tr th.with-options-pay select:focus {
     outline: none;
 }
 
 .dataTable.table-novo thead tr th.with-options select,
-.dataTable.table-novo thead tr th.with-choices select {
+.dataTable.table-novo thead tr th.with-choices select,
+.dataTable.table-novo thead tr th.with-options-pay select {
     height: 100%;
     background: #292e41;
 }
