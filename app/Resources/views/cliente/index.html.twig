@@ -55,11 +55,13 @@
 
             lastTd.innerHTML = `
             <ul class="unstyled-list list-inline">
+            {% if is_granted(expression('has_role("CLIENTE_EDIT") or (user.isAdmin())')) %}
                 <li>
                 <a href="${entryPath}/editar">
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                 </a>
                 </li>
+            {% endif %}
                 <li>
                 <a href="${entryPath}">
                     <i class="fa fa-eye" aria-hidden="true"></i>

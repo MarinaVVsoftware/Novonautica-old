@@ -2,8 +2,10 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Repository\PermissionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,27 +26,44 @@ class UsuarioType extends AbstractType
             ->add('nombreUsuario')
             ->add('correo', EmailType::class)
             ->add('roles', ChoiceType::class, [
-                'label' => 'Modulos',
+                'label' => false,
                 'multiple' => true,
                 'expanded' => true,
                 'choices' => [
-                    'Clientes' => 'ROLE_CLIENTES',
-                    'Marina Humeda' => 'ROLE_MARINA',
-                    'Astillero' => 'ROLE_ASTILLERO',
-                    'Ocean Deal' => 'ROLE_EMBARCACION',
-                    'Tienda' => 'ROLE_TIENDA',
-                    'Contabilidad' => 'ROLE_CONTABILIDAD',
-                    'Correos' => 'ROLE_CORREOS',
-                    'Recursos Humanos' => 'ROLE_RH',
-                    'Ajustes' => 'ROLE_AJUSTES',
+                    'Clientes' => [
+                        'Acceder' => 'ROLE_CLIENTE',
+                        'Crear' => 'CLIENTE_CREATE',
+                        'Editar' => 'CLIENTE_EDIT',
+                    ],
+                    'Marina' => [
+                        'Acceder' => 'ROLE_MARINA'
+                    ],
+                    'Astillero' => [
+                        'Acceder' => 'ROLE_ASTILLERO'
+                    ],
+                    'Ocean Deal' => [
+                        'Acceder' => 'ROLE_EMBARCACION'
+                    ],
+                    'Tienda' => [
+                        'Acceder' => 'ROLE_TIENDA'
+                    ],
+                    'Contabilidad' => [
+                        'Acceder' => 'ROLE_CONTABILIDAD'
+                    ],
+                    'Historial de Correos' => [
+                        'Acceder' => 'ROLE_HCORREO'
+                    ],
+                    'Recursos humanos' => [
+                        'Acceder' => 'ROLE_RH'
+                    ],
+                    'Ajustes' => [
+                        'Acceder' => 'ROLE_AJUSTES'
+                    ],
                 ]
             ])
             ->add('isActive', ChoiceType::class, [
                 'label' => 'Estatus',
-                'choices' => [
-                    'Activo' => true,
-                    'Inactivo' => false
-                ]
+                'choices' => ['Activo' => true, 'Inactivo' => false]
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -66,7 +85,7 @@ class UsuarioType extends AbstractType
             }
         });
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -84,6 +103,4 @@ class UsuarioType extends AbstractType
     {
         return 'appbundle_usuario';
     }
-
-
 }

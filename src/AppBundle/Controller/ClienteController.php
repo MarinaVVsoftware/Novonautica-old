@@ -6,9 +6,12 @@ use AppBundle\Entity\Barco;
 use AppBundle\Entity\Cliente;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -29,6 +32,12 @@ class ClienteController extends Controller
      *
      * @Route("/", name="cliente_index")
      * @Method("GET")
+     * @Security("has_role('ROLE_CLIENTE')")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $datatables
+     *
+     * @return JsonResponse|Response
      */
     public function indexAction(Request $request, DataTablesInterface $datatables)
     {
@@ -45,68 +54,22 @@ class ClienteController extends Controller
     }
 
     /**
-     * @Route("/empresas.{_format}", defaults={"_format" = "json"})
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function getEmpresasAction(Request $request)
-    {
-        $empresas = $this->getDoctrine()->getRepository('AppBundle:Cliente')->findEmpresas();
-        return new Response($this->serializeEntities($empresas, $request->getRequestFormat(), [
-            'barcos',
-            'monederomovimientos',
-            'mhcotizaciones',
-            'mhcotizacionesadicionales',
-            'astillerocotizaciones'
-        ]));
-    }
-
-    /**
-     * El campo factura de clientes utilizara este metodo para conseguir la informacion
-     * de un cliente a traves de su RFC
-     *
-     * @Route("/listado.{_format}", defaults={"_format"="json"})
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function getClientesLike(Request $request)
-    {
-        $q = $request->query->get('rfc');
-        $rfcs = $this->getDoctrine()->getRepository('AppBundle:Cliente\RazonSocial')->findLikeRfc($q);
-
-        $normalizer = new ObjectNormalizer();
-        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
-
-        $obj = $serializer->serialize($rfcs, $request->getRequestFormat(), [
-            'attributes' => [
-                'rfc',
-                'razonSocial',
-                'direccion',
-                'correos',
-                'cliente' => [
-                    'nombre',
-                    'telefono'
-                ]
-            ]
-        ]);
-
-        return new Response($obj);
-    }
-
-    /**
      * Creates a new cliente entity.
      *
      * @Route("/nuevo", name="cliente_new")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param \Swift_Mailer $mailer
+     *
+     * @return RedirectResponse|Response
      */
     public function newAction(Request $request, \Swift_Mailer $mailer)
     {
         $cliente = new Cliente();
         $barco = new Barco();
+
+        $this->denyAccessUnlessGranted('CLIENTE_CREATE', $cliente);
 
         $cliente->setEstatus(true);
         $barco->setEstatus(true);
@@ -172,11 +135,14 @@ class ClienteController extends Controller
      *
      * @Route("/{id}", name="cliente_show")
      * @Method("GET")
+     *
+     * @param Cliente $cliente
+     *
+     * @return Response
      */
     public function showAction(Cliente $cliente)
     {
         $deleteForm = $this->createDeleteForm($cliente);
-        //$barcos = $cliente->getBarcos();
 
         return $this->render('cliente/show.html.twig', [
             'title' => 'Cliente',
@@ -190,9 +156,16 @@ class ClienteController extends Controller
      *
      * @Route("/{id}/editar", name="cliente_edit")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param Cliente $cliente
+     *
+     * @return RedirectResponse|Response
      */
     public function editAction(Request $request, Cliente $cliente)
     {
+        $this->denyAccessUnlessGranted('CLIENTE_EDIT', $cliente);
+
         $barcos = $cliente->getBarcos();
         $barcomotores = [];
 
@@ -235,6 +208,7 @@ class ClienteController extends Controller
                         // if you wanted to delete the Tag entirely, you can also do that
                         $em->remove($motor);
                     }
+
                     $em->persist($barco);
                 }
             }
@@ -248,7 +222,7 @@ class ClienteController extends Controller
 
             $em->flush();
 
-            // redirect back to some edit page
+// redirect back to some edit page
             return $this->redirectToRoute('cliente_show', ['id' => $cliente->getId()]);
         }
 
@@ -266,8 +240,14 @@ class ClienteController extends Controller
      *
      * @Route("/{id}", name="cliente_delete")
      * @Method("DELETE")
+     *
+     * @param Request $request
+     * @param Cliente $cliente
+     *
+     * @return RedirectResponse
      */
-    public function deleteAction(Request $request, Cliente $cliente)
+    public
+    function deleteAction(Request $request, Cliente $cliente)
     {
         $form = $this->createDeleteForm($cliente);
         $form->handleRequest($request);
@@ -281,7 +261,43 @@ class ClienteController extends Controller
         return $this->redirectToRoute('cliente_index');
     }
 
-    private function serializeEntities($entity, $format, $ignoredAttributes = []): string
+    /**
+     * El campo factura de clientes utilizara este metodo para conseguir la informacion
+     * de un cliente a traves de su RFC
+     *
+     * @Route("/listado.{_format}", defaults={"_format"="json"})
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public
+    function getClientesLike(Request $request)
+    {
+        $q = $request->query->get('rfc');
+        $rfcs = $this->getDoctrine()->getRepository('AppBundle:Cliente\RazonSocial')->findLikeRfc($q);
+
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+
+        $obj = $serializer->serialize($rfcs, $request->getRequestFormat(), [
+            'attributes' => [
+                'rfc',
+                'razonSocial',
+                'direccion',
+                'correos',
+                'cliente' => [
+                    'nombre',
+                    'telefono'
+                ]
+            ]
+        ]);
+
+        return new Response($obj);
+    }
+
+    private
+    function serializeEntities($entity, $format, $ignoredAttributes = []): string
     {
         $normalizer = new ObjectNormalizer();
         $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
@@ -297,7 +313,8 @@ class ClienteController extends Controller
      *
      * @return \Symfony\Component\Form\FormInterface
      */
-    private function createDeleteForm(Cliente $cliente)
+    private
+    function createDeleteForm(Cliente $cliente)
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('cliente_delete', ['id' => $cliente->getId()]))

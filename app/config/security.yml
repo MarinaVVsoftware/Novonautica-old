@@ -57,16 +57,16 @@ security:
         - { path: ^/marina/cotizacion/.*/confirma, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/astillero/gracias, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/astillero/.*/confirma, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/cliente, roles: ROLE_CLIENTES }
+        - { path: ^/cliente, roles: ROLE_CLIENTE }
         - { path: ^/marina, roles: ROLE_MARINA }
         - { path: ^/astillero, roles: ROLE_ASTILLERO }
         - { path: ^/embarcacion, roles: ROLE_EMBARCACION }
         - { path: ^/tienda, roles: ROLE_TIENDA }
         - { path: ^/contabilidad, roles: ROLE_CONTABILIDAD }
-        - { path: ^/historial-correo, roles: ROLE_CORREOS }
+        - { path: ^/historial-correo, roles: ROLE_HCORREO }
         - { path: ^/usuario, roles: ROLE_RH }
         - { path: ^/ajustes, roles: ROLE_ADMIN }
         - { path: ^/.*, roles: ROLE_USER }
 
     role_hierarchy:
-            ROLE_ADMIN: [ROLE_USER, ROLE_CLIENTES, ROLE_MARINA, ROLE_ASTILLERO, ROLE_EMBARCACION, ROLE_TIENDA, ROLE_CONTABILIDAD, ROLE_CORREOS, ROLE_RH, ROLE_AJUSTES]
+            ROLE_ADMIN: [ROLE_USER, ROLE_CLIENTE, ROLE_MARINA, ROLE_ASTILLERO, ROLE_EMBARCACION, ROLE_TIENDA, ROLE_CONTABILIDAD, ROLE_HCORREO, ROLE_RH, ROLE_AJUSTES]

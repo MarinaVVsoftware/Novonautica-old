@@ -1,0 +1,19 @@
+{% block _appbundle_usuario_roles_widget %}
+    <div {{ block('widget_container_attributes') }}>
+        {% for name, choices in form.vars.choices %}
+            <div class="col-sm-4" style="margin-bottom: 2rem;">
+                <fieldset>
+                    <legend>{{ name }}</legend>
+                    <div class="row novo-checkbox-container">
+                        {% for key,choice in choices %}
+                            <div class="col-sm-6">
+                                {{ form_widget(form[key]) }}
+                                {{ form_label(form[key]) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

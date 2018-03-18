@@ -9,7 +9,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Usuario controller.
@@ -23,6 +22,7 @@ class UsuarioController extends Controller
      *
      * @Route("/", name="usuario_index")
      * @Method("GET")
+     *
      */
     public function indexAction()
     {
@@ -48,15 +48,17 @@ class UsuarioController extends Controller
     public function newAction(Request $request)
     {
         $usuario = new Usuario();
+
         $form = $this->createForm('AppBundle\Form\UsuarioType', $usuario);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            dump($usuario);
+            /*$em = $this->getDoctrine()->getManager();
             $em->persist($usuario);
-            $em->flush();
+            $em->flush();*/
 
-            return $this->redirectToRoute('usuario_index');
+//            return $this->redirectToRoute('usuario_index');
         }
 
         return $this->render('usuario/new.html.twig', [
@@ -150,7 +152,6 @@ class UsuarioController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('usuario_delete', ['id' => $usuario->getId()]))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

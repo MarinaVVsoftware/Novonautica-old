@@ -70,16 +70,23 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
     /**
      * @var array
      *
-     * @ORM\Column(name="roles", type="simple_array")
+     * @ORM\Column(name="roles", type="json")
      */
     private $roles;
 
     /**
-     * @var int
+     * @var boolean
      *
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_admin", type="boolean")
+     */
+    private $isAdmin;
 
     /**
      * @var \DateTime
@@ -98,6 +105,7 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
     public function __construct()
     {
         $this->isActive = true;
+        $this->isAdmin = false;
         $this->registro = new \DateTimeImmutable();
     }
 
@@ -223,7 +231,7 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
      *
      * @return Usuario
      */
-    public function setRoles($roles)
+    public function setRoles(array $roles)
     {
         $this->roles = $roles;
 
@@ -239,7 +247,7 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
     {
         $roles = $this->roles;
 
-        if ($roles && !in_array('ROLE_USER', $roles)) {
+        if (!in_array('ROLE_USER', $roles)) {
             $roles[] = 'ROLE_USER';
         }
 
@@ -268,6 +276,22 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->isAdmin;
+    }
+
+    /**
+     * @param bool $isAdmin
+     */
+    public function setIsAdmin($isAdmin)
+    {
+        $this->isAdmin = $isAdmin;
     }
 
     /**

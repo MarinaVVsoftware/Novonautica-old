@@ -10,12 +10,4 @@ namespace AppBundle\Repository;
  */
 class ClienteRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findEmpresas()
-    {
-        $qb = $this->createQueryBuilder('cl');
-        return $qb
-            ->select('cl.empresa as nombre')
-            ->getQuery()
-            ->getResult();
-    }
 }
