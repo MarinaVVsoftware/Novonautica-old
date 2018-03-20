@@ -41,6 +41,7 @@ class UsuarioType extends AbstractType
                         'Validar' => 'MARINA_COTIZACION_VALIDATE',
                         'Renovar' => 'MARINA_COTIZACION_RENEW',
                         'Recotizar' => 'MARINA_COTIZACION_REQUOTE',
+                        'Eliminar' => 'MARINA_COTIZACION_DELETE',
                         'Pagos' => 'ROLE_MARINA_PAGO',
                         'Monedero' => 'ROLE_MARINA_MONEDERO',
                         'Slips' => 'ROLE_MARINA_SLIP',

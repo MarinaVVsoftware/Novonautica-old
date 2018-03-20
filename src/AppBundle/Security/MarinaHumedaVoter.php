@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class MarinaHumedaVoter extends Voter
 {
     const CREATE = 'MARINA_COTIZACION_CREATE';
+    const DELETE = 'MARINA_COTIZACION_DELETE';
     const VALIDATE = 'MARINA_COTIZACION_VALIDATE';
     const REQUOTE = 'MARINA_COTIZACION_REQUOTE';
     const RENEW = 'MARINA_COTIZACION_RENEW';
@@ -40,7 +41,7 @@ class MarinaHumedaVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, [self::CREATE, self::VALIDATE, self::REQUOTE, self::RENEW])) {
+        if (!in_array($attribute, [self::CREATE, self::VALIDATE, self::REQUOTE, self::RENEW, self::DELETE])) {
             return false;
         }
 
@@ -80,6 +81,9 @@ class MarinaHumedaVoter extends Voter
             case self::CREATE:
                 return $this->canCreate($user);
                 break;
+            case self::DELETE:
+                return $this->canDelete($user);
+                break;
             case self::VALIDATE:
                 return $this->canValidate($user);
                 break;
@@ -97,6 +101,15 @@ class MarinaHumedaVoter extends Voter
     private function canCreate(Usuario $usuario)
     {
         if (!in_array(self::CREATE, $usuario->getRoles())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function canDelete(Usuario $usuario)
+    {
+        if (!in_array(self::DELETE, $usuario->getRoles())) {
             return false;
         }
 

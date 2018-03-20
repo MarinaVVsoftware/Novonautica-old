@@ -818,7 +818,8 @@
                             </a>
                         </div>
                     </div>
-                    {% if marinaHumedaCotizacion.validanovo == 0 %}
+                    {% if marinaHumedaCotizacion.validanovo == 0 and
+                        is_granted(expression('has_role("MARINA_COTIZACION_DELETE") or (user.isAdmin())')) %}
                     <div class="row espacio-linea-arriba2">
                         <div class="col-sm-12">
                             {{ delete_form is defined ? modal.deleteButton('Cotización') : '' }}

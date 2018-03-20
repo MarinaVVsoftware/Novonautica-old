@@ -18,7 +18,7 @@ security:
             security: true
             provider: Usuario
             logout_on_user_change: true
-            methods: [GET, POST]
+            methods: [GET, POST, DELETE]
             form_login:
                 check_path: login
                 login_path: login

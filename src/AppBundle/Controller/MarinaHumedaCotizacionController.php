@@ -4,15 +4,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Correo;
 use AppBundle\Entity\CotizacionNota;
-use AppBundle\Entity\CuentaBancaria;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Entity\MonederoMovimiento;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Form\CotizacionNotaType;
-use AppBundle\Form\MarinaHumedaCotizacionAceptadaType;
 use AppBundle\Form\MarinaHumedaCotizacionGasolinaType;
-use AppBundle\Form\MarinaHumedaCotizacionRechazadaType;
 use AppBundle\Form\MarinaHumedaCotizacionType;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -74,6 +71,7 @@ class MarinaHumedaCotizacionController extends Controller
      * @Method("GET")
      *
      * @param Request $request
+     * @param DataTablesInterface $dataTables
      *
      * @return JsonResponse|Response
      */
@@ -352,7 +350,6 @@ class MarinaHumedaCotizacionController extends Controller
         }
 
         $valorSistema = new ValorSistema();
-        $servicios = $marinaHumedaCotizacion->getMHCservicios();
         $deleteForm = $this->createDeleteForm($marinaHumedaCotizacion);
 
         $editForm = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionType', $marinaHumedaCotizacion);
@@ -1234,17 +1231,19 @@ class MarinaHumedaCotizacionController extends Controller
      */
     public function deleteAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
+        $this->denyAccessUnlessGranted('MARINA_COTIZACION_DELETE', $marinaHumedaCotizacion);
+
         $form = $this->createDeleteForm($marinaHumedaCotizacion);
         $form->handleRequest($request);
         $tipo = $marinaHumedaCotizacion->getMHCservicios()->first()->getTipo();
         if ($form->isSubmitted() && $form->isValid()) {
-//            dump($marinaHumedaCotizacion->getMHCservicios()->first()->getTipo());
             if ($marinaHumedaCotizacion->getValidanovo() == 0) {
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($marinaHumedaCotizacion);
                 $em->flush();
             }
         }
+
         if($tipo == 1 || $tipo == 2){
             return $this->redirectToRoute('marina-humeda_estadia_index');
         }else{
