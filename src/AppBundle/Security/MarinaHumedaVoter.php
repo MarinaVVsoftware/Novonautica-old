@@ -2,24 +2,26 @@
 /**
  * Created by PhpStorm.
  * User: inrumi
- * Date: 3/18/18
- * Time: 13:07
+ * Date: 3/20/18
+ * Time: 12:45
  */
 
 namespace AppBundle\Security;
 
 
-use AppBundle\Entity\Cliente;
+use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\Usuario;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class ClienteVoter extends Voter
+class MarinaHumedaVoter extends Voter
 {
-    const CREATE = 'CLIENTE_CREATE';
-    const EDIT = 'CLIENTE_EDIT';
+    const CREATE = 'MARINA_COTIZACION_CREATE';
+    const VALIDATE = 'MARINA_COTIZACION_VALIDATE';
+    const REQUOTE = 'MARINA_COTIZACION_REQUOTE';
+    const RENEW = 'MARINA_COTIZACION_RENEW';
 
     private $decisionManager;
 
@@ -27,7 +29,6 @@ class ClienteVoter extends Voter
     {
         $this->decisionManager = $decisionManager;
     }
-
 
     /**
      * Determines if the attribute and subject are supported by this voter.
@@ -39,11 +40,11 @@ class ClienteVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, [self::CREATE, self::EDIT])) {
+        if (!in_array($attribute, [self::CREATE, self::VALIDATE, self::REQUOTE, self::RENEW])) {
             return false;
         }
 
-        if (!$subject instanceof Cliente) {
+        if (!$subject instanceof MarinaHumedaCotizacion) {
             return false;
         }
 
@@ -72,22 +73,28 @@ class ClienteVoter extends Voter
             return true;
         }
 
-        /** @var Cliente $cliente */
-        $cliente = $subject;
+        /** @var MarinaHumedaCotizacion $cotizacionMarina */
+        $cotizacionMarina = $subject;
 
         switch ($attribute) {
             case self::CREATE:
-                return $this->canCreate($cliente, $user);
+                return $this->canCreate($user);
                 break;
-            case self::EDIT:
-                return $this->canEdit($cliente, $user);
+            case self::VALIDATE:
+                return $this->canValidate($user);
+                break;
+            case self::REQUOTE:
+                return $this->canRequote($user);
+                break;
+            case self::RENEW:
+                return $this->canRenew($user);
                 break;
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canCreate(Cliente $cliente, Usuario $usuario)
+    private function canCreate(Usuario $usuario)
     {
         if (!in_array(self::CREATE, $usuario->getRoles())) {
             return false;
@@ -96,9 +103,27 @@ class ClienteVoter extends Voter
         return true;
     }
 
-    private function canEdit(Cliente $cliente, Usuario $usuario)
+    private function canValidate(Usuario $usuario)
     {
-        if (!in_array(self::EDIT, $usuario->getRoles())) {
+        if (!in_array(self::VALIDATE, $usuario->getRoles())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function canRequote(Usuario $usuario)
+    {
+        if (!in_array(self::REQUOTE, $usuario->getRoles())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function canRenew(Usuario $usuario)
+    {
+        if (!in_array(self::RENEW, $usuario->getRoles())) {
             return false;
         }
 

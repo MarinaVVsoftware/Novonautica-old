@@ -12,15 +12,18 @@ use AppBundle\Entity\ValorSistema;
 use AppBundle\Form\CotizacionNotaType;
 use AppBundle\Form\MarinaHumedaCotizacionAceptadaType;
 use AppBundle\Form\MarinaHumedaCotizacionGasolinaType;
-use AppBundle\Form\MarinaHumedaCotizacionNotaType;
 use AppBundle\Form\MarinaHumedaCotizacionRechazadaType;
 use AppBundle\Form\MarinaHumedaCotizacionType;
+use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,15 +60,15 @@ class MarinaHumedaCotizacionController extends Controller
      * @Method("GET")
      *
      * @param Request $request
+     * @param DataTablesInterface $dataTables
      *
      * @return JsonResponse|Response
      */
-    public function indexEstadiaAction(Request $request)
+    public function indexEstadiaAction(Request $request, DataTablesInterface $dataTables)
     {
         if ($request->isXmlHttpRequest()) {
             try {
-                $datatables = $this->get('datatables');
-                $results = $datatables->handle($request, 'cotizacionEstadia');
+                $results = $dataTables->handle($request, 'cotizacionEstadia');
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getStatusCode());
@@ -80,6 +83,10 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @Route("/gasolina/", name="marina-humeda_gasolina_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse|Response
      */
     public function indexGasolinaAction(Request $request)
     {
@@ -101,10 +108,18 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @Route("/estadia/nuevo", name="marina-humeda_estadia_new")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
         $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
+
+        // Bloquear acceso si no puede crear cotizaciones
+        $this->denyAccessUnlessGranted('MARINA_COTIZACION_CREATE', $marinaHumedaCotizacion);
+
         $marinaDiasEstadia = new MarinaHumedaCotizaServicios();
         $marinaElectricidad = new MarinaHumedaCotizaServicios();
 
@@ -122,7 +137,6 @@ class MarinaHumedaCotizacionController extends Controller
             ->addMarinaHumedaCotizaServicios($marinaElectricidad)
             ->setMensaje($mensaje);
 
-
         $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -134,10 +148,6 @@ class MarinaHumedaCotizacionController extends Controller
             $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
             $dolar = $marinaHumedaCotizacion->getDolar();
 
-//            $llegada = $marinaHumedaCotizacion->getFechaLlegada();
-//            $salida = $marinaHumedaCotizacion->getFechaSalida();
-//            $diferenciaDias = date_diff($llegada, $salida);
-//            $cantidadDias = ($diferenciaDias->days);
             $cantidadDias = $marinaHumedaCotizacion->getDiasEstadia();
 
             // Días Estadía
@@ -227,13 +237,20 @@ class MarinaHumedaCotizacionController extends Controller
     }
 
     /**
-     *
      * @Route("/gasolina/nuevo", name="marina-humeda_gasolina_new")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
      */
     public function newGasolinaAction(Request $request)
     {
         $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
+
+        // Bloquear acceso si no puede crear cotizaciones
+        $this->denyAccessUnlessGranted('MARINA_COTIZACION_CREATE', $marinaHumedaCotizacion);
+
         $marinaGasolina = new MarinaHumedaCotizaServicios();
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
@@ -307,7 +324,9 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @Route("/{id}", name="marina-humeda_show")
      * @Method("GET")
+     *
      * @param MarinaHumedaCotizacion $marinaHumedaCotizacion
+     *
      * @return Response
      */
     public function showAction(MarinaHumedaCotizacion $marinaHumedaCotizacion)
@@ -322,6 +341,145 @@ class MarinaHumedaCotizacionController extends Controller
     }
 
     /**
+     * @Route("/{id}/validar", name="marina-humeda_validar")
+     * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param MarinaHumedaCotizacion $marinaHumedaCotizacion
+     * @param \Swift_Mailer $mailer
+     *
+     * @return RedirectResponse|Response
+     */
+    public function validaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion, \Swift_Mailer $mailer)
+    {
+        // Bloquear acceso si no pueden validar
+        $this->denyAccessUnlessGranted('MARINA_COTIZACION_VALIDATE', $marinaHumedaCotizacion);
+
+        if ($marinaHumedaCotizacion->getEstatus() == 0 ||
+            $marinaHumedaCotizacion->getValidanovo() == 1 ||
+            $marinaHumedaCotizacion->getValidacliente() == 1 ||
+            $marinaHumedaCotizacion->getValidacliente() == 2
+        ) {
+            throw new NotFoundHttpException();
+        }
+
+        $valorSistema = new ValorSistema();
+        $servicios = $marinaHumedaCotizacion->getMHCservicios();
+        $deleteForm = $this->createDeleteForm($marinaHumedaCotizacion);
+
+        $editForm = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionType', $marinaHumedaCotizacion);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            if (is_null($marinaHumedaCotizacion->getTokenacepta())) {
+                if ($marinaHumedaCotizacion->getValidanovo() == 2) {
+                    $tokenAcepta = $valorSistema->generaToken(100);
+                    $tokenRechaza = $valorSistema->generaToken(100);
+                    $marinaHumedaCotizacion
+                        ->setTokenacepta($tokenAcepta)
+                        ->setTokenrechaza($tokenRechaza)
+                        ->setNombrevalidanovo($this->getUser()->getNombre());
+
+                    // Generacion de PDF
+                    // Se envia un correo si se solicito notificar al cliente
+                    if ($marinaHumedaCotizacion->isNotificarCliente()) {
+                        $html = $this->renderView('marinahumeda/cotizacion/pdf/cotizacionpdf.html.twig', [
+                            'title' => 'Cotizacion-' . $marinaHumedaCotizacion->getFolio() . '.pdf',
+                            'marinaHumedaCotizacion' => $marinaHumedaCotizacion
+                        ]);
+                        $header = $this->renderView('marinahumeda/cotizacion/pdf/pdfencabezado.twig', [
+                            'marinaHumedaCotizacion' => $marinaHumedaCotizacion
+                        ]);
+                        $footer = $this->renderView('marinahumeda/cotizacion/pdf/pdfpie.twig', [
+                            'marinaHumedaCotizacion' => $marinaHumedaCotizacion
+                        ]);
+                        $hojapdf = $this->get('knp_snappy.pdf');
+                        $options = [
+                            'margin-top' => 23,
+                            'margin-right' => 0,
+                            'margin-bottom' => 33,
+                            'margin-left' => 0,
+                            'header-html' => utf8_decode($header),
+                            'footer-html' => utf8_decode($footer)
+                        ];
+                        $pdfEnviar = new PdfResponse(
+                            $hojapdf->getOutputFromHtml($html, $options),
+                            'Cotizacion-' . $marinaHumedaCotizacion
+                                ->getFolio() . '-' . $marinaHumedaCotizacion
+                                ->getFoliorecotiza() . '.pdf', 'application/pdf', 'inline'
+                        );
+                        $attachment = new Swift_Attachment($pdfEnviar, 'Cotizacion-' . $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza() . '.pdf', 'application/pdf');
+                        // Enviar correo de confirmacion
+                        $message = (new \Swift_Message('¡Cotizacion de servicios!'))
+                            ->setFrom('noresponder@novonautica.com')
+                            ->setTo($marinaHumedaCotizacion->getCliente()->getCorreo())
+                            ->setBcc('admin@novonautica.com')
+                            ->setBody(
+                                $this->renderView('marinahumeda/cotizacion/correo-clientevalida.twig', [
+                                    'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+                                    'tokenAcepta' => $tokenAcepta,
+                                    'tokenRechaza' => $tokenRechaza
+                                ]),
+                                'text/html'
+                            )
+                            ->attach($attachment);
+                        if($marinaHumedaCotizacion->getBarco()->getCorreoCapitan()){
+                            $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoCapitan());
+                        }
+                        if($marinaHumedaCotizacion->getBarco()->getCorreoResponsable()){
+                            $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoResponsable());
+                        }
+                        $mailer->send($message);
+
+                        if ($marinaHumedaCotizacion->getFoliorecotiza() == 0) {
+                            $folio = $marinaHumedaCotizacion->getFolio();
+                            $tipoCorreo = 'Cotización servicio Marina Humeda';
+                        } else {
+                            $folio = $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza();
+                            $tipoCorreo = 'Recotización servicio Marina Humeda';
+                        }
+
+                        // Guardar correo en el log de correos
+                        $historialCorreo = new Correo();
+                        $historialCorreo
+                            ->setFecha(new \DateTime('now'))
+                            ->setTipo($tipoCorreo)
+                            ->setDescripcion('Envio de cotización con folio: ' . $folio)
+                            ->setFolioCotizacion($folio)
+                            ->setMhcotizacion($marinaHumedaCotizacion)
+                        ;
+
+                        $em->persist($historialCorreo);
+                    }
+
+
+
+                } else {
+                    if ($marinaHumedaCotizacion->getValidanovo() == 1) {
+                        $marinaHumedaCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
+                    }
+                }
+            }
+
+            // Guardar la fecha en la que se valido la cotizacion por novonautica
+            $marinaHumedaCotizacion->setRegistroValidaNovo(new \DateTimeImmutable());
+
+            $em->persist($marinaHumedaCotizacion);
+            $em->flush();
+
+            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
+        }
+
+        return $this->render('marinahumeda/cotizacion/validar.html.twig', [
+            'title' => 'Validación',
+            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ]);
+    }
+
+    /**
      * Genera el pdf de una cotizacion en base a su id
      *
      * @Route("/{id}/pdf", name="marina-pdf")
@@ -331,7 +489,7 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @return PdfResponse
      */
-    public function displayMarinaPDF(MarinaHumedaCotizacion $mhc)
+    public function displayMarinaPDFAction(MarinaHumedaCotizacion $mhc)
     {
         $html = $this->renderView('marinahumeda/cotizacion/pdf/cotizacionpdf.html.twig', [
             'title' => 'Cotizacion-' . $mhc->getFolio() . '.pdf',
@@ -361,123 +519,13 @@ class MarinaHumedaCotizacionController extends Controller
     }
 
     /**
-     * Confirma la respuesta de un cliente a una cotizacion
-     *
-     * @Route("/{token}/confirma", name="respuesta-cliente")
-     * @Method({"GET", "POST"})
-     *
-     * @param $token
-     *
-     * @return Response
-     */
-    public function repuestaCliente(Request $request, $token)
-    {
-
-        $em = $this->getDoctrine()->getManager();
-        $cotizacionAceptar = $em->getRepository(MarinaHumedaCotizacion::class)
-            ->findOneBy(['tokenacepta' => $token]);
-
-        if ($cotizacionAceptar) {
-            $cuentaBancaria = $em->getRepository(CuentaBancaria::class)
-                ->findAll();
-            $qb = $em->createQueryBuilder();
-            $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
-            $sistema = $query->getArrayResult();
-
-            $diasHabiles = $sistema[0]['diasHabilesMarinaCotizacion'];
-
-            if ($cotizacionAceptar->getFoliorecotiza() == 0) {
-                $folio = $cotizacionAceptar->getFolio();
-            } else {
-                $folio = $cotizacionAceptar->getFolio() . '-' . $cotizacionAceptar->getFoliorecotiza();
-            }
-
-            $valorSistema = new ValorSistema();
-            $codigoSeguimiento = $folio . '-' . $valorSistema->generaToken(10);
-
-            $cotizacionAceptar
-                ->setValidacliente(2)
-                ->setCodigoseguimiento($codigoSeguimiento);
-
-            // Fecha en la que acepto el cliente
-            $cotizacionAceptar->setRegistroValidaCliente(new \DateTimeImmutable());
-
-            $em->persist($cotizacionAceptar);
-            $em->flush();
-
-            $mensaje1 = '¡Enhorabuena!';
-            $mensaje2 = 'La cotización ' . $folio . ' ha sido aprobada.';
-            $suformulario = 1;
-
-            $editForm = $this->createForm(MarinaHumedaCotizacionAceptadaType::class, $cotizacionAceptar);
-            $editForm->handleRequest($request);
-
-            if ($editForm->isSubmitted() && $editForm->isValid()) {
-                $cotizacionAceptar->setFecharespuesta(new \DateTime('now'));
-                $em->persist($cotizacionAceptar);
-                $em->flush();
-                return $this->redirectToRoute('marina-humeda_gracias');
-            }
-
-            return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', [
-                'mensaje1' => $mensaje1,
-                'mensaje2' => $mensaje2,
-                'suformulario' => $suformulario,
-                'cuentaBancaria' => $cuentaBancaria,
-                'diasHabiles' => $diasHabiles,
-                'form' => $editForm->createView(),
-                'marinaHumedaCotizacion' => $cotizacionAceptar
-            ]);
-        }
-        else {
-            $cotizacionRechazar = $em->getRepository(MarinaHumedaCotizacion::class)
-                ->findOneBy(['tokenrechaza' => $token]);
-
-            if ($cotizacionRechazar) {
-                $cotizacionRechazar->setValidacliente(1);
-                $cotizacionRechazar->setRegistroValidaCliente(new \DateTimeImmutable());
-                $em->persist($cotizacionRechazar);
-                $em->flush();
-
-                if ($cotizacionRechazar->getFoliorecotiza() == 0) {
-                    $folio = $cotizacionRechazar->getFolio();
-                } else {
-                    $folio = $cotizacionRechazar->getFolio() . '-' . $cotizacionRechazar->getFoliorecotiza();
-                }
-
-                $mensaje1 = '¡Oh-oh!';
-                $mensaje2 = 'La cotización ' . $folio . ' no ha sido aprobada.';
-                $mensaje3 = 'Nos gustaría saber su opinión o comentarios del motivo de su rechazo.';
-                $suformulario = 2;
-
-                $editForm = $this->createForm(MarinaHumedaCotizacionRechazadaType::class, $cotizacionRechazar);
-                $editForm->handleRequest($request);
-
-                if ($editForm->isSubmitted() && $editForm->isValid()) {
-                    $em->flush();
-                    return $this->redirectToRoute('marina-humeda_gracias');
-                }
-
-            }
-
-            return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', [
-                'mensaje1' => $mensaje1,
-                'mensaje2' => $mensaje2,
-                'mensaje3' => $mensaje3,
-                'suformulario' => $suformulario,
-                'form' => $editForm->createView()
-            ]);
-        }
-    }
-
-    /**
      * @Route("/{id}/pago", name="marina_cotizacion_pago_edit")
      * @Method({"GET", "POST"})
      *
-     * @param Request $request
+     * @Security()m Request $request
      * @param MarinaHumedaCotizacion $marinaHumedaCotizacion
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return RedirectResponse|Response
      */
     public function editPagoAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
@@ -519,7 +567,6 @@ class MarinaHumedaCotizacionController extends Controller
                 if($pago->getDivisa()=='MXN'){
                     $unpago = ($pago->getCantidad()/$pago->getDolar())*100;
                     $pago->setCantidad($unpago);
-
                 }else{
                     $unpago = $pago->getCantidad();
                 }
@@ -611,9 +658,16 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @Route("/estadia/{id}/renovar", name="marina-humeda_estadia_renovar")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param MarinaHumedaCotizacion $marinaHumedaCotizacionAnterior
+     *
+     * @return RedirectResponse|Response
      */
     public function renuevaEstadiaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacionAnterior)
     {
+        $this->denyAccessUnlessGranted('MARINA_COTIZACION_RENEW', $marinaHumedaCotizacionAnterior);
+
         if ($marinaHumedaCotizacionAnterior->getValidacliente() != 2) {
             throw new NotFoundHttpException();
         }
@@ -772,9 +826,16 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @Route("/estadia/{id}/recotizar", name="marina-humeda_estadia_recotizar")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param MarinaHumedaCotizacion $marinaHumedaCotizacionAnterior
+     *
+     * @return RedirectResponse|Response
      */
     public function recotizaEstadiaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacionAnterior)
     {
+        $this->denyAccessUnlessGranted('MARINA_COTIZACION_REQUOTE', $marinaHumedaCotizacionAnterior);
+
         if ($marinaHumedaCotizacionAnterior->getEstatus() == 0 ||
             $marinaHumedaCotizacionAnterior->getValidacliente() == 2 ||
             $marinaHumedaCotizacionAnterior->getValidanovo() == 0 ||
@@ -784,25 +845,15 @@ class MarinaHumedaCotizacionController extends Controller
         }
 
         $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
-        //       $marinaHumedaCotizacion = clone $marinaHumedaCotizacionAnterior;
         $foliorecotizado = $marinaHumedaCotizacionAnterior->getFoliorecotiza() + 1;
         $cliente = $marinaHumedaCotizacionAnterior->getCliente();
         $barco = $marinaHumedaCotizacionAnterior->getBarco();
-//        $marinaHumedaCotizacion
-//            ->setFoliorecotiza($foliorecotizado)
-//            ->setNotasnovo(null)
-//            ->setValidanovo(0)
-//            ->setFecharegistro(null)
-//            ->setNombrevalidanovo(null)
-//        ;
-
 
         $marinaHumedaCotizacion
             ->setCliente($cliente)
             ->setBarco($barco)
             ->setFechaLlegada($marinaHumedaCotizacionAnterior->getFechaLlegada())
             ->setFechaSalida($marinaHumedaCotizacionAnterior->getFechaSalida())
-//            ->setSlip($marinaHumedaCotizacionAnterior->getSlip())
             ->setSlip(null)
             ->setDescuento($marinaHumedaCotizacionAnterior->getDescuento())
             ->setDolar($marinaHumedaCotizacionAnterior->getDolar())
@@ -893,7 +944,6 @@ class MarinaHumedaCotizacionController extends Controller
             $granTotal += $total;
 
             // Conexión a electricidad
-            //$cantidad = $marinaElectricidad->getCantidad();
             $precio = $marinaElectricidad->getPrecioAux()->getCosto();
 
             $subTotal = $cantidad * $precio * $eslora;
@@ -951,9 +1001,16 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @Route("/gasolina/{id}/recotizar", name="marina-humeda_gasolina_recotizar")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param MarinaHumedaCotizacion $marinaHumedaCotizacionAnterior
+     *
+     * @return RedirectResponse|Response
      */
     public function recotizaGasolinaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacionAnterior)
     {
+        $this->denyAccessUnlessGranted('MARINA_COTIZACION_REQUOTE', $marinaHumedaCotizacionAnterior);
+
         if ($marinaHumedaCotizacionAnterior->getEstatus() == 0 ||
             $marinaHumedaCotizacionAnterior->getValidacliente() == 2 ||
             $marinaHumedaCotizacionAnterior->getValidanovo() == 0 ||
@@ -1051,141 +1108,15 @@ class MarinaHumedaCotizacionController extends Controller
     }
 
     /**
-     *
-     * @Route("/{id}/validar", name="marina-humeda_validar")
-     * @Method({"GET", "POST"})
-     **/
-    public function validaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion, \Swift_Mailer $mailer)
-    {
-        if ($marinaHumedaCotizacion->getEstatus() == 0 ||
-            $marinaHumedaCotizacion->getValidanovo() == 1 ||
-            $marinaHumedaCotizacion->getValidacliente() == 1 ||
-            $marinaHumedaCotizacion->getValidacliente() == 2
-        ) {
-            throw new NotFoundHttpException();
-        }
-
-        $valorSistema = new ValorSistema();
-        $servicios = $marinaHumedaCotizacion->getMHCservicios();
-        $deleteForm = $this->createDeleteForm($marinaHumedaCotizacion);
-
-        $editForm = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionType', $marinaHumedaCotizacion);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            if (is_null($marinaHumedaCotizacion->getTokenacepta())) {
-                if ($marinaHumedaCotizacion->getValidanovo() == 2) {
-                    $tokenAcepta = $valorSistema->generaToken(100);
-                    $tokenRechaza = $valorSistema->generaToken(100);
-                    $marinaHumedaCotizacion
-                        ->setTokenacepta($tokenAcepta)
-                        ->setTokenrechaza($tokenRechaza)
-                        ->setNombrevalidanovo($this->getUser()->getNombre());
-
-                    // Generacion de PDF
-                    // Se envia un correo si se solicito notificar al cliente
-                    if ($marinaHumedaCotizacion->isNotificarCliente()) {
-                        $html = $this->renderView('marinahumeda/cotizacion/pdf/cotizacionpdf.html.twig', [
-                            'title' => 'Cotizacion-' . $marinaHumedaCotizacion->getFolio() . '.pdf',
-                            'marinaHumedaCotizacion' => $marinaHumedaCotizacion
-                        ]);
-                        $header = $this->renderView('marinahumeda/cotizacion/pdf/pdfencabezado.twig', [
-                            'marinaHumedaCotizacion' => $marinaHumedaCotizacion
-                        ]);
-                        $footer = $this->renderView('marinahumeda/cotizacion/pdf/pdfpie.twig', [
-                            'marinaHumedaCotizacion' => $marinaHumedaCotizacion
-                        ]);
-                        $hojapdf = $this->get('knp_snappy.pdf');
-                        $options = [
-                            'margin-top' => 23,
-                            'margin-right' => 0,
-                            'margin-bottom' => 33,
-                            'margin-left' => 0,
-                            'header-html' => utf8_decode($header),
-                            'footer-html' => utf8_decode($footer)
-                        ];
-                        $pdfEnviar = new PdfResponse(
-                            $hojapdf->getOutputFromHtml($html, $options),
-                            'Cotizacion-' . $marinaHumedaCotizacion
-                                ->getFolio() . '-' . $marinaHumedaCotizacion
-                                ->getFoliorecotiza() . '.pdf', 'application/pdf', 'inline'
-                        );
-                        $attachment = new Swift_Attachment($pdfEnviar, 'Cotizacion-' . $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza() . '.pdf', 'application/pdf');
-                        // Enviar correo de confirmacion
-                        $message = (new \Swift_Message('¡Cotizacion de servicios!'))
-                            ->setFrom('noresponder@novonautica.com')
-                            ->setTo($marinaHumedaCotizacion->getCliente()->getCorreo())
-                            ->setBcc('admin@novonautica.com')
-                            ->setBody(
-                                $this->renderView('marinahumeda/cotizacion/correo-clientevalida.twig', [
-                                    'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
-                                    'tokenAcepta' => $tokenAcepta,
-                                    'tokenRechaza' => $tokenRechaza
-                                ]),
-                                'text/html'
-                            )
-                            ->attach($attachment);
-                        if($marinaHumedaCotizacion->getBarco()->getCorreoCapitan()){
-                            $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoCapitan());
-                        }
-                        if($marinaHumedaCotizacion->getBarco()->getCorreoResponsable()){
-                            $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoResponsable());
-                        }
-                        $mailer->send($message);
-
-                        if ($marinaHumedaCotizacion->getFoliorecotiza() == 0) {
-                            $folio = $marinaHumedaCotizacion->getFolio();
-                            $tipoCorreo = 'Cotización servicio Marina Humeda';
-                        } else {
-                            $folio = $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza();
-                            $tipoCorreo = 'Recotización servicio Marina Humeda';
-                        }
-
-                        // Guardar correo en el log de correos
-                        $historialCorreo = new Correo();
-                        $historialCorreo
-                            ->setFecha(new \DateTime('now'))
-                            ->setTipo($tipoCorreo)
-                            ->setDescripcion('Envio de cotización con folio: ' . $folio)
-                            ->setFolioCotizacion($folio)
-                            ->setMhcotizacion($marinaHumedaCotizacion)
-                        ;
-
-                        $em->persist($historialCorreo);
-                    }
-
-
-
-                } else {
-                    if ($marinaHumedaCotizacion->getValidanovo() == 1) {
-                        $marinaHumedaCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
-                    }
-                }
-            }
-
-            // Guardar la fecha en la que se valido la cotizacion por novonautica
-            $marinaHumedaCotizacion->setRegistroValidaNovo(new \DateTimeImmutable());
-
-            $em->persist($marinaHumedaCotizacion);
-            $em->flush();
-
-            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
-        }
-
-        return $this->render('marinahumeda/cotizacion/validar.html.twig', [
-            'title' => 'Validación',
-            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ]);
-    }
-
-    /**
      * @Route("/{id}/reenviar", name="marina-humeda_reenviar")
      * @Method({"GET", "POST"})
-     **/
-    public function reenviaCoreoAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion, \Swift_Mailer $mailer)
+     *
+     * @param MarinaHumedaCotizacion $marinaHumedaCotizacion
+     * @param \Swift_Mailer $mailer
+     *
+     * @return void
+     */
+    public function reenviaCoreoAction(MarinaHumedaCotizacion $marinaHumedaCotizacion, \Swift_Mailer $mailer)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -1266,8 +1197,6 @@ class MarinaHumedaCotizacionController extends Controller
         $em->persist($historialCorreo);
         $em->persist($marinaHumedaCotizacion);
         $em->flush();
-
-        //return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
     }
 
     /**
@@ -1300,23 +1229,16 @@ class MarinaHumedaCotizacionController extends Controller
         return new Response($this->serializeEntities($barcos, $request->getRequestFormat()));
     }
 
-    private function serializeEntities($entity, $format, $ignoredAttributes = []): string
-    {
-        $normalizer = new ObjectNormalizer();
-        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
-        $normalizer->setIgnoredAttributes($ignoredAttributes);
-
-        return $serializer->serialize($entity, $format);
-    }
-
     /**
      * Deletes a marinaHumedaCotizacion entity.
      *
      * @Route("/{id}", name="marina-humeda_delete")
      * @Method("DELETE")
+     *
      * @param Request $request
      * @param MarinaHumedaCotizacion $marinaHumedaCotizacion
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @return RedirectResponse
      */
     public function deleteAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
@@ -1357,5 +1279,12 @@ class MarinaHumedaCotizacionController extends Controller
             ->getForm();
     }
 
+    private function serializeEntities($entity, $format, $ignoredAttributes = [])
+    {
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+        $normalizer->setIgnoredAttributes($ignoredAttributes);
 
+        return $serializer->serialize($entity, $format);
+    }
 }

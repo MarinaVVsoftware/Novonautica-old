@@ -733,7 +733,7 @@
                             </a>
                         </div>
                     </div>
-                    {% if marinaHumedaCotizacion.validanovo == 0 %}
+                    {% if marinaHumedaCotizacion.validanovo == 0 and is_granted(expression('has_role("MARINA_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
                                 <a class="btn btn-azul pull-right"
@@ -744,7 +744,7 @@
                             </div>
                         </div>
                     {% endif %}
-                    {% if marinaHumedaCotizacion.validanovo == 2 and marinaHumedaCotizacion.validacliente == 0 %}
+                    {% if marinaHumedaCotizacion.validanovo == 2 and marinaHumedaCotizacion.validacliente == 0 and is_granted(expression('has_role("MARINA_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
                                 <a class="btn btn-azul pull-right"
@@ -757,7 +757,8 @@
                     {% endif %}
                     {% if (marinaHumedaCotizacion.validanovo == 1 or
                         marinaHumedaCotizacion.validacliente == 1) and
-                        marinaHumedaCotizacion.estatus == 1 %}
+                        marinaHumedaCotizacion.estatus == 1 and
+                        is_granted(expression('has_role("MARINA_COTIZACION_REQUOTE") or (user.isAdmin())')) %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
                                 <a class="btn btn-naranja pull-right"
@@ -772,7 +773,9 @@
                             </div>
                         </div>
                     {% endif %}
-                    {% if marinaHumedaCotizacion.validacliente == 2 and marinaHumedaCotizacion.estatuspago != 2 %}
+                    {% if marinaHumedaCotizacion.validacliente == 2 and
+                        marinaHumedaCotizacion.estatuspago != 2 and
+                        is_granted('ROLE_MARINA_PAGO') %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
                                 <a class="btn btn-verde pull-right"
@@ -794,7 +797,8 @@
                             </div>
                         </div>
                     {% endif %}
-                    {% if marinaHumedaCotizacion.validacliente == 2 %}
+                    {% if marinaHumedaCotizacion.validacliente == 2 and
+                       is_granted(expression('has_role("MARINA_COTIZACION_RENEW") or (user.isAdmin())')) %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
                                 <a class="btn btn-azul pull-right"
@@ -830,21 +834,21 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        $('#reenviar').on('click', function () {
-            var url = "{{ path('marina-humeda_reenviar',{'id':'idcotizacion'}) }}";
-            url = url.replace("idcotizacion", $(this).data('idcotizacion'));
-            $.ajax({
-                method: "POST",
-                url: url,
-                success: function () {
-                    $('#loading').hide();
-                    $('#estatusEnvio').modal('show');
-                    setTimeout(function () {
-                        $('#estatusEnvio').modal('hide');
-                    }, 3000);
-                }
-            });
+      $('#reenviar').on('click', function () {
+        var url = "{{ path('marina-humeda_reenviar',{'id':'idcotizacion'}) }}";
+        url = url.replace("idcotizacion", $(this).data('idcotizacion'));
+        $.ajax({
+          method: "POST",
+          url: url,
+          success: function () {
+            $('#loading').hide();
+            $('#estatusEnvio').modal('show');
+            setTimeout(function () {
+              $('#estatusEnvio').modal('hide');
+            }, 3000);
+          }
         });
+      });
     </script>
 {% endblock %}
 {% block modals %}

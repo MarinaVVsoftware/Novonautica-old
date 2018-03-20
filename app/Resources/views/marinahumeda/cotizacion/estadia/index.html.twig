@@ -76,7 +76,7 @@
             {responsivePriority: 1},
             {responsivePriority: 1},
             {responsivePriority: 1},
-            {responsivePriority: 1},
+            {responsivePriority: 0},
           ],
           createdRow: function (row, data) {
             for (let i of [11, 12, 13]) {
@@ -113,11 +113,19 @@
           <td>
             <ul class="list-unstyled">
               <li><a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.requestUri ~ '../${item.id}' }}">Detalle</a></li>
+              {% if is_granted(expression('has_role("MARINA_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
               ${validacion === 0 ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '../${item.id}/validar' }}">Validar</a></li>` : ''}
               ${(validacion === 2 && aceptacion === 0) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '../${item.id}/validar' }}">Aceptar</a></li>` : ''}
+              {% endif %}
+              {% if is_granted(expression('has_role("MARINA_COTIZACION_REQUOTE") or (user.isAdmin())')) %}
               ${(validacion === 1 || aceptacion === 1) && item.estatus ? `<li><a class="btn btn-xs btn-block btn-naranja" href="{{ app.request.requestUri ~ '${item.id}/recotizar' }}">Recotizar</a></li>` : ''}
-              ${(aceptacion === 2 && pago !== 2) ? `<li><a class="btn btn-xs btn-block btn-verde" href="{{ app.request.requestUri ~ '../${item.id}/pago' }}">Pagos</a></li>` : ''}
+              {% endif %}
+              {% if is_granted(expression('has_role("MARINA_COTIZACION_RENEW") or (user.isAdmin())')) %}
               ${(aceptacion === 2) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '../estadia/${item.id}/renovar' }}">Renovar</a></li>` : ''}
+              {% endif %}
+              {% if is_granted('ROLE_MARINA_PAGO') %}
+              ${(aceptacion === 2 && pago !== 2) ? `<li><a class="btn btn-xs btn-block btn-verde" href="{{ app.request.requestUri ~ '../${item.id}/pago' }}">Pagos</a></li>` : ''}
+              {% endif %}
             </ul>
           </td>
         `;

@@ -12,6 +12,7 @@ use AppBundle\Form\AstilleroCotizacionRechazadaType;
 use AppBundle\Form\AstilleroCotizacionType;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use SensioLabs\Security\Exception\HttpException;
 use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -41,6 +42,11 @@ class AstilleroCotizacionController extends Controller
      *
      * @Route("/", name="astillero_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return JsonResponse|Response
      */
     public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
@@ -57,33 +63,8 @@ class AstilleroCotizacionController extends Controller
     }
 
     /**
-     * @Route("/gracias", name="astillero_gracias")
-     * @Method("GET")
-     */
-    public function graciasAction()
-    {
-        return $this->render('marinahumeda/cotizacion/gracias.twig', [
-        ]);
-    }
-
-    /**
-     * @Route("/aceptaciones", name="astillero-aceptaciones")
-     */
-    public function displayAstilleroAceptaciones()
-    {
-
-        $em = $this->getDoctrine()->getManager();
-        $miRepositorio = $em->getRepository('AppBundle:AstilleroCotizacion');
-        $astilleroCotizacions = $miRepositorio->soloAceptados();
-
-        return $this->render('astillero/cotizacion/index.html.twig', [
-            'title' => 'Aceptaciones',
-            'astilleroCotizacions' => $astilleroCotizacions,
-        ]);
-    }
-
-    /**
      * Crea una nueva cotizacion de astillero
+     * cantidades se guardan en pesos
      *
      * @Route("/nueva", name="astillero_new")
      * @Method({"GET", "POST"})
@@ -95,6 +76,9 @@ class AstilleroCotizacionController extends Controller
     public function newAction(Request $request) //cantidades se guardan en pesos
     {
         $astilleroCotizacion = new AstilleroCotizacion();
+
+        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_CREATE', $astilleroCotizacion);
+
         $astilleroGrua = new AstilleroCotizaServicio();
         $astilleroEstadia = new AstilleroCotizaServicio();
         $astilleroRampa = new AstilleroCotizaServicio();
@@ -129,8 +113,6 @@ class AstilleroCotizacionController extends Controller
             $eslora = $astilleroCotizacion->getBarco()->getEslora();
             $llegada = $astilleroCotizacion->getFechaLlegada();
             $salida = $astilleroCotizacion->getFechaSalida();
-            //$diferenciaDias = date_diff($llegada, $salida);
-            //$cantidadDias = ($diferenciaDias->days);
             $cantidadDias = $astilleroCotizacion->getDiasEstadia();
 
             // Uso de grua
@@ -346,11 +328,9 @@ class AstilleroCotizacionController extends Controller
     /**
      * @Route("/cliente.json")
      *
-     * @param Request $request
-     *
      * @return Response
      */
-    public function getClientesAction(Request $request)
+    public function getClientesAction()
     {
         $clientes = $this->getDoctrine()->getRepository('AppBundle:AstilleroCotizacion')->getAllClientes();
 
@@ -360,23 +340,24 @@ class AstilleroCotizacionController extends Controller
     /**
      * @Route("/barco.json")
      *
-     * @param Request $request
-     *
      * @return Response
      */
-    public function getBarcosAction(Request $request)
+    public function getBarcosAction()
     {
         $barcos = $this->getDoctrine()->getRepository('AppBundle:AstilleroCotizacion')->getAllBarcos();
 
         return new JsonResponse($barcos);
     }
 
-
     /**
      * Muestra una cotizacion de astillero
      *
      * @Route("/{id}", name="astillero_show")
      * @Method("GET")
+     *
+     * @param AstilleroCotizacion $astilleroCotizacion
+     *
+     * @return Response
      */
     public function showAction(AstilleroCotizacion $astilleroCotizacion)
     {
@@ -388,6 +369,7 @@ class AstilleroCotizacionController extends Controller
             'delete_form' => $deleteForm->createView(),
         ]);
     }
+
     /**
      * Genera el pdf de una cotizacion en base a su id
      *
@@ -395,10 +377,11 @@ class AstilleroCotizacionController extends Controller
      * @Method("GET")
      *
      * @param AstilleroCotizacion $ac
+     * @param $tipo
      *
      * @return PdfResponse
      */
-    public function displayMarinaPDF(AstilleroCotizacion $ac,$tipo)
+    public function displayMarinaPDF(AstilleroCotizacion $ac, $tipo)
     {
         if($tipo == 1){ //dolares
             $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
@@ -436,267 +419,127 @@ class AstilleroCotizacionController extends Controller
     /**
      * Confirma la respuesta de un cliente a una cotizacion
      *
-     * @Route("/{token}/confirma", name="respuesta-cliente-astillero")
+     * @Route("/{id}/validar", name="astillero_validar")
      * @Method({"GET", "POST"})
      *
-     * @param $token
+     * @param Request $request
+     * @param AstilleroCotizacion $astilleroCotizacion
+     * @param \Swift_Mailer $mailer
      *
-     * @return Response
+     * @return RedirectResponse|Response
      */
-    public function repuestaCliente(Request $request, $token)
+    public function validaAction(Request $request, AstilleroCotizacion $astilleroCotizacion, \Swift_Mailer $mailer)
     {
+        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_VALIDATE', $astilleroCotizacion);
 
-        $em = $this->getDoctrine()->getManager();
-        $cotizacionAceptar = $em->getRepository(AstilleroCotizacion::class)
-            ->findOneBy(['tokenacepta'=>$token]);
-
-        if($cotizacionAceptar) {
-            $cuentaBancaria = $em->getRepository(CuentaBancaria::class)
-                ->findAll();
-            $qb = $em->createQueryBuilder();
-            $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
-            $sistema =$query->getArrayResult();
-
-            $diasHabiles = $sistema[0]['diasHabilesAstilleroCotizacion'];
-
-            if($cotizacionAceptar->getFoliorecotiza()==0){
-                $folio = $cotizacionAceptar->getFolio();
-            }else{
-                $folio = $cotizacionAceptar->getFolio().'-'.$cotizacionAceptar->getFoliorecotiza();
-            }
-            $valorSistema = new ValorSistema();
-            $codigoSeguimiento = $folio.'-'.$valorSistema->generaToken(10);
-
-            $cotizacionAceptar->setValidacliente(2);
-            $cotizacionAceptar->setCodigoseguimiento($codigoSeguimiento);
-            $em->persist($cotizacionAceptar);
-            $em->flush();
-
-            $mensaje1 = '¡Enhorabuena!';
-            $mensaje2 = 'La cotización '.$folio.' ha sido aprobada.';
-            $suformulario = 1;
-
-            $editForm = $this->createForm(AstilleroCotizacionAceptadaType::class, $cotizacionAceptar);
-            $editForm ->handleRequest($request);
-            if ($editForm->isSubmitted() && $editForm->isValid()) {
-                $cotizacionAceptar->setFecharespuesta (new \DateTime('now'));
-                $em->persist($cotizacionAceptar);
-                $em->flush();
-                return $this->redirectToRoute('astillero_gracias');
-            }
-            return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', [
-                'mensaje1' => $mensaje1,
-                'mensaje2' => $mensaje2,
-                'suformulario' => $suformulario,
-                'cuentaBancaria' => $cuentaBancaria,
-                'diasHabiles' => $diasHabiles,
-                'form' => $editForm->createView(),
-                'marinaHumedaCotizacion' => $cotizacionAceptar
-            ]);
+        if ($astilleroCotizacion->isEstatus() == 0 ||
+            $astilleroCotizacion->getValidanovo() == 1 ||
+            $astilleroCotizacion->getValidanovo() == 2
+        ) {
+            throw new NotFoundHttpException();
         }
-        else{
-            $cotizacionRechazar = $em->getRepository(AstilleroCotizacion::class)
-                ->findOneBy(['tokenrechaza'=>$token]);
-            if($cotizacionRechazar){
-                $cotizacionRechazar->setValidacliente(1);
-                $em->persist($cotizacionRechazar);
-                $em->flush();
-                if($cotizacionRechazar->getFoliorecotiza()==0){
-                    $folio = $cotizacionRechazar->getFolio();
-                }else{
-                    $folio = $cotizacionRechazar->getFolio().'-'.$cotizacionRechazar->getFoliorecotiza();
-                }
-                $mensaje1 = '¡Oh-oh!';
-                $mensaje2 = 'La cotización '.$folio.' no ha sido aprobada.';
-                $mensaje3 = 'Nos gustaría saber su opinión o comentarios del motivo de su rechazo.';
-                $suformulario = 2;
 
-                $editForm = $this->createForm(AstilleroCotizacionRechazadaType::class, $cotizacionRechazar);
-                $editForm ->handleRequest($request);
-                if ($editForm->isSubmitted() && $editForm->isValid()) {
-                    $em->flush();
-                    return $this->redirectToRoute('astillero_gracias');
-                }
+        $valorSistema = new ValorSistema();
+        $editForm = $this->createForm('AppBundle\Form\AstilleroCotizacionValidarType', $astilleroCotizacion);
 
-            }
-            return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', [
-                'mensaje1' => $mensaje1,
-                'mensaje2' => $mensaje2,
-                'mensaje3' => $mensaje3,
-                'suformulario' => $suformulario,
-                'form' => $editForm->createView()
-            ]);
-        }
-    }
-
-    /**
-     * @Route("/{id}/pago", name="astillero_cotizacion_pago_edit")
-     * @Method({"GET", "POST"})
-     */
-    public function editPagoAction(Request $request,AstilleroCotizacion $astilleroCotizacion)
-    {
-        $totPagado = 0;
-        $listaPagos = new ArrayCollection();
-        foreach ($astilleroCotizacion->getPagos() as $pago){
-            if($pago->getDivisa()=='MXN'){
-                $pesos = ($pago->getCantidad()*$pago->getDolar())/100;
-                $pago->setCantidad($pesos);
-            }
-            $listaPagos->add($pago);
-        }
-        $form = $this->createForm('AppBundle\Form\AstilleroRegistraPagoType', $astilleroCotizacion);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $total = $astilleroCotizacion->getTotal();
-            //$pagado = $astilleroCotizacion->getPagado();
-
-            $em = $this->getDoctrine()->getManager();
-
-            foreach ($listaPagos as $pago) {
-                if (false === $astilleroCotizacion->getPagos()->contains($pago)) {
-                    $pago->getAcotizacion()->removePago($pago);
-                    $em->persist($pago);
-                    $em->remove($pago);
-                }
-            }
-            foreach ($astilleroCotizacion->getPagos() as $pago) {
-                if($pago->getDivisa()=='MXN'){
-                    $unpago = ($pago->getCantidad()/$pago->getDolar())*100;
-                    $pago->setCantidad($unpago);
-                }else{
-                    $unpago = $pago->getCantidad();
-                }
-                $totPagado += $unpago;
-            }
-            if($total < $totPagado) {
-                $this->addFlash(
-                    'notice',
-                    'Error! Se ha intentado pagar más del total'
-                );
-            }else{
-                $faltante = $total - $totPagado;
-                if($faltante==0){
-                    $astilleroCotizacion->setEstatuspago(2);
-                }else{
-                    $astilleroCotizacion->setEstatuspago(1);
-                }
-                $astilleroCotizacion
-                    ->setPagado($totPagado);
-                $em->persist($astilleroCotizacion);
-                $em->flush();
-                return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
-            }
-
-        }
-        return $this->render('astillero/cotizacion/pago/edit.html.twig', array(
-            'title' => 'Registrar pagos',
-            'astilleroCotizacion' => $astilleroCotizacion,
-            'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * @Route("/{id}/reenviar", name="astillero_reenviar")
-     * @Method({"GET", "POST"})
-     **/
-    public function reenviaCoreoAction(Request $request, AstilleroCotizacion $astilleroCotizacion,\Swift_Mailer $mailer){
-        $em = $this->getDoctrine()->getManager();
-        $tokenAcepta = $astilleroCotizacion->getTokenacepta();
-        $tokenRechaza = $astilleroCotizacion->getTokenrechaza();
-
-        $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
-            'title' => 'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf',
-            'astilleroCotizacion' => $astilleroCotizacion
-        ]);
-        $htmlMXN = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
-            'title' => 'Cotizacion-0.pdf',
-            'astilleroCotizacion' => $astilleroCotizacion
-        ]);
-        $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
-            'astilleroCotizacion' => $astilleroCotizacion
-        ]);
-        $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig', [
-            'astilleroCotizacion' => $astilleroCotizacion
-        ]);
-        $hojapdf = $this->get('knp_snappy.pdf');
-        $options = [
-            'margin-top' => 30,
-            'margin-right' => 0,
-            'margin-bottom' => 33,
-            'margin-left' => 0,
-            'header-html' => utf8_decode($header),
-            'footer-html' => utf8_decode($footer)
-        ];
-        $pdfEnviar = new PdfResponse(
-            $hojapdf->getOutputFromHtml($html, $options),
-            'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
-        );
-        $pdfEnviarMXN = new PdfResponse(
-            $hojapdf->getOutputFromHtml($htmlMXN, $options),
-            'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
-        );
-        $attachment = new Swift_Attachment($pdfEnviar, 'CotizacionUSD-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
-        $attachmentMXN = new Swift_Attachment($pdfEnviarMXN, 'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
-
-        // Enviar correo de confirmacion
-        $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'))
-            ->setFrom('noresponder@novonautica.com')
-            ->setTo($astilleroCotizacion->getBarco()->getCliente()->getCorreo())
-            ->setBcc('admin@novonautica.com')
-            ->setCc([$astilleroCotizacion->getBarco()->getCorreoCapitan(),$astilleroCotizacion->getBarco()->getCorreoResponsable()])
-            ->setBody(
-                $this->renderView('astillero/cotizacion/correo-clientevalida.twig', [
-                        'astilleroCotizacion' => $astilleroCotizacion,
-                        'tokenAcepta' => $tokenAcepta,
-                        'tokenRechaza' => $tokenRechaza
-                    ]
-                ),
-                'text/html'
-            )
-            ->attach($attachment)
-            ->attach($attachmentMXN);
-
-        $mailer->send($message);
-
-        $historialCorreo = new Correo();
-        $historialCorreo
-            ->setFecha(new \DateTime('now'))
-            ->setTipo('Cotización servicio Astillero')
-            ->setDescripcion('Reenvio de cotización de Astillero')
-            ->setFolioCotizacion($astilleroCotizacion->getFolio())
-            ->setAcotizacion($astilleroCotizacion)
-        ;
-
-        $em->persist($historialCorreo);
-
-        $em->flush();
-
-        return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
-    }
-
-    /**
-     * Editar una cotizacion
-     *
-     * @Route("/{id}/edit", name="astillero_edit")
-     * @Method({"GET", "POST"})
-     */
-    public function editAction(Request $request, AstilleroCotizacion $astilleroCotizacion)
-    {
-        $deleteForm = $this->createDeleteForm($astilleroCotizacion);
-        $editForm = $this->createForm('AppBundle\Form\AstilleroCotizacionType', $astilleroCotizacion);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $em = $this->getDoctrine()->getManager();
+            if ($astilleroCotizacion->getValidanovo() == 2) {
+                $tokenAcepta = $valorSistema->generaToken(100);
+                $tokenRechaza = $valorSistema->generaToken(100);
+                $astilleroCotizacion->setTokenacepta($tokenAcepta);
+                $astilleroCotizacion->setTokenrechaza($tokenRechaza);
+                $astilleroCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
 
-            return $this->redirectToRoute('astillero_edit', ['id' => $astilleroCotizacion->getId()]);
+                // creando pdf
+                $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
+                    'title' => 'Cotizacion-0.pdf',
+                    'astilleroCotizacion' => $astilleroCotizacion
+                ]);
+                $htmlMXN = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
+                    'title' => 'Cotizacion-0.pdf',
+                    'astilleroCotizacion' => $astilleroCotizacion
+                ]);
+                $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
+                    'astilleroCotizacion' => $astilleroCotizacion
+                ]);
+                $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig', [
+                    'astilleroCotizacion' => $astilleroCotizacion
+                ]);
+                $hojapdf = $this->get('knp_snappy.pdf');
+                $options = [
+                    'margin-top' => 30,
+                    'margin-right' => 0,
+                    'margin-bottom' => 33,
+                    'margin-left' => 0,
+                    'header-html' => utf8_decode($header),
+                    'footer-html' => utf8_decode($footer)
+                ];
+                $pdfEnviar = new PdfResponse(
+                    $hojapdf->getOutputFromHtml($html, $options),
+                    'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
+                );
+                $pdfEnviarMXN = new PdfResponse(
+                    $hojapdf->getOutputFromHtml($htmlMXN, $options),
+                    'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
+                );
+                $attachment = new Swift_Attachment($pdfEnviar, 'CotizacionUSD-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
+                $attachmentMXN = new Swift_Attachment($pdfEnviarMXN, 'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
+
+                // Enviar correo de confirmacion
+                $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'))
+                    ->setFrom('noresponder@novonautica.com')
+                    ->setTo($astilleroCotizacion->getBarco()->getCliente()->getCorreo())
+                    ->setBcc('admin@novonautica.com')
+                    ->setCc([$astilleroCotizacion->getBarco()->getCorreoCapitan(),$astilleroCotizacion->getBarco()->getCorreoResponsable()])
+                    ->setBody(
+                        $this->renderView('astillero/cotizacion/correo-clientevalida.twig', [
+                                'astilleroCotizacion' => $astilleroCotizacion,
+                                'tokenAcepta' => $tokenAcepta,
+                                'tokenRechaza' => $tokenRechaza
+                            ]
+                        ),
+                        'text/html'
+                    )
+                    ->attach($attachment)
+                    ->attach($attachmentMXN);
+
+                $mailer->send($message);
+
+                if($astilleroCotizacion->getFoliorecotiza() == 0){
+                    $folio = $astilleroCotizacion->getFolio();
+                    $tipoCorreo = 'Cotización servicio Astillero';
+                }else{
+                    $folio = $astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza();
+                    $tipoCorreo = 'Recotización Servicio Astillero';
+                }
+                $historialCorreo = new Correo();
+                $historialCorreo
+                    ->setFecha(new \DateTime('now'))
+                    ->setTipo($tipoCorreo)
+                    ->setDescripcion('Envio de cotización de Astillero con folio: ' . $folio)
+                    ->setFolioCotizacion($folio)
+                    ->setAcotizacion($astilleroCotizacion)
+                ;
+
+                $em->persist($historialCorreo);
+            }
+            else{
+                if($astilleroCotizacion->getValidanovo()==1){
+                    $astilleroCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
+                }
+            }
+            $em->persist($astilleroCotizacion);
+            $em->flush();
+            return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
         }
 
-        return $this->render('astillero/cotizacion/edit.html.twig', [
-            'title' => 'Editar cotización',
+        return $this->render('astillero/cotizacion/validar.html.twig', [
+            'title' => 'Validación',
             'astilleroCotizacion' => $astilleroCotizacion,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'edit_form' => $editForm->createView()
         ]);
     }
 
@@ -705,13 +548,18 @@ class AstilleroCotizacionController extends Controller
      *
      * @Route("/{id}/recotizar", name="astillero_recotizar")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     * @param AstilleroCotizacion $astilleroCotizacionAnterior
+     * @return RedirectResponse|Response
      */
     public function recotizaAction(Request $request, AstilleroCotizacion $astilleroCotizacionAnterior)
     {
+        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_REQUOTE', $astilleroCotizacionAnterior);
+
         if ($astilleroCotizacionAnterior->getEstatus() == 0 ||
             $astilleroCotizacionAnterior->getValidacliente() ==2 ||
             $astilleroCotizacionAnterior->getValidanovo() == 0 ||
-            ($astilleroCotizacionAnterior->getValidanovo() == 2 && $astilleroCotizacionAnterior->getValidacliente() ==0)
+            ($astilleroCotizacionAnterior->getValidanovo() == 2 && $astilleroCotizacionAnterior->getValidacliente() == 0)
         ) {
             throw new NotFoundHttpException();
         }
@@ -997,132 +845,160 @@ class AstilleroCotizacionController extends Controller
     }
 
     /**
-     *
-     * @Route("/{id}/validar", name="astillero_validar")
+     * @Route("/{id}/pago", name="astillero_cotizacion_pago_edit")
      * @Method({"GET", "POST"})
-     **/
-    public function validaAction(Request $request, AstilleroCotizacion $astilleroCotizacion, \Swift_Mailer $mailer)
+     *
+     * @Security("has_role('ROLE_ASTILLERO_PAGO')")
+     *
+     * @param Request $request
+     * @param AstilleroCotizacion $astilleroCotizacion
+     *
+     * @return RedirectResponse|Response
+     */
+    public function editPagoAction(Request $request, AstilleroCotizacion $astilleroCotizacion)
     {
-        if ($astilleroCotizacion->isEstatus() == 0 ||
-            $astilleroCotizacion->getValidanovo() == 1 ||
-            $astilleroCotizacion->getValidanovo() == 2
-            //    $marinaHumedaCotizacion->getValidacliente() ==1 ||
-            //    $marinaHumedaCotizacion->getValidacliente() ==2
-        ) {
-            throw new NotFoundHttpException();
+        $totPagado = 0;
+        $listaPagos = new ArrayCollection();
+        foreach ($astilleroCotizacion->getPagos() as $pago){
+            if($pago->getDivisa()=='MXN'){
+                $pesos = ($pago->getCantidad()*$pago->getDolar())/100;
+                $pago->setCantidad($pesos);
+            }
+            $listaPagos->add($pago);
         }
-        $valorSistema = new ValorSistema();
-        //$servicios = $marinaHumedaCotizacion->getMHCservicios();
-        $editForm = $this->createForm('AppBundle\Form\AstilleroCotizacionValidarType', $astilleroCotizacion);
+        $form = $this->createForm('AppBundle\Form\AstilleroRegistraPagoType', $astilleroCotizacion);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $total = $astilleroCotizacion->getTotal();
+            //$pagado = $astilleroCotizacion->getPagado();
 
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            if ($astilleroCotizacion->getValidanovo() == 2) {
-                $tokenAcepta = $valorSistema->generaToken(100);
-                $tokenRechaza = $valorSistema->generaToken(100);
-                $astilleroCotizacion->setTokenacepta($tokenAcepta);
-                $astilleroCotizacion->setTokenrechaza($tokenRechaza);
-                $astilleroCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
 
-                // creando pdf
-                $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
-                    'title' => 'Cotizacion-0.pdf',
-                    'astilleroCotizacion' => $astilleroCotizacion
-                ]);
-                $htmlMXN = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
-                    'title' => 'Cotizacion-0.pdf',
-                    'astilleroCotizacion' => $astilleroCotizacion
-                ]);
-                $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
-                    'astilleroCotizacion' => $astilleroCotizacion
-                ]);
-                $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig', [
-                    'astilleroCotizacion' => $astilleroCotizacion
-                ]);
-                $hojapdf = $this->get('knp_snappy.pdf');
-                $options = [
-                    'margin-top' => 30,
-                    'margin-right' => 0,
-                    'margin-bottom' => 33,
-                    'margin-left' => 0,
-                    'header-html' => utf8_decode($header),
-                    'footer-html' => utf8_decode($footer)
-                ];
-                $pdfEnviar = new PdfResponse(
-                    $hojapdf->getOutputFromHtml($html, $options),
-                    'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
-                );
-                $pdfEnviarMXN = new PdfResponse(
-                    $hojapdf->getOutputFromHtml($htmlMXN, $options),
-                    'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
-                );
-                $attachment = new Swift_Attachment($pdfEnviar, 'CotizacionUSD-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
-                $attachmentMXN = new Swift_Attachment($pdfEnviarMXN, 'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
-
-                // Enviar correo de confirmacion
-                $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'))
-                    ->setFrom('noresponder@novonautica.com')
-                    ->setTo($astilleroCotizacion->getBarco()->getCliente()->getCorreo())
-                    ->setBcc('admin@novonautica.com')
-                    ->setCc([$astilleroCotizacion->getBarco()->getCorreoCapitan(),$astilleroCotizacion->getBarco()->getCorreoResponsable()])
-                    ->setBody(
-                        $this->renderView('astillero/cotizacion/correo-clientevalida.twig', [
-                                'astilleroCotizacion' => $astilleroCotizacion,
-                                'tokenAcepta' => $tokenAcepta,
-                                'tokenRechaza' => $tokenRechaza
-                            ]
-                        ),
-                        'text/html'
-                    )
-                    ->attach($attachment)
-                    ->attach($attachmentMXN);
-
-                $mailer->send($message);
-
-                if($astilleroCotizacion->getFoliorecotiza() == 0){
-                    $folio = $astilleroCotizacion->getFolio();
-                    $tipoCorreo = 'Cotización servicio Astillero';
+            foreach ($listaPagos as $pago) {
+                if (false === $astilleroCotizacion->getPagos()->contains($pago)) {
+                    $pago->getAcotizacion()->removePago($pago);
+                    $em->persist($pago);
+                    $em->remove($pago);
+                }
+            }
+            foreach ($astilleroCotizacion->getPagos() as $pago) {
+                if($pago->getDivisa()=='MXN'){
+                    $unpago = ($pago->getCantidad()/$pago->getDolar())*100;
+                    $pago->setCantidad($unpago);
                 }else{
-                    $folio = $astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza();
-                    $tipoCorreo = 'Recotización Servicio Astillero';
+                    $unpago = $pago->getCantidad();
                 }
-                $historialCorreo = new Correo();
-                $historialCorreo
-                    ->setFecha(new \DateTime('now'))
-                    ->setTipo($tipoCorreo)
-                    ->setDescripcion('Envio de cotización de Astillero con folio: ' . $folio)
-                    ->setFolioCotizacion($folio)
-                    ->setAcotizacion($astilleroCotizacion)
-                ;
+                $totPagado += $unpago;
+            }
+            if($total < $totPagado) {
+                $this->addFlash(
+                    'notice',
+                    'Error! Se ha intentado pagar más del total'
+                );
+            }else{
+                $faltante = $total - $totPagado;
+                if($faltante==0){
+                    $astilleroCotizacion->setEstatuspago(2);
+                }else{
+                    $astilleroCotizacion->setEstatuspago(1);
+                }
+                $astilleroCotizacion
+                    ->setPagado($totPagado);
+                $em->persist($astilleroCotizacion);
+                $em->flush();
+                return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
+            }
 
-                $em->persist($historialCorreo);
-            }
-            else{
-                if($astilleroCotizacion->getValidanovo()==1){
-                    $astilleroCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
-                }
-            }
-            $em->persist($astilleroCotizacion);
-            $em->flush();
-            return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
         }
-
-        return $this->render('astillero/cotizacion/validar.html.twig', [
-            'title' => 'Validación',
+        return $this->render('astillero/cotizacion/pago/edit.html.twig', array(
+            'title' => 'Registrar pagos',
             'astilleroCotizacion' => $astilleroCotizacion,
-            'edit_form' => $editForm->createView()
-        ]);
+            'form' => $form->createView(),
+        ));
     }
 
-    private function serializeEntities($entity, $format, $ignoredAttributes = []): string
-    {
-        $normalizer = new ObjectNormalizer();
-        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
-        $normalizer->setIgnoredAttributes($ignoredAttributes);
+    /**
+     * @Route("/{id}/reenviar", name="astillero_reenviar")
+     * @Method({"GET", "POST"})
+     *
+     * @param AstilleroCotizacion $astilleroCotizacion
+     * @param \Swift_Mailer $mailer
+     *
+     * @return RedirectResponse
+     */
+    public function reenviaCoreoAction(AstilleroCotizacion $astilleroCotizacion,\Swift_Mailer $mailer){
+        $em = $this->getDoctrine()->getManager();
+        $tokenAcepta = $astilleroCotizacion->getTokenacepta();
+        $tokenRechaza = $astilleroCotizacion->getTokenrechaza();
 
-        return $serializer->serialize($entity, $format);
+        $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
+            'title' => 'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf',
+            'astilleroCotizacion' => $astilleroCotizacion
+        ]);
+        $htmlMXN = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
+            'title' => 'Cotizacion-0.pdf',
+            'astilleroCotizacion' => $astilleroCotizacion
+        ]);
+        $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
+            'astilleroCotizacion' => $astilleroCotizacion
+        ]);
+        $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig', [
+            'astilleroCotizacion' => $astilleroCotizacion
+        ]);
+        $hojapdf = $this->get('knp_snappy.pdf');
+        $options = [
+            'margin-top' => 30,
+            'margin-right' => 0,
+            'margin-bottom' => 33,
+            'margin-left' => 0,
+            'header-html' => utf8_decode($header),
+            'footer-html' => utf8_decode($footer)
+        ];
+        $pdfEnviar = new PdfResponse(
+            $hojapdf->getOutputFromHtml($html, $options),
+            'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
+        );
+        $pdfEnviarMXN = new PdfResponse(
+            $hojapdf->getOutputFromHtml($htmlMXN, $options),
+            'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
+        );
+        $attachment = new Swift_Attachment($pdfEnviar, 'CotizacionUSD-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
+        $attachmentMXN = new Swift_Attachment($pdfEnviarMXN, 'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
+
+        // Enviar correo de confirmacion
+        $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'))
+            ->setFrom('noresponder@novonautica.com')
+            ->setTo($astilleroCotizacion->getBarco()->getCliente()->getCorreo())
+            ->setBcc('admin@novonautica.com')
+            ->setCc([$astilleroCotizacion->getBarco()->getCorreoCapitan(),$astilleroCotizacion->getBarco()->getCorreoResponsable()])
+            ->setBody(
+                $this->renderView('astillero/cotizacion/correo-clientevalida.twig', [
+                        'astilleroCotizacion' => $astilleroCotizacion,
+                        'tokenAcepta' => $tokenAcepta,
+                        'tokenRechaza' => $tokenRechaza
+                    ]
+                ),
+                'text/html'
+            )
+            ->attach($attachment)
+            ->attach($attachmentMXN);
+
+        $mailer->send($message);
+
+        $historialCorreo = new Correo();
+        $historialCorreo
+            ->setFecha(new \DateTime('now'))
+            ->setTipo('Cotización servicio Astillero')
+            ->setDescripcion('Reenvio de cotización de Astillero')
+            ->setFolioCotizacion($astilleroCotizacion->getFolio())
+            ->setAcotizacion($astilleroCotizacion)
+        ;
+
+        $em->persist($historialCorreo);
+
+        $em->flush();
+
+        return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
     }
 
     /**
@@ -1130,6 +1006,11 @@ class AstilleroCotizacionController extends Controller
      *
      * @Route("/{id}", name="astillero_delete")
      * @Method("DELETE")
+     *
+     * @param Request $request
+     * @param AstilleroCotizacion $astilleroCotizacion
+     *
+     * @return RedirectResponse
      */
     public function deleteAction(Request $request, AstilleroCotizacion $astilleroCotizacion)
     {

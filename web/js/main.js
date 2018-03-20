@@ -1321,7 +1321,10 @@ const datatablesSettings = {
     }
   },
   searchDelay: 500,
-  columnDefs: [{targets: 'no-sort', orderable: false}],
+  columnDefs: [
+      {targets: 'no-sort', orderable: false},
+      {targets: 'no-show', visible:false, searchable:false}
+      ],
   initComplete: function () {
     this.api().columns('.with-choices').every(function () {
       const column = this;

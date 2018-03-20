@@ -247,7 +247,7 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
     {
         $roles = $this->roles;
 
-        if (!in_array('ROLE_USER', $roles)) {
+        if ($roles && !in_array('ROLE_USER', $roles)) {
             $roles[] = 'ROLE_USER';
         }
 

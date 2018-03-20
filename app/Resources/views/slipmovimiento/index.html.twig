@@ -24,44 +24,10 @@
                                     <th>Fecha Llegada</th>
                                     <th>Fecha Salida</th>
                                     <th>Registrado</th>
-                                    <th></th>
+                                    <th class="no-sort no-show"></th>
                                 </tr>
                                 </thead>
-                                {#<tbody>
-                                {% for slipMovimiento in slipMovimientos %}
-                                    {% if slipMovimiento %}
-                                    <tr>
-                                        <td>{{ slipMovimiento.marinahumedacotizacion.barco }}</td>
-                                        <td>{{ slipMovimiento.slip.num }}</td>
-                                        <td>
-                                            {% if slipMovimiento.marinaHumedaCotizacion.foliorecotiza == 0 %}
-                                                {{ slipMovimiento.marinaHumedaCotizacion.folio }}
-                                            {% else %}
-                                                {{ slipMovimiento.marinaHumedaCotizacion.folio }}-{{ slipMovimiento.marinaHumedaCotizacion.foliorecotiza }}
-                                            {% endif %}
-                                        </td>
-                                        <td>{% if slipMovimiento.marinahumedacotizacion.fechaLlegada %}{{ slipMovimiento.marinahumedacotizacion.fechaLlegada|date('Y-m-d') }}{% endif %}</td>
-                                        <td>{% if slipMovimiento.marinahumedacotizacion.fechaSalida %}{{ slipMovimiento.marinahumedacotizacion.fechaSalida|date('Y-m-d') }}{% endif %}</td>
-                                        <td>{{ slipMovimiento.estatus }}</td>
-                                        <td>{% if slipMovimiento.createdAt %}{{ slipMovimiento.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                        <td>
-                                            <a class="btn btn-azul" href="{{ path('slipmovimiento_edit', { 'id': slipMovimiento.id }) }}">Editar</a>
-                                        </td>
-                                    </tr>
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>#}
                             </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <a class="btn btn-azul" href="{{ path('slipmovimiento_new') }}">
-                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                Asignar
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -79,15 +45,6 @@
           ...settings,
           order: [[6, 'desc']],
           ajax: '{{ path('slipmovimiento_index') }}',
-          createdRow: function (row, data) {
-            let actionsCell = row.cells[6];
-
-            actionsCell.innerHTML = `
-                <a href="ocupacion/${data[6]}/editar">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                </a>
-            `;
-          }
         });
       })(jQuery, datatablesSettings);
     </script>

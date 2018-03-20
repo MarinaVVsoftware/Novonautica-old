@@ -11,9 +11,11 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Cliente;
 use AppBundle\Entity\MonederoMovimiento;
 use DataTables\DataTablesInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,21 +33,22 @@ class MarinaHumedaMonederoController extends Controller
      *
      * @Route("/", name="mh_monedero_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return JsonResponse|Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
         if ($request->isXmlHttpRequest()) {
             try {
-                $datatables = $this->get('datatables');
-                $results = $datatables->handle($request, 'MHCMonedero');
+                $results = $dataTables->handle($request, 'MHCMonedero');
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getStatusCode());
             }
         }
-
-        /*$em = $this->getDoctrine()->getManager();
-        $clientes = $em->getRepository('AppBundle:Cliente')->findAll();*/
 
         return $this->render('marinahumeda/monedero/index.html.twig', [
             'title' => 'Monedero',
@@ -57,10 +60,13 @@ class MarinaHumedaMonederoController extends Controller
      *
      * @Route("/{id}", name="mh_monedero_ver")
      * @Method("GET")
+     *
+     * @param Cliente $cliente
+     *
+     * @return Response
      */
     public function showAction(Request $request, Cliente $cliente, DataTablesInterface $dataTables)
     {
-
         if($request->isXmlHttpRequest()){
             try {
                 $results = $dataTables->handle($request, 'MHCMonederoMovimiento');

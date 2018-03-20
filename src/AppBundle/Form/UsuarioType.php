@@ -31,33 +31,49 @@ class UsuarioType extends AbstractType
                 'expanded' => true,
                 'choices' => [
                     'Clientes' => [
-                        'Acceder' => 'ROLE_CLIENTE',
+                        'Acceso' => 'ROLE_CLIENTE',
                         'Crear' => 'CLIENTE_CREATE',
                         'Editar' => 'CLIENTE_EDIT',
                     ],
                     'Marina' => [
-                        'Acceder' => 'ROLE_MARINA'
+                        'Acceso' => 'ROLE_MARINA',
+                        'Crear' => 'MARINA_COTIZACION_CREATE',
+                        'Validar' => 'MARINA_COTIZACION_VALIDATE',
+                        'Renovar' => 'MARINA_COTIZACION_RENEW',
+                        'Recotizar' => 'MARINA_COTIZACION_REQUOTE',
+                        'Pagos' => 'ROLE_MARINA_PAGO',
+                        'Monedero' => 'ROLE_MARINA_MONEDERO',
+                        'Slips' => 'ROLE_MARINA_SLIP',
+                        'Tarifas' => 'ROLE_MARINA_TARIFF',
+                        'Servicios adicionales' => 'ROLE_MARINA_SERVICIOADICIONAL',
                     ],
                     'Astillero' => [
-                        'Acceder' => 'ROLE_ASTILLERO'
+                        'Acceso' => 'ROLE_ASTILLERO',
+                        'Crear' => 'ASTILLERO_COTIZACION_CREATE',
+                        'Validar' => 'ASTILLERO_COTIZACION_VALIDATE',
+                        'Recotizar' => 'ASTILLERO_COTIZACION_REQUOTE',
+                        'Pagos' => 'ROLE_ASTILLERO_PAGO',
+                        'ODT' => 'ROLE_ASTILLERO_ODT',
+                        'Productos' => 'ROLE_ASTILLERO_PRODUCTO',
+                        'Servicios' => 'ROLE_ASTILLERO_SERVICIO',
                     ],
                     'Ocean Deal' => [
-                        'Acceder' => 'ROLE_EMBARCACION'
+                        'Acceso' => 'ROLE_EMBARCACION',
                     ],
                     'Tienda' => [
-                        'Acceder' => 'ROLE_TIENDA'
+                        'Acceso' => 'ROLE_TIENDA'
                     ],
                     'Contabilidad' => [
-                        'Acceder' => 'ROLE_CONTABILIDAD'
+                        'Acceso' => 'ROLE_CONTABILIDAD'
                     ],
                     'Historial de Correos' => [
-                        'Acceder' => 'ROLE_HCORREO'
+                        'Acceso' => 'ROLE_HCORREO'
                     ],
                     'Recursos humanos' => [
-                        'Acceder' => 'ROLE_RH'
+                        'Acceso' => 'ROLE_RH'
                     ],
                     'Ajustes' => [
-                        'Acceder' => 'ROLE_AJUSTES'
+                        'Acceso' => 'ROLE_AJUSTES'
                     ],
                 ]
             ])

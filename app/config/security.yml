@@ -53,13 +53,20 @@ security:
 
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/marina/cotizacion/gracias, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/marina/cotizacion/.*/confirma, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/astillero/gracias, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/astillero/.*/confirma, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
         - { path: ^/cliente, roles: ROLE_CLIENTE }
+
+        - { path: ^/marina/monedero, roles: ROLE_MARINA_MONEDERO }
+        - { path: ^/marina/slip, roles: ROLE_MARINA_SLIP }
+        - { path: ^/marina/servicios-adicionales, roles: ROLE_MARINA_SERVICIOADICIONAL }
+        - { path: ^/marina/cotizacion/estadia/tarifas, roles: ROLE_MARINA_TARIFF }
         - { path: ^/marina, roles: ROLE_MARINA }
+
+        - { path: ^/astillero/odt, roles: ROLE_ASTILLERO_ODT }
+        - { path: ^/astillero/producto, roles: ROLE_ASTILLERO_PRODUCTO }
+        - { path: ^/astillero/servicio, roles: ROLE_ASTILLERO_SERVICIO }
         - { path: ^/astillero, roles: ROLE_ASTILLERO }
+
         - { path: ^/embarcacion, roles: ROLE_EMBARCACION }
         - { path: ^/tienda, roles: ROLE_TIENDA }
         - { path: ^/contabilidad, roles: ROLE_CONTABILIDAD }
@@ -69,4 +76,6 @@ security:
         - { path: ^/.*, roles: ROLE_USER }
 
     role_hierarchy:
-            ROLE_ADMIN: [ROLE_USER, ROLE_CLIENTE, ROLE_MARINA, ROLE_ASTILLERO, ROLE_EMBARCACION, ROLE_TIENDA, ROLE_CONTABILIDAD, ROLE_HCORREO, ROLE_RH, ROLE_AJUSTES]
+        ROLE_WHOLE_MARINA: [ROLE_MARINA, ROLE_MARINA_MONEDERO, ROLE_MARINA_SLIP, ROLE_MARINA_SERVICIOADICIONAL, ROLE_MARINA_TARIFF, ROLE_MARINA_PAGO]
+        ROLE_WHOLE_ASTILLERO: [ROLE_ASTILLERO, ROLE_ASTILLERO_PAGO, ROLE_ASTILLERO_ODT]
+        ROLE_ADMIN: [ROLE_USER, ROLE_CLIENTE, ROLE_WHOLE_MARINA, ROLE_WHOLE_ASTILLERO, ROLE_EMBARCACION, ROLE_TIENDA, ROLE_CONTABILIDAD, ROLE_HCORREO, ROLE_RH, ROLE_AJUSTES]
