@@ -42,17 +42,6 @@ use Symfony\Component\Serializer\Serializer;
  */
 class MarinaHumedaCotizacionController extends Controller
 {
-
-    /**
-     * @Route("/gracias", name="marina-humeda_gracias")
-     * @Method("GET")
-     */
-    public function graciasAction()
-    {
-        return $this->render('marinahumeda/cotizacion/gracias.twig', [
-        ]);
-    }
-
     /**
      * Enlista todas las cotizaciones estadias
      *
@@ -88,12 +77,11 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @return JsonResponse|Response
      */
-    public function indexGasolinaAction(Request $request)
+    public function indexGasolinaAction(Request $request, DataTablesInterface $dataTables)
     {
         if ($request->isXmlHttpRequest()) {
             try {
-                $datatables = $this->get('datatables');
-                $results = $datatables->handle($request, 'cotizacionGasolina');
+                $results = $dataTables->handle($request, 'cotizacionGasolina');
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getStatusCode());
@@ -522,15 +510,15 @@ class MarinaHumedaCotizacionController extends Controller
      * @Route("/{id}/pago", name="marina_cotizacion_pago_edit")
      * @Method({"GET", "POST"})
      *
-     * @Security()m Request $request
+     * @Security("has_role('ROLE_MARINA_PAGO')")
+     *
+     * @param Request $request
      * @param MarinaHumedaCotizacion $marinaHumedaCotizacion
      *
      * @return RedirectResponse|Response
      */
     public function editPagoAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
-        //$pago = new Pago();
-        //$marinaHumedaCotizacion->addPago($pago);
         $totPagado = 0;
         $totPagadoMonedero = 0;
         $listaPagos = new ArrayCollection();
@@ -632,6 +620,11 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @Route("/{id}/nota", name="marina-humeda_nota")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param MarinaHumedaCotizacion $marinaHumedaCotizacion
+     *
+     * @return RedirectResponse|Response
      */
     public function agregaNotaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
     {
@@ -684,7 +677,6 @@ class MarinaHumedaCotizacionController extends Controller
             ->setBarco($barco)
             ->setFechaLlegada($marinaHumedaCotizacionAnterior->getFechaLlegada())
             ->setFechaSalida($marinaHumedaCotizacionAnterior->getFechaSalida())
-//            ->setSlip($marinaHumedaCotizacionAnterior->getSlip())
             ->setSlip(null)
             ->setDescuento($marinaHumedaCotizacionAnterior->getDescuento())
             ->setDolar($dolar)
