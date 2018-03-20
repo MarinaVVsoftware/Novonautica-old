@@ -83,14 +83,6 @@ class AstilleroCotizacionController extends Controller
     }
 
     /**
-     * @Route("/odt", name="astillero-odt")
-     */
-    public function displayAstilleroODT(Request $request)
-    {
-        return $this->render('astillero-odt.twig');
-    }
-
-    /**
      * Crea una nueva cotizacion de astillero
      *
      * @Route("/nueva", name="astillero_new")

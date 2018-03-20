@@ -60,6 +60,24 @@ class Proveedor
     private $tipo;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Astillero\Contratista", mappedBy="proveedor")
+     */
+    private $AContratistas;
+
+    public function __toString()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->AContratistas = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Get id.
      *
      * @return int
@@ -157,5 +175,41 @@ class Proveedor
     {
         $this->tipo = $tipo;
         return $this;
+    }
+
+    /**
+     * Add aContratista.
+     *
+     * @param \AppBundle\Entity\Astillero\Contratista $aContratista
+     *
+     * @return Proveedor
+     */
+    public function addAContratista(\AppBundle\Entity\Astillero\Contratista $aContratista)
+    {
+        $this->AContratistas[] = $aContratista;
+
+        return $this;
+    }
+
+    /**
+     * Remove aContratista.
+     *
+     * @param \AppBundle\Entity\Astillero\Contratista $aContratista
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeAContratista(\AppBundle\Entity\Astillero\Contratista $aContratista)
+    {
+        return $this->AContratistas->removeElement($aContratista);
+    }
+
+    /**
+     * Get aContratistas.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAContratistas()
+    {
+        return $this->AContratistas;
     }
 }

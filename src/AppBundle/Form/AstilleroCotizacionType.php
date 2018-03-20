@@ -79,6 +79,7 @@ class AstilleroCotizacionType extends AbstractType
                 'attr' => ['prototype2' => ' '],
                 'by_reference' => false
             ])
+
         ;
 //        $formModifier = function (FormInterface $form, Cliente $cliente = null) {
 //            $barcos = null === $cliente ? array() : $cliente->getBarcos();

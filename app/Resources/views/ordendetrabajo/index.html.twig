@@ -1,5 +1,8 @@
 {% extends 'estructura/plantilla.twig' %}
-
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+{% endblock %}
 {% block contwrapper %}
 <div class="content-wrapper">
     <section class="content">
@@ -9,35 +12,47 @@
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-sm-6">
-                        <table class="table">
+                    <div class="col-sm-12">
+                        <table class="table table-novo">
                             <thead>
                             <tr>
                                 <th>Folio</th>
                                 <th>Barco</th>
                                 <th>Cliente</th>
+                                <th>Precio</th>
+                                <th>Materiales</th>
+                                <th>Pagos</th>
+                                <th>Saldo</th>
+                                <th>Precio V&V</th>
+                                <th>Utilidad V&V</th>
+                                <th>Iva</th>
+                                <th>Total</th>
                                 <th></th>
                             </tr>
                             </thead>
-                            <tbody>
-                            {% for ordenDeTrabajo in ordenDeTrabajos %}
-                                <tr>
-                                    <td>
-                                        {% if ordenDeTrabajo.astilleroCotizacion.foliorecotiza == 0 %}
-                                            {{ ordenDeTrabajo.astilleroCotizacion.folio }}
-                                        {% else %}
-                                            {{ ordenDeTrabajo.astilleroCotizacion.folio }}-{{ ordenDeTrabajo.astilleroCotizacion.foliorecotiza }}
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ ordenDeTrabajo.astilleroCotizacion.barco.nombre }}</td>
-                                    <td>{{ ordenDeTrabajo.astilleroCotizacion.cliente.nombre }}</td>
-                                    <td>
+                            {#<tbody>#}
+                            {#{% for ordenDeTrabajo in ordenDeTrabajos %}#}
+                                {#<tr>#}
+                                    {#<td>#}
+                                        {#{% if ordenDeTrabajo.astilleroCotizacion.foliorecotiza == 0 %}#}
+                                            {#{{ ordenDeTrabajo.astilleroCotizacion.folio }}#}
+                                        {#{% else %}#}
+                                            {#{{ ordenDeTrabajo.astilleroCotizacion.folio }}-{{ ordenDeTrabajo.astilleroCotizacion.foliorecotiza }}#}
+                                        {#{% endif %}#}
+                                    {#</td>#}
+                                    {#<td>{{ ordenDeTrabajo.astilleroCotizacion.barco.nombre }}</td>#}
+                                    {#<td>#}
+                                        {#{% if ordenDeTrabajo.astilleroCotizacion.cliente %}#}
+                                            {#{{ ordenDeTrabajo.astilleroCotizacion.cliente.nombre }}#}
+                                        {#{% endif %}#}
+                                    {#</td>#}
+                                    {#<td>#}
                                         {#<a class="btn btn-morado-claro" href="{{ path('ordendetrabajo_show', { 'id': ordenDeTrabajo.id }) }}">Ver</a>#}
                                         {#<a class="btn btn-azul" href="{{ path('ordendetrabajo_edit', { 'id': ordenDeTrabajo.id }) }}">Editar</a>#}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
+                                    {#</td>#}
+                                {#</tr>#}
+                            {#{% endfor %}#}
+                            {#</tbody>#}
                         </table>
                     </div>
                 </div>
@@ -46,4 +61,34 @@
         </div>
     </section>
 </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+        (function ($, settings) {
+            $('.table-novo').DataTable({
+                    ...settings,
+                ajax: '{{ path('ordendetrabajo_index') }}',
+                order: [[0, 'desc']],
+                createdRow: function (row, data) {
+                let actionsCell = row.cells[11];
+                actionsCell.innerHTML = `
+            <ul class="unstyled-list list-inline">
+                <li>
+                <a href="${data[11]}">
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                </a>
+                </li>
+                <li>
+                <a href="${data[11]}/editar">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                </a>
+                </li>
+            </ul>
+            `
+            },
+        });
+        })(jQuery, datatablesSettings);
+    </script>
 {% endblock %}

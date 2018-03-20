@@ -96,8 +96,15 @@
         (function ($, settings) {
             $('.table-novo').DataTable({
                     ...settings,
-                ajax: '{{ path('mh_monedero_ver', { 'id': cliente.id }) }}',
+                ajax:{
+            url: '{{ path('mh_monedero_ver', { 'id': cliente.id }) }}',
+            data:{
+                idcliente: '{{ cliente.id }}'
+                },
                 order: [[0, 'desc']],
+            }
+
+
                 // createdRow: function (row, data) {
             //     let actionsCell = row.cells[2];
             //     actionsCell.innerHTML = `
@@ -116,6 +123,12 @@
             // `
             // },
         });
+
+            $('table')
+                .on('preXhr.dt', function (e, settings, data) {
+                    data.idcliente = '{{ cliente.id }}'
+                })
+                .DataTable();
         })(jQuery, datatablesSettings);
     </script>
 {% endblock %}

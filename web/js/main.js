@@ -473,6 +473,39 @@ $('.lista-pagos').on('click', '.remove-pago', function (e) {
   return false;
 });
 
+//-- colection al agregar contratista a ODT
+jQuery('.add-another-proveedor').click(function (e) {
+    e.preventDefault();
+    // var elementoMotor = document.getElementsByClassName(this);
+    var totProveedor = $(this).data('cantidad');
+    var lista = $(this).data('idlista');
+    var proveedorListPrimero = jQuery('#proveedor-fields-list' + lista);
+    //var motorListOtros = jQuery('.lista-motores'+lista);
+    // grab the prototype template
+    var newWidget = $(proveedorListPrimero).data('prototype');
+    // replace the "__name__" used in the id and name of the prototype
+    // with a number that's unique to your emails
+    // end name attribute looks like name="contact[emails][2]"
+    newWidget = newWidget.replace(/__name__/g, totProveedor);
+    totProveedor++;
+    $(this).data('cantidad', totProveedor);
+    // create a new list element and add it to the list
+    var newLi = jQuery('<div class="row"></div>').html(newWidget);
+    newLi.appendTo(proveedorListPrimero);
+
+    // also add a remove button, just for this example
+    //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
+
+    newLi.before(newLi);
+});
+$('.lista-proveedores').on('click', '.remove-proveedor', function (e) {
+    e.preventDefault();
+    //console.log('quitar motor');
+    $(this).parent().parent().remove();
+
+    return false;
+});
+
 //--- select dependiente para marina humeda cotización ---
 var elclientemh = $('#appbundle_marinahumedacotizacion_cliente');
 elclientemh.change(function () {

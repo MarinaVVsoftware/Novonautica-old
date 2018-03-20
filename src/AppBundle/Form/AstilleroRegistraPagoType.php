@@ -24,7 +24,7 @@ class AstilleroRegistraPagoType extends AbstractType
     {
         $builder
             ->add('pagos',CollectionType::class,[
-                'entry_type' => PagoType::class,
+                'entry_type' => PagoAstilleroType::class,
                 'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,

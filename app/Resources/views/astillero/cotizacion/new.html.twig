@@ -458,7 +458,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row ">
                                 <div class="col-sm-12">
                                     <div id="" class="">
                                         <small>IVA: {{ valiva }} %</small>
@@ -515,16 +515,23 @@
                         </div>
                         <div role="tabpanel" class="tab-pane" id="correo">
                             <div class="row">
-                                <div class="col-sm-10">
+                                <div class="col-sm-12">
                                     {{ form_row(form.mensaje) }}
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="submit" class="btn btn-azul">
-                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                        Guardar
-                                    </button>
-                                </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
+                        <div class="col-sm-12">
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-azul">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
                         </div>
                     </div>
                     {% if form.acservicios.0.estatus is defined %}
