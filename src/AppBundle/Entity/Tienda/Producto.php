@@ -136,8 +136,6 @@ class Producto
         return $this->precio;
     }
 
-
-
     /**
      * Set claveProdServ.
      *

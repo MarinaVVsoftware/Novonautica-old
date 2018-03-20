@@ -41,6 +41,12 @@ class Peticion
     private $cantidad;
 
     /**
+     * @var integer
+     * @ORM\Column(name="cantidad_entregado", type="integer", length=255)
+     */
+    private $cantidad_entregado;
+
+    /**
      * Get id
      *
      * @return int
@@ -144,5 +150,29 @@ class Peticion
     public function getPeticion()
     {
         return $this->peticion;
+    }
+
+    /**
+     * Set cantidadEntregado.
+     *
+     * @param int $cantidadEntregado
+     *
+     * @return Peticion
+     */
+    public function setCantidadEntregado($cantidadEntregado)
+    {
+        $this->cantidad_entregado = $cantidadEntregado;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidadEntregado.
+     *
+     * @return int
+     */
+    public function getCantidadEntregado()
+    {
+        return $this->cantidad_entregado;
     }
 }

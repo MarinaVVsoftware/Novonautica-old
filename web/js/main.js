@@ -184,11 +184,12 @@ function esNumeroDecimal(e, field) {
     var precio = $(this).find(':selected').data('precio');
     var subtotalHolder = $(this.parentNode.parentNode.parentNode).find('.subtotal');
     var can = $(this.parentNode.parentNode.parentNode).find('.cantidad');
-
     calculateProducto(can, precio, subtotalHolder);
 
     can.on('input', function () {
       calculateProducto(this, precio, subtotalHolder);
+      console.log($(this).parent().parent().find('.entregado'));
+        $(this).parent().parent().find('.entregado').val($(this).val());
     });
   });
 
