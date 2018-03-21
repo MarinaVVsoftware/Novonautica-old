@@ -16,27 +16,13 @@
                     <table class="table-novo table text-center">
                         <thead>
                         <tr>
-                            <th>Id</th>
                             <th>Nombre</th>
+                            <th>Nombre de usuario</th>
                             <th>Correo</th>
                             <th>Estatus</th>
                             <th></th>
                         </tr>
                         </thead>
-                        <tbody>
-                        {% for usuario in usuarios %}
-                            <tr>
-                                <td><a href="{{ path('usuario_show', { 'id': usuario.id }) }}">{{ usuario.id }}</a></td>
-                                <td>{{ usuario.nombre }}</td>
-                                <td>{{ usuario.correo }}</td>
-                                <td>{{ usuario.isActive ? 'Activo' : 'Inactivo' }}</td>
-                                <td>
-                                    <a href="{{ path('usuario_show', { 'id': usuario.id }) }}">show</a>
-                                    <a href="{{ path('usuario_edit', { 'id': usuario.id }) }}">edit</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -46,40 +32,22 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {#<script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
       (function ($, settings) {
         $('.table-novo').DataTable({
           ...settings,
-          ajax: '{{ path('cliente_index') }}',
-          order: [[5, 'desc']],
-          createdRow: function (tr, data) {
-            let barcosTd = tr.cells[4];
-            let lastTd = tr.querySelector('td:last-child');
-            let entryPath = `{{ app.request.requestUri }}${data[5]}`;
-            let barcosList = data[4].map(barco => `<li><a href="${entryPath}#${barco[0]}">${barco[1]}</a></li>`).join('');
-            barcosTd.innerHTML = `
-                <ul class="list-unstyled text-left">
-                ${barcosList}
-                </ul>
-            `.replace(',', '');
-
-            lastTd.innerHTML = `
-            <ul class="unstyled-list list-inline">
-                <li>
-                <a href="${entryPath}/editar">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                </a>
-                </li>
-                <li>
-                <a href="${entryPath}">
-                    <i class="fa fa-eye" aria-hidden="true"></i>
-                </a>
-                </li>
-            </ul>
+          ajax: '{{ path('usuario_index_data') }}',
+          order: [[4, 'desc']],
+          createdRow: function (row, usuario) {
+            let lastCell = row.cells[4];
+            lastCell.innerHTML = `
+            {% if is_granted(expression('has_role("RH_EDIT") or (user.isAdmin())')) %}
+            <a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '${usuario[4]}/edit' }}">Editar</a>
+            {% endif %}
             `
           },
         });
       })(jQuery, datatablesSettings);
-    </script>#}
+    </script>
 {% endblock %}

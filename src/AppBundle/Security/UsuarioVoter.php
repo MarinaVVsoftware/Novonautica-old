@@ -2,25 +2,24 @@
 /**
  * Created by PhpStorm.
  * User: inrumi
- * Date: 3/18/18
- * Time: 13:07
+ * Date: 3/21/18
+ * Time: 13:37
  */
 
 namespace AppBundle\Security;
 
 
-use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Usuario;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class ClienteVoter extends Voter
+class UsuarioVoter extends Voter
 {
-    const CREATE = 'CLIENTE_CREATE';
-    const EDIT = 'CLIENTE_EDIT';
-    const DELETE = 'CLIENTE_DELETE';
+    const CREATE = 'RH_CREATE';
+    const EDIT = 'RH_EDIT';
+    const DELETE = 'RH_DELETE';
 
     private $decisionManager;
 
@@ -43,7 +42,7 @@ class ClienteVoter extends Voter
             return false;
         }
 
-        if (!$subject instanceof Cliente) {
+        if (!$subject instanceof Usuario) {
             return false;
         }
 

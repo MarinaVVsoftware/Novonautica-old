@@ -1,4 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
+{% import 'estructura/modalborrar.twig' as modal %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -135,11 +136,7 @@
                             {{ form_end(form) }}
 
                             {% if delete_form is defined %}
-                                {{ form_start(delete_form) }}
-                                <button type="submit" class="btn btn-danger">
-                                    Eliminar
-                                </button>
-                                {{ form_end(delete_form) }}
+                                {{ delete_form is defined and is_granted(expression('has_role("RH_DELETE") or (user.isAdmin())')) ? modal.deleteButton('Usuario') : '' }}
                             {% endif %}
 
                         </div>
@@ -148,6 +145,10 @@
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block modals %}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}
 
 {% block javascripts %}

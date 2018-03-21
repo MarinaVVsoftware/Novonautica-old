@@ -49,9 +49,12 @@ class PagoType extends AbstractType
                 'label' => 'Fecha de pago',
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['class' => 'datepicker-solo input-calendario',
-                    'readonly' => true],
-                'format' => 'yyyy-MM-dd'
+                'attr' => [
+                    'class' => 'datepicker-solo input-calendario',
+                    'readonly' => true
+                ],
+                'format' => 'yyyy-MM-dd',
+                'data' => new \DateTime()
             ])
             ->add('dolar',MoneyType::class,[
                 'label' => 'Valor del dolar',

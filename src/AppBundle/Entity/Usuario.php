@@ -89,7 +89,7 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
     private $isAdmin;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      *
      * @ORM\Column(name="registro", type="datetime_immutable")
      */
@@ -297,7 +297,7 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
     /**
      * Set registro.
      *
-     * @param \DateTime $registro
+     * @param \DateTimeImmutable $registro
      *
      * @return Usuario
      */
@@ -311,7 +311,7 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
     /**
      * Get registro.
      *
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getRegistro()
     {

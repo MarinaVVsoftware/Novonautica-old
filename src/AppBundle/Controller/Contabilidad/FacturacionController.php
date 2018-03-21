@@ -161,8 +161,10 @@ class FacturacionController extends Controller
      */
     public function newAction(Request $request, \Swift_Mailer $mailer)
     {
-        $em = $this->getDoctrine()->getManager();
         $factura = new Facturacion();
+        $this->denyAccessUnlessGranted('CONTABILIDAD_CREATE', $factura);
+
+        $em = $this->getDoctrine()->getManager();
         $valorSistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
         $factura->setTipoCambio($valorSistema->getDolar());
         $unConcepto = new Facturacion\Concepto();
@@ -182,7 +184,7 @@ class FacturacionController extends Controller
                 ->getQuery()
                 ->getSingleScalarResult();
 
-            $factura->setFolio($folioFactura);
+            $factura->setFolio($folioFactura + 1000);
 
             // Verificar que la factura se haya timbrado correctamente
             if ($timbrado['codigo_mf_numero']) {
@@ -309,6 +311,8 @@ class FacturacionController extends Controller
      */
     public function cancelAction(Facturacion $factura)
     {
+        $this->denyAccessUnlessGranted('CONTABILIDAD_CANCEL', $factura);
+
         $facturador = $this->container->get('multifacturas');
         $timbrado = $facturador->cancela($factura);
 
@@ -321,6 +325,40 @@ class FacturacionController extends Controller
         }
 
         return $this->redirectToRoute('contabilidad_facturacion_index');
+    }
+
+    /**
+     * El campo factura de clientes utilizara este metodo para conseguir la informacion
+     * de un cliente a traves de su RFC
+     *
+     * @Route("/clientes.{_format}", defaults={"_format"="json"})
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getClientesLike(Request $request)
+    {
+        $q = $request->query->get('rfc');
+        $rfcs = $this->getDoctrine()->getRepository('AppBundle:Cliente\RazonSocial')->findLikeRfc($q);
+
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+
+        $serializedClients = $serializer->serialize($rfcs, $request->getRequestFormat(), [
+            'attributes' => [
+                'rfc',
+                'razonSocial',
+                'direccion',
+                'correos',
+                'cliente' => [
+                    'nombre',
+                    'telefono'
+                ]
+            ]
+        ]);
+
+        return new Response($serializedClients);
     }
 
     /**

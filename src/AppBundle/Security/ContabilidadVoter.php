@@ -2,25 +2,24 @@
 /**
  * Created by PhpStorm.
  * User: inrumi
- * Date: 3/18/18
- * Time: 13:07
+ * Date: 3/21/18
+ * Time: 12:02
  */
 
 namespace AppBundle\Security;
 
 
-use AppBundle\Entity\Cliente;
+use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Entity\Usuario;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class ClienteVoter extends Voter
+class ContabilidadVoter extends Voter
 {
-    const CREATE = 'CLIENTE_CREATE';
-    const EDIT = 'CLIENTE_EDIT';
-    const DELETE = 'CLIENTE_DELETE';
+    const CREATE = 'CONTABILIDAD_CREATE';
+    const CANCEL = 'CONTABILIDAD_CANCEL';
 
     private $decisionManager;
 
@@ -39,11 +38,11 @@ class ClienteVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, [self::CREATE, self::EDIT, self::DELETE])) {
+        if (!in_array($attribute, [self::CREATE, self::CANCEL])) {
             return false;
         }
 
-        if (!$subject instanceof Cliente) {
+        if (!$subject instanceof Facturacion) {
             return false;
         }
 
@@ -76,11 +75,8 @@ class ClienteVoter extends Voter
             case self::CREATE:
                 return $this->canCreate($user);
                 break;
-            case self::EDIT:
-                return $this->canEdit($user);
-                break;
-            case self::DELETE:
-                return $this->canDelete($user);
+            case self::CANCEL:
+                return $this->canCancel($user);
                 break;
         }
 
@@ -96,18 +92,9 @@ class ClienteVoter extends Voter
         return true;
     }
 
-    private function canEdit(Usuario $usuario)
+    private function canCancel(Usuario $usuario)
     {
-        if (!in_array(self::EDIT, $usuario->getRoles())) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private function canDelete(Usuario $usuario)
-    {
-        if (!in_array(self::DELETE, $usuario->getRoles())) {
+        if (!in_array(self::CANCEL, $usuario->getRoles())) {
             return false;
         }
 

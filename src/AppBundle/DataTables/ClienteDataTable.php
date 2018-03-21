@@ -34,7 +34,6 @@ class ClienteDataTable extends AbstractDataTableHandler
      *
      * @return DataTableResults
      *
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function handle(DataTableQuery $request): DataTableResults
@@ -60,17 +59,6 @@ class ClienteDataTable extends AbstractDataTableHandler
             )
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
         }
-
-        /*foreach ($request->columns as $column) {
-            if ($column->search->value) {
-                $value = strtolower($column->search->value);
-
-                if ($column->data == 'empresa') {
-                    $q->andWhere('LOWER(cl.empresa) LIKE :empresa')
-                        ->setParameter('empresa', "%{$value}%");
-                }
-            }
-        }*/
 
         foreach ($request->order as $order) {
             if ($order->column === 0) {
@@ -108,8 +96,7 @@ class ClienteDataTable extends AbstractDataTableHandler
             $results->data[] = [
                 $cliente->getNombre(),
                 $cliente->getCorreo(),
-                "{$cliente->getTelefono() } / {$cliente->getCelular()}",
-                $cliente->getDireccion(),
+                $cliente->getTelefono() ?: $cliente->getCelular(),
                 $barcos,
                 $cliente->getId()
             ];

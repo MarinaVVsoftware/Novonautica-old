@@ -246,9 +246,10 @@ class ClienteController extends Controller
      *
      * @return RedirectResponse
      */
-    public
-    function deleteAction(Request $request, Cliente $cliente)
+    public function deleteAction(Request $request, Cliente $cliente)
     {
+        $this->denyAccessUnlessGranted('CLIENTE_DELETE', $cliente);
+
         $form = $this->createDeleteForm($cliente);
         $form->handleRequest($request);
 
@@ -262,59 +263,13 @@ class ClienteController extends Controller
     }
 
     /**
-     * El campo factura de clientes utilizara este metodo para conseguir la informacion
-     * de un cliente a traves de su RFC
-     *
-     * @Route("/listado.{_format}", defaults={"_format"="json"})
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public
-    function getClientesLike(Request $request)
-    {
-        $q = $request->query->get('rfc');
-        $rfcs = $this->getDoctrine()->getRepository('AppBundle:Cliente\RazonSocial')->findLikeRfc($q);
-
-        $normalizer = new ObjectNormalizer();
-        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
-
-        $obj = $serializer->serialize($rfcs, $request->getRequestFormat(), [
-            'attributes' => [
-                'rfc',
-                'razonSocial',
-                'direccion',
-                'correos',
-                'cliente' => [
-                    'nombre',
-                    'telefono'
-                ]
-            ]
-        ]);
-
-        return new Response($obj);
-    }
-
-    private
-    function serializeEntities($entity, $format, $ignoredAttributes = []): string
-    {
-        $normalizer = new ObjectNormalizer();
-        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
-        $normalizer->setIgnoredAttributes($ignoredAttributes);
-
-        return $serializer->serialize($entity, $format);
-    }
-
-    /**
      * Creates a form to delete a cliente entity.
      *
      * @param Cliente $cliente The cliente entity
      *
      * @return \Symfony\Component\Form\FormInterface
      */
-    private
-    function createDeleteForm(Cliente $cliente)
+    private function createDeleteForm(Cliente $cliente)
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('cliente_delete', ['id' => $cliente->getId()]))

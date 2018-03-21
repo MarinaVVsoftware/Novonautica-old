@@ -264,9 +264,6 @@
                                         Facturar
                                     </button>
                                     {{ form_end(form) }}
-                                    {#<div class="pull-left">
-                                        {{ delete_form is defined ? modal.deleteButton() : '' }}
-                                    </div>#}
                                 </div>
                             </div>
                         </div>
@@ -277,48 +274,10 @@
     </div>
 {% endblock %}
 
-{#
-{% block modals %}
-    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
-{% endblock %}
-#}
-
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/jquery.autocomplete.min.js') }}"></script>
     <script type="text/javascript">
-      /*
-          MOSTRAR TAB ACTIVA DONDE HAY ERRORES (Implementado globalmente)
-      */
-      /*(function ($) {
-        const fooForm = document.querySelector('form');
-        const tabContent = document.querySelector('.tab-content');
-        const firstError = tabContent.querySelector('.has-error');
-        const helpBlocks = tabContent.querySelector('.help-block');
-        const tabPanes = tabContent.querySelectorAll('.tab-pane');
-        const tabs = document.querySelectorAll('.nav-tabs > li');
-
-        if (firstError || helpBlocks) {
-          let errorElement = firstError || helpBlocks;
-          const paneWithError = $(tabPanes).has(errorElement);
-          showErrors(paneWithError[0]);
-        }
-
-        fooForm.addEventListener('invalid', e => {
-          tabPanes.forEach(pane => pane.querySelector(`#${e.target.getAttribute('id')}`) ? showErrors(pane) : false);
-        }, true);
-
-        function showErrors(pane) {
-          const tabId = pane.getAttribute('id');
-          const tab = document.querySelector(`[href="#${tabId}"]`).parentNode;
-
-          tabs.forEach(elem => elem.classList.remove('active'));
-          tabPanes.forEach(elem => elem.classList.remove('active'));
-          tab.classList.add('active');
-          pane.classList.add('active')
-        }
-      })(jQuery);*/
-
       /*
           JQUERY AUTOCOMPLETE && COLLECCION DE CONCEPTOS
       */
@@ -413,7 +372,8 @@
             });
 
             precio = ((precio / 116) * 100).toFixed(2);
-            appendRow({ cantidad: 1, servicio: 'VENTA', precio, cps: '01010101 / No existe en el catálogo', cu: 'ACT / Actividad' }, true);
+            // Debido al calculo de diferentes divisas ya no se enviara el total para la factura global
+            appendRow({ cantidad: 1, servicio: 'VENTA', precio: 0, cps: '01010101 / No existe en el catálogo', cu: 'ACT / Actividad' }, true);
           }
         });
 
@@ -431,7 +391,7 @@
           ...autocompleteSettings,
           minChars: 2,
           paramName: 'rfc',
-          serviceUrl: `{{ app.request.BaseUrl }}/cliente/listado.json`,
+          serviceUrl: `{{ app.request.requestUri }}/../clientes.json`,
           params: {},
           transformResult: function (datos) {
             return {

@@ -264,21 +264,27 @@
                                 <i class="fa fa-circle-o"></i> Listado
                             </a>
                         </li>
+                        {% if is_granted(expression('has_role("EMBARCACION_CREATE") or (user.isAdmin())')) %}
                         <li class="{{ path.check('embarcacion_new') }}">
                             <a href="{{ path('embarcacion_new') }}">
                                 <i class="fa fa-circle-o"></i> Nueva
                             </a>
                         </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_EMBARCACION_MARCA') %}
                         <li class="{{ path.check('embarcacion_marca_new') }}">
                             <a href="{{ path('embarcacion_marca_new') }}">
                                 <i class="fa fa-circle-o"></i> Marcas
                             </a>
                         </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_EMBARCACION_MODELO') %}
                         <li class="{{ path.check('embarcacion_modelo') }}">
                             <a href="{{ path('embarcacion_modelo') }}">
                                 <i class="fa fa-circle-o"></i> Modelos
                             </a>
                         </li>
+                        {% endif %}
                     </ul>
                 </li>
             {% endif %}
@@ -297,16 +303,20 @@
                                 <i class="fa fa-circle-o"></i> Solicitudes
                             </a>
                         </li>
+                        {% if is_granted(expression('has_role("TIENDA_CREATE") or (user.isAdmin())')) %}
                         <li class="{{ path.check('tienda_solicitud_new') }}">
                             <a href="{{ path('tienda_solicitud_new') }}">
                                 <i class="fa fa-circle-o"></i> Nueva
                             </a>
                         </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_TIENDA_PRODUCTO') %}
                         <li class="{{ path.check('tienda_producto_index') }}">
                             <a href="{{ path('tienda_producto_index') }}">
                                 <i class="fa fa-circle-o"></i> Productos
                             </a>
                         </li>
+                        {% endif %}
                     </ul>
                 </li>
             {% endif %}
@@ -325,23 +335,27 @@
                                 <i class="fa fa-circle-o"></i> Facturas
                             </a>
                         </li>
+                        {% if is_granted(expression('has_role("CONTABILIDAD_CREATE") or (user.isAdmin())')) %}
                         <li class="{{ path.check('contabilidad_facturacion_new') }}">
                             <a href="{{ path('contabilidad_facturacion_new') }}">
                                 <i class="fa fa-circle-o"></i> Nueva
                             </a>
                         </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_CONTABILIDAD_EMISOR') %}
                         <li class="{{ path.check('contabilidad_facturacion_emisor') }}">
                             <a href="{{ path('contabilidad_facturacion_emisor') }}">
                                 <i class="fa fa-circle-o"></i> Emisores
                             </a>
                         </li>
+                        {% endif %}
                     </ul>
                 </li>
             {% endif %}
             <!-- END CONTABILIDAD -->
 
             <!-- START HISTORIAL CORREOS -->
-            {% if is_granted('ROLE_CORREOS') %}
+            {% if is_granted('ROLE_HCORREO') %}
                 <li class="{{ path.check('historial-correo') }}">
                     <a href="{{ path('historial-correo_index') }}">
                         <i class="fa fa-book"></i> <span>Historial de correos</span>
@@ -363,18 +377,20 @@
                                 <i class="fa fa-circle-o"></i> Listado
                             </a>
                         </li>
+                        {% if is_granted(expression('has_role("RH_CREATE") or (user.isAdmin())')) %}
                         <li class="{{ path.check('usuario_new') }}">
                             <a href="{{ path('usuario_new') }}">
                                 <i class="fa fa-circle-o"></i> Nuevo
                             </a>
                         </li>
+                        {% endif %}
                     </ul>
                 </li>
             {% endif %}
             <!-- END RECURSOS HUMANOS -->
 
             <!-- START AJUSTES -->
-            {% if is_granted('ROLE_ADMIN') %}
+            {% if is_granted('ROLE_AJUSTES') %}
                 <li class="treeview {{ path.check('ajustes_') }} {{ path.check('cuenta-bancaria_') }}">
                     <a href="#">
                         <i class="fa fa-cog"></i> <span>Ajustes</span>
@@ -386,11 +402,13 @@
                                 <i class="fa fa-circle-o"></i> Valores
                             </a>
                         </li>
+                        {% if is_granted('ROLE_AJUSTES_CUENTAS_BANCARIAS') %}
                         <li class="{{ path.check('cuenta-bancaria_index') }}">
                             <a href="{{ path('cuenta-bancaria_index') }}">
                                 <i class="fa fa-circle-o"></i> Cuentas Bancarias
                             </a>
                         </li>
+                        {% endif %}
                     </ul>
                 </li>
             {% endif %}

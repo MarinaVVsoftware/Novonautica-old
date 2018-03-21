@@ -798,6 +798,7 @@
                         </div>
                     {% endif %}
                     {% if marinaHumedaCotizacion.validacliente == 2 and
+                        marinaHumedaCotizacion.mHCservicios.count > 1 and
                        is_granted(expression('has_role("MARINA_COTIZACION_RENEW") or (user.isAdmin())')) %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">

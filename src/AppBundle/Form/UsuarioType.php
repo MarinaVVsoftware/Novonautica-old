@@ -2,10 +2,8 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Repository\PermissionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -33,7 +31,8 @@ class UsuarioType extends AbstractType
                     'Clientes' => [
                         'Acceso' => 'ROLE_CLIENTE',
                         'Crear' => 'CLIENTE_CREATE',
-                        'Editar' => 'CLIENTE_EDIT',
+                        'Modificar' => 'CLIENTE_EDIT',
+                        'Eliminar' => 'CLIENTE_DELETE',
                     ],
                     'Marina' => [
                         'Acceso' => 'ROLE_MARINA',
@@ -60,21 +59,35 @@ class UsuarioType extends AbstractType
                     ],
                     'Ocean Deal' => [
                         'Acceso' => 'ROLE_EMBARCACION',
+                        'Crear' => 'EMBARCACION_CREATE',
+                        'Modificar' => 'EMBARCACION_EDIT',
+                        'Eliminar' => 'EMBARCACION_DELETE',
+                        'Marcas' => 'ROLE_EMBARCACION_MARCA',
+                        'Modelos' => 'ROLE_EMBARCACION_MODELO',
                     ],
                     'Tienda' => [
-                        'Acceso' => 'ROLE_TIENDA'
+                        'Acceso' => 'ROLE_TIENDA',
+                        'Crear' => 'TIENDA_CREATE',
+                        'Productos' => 'ROLE_TIENDA_PRODUCTO'
                     ],
                     'Contabilidad' => [
-                        'Acceso' => 'ROLE_CONTABILIDAD'
+                        'Acceso' => 'ROLE_CONTABILIDAD',
+                        'Crear' => 'CONTABILIDAD_CREATE',
+                        'Cancelar' => 'CONTABILIDAD_CANCEL',
+                        'Emisores' => 'ROLE_CONTABILIDAD_EMISOR',
                     ],
                     'Historial de Correos' => [
                         'Acceso' => 'ROLE_HCORREO'
                     ],
                     'Recursos humanos' => [
-                        'Acceso' => 'ROLE_RH'
+                        'Acceso' => 'ROLE_RH',
+                        'Crear' => 'RH_CREATE',
+                        'Modificar' => 'RH_EDIT',
+                        'Eliminar' => 'RH_DELETE',
                     ],
                     'Ajustes' => [
-                        'Acceso' => 'ROLE_AJUSTES'
+                        'Acceso' => 'ROLE_AJUSTES',
+                        'Cuentas bancarias' => 'ROLE_AJUSTES_CUENTAS_BANCARIAS',
                     ],
                 ]
             ])

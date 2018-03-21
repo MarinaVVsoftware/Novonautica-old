@@ -51,6 +51,9 @@ class SolicitudController extends Controller
         $em = $this->getDoctrine();
 
         $solicitud = new Solicitud();
+
+        $this->denyAccessUnlessGranted('TIENDA_CREATE', $solicitud);
+
         $producto = new Peticion();
 
         $valorsistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
@@ -283,8 +286,8 @@ class SolicitudController extends Controller
     /**
      * Deletes a solicitud entity.
      *
-     * @Route("/{id}", name="tienda_solicitud_delete")
-     * @Method("DELETE")
+     * Route("/{id}", name="tienda_solicitud_delete")
+     * Method("DELETE")
      */
     public function deleteAction(Request $request, Solicitud $solicitud)
     {

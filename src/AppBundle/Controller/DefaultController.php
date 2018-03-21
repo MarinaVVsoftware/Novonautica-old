@@ -70,24 +70,6 @@ class DefaultController extends Controller
         ]);
     }
 
-//    /**
-//     * @Route("/astillero/aceptaciones", name="astillero-aceptaciones")
-//     */
-//    public function displayAstilleroAceptaciones()
-//    {
-//        return $this->render('astillero-aceptaciones.twig', [
-//            'title' => 'Aceptaciones'
-//        ]);
-//    }
-
-//    /**
-//     * @Route("/astillero/odt", name="astillero-odt")
-//     */
-//    public function displayAstilleroODT(Request $request)
-//    {
-//        return $this->render('astillero-odt.twig');
-//    }
-
     /**
      * @Route("/astillero/odt/asigna-dias", name="astillero-odt-dias")
      */
@@ -123,9 +105,7 @@ class DefaultController extends Controller
      */
     public function displayContabilidad(Request $request)
     {
-        return $this->render('contabilidad.twig', [
-            'contabilidad' => 1
-        ]);
+        return $this->redirectToRoute('contabilidad_facturacion_index');
     }
 
     /**
