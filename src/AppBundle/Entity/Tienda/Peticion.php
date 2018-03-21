@@ -22,15 +22,13 @@ class Peticion
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Producto", inversedBy="nombreproducto")
      */
-    private $peticion;
+    private $producto;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Solicitud", inversedBy="producto")
-     * @ORM\JoinColumn(name="idpeticion", referencedColumnName="id",onDelete="CASCADE")
+     * @ORM\JoinColumn(name="solicitud_id", referencedColumnName="id",onDelete="CASCADE")
      */
     private $solicitud;
 
@@ -129,30 +127,6 @@ class Peticion
     }
 
     /**
-     * Set peticion
-     *
-     * @param \AppBundle\Entity\Tienda\Producto $peticion
-     *
-     * @return Peticion
-     */
-    public function setPeticion(\AppBundle\Entity\Tienda\Producto $peticion = null)
-    {
-        $this->peticion = $peticion;
-
-        return $this;
-    }
-
-    /**
-     * Get peticion
-     *
-     * @return \AppBundle\Entity\Tienda\Producto
-     */
-    public function getPeticion()
-    {
-        return $this->peticion;
-    }
-
-    /**
      * Set cantidadEntregado.
      *
      * @param int $cantidadEntregado
@@ -174,5 +148,29 @@ class Peticion
     public function getCantidadEntregado()
     {
         return $this->cantidad_entregado;
+    }
+
+    /**
+     * Set producto.
+     *
+     * @param Producto|null $producto
+     *
+     * @return Peticion
+     */
+    public function setProducto(Producto $producto = null)
+    {
+        $this->producto = $producto;
+
+        return $this;
+    }
+
+    /**
+     * Get producto.
+     *
+     * @return Producto|null
+     */
+    public function getProducto()
+    {
+        return $this->producto;
     }
 }

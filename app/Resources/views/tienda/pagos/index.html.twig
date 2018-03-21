@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Pagos list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Metodopago</th>
+                <th>Divisa</th>
+                <th>Cantidad</th>
+                <th>Dolar</th>
+                <th>Titular</th>
+                <th>Banco</th>
+                <th>Numcuenta</th>
+                <th>Codigoseguimiento</th>
+                <th>Fecharealpago</th>
+                <th>Fecharegistro</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for pago in pagos %}
+            <tr>
+                <td><a href="{{ path('tienda_pagos_show', { 'id': pago.id }) }}">{{ pago.id }}</a></td>
+                <td>{{ pago.metodopago }}</td>
+                <td>{{ pago.divisa }}</td>
+                <td>{{ pago.cantidad }}</td>
+                <td>{{ pago.dolar }}</td>
+                <td>{{ pago.titular }}</td>
+                <td>{{ pago.banco }}</td>
+                <td>{{ pago.numcuenta }}</td>
+                <td>{{ pago.codigoseguimiento }}</td>
+                <td>{{ pago.fecharealpago }}</td>
+                <td>{{ pago.fecharegistro }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('tienda_pagos_show', { 'id': pago.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('tienda_pagos_edit', { 'id': pago.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('tienda_pagos_new') }}">Create a new pago</a>
+        </li>
+    </ul>
+{% endblock %}

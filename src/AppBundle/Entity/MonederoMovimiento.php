@@ -57,7 +57,7 @@ class MonederoMovimiento
     private $resultante;
 
     /**
-     * @var int Tipo: 1 Marina Humeda, 2 Astillero
+     * @var int Tipo: 1 Marina Humeda, 2 Astillero, 3 Tienda
      *
      * @ORM\Column(name="tipo", type="integer")
      */

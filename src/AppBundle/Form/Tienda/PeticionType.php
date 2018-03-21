@@ -16,7 +16,7 @@ class PeticionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('peticion', EntityType::class, [
+        $builder->add('producto', EntityType::class, [
             'label' => 'Producto',
             'choice_attr' => function($val, $key, $index)
             {
