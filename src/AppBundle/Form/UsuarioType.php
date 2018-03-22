@@ -56,6 +56,7 @@ class UsuarioType extends AbstractType
                         'ODT' => 'ROLE_ASTILLERO_ODT',
                         'Productos' => 'ROLE_ASTILLERO_PRODUCTO',
                         'Servicios' => 'ROLE_ASTILLERO_SERVICIO',
+                        'Proveedores' => 'ROLE_ASTILLERO_PROVEEDOR',
                     ],
                     'Ocean Deal' => [
                         'Acceso' => 'ROLE_EMBARCACION',
