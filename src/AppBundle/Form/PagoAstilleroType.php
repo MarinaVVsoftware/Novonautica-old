@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PagoType extends AbstractType
+class PagoAstilleroType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -27,15 +27,14 @@ class PagoType extends AbstractType
                 'choices'  => ['Efectivo' => 'Efectivo',
                     'Transferencia' => 'Transferencia',
                     'Tarjeta de crédito' => 'Tarjeta de crédito',
-                    'Monedero' => 'Monedero',
-                    ],
+                ],
                 'placeholder' => 'Seleccionar...',
                 'label' => 'Método de pago',
 //                'required' => false
             ])
             ->add('divisa',ChoiceType::class,[
-                    'choices'  => ['USD' => 'USD','MXN' => 'MXN'],
-                    'label' => 'Divisa',
+                'choices'  => ['USD' => 'USD','MXN' => 'MXN'],
+                'label' => 'Divisa',
             ])
             ->add('cantidad',MoneyType::class,[
                 'label' => 'Pago',
@@ -62,7 +61,7 @@ class PagoType extends AbstractType
                 'attr' => ['class' => 'esdecimal']
             ]);
     }
-    
+
     /**
      * {@inheritdoc}
      */

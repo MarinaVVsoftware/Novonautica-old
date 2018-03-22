@@ -1,32 +1,262 @@
-{% extends 'base.html.twig' %}
+{% extends 'estructura/plantilla.twig' %}
 
-{% block body %}
-    <h1>Ordendetrabajo</h1>
-
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ ordenDeTrabajo.id }}</td>
-            </tr>
-            <tr>
-                <th>Observaciones</th>
-                <td>{{ ordenDeTrabajo.observaciones }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('ordendetrabajo_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('ordendetrabajo_edit', { 'id': ordenDeTrabajo.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">{{ title }}</h3>
+                            <span>
+                                 {% if ordenDeTrabajo.astilleroCotizacion.foliorecotiza == 0 %}
+                                     {{ ordenDeTrabajo.astilleroCotizacion.folio }}
+                                 {% else %}
+                                     {{ ordenDeTrabajo.astilleroCotizacion.folio }}-{{ ordenDeTrabajo.astilleroCotizacion.foliorecotiza }}
+                                 {% endif %}
+                            </span>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('ordendetrabajo_index') }}">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body panel-pestanias">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="primero active">
+                            <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#contratistas" aria-controls="contratistas" role="tab" data-toggle="tab">Contratistas</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#hojapagos" aria-controls="hojapagos" role="tab" data-toggle="tab">Hoja de pagos</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="generales">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="letra-azul">Nombre:</div>
+                                            <ul>{{ ordenDeTrabajo.astilleroCotizacion.cliente.nombre }}</ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="letra-azul">Teléfono:</div>
+                                            <ul>{{ ordenDeTrabajo.astilleroCotizacion.cliente.telefono }}</ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="letra-azul">Celular:</div>
+                                            <ul>{{ ordenDeTrabajo.astilleroCotizacion.cliente.celular }}</ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="letra-azul">Correo:</div>
+                                            <ul>{{ ordenDeTrabajo.astilleroCotizacion.cliente.correo }}</ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="letra-azul">Embarcación:</div>
+                                            <ul>{{ ordenDeTrabajo.astilleroCotizacion.barco.nombre }}</ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="letra-azul">Modelo:</div>
+                                            <ul>{{ ordenDeTrabajo.astilleroCotizacion.barco.modelo }}</ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="letra-azul">Calado:</div>
+                                            <ul>{{ ordenDeTrabajo.astilleroCotizacion.barco.calado }}</ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="letra-azul">Manga:</div>
+                                            <ul>{{ ordenDeTrabajo.astilleroCotizacion.barco.manga }}</ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="letra-azul">Eslora:</div>
+                                            <ul>{{ ordenDeTrabajo.astilleroCotizacion.barco.eslora }}</ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <small class="pull-left">Precios en USD</small>
+                                    <small class="pull-right">Tipo de cambio: <span
+                                                id="precio-dolar">{{ (ordenDeTrabajo.astilleroCotizacion.dolar/100)| number_format(2) }}</span>
+                                        MXN
+                                    </small>
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Cantidad</th>
+                                            <th>Producto / Servicio</th>
+                                            <th>Prec. Unid.</th>
+                                            <th>Sub-Total</th>
+                                            <th>IVA</th>
+                                            <th>Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="servicios-cotizacion">
+                                        {% for Aservicio in ordenDeTrabajo.astilleroCotizacion.acservicios %}
+                                            {% if Aservicio.estatus %}
+                                                <tr>
+                                                    <td>{{ Aservicio.cantidad }}</td>
+                                                    <td>
+                                                        {% if Aservicio.servicio is not null %}
+                                                            {{ Aservicio.servicio.nombre }}
+                                                        {% elseif Aservicio.producto is not null %}
+                                                            {{ Aservicio.producto.nombre }}
+                                                        {% elseif Aservicio.otroservicio is not null %}
+                                                            {{ Aservicio.otroservicio }}
+                                                        {% elseif Aservicio.astilleroserviciobasico is not null %}
+                                                            {{ Aservicio.astilleroserviciobasico.nombre }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>${{ (Aservicio.precio/100)|number_format(2) }}</td>
+                                                    <td>${{ (Aservicio.subtotal/100)|number_format(2) }}</td>
+                                                    <td>${{ (Aservicio.iva/100)|number_format(2) }}</td>
+                                                    <td>${{ (Aservicio.total/100)|number_format(2) }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <small>Iva: <span
+                                                id="porcentaje-iva">{{ ordenDeTrabajo.astilleroCotizacion.iva | number_format(2) }}</span>%
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="contratistas">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <small class="pull-left">Precios en USD</small>
+                                    <small class="pull-right">Tipo de cambio: <span>{{ (ordenDeTrabajo.astilleroCotizacion.dolar/100)| number_format(2) }}</span>
+                                        MXN
+                                    </small>
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Cotización inicial</th>
+                                            <th>Contratista</th>
+                                            <th>Razón social</th>
+                                            <th>Precio</th>
+                                            <th>% V&V</th>
+                                            <th>Utilidad V&V</th>
+                                            <th>Precio V&V</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for contratista in ordenDeTrabajo.contratistas %}
+                                            <tr>
+                                                <td>{{ contratista.cotizacionInicial }}</td>
+                                                <td>{{ contratista.proveedor.nombre }}</td>
+                                                <td>{{ contratista.proveedor.razonsocial }}</td>
+                                                <td>${{ (contratista.precio/100)|number_format(2) }}</td>
+                                                <td>{{ contratista.porcentajevv|number_format(2) }}%</td>
+                                                <td>${{ (contratista.utilidadvv/100)|number_format(2) }}</td>
+                                                <td>${{ (contratista.preciovv/100)|number_format(2) }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3" class="text-right">Totales:</td>
+                                                <td>${{ (ordenDeTrabajo.precioTotal/100)|number_format(2) }}</td>
+                                                <td></td>
+                                                <td>${{ (ordenDeTrabajo.utilidadvvTotal/100)|number_format(2) }}</td>
+                                                <td>${{ (ordenDeTrabajo.preciovvTotal/100)|number_format(2) }}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="hojapagos">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <small class="pull-left">Precios en USD</small>
+                                    <small class="pull-right">Tipo de cambio: <span>{{ (ordenDeTrabajo.astilleroCotizacion.dolar/100)| number_format(2) }}</span>
+                                        MXN
+                                    </small>
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Cotización inicial</th>
+                                            <th>Contratista</th>
+                                            <th>Razón social</th>
+                                            <th>Precio</th>
+                                            <th>Materiales a descontar</th>
+                                            <th>IVA</th>
+                                            <th>Total</th>
+                                            <th>Pagos</th>
+                                            <th>Fecha</th>
+                                            <th>Forma de pago</th>
+                                            <th>Saldo</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for contratista in ordenDeTrabajo.contratistas %}
+                                            <tr>
+                                                <td>{{ contratista.cotizacionInicial }}</td>
+                                                <td>{{ contratista.proveedor.nombre }}</td>
+                                                <td>{{ contratista.proveedor.razonsocial }}</td>
+                                                <td>${{ (contratista.precio/100)|number_format(2) }}</td>
+                                                <td>${{ (contratista.materiales/100)|number_format(2) }}</td>
+                                                <td>${{ (contratista.ivatot/100)|number_format(2) }}</td>
+                                                <td>${{ (contratista.total/100)|number_format(2) }}</td>
+                                                <td>${{ (contratista.pagos/100)|number_format(2) }}</td>
+                                                <td>{{ contratista.fecha ? contratista.fecha|date('d-m-Y'):'' }}</td>
+                                                <td>{{ contratista.formaPago }}</td>
+                                                <td>${{ (contratista.saldo/100)|number_format(2) }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colspan="3" class="text-right">Totales:</td>
+                                            <td>${{ (ordenDeTrabajo.precioTotal/100)|number_format(2) }}</td>
+                                            <td>${{ (ordenDeTrabajo.materialesTotal/100)|number_format(2) }}</td>
+                                            <td>${{ (ordenDeTrabajo.ivaTotal/100)|number_format(2) }}</td>
+                                            <td>${{ (ordenDeTrabajo.granTotal/100)|number_format(2) }}</td>
+                                            <td>${{ (ordenDeTrabajo.pagosTotal/100)|number_format(2) }}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>${{ (ordenDeTrabajo.saldoTotal/100)|number_format(2) }}</td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                    <small>Iva: <span>{{ ordenDeTrabajo.astilleroCotizacion.iva | number_format(2) }}</span>%
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row espacio-linea-arriba2">
+                            <div class="col-sm-12">
+                                <a class="btn btn-azul pull-right"
+                                   href="{{ path('ordendetrabajo_edit',{'id': ordenDeTrabajo.id}) }}">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    Editar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 {% endblock %}

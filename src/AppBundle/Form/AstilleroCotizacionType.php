@@ -38,7 +38,7 @@ class AstilleroCotizacionType extends AbstractType
                 'attr' => ['class' => 'select-buscador selectbarcobuscar']
             ])
             ->add('fechaLlegada',DateType::class,[
-                'label' => 'Fecha llegada',
+                'label' => 'Fecha inicio',
                 'widget' => 'single_text',
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
@@ -46,7 +46,7 @@ class AstilleroCotizacionType extends AbstractType
                 'format' => 'yyyy-MM-dd'
             ])
             ->add('fechaSalida',DateType::class,[
-                'label' => 'Fecha Salida',
+                'label' => 'Fecha fin',
                 'widget' => 'single_text',
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
@@ -79,6 +79,7 @@ class AstilleroCotizacionType extends AbstractType
                 'attr' => ['prototype2' => ' '],
                 'by_reference' => false
             ])
+
         ;
 //        $formModifier = function (FormInterface $form, Cliente $cliente = null) {
 //            $barcos = null === $cliente ? array() : $cliente->getBarcos();

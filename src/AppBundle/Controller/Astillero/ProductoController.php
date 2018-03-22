@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Producto controller.
@@ -28,14 +29,23 @@ class ProductoController extends Controller
      * @Route("/", name="astillero_producto_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $productos = $em->getRepository('AppBundle:Astillero\Producto')->findAll();
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'AstilleroProducto');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getStatusCode());
+            }
+            }
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $productos = $em->getRepository('AppBundle:Astillero\Producto')->findAll();
 
         return $this->render('astillero/producto/index.html.twig', array(
-            'productos' => $productos,
+//            'productos' => $productos,
             'title' => 'Astillero Productos'
         ));
     }

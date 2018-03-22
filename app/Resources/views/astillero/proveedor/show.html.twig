@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Proveedor</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ proveedor.id }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ proveedor.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Razonsocial</th>
+                <td>{{ proveedor.razonsocial }}</td>
+            </tr>
+            <tr>
+                <th>Porcentaje</th>
+                <td>{{ proveedor.porcentaje }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('astillero_proveedor_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('astillero_proveedor_edit', { 'id': proveedor.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

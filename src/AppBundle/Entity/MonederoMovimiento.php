@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * MonederoMovimiento
@@ -23,6 +24,9 @@ class MonederoMovimiento
 
     /**
      * @var integer
+     * @Assert\NotBlank(
+     *     message="El monto está en 0"
+     * )
      *
      * @ORM\Column(name="monto", type="bigint", nullable=true)
      */
@@ -37,6 +41,9 @@ class MonederoMovimiento
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Debes agregar una descripción de la operación"
+     * )
      *
      * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
@@ -45,7 +52,7 @@ class MonederoMovimiento
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha", type="datetime", nullable=true)
+     * @ORM\Column(name="fecha", type="datetime")
      */
     private $fecha;
 

@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-
+use Symfony\Component\HttpKernel\Exception\HttpException;
 /**
  * Servicio controller.
  *
@@ -25,14 +25,22 @@ class ServicioController extends Controller
      * @Route("/", name="astillero_servicio_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $servicios = $em->getRepository('AppBundle:Astillero\Servicio')->findAll();
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'AstilleroServicio');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getStatusCode());
+            }
+        }
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $servicios = $em->getRepository('AppBundle:Astillero\Servicio')->findAll();
 
         return $this->render('astillero/servicio/index.html.twig', array(
-            'servicios' => $servicios,
             'title' => 'Astillero Servicios'
         ));
     }

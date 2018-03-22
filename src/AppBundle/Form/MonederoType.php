@@ -34,7 +34,7 @@ class MonederoType extends AbstractType
                 ]
             ])
             ->add('monto', MoneyType::class, [
-                'label' => 'Monto a procesar',
+                'label' => 'Monto a procesar (USD)',
                 'required' => false,
                 'currency' => 'USD',
                 'divisor' => 100,

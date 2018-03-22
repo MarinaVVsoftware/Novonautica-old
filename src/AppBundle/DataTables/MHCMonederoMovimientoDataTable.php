@@ -8,7 +8,7 @@
 
 namespace AppBundle\DataTables;
 
-//use AppBundle\Entity\Cliente;
+use AppBundle\Entity\Cliente;
 use AppBundle\Entity\MonederoMovimiento;
 use DataTables\AbstractDataTableHandler;
 //use DataTables\DataTableException;
@@ -29,17 +29,19 @@ class MHCMonederoMovimientoDataTable extends AbstractDataTableHandler
 
     /**
      * {@inheritdoc}
+     *
+     *
      */
     public function handle(DataTableQuery $request): DataTableResults
     {
 
+//        $cliente = $this->doctrine->getRepository('AppBundle:Cliente')->createQueryBuilder('c')->getQuery()->getSingleScalarResult();
         $monederoMovimientoRepo = $this->doctrine->getRepository('AppBundle:MonederoMovimiento');
         $results = new DataTableResults();
 
         $qb = $monederoMovimientoRepo->createQueryBuilder('mm');
-        $results->recordsTotal = $qb->select('COUNT(mm.id)')->getQuery()->getSingleScalarResult();
-
-        $q = $qb->select('mm','cliente')->join('mm.cliente', 'cliente');
+        $results->recordsTotal = $qb->select('COUNT(mm.id)')->where('mm.cliente = '.$request->customData['idcliente'])->getQuery()->getSingleScalarResult();
+        $q = $qb->select('mm','cliente')->join('mm.cliente', 'cliente')->where('cliente.id = '.$request->customData['idcliente']);
 
         if ($request->search->value) {
             $q->where('(LOWER(mm.descripcion) LIKE :search OR ' . 'mm.fecha LIKE :search OR mm.monto LIKE :search OR mm.resultante LIKE :search)'

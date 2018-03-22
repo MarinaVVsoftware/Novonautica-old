@@ -1,4 +1,8 @@
 {% extends 'estructura/plantilla.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+{% endblock %}
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -8,11 +12,10 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-10 col-sm-offset-1">
-                            <table class="table text-center">
+                        <div class="col-sm-12">
+                            <table class="table table-novo">
                                 <thead>
                                 <tr>
-                                    <th>Id</th>
                                     <th>Nombre</th>
                                     <th>Precio</th>
                                     <th>Unidad</th>
@@ -20,37 +23,62 @@
                                     <th></th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                {% for producto in productos %}
-                                    <tr>
-                                        <td>{{ producto.id }}</td>
-                                        <td>{{ producto.nombre }}</td>
-                                        <td>$ {{ (producto.precio/100)|number_format(2) }}</td>
-                                        <td>{{ producto.unidad }}</td>
-                                        <td>{{ producto.descripcion }}</td>
-                                        <td>
-                                            <a class="btn btn-azul" href="{{ path('astillero_producto_edit', { 'id': producto.id }) }}">
-                                                Editar
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
+                                {#<tbody>#}
+                                {#{% for producto in productos %}#}
+                                    {#<tr>#}
+                                        {#<td>{{ producto.id }}</td>#}
+                                        {#<td>{{ producto.nombre }}</td>#}
+                                        {#<td>$ {{ (producto.precio/100)|number_format(2) }}</td>#}
+                                        {#<td>{{ producto.unidad }}</td>#}
+                                        {#<td>{{ producto.descripcion }}</td>#}
+                                        {#<td>#}
+                                            {#<a class="btn btn-azul" href="{{ path('astillero_producto_edit', { 'id': producto.id }) }}">#}
+                                                {#Editar#}
+                                            {#</a>#}
+                                        {#</td>#}
+                                    {#</tr>#}
+                                {#{% endfor %}#}
+                                {#</tbody>#}
                             </table>
                         </div>
                     </div>
                 </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <a class="btn btn-azul" href="{{ path('astillero_producto_new') }}">
-                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                Agregar
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                {#<div class="panel-footer">#}
+                    {#<div class="row">#}
+                        {#<div class="col-sm-12">#}
+                            {#<a class="btn btn-azul" href="{{ path('astillero_producto_new') }}">#}
+                                {#<i class="fa fa-plus" aria-hidden="true"></i>#}
+                                {#Agregar#}
+                            {#</a>#}
+                        {#</div>#}
+                    {#</div>#}
+                {#</div>#}
             </div>
         </section>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+        (function ($, settings) {
+            $('.table-novo').DataTable({
+                    ...settings,
+                ajax: '{{ path('astillero_producto_index') }}',
+                order: [[0, 'desc']],
+                createdRow: function (row, data) {
+                let actionsCell = row.cells[4];
+                actionsCell.innerHTML = `
+            <ul class="unstyled-list list-inline" style="margin: 0">
+                <li>
+                <a href="${data[4]}/editar">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                </a>
+                </li>
+            </ul>
+            `
+            },
+        });
+        })(jQuery, datatablesSettings);
+    </script>
 {% endblock %}

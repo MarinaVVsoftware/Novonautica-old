@@ -13,10 +13,7 @@
                             <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
                         </li>
                         <li role="presentation">
-                            <a href="#fotografias" aria-controls="fotografias" role="tab" data-toggle="tab">Fotografías</a>
-                        </li>
-                        <li role="presentation">
-                            <a href="#asignacion" aria-controls="asignacion" role="tab" data-toggle="tab">Asignación</a>
+                            <a href="#asignacion" aria-controls="asignacion" role="tab" data-toggle="tab">Contratistas</a>
                         </li>
                     </ul>
                     {{ form_start(form) }}
@@ -24,7 +21,7 @@
                         <div role="tabpanel" class="tab-pane active" id="generales">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    {{ form_widget(form) }}
+                                    {{ form_row(form.astilleroCotizacion) }}
                                 </div>
                             </div>
                             <div class="row">
@@ -53,13 +50,37 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="fotografias">
-                        </div>
                         <div role="tabpanel" class="tab-pane" id="asignacion">
+                            <div id="proveedor-fields-list0" class="lista-proveedores"
+                                 data-prototype="{% filter escape %}
+                                                {{ include('astillero/form-contratista.twig', { 'form': form.contratistas.vars.prototype }) }}
+                                                {{ form_widget(form.contratistas.vars.prototype)|e }}
+                                                {% endfilter %}">
+                                {% for pr in form.contratistas %}
+                                    <div class="row">
+                                        {{ form_widget(pr) }}
+                                    </div>
+                                {% endfor %}
+                            </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <button class="btn btn-azul" type="submit">Guardar</button>
+                                    <a href="#" id="" class="add-another-proveedor letra-azul" data-cantidad="{{ form.contratistas|length }}" data-idlista="0">
+                                        + Agregar Contratista
+                                    </a>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
+                            <div class="col-sm-12">
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 text-right">
+                                <button class="btn btn-azul" type="submit">
+                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                    Guardar
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -101,23 +122,28 @@
                     );
 
                     for(var i=0;i<cotizacion[0].acservicios.length;i++){
-                        var elemento = '';
-                        var unidad = '';
-                        if(cotizacion[0].acservicios[i].servicio){
-                            elemento = cotizacion[0].acservicios[i].servicio.nombre;
+                        if(cotizacion[0].acservicios[i].estatus){
+                            var elemento = '';
+                            var unidad = '';
+                            if(cotizacion[0].acservicios[i].servicio){
+                                elemento = cotizacion[0].acservicios[i].servicio.nombre;
+                            }
+                            if(cotizacion[0].acservicios[i].producto){
+                                elemento = cotizacion[0].acservicios[i].producto.nombre;
+                            }
+                            if(cotizacion[0].acservicios[i].astilleroserviciobasico){
+                                elemento = cotizacion[0].acservicios[i].astilleroserviciobasico.nombre;
+                            }
+                            if(cotizacion[0].acservicios[i].otroservicio){
+                                elemento = cotizacion[0].acservicios[i].otroservicio;
+                            }
+                            $('#servicios-cotizacion').append('<tr><td>'+cotizacion[0].acservicios[i].cantidad+'</td>' +
+                                '<td>'+elemento+'</td>' +
+                                '<td>$ '+(cotizacion[0].acservicios[i].precio/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
+                                '<td>$ '+(cotizacion[0].acservicios[i].subtotal/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
+                                '<td>$ '+(cotizacion[0].acservicios[i].iva/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
+                                '<td>$ '+(cotizacion[0].acservicios[i].total/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td></tr>');
                         }
-                        if(cotizacion[0].acservicios[i].producto){
-                            elemento = cotizacion[0].acservicios[i].producto.nombre;
-                        }
-                        if(cotizacion[0].acservicios[i].astilleroserviciobasico){
-                            elemento = cotizacion[0].acservicios[i].astilleroserviciobasico.nombre;
-                        }
-                        $('#servicios-cotizacion').append('<tr><td>'+cotizacion[0].acservicios[i].cantidad+'</td>' +
-                                                                '<td>'+elemento+'</td>' +
-                                                                '<td>$ '+(cotizacion[0].acservicios[i].precio/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
-                                                                '<td>$ '+(cotizacion[0].acservicios[i].subtotal/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
-                                                                '<td>$ '+(cotizacion[0].acservicios[i].iva/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
-                                                                '<td>$ '+(cotizacion[0].acservicios[i].total/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td></tr>');
                     }
                     $('#porcentaje-iva').html(cotizacion[0].iva);
                     $('#precio-dolar').html((cotizacion[0].dolar/100).toFixed(2));
@@ -134,6 +160,8 @@
             });
 
         });
+
+
     })(jQuery);
 </script>
 {% endblock %}

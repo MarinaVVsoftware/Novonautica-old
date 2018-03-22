@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Cliente;
 use AppBundle\Entity\MonederoMovimiento;
+use DataTables\DataTablesInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -57,12 +58,12 @@ class MarinaHumedaMonederoController extends Controller
      * @Route("/{id}", name="mh_monedero_ver")
      * @Method("GET")
      */
-    public function showAction(Request $request, Cliente $cliente)
+    public function showAction(Request $request, Cliente $cliente, DataTablesInterface $dataTables)
     {
+
         if($request->isXmlHttpRequest()){
             try {
-                $datatables = $this->get('datatables');
-                $results = $datatables->handle($request, 'MHCMonederoMovimiento');
+                $results = $dataTables->handle($request, 'MHCMonederoMovimiento');
                 return $this->json($results);
             } catch (HttpException $e){
                 return $this->json($e->getMessage(),$e->getStatusCode());

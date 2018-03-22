@@ -25,14 +25,14 @@
                                 <th>Folio</th>
                                 <th class="with-choices">Cliente</th>
                                 <th class="with-choices">Barco</th>
-                                <th>Fecha llegada</th>
-                                <th>Fecha salida</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
                                 <th>Subtotal</th>
-                                <th>Ivatotal</th>
+                                <th>Iva</th>
                                 <th>Total</th>
                                 <th class="with-options">Validación</th>
                                 <th class="with-options">Aceptación</th>
-                                <th class="with-options">Pago</th>
+                                <th class="with-options-pay">Pago</th>
                                 <th>Acciones</th>
                             </tr>
                             </thead>
@@ -101,6 +101,26 @@
           select.add(new Option('Rechazada', '1'));
           select.add(new Option('Pendiente', null));
         });
+
+          $tabla.columns('.with-options-pay').every(function () {
+              const column = this;
+              const columnHeader = column.header();
+              const select = document.createElement('select');
+
+              select.add(new Option(columnHeader.innerHTML, ''));
+              columnHeader.innerHTML = '';
+              columnHeader.appendChild(select);
+
+              select.addEventListener('click', e => e.stopPropagation());
+              select.addEventListener('change', function () {
+                  let val = $.fn.dataTable.util.escapeRegex(this.value);
+                  column.search(val, true, true).draw();
+              });
+
+              select.add(new Option('Pagado', '2'));
+              select.add(new Option('En proceso', '1'));
+              select.add(new Option('Pendiente', null));
+          });
 
         function writeLastChild(validacion, aceptacion, pago, item) {
           const btnClass = 'btn btn-xs btn-block btn-';

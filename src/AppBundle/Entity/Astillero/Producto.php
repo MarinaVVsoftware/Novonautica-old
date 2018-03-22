@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Astillero;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Producto
@@ -26,6 +27,9 @@ class Producto
      * @var string
      *
      * @Groups({"facturacion"})
+     * @Assert\NotBlank(
+     *     message="Nombre no puede quedar vacío"
+     * )
      *
      * @ORM\Column(name="nombre", type="string", length=255, nullable=true)
      */
@@ -33,6 +37,9 @@ class Producto
 
     /**
      * @var int
+     * @Assert\NotBlank(
+     *     message="Precio no puede quedar vacío"
+     * )
      *
      * @ORM\Column(name="precio", type="bigint", nullable=true)
      */
@@ -40,6 +47,9 @@ class Producto
 
     /**
      * @var string
+     * @Assert\NotBlank(
+     *     message="Unidad no puede quedar vacío"
+     * )
      *
      * @ORM\Column(name="unidad", type="string", length=20, nullable=true)
      */
