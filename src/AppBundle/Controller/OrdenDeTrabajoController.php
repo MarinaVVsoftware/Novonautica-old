@@ -178,7 +178,7 @@ class OrdenDeTrabajoController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            dump($ordenDeTrabajo);
+
             $iva = $ordenDeTrabajo->getAstilleroCotizacion()->getIva();
             //$this->getDoctrine()->getManager()->flush();
             foreach ($originalContratistas as $contratista){

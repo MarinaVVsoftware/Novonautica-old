@@ -9,12 +9,14 @@
 namespace AppBundle\Form\Astillero;
 
 
+use DateTime;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
 
 class ContratistaType extends AbstractType
 {
@@ -70,7 +72,8 @@ class ContratistaType extends AbstractType
                 'html5' => false,
                 'attr' => ['class' => 'datepicker-solo input-calendario',
                     'readonly' => true],
-                'format' => 'yyyy-MM-dd'
+                'format' => 'yyyy-MM-dd',
+                'data' => new DateTime()
             ])
             ->add('formaPago')
             ->add('saldo',MoneyType::class,[
