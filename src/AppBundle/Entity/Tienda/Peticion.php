@@ -22,15 +22,13 @@ class Peticion
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Producto", inversedBy="nombreproducto")
      */
-    private $peticion;
+    private $producto;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Solicitud", inversedBy="producto")
-     * @ORM\JoinColumn(name="idpeticion", referencedColumnName="id",onDelete="CASCADE")
+     * @ORM\JoinColumn(name="solicitud_id", referencedColumnName="id",onDelete="CASCADE")
      */
     private $solicitud;
 
@@ -39,6 +37,12 @@ class Peticion
      * @ORM\Column(name="cantidad", type="integer", length=255)
      */
     private $cantidad;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="cantidad_entregado", type="integer", length=255)
+     */
+    private $cantidad_entregado;
 
     /**
      * Get id
@@ -123,26 +127,50 @@ class Peticion
     }
 
     /**
-     * Set peticion
+     * Set cantidadEntregado.
      *
-     * @param \AppBundle\Entity\Tienda\Producto $peticion
+     * @param int $cantidadEntregado
      *
      * @return Peticion
      */
-    public function setPeticion(\AppBundle\Entity\Tienda\Producto $peticion = null)
+    public function setCantidadEntregado($cantidadEntregado)
     {
-        $this->peticion = $peticion;
+        $this->cantidad_entregado = $cantidadEntregado;
 
         return $this;
     }
 
     /**
-     * Get peticion
+     * Get cantidadEntregado.
      *
-     * @return \AppBundle\Entity\Tienda\Producto
+     * @return int
      */
-    public function getPeticion()
+    public function getCantidadEntregado()
     {
-        return $this->peticion;
+        return $this->cantidad_entregado;
+    }
+
+    /**
+     * Set producto.
+     *
+     * @param Producto|null $producto
+     *
+     * @return Peticion
+     */
+    public function setProducto(Producto $producto = null)
+    {
+        $this->producto = $producto;
+
+        return $this;
+    }
+
+    /**
+     * Get producto.
+     *
+     * @return Producto|null
+     */
+    public function getProducto()
+    {
+        return $this->producto;
     }
 }

@@ -74,12 +74,46 @@ class Solicitud
     /**
      * @var int
      *
+     * @ORM\Column(name="cantidadpagado", type="bigint", nullable=true)
+     */
+    private $cantidadpagado;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="valordolar", type="bigint")
+     */
+    private $valordolar;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="totalusd", type="float")
+     */
+    private $totalusd;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="pagado", type="smallint")
      */
     private $pagado;
 
+    /**
+     * @var \DateTimeImmutable
+     *
+     * @ORM\Column(name="registro_pago_completado", type="datetime_immutable", nullable=true)
+     */
+    private $registroPagoCompletado;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Pago", mappedBy="tiendasolicitud",cascade={"persist","remove"})
+     */
+    private $pagos;
+
     public function __construct()
     {
+        $this->pagos = new ArrayCollection();
         $this->producto = new ArrayCollection();
         $this->entregado = 2;
         $this->pagado = 2;
@@ -320,5 +354,138 @@ class Solicitud
     public function getPagado()
     {
         return $this->pagado;
+    }
+
+    /**
+     * Set registroPagoCompletado.
+     *
+     * @param \DateTimeImmutable|null $registroPagoCompletado
+     *
+     * @return Solicitud
+     */
+    public function setRegistroPagoCompletado($registroPagoCompletado = null)
+    {
+        $this->registroPagoCompletado = $registroPagoCompletado;
+
+        return $this;
+    }
+
+    /**
+     * Get registroPagoCompletado.
+     *
+     * @return \DateTimeImmutable|null
+     */
+    public function getRegistroPagoCompletado()
+    {
+        return $this->registroPagoCompletado;
+    }
+
+    /**
+     * Add pago.
+     *
+     * @param \AppBundle\Entity\Pago $pago
+     *
+     * @return Solicitud
+     */
+    public function addPago(\AppBundle\Entity\Pago $pago)
+    {
+        $pago->setTiendasolicitud($this);
+        $this->pagos[] = $pago;
+
+        return $this;
+    }
+
+    /**
+     * Remove pago.
+     *
+     * @param \AppBundle\Entity\Pago $pago
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removePago(\AppBundle\Entity\Pago $pago)
+    {
+        return $this->pagos->removeElement($pago);
+    }
+
+    /**
+     * Get pagos.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPagos()
+    {
+        return $this->pagos;
+    }
+
+    /**
+     * Set cantidadpagado.
+     *
+     * @param int|null $cantidadpagado
+     *
+     * @return Solicitud
+     */
+    public function setCantidadpagado($cantidadpagado = null)
+    {
+        $this->cantidadpagado = $cantidadpagado;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidadpagado.
+     *
+     * @return int|null
+     */
+    public function getCantidadpagado()
+    {
+        return $this->cantidadpagado;
+    }
+
+    /**
+     * Set valordolar.
+     *
+     * @param int $valordolar
+     *
+     * @return Solicitud
+     */
+    public function setValordolar($valordolar)
+    {
+        $this->valordolar = $valordolar;
+
+        return $this;
+    }
+
+    /**
+     * Get valordolar.
+     *
+     * @return int
+     */
+    public function getValordolar()
+    {
+        return $this->valordolar;
+    }
+
+    /**
+     * Set totalusd.
+     *
+     * @param float $totalusd
+     *
+     * @return Solicitud
+     */
+    public function setTotalusd($totalusd)
+    {
+        $this->totalusd = $totalusd;
+
+        return $this;
+    }
+
+    /**
+     * Get totalusd.
+     *
+     * @return float
+     */
+    public function getTotalusd()
+    {
+        return $this->totalusd;
     }
 }

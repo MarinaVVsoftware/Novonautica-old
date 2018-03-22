@@ -109,6 +109,11 @@ class Pago
     private $acotizacion;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Solicitud", inversedBy="pagos")
+     */
+    private $tiendasolicitud;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CuentaBancaria", inversedBy="pagos")
      * @ORM\JoinColumn(name="idcuentabancaria", referencedColumnName="id",onDelete="CASCADE")
      */
@@ -419,5 +424,29 @@ class Pago
     public function setDivisa($divisa)
     {
         $this->divisa = $divisa;
+    }
+
+    /**
+     * Set tiendasolicitud.
+     *
+     * @param \AppBundle\Entity\Tienda\Solicitud|null $tiendasolicitud
+     *
+     * @return Pago
+     */
+    public function setTiendasolicitud(\AppBundle\Entity\Tienda\Solicitud $tiendasolicitud = null)
+    {
+        $this->tiendasolicitud = $tiendasolicitud;
+
+        return $this;
+    }
+
+    /**
+     * Get tiendasolicitud.
+     *
+     * @return \AppBundle\Entity\Tienda\Solicitud|null
+     */
+    public function getTiendasolicitud()
+    {
+        return $this->tiendasolicitud;
     }
 }

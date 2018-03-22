@@ -4,6 +4,7 @@ namespace AppBundle\Form\Tienda;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,7 +16,7 @@ class PeticionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('peticion', EntityType::class, [
+        $builder->add('producto', EntityType::class, [
             'label' => 'Producto',
             'choice_attr' => function($val, $key, $index)
             {
@@ -29,6 +30,11 @@ class PeticionType extends AbstractType
             'data' => 1,
             'empty_data' => 1,
             'attr' => ['min' => 1, 'class' => 'cantidad']
+        ])
+        ->add('cantidadEntregado', HiddenType::class, [
+            'data' => 1,
+            'empty_data' => 1,
+            'attr' => ['class' => 'entregado']
         ]);
     }
     

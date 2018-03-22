@@ -60,7 +60,7 @@ class Producto
     private $claveUnidad;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Peticion", mappedBy="peticion")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Peticion", mappedBy="producto")
      */
     private $nombreproducto;
 
@@ -135,8 +135,6 @@ class Producto
     {
         return $this->precio;
     }
-
-
 
     /**
      * Set claveProdServ.
