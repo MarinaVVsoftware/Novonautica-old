@@ -69,21 +69,7 @@ class SlipMovimientoController extends Controller
     {
         try {
             $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
-            // FIXME
-//            $slipRepo = $this->getDoctrine()->getRepository('AppBundle:Slip');
-
             $currentSlips = $smRepo->getCurrentOcupation();
-            /*$filledSlips = $smRepo->getCurrentOcupationStats();
-            $allSlips = $slipRepo->getAllByGroupFeet();
-
-            foreach ($allSlips as $i => $slip) {
-                $allSlips[$i]['amarres'] = (int)$allSlips[$i]['amarres'];
-                $allSlips[$i]['ocupacion'] = (int)$filledSlips[$i]['ocupados'];
-                $allSlips[$i]['porcentaje'] = (float)number_format((($filledSlips[$i]['ocupados'] * 100) / $allSlips[$i]['amarres']), 1);
-                if ($i === 1) {
-                    break;
-                }
-            }*/
             $allSlips = $smRepo->calculoOcupaciones2(new \DateTime());
 
             $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));

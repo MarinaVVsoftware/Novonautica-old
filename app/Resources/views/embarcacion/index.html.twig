@@ -54,11 +54,13 @@
             let pdfPath = `{{ app.request.requestUri }}${data[7]}/brochure`;
             lastTd.innerHTML = `
                 <ul class="list-unstyled list-inline">
+                {% if is_granted(expression('has_role("EMBARCACION_EDIT") or (user.isAdmin())')) %}
                     <li>
                     <a href="${entryPath}">
                         <i class="fa fa-pencil"></i>
                     </a>
                     </li>
+                {% endif %}
                     <li>
                     <a href="${pdfPath}" target="_blank">
                         <i class="fa fa-file-pdf-o"></i>

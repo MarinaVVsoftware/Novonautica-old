@@ -69,7 +69,7 @@
             {responsivePriority: 1},
             {responsivePriority: 1},
             {responsivePriority: 1},
-            {responsivePriority: 1},
+            {responsivePriority: 0},
           ],
           createdRow: function (row, data) {
             for (let i of [8, 9, 10]) {
@@ -128,9 +128,15 @@
           <td>
             <ul class="list-unstyled">
               <li><a class="${btnClass}morado-claro" href="{{ app.request.requestUri ~ '${item.id}' }}">Detalle</a></li>
+              {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
               ${validacion === 0 ? `<li><a class="${btnClass}azul" href="{{ app.request.requestUri ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
+              {% endif %}
+              {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_REQUOTE") or (user.isAdmin())')) %}
               ${(validacion === 1 || aceptacion === 1) && item.estatus ? `<li><a class="${btnClass}naranja" href="{{ app.request.requestUri ~ '${item.id}/recotizar' }}">Recotizar</a></li>` : ''}
+              {% endif %}
+              {% if is_granted('ROLE_MARINA_PAGO') %}
               ${(aceptacion === 2 && pago !== 2) ? `<li><a class="${btnClass}verde" href="{{ app.request.requestUri ~ '${item.id}/pago' }}">Pagos</a></li>` : ''}
+              {% endif %}
             </ul>
           </td>
         `;

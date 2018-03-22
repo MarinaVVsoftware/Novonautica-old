@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Embarcacion;
 use AppBundle\Entity\EmbarcacionImagen;
 use AppBundle\Entity\EmbarcacionLayout;
+use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use SensioLabs\Security\Exception\HttpException;
@@ -15,6 +16,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -36,15 +38,15 @@ class EmbarcacionController extends Controller
      * @Method({"GET", "POST"})
      *
      * @param Request $request
+     * @param DataTablesInterface $dataTables
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
         if ($request->isXmlHttpRequest()) {
             try {
-                $datatables = $this->get('datatables');
-                $results = $datatables->handle($request, 'embarcaciones');
+                $results = $dataTables->handle($request, 'embarcaciones');
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getCode());
@@ -58,11 +60,17 @@ class EmbarcacionController extends Controller
      *
      * @Route("/new", name="embarcacion_new")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
         $embarcacion = new Embarcacion();
-        // Hack para que aparezca al menos un motor el primer [] abre un arreglo, el segundo [] insera un arreglo de motor
+        $this->denyAccessUnlessGranted('EMBARCACION_CREATE', $embarcacion);
+
+        // Hack para que aparezca al menos un motor el primer [] abre un arreglo, el segundo [] inserta un arreglo de motor
         $embarcacion->setMotores([[]]);
         $form = $this->createForm('AppBundle\Form\EmbarcacionType', $embarcacion);
         $form->handleRequest($request);
@@ -87,9 +95,16 @@ class EmbarcacionController extends Controller
      *
      * @Route("/{id}/edit", name="embarcacion_edit")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param Embarcacion $embarcacion
+     *
+     * @return JsonResponse|RedirectResponse|Response
      */
     public function editAction(Request $request, Embarcacion $embarcacion)
     {
+        $this->denyAccessUnlessGranted('EMBARCACION_EDIT', $embarcacion);
+
         $deleteForm = $this->createDeleteForm($embarcacion);
 
         $oldImages = new ArrayCollection();
@@ -152,7 +167,35 @@ class EmbarcacionController extends Controller
     }
 
     /**
+     * Deletes a embarcacion entity.
+     *
+     * @Route("/{id}", name="embarcacion_delete")
+     * @Method("DELETE")
+     *
+     * @param Request $request
+     * @param Embarcacion $embarcacion
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction(Request $request, Embarcacion $embarcacion)
+    {
+        $this->denyAccessUnlessGranted('EMBARCACION_DELETE', $embarcacion);
+        $form = $this->createDeleteForm($embarcacion);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($embarcacion);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('embarcacion_index');
+    }
+
+    /**
      * @Route("/{id}/brochure", name="embarcacion_brochure")
+     *
+     * @param Embarcacion $embarcacion
      *
      * @return PdfResponse|Response
      */
@@ -160,7 +203,6 @@ class EmbarcacionController extends Controller
     {
         $head = $this->renderView('embarcacion/pdf/head.html.twig');
         $body = $this->renderView('embarcacion/pdf/body.html.twig', [
-//            'title' => strtolower(str_replace(' ', '-', $embarcacion->getNombre())) . '-brochure.pdf',
             'title' => 'brochure.pdf',
             'embarcacion' => $embarcacion
         ]);
@@ -177,8 +219,6 @@ class EmbarcacionController extends Controller
             $this->get('knp_snappy.pdf')->getOutputFromHtml($body, $options),
             'brochure.pdf', 'application/pdf', 'inline'
         );
-
-//        return $this->render('embarcacion/pdf/body.html.twig', ['title' => 'asd', 'embarcacion' => $embarcacion]);
     }
 
     /**
@@ -239,27 +279,7 @@ class EmbarcacionController extends Controller
         return new Response($this->serializeEntities($years, $request->getRequestFormat()));
     }
 
-    /**
-     * Deletes a embarcacion entity.
-     *
-     * @Route("/{id}", name="embarcacion_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, Embarcacion $embarcacion)
-    {
-        $form = $this->createDeleteForm($embarcacion);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($embarcacion);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('embarcacion_index');
-    }
-
-    private function serializeEntities($entity, $format, $ignoredAttributes = []): string
+    private function serializeEntities($entity, $format, $ignoredAttributes = [])
     {
         $normalizer = new ObjectNormalizer();
         $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
@@ -275,10 +295,10 @@ class EmbarcacionController extends Controller
      *
      * @return FormInterface
      */
-    private function createDeleteForm(Embarcacion $embarcacion) : FormInterface
+    private function createDeleteForm(Embarcacion $embarcacion)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('embarcacion_delete', array('id' => $embarcacion->getId())))
+            ->setAction($this->generateUrl('embarcacion_delete', ['id' => $embarcacion->getId()]))
             ->setMethod('DELETE')
             ->getForm();
     }

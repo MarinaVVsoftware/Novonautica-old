@@ -99,7 +99,7 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
         array_push($ocupacionTiposSlips, ['tipo' => $tipoSlip, 'num' => $numTiposSlip, 'total' => $total, 'porcentaje' => $porcentaje]);
         return $ocupacionTiposSlips;
     }
-    // FIXME
+
     public function calculoOcupaciones2($fechaBuscar)
     {
         $ocupacionTiposSlips = [];

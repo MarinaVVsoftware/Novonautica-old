@@ -28,49 +28,55 @@ $(document).ready(function () {
     var urlnueva = url.replace($('#linkdetalle').data('id'), "comodinIdCotizacion");
     $('#linkdetalle').attr('href', urlnueva);
   });
-  $('.select-buscador').select2();
-  $.fn.datepicker.dates['es'] = {
-    days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
-    daysShort: ["Dom", "Lun", "Mar", "Mi", "Ju", "Vi", "Sab"],
-    daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-    months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-    monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-    today: "Hoy",
-    clear: "Quitar",
-    // format: "dd-mm-yyyy",
-    titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
-    weekStart: 0
-  };
-  $('.input-daterange').datepicker({
-    format: 'yyyy-mm-dd',
-    language: "es",
-    orientation: "bottom auto",
-    autoclose: true
-  });
-  $('.datepicker-solo').datepicker({
-    format: 'yyyy-mm-dd',
-    language: "es",
-    orientation: "bottom auto",
-    autoclose: true
-  });
 
-  $('.editorwy').wysihtml5({
-    toolbar: {
-      "image": false,
-      "color": false,
-      "link": false,
-      "html": true,
-    }
-  });
+  var $selectBuscador = $('.select-buscador');
 
-  $('.lista-pagos').on('click', '.input-calendario', function (e) {
-    console.log('click calendario');
-    $(this).datepicker({
-      autoclose: true,
+  if ($selectBuscador.length) {
+  $selectBuscador.select2();
+  }
+
+  if ($.fn.datepicker) {
+    $.fn.datepicker.dates['es'] = {
+      days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+      daysShort: ["Dom", "Lun", "Mar", "Mi", "Ju", "Vi", "Sab"],
+      daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+      months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+      monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+      today: "Hoy",
+      clear: "Quitar",
+      // format: "dd-mm-yyyy",
+      titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+      weekStart: 0
+    };
+
+    $('.input-daterange').datepicker({
       format: 'yyyy-mm-dd',
-      orientation: "auto",
-    })
-  });
+      language: "es",
+      orientation: "bottom auto",
+      autoclose: true
+    });
+
+    $('.datepicker-solo').datepicker({
+      format: 'yyyy-mm-dd',
+      language: "es",
+      orientation: "bottom auto",
+      autoclose: true
+    });
+  }
+
+  var $editorWSY = $('.editorwy');
+
+  if ($editorWSY.length) {
+    $editorWSY.wysihtml5({
+      toolbar: {
+        "image": false,
+        "color": false,
+        "link": false,
+        "html": true,
+      }
+    });
+  }
+
   $('.cuadro-zona').on('click', function () {
     var direc = $(this).data('direccion');
     window.location.href = direc;
@@ -456,10 +462,16 @@ jQuery('.add-another-pago').click(function (e) {
   newWidget = newWidget.replace(/__name__/g, totPagos);
   totPagos++;
   $(this).data('cantidad', totPagos);
+
   // create a new list element and add it to the list
   var newLi = jQuery('<tr class="pago-agregado"></tr>').html(newWidget);
   newLi.appendTo(pagoListPrimero);
 
+  newLi.find('.input-calendario').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    orientation: 'bottom',
+  });
   // also add a remove button, just for this example
   //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
 
@@ -1321,7 +1333,10 @@ const datatablesSettings = {
     }
   },
   searchDelay: 500,
-  columnDefs: [{targets: 'no-sort', orderable: false}],
+  columnDefs: [
+      {targets: 'no-sort', orderable: false},
+      {targets: 'no-show', visible:false, searchable:false}
+      ],
   initComplete: function () {
     this.api().columns('.with-choices').every(function () {
       const column = this;
@@ -1373,9 +1388,11 @@ const datatablesSettings = {
   const tabPanes = tabContent ? tabContent.querySelectorAll('.tab-pane') : undefined;
   const tabs = document.querySelectorAll('.nav-tabs > li') || undefined;
 
-  fooForm.addEventListener('invalid', e => {
-    tabPanes.forEach(pane => pane.querySelector(`#${e.target.getAttribute('id')}`) ? showErrors(pane) : false);
-  }, true);
+  if (fooForm && tabPanes) {
+    fooForm.addEventListener('invalid', e => {
+      tabPanes.forEach(pane => pane.querySelector(`#${e.target.getAttribute('id')}`) ? showErrors(pane) : false);
+    }, true);
+  }
 
   if (fooForm && tabContent && (firstError || helpBlocks) && tabPanes && tabs) {
     let errorElement = firstError || helpBlocks;

@@ -82,7 +82,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <h4>Datos de facturación</h4>
-                                    {%  for razon in cliente.razonesSociales %}
+                                    {% for razon in cliente.razonesSociales %}
                                         <table class="table table-novo">
                                             <tbody>
                                             <tr>
@@ -116,10 +116,12 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <a class="btn btn-azul" href="{{ path('cliente_edit', { 'id': cliente.id }) }}">
-                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                        Editar Todo
-                                    </a>
+                                    {% if is_granted(expression('has_role("CLIENTE_EDIT") or (user.isAdmin())')) %}
+                                        <a class="btn btn-azul" href="{{ path('cliente_edit', { 'id': cliente.id }) }}">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            Editar Todo
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

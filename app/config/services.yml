@@ -32,15 +32,16 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
-    # add more services, or override services that need manual wiring
-    # AppBundle\Service\ExampleService:
-    #     arguments:
-    #         $someArgument: 'some_value'
     app.upload.listener:
         class: AppBundle\EventListener\UploadListener
         arguments: ['@doctrine.orm.entity_manager']
         tags:
             - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
+
+    AppBundle\Entity\UsuarioListener:
+        autowire: true
+        tags:
+            - { name: doctrine.orm.entity_listener }
 
     AppBundle\DataTables\:
         resource: '../../src/AppBundle/DataTables'

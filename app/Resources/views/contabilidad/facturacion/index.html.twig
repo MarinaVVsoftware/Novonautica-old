@@ -111,11 +111,13 @@
 
             if (data[7]['status']) {
               actionsInner += `
+                {% if is_granted(expression('has_role("CONTABILIDAD_CANCEL") or (user.isAdmin())')) %}
                 <button data-url="${url}${data[7]['id']}/cancelar"
                  class="btn btn-xs btn-naranja cancel-action"
                  data-toggle="modal"
                  data-target=".ventanaborrar"
                  style="margin: 5px;">Cancelar</button>
+                 {% endif %}
               `;
             } else {
               actionsInner += `

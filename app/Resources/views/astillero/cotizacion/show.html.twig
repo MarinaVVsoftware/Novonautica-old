@@ -485,7 +485,9 @@
                             </a>
                         </div>
                     </div>
-                    {% if astilleroCotizacion.validanovo == 0 %}
+                    {% if astilleroCotizacion.validanovo == 0 and
+                        is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") or (user.isAdmin())'))
+                    %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
                                 <a class="btn btn-azul pull-right"
@@ -498,7 +500,9 @@
                     {% endif %}
                     {% if (astilleroCotizacion.validanovo == 1 or
                         astilleroCotizacion.validacliente == 1) and
-                        astilleroCotizacion.estatus == 1 %}
+                        astilleroCotizacion.estatus == 1 and
+                        is_granted(expression('has_role("ASTILLERO_COTIZACION_REQUOTE") or (user.isAdmin())'))
+                    %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
                                 <a class="btn btn-naranja pull-right"
@@ -509,7 +513,10 @@
                             </div>
                         </div>
                     {% endif %}
-                    {% if astilleroCotizacion.validacliente == 2 and astilleroCotizacion.estatuspago != 2 %}
+                    {% if astilleroCotizacion.validacliente == 2 and
+                        astilleroCotizacion.estatuspago != 2 and
+                        is_granted('ROLE_ASTILLERO_PAGO')
+                    %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
                                 <a class="btn btn-verde pull-right"

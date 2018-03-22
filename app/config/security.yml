@@ -6,7 +6,6 @@ security:
         Usuario:
             entity:
                 class: AppBundle:Usuario
-                property: correo
 
     firewalls:
         dev:
@@ -14,10 +13,12 @@ security:
             security: false
 
         main:
-            logout_on_user_change: true
+            anonymous: ~
             pattern: .*
-            methods: [GET, POST]
+            security: true
             provider: Usuario
+            logout_on_user_change: true
+            methods: [GET, POST, DELETE]
             form_login:
                 check_path: login
                 login_path: login
@@ -49,14 +50,50 @@ security:
                 path: logout
                 target: login
                 invalidate_session: false
-            security: true
-            anonymous: ~
 
     access_control:
+        - { path: ^/gracias, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/.*/confirma, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/marina/cotizacion/gracias, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/marina/cotizacion/.*/confirma, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/astillero/gracias, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/astillero/.*/confirma, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/.*, roles: IS_AUTHENTICATED_FULLY }
+
+        - { path: ^/cliente, roles: ROLE_CLIENTE }
+
+        - { path: ^/marina/monedero, roles: ROLE_MARINA_MONEDERO }
+        - { path: ^/marina/slip, roles: ROLE_MARINA_SLIP }
+        - { path: ^/marina/servicios-adicionales, roles: ROLE_MARINA_SERVICIOADICIONAL }
+        - { path: ^/marina/cotizacion/estadia/tarifas, roles: ROLE_MARINA_TARIFF }
+        - { path: ^/marina, roles: ROLE_MARINA }
+
+        - { path: ^/astillero/odt, roles: ROLE_ASTILLERO_ODT }
+        - { path: ^/astillero/producto, roles: ROLE_ASTILLERO_PRODUCTO }
+        - { path: ^/astillero/servicio, roles: ROLE_ASTILLERO_SERVICIO }
+        - { path: ^/astillero, roles: ROLE_ASTILLERO }
+
+        - { path: ^/embarcacion/marca/, roles: ROLE_EMBARCACION_MARCA }
+        - { path: ^/embarcacion/modelo/, roles: ROLE_EMBARCACION_MODELO }
+        - { path: ^/embarcacion, roles: ROLE_EMBARCACION }
+
+        - { path: ^/tienda/producto/, roles: ROLE_TIENDA_PRODUCTO }
+        - { path: ^/tienda, roles: ROLE_TIENDA }
+
+        - { path: ^/contabilidad/facturacion/emisor/, roles: ROLE_CONTABILIDAD_EMISOR }
+        - { path: ^/contabilidad, roles: ROLE_CONTABILIDAD }
+
+        - { path: ^/historial-correo, roles: ROLE_HCORREO }
+
+        - { path: ^/usuario, roles: ROLE_RH }
+
+        - { path: ^/ajustes/cuentas-bancarias/, roles: ROLE_AJUSTES_CUENTAS_BANCARIAS }
+        - { path: ^/ajustes, roles: ROLE_AJUSTES }
+
+        - { path: ^/perfil, roles: ROLE_USER }
+        - { path: ^/.*, roles: ROLE_USER }
+
+    role_hierarchy:
+        ROLE_WHOLE_MARINA: [ROLE_MARINA, ROLE_MARINA_MONEDERO, ROLE_MARINA_SLIP, ROLE_MARINA_SERVICIOADICIONAL, ROLE_MARINA_TARIFF, ROLE_MARINA_PAGO]
+        ROLE_WHOLE_ASTILLERO: [ROLE_ASTILLERO, ROLE_ASTILLERO_ODT, ROLE_ASTILLERO_PRODUCTO, ROLE_ASTILLERO_SERVICIO, ROLE_ASTILLERO_PAGO, ROLE_ASTILLERO_PROVEEDOR]
+        ROLE_WHOLE_EMBARCACION: [ROLE_EMBARCACION, ROLE_EMBARCACION_MARCA, ROLE_EMBARCACION_MODELO]
+        ROLE_WHOLE_TIENDA: [ROLE_TIENDA, ROLE_TIENDA_PRODUCTO]
+        ROLE_WHOLE_CONTABILIDAD: [ROLE_CONTABILIDAD, ROLE_CONTABILIDAD_EMISOR]
+        ROLE_WHOLE_AJUSTES: [ROLE_AJUSTES, ROLE_AJUSTES_CUENTAS_BANCARIAS]
+        ROLE_ADMIN: [ROLE_USER, ROLE_CLIENTE, ROLE_WHOLE_MARINA, ROLE_WHOLE_ASTILLERO, ROLE_WHOLE_EMBARCACION, ROLE_WHOLE_TIENDA, ROLE_WHOLE_CONTABILIDAD, ROLE_HCORREO, ROLE_RH, ROLE_WHOLE_AJUSTES]

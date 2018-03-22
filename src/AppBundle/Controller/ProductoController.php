@@ -26,8 +26,8 @@ class ProductoController extends Controller
     /**
      * Lists all producto entities.
      *
-     * @Route("/", name="producto_index")
-     * @Method("GET")
+     * Route("/", name="producto_index")
+     * Method("GET")
      */
     public function indexAction(Request $request)
     {
@@ -47,8 +47,8 @@ class ProductoController extends Controller
     /**
      * Creates a new producto entity.
      *
-     * @Route("/new", name="producto_new")
-     * @Method({"GET", "POST"})
+     * Route("/new", name="producto_new")
+     * Method({"GET", "POST"})
      *
      * @param Request $request
      *
@@ -76,7 +76,7 @@ class ProductoController extends Controller
     }
 
     /**
-     * @Route("/marcas.{_format}", defaults={"_format" = "json"})
+     * Route("/marcas.{_format}", defaults={"_format" = "json"})
      *
      * @param Request $request
      *
@@ -89,7 +89,7 @@ class ProductoController extends Controller
     }
 
     /**
-     * @Route("/categorias.{_format}", defaults={"_format" = "json"})
+     * Route("/categorias.{_format}", defaults={"_format" = "json"})
      *
      * @param Request $request
      *
@@ -102,7 +102,7 @@ class ProductoController extends Controller
     }
 
     /**
-     * @Route("/subcategorias.{_format}", defaults={"_format" = "json"})
+     * Route("/subcategorias.{_format}", defaults={"_format" = "json"})
      *
      * @param Request $request
      *
@@ -117,7 +117,7 @@ class ProductoController extends Controller
     /**
      * Displays a form to edit an existing producto entity.
      *
-     * @Route("/{id}/edit", name="producto_edit")
+     * Route("/{id}/edit", name="producto_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Producto $producto)
@@ -143,7 +143,7 @@ class ProductoController extends Controller
     /**
      * Deletes a producto entity.
      *
-     * @Route("/{id}", name="producto_delete")
+     * Route("/{id}", name="producto_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Producto $producto)
