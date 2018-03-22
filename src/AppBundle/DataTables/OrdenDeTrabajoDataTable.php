@@ -61,17 +61,17 @@ class OrdenDeTrabajoDataTable extends AbstractDataTableHandler
             $odt = $odts[$index];
 
             $results->data[] = [
-                $odt->getAstilleroCotizacion()->getFolio(),
+                $odt->getAstilleroCotizacion()->getFoliorecotiza() == 0 ? $odt->getAstilleroCotizacion()->getFolio() : $odt->getAstilleroCotizacion()->getFolio().'-'.$odt->getAstilleroCotizacion()->getFoliorecotiza(),
                 $odt->getAstilleroCotizacion()->getBarco()->getNombre(),
                 $odt->getAstilleroCotizacion()->getCliente()->getNombre(),
-                $odt->getPrecioTotal(),
-                $odt->getMaterialesTotal(),
-                $odt->getPagosTotal(),
-                $odt->getSaldoTotal(),
-                $odt->getPreciovvTotal(),
-                $odt->getUtilidadvvTotal(),
-                $odt->getIvaTotal(),
-                $odt->getGranTotal(),
+                '$' . number_format($odt->getPrecioTotal() / 100, 2),
+                '$' . number_format($odt->getMaterialesTotal() / 100, 2),
+                '$' . number_format($odt->getPagosTotal() / 100, 2),
+                '$' . number_format($odt->getSaldoTotal() / 100, 2),
+                '$' . number_format($odt->getPreciovvTotal() / 100, 2),
+                '$' . number_format($odt->getUtilidadvvTotal() / 100, 2),
+                '$' . number_format($odt->getIvaTotal() / 100, 2),
+                '$' . number_format($odt->getGranTotal() / 100, 2),
                 $odt->getId()
             ];
         }

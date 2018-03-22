@@ -28,9 +28,6 @@
                         <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
                     </li>
                     <li role="presentation">
-                        <a href="#fotografias" aria-controls="fotografias" role="tab" data-toggle="tab">Fotografías</a>
-                    </li>
-                    <li role="presentation">
                         <a href="#asignacion" aria-controls="asignacion" role="tab" data-toggle="tab">Contratistas</a>
                     </li>
                 </ul>
@@ -97,8 +94,6 @@
                             </div>
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="fotografias">
-                    </div>
                     <div role="tabpanel" class="tab-pane" id="asignacion">
                         <div id="proveedor-fields-list0" class="lista-proveedores"
                              data-prototype="{% filter escape %}
@@ -147,4 +142,18 @@
 {% endblock %}
 {% block modals %}
     {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (function ($) {
+            $('.lista-proveedores').on('click', '.input-calendario', function (e) {
+                $('.lista-proveedores .input-calendario').datepicker({
+                    autoclose: true,
+                    format: 'yyyy-mm-dd',
+                    orientation: "auto",
+                })
+            });
+        })(jQuery);
+    </script>
 {% endblock %}

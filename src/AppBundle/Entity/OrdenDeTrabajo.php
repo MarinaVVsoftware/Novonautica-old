@@ -85,6 +85,13 @@ class OrdenDeTrabajo
     private $saldoTotal;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha", type="datetime")
+     */
+    private $fecha;
+
+    /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\AstilleroCotizacion", inversedBy="odt")
      * @ORM\JoinColumn(name="idastillerocotizacion", referencedColumnName="id")
      */
@@ -370,5 +377,29 @@ class OrdenDeTrabajo
     public function getMaterialesTotal()
     {
         return $this->materialesTotal;
+    }
+
+    /**
+     * Set fecha.
+     *
+     * @param \DateTime $fecha
+     *
+     * @return OrdenDeTrabajo
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha.
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
     }
 }

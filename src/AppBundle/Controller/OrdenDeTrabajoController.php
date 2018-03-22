@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Astillero\Contratista;
 use AppBundle\Entity\OrdenDeTrabajo;
 use DataTables\DataTablesInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -85,6 +86,7 @@ class OrdenDeTrabajoController extends Controller
                 $ivaTotal+=$ivatot;
                 $granTotal+=$total;
             }
+            $fechaHoraActual = new \DateTime('now');
             $ordenDeTrabajo
                 ->setPrecioTotal($precioTotal)
                 ->setUtilidadvvTotal($utilidadvvTotal)
@@ -94,6 +96,7 @@ class OrdenDeTrabajoController extends Controller
                 ->setPagosTotal($pagosTotal)
                 ->setIvaTotal($ivaTotal)
                 ->setGranTotal($granTotal)
+                ->setFecha($fechaHoraActual)
             ;
             $em->persist($ordenDeTrabajo);
             $em->flush();
@@ -156,14 +159,94 @@ class OrdenDeTrabajoController extends Controller
      */
     public function editAction(Request $request, OrdenDeTrabajo $ordenDeTrabajo)
     {
+        $precioTotal = 0;
+        $utilidadvvTotal = 0;
+        $preciovvTotal = 0;
+        $ivaTotal = 0;
+        $granTotal = 0;
+        $saldoTotal = 0;
+        $materialesTotal = 0;
+        $pagosTotal = 0;
+        $em = $this->getDoctrine()->getManager();
+
+        $originalContratistas = new ArrayCollection();
+        foreach ($ordenDeTrabajo->getContratistas() as $contratista){
+            $originalContratistas->add($contratista);
+        }
         $deleteForm = $this->createDeleteForm($ordenDeTrabajo);
         $editForm = $this->createForm('AppBundle\Form\OrdenDeTrabajoType', $ordenDeTrabajo);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            dump($ordenDeTrabajo);
+            $iva = $ordenDeTrabajo->getAstilleroCotizacion()->getIva();
+            //$this->getDoctrine()->getManager()->flush();
+            foreach ($originalContratistas as $contratista){
+                if (false === $ordenDeTrabajo->getContratistas()->contains($contratista)) {
 
-            return $this->redirectToRoute('ordendetrabajo_edit', array('id' => $ordenDeTrabajo->getId()));
+                        // remove the Task from the Tag
+                        $contratista->getAstilleroODT()->removeContratista($contratista);
+
+                        // if it was a many-to-one relationship, remove the relationship like this
+                        //$motor->setBarco(null);
+                        $em->persist($contratista);
+
+                        // if you wanted to delete the Tag entirely, you can also do that
+                        $em->remove($contratista);
+                }else{
+                    $precioTotal+=$contratista->getPrecio();
+                    $utilidadvvTotal+=$contratista->getUtilidadvv();
+                    $preciovvTotal+=$contratista->getPreciovv();
+                    $saldoTotal+=$contratista->getSaldo();
+                    $materialesTotal+=$contratista->getMateriales();
+                    $pagosTotal+=$contratista->getPagos();
+
+                    $ivatot = ($contratista->getPrecio() * $iva)/100;
+                    $total = $contratista->getPrecio() + $ivatot;
+                    $porcentajevv = $contratista->getProveedor()->getPorcentaje();
+                    $contratista
+                        ->setPorcentajevv($porcentajevv)
+                        ->setIvatot($ivatot)
+                        ->setTotal($total);
+                    $ivaTotal+=$ivatot;
+                    $granTotal+=$total;
+
+                }
+            }
+            foreach ($ordenDeTrabajo->getContratistas() as $contratistanuevo){
+                if($contratistanuevo->getId() == null){
+                    $precioTotal+=$contratistanuevo->getPrecio();
+                    $utilidadvvTotal+=$contratistanuevo->getUtilidadvv();
+                    $preciovvTotal+=$contratistanuevo->getPreciovv();
+                    $saldoTotal+=$contratistanuevo->getSaldo();
+                    $materialesTotal+=$contratistanuevo->getMateriales();
+                    $pagosTotal+=$contratistanuevo->getPagos();
+
+                    $ivatot = ($contratistanuevo->getPrecio() * $iva)/100;
+                    $total = $contratistanuevo->getPrecio() + $ivatot;
+                    $porcentajevv = $contratistanuevo->getProveedor()->getPorcentaje();
+                    $contratistanuevo
+                        ->setPorcentajevv($porcentajevv)
+                        ->setIvatot($ivatot)
+                        ->setTotal($total);
+                    $ivaTotal+=$ivatot;
+                    $granTotal+=$total;
+                }
+            }
+            $ordenDeTrabajo
+                ->setPrecioTotal($precioTotal)
+                ->setUtilidadvvTotal($utilidadvvTotal)
+                ->setPreciovvTotal($preciovvTotal)
+                ->setSaldoTotal($saldoTotal)
+                ->setMaterialesTotal($materialesTotal)
+                ->setPagosTotal($pagosTotal)
+                ->setIvaTotal($ivaTotal)
+                ->setGranTotal($granTotal)
+            ;
+            $em->persist($ordenDeTrabajo);
+            $em->flush();
+
+            return $this->redirectToRoute('ordendetrabajo_show', ['id' => $ordenDeTrabajo->getId()]);
         }
 
         return $this->render('ordendetrabajo/edit.html.twig', [
