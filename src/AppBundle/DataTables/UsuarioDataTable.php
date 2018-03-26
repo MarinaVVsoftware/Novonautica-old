@@ -39,7 +39,6 @@ class UsuarioDataTable extends AbstractDataTableHandler
     public function handle(DataTableQuery $request): DataTableResults
     {
         $repository = $this->doctrine->getRepository('AppBundle:Usuario');
-
         $results = new DataTableResults();
 
         $query = $repository->createQueryBuilder('u')->select('COUNT(u.id)');

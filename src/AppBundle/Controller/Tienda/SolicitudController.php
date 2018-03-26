@@ -5,12 +5,15 @@ namespace AppBundle\Controller\Tienda;
 use AppBundle\Entity\MonederoMovimiento;
 use AppBundle\Entity\Tienda\Peticion;
 use AppBundle\Entity\Tienda\Solicitud;
+use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Solicitud controller.
@@ -27,17 +30,25 @@ class SolicitudController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        return $this->render('tienda/solicitud/index.html.twig', ['title' => 'Tienda']);
+    }
 
-        $solicituds = $em->getRepository('AppBundle:Tienda\Solicitud')->findAll();
-
-
-        $productos = $em->getRepository('AppBundle:Tienda\Peticion')->findAll();
-
-        return $this->render('tienda/solicitud/index.html.twig', array(
-            'solicituds' => $solicituds,
-            'productos' => $productos
-        ));
+    /**
+     * @Route("/solicitudes", name="tienda_solicitud_index_data")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getUsuariosDataAction(Request $request, DataTablesInterface $dataTables)
+    {
+        try {
+            $results = $dataTables->handle($request, 'tienda');
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
+        }
     }
 
     /**
@@ -45,6 +56,10 @@ class SolicitudController extends Controller
      *
      * @Route("/new", name="tienda_solicitud_new")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
@@ -136,7 +151,7 @@ class SolicitudController extends Controller
      *
      * @param Request $request
      * @param Solicitud $solicitud
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return RedirectResponse|Response
      */
     public function editPagoAction(Request $request, Solicitud $solicitud)
     {

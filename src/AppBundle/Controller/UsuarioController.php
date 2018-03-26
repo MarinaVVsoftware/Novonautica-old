@@ -20,8 +20,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class UsuarioController extends Controller
 {
     /**
-     * Lists all usuar dasÇdñas´`kaspç`as
-     * çio entities.
+     * Lists all user entities
      *
      * @Route("/", name="usuario_index")
      * @Method("GET")

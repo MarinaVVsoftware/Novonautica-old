@@ -1,7 +1,13 @@
 {% extends 'estructura/plantilla.twig' %}
 
-{% block title %}
-    Novonautiva | Servicios Adicionales
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        .list-unstyled li {
+            margin-bottom: .5rem;
+        }
+    </style>
 {% endblock %}
 
 {% block contwrapper %}
@@ -14,10 +20,9 @@
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive scroll-novo">
-                        <table class="table text-center">
+                        <table class="table table-novo">
                             <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Fecha</th>
                                 <th>Embarcación</th>
                                 <th>Solicitud Especial</th>
@@ -25,82 +30,63 @@
                                 <th>Total (USD)</th>
                                 <th>Pagado</th>
                                 <th>Entregado</th>
-                                <th>Acciones</th>
-                                <th>Productos</th>
+                                <th></th>
                             </tr>
                             </thead>
-                            <tbody>
-                            {% for solicitud in solicituds %}
-                                <tr>
-                                    <td>{{ solicitud.id }}</td>
-                                    <td>{{ solicitud.fecha|date("m/d/Y") }}</td>
-                                    <td>{{ solicitud.nombrebarco }}</td>
-                                    {% if solicitud.solicitudEspecial is empty %}
-                                        <td>N/A</td>
-                                    {% else %}
-                                        <td> {{ solicitud.solicitudEspecial }}</td>
-                                    {% endif %}
-                                    <td>$ {{ (solicitud.total/100)|number_format(2,'.',',') }}</td>
-                                    <td>$ {{ (solicitud.totalusd/100)|number_format(2,'.',',') }}</td>
-                                    <td class="align-middle">
-                                        {% if solicitud.pagado >= 2 %}
-                                            <img src="{{ asset('img/status-pendiente-icon.svg') }}"
-                                                 class="center-block" title="Pendiente">
-                                        {% elseif solicitud.pagado == 0 %}
-                                            <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                                 class="center-block" title="Adeudo">
-                                        {% elseif solicitud.pagado == 1 %}
-                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
-                                                 class="center-block" title="Pagado">
-                                        {% endif %}
-                                    </td>
-                                    <td class="align-middle">
-                                        {% if solicitud.entregado >= 2 %}
-                                            <img src="{{ asset('img/status-pendiente-icon.svg') }}"
-                                                 class="center-block" title="Pendiente">
-                                        {% elseif solicitud.entregado == 0 %}
-                                            <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                                 class="center-block" title="Rechazado">
-                                        {% elseif solicitud.entregado == 1 %}
-                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
-                                                 class="center-block" title="Entregado">
-                                        {% endif %}
-                                    </td>
-                                    <td align="center" valign="middle">
-                                        <ul class="list-inline">
-                                            <li>
-                                                {% if solicitud.pagado >= 2 %}
-                                                    <a href="{{ path('solicitud_pago_edit', {'id': solicitud.id}) }}" class="btn btn-block btn-xs btn-verde">
-                                                        Pagos</a>
-                                                {% elseif solicitud.pagado == 0 %}
-                                                    <a href="{{ path('solicitud_pago_edit', {'id': solicitud.id}) }}" class="btn btn-block btn-xs btn-verde">
-                                                        Pagos</a>
-                                                {% endif %}
-                                                {% if solicitud.entregado >= 2 %}
-                                                            <a href="entregar/{{ solicitud.id }}" class="btn btn-block btn-xs btn-azul">
-                                                                Entregado</a>
-                                                            <a href="noentregado/{{ solicitud.id }}" class="btn btn-block btn-xs btn-naranja">
-                                                                No entregado</a>
-                                                {% elseif solicitud.entregado == 1 %}
-                                                    <a href="entregar/{{ solicitud.id }}" class="btn btn-block btn-xs btn-naranja">
-                                                        No entregado</a>
-                                                {% elseif solicitud.entregado == 0 %}
-                                                    <a href="entregar/{{ solicitud.id }}" class="btn btn-block btn-xs btn-azul">
-                                                        Entregado</a>
-                                                {% endif %}
-                                            </li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <a href="{{ path('tienda_solicitud_ver', {'id' : solicitud.id}) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, datatableSettings) {
+        const aceptado = `<img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">`;
+        const rechazado = `<img src="{{ asset('img/status-desaprovado-icon.svg') }}" class="center-block">`;
+        const pendiente = `<img src="{{ asset('img/status-pendiente-icon.svg') }}" class="center-block">`;
+
+        $('.table-novo').DataTable({
+          ...datatableSettings,
+          ajax: '{{ path('tienda_solicitud_index_data') }}',
+          order: [[0, 'desc']],
+          columns: [
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 0},
+          ],
+          createdRow: function (row, data) {
+            for (let i of [5, 6]) {
+              if (!data[i]) row.children[i].innerHTML = rechazado;
+              if (data[i] === 1) row.children[i].innerHTML = aceptado;
+              if (data[i] === 2) row.children[i].innerHTML = pendiente;
+            }
+
+            row.lastElementChild.innerHTML = writeLastChild(data[5], data[6], data[7]);
+          }
+        });
+
+        function writeLastChild(pagado, entregado, id) {
+          const btnClass = 'btn btn-xs btn-block btn-';
+          return `
+          <td>
+            <ul class="list-unstyled">
+              <li><a class="${btnClass}morado-claro" href="${id}">Detalle</a></li>
+              ${pagado === 0 || pagado >= 2 ? `<li><a class="${btnClass}verde" href="${id}/pago">Pagos</a></li>` : ''}
+              ${entregado ? `<li><a class="${btnClass}naranja" href="entregar/${id}">No Entregado</a></li>` : `<li><a class="${btnClass}azul" href="entregar/${id}">Entregado</a></li>`}
+            </ul>
+          </td>
+        `;
+        }
+      })(jQuery, datatablesSettings);
+    </script>
 {% endblock %}

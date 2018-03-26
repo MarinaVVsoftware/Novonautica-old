@@ -89,16 +89,6 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/gracias", name="astillero_gracias")
-     * @Method("GET")
-     */
-    public function graciasAstilleroAction()
-    {
-        return $this->render('marinahumeda/cotizacion/gracias.twig', [
-        ]);
-    }
-
-    /**
      * Confirma la respuesta de un cliente a una cotizacion de marina
      *
      * @Route("/{token}/confirma", name="respuesta-cliente")
