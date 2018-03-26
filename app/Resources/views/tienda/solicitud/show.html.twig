@@ -23,122 +23,116 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <div class="table-responsive scroll-novo">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unidad (MXN)</th>
-                                <th>Precio Unidad (USD)</th>
-                                <th>Subtotal (MXN)</th>
-                                <th>Subtotal (USD)</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for prods in solicitud.producto %}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4 style="margin-top: 0;">Productos</h4>
+                            <table class="table">
+                                <thead>
                                 <tr>
-                                    <td>{{ prods.producto }}</td>
-                                    <td>{{ prods.cantidad }}</td>
-                                    <td>$ {{ (prods.producto.precio / 100)|number_format(2) }}</td>
-                                    <td>$ {{ ((prods.producto.precio / solicitud.valordolar))|number_format(2) }}</td>
-                                    <td>$ {{ ((prods.cantidad * prods.producto.precio) / 100)|number_format(2) }}</td>
-                                    <td>$ {{ (prods.cantidad * (prods.producto.precio / solicitud.valordolar))|number_format(2) }}</td>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unidad (MXN)</th>
+                                    <th>Precio Unidad (USD)</th>
+                                    <th>Subtotal (MXN)</th>
+                                    <th>Subtotal (USD)</th>
                                 </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div role="tabpanel" class="tab-pane" id="pagos">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <label>Total a pagar</label>
-                                <div class="info-input">
-                                    $ {{ (solicitud.totalusd/100)|number_format(2) }} USD
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row espacio-linea">
-                            <div class="col-sm-6">
-                                <hr>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table class="table text-center">
-                                    <thead>
+                                </thead>
+                                <tbody>
+                                {% for prods in solicitud.producto %}
                                     <tr>
-                                        <th>Método de pago</th>
-                                        <th>Pago</th>
-                                        <th>Fecha</th>
-                                        <th>Tipo de cambio</th>
-                                        <th>Total en MXN</th>
-                                        <th>Factura</th>
+                                        <td>{{ prods.producto }}</td>
+                                        <td>{{ prods.cantidad }}</td>
+                                        <td>$ {{ (prods.producto.precio / 100)|number_format(2) }}</td>
+                                        <td>$ {{ ((prods.producto.precio / solicitud.valordolar))|number_format(2) }}</td>
+                                        <td>$ {{ ((prods.cantidad * prods.producto.precio) / 100)|number_format(2) }}</td>
+                                        <td>
+                                            $ {{ (prods.cantidad * (prods.producto.precio / solicitud.valordolar))|number_format(2) }}</td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% set totMxn = 0 %}
-                                    {% for pago in solicitud.pagos %}
-                                        {% set factura = pago.factura %}
-                                        <tr>
-                                            <td>{{ pago.metodopago }}</td>
-                                            <td>$ {{ (pago.cantidad/100)|number_format(2) }} USD</td>
-                                            <td>{% if pago.fechaRealPago %}
-                                                    {{ pago.fechaRealPago|date('d-m-Y') }}
-                                                {% endif %}</td>
-                                            <td>$ {{ (pago.dolar/100)|number_format(2) }} MXN</td>
-                                            <td>$ {{ ((pago.cantidad * pago.dolar)/10000)|number_format(2) }}
-                                                MXN
-                                            </td>
-                                            <td>
-                                                {% if factura %}
-                                                    <a href="{{ path('contabilidad_factura_pdf', { 'id': factura.id }) }}"
-                                                       target="_blank"
-                                                       class="remove-motor btn btn-xs btn-azul"
-                                                       style="margin: 5px;"
-                                                    >
-                                                        PDF
-                                                    </a>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                        {% set totMxn = totMxn + (pago.cantidad * pago.dolar) %}
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <hr style="margin: 2rem 0 !important;">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4 style="margin-top: 0;">Pagos</h4>
+                            <table class="table text-center">
+                                <thead>
+                                <tr>
+                                    <th>Método de pago</th>
+                                    <th>Pago</th>
+                                    <th>Fecha</th>
+                                    <th>Tipo de cambio</th>
+                                    <th>Total en MXN</th>
+                                    <th>Factura</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% set totMxn = 0 %}
+                                {% for pago in solicitud.pagos %}
+                                    {% set factura = pago.factura %}
+                                    <tr>
+                                        <td>{{ pago.metodopago }}</td>
+                                        <td>$ {{ (pago.cantidad/100)|number_format(2) }} USD</td>
+                                        <td>{% if pago.fechaRealPago %}
+                                                {{ pago.fechaRealPago|date('d-m-Y') }}
+                                            {% endif %}</td>
+                                        <td>$ {{ (pago.dolar/100)|number_format(2) }} MXN</td>
+                                        <td>$ {{ ((pago.cantidad * pago.dolar)/10000)|number_format(2) }}
+                                            MXN
+                                        </td>
+                                        <td>
+                                            {% if factura %}
+                                                <a href="{{ path('contabilidad_factura_pdf', { 'id': factura.id }) }}"
+                                                   target="_blank"
+                                                   class="remove-motor btn btn-xs btn-azul"
+                                                   style="margin: 5px;"
+                                                >
+                                                    PDF
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% set totMxn = totMxn + (pago.cantidad * pago.dolar) %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>Total a pagar</label>
+                            <div class="info-input">
+                                $ {{ (solicitud.totalusd/100)|number_format(2) }} USD
                             </div>
                         </div>
-                        <div class="row espacio-linea">
-                            <div class="col-sm-6">
-                                <hr>
+                        <div class="col-sm-3">
+                            <label>Pagado hasta el momento</label>
+                            <div class="info-input">
+                                $ {{ (solicitud.cantidadpagado/100)|number_format(2) }} USD
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <label>Pagado hasta el momento</label>
-                                <div class="info-input">
-                                    $ {{ (solicitud.cantidadpagado/100)|number_format(2) }} USD
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <label></label>
-                                <div class="info-input">
-                                    $ {{ (totMxn/10000)|number_format(2) }} MXN
-                                </div>
+                        <div class="col-sm-3">
+                            <label>En MXN</label>
+                            <div class="info-input">
+                                $ {{ (totMxn/10000)|number_format(2) }} MXN
                             </div>
                         </div>
-                        <div class="row espacio-linea-arriba2">
-                            <div class="col-sm-3">
-                                <label>Saldo faltante</label>
-                                <div class="info-input">
-                                    $ {{ ((solicitud.totalusd-solicitud.cantidadpagado)/100)|number_format(2) }}
-                                    USD
-                                </div>
+                        <div class="col-sm-3">
+                            <label>Saldo faltante</label>
+                            <div class="info-input">
+                                $ {{ ((solicitud.totalusd-solicitud.cantidadpagado)/100)|number_format(2) }}
+                                USD
                             </div>
                         </div>
                     </div>
 
+                </div>
+
+                <div class="panel-footer">
                     {% if solicitud.pagado >= 2 %}
                         <div class="row">
                             <div class="col-sm-12">
@@ -160,8 +154,8 @@
                             </div>
                         </div>
                     {% endif %}
-
                 </div>
+
             </div>
         </section>
     </div>

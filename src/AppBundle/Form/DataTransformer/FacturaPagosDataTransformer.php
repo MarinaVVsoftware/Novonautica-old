@@ -70,7 +70,7 @@ class FacturaPagosDataTransformer implements DataTransformerInterface
         $entities = new ArrayCollection($pagos);
 
         if ($entities->isEmpty()) {
-            throw new TransformationFailedException('Uno o mas pagos no se encontraron');
+            throw new TransformationFailedException('No se encontraron los pagos');
         }
 
         return $entities;

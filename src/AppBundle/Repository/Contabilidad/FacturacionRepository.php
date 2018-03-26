@@ -13,11 +13,12 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
     public function getCotizaciones($folio)
     {
         $folios = explode('-', $folio);
-
         $marinaCotizaciones = $this->getMarinaCotizacionesByFolio($folios[0], $folios[1] ?? null);
         $astilleroCotizaciones = $this->getAstilleroCotizacionesByFolio($folios[0], $folios[1] ?? null);
+        $tiendaSolicitudes = $this->getTiendaSolicitudes($folios[0]);
 
-        return array_merge($marinaCotizaciones, $astilleroCotizaciones);
+//        return array_merge($marinaCotizaciones, $astilleroCotizaciones, $tiendaSolicitudes);
+        return$marinaCotizaciones + $astilleroCotizaciones + $tiendaSolicitudes;
     }
 
     public function getFacturaGlobal()
@@ -117,13 +118,14 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         $em = $this->getEntityManager();
         $dql = '
         SELECT 
-        pagos, mhc, atc, movimiento
+        pagos, mhc, atc, tienda, movimiento
         FROM AppBundle:Pago AS pagos
         LEFT JOIN pagos.mhcotizacion AS mhc
         LEFT JOIN pagos.acotizacion AS atc
+        LEFT JOIN pagos.tiendasolicitud AS tienda
         LEFT JOIN mhc.slipmovimiento AS movimiento
         WHERE pagos.factura IS NULL
-        AND mhc.folio = :folio OR atc.folio = :folio
+        AND mhc.folio = :folio OR atc.folio = :folio OR tienda.folio = :folio
         ';
 
         if ($folioRecotizado) {
@@ -135,7 +137,6 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
             $query = $em->createQuery($dql)
                 ->setParameter(':folio', $folio);
         }
-
 
         return $query->getResult();
     }
@@ -206,5 +207,21 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         }
 
         return $query->getResult();
+    }
+
+    private function getTiendaSolicitudes($folio)
+    {
+        $repository = $this->getEntityManager()->getRepository('AppBundle:Tienda\Solicitud');
+        $query = $repository->createQueryBuilder('solicitud');
+
+        $query
+            ->select('solicitud, peticion, producto, pagos')
+            ->leftJoin('solicitud.pagos', 'pagos')
+            ->leftJoin('solicitud.producto', 'peticion')
+            ->leftJoin('peticion.producto', 'producto')
+            ->where('solicitud.folio = :folio AND pagos.id IS NOT NULL and pagos.factura IS NULL')
+            ->setParameter('folio', $folio);
+
+        return $query->getQuery()->getResult();
     }
 }

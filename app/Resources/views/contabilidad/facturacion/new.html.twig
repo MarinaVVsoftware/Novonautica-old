@@ -341,7 +341,12 @@
             pagosHolder.innerHTML = '';
 
             if (!cotizacionesData) {
-              $.ajax({url: 'factura-global.json', success: data => { cotizacionesData = data; rollFacturaGlobal(cotizacionesData);  } });
+              $.ajax({
+                url: 'factura-global.json', success: data => {
+                  cotizacionesData = data;
+                  rollFacturaGlobal(cotizacionesData);
+                }
+              });
             } else {
               rollFacturaGlobal(cotizacionesData)
             }
@@ -373,18 +378,19 @@
 
             precio = ((precio / 116) * 100).toFixed(2);
             // Debido al calculo de diferentes divisas ya no se enviara el total para la factura global
-            appendRow({ cantidad: 1, servicio: 'VENTA', precio: 0, cps: '01010101 / No existe en el catálogo', cu: 'ACT / Actividad' }, true);
+            appendRow({
+              cantidad: 1,
+              servicio: 'VENTA',
+              precio: 0,
+              cps: '01010101 / No existe en el catálogo',
+              cu: 'ACT / Actividad'
+            }, true);
           }
         });
 
         // En caso de que el tipo de comprobante sea "P", remover todas las dependecias de "I" y "E"
         checkTipoComprobante();
         tipoComprobanteHolder.addEventListener('change', checkTipoComprobante);
-
-        // Sugiere el tipo de cambio en base a la moneda elegida
-        // Facturacion en base a la divisa
-        /*monedaSelect.addEventListener('change', function () {
-        });*/
 
         // Autocomplete para rellenado de datos de cliente con RFC
         $rfcSelect.autocomplete({
@@ -484,7 +490,39 @@
                 tipoCambioHolder.value = `${pago[0].dolar / 100}`;
 
                 conceptoHolder.innerHTML = '';
-                cotizacionData.conceptos.forEach(concepto => appendRow(concepto, concepto.tipo === 3));
+                if (cotizacionData.conceptos) {
+                  cotizacionData.conceptos.forEach(concepto => appendRow(concepto, true));
+                }
+
+                if (cotizacionData.producto) {
+
+                  if (cotizacionData.solicitudEspecial) {
+                    cotizacionData.producto.push({
+                      cantidad: 1,
+                      producto: {
+                        nombre: cotizacionData.solicitudEspecial,
+                        precio: cotizacionData.preciosolespecial,
+                        claveProdServ: {
+                          claveProdServ: '01010101',
+                          descripcion: 'No existe en el catálogo'
+                        },
+                        claveUnidad: {
+                          claveUnidad: 'ACT',
+                          nombre: 'Actividad'
+                        }
+                      }
+                    });
+                  }
+
+                  cotizacionData.producto.forEach(producto => {
+                    monedaSelect.value = 'MXN';
+                    producto.precio = producto.producto.precio;
+                    producto.cps = producto.producto.claveProdServ.claveProdServ + ' / ' + producto.producto.claveProdServ.descripcion;
+                    producto.cu = producto.producto.claveUnidad.claveUnidad + ' / ' + producto.producto.claveUnidad.nombre;
+
+                    appendRow(producto, true)
+                  });
+                }
               }
             });
           } else {
@@ -494,7 +532,39 @@
             tipoCambioHolder.value = `${pago[0].dolar / 100}`;
 
             conceptoHolder.innerHTML = '';
-            cotizacionData.conceptos.forEach(concepto => appendRow(concepto, concepto.tipo === 3));
+            if (cotizacionData.conceptos) {
+              cotizacionData.conceptos.forEach(concepto => appendRow(concepto, concepto.tipo === 3));
+            }
+
+            if (cotizacionData.producto) {
+
+              if (cotizacionData.solicitudEspecial) {
+                cotizacionData.producto.push({
+                  cantidad: 1,
+                  producto: {
+                    nombre: cotizacionData.solicitudEspecial,
+                    precio: cotizacionData.preciosolespecial,
+                    claveProdServ: {
+                      claveProdServ: '01010101',
+                      descripcion: 'No existe en el catálogo'
+                    },
+                    claveUnidad: {
+                      claveUnidad: 'ACT',
+                      nombre: 'Actividad'
+                    }
+                  }
+                });
+              }
+
+              cotizacionData.producto.forEach(producto => {
+                monedaSelect.value = 'MXN';
+                producto.precio = producto.producto.precio;
+                producto.cps = producto.producto.claveProdServ.claveProdServ + ' / ' + producto.producto.claveProdServ.descripcion;
+                producto.cu = producto.producto.claveUnidad.claveUnidad + ' / ' + producto.producto.claveUnidad.nombre;
+
+                appendRow(producto, true)
+              });
+            }
           }
 
         });
@@ -572,15 +642,24 @@
           if (data) {
             // Convertir el tipo para MHC de numero a descripcion
             switch (data.tipo) {
-              case 1: data.nombre = 'Días de estancia'; break;
-              case 2: data.nombre = 'Conexión a electricidad'; break;
-              case 3: data.nombre = 'Abastecimiento de combustible'; break;
+              case 1:
+                data.nombre = 'Días de estancia';
+                break;
+              case 2:
+                data.nombre = 'Conexión a electricidad';
+                break;
+              case 3:
+                data.nombre = 'Abastecimiento de combustible';
+                break;
             }
 
             cantidadConcepto.value = data.cantidad || cantidadConcepto.value;
             cpsConcepto.value = data.cps || cpsConcepto.value || '';
             cuConcepto.value = data.cu || cuConcepto.value || '';
-            descripcionConcepto.value = data.nombre || data.serviciobasico || data.servicio || data.producto || data.otroservicio || descripcionConcepto.value;
+            descripcionConcepto.value = data.nombre || data.serviciobasico || data.servicio || data.producto.nombre || data.producto || data.otroservicio || descripcionConcepto.value;
+
+            // Resta el iva de un precio;
+            // data.precio = ((data.precio / 116) * 100).toFixed(2);
 
             vUnitarioConcepto.value = true === writePrice ? `${(data.precio / 100).toFixed(2)}` : 0;
             descuentoConcepto.value = data.descuento ? `${data.descuento / 100}` : 0;

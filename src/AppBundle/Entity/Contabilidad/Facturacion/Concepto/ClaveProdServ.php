@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Contabilidad\Facturacion\Concepto;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * ClaveProdServ
@@ -24,12 +25,16 @@ class ClaveProdServ
     /**
      * @var string
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="claveProdServ", type="string", length=20)
      */
     private $claveProdServ;
 
     /**
      * @var string
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="descripcion", type="string", length=255)
      */

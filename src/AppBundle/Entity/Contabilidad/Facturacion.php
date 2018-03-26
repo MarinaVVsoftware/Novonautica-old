@@ -1173,8 +1173,8 @@ class Facturacion
 
         $cantidadMXN = ($cantidad * $this->getTipoCambio()) / 100;
         $totalMXN = $this->getTotal();
-        $min = $cantidadMXN - 1;
-        $max = $cantidadMXN + 1;
+        $min = $cantidadMXN - 5;
+        $max = $cantidadMXN + 5;
 
         if ($this->getMoneda() === 'MXN') {
             if ($this->getPagos()->count() && !($min <= $totalMXN && $totalMXN <= $max)) {

@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Tienda;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Peticion
@@ -22,6 +23,8 @@ class Peticion
     private $id;
 
     /**
+     * @Groups({"facturacion"})
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Producto", inversedBy="nombreproducto")
      */
     private $producto;
@@ -34,6 +37,9 @@ class Peticion
 
     /**
      * @var integer
+     *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="cantidad", type="integer", length=255)
      */
     private $cantidad;
@@ -53,30 +59,6 @@ class Peticion
     {
         return $this->id;
     }
-
-//    /**
-//     * Set peticion
-//     *
-//     * @param string $peticion
-//     *
-//     * @return Peticion
-//     */
-//    public function setPeticion($peticion)
-//    {
-//        $this->peticion = $peticion;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get peticion
-//     *
-//     * @return string
-//     */
-//    public function getPeticion()
-//    {
-//        return $this->peticion;
-//    }
 
     /**
      * Set solicitud
