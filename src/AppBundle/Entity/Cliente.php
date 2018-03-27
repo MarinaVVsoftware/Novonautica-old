@@ -154,6 +154,12 @@ class Cliente
     private $astilleroCotizaciones;
 
     /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaSolicitudGasolina", mappedBy="cliente")
+     */
+    private $appgasolinasolicitudes;
+
+    /**
      * @var RazonSocial
      *
      * @Assert\Valid()
@@ -169,6 +175,7 @@ class Cliente
         $this->mhcotizacionesadicionales = new ArrayCollection();
         $this->razonesSociales = new ArrayCollection();
         $this->astilleroCotizaciones = new ArrayCollection();
+        $this->appgasolinasolicitudes = new ArrayCollection();
         $this->idioma = 1;
     }
 
@@ -650,5 +657,41 @@ class Cliente
     public function getIdioma()
     {
         return $this->idioma;
+    }
+
+    /**
+     * Add appgasolinasolicitude.
+     *
+     * @param MarinaHumedaSolicitudGasolina $appgasolinasolicitude
+     *
+     * @return Cliente
+     */
+    public function addAppgasolinasolicitude(MarinaHumedaSolicitudGasolina $appgasolinasolicitude)
+    {
+        $this->appgasolinasolicitudes[] = $appgasolinasolicitude;
+
+        return $this;
+    }
+
+    /**
+     * Remove appgasolinasolicitude.
+     *
+     * @param MarinaHumedaSolicitudGasolina $appgasolinasolicitude
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeAppgasolinasolicitude(MarinaHumedaSolicitudGasolina $appgasolinasolicitude)
+    {
+        return $this->appgasolinasolicitudes->removeElement($appgasolinasolicitude);
+    }
+
+    /**
+     * Get appgasolinasolicitudes.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAppgasolinasolicitudes()
+    {
+        return $this->appgasolinasolicitudes;
     }
 }

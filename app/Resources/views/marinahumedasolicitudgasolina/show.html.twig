@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Marinahumedasolicitudgasolina</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ marinaHumedaSolicitudGasolina.id }}</td>
+            </tr>
+            <tr>
+                <th>Cantidadcombustible</th>
+                <td>{{ marinaHumedaSolicitudGasolina.cantidadCombustible }}</td>
+            </tr>
+            <tr>
+                <th>Fechapeticion</th>
+                <td>{{ marinaHumedaSolicitudGasolina.fechaPeticion|date("m/d/Y") }}</td>
+            </tr>
+            <tr>
+                <th>Cliente</th>
+                <td>{{ marinaHumedaSolicitudGasolina.cliente }}</td>
+            </tr>
+            <tr>
+                <th>Barco</th>
+                <td>{{ marinaHumedaSolicitudGasolina.idbarco }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('marinahumedasolicitudgasolina_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('marinahumedasolicitudgasolina_edit', { 'id': marinaHumedaSolicitudGasolina.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

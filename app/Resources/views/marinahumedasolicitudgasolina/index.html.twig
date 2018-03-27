@@ -1,0 +1,46 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Solicitudes de Gasolina de la Aplicación</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table-novo table text-center">
+                        <thead>
+                        <tr>
+                            <th>Folio</th>
+                            <th>Cliente</th>
+                            <th>Barco</th>
+                            <th>Fecha</th>
+                            <th>Cantidad Combustible</th>
+                            <th>Tipo de Combustible</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+        (function ($, settings) {
+            $('.table-novo').DataTable({
+                ...settings,
+                ajax: '{{ path('solicitud_index_data') }}',
+                order: [[0, 'desc']],
+            });
+        })(jQuery, datatablesSettings);
+    </script>
+{% endblock %}
