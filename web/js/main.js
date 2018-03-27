@@ -485,7 +485,7 @@ $('.lista-pagos').on('click', '.remove-pago', function (e) {
   return false;
 });
 
-//-- colection al agregar contratista a ODT
+//---------- colection al agregar contratista a ODT -----------------
 jQuery('.add-another-proveedor').click(function (e) {
     e.preventDefault();
     // var elementoMotor = document.getElementsByClassName(this);
@@ -519,6 +519,26 @@ $('.lista-proveedores').on('click', '.remove-proveedor', function (e) {
     //console.log('quitar motor');
     $(this).parent().parent().remove();
 
+    return false;
+});
+
+//---------- colection al agregar bancos a un proveedor -----------------
+jQuery('.add-another-banco').click(function (e) {
+    e.preventDefault();
+    var totBanco = $(this).data('cantidad');
+    var lista = $(this).data('idlista');
+    var bancoListPrimero = jQuery('#banco-fields-list' + lista);
+    var newWidget = $(bancoListPrimero).data('prototype');
+    newWidget = newWidget.replace(/__name__/g, totBanco);
+    totBanco++;
+    $(this).data('cantidad', totBanco);
+    var newLi = jQuery('<div class="row"></div>').html(newWidget);
+    newLi.appendTo(bancoListPrimero);
+    newLi.before(newLi);
+});
+$('.lista-bancos').on('click', '.remove-banco', function (e) {
+    e.preventDefault();
+    $(this).parent().parent().remove();
     return false;
 });
 
@@ -995,6 +1015,10 @@ function gasolinaCalculaSubtotalesMxn() {
 
 
 //--- para astillero nueva cotización ---
+
+
+
+
 //--dolar--
 $('#appbundle_astillerocotizacion_dolar').keyup(function () {
   var dolar = $(this).val();
@@ -1118,17 +1142,37 @@ $('#appbundle_astillerocotizacion_acservicios_1_precio').keyup(function () {
   calculaSubtotalesAstillero(fila);
 
 });
+//-- uso de grua (sacar varada y botadura)
+$('#appbundle_astillerocotizacion_acservicios_0_estatus').on('click', function () {
+    astilleroOcultaMuestraFila(this,$('#fila_grua'),$('#fila_grua_mxn'));
+});
+//-- estadia
+$('#appbundle_astillerocotizacion_acservicios_1_estatus').on('click', function () {
+    astilleroOcultaMuestraFila(this,$('#fila_estadia'),$('#fila_estadia_mxn'));
+});
 //-- Uso de rampa
 $('#appbundle_astillerocotizacion_acservicios_2_estatus').on('click', function () {
-  if ($('#appbundle_astillerocotizacion_acservicios_2_estatus').is(':checked')) {
-    $('#cotizarampa').removeClass('hidden');
-    $('#cotizarampa_mxn').removeClass('hidden');
-  } else {
-    $('#cotizarampa').addClass('hidden');
-    $('#cotizarampa_mxn').addClass('hidden');
-  }
-  calculaTotalesAstillero();
-  calculaTotalesAstilleroMXN()
+    astilleroOcultaMuestraFila(this,$('#cotizarampa'),$('#cotizarampa_mxn'));
+});
+//--Uso de karcher
+$('#appbundle_astillerocotizacion_acservicios_3_estatus').on('click', function () {
+    astilleroOcultaMuestraFila(this,$('#cotizakarcher'),$('#cotizakarcher_mxn'));
+});
+// -- Uso de explanada
+$('#appbundle_astillerocotizacion_acservicios_4_estatus').on('click',function () {
+    astilleroOcultaMuestraFila(this,$('#cotizaexplanada'),$('#cotizaexplanada_mxn'));
+});
+// -- Conexión a electricidad
+$('#appbundle_astillerocotizacion_acservicios_5_estatus').on('click',function () {
+    astilleroOcultaMuestraFila(this,$('#cotizaelectricidad'),$('#cotizaelectricidad_mxn'));
+});
+// -- limpieza de locación
+$('#appbundle_astillerocotizacion_acservicios_6_estatus').on('click',function () {
+    astilleroOcultaMuestraFila(this,$('#cotizalimpieza'),$('#cotizalimpieza_mxn'));
+});
+// -- sacar para inspeccionar
+$('#appbundle_astillerocotizacion_acservicios_7_estatus').on('click',function () {
+    astilleroOcultaMuestraFila(this,$('#cotizainspeccionar'),$('#cotizainspeccionar_mxn'));
 });
 $('#appbundle_astillerocotizacion_acservicios_2_precio').keyup(function () {
   var rampa_precio = $(this).val();
@@ -1145,18 +1189,6 @@ $('#appbundle_astillerocotizacion_acservicios_2_precio').keyup(function () {
   fila = $('#cotizarampa_mxn');
   calculaSubtotalesAstillero(fila);
 });
-//--Uso de karcher
-$('#appbundle_astillerocotizacion_acservicios_3_estatus').on('click', function () {
-  if ($('#appbundle_astillerocotizacion_acservicios_3_estatus').is(':checked')) {
-    $('#cotizakarcher').removeClass('hidden');
-    $('#cotizakarcher_mxn').removeClass('hidden');
-  } else {
-    $('#cotizakarcher').addClass('hidden');
-    $('#cotizakarcher_mxn').addClass('hidden');
-  }
-  calculaTotalesAstillero();
-  calculaTotalesAstilleroMXN();
-});
 $('#appbundle_astillerocotizacion_acservicios_3_precio').keyup(function () {
   var karcher_precio = $(this).val();
   $('#karcher_precio').html('$ ' + karcher_precio);
@@ -1172,18 +1204,7 @@ $('#appbundle_astillerocotizacion_acservicios_3_precio').keyup(function () {
   fila = $('#cotizakarcher_mxn');
   calculaSubtotalesAstillero(fila);
 });
-// -- Uso de explanada
-$('#appbundle_astillerocotizacion_acservicios_4_estatus').on('click', function () {
-  if ($('#appbundle_astillerocotizacion_acservicios_4_estatus').is(':checked')) {
-    $('#cotizaexplanada').removeClass('hidden');
-    $('#cotizaexplanada_mxn').removeClass('hidden');
-  } else {
-    $('#cotizaexplanada').addClass('hidden');
-    $('#cotizaexplanada_mxn').addClass('hidden');
-  }
-  calculaTotalesAstillero();
-  calculaTotalesAstilleroMXN();
-});
+
 $('#appbundle_astillerocotizacion_acservicios_4_precio').keyup(function () {
   var explanada_precio = $(this).val();
   $('#explanada_precio').html('$ ' + parseFloat(explanada_precio).toFixed(2));
@@ -1233,6 +1254,17 @@ $('#a_nuevacotizacion').on('keyup', '.valorprecio>.input-group>input', function 
   calculaSubtotalesAstillero(fila);
 });
 
+function astilleroOcultaMuestraFila (estatus,fila,filamx) {
+    if ($(estatus).is(':checked')) {
+        fila.removeClass('hidden');
+        filamx.removeClass('hidden');
+    } else {
+        fila.addClass('hidden');
+        filamx.addClass('hidden');
+    }
+    calculaTotalesAstillero();
+    calculaTotalesAstilleroMXN();
+}
 
 function calculaSubtotalesAstillero(fila) {
   var iva = $('#valorsistemaiva').data('valor');

@@ -79,11 +79,39 @@ class AstilleroCotizacionController extends Controller
 
         $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_CREATE', $astilleroCotizacion);
 
+        $em = $this->getDoctrine()->getManager();
+        $qb = $em->createQueryBuilder();
+
+        $queryBasico = $qb->select('sb')->from(astilleroServicioBasico::class,'sb')->getQuery();
+        $preciosBasicos = $queryBasico->getArrayResult();
+
         $astilleroGrua = new AstilleroCotizaServicio();
         $astilleroEstadia = new AstilleroCotizaServicio();
         $astilleroRampa = new AstilleroCotizaServicio();
         $astilleroKarcher = new AstilleroCotizaServicio();
         $astilleroExplanada = new AstilleroCotizaServicio();
+        $astilleroElectricidad = new AstilleroCotizaServicio();
+        $astilleroLimpieza = new AstilleroCotizaServicio();
+        $astilleroInspeccionar = new AstilleroCotizaServicio();
+
+        $astilleroGrua->setPrecio($preciosBasicos[0]['precio']);
+        $astilleroEstadia->setPrecio($preciosBasicos[1]['precio']);
+        $astilleroRampa
+            ->setCantidad(1)
+            ->setPrecio($preciosBasicos[2]['precio']);
+        $astilleroKarcher
+            ->setCantidad(1)
+            ->setPrecio($preciosBasicos[3]['precio']);
+        $astilleroExplanada
+            ->setCantidad(1)
+            ->setPrecio($preciosBasicos[4]['precio']);
+        $astilleroElectricidad->setPrecio($preciosBasicos[5]['precio']);
+        $astilleroLimpieza
+            ->setCantidad(1)
+            ->setPrecio($preciosBasicos[6]['precio']);
+        $astilleroInspeccionar
+            ->setCantidad(1)
+            ->setPrecio($preciosBasicos[7]['precio']);
 
 
         $astilleroCotizacion
@@ -92,10 +120,12 @@ class AstilleroCotizacionController extends Controller
             ->addAcservicio($astilleroRampa)
             ->addAcservicio($astilleroKarcher)
             ->addAcservicio($astilleroExplanada)
+            ->addAcservicio($astilleroElectricidad)
+            ->addAcservicio($astilleroLimpieza)
+            ->addAcservicio($astilleroInspeccionar)
           ;
 
-        $em = $this->getDoctrine()->getManager();
-        $qb = $em->createQueryBuilder();
+
         $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
         $sistema = $query->getArrayResult();
         $dolar = $sistema[0]['dolar'];
@@ -493,7 +523,6 @@ class AstilleroCotizacionController extends Controller
                     ->setFrom('noresponder@novonautica.com')
                     ->setTo($astilleroCotizacion->getBarco()->getCliente()->getCorreo())
                     ->setBcc('admin@novonautica.com')
-                    ->setCc([$astilleroCotizacion->getBarco()->getCorreoCapitan(),$astilleroCotizacion->getBarco()->getCorreoResponsable()])
                     ->setBody(
                         $this->renderView('astillero/cotizacion/correo-clientevalida.twig', [
                                 'astilleroCotizacion' => $astilleroCotizacion,
@@ -505,7 +534,12 @@ class AstilleroCotizacionController extends Controller
                     )
                     ->attach($attachment)
                     ->attach($attachmentMXN);
-
+                if($astilleroCotizacion->getBarco()->getCorreoCapitan()){
+                    $message->addCc($astilleroCotizacion->getBarco()->getCorreoCapitan());
+                }
+                if($astilleroCotizacion->getBarco()->getCorreoResponsable()){
+                    $message->addCc($astilleroCotizacion->getBarco()->getCorreoResponsable());
+                }
                 $mailer->send($message);
 
                 if($astilleroCotizacion->getFoliorecotiza() == 0){

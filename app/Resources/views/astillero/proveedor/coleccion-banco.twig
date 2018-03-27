@@ -1,0 +1,23 @@
+{% block form_widget %}
+    {% spaceless %}
+        <div class="col-sm-12 espacio-linea-abajo2">
+            <hr>
+        </div>
+        <div class="col-sm-5">
+            <div class="form-group">
+                {{ form_row(form.nombre) }}
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <div class="form-group">
+                {{ form_row(form.numcuenta) }}
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <a href="#" class="remove-banco btn btn-xs btn-naranja">
+                <i class="fa fa-times" aria-hidden="true"></i>
+                Remover Banco
+            </a>
+        </div>
+    {% endspaceless %}
+{% endblock %}

@@ -1,9 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
 {% import 'estructura/modalborrar.twig' as modal %}
-{% block title %}
-    Novonautiva | Editar Tarifa Marina Humeda
-{% endblock %}
-
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -11,46 +7,37 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Editar Tarifa</h3>
+                            <h3 class="panel-title">{{ title }}</h3>
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-contorno-azul pull-right" href="{{ path('marinahumeda-tarifas_index') }}">Regresar</a>
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('astillero_proveedor_trabajo_index') }}">Regresar</a>
                         </div>
                     </div>
                 </div>
                 <div class="panel-body">
-                    {% form_theme edit_form 'estructura/temaerror.html.twig' %}
                     {{ form_start(edit_form) }}
-
-                    {{ form_widget(edit_form) }}
-                    <div class="row espacio-linea-arriba2">
+                    <div class="row">
                         <div class="col-sm-12">
-                            <button type="submit" class="btn btn-azul pull-right">
+                            {{ form_widget(edit_form) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ delete_form is defined ? modal.deleteButton('') : '' }}
+                            <button type="submit" value="Create" class="btn btn-azul pull-right">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 Guardar
                             </button>
                         </div>
                     </div>
-
                     {{ form_end(edit_form) }}
                     <div class="row espacio-linea-arriba2">
                         <div class="col-sm-12">
-                            <a href="{{ path('marinahumeda-tarifas_index') }}" class="btn btn-naranja pull-right">
-                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                Cancelar
-                            </a>
+
                         </div>
                     </div>
-                    <div class="row  espacio-linea-arriba2">
-                        <div class="col-sm-12 text-right">
-                            {{ delete_form is defined ? modal.deleteButton() : '' }}
-                        </div>
-                    </div>
-
-
-
                 </div>
-
             </div>
         </section>
     </div>

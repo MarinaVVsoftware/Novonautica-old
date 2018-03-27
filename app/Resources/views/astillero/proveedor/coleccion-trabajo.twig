@@ -1,0 +1,17 @@
+{% block _appbundle_astillero_proveedor_trabajos_widget %}
+    <div {{ block('widget_container_attributes') }}>
+        <div class="col-sm-4" style="margin-bottom: 2rem;">
+            <fieldset>
+                <legend>Tipo de trabajo</legend>
+                <div class="row novo-checkbox-container">
+                    {% for key,choice in form.vars.choices %}
+                        <div class="col-sm-6">
+                            {{ form_widget(form[key]) }}
+                            {{ form_label(form[key]) }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </fieldset>
+        </div>
+    </div>
+{% endblock %}

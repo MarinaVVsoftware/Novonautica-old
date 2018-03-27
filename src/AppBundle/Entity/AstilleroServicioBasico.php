@@ -31,6 +31,19 @@ class AstilleroServicioBasico
      */
     private $nombre;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="precio", type="integer")
+     */
+    private $precio;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="divisa", type="string", length=3)
+     */
+    private $divisa;
 
     /**
      * Get id
@@ -64,5 +77,53 @@ class AstilleroServicioBasico
     public function getNombre()
     {
         return $this->nombre;
+    }
+
+    /**
+     * Set precio.
+     *
+     * @param int|null $precio
+     *
+     * @return AstilleroServicioBasico
+     */
+    public function setPrecio($precio = null)
+    {
+        $this->precio = $precio;
+
+        return $this;
+    }
+
+    /**
+     * Get precio.
+     *
+     * @return int|null
+     */
+    public function getPrecio()
+    {
+        return $this->precio;
+    }
+
+    /**
+     * Set divisa.
+     *
+     * @param string $divisa
+     *
+     * @return AstilleroServicioBasico
+     */
+    public function setDivisa($divisa)
+    {
+        $this->divisa = $divisa;
+
+        return $this;
+    }
+
+    /**
+     * Get divisa.
+     *
+     * @return string
+     */
+    public function getDivisa()
+    {
+        return $this->divisa;
     }
 }

@@ -18,6 +18,8 @@
                             <tr>
                                 <th>Nombre</th>
                                 <th>Razón social</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
                                 <th>Porcentaje</th>
                                 <th>Tipo</th>
                                 <th></th>
@@ -56,11 +58,16 @@
                 ajax: '{{ path('astillero_proveedor_index') }}',
                 order: [[0, 'desc']],
                 createdRow: function (row, data) {
-                let actionsCell = row.cells[4];
+                let actionsCell = row.cells[6];
                 actionsCell.innerHTML = `
             <ul class="unstyled-list list-inline" style="margin: 0">
                 <li>
-                <a href="${data[4]}/editar">
+                <a href="${data[6]}">
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                </a>
+                </li>
+                <li>
+                <a href="${data[6]}/editar">
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                 </a>
                 </li>
