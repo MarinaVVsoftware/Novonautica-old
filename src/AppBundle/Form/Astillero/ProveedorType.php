@@ -49,6 +49,12 @@ class ProveedorType extends AbstractType
                 'expanded' => true,
                 'multiple' => true
             ])
+            ->add('rfc',TextType::class,[
+                'label' => 'RFC'
+            ])
+            ->add('direccionfiscal',TextType::class,[
+                'label' => 'Dirección fiscal'
+            ])
         ;
     }/**
      * {@inheritdoc}

@@ -70,6 +70,8 @@ class AstilleroProveedorDataTable extends AbstractDataTableHandler
             $results->data[] = [
                 $proveedor->getNombre(),
                 $proveedor->getRazonsocial(),
+                $proveedor->getRfc(),
+                $proveedor->getDireccionfiscal(),
                 $proveedor->getCorreo(),
                 $proveedor->getTelefono(),
                 number_format($proveedor->getPorcentaje(), 2).' %',

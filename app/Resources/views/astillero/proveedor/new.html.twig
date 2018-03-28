@@ -123,6 +123,14 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-sm-6">
+                        {{ form_row(form.rfc) }}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(form.direccionfiscal) }}
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-11 col-sm-offset-1">
                         {% form_theme form.trabajos 'astillero/proveedor/coleccion-trabajo.twig' %}
                         {{ form_row(form.trabajos) }}

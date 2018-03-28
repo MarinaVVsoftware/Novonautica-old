@@ -81,9 +81,12 @@ class AstilleroCotizacionController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-
         $queryBasico = $qb->select('sb')->from(astilleroServicioBasico::class,'sb')->getQuery();
         $preciosBasicos = $queryBasico->getArrayResult();
+
+        $sistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
+        $dolar = $sistema->getDolar();
+        $iva = $sistema->getIva();
 
         $astilleroGrua = new AstilleroCotizaServicio();
         $astilleroEstadia = new AstilleroCotizaServicio();
@@ -96,23 +99,22 @@ class AstilleroCotizacionController extends Controller
 
         $astilleroGrua->setPrecio($preciosBasicos[0]['precio']);
         $astilleroEstadia->setPrecio($preciosBasicos[1]['precio']);
-        $astilleroRampa
-            ->setCantidad(1)
-            ->setPrecio($preciosBasicos[2]['precio']);
-        $astilleroKarcher
-            ->setCantidad(1)
-            ->setPrecio($preciosBasicos[3]['precio']);
-        $astilleroExplanada
-            ->setCantidad(1)
-            ->setPrecio($preciosBasicos[4]['precio']);
+        $cantidad = 1;
+        $precio = $preciosBasicos[2]['precio'];
+        $astilleroRampa = $this->calculaServicio($astilleroRampa,$cantidad,$precio,$iva);
+        $cantidad = 1;
+        $precio = $preciosBasicos[3]['precio'];
+        $astilleroKarcher = $this->calculaServicio($astilleroKarcher,$cantidad,$precio,$iva);
+        $cantidad = 1;
+        $precio = $preciosBasicos[4]['precio'];
+        $astilleroExplanada = $this->calculaServicio($astilleroExplanada,$cantidad,$precio,$iva);
         $astilleroElectricidad->setPrecio($preciosBasicos[5]['precio']);
-        $astilleroLimpieza
-            ->setCantidad(1)
-            ->setPrecio($preciosBasicos[6]['precio']);
-        $astilleroInspeccionar
-            ->setCantidad(1)
-            ->setPrecio($preciosBasicos[7]['precio']);
-
+        $cantidad = 1;
+        $precio = $preciosBasicos[6]['precio'];
+        $astilleroLimpieza = $this->calculaServicio($astilleroLimpieza,$cantidad,$precio,$iva);
+        $cantidad = 1;
+        $precio = $preciosBasicos[7]['precio'];
+        $astilleroInspeccionar = $this->calculaServicio($astilleroInspeccionar,$cantidad,$precio,$iva);
 
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
@@ -125,12 +127,7 @@ class AstilleroCotizacionController extends Controller
             ->addAcservicio($astilleroInspeccionar)
           ;
 
-
-        $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
-        $sistema = $query->getArrayResult();
-        $dolar = $sistema[0]['dolar'];
-        $iva = $sistema[0]['iva'];
-        $mensaje = $sistema[0]['mensajeCorreoAstillero'];
+        $mensaje = $sistema->getMensajeCorreoAstillero();
         $astilleroCotizacion->setDolar($dolar)->setMensaje($mensaje);
         $form = $this->createForm('AppBundle\Form\AstilleroCotizacionType', $astilleroCotizacion);
         $form->handleRequest($request);
@@ -1073,5 +1070,18 @@ class AstilleroCotizacionController extends Controller
             ->setAction($this->generateUrl('astillero_delete', ['id' => $astilleroCotizacion->getId()]))
             ->setMethod('DELETE')
             ->getForm();
+    }
+
+    public function calculaServicio($servicio,$cantidad,$precio,$iva){
+        $subtotal = $cantidad*$precio;
+        $ivatot = ($subtotal * $iva)/100;
+        $total = $subtotal + $ivatot;
+        $servicio
+            ->setCantidad($cantidad)
+            ->setPrecio($precio)
+            ->setSubtotal($subtotal)
+            ->setIva($ivatot)
+            ->setTotal($total);
+        return $servicio;
     }
 }

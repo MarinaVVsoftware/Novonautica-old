@@ -15,7 +15,6 @@
                             <tr>
                                 <th>Servicio</th>
                                 <th>Precio</th>
-                                <th>Divisa</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -23,8 +22,7 @@
                             {% for astilleroServicioBasico in astilleroServicioBasicos %}
                                 <tr>
                                     <td>{{ astilleroServicioBasico.nombre }}</td>
-                                    <td>${{ (astilleroServicioBasico.precio/100)|number_format(2) }}</td>
-                                    <td>{{ astilleroServicioBasico.divisa }}</td>
+                                    <td>${{ (astilleroServicioBasico.precio/100)|number_format(2) }} {{ astilleroServicioBasico.divisa }}</td>
                                     <td>
                                         <a class="btn btn-azul" href="{{ path('astillero_servicio-basico_edit', { 'id': astilleroServicioBasico.id }) }}">
                                             <i class="fa fa-pencil-square-o"></i>

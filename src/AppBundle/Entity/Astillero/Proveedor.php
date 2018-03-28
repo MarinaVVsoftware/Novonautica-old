@@ -92,6 +92,27 @@ class Proveedor
     private $telefono;
 
     /**
+     * @var string
+     *
+     * @Assert\Regex(
+     *     pattern="/^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))((-)?([A-Z\d]{3}))?$/",
+     *     message="El RFC es invalido"
+     *     )
+     *
+     * @ORM\Column(name="rfc", type="string", length=50)
+     */
+    private $rfc;
+
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank(message="Este campo no puede estar vacio")
+     *
+     * @ORM\Column(name="direccionfiscal", type="string", length=255)
+     */
+    private $direccionfiscal;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Astillero\Contratista", mappedBy="proveedor")
      */
     private $AContratistas;
@@ -381,5 +402,53 @@ class Proveedor
     public function getTelefono()
     {
         return $this->telefono;
+    }
+
+    /**
+     * Set rfc.
+     *
+     * @param string $rfc
+     *
+     * @return Proveedor
+     */
+    public function setRfc($rfc)
+    {
+        $this->rfc = $rfc;
+
+        return $this;
+    }
+
+    /**
+     * Get rfc.
+     *
+     * @return string
+     */
+    public function getRfc()
+    {
+        return $this->rfc;
+    }
+
+    /**
+     * Set direccionfiscal.
+     *
+     * @param string $direccionfiscal
+     *
+     * @return Proveedor
+     */
+    public function setDireccionfiscal($direccionfiscal)
+    {
+        $this->direccionfiscal = $direccionfiscal;
+
+        return $this;
+    }
+
+    /**
+     * Get direccionfiscal.
+     *
+     * @return string
+     */
+    public function getDireccionfiscal()
+    {
+        return $this->direccionfiscal;
     }
 }
