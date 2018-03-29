@@ -39,7 +39,7 @@
       (function ($, settings) {
         $('.table-novo').DataTable({
           ...settings,
-          ajax: '{{ path('cliente_index') }}',
+          ajax: '{{ path('cliente_index_data') }}',
           order: [[4, 'desc']],
           createdRow: function (tr, data) {
             let barcosTd = tr.cells[3];

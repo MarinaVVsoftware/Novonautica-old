@@ -112,15 +112,6 @@ class MarinaHumedaCotizacion
     /**
      * @var integer
      *
-     * @Groups({"facturacion"})
-     *
-     * @ORM\Column(name="adeudo", type="bigint", nullable=true)
-     */
-    private $adeudo;
-
-    /**
-     * @var integer
-     *
      * @ORM\Column(name="pagado", type="bigint", nullable=true)
      */
     private $pagado;
@@ -1019,22 +1010,6 @@ class MarinaHumedaCotizacion
     public function getSlip()
     {
         return $this->slip;
-    }
-
-    /**
-     * @return float
-     */
-    public function getAdeudo()
-    {
-        return $this->adeudo;
-    }
-
-    /**
-     * @param float $adeudo
-     */
-    public function setAdeudo($adeudo)
-    {
-        $this->adeudo = $adeudo;
     }
 
     /**

@@ -267,9 +267,9 @@ class MarinaHumedaCotizacionController extends Controller
             $marinaGasolina
                 ->setEstatus(1)
                 ->setCantidad($cantidad)
-                ->setPrecio($precioUSD) // Precio sin iva
-                ->setSubtotal($subtotalUSD) // Total sin iva
-                ->setIva($ivaUSD) // El iva del total
+                ->setPrecio($precioUSD)// Precio sin iva
+                ->setSubtotal($subtotalUSD)// Total sin iva
+                ->setIva($ivaUSD)// El iva del total
                 ->setTotal($totalUSD); // Total con iva
             ;
             $marinaHumedaCotizacion
@@ -357,14 +357,16 @@ class MarinaHumedaCotizacionController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
             if (is_null($marinaHumedaCotizacion->getTokenacepta())) {
                 if ($marinaHumedaCotizacion->getValidanovo() == 2) {
+                    // Si no existe token pero ya ha sido validada por novonautica
                     $tokenAcepta = $valorSistema->generaToken(100);
                     $tokenRechaza = $valorSistema->generaToken(100);
-                    $marinaHumedaCotizacion
-                        ->setTokenacepta($tokenAcepta)
-                        ->setTokenrechaza($tokenRechaza)
-                        ->setNombrevalidanovo($this->getUser()->getNombre());
+
+                    $marinaHumedaCotizacion->setTokenacepta($tokenAcepta);
+                    $marinaHumedaCotizacion->setTokenrechaza($tokenRechaza);
+                    $marinaHumedaCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
 
                     // Generacion de PDF
                     // Se envia un correo si se solicito notificar al cliente
@@ -409,10 +411,10 @@ class MarinaHumedaCotizacionController extends Controller
                                 'text/html'
                             )
                             ->attach($attachment);
-                        if($marinaHumedaCotizacion->getBarco()->getCorreoCapitan()){
+                        if ($marinaHumedaCotizacion->getBarco()->getCorreoCapitan()) {
                             $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoCapitan());
                         }
-                        if($marinaHumedaCotizacion->getBarco()->getCorreoResponsable()){
+                        if ($marinaHumedaCotizacion->getBarco()->getCorreoResponsable()) {
                             $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoResponsable());
                         }
                         $mailer->send($message);
@@ -432,19 +434,20 @@ class MarinaHumedaCotizacionController extends Controller
                             ->setTipo($tipoCorreo)
                             ->setDescripcion('Envio de cotización con folio: ' . $folio)
                             ->setFolioCotizacion($folio)
-                            ->setMhcotizacion($marinaHumedaCotizacion)
-                        ;
+                            ->setMhcotizacion($marinaHumedaCotizacion);
 
                         $em->persist($historialCorreo);
                     }
-
-
-
                 } else {
                     if ($marinaHumedaCotizacion->getValidanovo() == 1) {
                         $marinaHumedaCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
                     }
                 }
+            }
+
+            if ($marinaHumedaCotizacion->getValidacliente() === 2) {
+                // Guardar la fecha en la que se valido la cotizacion por el cliente
+                $marinaHumedaCotizacion->setRegistroValidaCliente(new \DateTimeImmutable());
             }
 
             // Guardar la fecha en la que se valido la cotizacion por novonautica
@@ -520,9 +523,10 @@ class MarinaHumedaCotizacionController extends Controller
         $totPagadoMonedero = 0;
         $listaPagos = new ArrayCollection();
 
+        // Conversion de pagos de la DB (USD) a la vista (MXN)
         foreach ($marinaHumedaCotizacion->getPagos() as $pago) {
-            if($pago->getDivisa()=='MXN'){
-                $pesos = ($pago->getCantidad()*$pago->getDolar())/100;
+            if ($pago->getDivisa() == 'MXN') {
+                $pesos = ($pago->getCantidad() * $pago->getDolar()) / 100;
                 $pago->setCantidad($pesos);
             }
             $listaPagos->add($pago);
@@ -532,7 +536,6 @@ class MarinaHumedaCotizacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $continuarpago = true;
             $total = $marinaHumedaCotizacion->getTotal();
             $pagado = $marinaHumedaCotizacion->getPagado();
@@ -548,28 +551,33 @@ class MarinaHumedaCotizacionController extends Controller
                 }
             }
 
+            // Conversion de la vista (MXN) a la DB (USD)
             foreach ($marinaHumedaCotizacion->getPagos() as $pago) {
-                if($pago->getDivisa()=='MXN'){
-                    $unpago = ($pago->getCantidad()/$pago->getDolar())*100;
+                if ($pago->getDivisa() == 'MXN') {
+                    $unpago = ($pago->getCantidad() / $pago->getDolar()) * 100;
                     $pago->setCantidad($unpago);
-                }else{
+                } else {
                     $unpago = $pago->getCantidad();
                 }
+
                 $totPagado += $unpago;
 
-                if($pago->getMetodopago() == 'Monedero' && $pago->getId() == null){
+                if ($pago->getMetodopago() == 'Monedero' && $pago->getId() == null) {
                     $totPagadoMonedero += $unpago;
                     $monederotot = $monedero - $totPagadoMonedero;
-                    if($marinaHumedaCotizacion->getFoliorecotiza()){
-                        $folioCotizacion = $marinaHumedaCotizacion->getFolio().'-'.$marinaHumedaCotizacion->getFoliorecotiza();
-                    }else{
+
+                    if ($marinaHumedaCotizacion->getFoliorecotiza()) {
+                        $folioCotizacion = $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza();
+                    } else {
                         $folioCotizacion = $marinaHumedaCotizacion->getFolio();
                     }
-                    if($marinaHumedaCotizacion->getMHCservicios()->first()->getTipo() == 1 || $marinaHumedaCotizacion->getMHCservicios()->first()->getTipo() == 2){
-                        $notaMonedero = 'Pago de servicio de estadía y electricidad. Folio cotización: '.$folioCotizacion;
-                    }else{
-                        $notaMonedero = 'Pago de servicio de gasolina. Folio cotización: '.$folioCotizacion;
+
+                    if ($marinaHumedaCotizacion->getMHCservicios()->first()->getTipo() == 1 || $marinaHumedaCotizacion->getMHCservicios()->first()->getTipo() == 2) {
+                        $notaMonedero = 'Pago de servicio de estadía y electricidad. Folio cotización: ' . $folioCotizacion;
+                    } else {
+                        $notaMonedero = 'Pago de servicio de gasolina. Folio cotización: ' . $folioCotizacion;
                     }
+
                     $fechaHoraActual = new \DateTime('now');
                     $monederoMovimiento = new MonederoMovimiento();
                     $monederoMovimiento
@@ -582,8 +590,8 @@ class MarinaHumedaCotizacionController extends Controller
                         ->setDescripcion($notaMonedero);
                     $em->persist($monederoMovimiento);
                 }
-
             }
+
             if (($total + 1) < $totPagado) {
                 $this->addFlash('notice', 'Error! Se ha intentado pagar más del total');
             } else {
@@ -591,17 +599,21 @@ class MarinaHumedaCotizacionController extends Controller
                     $this->addFlash('notice', 'Error! Fondos insuficientes en el monedero');
                 } else {
                     $faltante = $total - $totPagado;
+
                     if ($faltante <= 0.5) {
                         $marinaHumedaCotizacion->setRegistroPagoCompletado(new \DateTimeImmutable());
                         $marinaHumedaCotizacion->setEstatuspago(2);
                     } else {
                         $marinaHumedaCotizacion->setEstatuspago(1);
                     }
-                    $monederoRestante =  $monedero - $totPagadoMonedero;
+
+                    $monederoRestante = $monedero - $totPagadoMonedero;
                     $marinaHumedaCotizacion->setPagado($totPagado);
                     $marinaHumedaCotizacion->getCliente()->setMonederomarinahumeda($monederoRestante);
+
                     $em->persist($marinaHumedaCotizacion);
                     $em->flush();
+
                     return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
                 }
             }
@@ -1142,7 +1154,6 @@ class MarinaHumedaCotizacionController extends Controller
         $attachment = new Swift_Attachment($pdfEnviar, 'Cotizacion-' . $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza() . '.pdf', 'application/pdf');
 
 
-
         // Enviar correo de confirmacion
         $message = (new \Swift_Message('¡Cotizacion de servicios!'))
             ->setFrom('noresponder@novonautica.com')
@@ -1158,10 +1169,10 @@ class MarinaHumedaCotizacionController extends Controller
             )
             ->attach($attachment);
 
-        if($marinaHumedaCotizacion->getBarco()->getCorreoCapitan()){
+        if ($marinaHumedaCotizacion->getBarco()->getCorreoCapitan()) {
             $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoCapitan());
         }
-        if($marinaHumedaCotizacion->getBarco()->getCorreoResponsable()){
+        if ($marinaHumedaCotizacion->getBarco()->getCorreoResponsable()) {
             $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoResponsable());
         }
         $mailer->send($message);
@@ -1180,8 +1191,7 @@ class MarinaHumedaCotizacionController extends Controller
             ->setTipo($tipoCorreo)
             ->setDescripcion('Reenvio de cotización con Folio: ' . $folio)
             ->setFolioCotizacion($folio)
-            ->setMhcotizacion($marinaHumedaCotizacion)
-        ;
+            ->setMhcotizacion($marinaHumedaCotizacion);
 
         $em->persist($historialCorreo);
         $em->persist($marinaHumedaCotizacion);
@@ -1244,12 +1254,12 @@ class MarinaHumedaCotizacionController extends Controller
             }
         }
 
-        if($tipo == 1 || $tipo == 2){
+        if ($tipo == 1 || $tipo == 2) {
             return $this->redirectToRoute('marina-humeda_estadia_index');
-        }else{
-            if($tipo == 3 || $tipo == 4 || $tipo == 5){
+        } else {
+            if ($tipo == 3 || $tipo == 4 || $tipo == 5) {
                 return $this->redirectToRoute('marina-humeda_gasolina_index');
-            }else{
+            } else {
                 return $this->redirectToRoute('inicio');
             }
         }

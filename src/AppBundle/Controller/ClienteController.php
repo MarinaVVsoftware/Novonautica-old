@@ -34,23 +34,30 @@ class ClienteController extends Controller
      * @Method("GET")
      * @Security("has_role('ROLE_CLIENTE')")
      *
-     * @param Request $request
-     * @param DataTablesInterface $datatables
-     *
      * @return JsonResponse|Response
      */
-    public function indexAction(Request $request, DataTablesInterface $datatables)
+    public function indexAction()
+    {
+        return $this->render('cliente/index.html.twig', ['title' => 'Clientes']);
+    }
+
+    /**
+     * @Route("/clientes", name="cliente_index_data")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     * @return JsonResponse
+     */
+    public function getClientesDataAction(Request $request, DataTablesInterface $dataTables)
     {
         if ($request->isXmlHttpRequest()) {
             try {
-                $results = $datatables->handle($request, 'cliente');
+                $results = $dataTables->handle($request, 'cliente');
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getCode());
             }
         }
-
-        return $this->render('cliente/index.html.twig', ['title' => 'Clientes']);
     }
 
     /**
@@ -142,13 +149,28 @@ class ClienteController extends Controller
      */
     public function showAction(Cliente $cliente)
     {
-        $deleteForm = $this->createDeleteForm($cliente);
-
         return $this->render('cliente/show.html.twig', [
-            'title' => 'Cliente',
+            'title' => "Cliente: {$cliente->getNombre()}",
             'cliente' => $cliente,
-            'delete_form' => $deleteForm->createView()
         ]);
+    }
+
+    /**
+     * @Route("/{id}/reportes", name="cliente_show_data")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return JsonResponse
+     */
+    public function getShowDataAction(Request $request, Cliente $cliente, DataTablesInterface $dataTables)
+    {
+        try {
+            $results = $dataTables->handle($request, 'clienteReporte');
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
+        }
     }
 
     /**
