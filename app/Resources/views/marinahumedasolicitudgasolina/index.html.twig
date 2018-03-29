@@ -16,12 +16,12 @@
                     <table class="table-novo table text-center">
                         <thead>
                         <tr>
-                            <th>Folio</th>
                             <th>Cliente</th>
                             <th>Barco</th>
                             <th>Fecha</th>
                             <th>Cantidad Combustible</th>
                             <th>Tipo de Combustible</th>
+                            <th>Cotizar</th>
                         </tr>
                         </thead>
                     </table>
@@ -39,7 +39,14 @@
             $('.table-novo').DataTable({
                 ...settings,
                 ajax: '{{ path('solicitud_index_data') }}',
-                order: [[0, 'desc']],
+                order: [[5, 'desc']],
+                createdRow: function (row, solicitud) {
+                    console.log(solicitud);
+                    let lastCell = row.cells[5];
+                    lastCell.innerHTML = `
+            <a class="btn btn-xs btn-block btn-azul" href="{{ 'nuevo?id=${solicitud[5]}' }}">Cotizar</a>
+            `
+                },
             });
         })(jQuery, datatablesSettings);
     </script>
