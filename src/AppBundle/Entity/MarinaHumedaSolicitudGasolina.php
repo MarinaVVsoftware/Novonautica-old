@@ -22,11 +22,6 @@ class MarinaHumedaSolicitudGasolina
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="gasolinabarco")
-     */
-    private $idbarco;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="cantidad_combustible", type="integer")
@@ -40,6 +35,22 @@ class MarinaHumedaSolicitudGasolina
      */
     private $fechaPeticion;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo_combustible", type="string", length=255)
+     */
+    private $tipo_combustible;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="gasolinabarco")
+     */
+    private $idbarco;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="appgasolinasolicitudes")
+     */
+    private $cliente;
 
     /**
      * Get id.
@@ -121,5 +132,53 @@ class MarinaHumedaSolicitudGasolina
     public function getFechaPeticion()
     {
         return $this->fechaPeticion;
+    }
+
+    /**
+     * Set cliente.
+     *
+     * @param Cliente|null $cliente
+     *
+     * @return MarinaHumedaSolicitudGasolina
+     */
+    public function setCliente(Cliente $cliente = null)
+    {
+        $this->cliente = $cliente;
+
+        return $this;
+    }
+
+    /**
+     * Get cliente.
+     *
+     * @return Cliente|null
+     */
+    public function getCliente()
+    {
+        return $this->cliente;
+    }
+
+    /**
+     * Set tipoCombustible.
+     *
+     * @param string $tipoCombustible
+     *
+     * @return MarinaHumedaSolicitudGasolina
+     */
+    public function setTipoCombustible($tipoCombustible)
+    {
+        $this->tipo_combustible = $tipoCombustible;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoCombustible.
+     *
+     * @return string
+     */
+    public function getTipoCombustible()
+    {
+        return $this->tipo_combustible;
     }
 }
