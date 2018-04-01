@@ -219,8 +219,8 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin('solicitud.pagos', 'pagos')
             ->leftJoin('solicitud.producto', 'peticion')
             ->leftJoin('peticion.producto', 'producto')
-            ->where('solicitud.folio = :folio AND pagos.id IS NOT NULL and pagos.factura IS NULL')
-            ->setParameter('folio', $folio);
+            ->where('solicitud.folio LIKE :folio AND pagos.id IS NOT NULL and pagos.factura IS NULL')
+            ->setParameter('folio', "%{$folio}%");
 
         return $query->getQuery()->getResult();
     }

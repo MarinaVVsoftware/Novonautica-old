@@ -57,20 +57,24 @@ class TiendaDataTable extends AbstractDataTableHandler
 
         foreach ($request->order as $order) {
             if ($order->column == 0) {
-                $query->addOrderBy('t.fecha', $order->dir);
+                $query->addOrderBy('t.folio', $order->dir);
             } elseif ($order->column == 1) {
-                $query->addOrderBy('b.nombre', $order->dir);
+                $query->addOrderBy('t.fecha', $order->dir);
             } elseif ($order->column == 2) {
-                $query->addOrderBy('t.solicitudEspecial', $order->dir);
+                $query->addOrderBy('b.nombre', $order->dir);
             } elseif ($order->column == 3) {
-                $query->addOrderBy('t.total', $order->dir);
+                $query->addOrderBy('t.solicitudEspecial', $order->dir);
             } elseif ($order->column == 4) {
-                $query->addOrderBy('t.totalusd', $order->dir);
+                $query->addOrderBy('t.total', $order->dir);
             } elseif ($order->column == 5) {
-                $query->addOrderBy('t.pagado', $order->dir);
+                $query->addOrderBy('t.totalusd', $order->dir);
             } elseif ($order->column == 6) {
-                $query->addOrderBy('t.entregado', $order->dir);
+                $query->addOrderBy('t.pagado', $order->dir);
             } elseif ($order->column == 7) {
+                $query->addOrderBy('t.entregado', $order->dir);
+            } elseif ($order->column == 8) {
+                $query->addOrderBy('t.id', $order->dir);
+            } elseif ($order->column == 9) {
                 $query->addOrderBy('t.id', $order->dir);
             }
         }
@@ -87,6 +91,7 @@ class TiendaDataTable extends AbstractDataTableHandler
 
         foreach ($solicitudes as $solicitud) {
             $results->data[] = [
+                $solicitud->getFolio(),
                 $solicitud->getFecha()->format('d/m/Y'),
                 $solicitud->getNombrebarco()->getNombre(),
                 $solicitud->getSolicitudEspecial() ?: 'N/A',

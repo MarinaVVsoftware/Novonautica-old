@@ -81,9 +81,9 @@ class ReporteDataTable extends AbstractDataTableHandler
             $results->data[] = [
                 $reporte['nombre'],
                 $reporte['createdAt']->format('d M Y'),
-                '$' . number_format(($reporte['adeudo'] / 100), 2),
-                '$' . number_format(($reporte['abono'] / 100), 2),
-                '$' . number_format(($reporte['total'] / 100), 2),
+                '$' . number_format(($reporte['adeudo'] / 100), 2) . ' USD',
+                '$' . number_format(($reporte['abono'] / 100), 2) . ' USD',
+                '$' . number_format(($reporte['total'] / 100), 2) . ' USD',
                 $reporte['id'],
             ];
         }

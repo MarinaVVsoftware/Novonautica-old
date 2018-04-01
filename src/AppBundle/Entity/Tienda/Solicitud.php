@@ -541,4 +541,23 @@ class Solicitud
     {
         return $this->totalusd;
     }
+
+    /**
+     * A falta de la relacion directa con el cliente
+     *
+     * @return \AppBundle\Entity\Cliente
+     */
+    public function getCliente()
+    {
+        return $this->getNombrebarco()->getCliente();
+    }
+    /**
+     * Funcion falsa ya que solicitudes no se recotizan
+     *
+     * @return null
+     */
+    public function getFolioRecotiza()
+    {
+        return null;
+    }
 }

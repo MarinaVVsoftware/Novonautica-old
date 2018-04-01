@@ -23,6 +23,7 @@
                         <table class="table table-novo">
                             <thead>
                             <tr>
+                                <th>folio</th>
                                 <th>Fecha</th>
                                 <th>Embarcación</th>
                                 <th>Solicitud Especial</th>
@@ -55,6 +56,7 @@
           ajax: '{{ path('tienda_solicitud_index_data') }}',
           order: [[0, 'desc']],
           columns: [
+            {responsivePriority: 1},
             {responsivePriority: 2},
             {responsivePriority: 2},
             {responsivePriority: 2},
@@ -65,13 +67,13 @@
             {responsivePriority: 0},
           ],
           createdRow: function (row, data) {
-            for (let i of [5, 6]) {
+            for (let i of [6, 7]) {
               if (!data[i]) row.children[i].innerHTML = rechazado;
               if (data[i] === 1) row.children[i].innerHTML = aceptado;
               if (data[i] === 2) row.children[i].innerHTML = pendiente;
             }
 
-            row.lastElementChild.innerHTML = writeLastChild(data[5], data[6], data[7]);
+            row.lastElementChild.innerHTML = writeLastChild(data[6], data[7], data[8]);
           }
         });
 

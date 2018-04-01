@@ -39,7 +39,7 @@ monolog:
 
 swiftmailer:
 #    delivery_addresses: ['me@example.com']
-    disable_delivery: true
+#    disable_delivery: true
 
 knp_snappy:
     pdf:

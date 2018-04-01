@@ -3,6 +3,8 @@
 namespace AppBundle\Controller\Contabilidad;
 
 use AppBundle\Entity\Astillero\Servicio;
+use AppBundle\Entity\AstilleroCotizacion;
+use AppBundle\Entity\AstilleroServicioBasico;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaServicio;
@@ -424,6 +426,10 @@ class FacturacionController extends Controller
 
         $returnNombres = function ($servicio) {
             if ($servicio instanceof MarinaHumedaServicio) {
+                return $servicio->getNombre();
+            }
+
+            if ($servicio instanceof AstilleroServicioBasico) {
                 return $servicio->getNombre();
             }
 

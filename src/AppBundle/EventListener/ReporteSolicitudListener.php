@@ -34,13 +34,12 @@ class ReporteSolicitudListener implements EventSubscriber
         }
 
         $em = $args->getObjectManager();
-        $folio = $entity->getFoliorecotiza() ? "{$entity->getFolio()}-{$entity->getFoliorecotiza()}" : $entity->getFolio();
 
         $reporte = new Reporte();
         $reporte->setAdeudo($entity->getTotalusd());
         $reporte->setCliente($entity->getNombrebarco()->getCliente());
-        $reporte->setConcepto("Solicitud Tienda #{$folio}");
-        $reporte->setReferencia($folio);
+        $reporte->setConcepto("Solicitud Tienda #{$entity->getFolio()}");
+        $reporte->setReferencia($entity->getFolio());
 
         $em->persist($reporte);
         $em->flush();
