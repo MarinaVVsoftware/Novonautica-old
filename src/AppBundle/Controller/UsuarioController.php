@@ -7,6 +7,7 @@ use DataTables\DataTablesInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,12 +21,10 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class UsuarioController extends Controller
 {
     /**
-     * Lists all usuar dasÇdñas´`kaspç`as
-     * çio entities.
+     * Lists all user entities
      *
      * @Route("/", name="usuario_index")
      * @Method("GET")
-     *
      */
     public function indexAction()
     {
@@ -38,7 +37,7 @@ class UsuarioController extends Controller
      * @param Request $request
      * @param DataTablesInterface $dataTables
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      */
     public function getUsuariosDataAction(Request $request, DataTablesInterface $dataTables)
     {

@@ -3,15 +3,10 @@
 namespace AppBundle\Form\Contabilidad;
 
 use AppBundle\Form\Contabilidad\Facturacion\ConceptoType;
-use AppBundle\Form\Contabilidad\Facturacion\FacturaPagoType;
 use AppBundle\Form\DataTransformer\FacturaPagosDataTransformer;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Proxies\__CG__\AppBundle\Entity\Contabilidad\Facturacion;
-use Symfony\Bridge\Doctrine\Form\DataTransformer\CollectionToArrayTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -104,8 +99,6 @@ class FacturacionType extends AbstractType
                 'choices' => [
                     'Ingreso' => 'I',
                     'Egreso' => 'E',
-//                    'Traslado' => 'T',
-//                    'Nómina' => 'N',
                     'Pago' => 'P',
                 ]
             ])

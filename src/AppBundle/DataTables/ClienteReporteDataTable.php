@@ -2,23 +2,23 @@
 /**
  * Created by PhpStorm.
  * User: inrumi
- * Date: 3/21/18
- * Time: 12:52
+ * Date: 3/29/18
+ * Time: 15:52
  */
 
 namespace AppBundle\DataTables;
 
 
-use AppBundle\Entity\Usuario;
+use AppBundle\Entity\Cliente\Reporte;
 use DataTables\AbstractDataTableHandler;
 use DataTables\DataTableException;
 use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-class UsuarioDataTable extends AbstractDataTableHandler
+class ClienteReporteDataTable extends AbstractDataTableHandler
 {
-    const ID = 'usuario';
+    const ID = 'clienteReporte';
     private $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)
@@ -38,53 +38,54 @@ class UsuarioDataTable extends AbstractDataTableHandler
      */
     public function handle(DataTableQuery $request): DataTableResults
     {
-        $repository = $this->doctrine->getRepository('AppBundle:Usuario');
+        $repository = $this->doctrine->getRepository('AppBundle:Cliente\Reporte');
         $results = new DataTableResults();
 
-        $query = $repository->createQueryBuilder('u')->select('COUNT(u.id)');
+        $clienteId = $request->customData['cliente'];
+
+        $query = $repository->createQueryBuilder('r')->select('COUNT(r.id)')
+            ->leftJoin('r.cliente', 'cliente')
+            ->where("cliente.id = ${clienteId}");
+
         $results->recordsTotal = $query->getQuery()->getSingleScalarResult();
 
-        $query = $repository->createQueryBuilder('u');
+        $query = $repository->createQueryBuilder('r')
+            ->leftJoin('r.cliente', 'cliente')
+            ->andWhere("cliente.id = ${clienteId}");
 
         if ($request->search->value) {
-            $query->where('(LOWER(u.nombre) LIKE :search OR ' .
-                'LOWER(u.nombreUsuario) LIKE :search OR ' .
-                'LOWER(u.correo) LIKE :search)'
+            $query->where('(LOWER(r.createdAt) LIKE :search OR ' .
+                'LOWER(r.concepto) LIKE :search)'
             );
             $query->setParameter('search', strtolower("%{$request->search->value}%"));
         }
 
         foreach ($request->order as $order) {
             if ($order->column == 0) {
-                $query->addOrderBy('u.nombre', $order->dir);
+                $query->addOrderBy('r.createdAt', $order->dir);
             } elseif ($order->column == 1) {
-                $query->addOrderBy('u.nombreUsuario', $order->dir);
+                $query->addOrderBy('r.adeudo', $order->dir);
             } elseif ($order->column == 2) {
-                $query->addOrderBy('u.correo', $order->dir);
-            } elseif ($order->column == 3) {
-                $query->addOrderBy('u.isActive', $order->dir);
-            } elseif ($order->column == 4) {
-                $query->addOrderBy('u.id', $order->dir);
+                $query->addOrderBy('r.abono', $order->dir);
             }
         }
 
         $queryCount = clone $query;
-        $queryCount->select('COUNT(u.id)');
+        $queryCount->select('COUNT(r.id)');
         $results->recordsFiltered = $queryCount->getQuery()->getSingleScalarResult();
 
         $query->setMaxResults($request->length);
         $query->setFirstResult($request->start);
 
-        /** @var Usuario[] $usuarios */
-        $usuarios = $query->getQuery()->getResult();
+        /** @var Reporte[] $reportes */
+        $reportes = $query->getQuery()->getResult();
 
-        foreach ($usuarios as $usuario) {
+        foreach ($reportes as $reporte) {
             $results->data[] = [
-                $usuario->getNombre(),
-                $usuario->getNombreUsuario(),
-                $usuario->getCorreo(),
-                $usuario->getIsActive() ? 'Activo' : 'Inactivo',
-                $usuario->getId(),
+                $reporte->getCreatedAt()->format('d M y H:i:s'),
+                '$' . number_format(($reporte->getAdeudo() / 100), 2),
+                '$' . number_format(($reporte->getAbono() / 100), 2),
+                $reporte->getConcepto()
             ];
         }
 

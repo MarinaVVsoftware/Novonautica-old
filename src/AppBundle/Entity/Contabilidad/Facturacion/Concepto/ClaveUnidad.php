@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Contabilidad\Facturacion\Concepto;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * ClaveUnidad
@@ -24,12 +25,16 @@ class ClaveUnidad
     /**
      * @var string
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="clave_unidad", type="string", length=20)
      */
     private $claveUnidad;
 
     /**
      * @var string
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="nombre", type="string", length=255)
      */
