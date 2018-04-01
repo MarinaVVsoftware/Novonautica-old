@@ -301,10 +301,12 @@ class AstilleroCotizaServicio
 
     /**
      * @param int $precio
+     * @return AstilleroCotizaServicio
      */
     public function setPrecio($precio)
     {
         $this->precio = $precio;
+        return $this;
     }
 
     /**
@@ -317,10 +319,12 @@ class AstilleroCotizaServicio
 
     /**
      * @param int $subtotal
+     * @return AstilleroCotizaServicio
      */
     public function setSubtotal($subtotal)
     {
         $this->subtotal = $subtotal;
+        return $this;
     }
 
     /**
@@ -333,10 +337,12 @@ class AstilleroCotizaServicio
 
     /**
      * @param int $iva
+     * @return AstilleroCotizaServicio
      */
     public function setIva($iva)
     {
         $this->iva = $iva;
+        return $this;
     }
 
     /**
@@ -349,9 +355,12 @@ class AstilleroCotizaServicio
 
     /**
      * @param int $total
+     * @return AstilleroCotizaServicio
      */
     public function setTotal($total)
     {
         $this->total = $total;
+        return $this;
     }
+
 }

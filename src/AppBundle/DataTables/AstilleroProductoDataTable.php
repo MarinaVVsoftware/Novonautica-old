@@ -72,7 +72,7 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
 
             $results->data[] = [
                 $producto->getNombre(),
-                '$' . number_format($producto->getPrecio() / 100, 2),
+                '$' . number_format($producto->getPrecio() / 100, 2).' USD',
                 $producto->getUnidad(),
                 $producto->getDescripcion(),
                 $producto->getId()

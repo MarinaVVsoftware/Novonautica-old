@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Astilleroserviciobasico</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ astilleroServicioBasico.id }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ astilleroServicioBasico.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Precio</th>
+                <td>{{ astilleroServicioBasico.precio }}</td>
+            </tr>
+            <tr>
+                <th>Divisa</th>
+                <td>{{ astilleroServicioBasico.divisa }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('astillero_servicio-basico_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('astillero_servicio-basico_edit', { 'id': astilleroServicioBasico.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

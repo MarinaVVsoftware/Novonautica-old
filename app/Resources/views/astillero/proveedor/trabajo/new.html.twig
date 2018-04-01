@@ -1,0 +1,34 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block contwrapper %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="panel panel-novo">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h3 class="panel-title">{{ title }}</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <a class="btn btn-contorno-azul pull-right"
+                           href="{{ path('astillero_proveedor_trabajo_index') }}">Regresar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        {{ form_start(form) }}
+                        {{ form_widget(form) }}
+                        <button type="submit" value="Create" class="btn btn-azul">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                            Guardar
+                        </button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -115,62 +115,22 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-3 col-sm-offset-1">
-                                    <label>Precio x pie (MXN)</label>
-                                    {% if form.acservicios.0.precio is defined %}
-                                        {{ form_widget(form.acservicios.0.precio) }}
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="row espacio-linea">
-                                <div class="col-sm-7">
-                                    <hr>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6 col-sm-offset-1">
-                                    <label class="tipo-letra1">Estadía</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-1">
-
-                                </div>
-                                <div class="col-sm-3">
-                                    <label>Precio x pie x día (MXN)</label>
-                                    {% if form.acservicios.1.precio is defined %}
-                                        {{ form_widget(form.acservicios.1.precio) }}
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="row espacio-linea">
-                                <div class="col-sm-7">
-                                    <hr>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6 col-sm-offset-1">
-                                    <label class="tipo-letra1">Uso de rampa (precio)</label>
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-sm-1">
                                     <div class="input-estatus">
                                         <span class="cont-label-novo">
-                                             {% if form.acservicios.2.estatus is defined %}
-                                                 {{ form_errors(form.acservicios.2.estatus) }}
-                                                 {{ form_widget(form.acservicios.2.estatus) }}
-                                                 {{ form_label(form.acservicios.2.estatus) }}
+                                             {% if form.acservicios.0.estatus is defined %}
+                                                 {{ form_errors(form.acservicios.0.estatus) }}
+                                                 {{ form_widget(form.acservicios.0.estatus) }}
+                                                 {{ form_label(form.acservicios.0.estatus) }}
                                              {% endif %}
                                          </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label>Precio (MXN)</label>
-                                    {% if form.acservicios.2.precio is defined %}
-                                        {{ form_widget(form.acservicios.2.precio) }}
+                                    <label>Precio x pie (MXN)</label>
+                                    {% if form.acservicios.0.precio is defined %}
+                                        {{ form_widget(form.acservicios.0.precio) }}
                                     {% endif %}
-
                                 </div>
                             </div>
                             <div class="row espacio-linea">
@@ -196,12 +156,148 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
+                                    <label>Cantidad</label>
+                                    {% if form.acservicios.3.cantidad is defined %}
+                                        {{ form_widget(form.acservicios.3.cantidad) }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-3">
                                     <label>Precio (MXN)</label>
                                     {% if form.acservicios.3.precio is defined %}
                                         {{ form_widget(form.acservicios.3.precio) }}
                                     {% endif %}
                                 </div>
                             </div>
+                            <div class="row espacio-linea">
+                                <div class="col-sm-7">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Conexión a electricidad</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <div class="input-estatus">
+                                        <span class="cont-label-novo">
+                                             {% if form.acservicios.5.estatus is defined %}
+                                                 {{ form_errors(form.acservicios.5.estatus) }}
+                                                 {{ form_widget(form.acservicios.5.estatus) }}
+                                                 {{ form_label(form.acservicios.5.estatus) }}
+                                             {% endif %}
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Precio x día (MXN)</label>
+                                    {% if form.acservicios.5.precio is defined %}
+                                        {{ form_widget(form.acservicios.5.precio) }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row espacio-linea">
+                                <div class="col-sm-7">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Estadía</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <div class="input-estatus">
+                                        <span class="cont-label-novo">
+                                             {% if form.acservicios.1.estatus is defined %}
+                                                 {{ form_errors(form.acservicios.1.estatus) }}
+                                                 {{ form_widget(form.acservicios.1.estatus) }}
+                                                 {{ form_label(form.acservicios.1.estatus) }}
+                                             {% endif %}
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Precio x pie x día (USD)</label>
+                                    {% if form.acservicios.1.precio is defined %}
+                                        {{ form_widget(form.acservicios.1.precio) }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row espacio-linea">
+                                <div class="col-sm-7">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Limpieza de locación</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <div class="input-estatus">
+                                        <span class="cont-label-novo">
+                                             {% if form.acservicios.6.estatus is defined %}
+                                                 {{ form_errors(form.acservicios.6.estatus) }}
+                                                 {{ form_widget(form.acservicios.6.estatus) }}
+                                                 {{ form_label(form.acservicios.6.estatus) }}
+                                             {% endif %}
+                                         </span>
+                                    </div>
+                                </div> <div class="col-sm-3">
+                                    <label>Cantidad</label>
+                                    {% if form.acservicios.6.cantidad is defined %}
+                                        {{ form_widget(form.acservicios.6.cantidad) }}
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <label>Precio (MXN)</label>
+                                    {% if form.acservicios.6.precio is defined %}
+                                        {{ form_widget(form.acservicios.6.precio) }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row espacio-linea">
+                                <div class="col-sm-7">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Uso de rampa</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <div class="input-estatus">
+                                        <span class="cont-label-novo">
+                                             {% if form.acservicios.2.estatus is defined %}
+                                                 {{ form_errors(form.acservicios.2.estatus) }}
+                                                 {{ form_widget(form.acservicios.2.estatus) }}
+                                                 {{ form_label(form.acservicios.2.estatus) }}
+                                             {% endif %}
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Cantidad</label>
+                                    {% if form.acservicios.2.cantidad is defined %}
+                                        {{ form_widget(form.acservicios.2.cantidad) }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Precio (MXN)</label>
+                                    {% if form.acservicios.2.precio is defined %}
+                                        {{ form_widget(form.acservicios.2.precio) }}
+                                    {% endif %}
+
+                                </div>
+                            </div>
+
                             <div class="row espacio-linea">
                                 <div class="col-sm-7">
                                     <hr>
@@ -225,12 +321,55 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
+                                    <label>Cantidad</label>
+                                    {% if form.acservicios.4.cantidad is defined %}
+                                        {{ form_widget(form.acservicios.4.cantidad) }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-3">
                                     <label>Precio (MXN)</label>
                                     {% if form.acservicios.4.precio is defined %}
                                         {{ form_widget(form.acservicios.4.precio) }}
                                     {% endif %}
                                 </div>
                             </div>
+
+                            <div class="row espacio-linea">
+                                <div class="col-sm-7">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Sacar para inspeccionar</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <div class="input-estatus">
+                                        <span class="cont-label-novo">
+                                             {% if form.acservicios.7.estatus is defined %}
+                                                 {{ form_errors(form.acservicios.7.estatus) }}
+                                                 {{ form_widget(form.acservicios.7.estatus) }}
+                                                 {{ form_label(form.acservicios.7.estatus) }}
+                                             {% endif %}
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Cantidad</label>
+                                    {% if form.acservicios.7.cantidad is defined %}
+                                        {{ form_widget(form.acservicios.7.cantidad) }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Precio (MXN)</label>
+                                    {% if form.acservicios.7.precio is defined %}
+                                        {{ form_widget(form.acservicios.7.precio) }}
+                                    {% endif %}
+                                </div>
+                            </div>
+
                         </div>
                         <div role="tabpanel" class="tab-pane" id="total">
                             <div class="row">
@@ -266,49 +405,132 @@
                                                         {#{{ form_widget(form.acservicios.vars.prototype) }}#}
                                                     {% endfilter %}"
                                         >
-                                        <tr id="fila_grua" class="servicio-agregado">
+                                        <tr id="fila_grua" class="hidden servicio-agregado" data-id="fila_grua_mxn">
                                             <td id="grua_cantidad" class="valorcantidad" data-valor="0">0</td>
                                             <td>Sacar varada y boradura</td>
-                                            <td id="grua_precio" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td id="grua_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[0].precio/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[0].precio/100)|number_format(2) }}
+                                            </td>
                                             <td id="grua_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
                                             <td id="grua_iva" class="valoriva" data-valor="0">$ 0.00</td>
                                             <td id="grua_total" class="valortotal" data-valor="0">$ 0.00</td>
                                             <td></td>
                                         </tr>
-                                        <tr id="fila_estadia" class="servicio-agregado">
+                                        <tr id="cotizakarcher" class="hidden servicio-agregado" data-id="cotizakarcher_mxn">
+                                            <td id="karcher_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[3].cantidad }}">
+                                                {{ astilleroCotizacion.acservicios[3].cantidad }}
+                                            </td>
+                                            <td>Uso de karcher</td>
+                                            <td id="karcher_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[3].precio/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[3].precio/100)|number_format(2) }}
+                                            </td>
+                                            <td id="karcher_subtotal" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[3].subtotal/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[3].subtotal/100)|number_format(2) }}
+                                            </td>
+                                            <td id="karcher_iva" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[3].iva/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[3].iva/100)|number_format(2) }}
+                                            </td>
+                                            <td id="karcher_total" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[3].total/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[3].total/100)|number_format(2) }}
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr id="cotizaelectricidad" class="hidden servicio-agregado" data-id="cotizaelectricidad_mxn">
+                                            <td id="electricidad_cantidad" class="valorcantidad" data-valor="0">0</td>
+                                            <td>Conexión a electricidad</td>
+                                            <td id="electricidad_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[5].precio/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[5].precio/100)|number_format(2) }}
+                                            </td>
+                                            <td id="electricidad_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
+                                            <td id="electricidad_iva" class="valoriva" data-valor="0">$ 0.00</td>
+                                            <td id="electricidad_total" class="valortotal" data-valor="0">$ 0.00</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr id="fila_estadia" class="hidden servicio-agregado" data-id="fila_estadia_mxn">
                                             <td id="estadia_cantidad" class="valorcantidad" data-valor="0" data-dias="0" data-eslora="0">0</td>
                                             <td>Estadía</td>
-                                            <td id="estadia_precio" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td id="estadia_precio" class="valorprecio" data-valor="{{ (astilleroCotizacion.acservicios[1].precio*valdolar)/10000 }}">
+                                                ${{ ((astilleroCotizacion.acservicios[1].precio*valdolar)/10000)|number_format(2) }}
+                                            </td>
                                             <td id="estadia_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
                                             <td id="estadia_iva" class="valoriva" data-valor="0">$ 0.00</td>
                                             <td id="estadia_total" class="valortotal" data-valor="0">$ 0.00</td>
                                             <td></td>
                                         </tr>
-                                        <tr id="cotizarampa" class="hidden servicio-agregado">
-                                            <td class="valorcantidad" data-valor="1">1</td>
+                                        <tr id="cotizalimpieza" class="hidden servicio-agregado" data-id="cotizalimpieza_mxn">
+                                            <td id="limpieza_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[6].cantidad }}">
+                                                {{ astilleroCotizacion.acservicios[6].cantidad }}
+                                            </td>
+                                            <td>Limpieza de locación</td>
+                                            <td id="limpieza_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[6].precio/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[6].precio/100)|number_format(2) }}
+                                            </td>
+                                            <td id="limpieza_subtotal" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[6].subtotal/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[6].subtotal/100)|number_format(2) }}
+                                            </td>
+                                            <td id="limpieza_iva" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[6].iva/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[6].iva/100)|number_format(2) }}
+                                            </td>
+                                            <td id="limpieza_total" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[6].total/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[6].total/100)|number_format(2) }}
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr id="cotizarampa" class="hidden servicio-agregado" data-id="cotizarampa_mxn">
+                                            <td id="rampa_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[2].cantidad }}">
+                                                {{ astilleroCotizacion.acservicios[2].cantidad }}
+                                            </td>
                                             <td>Uso de rampa</td>
-                                            <td id="rampa_precio" class="valorprecio" data-valor="0">$ 0.00</td>
-                                            <td id="rampa_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
-                                            <td id="rampa_iva" class="valoriva" data-valor="0">$ 0.00</td>
-                                            <td id="rampa_total" class="valortotal" data-valor="0">$ 0.00</td>
+                                            <td id="rampa_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[2].precio/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[2].precio/100)|number_format(2) }}
+                                            </td>
+                                            <td id="rampa_subtotal" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[2].subtotal/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[2].subtotal/100)|number_format(2) }}
+                                            </td>
+                                            <td id="rampa_iva" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[2].iva/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[2].iva/100)|number_format(2) }}
+                                            </td>
+                                            <td id="rampa_total" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[2].total/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[2].total/100)|number_format(2) }}
+                                            </td>
                                             <td></td>
                                         </tr>
-                                        <tr id="cotizakarcher" class="hidden servicio-agregado">
-                                            <td class="valorcantidad" data-valor="1">1</td>
-                                            <td>Uso de karcher</td>
-                                            <td id="karcher_precio" class="valorprecio" data-valor="0">$ 0.00</td>
-                                            <td id="karcher_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
-                                            <td id="karcher_iva" class="valoriva" data-valor="0">$ 0.00</td>
-                                            <td id="karcher_total" class="valortotal" data-valor="0">$ 0.00</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr id="cotizaexplanada" class="hidden servicio-agregado">
-                                            <td class="valorcantidad" data-valor="1">1</td>
+                                        <tr id="cotizaexplanada" class="hidden servicio-agregado" data-id="cotizaexplanada_mxn">
+                                            <td id="explanada_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[4].cantidad }}">
+                                                {{ astilleroCotizacion.acservicios[4].cantidad }}
+                                            </td>
                                             <td>Uso de explanada</td>
-                                            <td id="explanada_precio" class="valorprecio" data-valor="0">$ 0.00</td>
-                                            <td id="explanada_subtotal" class="valorsubtotal" data-valor="0">$ 0.00</td>
-                                            <td id="explanada_iva" class="valoriva" data-valor="0">$ 0.00</td>
-                                            <td id="explanada_total" class="valortotal" data-valor="0">$ 0.00</td>
+                                            <td id="explanada_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[4].precio/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[4].precio/100)|number_format(2) }}
+                                            </td>
+                                            <td id="explanada_subtotal" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[4].subtotal/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[4].subtotal/100)|number_format(2) }}
+                                            </td>
+                                            <td id="explanada_iva" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[4].iva/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[4].iva/100)|number_format(2) }}
+                                            </td>
+                                            <td id="explanada_total" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[4].total/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[4].total/100)|number_format(2) }}
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr id="cotizainspeccionar" class="hidden servicio-agregado" data-id="cotizainspeccionar_mxn">
+                                            <td id="inspeccionar_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[7].cantidad }}">
+                                                {{ astilleroCotizacion.acservicios[7].cantidad }}
+                                            </td>
+                                            <td>Sacar para inspeccionar</td>
+                                            <td id="inspeccionar_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[7].precio/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[7].precio/100)|number_format(2) }}
+                                            </td>
+                                            <td id="inspeccionar_subtotal" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[7].subtotal/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[7].subtotal/100)|number_format(2) }}
+                                            </td>
+                                            <td id="inspeccionar_iva" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[7].iva/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[7].iva/100)|number_format(2) }}
+                                            </td>
+                                            <td id="inspeccionar_total" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[7].total/100 }}">
+                                                ${{ (astilleroCotizacion.acservicios[7].total/100)|number_format(2) }}
+                                            </td>
                                             <td></td>
                                         </tr>
                                         </tbody>
@@ -414,45 +636,125 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr id="fila_grua_mxn" class="servicio-agregado">
+                                        <tr id="fila_grua_mxn" class="hidden servicio-agregado">
                                             <td id="grua_cantidad_mxn" class="valorcantidad" data-valor="0">0</td>
                                             <td>Sacar varada y botadura</td>
-                                            <td id="grua_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td id="grua_precio_mxn" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[0].precio/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[0].precio/valdolar)|number_format(2) }}
+                                            </td>
                                             <td id="grua_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
                                             <td id="grua_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
                                             <td id="grua_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
                                         </tr>
-                                        <tr id="fila_estadia_mxn" class="servicio-agregado">
+                                        <tr id="cotizakarcher_mxn" class="hidden servicio-agregado">
+                                            <td id="karcher_cantidad_mxn" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[3].cantidad }}">
+                                                {{ astilleroCotizacion.acservicios[3].cantidad }}
+                                            </td>
+                                            <td>Uso de karcher</td>
+                                            <td id="karcher_precio_mxn" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[3].precio/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[3].precio/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="karcher_subtotal_mxn" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[3].subtotal/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[3].subtotal/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="karcher_iva_mxn" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[3].iva/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[3].iva/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="karcher_total_mxn" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[3].total/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[3].total/valdolar)|number_format(2) }}
+                                            </td>
+                                        </tr>
+                                        <tr id="cotizaelectricidad_mxn" class="hidden servicio-agregado">
+                                            <td id="electricidad_cantidad_mxn" class="valorcantidad" data-valor="0">0</td>
+                                            <td>Conexión a electricidad</td>
+                                            <td id="electricidad_precio_mxn" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[5].precio/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[5].precio/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="electricidad_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
+                                            <td id="electricidad_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
+                                            <td id="electricidad_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
+                                        </tr>
+                                        <tr id="fila_estadia_mxn" class="hidden servicio-agregado">
                                             <td id="estadia_cantidad_mxn" class="valorcantidad" data-valor="0" data-dias="0" data-eslora="0">0</td>
-                                            <td>Uso de suelo</td>
-                                            <td id="estadia_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>
+                                            <td>Estadía</td>
+                                            <td id="estadia_precio_mxn" class="valorprecio" data-valor="{{ (astilleroCotizacion.acservicios[1].precio)/100 }}">
+                                                ${{ ((astilleroCotizacion.acservicios[1].precio)/100)|number_format(2) }}
+                                            </td>
                                             <td id="estadia_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
                                             <td id="estadia_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
                                             <td id="estadia_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
                                         </tr>
-                                        <tr id="cotizarampa_mxn" class="hidden servicio-agregado">
-                                            <td class="valorcantidad" data-valor="1">1</td>
-                                            <td>Uso de rampa</td>
-                                            <td id="rampa_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>
-                                            <td id="rampa_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
-                                            <td id="rampa_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
-                                            <td id="rampa_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
+                                        <tr id="cotizalimpieza_mxn" class="hidden servicio-agregado">
+                                            <td id="limpieza_cantidad_mxn" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[6].cantidad }}">
+                                                {{ astilleroCotizacion.acservicios[6].cantidad }}
+                                            </td>
+                                            <td>Limpieza de locación</td>
+                                            <td id="limpieza_precio_mxn" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[6].precio/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[6].precio/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="limpieza_subtotal_mxn" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[6].subtotal/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[6].subtotal/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="limpieza_iva_mxn" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[6].iva/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[6].iva/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="limpieza_total_mxn" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[6].total/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[6].total/valdolar)|number_format(2) }}
+                                            </td>
                                         </tr>
-                                        <tr id="cotizakarcher_mxn" class="hidden servicio-agregado">
-                                            <td class="valorcantidad" data-valor="1">1</td>
-                                            <td>Uso de karcher</td>
-                                            <td id="karcher_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>
-                                            <td id="karcher_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
-                                            <td id="karcher_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
-                                            <td id="karcher_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
+                                        <tr id="cotizarampa_mxn" class="hidden servicio-agregado">
+                                            <td id="rampa_cantidad_mxn" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[2].cantidad }}">
+                                                {{ astilleroCotizacion.acservicios[2].cantidad }}
+                                            </td>
+                                            <td>Uso de rampa</td>
+                                            <td id="rampa_precio_mxn" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[2].precio/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[2].precio/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="rampa_subtotal_mxn" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[2].subtotal/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[2].subtotal/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="rampa_iva_mxn" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[2].iva/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[2].iva/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="rampa_total_mxn" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[2].total/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[2].total/valdolar)|number_format(2) }}
+                                            </td>
                                         </tr>
                                         <tr id="cotizaexplanada_mxn" class="hidden servicio-agregado">
-                                            <td class="valorcantidad" data-valor="1">1</td>
+                                            <td id="explanada_cantidad_mxn" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[4].cantidad }}">
+                                                {{ astilleroCotizacion.acservicios[4].cantidad }}
+                                            </td>
                                             <td>Uso de explanada</td>
-                                            <td id="explanada_precio_mxn" class="valorprecio" data-valor="0">$ 0.00</td>
-                                            <td id="explanada_subtotal_mxn" class="valorsubtotal" data-valor="0">$ 0.00</td>
-                                            <td id="explanada_iva_mxn" class="valoriva" data-valor="0">$ 0.00</td>
-                                            <td id="explanada_total_mxn" class="valortotal" data-valor="0">$ 0.00</td>
+                                            <td id="explanada_precio_mxn" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[4].precio/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[4].precio/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="explanada_subtotal_mxn" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[4].subtotal/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[4].subtotal/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="explanada_iva_mxn" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[4].iva/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[4].iva/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="explanada_total_mxn" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[4].total/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[4].total/valdolar)|number_format(2) }}
+                                            </td>
+                                        </tr>
+                                        <tr id="cotizainspeccionar_mxn" class="hidden servicio-agregado">
+                                            <td id="inspeccionar_cantidad_mxn" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[7].cantidad }}">
+                                                {{ astilleroCotizacion.acservicios[7].cantidad }}
+                                            </td>
+                                            <td>Sacar para inspeccionar</td>
+                                            <td id="inspeccionar_precio_mxn" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[7].precio/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[7].precio/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="inspeccionar_subtotal_mxn" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[7].subtotal/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[7].subtotal/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="inspeccionar_iva_mxn" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[7].iva/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[7].iva/valdolar)|number_format(2) }}
+                                            </td>
+                                            <td id="inspeccionar_total_mxn" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[7].total/valdolar }}">
+                                                ${{ (astilleroCotizacion.acservicios[7].total/valdolar)|number_format(2) }}
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -519,41 +821,33 @@
                                     {{ form_row(form.mensaje) }}
                                 </div>
                             </div>
+                            <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
+                                <div class="col-sm-12">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-azul">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
-                        <div class="col-sm-12">
-                            <hr>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <button type="submit" class="btn btn-azul">
-                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                Guardar
-                            </button>
-                        </div>
-                    </div>
-                    {% if form.acservicios.0.estatus is defined %}
-                        {{ form_widget(form.acservicios.0.estatus,{'attr':{'class':'hidden'}}) }}
-                    {% endif %}
-                    {% if form.acservicios.1.estatus is defined %}
-                        {{ form_widget(form.acservicios.1.estatus,{'attr':{'class':'hidden'}}) }}
-                    {% endif %}
+
+
                     {% if form.acservicios.0.cantidad is defined %}
                         {{ form_widget(form.acservicios.0.cantidad,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
                     {% if form.acservicios.1.cantidad is defined %}
                         {{ form_widget(form.acservicios.1.cantidad,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-                    {% if form.acservicios.2.cantidad is defined %}
-                        {{ form_widget(form.acservicios.2.cantidad,{'attr':{'class':'hidden'}}) }}
-                    {% endif %}
-                    {% if form.acservicios.3.cantidad is defined %}
-                        {{ form_widget(form.acservicios.3.cantidad,{'attr':{'class':'hidden'}}) }}
-                    {% endif %}
-                    {% if form.acservicios.4.cantidad is defined %}
-                        {{ form_widget(form.acservicios.4.cantidad,{'attr':{'class':'hidden'}}) }}
+
+
+                    {% if form.acservicios.5.cantidad is defined %}
+                        {{ form_widget(form.acservicios.5.cantidad,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
 
                     {% if form.acservicios.0.otroservicio is defined %}
@@ -571,6 +865,15 @@
                     {% if form.acservicios.4.otroservicio is defined %}
                         {{ form_widget(form.acservicios.4.otroservicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
+                    {% if form.acservicios.5.otroservicio is defined %}
+                        {{ form_widget(form.acservicios.5.otroservicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.6.otroservicio is defined %}
+                        {{ form_widget(form.acservicios.6.otroservicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.7.otroservicio is defined %}
+                        {{ form_widget(form.acservicios.7.otroservicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
 
                     {% if form.acservicios.0.producto is defined %}
                         {{ form_widget(form.acservicios.0.producto,{'attr':{'class':'hidden'}}) }}
@@ -587,6 +890,15 @@
                     {% if form.acservicios.4.producto is defined %}
                         {{ form_widget(form.acservicios.4.producto,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
+                    {% if form.acservicios.5.producto is defined %}
+                        {{ form_widget(form.acservicios.5.producto,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.6.producto is defined %}
+                        {{ form_widget(form.acservicios.6.producto,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.7.producto is defined %}
+                        {{ form_widget(form.acservicios.7.producto,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
 
                     {% if form.acservicios.0.servicio is defined %}
                         {{ form_widget(form.acservicios.0.servicio,{'attr':{'class':'hidden'}}) }}
@@ -602,6 +914,15 @@
                     {% endif %}
                     {% if form.acservicios.4.servicio is defined %}
                         {{ form_widget(form.acservicios.4.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.5.servicio is defined %}
+                        {{ form_widget(form.acservicios.5.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.6.servicio is defined %}
+                        {{ form_widget(form.acservicios.6.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.7.servicio is defined %}
+                        {{ form_widget(form.acservicios.7.servicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
 
                     {{ form_end(form) }}
