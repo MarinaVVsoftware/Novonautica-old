@@ -1127,7 +1127,6 @@ class AstilleroCotizacionController extends Controller
             ->setFrom('noresponder@novonautica.com')
             ->setTo($astilleroCotizacion->getBarco()->getCliente()->getCorreo())
             ->setBcc('admin@novonautica.com')
-            ->setCc([$astilleroCotizacion->getBarco()->getCorreoCapitan(),$astilleroCotizacion->getBarco()->getCorreoResponsable()])
             ->setBody(
                 $this->renderView('astillero/cotizacion/correo-clientevalida.twig', [
                         'astilleroCotizacion' => $astilleroCotizacion,
@@ -1139,6 +1138,14 @@ class AstilleroCotizacionController extends Controller
             )
             ->attach($attachment)
             ->attach($attachmentMXN);
+
+        if ($astilleroCotizacion->getBarco()->getCorreoCapitan()) {
+            $message->addCc($astilleroCotizacion->getBarco()->getCorreoCapitan());
+        }
+
+        if ($astilleroCotizacion->getBarco()->getCorreoResponsable()) {
+            $message->addCc($astilleroCotizacion->getBarco()->getCorreoResponsable());
+        }
 
         $mailer->send($message);
 

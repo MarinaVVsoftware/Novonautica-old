@@ -98,6 +98,8 @@ class DefaultController extends Controller
      * @param $token
      *
      * @return Response
+     *
+     * @throws \Exception
      */
     public function repuestaClienteAction(Request $request, $token)
     {
