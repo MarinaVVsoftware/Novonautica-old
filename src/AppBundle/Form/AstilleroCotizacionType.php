@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 //use Doctrine\DBAL\Types\DateType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -79,7 +80,10 @@ class AstilleroCotizacionType extends AbstractType
                 'attr' => ['prototype2' => ' '],
                 'by_reference' => false
             ])
-
+            ->add('notificarCliente', CheckboxType::class, [
+                'label' => '¿Notificar al cliente?',
+                'required' => false
+            ])
         ;
 //        $formModifier = function (FormInterface $form, Cliente $cliente = null) {
 //            $barcos = null === $cliente ? array() : $cliente->getBarcos();

@@ -127,9 +127,10 @@
           return `
           <td>
             <ul class="list-unstyled">
-              <li><a class="${btnClass}morado-claro" href="{{ app.request.requestUri ~ '${item.id}' }}">Detalle</a></li>
+              <li><a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.requestUri ~ '${item.id}' }}">Detalle</a></li>
               {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
               ${validacion === 0 ? `<li><a class="${btnClass}azul" href="{{ app.request.requestUri ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
+              ${(validacion === 2 && aceptacion === 0) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '${item.id}/validar' }}">Aceptar</a></li>` : ''}
               {% endif %}
               {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_REQUOTE") or (user.isAdmin())')) %}
               ${(validacion === 1 || aceptacion === 1) && item.estatus ? `<li><a class="${btnClass}naranja" href="{{ app.request.requestUri ~ '${item.id}/recotizar' }}">Recotizar</a></li>` : ''}

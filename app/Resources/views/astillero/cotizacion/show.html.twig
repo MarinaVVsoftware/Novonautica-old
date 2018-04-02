@@ -498,6 +498,19 @@
                             </div>
                         </div>
                     {% endif %}
+                    {% if astilleroCotizacion.validanovo == 2 and astilleroCotizacion.validacliente == 0 and
+                        is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") or (user.isAdmin())'))
+                    %}
+                        <div class="row espacio-linea-arriba2">
+                            <div class="col-sm-12">
+                                <a class="btn btn-azul pull-right"
+                                   href="{{ path('astillero_validar', { 'id': astilleroCotizacion.id }) }}">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    Aceptar Cliente
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
                     {% if (astilleroCotizacion.validanovo == 1 or
                         astilleroCotizacion.validacliente == 1) and
                         astilleroCotizacion.estatus == 1 and

@@ -46,6 +46,13 @@ class AstilleroServicioBasico
     private $divisa;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="orden", type="integer")
+     */
+    private $orden;
+
+    /**
      * Get id
      *
      * @return int
@@ -125,5 +132,21 @@ class AstilleroServicioBasico
     public function getDivisa()
     {
         return $this->divisa;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param int $orden
+     */
+    public function setOrden($orden)
+    {
+        $this->orden = $orden;
     }
 }

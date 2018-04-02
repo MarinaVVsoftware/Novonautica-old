@@ -121,6 +121,13 @@ $(document).ready(function () {
     $("#appbundle_astillerocotizacion_validanovo_1").click(function () {
         $('#notarechazado').show();
     });
+    $("#appbundle_astillerocotizacion_validacliente_0").click(function () {
+        $('#notarechazado').hide();
+    });
+    $("#appbundle_astillerocotizacion_validacliente_1").click(function () {
+        $('#notarechazado').show();
+    });
+
     // $(".limite100").keypress(function () {
     //     if(parseFloat($(this).val())<=100){
     //         return true;
