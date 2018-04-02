@@ -6,6 +6,7 @@ use AppBundle\Entity\Correo;
 use AppBundle\Entity\CotizacionNota;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
+use AppBundle\Entity\MarinaHumedaSolicitudGasolina;
 use AppBundle\Entity\MonederoMovimiento;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Form\CotizacionNotaType;
@@ -232,6 +233,7 @@ class MarinaHumedaCotizacionController extends Controller
      */
     public function newGasolinaAction(Request $request)
     {
+
         $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
 
         // Bloquear acceso si no puede crear cotizaciones
@@ -243,13 +245,32 @@ class MarinaHumedaCotizacionController extends Controller
         $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
         $sistema = $query->getArrayResult();
 
+        $marinaGasolina->setCantidad(0);
         $dolarBase = $sistema[0]['dolar'];
         $iva = $sistema[0]['iva'];
         $mensaje = $sistema[0]['mensajeCorreoMarinaGasolina'];
 
+        $barcoid = $request->query->get('id');
+        if ($barcoid !== null){
+        $solicitud = $em->getRepository('AppBundle:MarinaHumedaSolicitudGasolina')->find($barcoid);
+        $cliente = $solicitud->getCliente();
+        $barco = $solicitud->getIdbarco();
+        $cantidadgasolina = $solicitud->getCantidadCombustible();
+        $tipogasolina = $solicitud->getTipoCombustible();
+
+        $marinaGasolina
+            ->setTipo($tipogasolina)
+            ->setCantidad($cantidadgasolina)
+        ;
+        $marinaHumedaCotizacion
+            ->setBarco($barco)
+            ->setCliente($cliente)
+        ;
+        }
         $marinaHumedaCotizacion
             ->addMarinaHumedaCotizaServicios($marinaGasolina)
-            ->setMensaje($mensaje);
+            ->setMensaje($mensaje)
+        ;
         $form = $this->createForm(MarinaHumedaCotizacionGasolinaType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
 

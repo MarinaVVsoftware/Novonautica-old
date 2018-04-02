@@ -565,6 +565,8 @@ elclientemh.change(function () {
     }
   });
 });
+
+
 //--- fin select dependiente para marina humeda cotización ---
 
 //--- select dependiente para marina humeda cotización adicional ---
@@ -949,6 +951,12 @@ $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').keyup(function ()
   gasolinaCalculaSubtotales();
   gasolinaCalculaSubtotalesMxn();
 });
+var cantidadmhc = $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').val();
+$('#g_cantidad').data('valor', cantidadmhc);
+$('#g_cantidad').html(cantidadmhc);
+$('#g_cantidad_mxn').data('valor', cantidadmhc);
+$('#g_cantidad_mxn').html(cantidadmhc);
+
 $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').keyup(function () {
   var iva = $('#valiva').data('valor');
   var dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
