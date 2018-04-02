@@ -65,7 +65,7 @@ class AstilleroCotizacionController extends Controller
      *
      * @return RedirectResponse|Response
      */
-    public function newAction(Request $request) //cantidades se guardan en pesos
+    public function newAction(Request $request)
     {
         $astilleroCotizacion = new AstilleroCotizacion();
 
@@ -110,12 +110,12 @@ class AstilleroCotizacionController extends Controller
 
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
-            ->addAcservicio($astilleroEstadia)
-            ->addAcservicio($astilleroRampa)
             ->addAcservicio($astilleroKarcher)
-            ->addAcservicio($astilleroExplanada)
             ->addAcservicio($astilleroElectricidad)
+            ->addAcservicio($astilleroEstadia)
             ->addAcservicio($astilleroLimpieza)
+            ->addAcservicio($astilleroRampa)
+            ->addAcservicio($astilleroExplanada)
             ->addAcservicio($astilleroInspeccionar)
           ;
 
@@ -507,12 +507,12 @@ class AstilleroCotizacionController extends Controller
             'header-html' => utf8_decode($header),
         ];
 
-        return new PdfResponse(
+        /*return new PdfResponse(
             $hojapdf->getOutputFromHtml($html, $options),
             'Cotizacion-' . $ac->getFolio() . '-' . $ac->getFoliorecotiza() . '.pdf',
             'application/pdf',
             'inline'
-        );
+        );*/
 
         return $this->render('astillero/cotizacion/pdf/cotizacionpdf.html.twig', ['astilleroCotizacion' => $ac]);
     }
