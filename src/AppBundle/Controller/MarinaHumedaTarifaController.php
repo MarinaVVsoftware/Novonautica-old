@@ -129,12 +129,12 @@ class MarinaHumedaTarifaController extends Controller
      *
      * @param MarinaHumedaTarifa $marinaHumedaTarifa The marinaHumedaTarifa entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
      */
     private function createDeleteForm(MarinaHumedaTarifa $marinaHumedaTarifa)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('marinahumeda-tarifas_delete', array('id' => $marinaHumedaTarifa->getId())))
+            ->setAction($this->generateUrl('marinahumeda-tarifas_delete', ['id' => $marinaHumedaTarifa->getId()]))
             ->setMethod('DELETE')
             ->getForm()
         ;

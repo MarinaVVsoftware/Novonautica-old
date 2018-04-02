@@ -3,12 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\AstilleroCotizacion;
-use AppBundle\Entity\CuentaBancaria;
 use AppBundle\Entity\AstilleroCotizaServicio;
 use AppBundle\Entity\AstilleroServicioBasico;
 use AppBundle\Entity\Correo;
-use AppBundle\Form\AstilleroCotizacionAceptadaType;
-use AppBundle\Form\AstilleroCotizacionRechazadaType;
 use AppBundle\Form\AstilleroCotizacionType;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,10 +22,6 @@ use AppBundle\Entity\ValorSistema;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * Astillerocotizacion controller.
@@ -491,14 +484,12 @@ class AstilleroCotizacionController extends Controller
      */
     public function displayMarinaPDF(AstilleroCotizacion $ac, $tipo)
     {
-        if($tipo == 1){ //dolares
+        if ($tipo == 1) { //dolares
             $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
-                'title' => 'Cotizacion-0.pdf',
                 'astilleroCotizacion' => $ac
             ]);
-        }else{ //pesos
+        } else { //pesos
             $html = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
-                'title' => 'Cotizacion-0.pdf',
                 'astilleroCotizacion' => $ac
             ]);
         }
@@ -506,22 +497,24 @@ class AstilleroCotizacionController extends Controller
         $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
             'astilleroCotizacion' => $ac
         ]);
-        $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig', [
-            'astilleroCotizacion' => $ac
-        ]);
+
         $hojapdf = $this->get('knp_snappy.pdf');
+
         $options = [
-            'margin-top' => 30,
+            'margin-top' => 19,
             'margin-right' => 0,
-            'margin-bottom' => 10,
             'margin-left' => 0,
             'header-html' => utf8_decode($header),
-            'footer-html' => utf8_decode($footer)
         ];
+
         return new PdfResponse(
             $hojapdf->getOutputFromHtml($html, $options),
-            'Cotizacion-'.$ac->getFolio().'-'.$ac->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
+            'Cotizacion-' . $ac->getFolio() . '-' . $ac->getFoliorecotiza() . '.pdf',
+            'application/pdf',
+            'inline'
         );
+
+        return $this->render('astillero/cotizacion/pdf/cotizacionpdf.html.twig', ['astilleroCotizacion' => $ac]);
     }
 
     /**
@@ -655,7 +648,7 @@ class AstilleroCotizacionController extends Controller
         ]);
     }
 
-    function llenarServicio($servicio,$datos,$dolar){
+    private function llenarServicio($servicio,$datos,$dolar){
         $servicio
             ->setServicio(null)
             ->setProducto(null)
