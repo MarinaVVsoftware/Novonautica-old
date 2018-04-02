@@ -55,18 +55,18 @@ class MHCGasolinaAppDataTable extends AbstractDataTableHandler
         }
 
         foreach ($request->order as $order) {
-            if ($order->column == 0) {
-                $query->addOrderBy('sg.id', $order->dir);
-            } elseif ($order->column == 1) {
+                if ($order->column == 0) {
                 $query->addOrderBy('ncliente.nombre', $order->dir);
-            } elseif ($order->column == 2) {
+            } elseif ($order->column == 1) {
                 $query->addOrderBy('nbarco.nombre', $order->dir);
-            } elseif ($order->column == 3) {
+            } elseif ($order->column == 2) {
                 $query->addOrderBy('sg.fechaPeticion', $order->dir);
-            } elseif ($order->column == 4) {
+            } elseif ($order->column == 3) {
                 $query->addOrderBy('sg.cantidadCombustible', $order->dir);
-            } elseif ($order->column == 5) {
+            } elseif ($order->column == 4) {
                 $query->addOrderBy('sg.tipo_combustible', $order->dir);
+            }elseif ($order->column == 5) {
+                $query->addOrderBy('sg.id', $order->dir);
             }
         }
 
@@ -82,12 +82,12 @@ class MHCGasolinaAppDataTable extends AbstractDataTableHandler
 
         foreach ($solicitudes as $solicitud) {
             $results->data[] = [
-                $solicitud->getId(),
                 $solicitud->getCliente()->getNombre(),
                 $solicitud->getIdbarco()->getNombre(),
                 $solicitud->getFechaPeticion()->format('d/m/Y H:i a'),
                 $solicitud->getCantidadCombustible(),
-                $solicitud->getTipoCombustible(),
+                ($solicitud->getTipoCombustible() == 3) ? "Magna" : ($solicitud->getTipoCombustible() == 4 ? "Premium" : "Diesel"),
+                $solicitud->getId()
             ];
         }
 

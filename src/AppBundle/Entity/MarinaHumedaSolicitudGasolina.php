@@ -36,9 +36,9 @@ class MarinaHumedaSolicitudGasolina
     private $fechaPeticion;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="tipo_combustible", type="string", length=255)
+     * @ORM\Column(name="tipo_combustible", type="integer")
      */
     private $tipo_combustible;
 
@@ -161,7 +161,7 @@ class MarinaHumedaSolicitudGasolina
     /**
      * Set tipoCombustible.
      *
-     * @param string $tipoCombustible
+     * @param int $tipoCombustible
      *
      * @return MarinaHumedaSolicitudGasolina
      */
@@ -175,7 +175,7 @@ class MarinaHumedaSolicitudGasolina
     /**
      * Get tipoCombustible.
      *
-     * @return string
+     * @return int
      */
     public function getTipoCombustible()
     {
