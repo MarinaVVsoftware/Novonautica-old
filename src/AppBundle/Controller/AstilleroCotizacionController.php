@@ -507,14 +507,12 @@ class AstilleroCotizacionController extends Controller
             'header-html' => utf8_decode($header),
         ];
 
-        /*return new PdfResponse(
+        return new PdfResponse(
             $hojapdf->getOutputFromHtml($html, $options),
             'Cotizacion-' . $ac->getFolio() . '-' . $ac->getFoliorecotiza() . '.pdf',
             'application/pdf',
             'inline'
-        );*/
-
-        return $this->render('astillero/cotizacion/pdf/cotizacionpdf.html.twig', ['astilleroCotizacion' => $ac]);
+        );
     }
 
     /**
