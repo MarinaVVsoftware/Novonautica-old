@@ -41,7 +41,7 @@ class AstilleroProveedorDataTable extends AbstractDataTableHandler
 
         $q = $qb->select('ap');
         if($request->search->value){
-            $q->where('(LOWER(ap.nombre) LIKE :search OR ap.razonsocial LIKE :search OR ap.porcentaje LIKE :search)')
+            $q->where('(LOWER(ap.nombre) LIKE :search OR ap.razonsocial LIKE :search OR ap.porcentaje LIKE :search OR ap.correo LIKE :search OR ap.telefono LIKE :search)')
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
         }
         foreach ($request->order as $order) {
@@ -70,6 +70,10 @@ class AstilleroProveedorDataTable extends AbstractDataTableHandler
             $results->data[] = [
                 $proveedor->getNombre(),
                 $proveedor->getRazonsocial(),
+                $proveedor->getRfc(),
+                $proveedor->getDireccionfiscal(),
+                $proveedor->getCorreo(),
+                $proveedor->getTelefono(),
                 number_format($proveedor->getPorcentaje(), 2).' %',
                 $proveedor->getTipo() == 0  ? 'Externo' : 'Interno',
                 $proveedor->getId()

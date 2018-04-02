@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Tienda;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Solicitud
@@ -16,11 +17,22 @@ class Solicitud
     /**
      * @var int
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var int
+     *
+     * @Groups({"facturacion"})*
+     *
+     * @ORM\Column(name="folio", type="integer")
+     */
+    private $folio;
 
     /**
      * @var \DateTime
@@ -35,6 +47,8 @@ class Solicitud
     private $nombrebarco;
 
     /**
+     * @Groups({"facturacion"})
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Peticion", mappedBy="solicitud", cascade={"persist"})
      */
     private $producto;
@@ -42,24 +56,35 @@ class Solicitud
     /**
      * @var string
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="solicitud_especial", type="string", length=255, nullable=true)
      */
     private $solicitudEspecial;
 
     /**
      * @var integer
+     *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="preciosolespecial", type="bigint", length=20, nullable=true)
      */
     private $preciosolespecial;
 
     /**
      * @var integer
+     *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="subtotal", type="bigint", length=20)
      */
     private $subtotal;
 
     /**
      * @var integer
+     *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="total", type="bigint", length=20)
      */
     private $total;
@@ -88,6 +113,8 @@ class Solicitud
     /**
      * @var float
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="totalusd", type="float")
      */
     private $totalusd;
@@ -107,6 +134,8 @@ class Solicitud
     private $registroPagoCompletado;
 
     /**
+     * @Groups({"facturacion"})
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Pago", mappedBy="tiendasolicitud",cascade={"persist","remove"})
      */
     private $pagos;
@@ -127,6 +156,30 @@ class Solicitud
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getPeticionAsProducto()
+    {
+        return [
+            'nombre' => $this->getSolicitudEspecial(),
+            'precio' => $this->getPreciosolespecial(),
+        ];
+    }
+
+    /**
+     * @return int
+     */
+    public function getFolio()
+    {
+        return $this->folio;
+    }
+
+    /**
+     * @param int $folio
+     */
+    public function setFolio($folio)
+    {
+        $this->folio = $folio;
     }
 
     /**
@@ -487,5 +540,24 @@ class Solicitud
     public function getTotalusd()
     {
         return $this->totalusd;
+    }
+
+    /**
+     * A falta de la relacion directa con el cliente
+     *
+     * @return \AppBundle\Entity\Cliente
+     */
+    public function getCliente()
+    {
+        return $this->getNombrebarco()->getCliente();
+    }
+    /**
+     * Funcion falsa ya que solicitudes no se recotizan
+     *
+     * @return null
+     */
+    public function getFolioRecotiza()
+    {
+        return null;
     }
 }

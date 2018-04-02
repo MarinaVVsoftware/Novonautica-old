@@ -5,12 +5,15 @@ namespace AppBundle\Controller\Tienda;
 use AppBundle\Entity\MonederoMovimiento;
 use AppBundle\Entity\Tienda\Peticion;
 use AppBundle\Entity\Tienda\Solicitud;
+use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Solicitud controller.
@@ -27,17 +30,25 @@ class SolicitudController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        return $this->render('tienda/solicitud/index.html.twig', ['title' => 'Tienda']);
+    }
 
-        $solicituds = $em->getRepository('AppBundle:Tienda\Solicitud')->findAll();
-
-
-        $productos = $em->getRepository('AppBundle:Tienda\Peticion')->findAll();
-
-        return $this->render('tienda/solicitud/index.html.twig', array(
-            'solicituds' => $solicituds,
-            'productos' => $productos
-        ));
+    /**
+     * @Route("/solicitudes", name="tienda_solicitud_index_data")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getUsuariosDataAction(Request $request, DataTablesInterface $dataTables)
+    {
+        try {
+            $results = $dataTables->handle($request, 'tienda');
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
+        }
     }
 
     /**
@@ -45,6 +56,10 @@ class SolicitudController extends Controller
      *
      * @Route("/new", name="tienda_solicitud_new")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
@@ -59,16 +74,22 @@ class SolicitudController extends Controller
         $valorsistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
         $valordolar = $valorsistema->getDolar();
 
+        $solicitud->setFolio($valorsistema->getFolioMarina());
         $solicitud->addProducto($producto);
+
         $form = $this->createForm('AppBundle\Form\Tienda\SolicitudType', $solicitud);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
             $solicitud->setValordolar($valordolar);
             $total = $solicitud->getTotal();
             $totalfinal = ($total / $valordolar) * 100;
             $solicitud->setTotalusd($totalfinal);
-            $em = $this->getDoctrine()->getManager();
+
+            $valorsistema->setFolioMarina($valorsistema->getFolioMarina() + 1);
+
             $em->persist($solicitud);
             $em->flush();
 
@@ -136,12 +157,10 @@ class SolicitudController extends Controller
      *
      * @param Request $request
      * @param Solicitud $solicitud
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return RedirectResponse|Response
      */
     public function editPagoAction(Request $request, Solicitud $solicitud)
     {
-        //$pago = new Pago();
-        //$marinaHumedaCotizacion->addPago($pago);
         $totPagado = 0;
         $totPagadoMonedero = 0;
         $listaPagos = new ArrayCollection();
@@ -168,7 +187,6 @@ class SolicitudController extends Controller
 
             foreach ($listaPagos as $pago) {
                 if (false === $solicitud->getPagos()->contains($pago)) {
-//                    $pago->getMhcotizacion()->removePago($pago);
                     $pago->getTiendaSolicitud()->removePago($pago);
                     $em->persist($pago);
                     $em->remove($pago);
@@ -188,16 +206,6 @@ class SolicitudController extends Controller
                 if($pago->getMetodopago() == 'Monedero' && $pago->getId() == null){
                     $totPagadoMonedero += $unpago;
                     $monederotot = $monedero - $totPagadoMonedero;
-//                    if($solicitud->getFoliorecotiza()){
-//                        $folioCotizacion = $solicitud->getFolio().'-'.$solicitud->getFoliorecotiza();
-//                    }else{
-//                        $folioCotizacion = $solicitud->getFolio();
-//                    }
-//                    if($solicitud->getMHCservicios()->first()->getTipo() == 1 || $solicitud->getMHCservicios()->first()->getTipo() == 2){
-//                        $notaMonedero = 'Pago de servicio de estadía y electricidad. Folio cotización: '.$folioCotizacion;
-//                    }else{
-//                        $notaMonedero = 'Pago de servicio de gasolina. Folio cotización: '.$folioCotizacion;
-//                    }
                     $notaMonedero = 'Pago de articulos de la tienda';
 
                     $fechaHoraActual = new \DateTime('now');
@@ -242,45 +250,22 @@ class SolicitudController extends Controller
         ]);
     }
 
-//    /**
-//     * Displays a form to edit an existing solicitud entity.
-//     *
-//     * @Route("/{id}/edit", name="tienda_solicitud_edit")
-//     * @Method({"GET", "POST"})
-//     */
-//    public function editAction(Request $request, Solicitud $solicitud)
-//    {
-//        $deleteForm = $this->createDeleteForm($solicitud);
-//        $editForm = $this->createForm('AppBundle\Form\Tienda\SolicitudType', $solicitud);
-//        $editForm->handleRequest($request);
-//
-//        if ($editForm->isSubmitted() && $editForm->isValid()) {
-//            $this->getDoctrine()->getManager()->flush();
-//
-//            return $this->redirectToRoute('tienda_solicitud_edit', array('id' => $solicitud->getId()));
-//        }
-//
-//        return $this->render('tienda/solicitud/edit.html.twig', array(
-//            'solicitud' => $solicitud,
-//            'edit_form' => $editForm->createView(),
-//            'delete_form' => $deleteForm->createView(),
-//        ));
-//    }
-
     /**
      * Displays a form to edit an existing solicitud entity.
      *
      * @Route("/{id}", name="tienda_solicitud_ver")
      * @Method({"GET"})
+     *
+     * @param Solicitud $solicitud
+     *
+     * @return Response
      */
     public function editAction(Solicitud $solicitud)
     {
-        $em = $this->getDoctrine()->getManager();
-        $solicitud = $em->getRepository('AppBundle:Tienda\Solicitud')->find($solicitud->getId());
+        $solicitud = $this->getDoctrine()
+            ->getRepository('AppBundle:Tienda\Solicitud')->find($solicitud->getId());
 
-        return $this->render('tienda/solicitud/show.html.twig', array(
-            'solicitud' => $solicitud,
-        ));
+        return $this->render('tienda/solicitud/show.html.twig', ['solicitud' => $solicitud]);
     }
 
     /**

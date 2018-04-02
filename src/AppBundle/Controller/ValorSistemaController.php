@@ -32,48 +32,6 @@ class ValorSistemaController extends Controller
         ));
     }
 
-//    /**
-//     * Creates a new valorSistema entity.
-//     *
-//     * @Route("/new", name="ajustes_new")
-//     * @Method({"GET", "POST"})
-//     */
-//    public function newAction(Request $request)
-//    {
-//        $valorSistema = new Valorsistema();
-//        $form = $this->createForm('AppBundle\Form\ValorSistemaType', $valorSistema);
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($valorSistema);
-//            $em->flush();
-//
-//            return $this->redirectToRoute('ajustes_show', array('id' => $valorSistema->getId()));
-//        }
-//
-//        return $this->render('valorsistema/new.html.twig', array(
-//            'valorSistema' => $valorSistema,
-//            'form' => $form->createView(),
-//        ));
-//    }
-
-//    /**
-//     * Finds and displays a valorSistema entity.
-//     *
-//     * @Route("/{id}", name="ajustes_show")
-//     * @Method("GET")
-//     */
-//    public function showAction(ValorSistema $valorSistema)
-//    {
-//        $deleteForm = $this->createDeleteForm($valorSistema);
-//
-//        return $this->render('valorsistema/show.html.twig', array(
-//            'valorSistema' => $valorSistema,
-//            'delete_form' => $deleteForm->createView(),
-//        ));
-//    }
-
     /**
      * Displays a form to edit an existing valorSistema entity.
      *
@@ -100,40 +58,4 @@ class ValorSistemaController extends Controller
             //'delete_form' => $deleteForm->createView(),
         ));
     }
-
-//    /**
-//     * Deletes a valorSistema entity.
-//     *
-//     * @Route("/{id}", name="ajustes_delete")
-//     * @Method("DELETE")
-//     */
-//    public function deleteAction(Request $request, ValorSistema $valorSistema)
-//    {
-//        $form = $this->createDeleteForm($valorSistema);
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $em = $this->getDoctrine()->getManager();
-//            $em->remove($valorSistema);
-//            $em->flush();
-//        }
-//
-//        return $this->redirectToRoute('ajustes_index');
-//    }
-
-//    /**
-//     * Creates a form to delete a valorSistema entity.
-//     *
-//     * @param ValorSistema $valorSistema The valorSistema entity
-//     *
-//     * @return \Symfony\Component\Form\Form The form
-//     */
-//    private function createDeleteForm(ValorSistema $valorSistema)
-//    {
-//        return $this->createFormBuilder()
-//            ->setAction($this->generateUrl('ajustes_delete', array('id' => $valorSistema->getId())))
-//            ->setMethod('DELETE')
-//            ->getForm()
-//        ;
-//    }
 }

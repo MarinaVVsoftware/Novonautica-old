@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Cliente\RazonSocial;
+use AppBundle\Entity\Cliente\Reporte;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -168,6 +169,13 @@ class Cliente
      */
     private $razonesSociales;
 
+    /**
+     * @var Reporte
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Cliente\Reporte", mappedBy="cliente", cascade={"persist", "remove"})
+     */
+    private $reportes;
+
     public function __construct() {
         $this->barcos = new ArrayCollection();
         $this->monederomovimientos = new ArrayCollection();
@@ -176,6 +184,7 @@ class Cliente
         $this->razonesSociales = new ArrayCollection();
         $this->astilleroCotizaciones = new ArrayCollection();
         $this->appgasolinasolicitudes = new ArrayCollection();
+        $this->reportes = new ArrayCollection();
         $this->idioma = 1;
     }
 
@@ -693,5 +702,41 @@ class Cliente
     public function getAppgasolinasolicitudes()
     {
         return $this->appgasolinasolicitudes;
+    }
+
+    /**
+     * Add reporte.
+     *
+     * @param Reporte $reporte
+     *
+     * @return Cliente
+     */
+    public function addReporte(Reporte $reporte)
+    {
+        $this->reportes[] = $reporte;
+
+        return $this;
+    }
+
+    /**
+     * Remove reporte.
+     *
+     * @param Reporte $reporte
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeReporte(Reporte $reporte)
+    {
+        return $this->reportes->removeElement($reporte);
+    }
+
+    /**
+     * Get reportes.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getReportes()
+    {
+        return $this->reportes;
     }
 }

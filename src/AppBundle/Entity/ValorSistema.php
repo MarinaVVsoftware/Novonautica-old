@@ -93,7 +93,7 @@ class ValorSistema
      *
      * @return string (100 characters)
      */
-    function generaToken($length)
+    public function generaToken($length)
     {
         //$length = 100;
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

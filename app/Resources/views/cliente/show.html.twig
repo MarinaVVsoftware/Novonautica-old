@@ -1,16 +1,7 @@
 {% extends 'estructura/plantilla.twig' %}
-
 {% block stylesheets %}
     {{ parent() }}
-    <style>
-        .content-wrapper table {
-            border: 2px solid #292e41;
-        }
-
-        .content-wrapper table th {
-            width: 25%;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
 {% endblock %}
 
 {% block contwrapper %}
@@ -219,67 +210,24 @@
                                 </div>
                             </div>
                         {% endfor %}
+
                         <div role="tabpanel" class="tab-pane" id="cuentas">
                             <div class="row">
-                                <div class="col-sm-10 col-sm-offset-1">
-                                    <table class="table text-center">
+                                <div class="col-sm-12">
+                                    <table id="table-cuentas" class="table-novo table" style="width: 100%;">
                                         <thead>
                                         <tr>
-                                            <th>Folio</th>
-                                            <th>Barco</th>
-                                            <th>Servicio</th>
-                                            <th>Fecha llegada</th>
-                                            <th>Fecha salida</th>
-                                            <th>Sub-Total</th>
-                                            <th>IVA</th>
-                                            <th>Descuento</th>
-                                            <th>Total</th>
-                                            <th>Estatus pago</th>
-                                            <th></th>
+                                            <th>Fecha de movimiento</th>
+                                            <th>Adeudo</th>
+                                            <th>Abono</th>
+                                            <th class="no-sort">Concepto</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        {% for cotizacion in cliente.mHcotizaciones %}
-                                            {% if cotizacion.validacliente == 2 %}
-                                                <tr>
-                                                    <td>
-                                                        {% if cotizacion.foliorecotiza == 0 %}
-                                                            {{ cotizacion.folio }}
-                                                        {% else %}
-                                                            {{ cotizacion.folio }}-{{ cotizacion.foliorecotiza }}
-                                                        {% endif %}
-                                                    </td>
-                                                    <td>{{ cotizacion.barco }}</td>
-                                                    <td>Marina Humeda</td>
-                                                    <td>{% if cotizacion.fechaLlegada %}{{ cotizacion.fechaLlegada|date('d-m-Y') }}{% endif %}</td>
-                                                    <td>{% if cotizacion.fechaSalida %}{{ cotizacion.fechaSalida|date('d-m-Y') }}{% endif %}</td>
-                                                    <td>$ {{ cotizacion.subtotal|number_format(2,'.',',') }}</td>
-                                                    <td>$ {{ cotizacion.ivatotal|number_format(2,'.',',') }}</td>
-                                                    <td>$ {{ cotizacion.descuentototal|number_format(2,'.',',') }}</td>
-                                                    <td>$ {{ cotizacion.total|number_format(2,'.',',') }}</td>
-                                                    <td>
-                                                        {% if cotizacion.pago.estatuspago is defined and cotizacion.pago.estatuspago == 1 %}
-                                                            <img src="{{ asset('img/status-aprobado-icon.svg') }}"
-                                                                 class="center-block" data-toggle="tooltip"
-                                                                 data-placement="left" title="Pagado">
-                                                        {% else %}
-                                                            <img src="{{ asset('img/status-desaprovado-icon.svg') }}"
-                                                                 class="center-block" data-toggle="tooltip"
-                                                                 data-placement="left" title="No pagado">
-                                                        {% endif %}
-                                                    </td>
-                                                    <td>
-                                                        <a class="btn btn-morado-claro"
-                                                           href="{{ path('marina-humeda_show', { 'id': cotizacion.id }) }}">Detalle</a>
-                                                    </td>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                        </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -289,10 +237,23 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
-      (function () {
+      (function ($, settings) {
+        $('#table-cuentas').DataTable({
+          ...settings,
+          ajax: {
+            url: '{{ path('cliente_show_data', { id: cliente.id }) }}',
+            data: {
+              cliente: '{{ cliente.id }}'
+            },
+          },
+          order: [[0, 'desc']]
+        });
+
         if (location.hash) {
           const tab = document.querySelector(`a[href="${location.hash}"]`).parentNode;
+
           const pane = document.getElementById(`${location.hash.replace('#', '')}`);
           [
             ...document.querySelectorAll('li[role="presentation"].active'),
@@ -302,8 +263,8 @@
 
           tab.dataset.expanded = true;
           pane.classList.add('active');
-          location.hash = '#_';
+          location.hash = '';
         }
-      })();
+      })(jQuery, datatablesSettings);
     </script>
 {% endblock %}

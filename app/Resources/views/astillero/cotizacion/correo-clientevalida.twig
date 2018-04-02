@@ -178,11 +178,11 @@
                     <tr>
                         <td align="center">
                             <a class="btnverde"
-                               href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ path('respuesta-cliente-astillero',{'token':tokenAcepta }) }}">Autorizar</a>
+                               href="{{ url('respuesta-cliente', {'token': tokenAcepta }) }}">Autorizar</a>
                         </td>
                         <td align="center">
                             <a class="btnnaranja"
-                               href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ path('respuesta-cliente-astillero',{'token':tokenRechaza }) }}">Rechazar</a>
+                               href="{{ url('respuesta-cliente', {'token': tokenRechaza }) }}">Rechazar</a>
                         </td>
                     </tr>
                 </table>

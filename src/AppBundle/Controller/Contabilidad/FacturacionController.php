@@ -3,14 +3,19 @@
 namespace AppBundle\Controller\Contabilidad;
 
 use AppBundle\Entity\Astillero\Servicio;
+use AppBundle\Entity\AstilleroCotizacion;
+use AppBundle\Entity\AstilleroServicioBasico;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaServicio;
 use AppBundle\Entity\Pago;
+use AppBundle\Entity\Tienda\Peticion;
+use AppBundle\Entity\Tienda\Producto;
 use AppBundle\Extra\NumberToLetter;
 use AppBundle\Serializer\CotizacionNameConverter;
 use AppBundle\Serializer\NotNullObjectNormalizer;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\ORM\PersistentCollection;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -420,15 +425,21 @@ class FacturacionController extends Controller
         $normalizer = new NotNullObjectNormalizer($classMetadataFactory, $nameConverter);
 
         $returnNombres = function ($servicio) {
-            /** @var Servicio|MarinaHumedaServicio $servicio */
-            return null !== $servicio ? $servicio->getNombre() : null;
+            if ($servicio instanceof MarinaHumedaServicio) {
+                return $servicio->getNombre();
+            }
+
+            if ($servicio instanceof AstilleroServicioBasico) {
+                return $servicio->getNombre();
+            }
+
+            return $servicio;
         };
 
         $usdTomxn = function ($pagos) {
             /** @var Pago[] $pagos */
             foreach ($pagos as $pago) {
                 if ($pago->getDivisa() === 'MXN') {
-//                    $pago->setCantidad(round((($pago->getCantidad() * $pago->getDolar()) / 100) / 100) * 100);
                     $pago->setCantidad($pago->getCantidad() * $pago->getDolar() / 100);
                 }
             }

@@ -1,40 +1,113 @@
-{% extends 'base.html.twig' %}
-
-{% block body %}
-    <h1>Proveedor</h1>
-
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ proveedor.id }}</td>
-            </tr>
-            <tr>
-                <th>Nombre</th>
-                <td>{{ proveedor.nombre }}</td>
-            </tr>
-            <tr>
-                <th>Razonsocial</th>
-                <td>{{ proveedor.razonsocial }}</td>
-            </tr>
-            <tr>
-                <th>Porcentaje</th>
-                <td>{{ proveedor.porcentaje }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('astillero_proveedor_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('astillero_proveedor_edit', { 'id': proveedor.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+{% extends 'estructura/plantilla.twig' %}
+{% import 'estructura/modalborrar.twig' as modal %}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">{{ title }}</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('astillero_proveedor_index') }}">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <td>{{ proveedor.nombre }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Razón social</th>
+                                    <td>{{ proveedor.razonsocial }}</td>
+                                </tr>
+                                <tr>
+                                    <th>RFC</th>
+                                    <td>{{ proveedor.rfc }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Direccón Fiscal</th>
+                                    <td>{{ proveedor.direccionfiscal }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Correo</th>
+                                    <td>{{ proveedor.correo }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Teléfono</th>
+                                    <td>{{ proveedor.telefono }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Porcentaje</th>
+                                    <td>{{ proveedor.porcentaje|number_format(2) }}%</td>
+                                </tr>
+                                <tr>
+                                    <th>Tipo de proveedor</th>
+                                    <td>{% if proveedor.tipo == 1 %}
+                                            Interno
+                                        {% else %}
+                                            Externo
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Tipos de trabajos</th>
+                                    <td>
+                                        {% for trabajo in proveedor.trabajos %}
+                                            <li>{{ trabajo }}</li>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4>Cuentas bancarias</h4>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Banco</th>
+                                    <th>Número de cuenta</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for banco in proveedor.bancos %}
+                                <tr>
+                                    <td> {{ banco.nombre }}</td>
+                                    <td> {{ banco.numcuenta }}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a class="btn btn-azul pull-right"
+                               href="{{ path('astillero_proveedor_edit', { 'id': proveedor.id }) }}">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                Editar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 {% endblock %}

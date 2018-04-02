@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Astillero;
 
 use AppBundle\Entity\Astillero\Proveedor;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -53,6 +54,8 @@ class ProveedorController extends Controller
     public function newAction(Request $request)
     {
         $proveedor = new Proveedor();
+        $banco = new Proveedor\Banco();
+        $proveedor->addBanco($banco);
         $form = $this->createForm('AppBundle\Form\Astillero\ProveedorType', $proveedor);
         $form->handleRequest($request);
 
@@ -79,11 +82,12 @@ class ProveedorController extends Controller
      */
     public function showAction(Proveedor $proveedor)
     {
-        $deleteForm = $this->createDeleteForm($proveedor);
+
 
         return $this->render('astillero/proveedor/show.html.twig', array(
             'proveedor' => $proveedor,
-            'delete_form' => $deleteForm->createView(),
+
+            'title' => 'Detalle proveedor'
         ));
     }
 
@@ -95,14 +99,28 @@ class ProveedorController extends Controller
      */
     public function editAction(Request $request, Proveedor $proveedor)
     {
+        $em = $this->getDoctrine()->getManager();
+        $originalBancos = new ArrayCollection();
+        foreach ($proveedor->getBancos() as $banco){
+            $originalBancos->add($banco);
+        }
         $deleteForm = $this->createDeleteForm($proveedor);
         $editForm = $this->createForm('AppBundle\Form\Astillero\ProveedorType', $proveedor);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            foreach ($originalBancos as $banco){
+                if (false === $proveedor->getBancos()->contains($banco)) {
+                    $banco->getProveedor()->removeBanco($banco);
+                    $em->persist($banco);
+                    $em->remove($banco);
 
-            return $this->redirectToRoute('astillero_proveedor_index');
+                }
+            }
+            $em->persist($proveedor);
+            $em->flush();
+
+            return $this->redirectToRoute('astillero_proveedor_show',['id'=>$proveedor->getId()]);
         }
 
         return $this->render('astillero/proveedor/edit.html.twig', array(

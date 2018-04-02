@@ -6,6 +6,7 @@ use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Producto
@@ -27,12 +28,16 @@ class Producto
     /**
      * @var string
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="solicitud", type="string", length=100)
      */
     private $nombre;
 
     /**
      * @var integer
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\Column(name="precio", type="bigint")
      */
@@ -41,6 +46,8 @@ class Producto
     /**
      * @var integer
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\Column(name="preciocolaborador", type="bigint")
      */
     private $preciocolaborador;
@@ -48,12 +55,16 @@ class Producto
     /**
      * @var ClaveProdServ
      *
+     * @Groups({"facturacion"})
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ")
      */
     private $claveProdServ;
 
     /**
      * @var ClaveUnidad
+     *
+     * @Groups({"facturacion"})
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
      */

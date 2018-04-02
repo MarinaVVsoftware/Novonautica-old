@@ -20,7 +20,7 @@ class Multifacturas
     {
         $this->env = $env;
         $this->dir = $dir;
-        $this->prod = 'SI';
+        $this->prod = 'NO';
     }
 
     public function procesa(Facturacion $factura)

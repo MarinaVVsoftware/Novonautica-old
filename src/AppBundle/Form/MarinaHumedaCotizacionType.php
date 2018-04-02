@@ -140,7 +140,9 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('notasnovo')
                     ->remove('notascliente');
                 $formModifier($event->getForm(), $cotizacion->getCliente());
-            } elseif($cotizacion->getValidanovo() == 2) { //para validar por el cliente
+            }
+            // para validar por el cliente
+            else if($cotizacion->getValidanovo() == 2) {
                 $form
                     ->remove('cliente')
                     ->remove('fechaLlegada')
@@ -154,7 +156,9 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('notasnovo')
                     ->remove('slip')
                     ->remove('notificarCliente');
-            } else { //para validar por novo
+            }
+            //para validar por novo
+            else {
                 $form
                     ->remove('cliente')
 //                    ->remove('barco')
