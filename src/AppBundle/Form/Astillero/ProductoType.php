@@ -16,6 +16,8 @@ class ProductoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('identificador')
+            ->add('proveedor')
             ->add('nombre')
             ->add('precio',MoneyType::class,[
                 'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
@@ -25,11 +27,7 @@ class ProductoType extends AbstractType
                 'empty_data' => 0,
                 'label' => 'Precio (USD)'
             ])
-            ->add('unidad')
-            ->add('descripcion',TextareaType::class,[
-                'label' => 'Descripción',
-                'attr' => ['rows'=>5]
-            ]);
+            ->add('unidad');
     }
     
     /**
