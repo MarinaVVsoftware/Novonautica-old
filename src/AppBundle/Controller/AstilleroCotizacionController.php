@@ -110,12 +110,12 @@ class AstilleroCotizacionController extends Controller
 
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
-            ->addAcservicio($astilleroKarcher)
-            ->addAcservicio($astilleroElectricidad)
             ->addAcservicio($astilleroEstadia)
-            ->addAcservicio($astilleroLimpieza)
             ->addAcservicio($astilleroRampa)
+            ->addAcservicio($astilleroKarcher)
             ->addAcservicio($astilleroExplanada)
+            ->addAcservicio($astilleroElectricidad)
+            ->addAcservicio($astilleroLimpieza)
             ->addAcservicio($astilleroInspeccionar)
           ;
 
