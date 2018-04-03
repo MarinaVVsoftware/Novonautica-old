@@ -172,11 +172,25 @@ class AstilleroCotizacion
     private $validanovo;
 
     /**
+     * @var \DateTimeImmutable
+     *
+     * @ORM\Column(name="registro_valida_novo", type="datetime_immutable", nullable=true)
+     */
+    private $registroValidaNovo;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="validacliente", type="smallint")
      */
     private $validacliente;
+
+    /**
+     * @var \DateTimeImmutable
+     *
+     * @ORM\Column(name="registro_valida_cliente", type="datetime_immutable", nullable=true)
+     */
+    private $registroValidaCliente;
 
     /**
      * @var string
@@ -260,6 +274,20 @@ class AstilleroCotizacion
     private $fecharespuesta;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="notificar_cliente", type="boolean")
+     */
+    private $notificarCliente;
+
+    /**
+     * @var \DateTimeImmutable
+     *
+     * @ORM\Column(name="registro_pago_completado", type="datetime_immutable", nullable=true)
+     */
+    private $registroPagoCompletado;
+
+    /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\OrdenDeTrabajo", mappedBy="astilleroCotizacion")
      */
     private $odt;
@@ -274,6 +302,10 @@ class AstilleroCotizacion
     public function __construct() {
         $this->acservicios = new ArrayCollection();
         $this->pagos = new ArrayCollection();
+        $this->notificarCliente = true;
+        $this->registroValidaNovo = null;
+        $this->registroValidaCliente = null;
+        $this->registroPagoCompletado = null;
     }
 
     public function __toString()
@@ -974,5 +1006,109 @@ class AstilleroCotizacion
     public function getCliente()
     {
         return $this->cliente;
+    }
+
+    /**
+     * Set registroValidaNovo.
+     *
+     * @param \DateTimeImmutable|null $registroValidaNovo
+     *
+     * @return AstilleroCotizacion
+     */
+    public function setRegistroValidaNovo($registroValidaNovo = null)
+    {
+        $this->registroValidaNovo = $registroValidaNovo;
+
+        return $this;
+    }
+
+    /**
+     * Get registroValidaNovo.
+     *
+     * @return \DateTimeImmutable|null
+     */
+    public function getRegistroValidaNovo()
+    {
+        return $this->registroValidaNovo;
+    }
+
+    /**
+     * Set registroValidaCliente.
+     *
+     * @param \DateTimeImmutable|null $registroValidaCliente
+     *
+     * @return AstilleroCotizacion
+     */
+    public function setRegistroValidaCliente($registroValidaCliente = null)
+    {
+        $this->registroValidaCliente = $registroValidaCliente;
+
+        return $this;
+    }
+
+    /**
+     * Get registroValidaCliente.
+     *
+     * @return \DateTimeImmutable|null
+     */
+    public function getRegistroValidaCliente()
+    {
+        return $this->registroValidaCliente;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNotificarCliente()
+    {
+        return $this->notificarCliente;
+    }
+
+    /**
+     * Set notificarCliente.
+     *
+     * @param bool $notificarCliente
+     *
+     * @return AstilleroCotizacion
+     */
+    public function setNotificarCliente($notificarCliente)
+    {
+        $this->notificarCliente = $notificarCliente;
+
+        return $this;
+    }
+
+    /**
+     * Get notificarCliente.
+     *
+     * @return bool
+     */
+    public function getNotificarCliente()
+    {
+        return $this->notificarCliente;
+    }
+
+    /**
+     * Set registroPagoCompletado.
+     *
+     * @param \DateTimeImmutable|null $registroPagoCompletado
+     *
+     * @return AstilleroCotizacion
+     */
+    public function setRegistroPagoCompletado($registroPagoCompletado = null)
+    {
+        $this->registroPagoCompletado = $registroPagoCompletado;
+
+        return $this;
+    }
+
+    /**
+     * Get registroPagoCompletado.
+     *
+     * @return \DateTimeImmutable|null
+     */
+    public function getRegistroPagoCompletado()
+    {
+        return $this->registroPagoCompletado;
     }
 }

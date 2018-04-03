@@ -39,6 +39,29 @@ class AstilleroCotizacionValidarType extends AbstractType
                 'required' => false
             ])
         ;
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $cotizacion = $event->getData();
+            $form = $event->getForm();
+
+            if($cotizacion->getValidanovo() == 2) {
+                $form
+                    ->remove('validanovo')
+                    ->remove('notasnovo')
+                    ->add('validacliente', ChoiceType::class, [
+                        'choices' => ['Aceptar' => 2, 'Rechazar' => 1],
+                        'expanded' => true,
+                        'multiple' => false,
+                        'choice_attr' => function ($val, $key, $index) {
+                            return ['class' => 'opcion' . strtolower($key)];
+                        },
+                    ])
+                    ->add('notascliente', TextareaType::class, [
+                        'label' => 'Observaciones',
+                        'attr' => ['rows' => 7],
+                        'required' => false
+                    ]);
+            }
+        });
     }
 
     /**

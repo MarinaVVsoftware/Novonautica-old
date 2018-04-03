@@ -533,7 +533,8 @@ class AstilleroCotizacionController extends Controller
 
         if ($astilleroCotizacion->isEstatus() == 0 ||
             $astilleroCotizacion->getValidanovo() == 1 ||
-            $astilleroCotizacion->getValidanovo() == 2
+            $astilleroCotizacion->getValidacliente() == 1 ||
+            $astilleroCotizacion->getValidacliente() == 2
         ) {
             throw new NotFoundHttpException();
         }
@@ -545,95 +546,111 @@ class AstilleroCotizacionController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            if ($astilleroCotizacion->getValidanovo() == 2) {
-                $tokenAcepta = $valorSistema->generaToken(100);
-                $tokenRechaza = $valorSistema->generaToken(100);
-                $astilleroCotizacion->setTokenacepta($tokenAcepta);
-                $astilleroCotizacion->setTokenrechaza($tokenRechaza);
-                $astilleroCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
 
-                // creando pdf
-                $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
-                    'title' => 'Cotizacion-0.pdf',
-                    'astilleroCotizacion' => $astilleroCotizacion
-                ]);
-                $htmlMXN = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
-                    'title' => 'Cotizacion-0.pdf',
-                    'astilleroCotizacion' => $astilleroCotizacion
-                ]);
-                $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
-                    'astilleroCotizacion' => $astilleroCotizacion
-                ]);
-                $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig', [
-                    'astilleroCotizacion' => $astilleroCotizacion
-                ]);
-                $hojapdf = $this->get('knp_snappy.pdf');
-                $options = [
-                    'margin-top' => 30,
-                    'margin-right' => 0,
-                    'margin-bottom' => 33,
-                    'margin-left' => 0,
-                    'header-html' => utf8_decode($header),
-                    'footer-html' => utf8_decode($footer)
-                ];
-                $pdfEnviar = new PdfResponse(
-                    $hojapdf->getOutputFromHtml($html, $options),
-                    'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
-                );
-                $pdfEnviarMXN = new PdfResponse(
-                    $hojapdf->getOutputFromHtml($htmlMXN, $options),
-                    'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
-                );
-                $attachment = new Swift_Attachment($pdfEnviar, 'CotizacionUSD-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
-                $attachmentMXN = new Swift_Attachment($pdfEnviarMXN, 'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
-
-                // Enviar correo de confirmacion
-                $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'))
-                    ->setFrom('noresponder@novonautica.com')
-                    ->setTo($astilleroCotizacion->getBarco()->getCliente()->getCorreo())
-                    ->setBcc('admin@novonautica.com')
-                    ->setBody(
-                        $this->renderView('astillero/cotizacion/correo-clientevalida.twig', [
-                                'astilleroCotizacion' => $astilleroCotizacion,
-                                'tokenAcepta' => $tokenAcepta,
-                                'tokenRechaza' => $tokenRechaza
-                            ]
-                        ),
-                        'text/html'
-                    )
-                    ->attach($attachment)
-                    ->attach($attachmentMXN);
-                if($astilleroCotizacion->getBarco()->getCorreoCapitan()){
-                    $message->addCc($astilleroCotizacion->getBarco()->getCorreoCapitan());
-                }
-                if($astilleroCotizacion->getBarco()->getCorreoResponsable()){
-                    $message->addCc($astilleroCotizacion->getBarco()->getCorreoResponsable());
-                }
-                $mailer->send($message);
-
-                if($astilleroCotizacion->getFoliorecotiza() == 0){
-                    $folio = $astilleroCotizacion->getFolio();
-                    $tipoCorreo = 'Cotización servicio Astillero';
-                }else{
-                    $folio = $astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza();
-                    $tipoCorreo = 'Recotización Servicio Astillero';
-                }
-                $historialCorreo = new Correo();
-                $historialCorreo
-                    ->setFecha(new \DateTime('now'))
-                    ->setTipo($tipoCorreo)
-                    ->setDescripcion('Envio de cotización de Astillero con folio: ' . $folio)
-                    ->setFolioCotizacion($folio)
-                    ->setAcotizacion($astilleroCotizacion)
-                ;
-
-                $em->persist($historialCorreo);
-            }
-            else{
-                if($astilleroCotizacion->getValidanovo()==1){
+            if (is_null($astilleroCotizacion->getTokenacepta())) {
+                if ($astilleroCotizacion->getValidanovo() == 2) {
+                    // Si no existe token pero ya ha sido validada por novonautica
+                    $tokenAcepta = $valorSistema->generaToken(100);
+                    $tokenRechaza = $valorSistema->generaToken(100);
+                    $astilleroCotizacion->setTokenacepta($tokenAcepta);
+                    $astilleroCotizacion->setTokenrechaza($tokenRechaza);
                     $astilleroCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
+
+                    // Generacion de PDF
+                    // Se envia un correo si se solicito notificar al cliente
+                    if ($astilleroCotizacion->isNotificarCliente()) {
+                        $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
+                            'title' => 'Cotizacion-'.$astilleroCotizacion->getFolio().'.pdf',
+                            'astilleroCotizacion' => $astilleroCotizacion
+                        ]);
+                        $htmlMXN = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
+                            'title' => 'Cotizacion-0.pdf',
+                            'astilleroCotizacion' => $astilleroCotizacion
+                        ]);
+                        $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
+                            'astilleroCotizacion' => $astilleroCotizacion
+                        ]);
+                        $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig', [
+                            'astilleroCotizacion' => $astilleroCotizacion
+                        ]);
+                        $hojapdf = $this->get('knp_snappy.pdf');
+                        $options = [
+                            'margin-top' => 30,
+                            'margin-right' => 0,
+                            'margin-bottom' => 33,
+                            'margin-left' => 0,
+                            'header-html' => utf8_decode($header),
+                            'footer-html' => utf8_decode($footer)
+                        ];
+                        $pdfEnviar = new PdfResponse(
+                            $hojapdf->getOutputFromHtml($html, $options),
+                            'Cotizacion-' . $astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza() . '.pdf', 'application/pdf', 'inline'
+                        );
+                        $pdfEnviarMXN = new PdfResponse(
+                            $hojapdf->getOutputFromHtml($htmlMXN, $options),
+                            'CotizacionMXN-' . $astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza() . '.pdf', 'application/pdf', 'inline'
+                        );
+                        $attachment = new Swift_Attachment($pdfEnviar, 'CotizacionUSD-' . $astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza() . '.pdf', 'application/pdf');
+                        $attachmentMXN = new Swift_Attachment($pdfEnviarMXN, 'CotizacionMXN-' . $astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza() . '.pdf', 'application/pdf');
+
+                        // Enviar correo de confirmacion
+                        $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'))
+                            ->setFrom('noresponder@novonautica.com')
+                            ->setTo($astilleroCotizacion->getBarco()->getCliente()->getCorreo())
+                            ->setBcc('admin@novonautica.com')
+                            ->setBody(
+                                $this->renderView('astillero/cotizacion/correo-clientevalida.twig', [
+                                        'astilleroCotizacion' => $astilleroCotizacion,
+                                        'tokenAcepta' => $tokenAcepta,
+                                        'tokenRechaza' => $tokenRechaza
+                                    ]
+                                ),
+                                'text/html'
+                            )
+                            ->attach($attachment)
+                            ->attach($attachmentMXN);
+                        if ($astilleroCotizacion->getBarco()->getCorreoCapitan()) {
+                            $message->addCc($astilleroCotizacion->getBarco()->getCorreoCapitan());
+                        }
+                        if ($astilleroCotizacion->getBarco()->getCorreoResponsable()) {
+                            $message->addCc($astilleroCotizacion->getBarco()->getCorreoResponsable());
+                        }
+                        $mailer->send($message);
+
+                        if ($astilleroCotizacion->getFoliorecotiza() == 0) {
+                            $folio = $astilleroCotizacion->getFolio();
+                            $tipoCorreo = 'Cotización servicio Astillero';
+                        } else {
+                            $folio = $astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza();
+                            $tipoCorreo = 'Recotización Servicio Astillero';
+                        }
+
+                        // Guardar correo en el log de correos
+                        $historialCorreo = new Correo();
+                        $historialCorreo
+                            ->setFecha(new \DateTime('now'))
+                            ->setTipo($tipoCorreo)
+                            ->setDescripcion('Envio de cotización de Astillero con folio: ' . $folio)
+                            ->setFolioCotizacion($folio)
+                            ->setAcotizacion($astilleroCotizacion);
+
+                        $em->persist($historialCorreo);
+                    }
+                } else {
+                    if ($astilleroCotizacion->getValidanovo() == 1) {
+                        $astilleroCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
+                    }
                 }
             }
+
+            if ($astilleroCotizacion->getValidacliente() === 2) {
+                // Guardar la fecha en la que se valido la cotizacion por el cliente
+                $astilleroCotizacion->setRegistroValidaCliente(new \DateTimeImmutable());
+            }
+
+            // Guardar la fecha en la que se valido la cotizacion por novonautica
+            $astilleroCotizacion->setRegistroValidaNovo(new \DateTimeImmutable());
+
             $em->persist($astilleroCotizacion);
             $em->flush();
             return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
@@ -644,22 +661,6 @@ class AstilleroCotizacionController extends Controller
             'astilleroCotizacion' => $astilleroCotizacion,
             'edit_form' => $editForm->createView()
         ]);
-    }
-
-    private function llenarServicio($servicio,$datos,$dolar){
-        $servicio
-            ->setServicio(null)
-            ->setProducto(null)
-            ->setOtroservicio(null)
-            ->setAstilleroserviciobasico($datos->getAstilleroserviciobasico());
-        $servicio->setCantidad($datos->getCantidad());
-        $servicio->setPrecio(($datos->getPrecio()*$dolar)/100);
-        $servicio->setIva(($datos->getIva()*$dolar)/100);
-        $servicio->setSubtotal(($datos->getSubtotal()*$dolar)/100);
-        $servicio->setTotal(($datos->getTotal()*$dolar)/100);
-        $servicio->setEstatus($datos->getEstatus());
-
-        return $servicio;
     }
 
     /**
@@ -1157,6 +1158,41 @@ class AstilleroCotizacionController extends Controller
     }
 
     /**
+     * @Route ("/{id}/dias-adicionales", name="astillero_cotizacion_dias_adicionales")
+     * @Method({"GET", "POST"})
+     * @param Request $request
+     * @param AstilleroCotizacion $astilleroCotizacion
+     * @return Response
+     */
+    public function diasAdicionalesAction(Request $request, AstilleroCotizacion $astilleroCotizacion){
+        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_CREATE', $astilleroCotizacion);
+
+        // Días adicionales
+        $servicio = $this->getDoctrine()->getRepository(AstilleroServicioBasico::class)->find(9);
+        $astilleroDiasAdicionales = new AstilleroCotizaServicio();
+        $astilleroDiasAdicionales
+            ->setAstilleroserviciobasico($servicio)
+            ->setPrecio($servicio->getPrecio())
+            ->setEstatus(true)
+        ;
+        $astilleroDiasAdicionales->setAstillerocotizacion($astilleroCotizacion);
+        dump($astilleroDiasAdicionales);
+        $editForm = $this->createForm('AppBundle\Form\AstilleroCotizaServicioType', $astilleroDiasAdicionales);
+        $editForm->handleRequest($request);
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($astilleroDiasAdicionales);
+            $em->flush();
+
+            return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
+        }
+        return $this->render('astillero/cotizacion/dias-adicionales.html.twig', [
+            'title' => 'Astillero Días Adicionales',
+            'astilleroDiasAdicionales' => $astilleroDiasAdicionales,
+            'edit_form' => $editForm->createView()
+        ]);
+    }
+    /**
      * Elimina una cotizacion
      *
      * @Route("/{id}", name="astillero_delete")
@@ -1206,6 +1242,23 @@ class AstilleroCotizacionController extends Controller
             ->setSubtotal($subtotal)
             ->setIva($ivatot)
             ->setTotal($total);
+        return $servicio;
+    }
+
+
+    private function llenarServicio($servicio,$datos,$dolar){
+        $servicio
+            ->setServicio(null)
+            ->setProducto(null)
+            ->setOtroservicio(null)
+            ->setAstilleroserviciobasico($datos->getAstilleroserviciobasico());
+        $servicio->setCantidad($datos->getCantidad());
+        $servicio->setPrecio(($datos->getPrecio()*$dolar)/100);
+        $servicio->setIva(($datos->getIva()*$dolar)/100);
+        $servicio->setSubtotal(($datos->getSubtotal()*$dolar)/100);
+        $servicio->setTotal(($datos->getTotal()*$dolar)/100);
+        $servicio->setEstatus($datos->getEstatus());
+
         return $servicio;
     }
 }

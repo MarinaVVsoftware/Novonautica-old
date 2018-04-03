@@ -8,10 +8,10 @@
                         <div class="col-sm-6">
                             <h3 class="panel-title">{{ title }}</h3>
                             <span>
-                                {% if astilleroCotizacion.foliorecotiza == 0 %}
-                                    {{ astilleroCotizacion.folio }}
+                                {% if astilleroDiasAdicionales.astillerocotizacion.foliorecotiza == 0 %}
+                                    {{ astilleroDiasAdicionales.astillerocotizacion.folio }}
                                 {% else %}
-                                    {{ astilleroCotizacion.folio }}-{{ astilleroCotizacion.foliorecotiza }}
+                                    {{ astilleroDiasAdicionales.astillerocotizacion.folio }}-{{ astilleroDiasAdicionales.astillerocotizacion.foliorecotiza }}
                                 {% endif %}
                             </span>
                         </div>
@@ -36,11 +36,8 @@
                         <li role="presentation">
                             <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
-                        <li role="presentation">
-                            <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
-                        </li>
                         <li role="presentation" class="active">
-                            <a href="#validacion" aria-controls="validacion" role="tab" data-toggle="tab">Validación</a>
+                            <a href="#validacion" aria-controls="validacion" role="tab" data-toggle="tab">Adicional</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -50,11 +47,11 @@
 
                                     <div id="info-cliente">
                                         <label>Cliente</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.nombre }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.cliente.nombre }}</div>
                                         <label>Correo electrónico</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.correo }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.cliente.correo }}</div>
                                         <label>Número de teléfono</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.telefono }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.cliente.telefono }}</div>
                                         <label>Dirección</label>
                                     </div>
                                 </div>
@@ -62,31 +59,31 @@
 
                                     <div id="info-barco">
                                         <label>Barco</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.nombre }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.nombre }}</div>
                                         <label>Modelo</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.modelo }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.modelo }}</div>
                                         <label>Eslora</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.eslora }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.eslora }}</div>
                                         <label>Manga</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.manga }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.manga }}</div>
                                         <label>Nombre del capitán</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.nombreCapitan }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.nombreCapitan }}</div>
                                         <label>Teléfono del capitán</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.telefonoCapitan }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.telefonoCapitan }}</div>
                                         <label>Correo del capitán</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.correoCapitan }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.correoCapitan }}</div>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div id="info-cliente">
                                         <label>Cliente</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.nombre }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.cliente.nombre }}</div>
                                         <label>Correo electrónico</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.correo }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.cliente.correo }}</div>
                                         <label>Número de teléfono</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.telefono }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.cliente.telefono }}</div>
                                         <label>Dirección</label>
-                                        <div class='info-input'>{{ astilleroCotizacion.barco.cliente.direccion }}</div>
+                                        <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.barco.cliente.direccion }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -98,13 +95,13 @@
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <label>Fecha inicio</label>
-                                                <div class='info-input'>{{ astilleroCotizacion.fechaLlegada|date('d-m-Y') }}</div>
+                                                <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.fechaLlegada|date('d-m-Y') }}</div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <label>Fecha fin</label>
-                                                <div class='info-input'>{{ astilleroCotizacion.fechaSalida|date('d-m-Y') }}</div>
+                                                <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.fechaSalida|date('d-m-Y') }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -113,13 +110,13 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label>Días estadía</label>
-                                    <div class='info-input'>{{ astilleroCotizacion.diasEstadia }}</div>
+                                    <div class='info-input'>{{ astilleroDiasAdicionales.astillerocotizacion.diasEstadia }}</div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label>Dolar</label>
-                                    <div class='info-input'>{{ (astilleroCotizacion.dolar/100)|number_format(2) }}</div>
+                                    <div class='info-input'>{{ (astilleroDiasAdicionales.astillerocotizacion.dolar/100)|number_format(2) }}</div>
                                 </div>
                             </div>
                         </div>
@@ -128,7 +125,7 @@
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
                                     <div id="tipocambio" class=""
-                                         data-valor="{{ astilleroCotizacion.dolar/100 }}">{{ (astilleroCotizacion.dolar/100)|number_format(2) }}
+                                         data-valor="{{ astilleroDiasAdicionales.astillerocotizacion.dolar/100 }}">{{ (astilleroDiasAdicionales.astillerocotizacion.dolar/100)|number_format(2) }}
                                         MXN
                                     </div>
                                 </div>
@@ -152,7 +149,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for AstilleroServicio in astilleroCotizacion.acservicios %}
+                                        {% for AstilleroServicio in astilleroDiasAdicionales.astillerocotizacion.acservicios %}
                                             {% if AstilleroServicio.estatus %}
                                                 <tr>
                                                     <td>
@@ -183,8 +180,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <div id="valiva" class="" data-valor="{{ astilleroCotizacion.iva }}">
-                                        <small>IVA: {{ astilleroCotizacion.iva }} %</small>
+                                    <div id="valiva" class="" data-valor="{{ astilleroDiasAdicionales.astillerocotizacion.iva }}">
+                                        <small>IVA: {{ astilleroDiasAdicionales.astillerocotizacion.iva }} %</small>
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +195,7 @@
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
                                         $
-                                        <span id="gransubtot">{{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</span>
+                                        <span id="gransubtot">{{ (astilleroDiasAdicionales.astillerocotizacion.subtotal/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -213,7 +210,7 @@
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
                                         $
-                                        <span id="graniva">{{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</span>
+                                        <span id="graniva">{{ (astilleroDiasAdicionales.astillerocotizacion.ivatotal/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -228,7 +225,7 @@
                                     <p class="letra-azul">Total:</p>
                                     <p>
                                         $
-                                        <span id="grantot">{{ (astilleroCotizacion.total/100)|number_format(2) }}</span>
+                                        <span id="grantot">{{ (astilleroDiasAdicionales.astillerocotizacion.total/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -239,7 +236,7 @@
                                 <div class="col-sm-9 text-right">
                                     <span>Tipo de cambio:</span>
                                     <div class=""
-                                         data-valor="{{ astilleroCotizacion.dolar/100 }}">{{ (astilleroCotizacion.dolar/100)|number_format(2) }}
+                                         data-valor="{{ astilleroDiasAdicionales.astillerocotizacion.dolar/100 }}">{{ (astilleroDiasAdicionales.astillerocotizacion.dolar/100)|number_format(2) }}
                                         MXN
                                     </div>
                                 </div>
@@ -263,7 +260,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for AstilleroServicio in astilleroCotizacion.acservicios %}
+                                        {% for AstilleroServicio in astilleroDiasAdicionales.astillerocotizacion.acservicios %}
                                             {% if AstilleroServicio.estatus %}
                                                 <tr>
                                                     <td>
@@ -281,10 +278,10 @@
                                                     {% elseif AstilleroServicio.servicio is not null %}
                                                         <td>{{ AstilleroServicio.servicio.nombre }}</td>
                                                     {% endif %}
-                                                    <td>$ {{ ((AstilleroServicio.precio*astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>
-                                                    <td>$ {{ ((AstilleroServicio.subtotal*astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>
-                                                    <td>$ {{ ((AstilleroServicio.iva*astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>
-                                                    <td>$ {{ ((AstilleroServicio.total*astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>
+                                                    <td>$ {{ ((AstilleroServicio.precio*astilleroDiasAdicionales.astillerocotizacion.dolar)/10000)|number_format(2) }}</td>
+                                                    <td>$ {{ ((AstilleroServicio.subtotal*astilleroDiasAdicionales.astillerocotizacion.dolar)/10000)|number_format(2) }}</td>
+                                                    <td>$ {{ ((AstilleroServicio.iva*astilleroDiasAdicionales.astillerocotizacion.dolar)/10000)|number_format(2) }}</td>
+                                                    <td>$ {{ ((AstilleroServicio.total*astilleroDiasAdicionales.astillerocotizacion.dolar)/10000)|number_format(2) }}</td>
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}
@@ -294,8 +291,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <div  class="" data-valor="{{ astilleroCotizacion.iva }}">
-                                        <small>IVA: {{ astilleroCotizacion.iva }} %</small>
+                                    <div  class="" data-valor="{{ astilleroDiasAdicionales.astillerocotizacion.iva }}">
+                                        <small>IVA: {{ astilleroDiasAdicionales.astillerocotizacion.iva }} %</small>
                                     </div>
                                 </div>
                             </div>
@@ -309,7 +306,7 @@
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
                                         $
-                                        <span>{{ ((astilleroCotizacion.subtotal*astilleroCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        <span>{{ ((astilleroDiasAdicionales.astillerocotizacion.subtotal*astilleroDiasAdicionales.astillerocotizacion.dolar)/10000)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -324,7 +321,7 @@
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
                                         $
-                                        <span>{{ ((astilleroCotizacion.ivatotal*astilleroCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        <span>{{ ((astilleroDiasAdicionales.astillerocotizacion.ivatotal*astilleroDiasAdicionales.astillerocotizacion.dolar)/10000)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -339,77 +336,51 @@
                                     <p class="letra-azul">Total:</p>
                                     <p>
                                         $
-                                        <span>{{ ((astilleroCotizacion.total*astilleroCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        <span>{{ ((astilleroDiasAdicionales.astillerocotizacion.total*astilleroDiasAdicionales.astillerocotizacion.dolar)/10000)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="correo">
+
+                        <div role="tabpanel" class="tab-pane active" id="validacion">
                             <div class="row">
-                                <div class="col-sm-8 col-sm-offset-2">
-                                    <label>Mensaje en el correo:</label>
-                                    <div class="info-input">{{ astilleroCotizacion.mensaje|raw }}</div>
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Estadía</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Días adicionales</label>
+                                    {{ form_widget(edit_form.cantidad) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Precio x pie x día (USD)</label>
+                                        {{ form_widget(edit_form.precio) }}
+                                </div>
+                            </div>
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-azul">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane active" id="validacion">
-                            {% if edit_form.validanovo is defined %}
-                                <div class="row">
-                                    <div class="col-sm-12 espacio-linea">
-                                        <label>Indique su respuesta</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="middle">
-                                            {{ form_widget(edit_form.validanovo) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <button type="submit" class="btn btn-azul pull-right">
-                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                            Guardar
-                                        </button>
-                                    </div>
-                                </div>
-                                <div id="notarechazado">
-                                    <div class="row">
-                                        <div class="col-sm-8 espacio-linea-arriba2">
-                                            {{ form_row(edit_form.notasnovo) }}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endif %}
-                            {% if edit_form.validacliente is defined %}
-                                <div class="row">
-                                    <div class="col-sm-12 espacio-linea">
-                                        <label>Aceptación como cliente</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="middle">
-                                            {{ form_widget(edit_form.validacliente) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <button type="submit" class="btn btn-azul pull-right">
-                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                            Guardar
-                                        </button>
-                                    </div>
-                                </div>
-                                <div id="notarechazado">
-                                    <div class="row">
-                                        <div class="col-sm-8 espacio-linea-arriba2">
-                                            {{ form_row(edit_form.notascliente) }}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        </div>
                     </div>
+                    {% if edit_form.estatus is defined %}
+                        {{ form_widget(edit_form.estatus,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if edit_form.otroservicio is defined %}
+                        {{ form_widget(edit_form.otroservicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if edit_form.producto is defined %}
+                        {{ form_widget(edit_form.producto,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if edit_form.servicio is defined %}
+                        {{ form_widget(edit_form.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
                     {{ form_end(edit_form) }}
                 </div>
             </div>
