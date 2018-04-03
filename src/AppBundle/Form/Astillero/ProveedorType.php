@@ -22,7 +22,8 @@ class ProveedorType extends AbstractType
         $builder
             ->add('nombre')
             ->add('razonsocial',TextType::class,[
-                'label' => 'Razón Social'
+                'label' => 'Razón Social',
+                'required' => false
             ])
             ->add('correo')
             ->add('telefono',TextType::class,[
@@ -50,10 +51,12 @@ class ProveedorType extends AbstractType
                 'multiple' => true
             ])
             ->add('rfc',TextType::class,[
-                'label' => 'RFC'
+                'label' => 'RFC',
+                'required' => false
             ])
             ->add('direccionfiscal',TextType::class,[
-                'label' => 'Dirección fiscal'
+                'label' => 'Dirección fiscal',
+                'required' => false
             ])
         ;
     }/**

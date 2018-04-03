@@ -1092,11 +1092,11 @@ $('#appbundle_astillerocotizacion_fechaLlegada').on("change", function () {
     var nueva_estadia_cantidad = dias * $("#estadia_cantidad").data('eslora');
     $("#estadia_cantidad").data('dias', dias);
     $("#estadia_cantidad").data('valor', nueva_estadia_cantidad);
-    $("#estadia_cantidad").html(nueva_estadia_cantidad + ' (pie por día)');
+    $("#estadia_cantidad").html(dias + ' (pie por día)');
     calculaSubtotalesAstillero($("#fila_estadia"));
     $("#estadia_cantidad_mxn").data('dias', dias);
     $("#estadia_cantidad_mxn").data('valor', nueva_estadia_cantidad);
-    $("#estadia_cantidad_mxn").html(nueva_estadia_cantidad + ' (pie por día)');
+    $("#estadia_cantidad_mxn").html(dias + ' (pie por día)');
     calculaSubtotalesAstillero($("#fila_estadia_mxn"));
 
     $("#electricidad_cantidad").data('valor', dias);
@@ -1117,11 +1117,11 @@ $('#appbundle_astillerocotizacion_fechaSalida').on("change", function () {
     var nueva_estadia_cantidad = dias * $("#estadia_cantidad").data('eslora');
     $("#estadia_cantidad").data('dias', dias);
     $("#estadia_cantidad").data('valor', nueva_estadia_cantidad);
-    $("#estadia_cantidad").html(nueva_estadia_cantidad + ' (pie por día)');
+    $("#estadia_cantidad").html(dias + ' (pie por día)');
     calculaSubtotalesAstillero($('#fila_estadia'));
     $("#estadia_cantidad_mxn").data('dias', dias);
     $("#estadia_cantidad_mxn").data('valor', nueva_estadia_cantidad);
-    $("#estadia_cantidad_mxn").html(nueva_estadia_cantidad + ' (pie por día)');
+    $("#estadia_cantidad_mxn").html(dias + ' (pie por día)');
     calculaSubtotalesAstillero($('#fila_estadia_mxn'));
 
     $("#electricidad_cantidad").data('valor', dias);
@@ -1138,11 +1138,11 @@ $('#appbundle_astillerocotizacion_diasEstadia').keyup(function () {
     var nueva_estadia_cantidad = dias * $("#estadia_cantidad").data('eslora');
     $("#estadia_cantidad").data('dias', dias);
     $("#estadia_cantidad").data('valor', nueva_estadia_cantidad);
-    $("#estadia_cantidad").html(nueva_estadia_cantidad + ' (pie por día)');
+    $("#estadia_cantidad").html(dias + ' (pie por día)');
     calculaSubtotalesAstillero($('#fila_estadia'));
     $("#estadia_cantidad_mxn").data('dias', dias);
     $("#estadia_cantidad_mxn").data('valor', nueva_estadia_cantidad);
-    $("#estadia_cantidad_mxn").html(nueva_estadia_cantidad + ' (pie por día)');
+    $("#estadia_cantidad_mxn").html(dias + ' (pie por día)');
     calculaSubtotalesAstillero($('#fila_estadia_mxn'));
 
     $("#electricidad_cantidad").data('valor', dias);

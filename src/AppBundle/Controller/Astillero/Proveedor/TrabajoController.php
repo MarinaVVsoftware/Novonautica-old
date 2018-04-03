@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 /**
  * Trabajo controller.
  *
- * @Route("astillero/proveedor/trabajo")
+ * @Route("astillero/proveedor/oficio")
  */
 class TrabajoController extends Controller
 {
@@ -28,7 +28,7 @@ class TrabajoController extends Controller
 
         return $this->render('astillero/proveedor/trabajo/index.html.twig', array(
             'trabajos' => $trabajos,
-            'title' => 'Catálogo trabajos'
+            'title' => 'Catálogo oficios'
         ));
     }
 
@@ -97,7 +97,7 @@ class TrabajoController extends Controller
             'trabajo' => $trabajo,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'title' => 'Editar Tipo Trabajo'
+            'title' => 'Editar Oficio'
         ));
     }
 

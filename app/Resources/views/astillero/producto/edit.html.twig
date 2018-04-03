@@ -3,6 +3,17 @@
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
+            <div class="row">
+                <div class="col-sm-12">
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×
+                            </button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
             <div class="panel panel-novo">
                 <div class="panel-heading">
                     <div class="row">
