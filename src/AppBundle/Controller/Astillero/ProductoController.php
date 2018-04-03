@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Astillero;
 
 use AppBundle\Entity\Astillero\Producto;
+use DataTables\DataTablesInterface;
 use Proxies\__CG__\AppBundle\Entity\Astillero\Servicio;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -28,26 +29,24 @@ class ProductoController extends Controller
      *
      * @Route("/", name="astillero_producto_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
         if ($request->isXmlHttpRequest()) {
             try {
-                $datatables = $this->get('datatables');
-                $results = $datatables->handle($request, 'AstilleroProducto');
+                $results = $dataTables->handle($request, 'AstilleroProducto');
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getStatusCode());
             }
             }
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $productos = $em->getRepository('AppBundle:Astillero\Producto')->findAll();
 
-        return $this->render('astillero/producto/index.html.twig', array(
-//            'productos' => $productos,
-            'title' => 'Astillero Productos'
-        ));
+        return $this->render('astillero/producto/index.html.twig', ['title' => 'Astillero Productos']);
     }
 
     /**
@@ -55,6 +54,10 @@ class ProductoController extends Controller
      *
      * @Route("/nuevo", name="astillero_producto_new")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
@@ -70,23 +73,30 @@ class ProductoController extends Controller
             return $this->redirectToRoute('astillero_producto_index');
         }
 
-        return $this->render('astillero/producto/new.html.twig', array(
+        return $this->render('astillero/producto/new.html.twig', [
             'producto' => $producto,
             'form' => $form->createView(),
             'title' => 'Astillero Nuevo Producto'
-        ));
+        ]);
     }
+
     /**
      * @Route("/buscarproducto/{id}.{_format}", name="ajax_astillero_busca_producto", defaults={"_format"="JSON"})
      *
+     * @param Request $request
+     * @param Producto $producto
+     *
+     * @return Response
      */
     public function buscarAction(Request $request, Producto $producto){
         $encoders = [new XmlEncoder(), new JsonEncoder()];
         $normalizer = new ObjectNormalizer();
         $normalizer->setCircularReferenceLimit(1);
+
         $normalizer->setCircularReferenceHandler(function ($object) {
             return $object->getId();
         });
+
         $normalizer->setIgnoredAttributes(['ACotizacionesServicios']);
         $normalizers = [$normalizer];
         $serializer = new Serializer($normalizers, $encoders);
@@ -98,6 +108,8 @@ class ProductoController extends Controller
      *
      * @Route("/{id}", name="astillero_producto_show")
      * @Method("GET")
+     * @param Producto $producto
+     * @return Response
      */
     public function showAction(Producto $producto)
     {
@@ -115,6 +127,12 @@ class ProductoController extends Controller
      *
      * @Route("/{id}/editar", name="astillero_producto_edit")
      * @Method({"GET", "POST"})
+     *
+     *
+     * @param Request $request
+     * @param Producto $producto
+     *
+     * @return RedirectResponse|Response
      */
     public function editAction(Request $request, Producto $producto)
     {
@@ -141,6 +159,11 @@ class ProductoController extends Controller
      *
      * @Route("/{id}", name="astillero_producto_delete")
      * @Method("DELETE")
+     *
+     * @param Request $request
+     * @param Producto $producto
+     *
+     * @return RedirectResponse
      */
     public function deleteAction(Request $request, Producto $producto)
     {
@@ -161,12 +184,12 @@ class ProductoController extends Controller
      *
      * @param Producto $producto The producto entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
      */
     private function createDeleteForm(Producto $producto)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('astillero_producto_delete', array('id' => $producto->getId())))
+            ->setAction($this->generateUrl('astillero_producto_delete', ['id' => $producto->getId()]))
             ->setMethod('DELETE')
             ->getForm()
         ;
