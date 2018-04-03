@@ -26,6 +26,8 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function handle(DataTableQuery $request): DataTableResults
     {
@@ -39,20 +41,22 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
 
         if ($request->search->value) {
             $q->where('(LOWER(ap.nombre) LIKE :search OR ' .
-                'ap.precio LIKE :search  OR ap.unidad LIKE :search OR ap.descripcion LIKE :search)'
+                'ap.identificador LIKE :search OR ap.precio LIKE :search OR ap.unidad LIKE :search OR ap.proveedor LIKE :search)'
             )
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
         }
 
         foreach ($request->order as $order) {
             if ($order->column === 0) {
-                $q->addOrderBy('ap.nombre', $order->dir);
+                $q->addOrderBy('ap.identificador', $order->dir);
             } elseif ($order->column === 1) {
-                $q->addOrderBy('ap.precio', $order->dir);
+                $q->addOrderBy('ap.proveedor', $order->dir);
             } elseif ($order->column === 2) {
-                $q->addOrderBy('ap.unidad', $order->dir);
+                $q->addOrderBy('ap.nombre', $order->dir);
             } elseif ($order->column === 3) {
-                $q->addOrderBy('ap.descripcion', $order->dir);
+                $q->addOrderBy('ap.precio', $order->dir);
+            } elseif ($order->column === 4) {
+                $q->addOrderBy('ap.unidad', $order->dir);
             }
         }
 
@@ -71,10 +75,11 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
             $producto = $productos[$index];
 
             $results->data[] = [
+                $producto->getIdentificador(),
+                $producto->getProveedor(),
                 $producto->getNombre(),
                 '$' . number_format($producto->getPrecio() / 100, 2).' USD',
                 $producto->getUnidad(),
-                $producto->getDescripcion(),
                 $producto->getId()
             ];
         }

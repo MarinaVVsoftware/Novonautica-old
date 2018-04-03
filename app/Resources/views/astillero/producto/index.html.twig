@@ -16,43 +16,18 @@
                             <table class="table table-novo">
                                 <thead>
                                 <tr>
+                                    <th>ID. Producto</th>
+                                    <th>Proveedor</th>
                                     <th>Nombre</th>
                                     <th>Precio</th>
                                     <th>Unidad</th>
-                                    <th>Descripción</th>
-                                    <th></th>
+                                    <th class="no-sort"></th>
                                 </tr>
                                 </thead>
-                                {#<tbody>#}
-                                {#{% for producto in productos %}#}
-                                    {#<tr>#}
-                                        {#<td>{{ producto.id }}</td>#}
-                                        {#<td>{{ producto.nombre }}</td>#}
-                                        {#<td>$ {{ (producto.precio/100)|number_format(2) }}</td>#}
-                                        {#<td>{{ producto.unidad }}</td>#}
-                                        {#<td>{{ producto.descripcion }}</td>#}
-                                        {#<td>#}
-                                            {#<a class="btn btn-azul" href="{{ path('astillero_producto_edit', { 'id': producto.id }) }}">#}
-                                                {#Editar#}
-                                            {#</a>#}
-                                        {#</td>#}
-                                    {#</tr>#}
-                                {#{% endfor %}#}
-                                {#</tbody>#}
                             </table>
                         </div>
                     </div>
                 </div>
-                {#<div class="panel-footer">#}
-                    {#<div class="row">#}
-                        {#<div class="col-sm-12">#}
-                            {#<a class="btn btn-azul" href="{{ path('astillero_producto_new') }}">#}
-                                {#<i class="fa fa-plus" aria-hidden="true"></i>#}
-                                {#Agregar#}
-                            {#</a>#}
-                        {#</div>#}
-                    {#</div>#}
-                {#</div>#}
             </div>
         </section>
     </div>
@@ -61,24 +36,32 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
-        (function ($, settings) {
-            $('.table-novo').DataTable({
-                    ...settings,
-                ajax: '{{ path('astillero_producto_index') }}',
-                order: [[0, 'desc']],
-                createdRow: function (row, data) {
-                let actionsCell = row.cells[4];
-                actionsCell.innerHTML = `
+      (function ($, settings) {
+        $('.table-novo').DataTable({
+          ...settings,
+          ajax: '{{ path('astillero_producto_index') }}',
+          order: [[5, 'desc']],
+          columns: [
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 0},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 0},
+          ],
+          createdRow: function (row, data) {
+            let actionsCell = row.cells[5];
+            actionsCell.innerHTML = `
             <ul class="unstyled-list list-inline" style="margin: 0">
                 <li>
-                <a href="${data[4]}/editar">
+                <a href="${data[5]}/editar">
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                 </a>
                 </li>
             </ul>
             `
-            },
+          },
         });
-        })(jQuery, datatablesSettings);
+      })(jQuery, datatablesSettings);
     </script>
 {% endblock %}
