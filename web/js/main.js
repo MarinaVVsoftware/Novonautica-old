@@ -1072,6 +1072,13 @@ $('#appbundle_astillerocotizacion_dolar').keyup(function () {
     var fila = $('#fila_estadia');
     calculaSubtotalesAstillero(fila);
 
+    var dia_adicional_precio = $('#appbundle_astillerocotizacion_acservicios_8_precio').val();
+    var dia_adicional_precio_mxn = dia_adicional_precio * dolar;
+    $('#dia_adicional_precio').data('valor', dia_adicional_precio_mxn);
+    $('#dia_adicional_precio').html('$ ' + parseFloat(dia_adicional_precio_mxn).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    var fila = $('#fila_dia_adicional');
+    calculaSubtotalesAstillero(fila);
+
   var idfila = 0;
   $("#a_nuevacotizacion tbody .servicio-agregado").each(function () {
     precio = $(this).children('.valorprecio').data('valor');
@@ -1186,7 +1193,10 @@ $('#appbundle_astillerocotizacion_acservicios_6_estatus').on('click',function ()
 $('#appbundle_astillerocotizacion_acservicios_7_estatus').on('click',function () {
     astilleroOcultaMuestraFila(this,$('#cotizainspeccionar'),$('#cotizainspeccionar_mxn'));
 });
-
+//-- dia adicional
+$('#appbundle_astillerocotizacion_acservicios_8_estatus').on('click', function () {
+    astilleroOcultaMuestraFila(this,$('#fila_dia_adicional'),$('#fila_dia_adicional_mxn'));
+});
 //-- Uso de grua (sacar varada y botadura) --
 $('#appbundle_astillerocotizacion_acservicios_0_precio').keyup(function () {
     var grua_precio = $(this).val();
@@ -1313,9 +1323,7 @@ $('#appbundle_astillerocotizacion_acservicios_6_precio').keyup(function () {
     fila = $('#cotizalimpieza_mxn');
     calculaSubtotalesAstillero(fila);
 });
-
-
-
+//-- uso de explanada
 $('#appbundle_astillerocotizacion_acservicios_4_precio').keyup(function () {
   var explanada_precio = $(this).val();
   $('#explanada_precio').html('$ ' + parseFloat(explanada_precio).toFixed(2));
@@ -1329,6 +1337,26 @@ $('#appbundle_astillerocotizacion_acservicios_4_precio').keyup(function () {
   $('#explanada_precio_mxn').data('valor', explanada_precio_mxn);
   fila = $('#cotizaexplanada_mxn');
   calculaSubtotalesAstillero(fila);
+});
+
+//-- dias adicionales
+$('#appbundle_astillerocotizacion_acservicios_8_cantidad').keyup(function () {
+    var dias_adicionales = $(this).val();
+    var nuevo_dias_adicionales_cantidad = dias_adicionales * $("#dia_adicional_cantidad").data('eslora');
+    $("#dia_adicional_cantidad").data('dias', dias_adicionales);
+    $("#dia_adicional_cantidad").data('valor', nuevo_dias_adicionales_cantidad);
+    $("#dia_adicional_cantidad").html(dias_adicionales + ' (pie por día)');
+    calculaSubtotalesAstillero($('#fila_dia_adicional'));
+    $("#dia_adicional_cantidad_mxn").data('dias', dias_adicionales);
+    $("#dia_adicional_cantidad_mxn").data('valor', nuevo_dias_adicionales_cantidad);
+    $("#dia_adicional_cantidad_mxn").html(dias_adicionales + ' (pie por día)');
+    calculaSubtotalesAstillero($('#fila_dia_adicional_mxn'));
+    $("#electricidad_cantidad").data('valor', dias_adicionales);
+    $("#electricidad_cantidad").html(dias_adicionales);
+    calculaSubtotalesAstillero($("#cotizaelectricidad"));
+    $("#electricidad_cantidad_mxn").data('valor', dias_adicionales);
+    $("#electricidad_cantidad_mxn").html(dias_adicionales);
+    calculaSubtotalesAstillero($("#cotizaelectricidad_mxn"));
 });
 
 $('#a_nuevacotizacion').on('keyup', 'input', function () {

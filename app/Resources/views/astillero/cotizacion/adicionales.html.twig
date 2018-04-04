@@ -70,7 +70,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Recotización</h3>
+                            <h3 class="panel-title">{{ title }}</h3>
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right"
@@ -189,6 +189,41 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Días adicionales</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <div class="input-estatus">
+                                        <span class="cont-label-novo">
+                                             {% if form.acservicios[8].estatus is defined %}
+                                                 {{ form_errors(form.acservicios[8].estatus) }}
+                                                 {{ form_widget(form.acservicios[8].estatus) }}
+                                                 {{ form_label(form.acservicios[8].estatus) }}
+                                             {% endif %}
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Días</label>
+                                    {% if form.acservicios[8].cantidad is defined %}
+                                        {{ form_widget(form.acservicios[8].cantidad) }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Precio x pie x día (USD)</label>
+                                    {% if form.acservicios[8].precio is defined %}
+                                        {{ form_widget(form.acservicios[8].precio) }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row espacio-linea">
+                                <div class="col-sm-7">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
                                     <label class="tipo-letra1">Sacar varada y botadura</label>
                                 </div>
                             </div>
@@ -269,7 +304,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label>Precio x día (MXN)</label>
+                                    <label>Precio x día adicional (MXN)</label>
                                     {% if form.acservicios.5.precio is defined %}
                                         {{ form_widget(form.acservicios.5.precio) }}
                                     {% endif %}
@@ -280,35 +315,35 @@
                                     <hr>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-6 col-sm-offset-1">
-                                    <label class="tipo-letra1">Estadía</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-1">
-                                    <div class="input-estatus">
-                                        <span class="cont-label-novo">
-                                             {% if form.acservicios.1.estatus is defined %}
-                                                 {{ form_errors(form.acservicios.1.estatus) }}
-                                                 {{ form_widget(form.acservicios.1.estatus) }}
-                                                 {{ form_label(form.acservicios.1.estatus) }}
-                                             {% endif %}
-                                         </span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <label>Precio x pie x día (USD)</label>
-                                    {% if form.acservicios.1.precio is defined %}
-                                        {{ form_widget(form.acservicios.1.precio) }}
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="row espacio-linea">
-                                <div class="col-sm-7">
-                                    <hr>
-                                </div>
-                            </div>
+                            {#<div class="row">#}
+                                {#<div class="col-sm-6 col-sm-offset-1">#}
+                                    {#<label class="tipo-letra1">Estadía</label>#}
+                                {#</div>#}
+                            {#</div>#}
+                            {#<div class="row">#}
+                                {#<div class="col-sm-1">#}
+                                    {#<div class="input-estatus">#}
+                                        {#<span class="cont-label-novo">#}
+                                             {#{% if form.acservicios.1.estatus is defined %}#}
+                                                 {#{{ form_errors(form.acservicios.1.estatus) }}#}
+                                                 {#{{ form_widget(form.acservicios.1.estatus) }}#}
+                                                 {#{{ form_label(form.acservicios.1.estatus) }}#}
+                                             {#{% endif %}#}
+                                         {#</span>#}
+                                    {#</div>#}
+                                {#</div>#}
+                                {#<div class="col-sm-3">#}
+                                    {#<label>Precio x pie x día (USD)</label>#}
+                                    {#{% if form.acservicios.1.precio is defined %}#}
+                                        {#{{ form_widget(form.acservicios.1.precio) }}#}
+                                    {#{% endif %}#}
+                                {#</div>#}
+                            {#</div>#}
+                            {#<div class="row espacio-linea">#}
+                                {#<div class="col-sm-7">#}
+                                    {#<hr>#}
+                                {#</div>#}
+                            {#</div>#}
                             <div class="row">
                                 <div class="col-sm-6 col-sm-offset-1">
                                     <label class="tipo-letra1">Limpieza de locación</label>
@@ -446,9 +481,9 @@
                                 </div>
                             </div>
                             {#{% if form.acservicios.5.estatus is defined %}#}
-                                {#{{ form_errors(form.acservicios.5.estatus) }}#}
-                                {#{{ form_widget(form.acservicios.5.estatus,{'attr':{'class':'hidden'}}) }}#}
-                                {#{{ form_label(form.acservicios.5.estatus) }}#}
+                            {#{{ form_errors(form.acservicios.5.estatus) }}#}
+                            {#{{ form_widget(form.acservicios.5.estatus,{'attr':{'class':'hidden'}}) }}#}
+                            {#{{ form_label(form.acservicios.5.estatus) }}#}
                             {#{% endif %}#}
                         </div>
                         <div role="tabpanel" class="tab-pane" id="total">
@@ -486,6 +521,25 @@
                                                         {#{{ form_widget(form.acservicios.vars.prototype) }}#}
                                                     {% endfilter %}"
                                         >
+                                        <tr id="fila_dia_adicional" class="{% if astilleroCotizacion.acservicios.8.estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="fila_estadia_mxn">
+                                            <td id="dia_adicional_cantidad" class="valorcantidad" data-valor="0" data-dias="0" data-eslora="{{ astilleroCotizacion.barco.eslora }}">
+                                                0 (pie por día)
+                                            </td>
+                                            <td>Días adicionales</td>
+                                            <td id="dia_adicional_precio" class="valorprecio" data-valor="{{ (astilleroCotizacion.acservicios.8.precio * astilleroCotizacion.dolar)/10000 }}">
+                                                $ {{ ((astilleroCotizacion.acservicios.8.precio * astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                            </td>
+                                            <td id="dia_adicional_subtotal" class="valorsubtotal" data-valor="{{ (astilleroCotizacion.acservicios.8.subtotal * astilleroCotizacion.dolar)/10000 }}">
+                                                $ {{ ((astilleroCotizacion.acservicios.8.subtotal * astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                            </td>
+                                            <td id="dia_adicional_iva" class="valoriva" data-valor="{{ (astilleroCotizacion.acservicios.8.iva * astilleroCotizacion.dolar)/10000 }}">
+                                                $ {{ ((astilleroCotizacion.acservicios.8.iva * astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                            </td>
+                                            <td id="dia_adicional_total" class="valortotal" data-valor="{{ (astilleroCotizacion.acservicios.8.total * astilleroCotizacion.dolar)/10000 }}">
+                                                $ {{ ((astilleroCotizacion.acservicios.8.total * astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                            </td>
+                                            <td></td>
+                                        </tr>
                                         <tr id="fila_grua" class="{% if astilleroCotizacion.acservicios.0.estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="fila_grua_mxn">
                                             <td id="grua_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios.0.cantidad }}">
                                                 {{ astilleroCotizacion.acservicios.0.cantidad }}
@@ -639,46 +693,46 @@
                                             </td>
                                             <td></td>
                                         </tr>
-                                        {% for servicioagregado in form.acservicios %}
-                                            {% if (servicioagregado.producto.vars.value is not empty) or (servicioagregado.servicio.vars.value is not empty) or (servicioagregado.otroservicio.vars.value is not empty) %}
-                                            {#{% form_theme servicioagregado 'astillero/cotizacion/coleccion-servicio.twig' %}#}
-                                            <tr class="servicio-agregado" data-id="{{ servicioagregado.vars.name }}">
-                                                <td class="valorcantidad" data-valor="{{ servicioagregado.cantidad.vars.value }}" >{{ form_widget(servicioagregado.cantidad) }}</td>
-                                                    {% if servicioagregado.producto.vars.value is not empty %}
-                                                        <td class="td-producto">{{ form_widget(servicioagregado.producto) }}</td>
-                                                        <td class="td-servicio hide">{{ form_widget(servicioagregado.servicio) }}</td>
-                                                        <td class="td-otroservicio hide">{{ form_widget(servicioagregado.otroservicio) }}</td>
-                                                    {% elseif servicioagregado.servicio.vars.value is not empty %}
-                                                        <td class="td-producto hide">{{ form_widget(servicioagregado.producto) }}</td>
-                                                        <td class="td-servicio">{{ form_widget(servicioagregado.servicio) }}</td>
-                                                        <td class="td-otroservicio hide">{{ form_widget(servicioagregado.otroservicio) }}</td>
-                                                    {% elseif servicioagregado.otroservicio.vars.value is not empty %}
-                                                        <td class="td-producto hide">{{ form_widget(servicioagregado.producto) }}</td>
-                                                        <td class="td-servicio hide">{{ form_widget(servicioagregado.servicio) }}</td>
-                                                        <td class="td-otroservicio">{{ form_widget(servicioagregado.otroservicio) }}</td>
-                                                    {% endif %}
-                                                {{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}
-                                                <td class="valorprecio" data-valor="{{ servicioagregado.precio.vars.value }}">
-                                                    {% if servicioagregado.otroservicio.vars.value is not empty %}
-                                                        {{ form_widget(servicioagregado.precio) }}
-                                                    {% else %}
-                                                        $ {{ ((servicioagregado.precio.vars.value)) }}
-                                                        <div class="hide">
-                                                            {{ form_widget(servicioagregado.precio,{'attr':{'class':'hidden'}}) }}
-                                                        </div>
-                                                    {% endif %}
-                                                </td>
-                                                <td class="valorsubtotal" data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">$ {{ (servicioagregado.vars.value.subtotal/100)|number_format(2) }}</td>
-                                                <td class="valoriva" data-valor="{{ servicioagregado.vars.value.iva/100 }}">$ {{ (servicioagregado.vars.value.iva/100)|number_format(2)}}</td>
-                                                <td class="valortotal" data-valor="{{ servicioagregado.vars.value.total/100 }}">$ {{ (servicioagregado.vars.value.total/100)|number_format(2)}}</td>
-                                                <td>
-                                                    <a href="#" class="remove-servicio btn btn-naranja">
-                                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            {% endif %}
-                                        {% endfor %}
+                                        {#{% for servicioagregado in form.acservicios %}#}
+                                            {#{% if (servicioagregado.producto.vars.value is not empty) or (servicioagregado.servicio.vars.value is not empty) or (servicioagregado.otroservicio.vars.value is not empty) %}#}
+                                                {#{% form_theme servicioagregado 'astillero/cotizacion/coleccion-servicio.twig' %}#}
+                                                {#<tr class="servicio-agregado" data-id="{{ servicioagregado.vars.name }}">#}
+                                                    {#<td class="valorcantidad" data-valor="{{ servicioagregado.cantidad.vars.value }}" >{{ form_widget(servicioagregado.cantidad) }}</td>#}
+                                                    {#{% if servicioagregado.producto.vars.value is not empty %}#}
+                                                        {#<td class="td-producto">{{ form_widget(servicioagregado.producto) }}</td>#}
+                                                        {#<td class="td-servicio hide">{{ form_widget(servicioagregado.servicio) }}</td>#}
+                                                        {#<td class="td-otroservicio hide">{{ form_widget(servicioagregado.otroservicio) }}</td>#}
+                                                    {#{% elseif servicioagregado.servicio.vars.value is not empty %}#}
+                                                        {#<td class="td-producto hide">{{ form_widget(servicioagregado.producto) }}</td>#}
+                                                        {#<td class="td-servicio">{{ form_widget(servicioagregado.servicio) }}</td>#}
+                                                        {#<td class="td-otroservicio hide">{{ form_widget(servicioagregado.otroservicio) }}</td>#}
+                                                    {#{% elseif servicioagregado.otroservicio.vars.value is not empty %}#}
+                                                        {#<td class="td-producto hide">{{ form_widget(servicioagregado.producto) }}</td>#}
+                                                        {#<td class="td-servicio hide">{{ form_widget(servicioagregado.servicio) }}</td>#}
+                                                        {#<td class="td-otroservicio">{{ form_widget(servicioagregado.otroservicio) }}</td>#}
+                                                    {#{% endif %}#}
+                                                    {#{{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}#}
+                                                    {#<td class="valorprecio" data-valor="{{ servicioagregado.precio.vars.value }}">#}
+                                                        {#{% if servicioagregado.otroservicio.vars.value is not empty %}#}
+                                                            {#{{ form_widget(servicioagregado.precio) }}#}
+                                                        {#{% else %}#}
+                                                            {#$ {{ ((servicioagregado.precio.vars.value)) }}#}
+                                                            {#<div class="hide">#}
+                                                                {#{{ form_widget(servicioagregado.precio,{'attr':{'class':'hidden'}}) }}#}
+                                                            {#</div>#}
+                                                        {#{% endif %}#}
+                                                    {#</td>#}
+                                                    {#<td class="valorsubtotal" data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">$ {{ (servicioagregado.vars.value.subtotal/100)|number_format(2) }}</td>#}
+                                                    {#<td class="valoriva" data-valor="{{ servicioagregado.vars.value.iva/100 }}">$ {{ (servicioagregado.vars.value.iva/100)|number_format(2)}}</td>#}
+                                                    {#<td class="valortotal" data-valor="{{ servicioagregado.vars.value.total/100 }}">$ {{ (servicioagregado.vars.value.total/100)|number_format(2)}}</td>#}
+                                                    {#<td>#}
+                                                        {#<a href="#" class="remove-servicio btn btn-naranja">#}
+                                                            {#<i class="fa fa-times" aria-hidden="true"></i>#}
+                                                        {#</a>#}
+                                                    {#</td>#}
+                                                {#</tr>#}
+                                            {#{% endif %}#}
+                                        {#{% endfor %}#}
                                         </tbody>
                                     </table>
                                 </div>
@@ -778,6 +832,24 @@
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        <tr id="fila_dia_adicional_mxn" class="{% if astilleroCotizacion.acservicios.8.estatus == 0 %}hidden{% endif %} servicio-agregado">
+                                            <td id="dia_adicional_cantidad_mxn" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios.8.cantidad }}" data-dias="0" data-eslora="{{ astilleroCotizacion.barco.eslora }}">
+                                                0 (pie por día)
+                                            </td>
+                                            <td>Días adicionales</td>
+                                            <td id="dia_adicional_precio_mxn" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios.8.precio/100 }}">
+                                                $ {{ (astilleroCotizacion.acservicios.8.precio/100)|number_format(2) }}
+                                            </td>
+                                            <td id="dia_adicional_subtotal_mxn" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios.8.subtotal/100 }}">
+                                                $ {{ (astilleroCotizacion.acservicios.8.subtotal/100)|number_format(2) }}
+                                            </td>
+                                            <td id="dia_adicional_iva_mxn" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios.8.iva/100 }}">
+                                                $ {{ (astilleroCotizacion.acservicios.8.iva/100)|number_format(2) }}
+                                            </td>
+                                            <td id="dia_adicional_total_mxn" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios.8.total/100 }}">
+                                                $ {{ (astilleroCotizacion.acservicios.8.total/100)|number_format(2) }}
+                                            </td>
+                                        </tr>
                                         <tr id="fila_grua_mxn" class="{% if astilleroCotizacion.acservicios.0.estatus == 0 %}hidden{% endif %} servicio-agregado">
                                             <td id="grua_cantidad_mxn" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios.0.cantidad }}">
                                                 {{ astilleroCotizacion.acservicios.0.cantidad }}
@@ -918,40 +990,40 @@
                                                 ${{ (astilleroCotizacion.acservicios[7].total/astilleroCotizacion.dolar)|number_format(2) }}
                                             </td>
                                         </tr>
-                                        {% for servicioagregado in form.acservicios %}
-                                            {% if (servicioagregado.producto.vars.value is not empty) or (servicioagregado.servicio.vars.value is not empty) or (servicioagregado.otroservicio.vars.value is not empty) %}
-                                            <tr class="servicio-agregado_mxn" id="{{ servicioagregado.vars.name }}">
-                                                <td class="valorcantidad" data-valor="{{ servicioagregado.cantidad.vars.value }}" >{{ servicioagregado.cantidad.vars.value }}</td>
-                                                {% if servicioagregado.producto.vars.value is not empty %}
-                                                    <td class="td-producto">{{ servicioagregado.producto.vars.data.nombre }}</td>
-                                                    <td class="valorprecio" data-valor="{{ ((servicioagregado.precio.vars.value/astilleroCotizacion.dolar)*100) }}">
-                                                        $ {{ ((servicioagregado.precio.vars.value/astilleroCotizacion.dolar)*100)|number_format(2) }}
-                                                    </td>
-                                                {% elseif servicioagregado.servicio.vars.value is not empty %}
-                                                    <td class="td-servicio">{{ servicioagregado.servicio.vars.data.nombre }}</td>
-                                                    <td class="valorprecio" data-valor="{{ servicioagregado.precio.vars.data/astilleroCotizacion.dolar }}">
-                                                        $ {{ (servicioagregado.precio.vars.data/astilleroCotizacion.dolar) }}
-                                                    </td>
-                                                {% elseif servicioagregado.otroservicio.vars.value is not empty %}
-                                                    <td class="td-otroservicio">{{ servicioagregado.otroservicio.vars.value }}</td>
-                                                    <td class="valorprecio" data-valor="{{ ((servicioagregado.precio.vars.value)/astilleroCotizacion.dolar)*100 }}">
-                                                        $ {{ ((servicioagregado.precio.vars.value/astilleroCotizacion.dolar)*100)|number_format(2) }}
-                                                    </td>
-                                                {% endif %}
+                                        {#{% for servicioagregado in form.acservicios %}#}
+                                            {#{% if (servicioagregado.producto.vars.value is not empty) or (servicioagregado.servicio.vars.value is not empty) or (servicioagregado.otroservicio.vars.value is not empty) %}#}
+                                                {#<tr class="servicio-agregado_mxn" id="{{ servicioagregado.vars.name }}">#}
+                                                    {#<td class="valorcantidad" data-valor="{{ servicioagregado.cantidad.vars.value }}" >{{ servicioagregado.cantidad.vars.value }}</td>#}
+                                                    {#{% if servicioagregado.producto.vars.value is not empty %}#}
+                                                        {#<td class="td-producto">{{ servicioagregado.producto.vars.data.nombre }}</td>#}
+                                                        {#<td class="valorprecio" data-valor="{{ ((servicioagregado.precio.vars.value/astilleroCotizacion.dolar)*100) }}">#}
+                                                            {#$ {{ ((servicioagregado.precio.vars.value/astilleroCotizacion.dolar)*100)|number_format(2) }}#}
+                                                        {#</td>#}
+                                                    {#{% elseif servicioagregado.servicio.vars.value is not empty %}#}
+                                                        {#<td class="td-servicio">{{ servicioagregado.servicio.vars.data.nombre }}</td>#}
+                                                        {#<td class="valorprecio" data-valor="{{ servicioagregado.precio.vars.data/astilleroCotizacion.dolar }}">#}
+                                                            {#$ {{ (servicioagregado.precio.vars.data/astilleroCotizacion.dolar) }}#}
+                                                        {#</td>#}
+                                                    {#{% elseif servicioagregado.otroservicio.vars.value is not empty %}#}
+                                                        {#<td class="td-otroservicio">{{ servicioagregado.otroservicio.vars.value }}</td>#}
+                                                        {#<td class="valorprecio" data-valor="{{ ((servicioagregado.precio.vars.value)/astilleroCotizacion.dolar)*100 }}">#}
+                                                            {#$ {{ ((servicioagregado.precio.vars.value/astilleroCotizacion.dolar)*100)|number_format(2) }}#}
+                                                        {#</td>#}
+                                                    {#{% endif %}#}
 
 
-                                                <td class="valorsubtotal" data-valor="{{ (servicioagregado.vars.value.subtotal / astilleroCotizacion.dolar) }}">
-                                                    $ {{ ((servicioagregado.vars.value.subtotal / astilleroCotizacion.dolar))|number_format(2) }}
-                                                </td>
-                                                <td class="valoriva" data-valor="{{ (servicioagregado.vars.value.iva / astilleroCotizacion.dolar) }}">
-                                                    $ {{ ((servicioagregado.vars.value.iva / astilleroCotizacion.dolar))|number_format(2) }}
-                                                </td>
-                                                <td class="valortotal" data-valor="{{ (servicioagregado.vars.value.total / astilleroCotizacion.dolar) }}">
-                                                    $ {{ ((servicioagregado.vars.value.total / astilleroCotizacion.dolar))|number_format(2) }}
-                                                </td>
-                                            </tr>
-                                            {% endif %}
-                                        {% endfor %}
+                                                    {#<td class="valorsubtotal" data-valor="{{ (servicioagregado.vars.value.subtotal / astilleroCotizacion.dolar) }}">#}
+                                                        {#$ {{ ((servicioagregado.vars.value.subtotal / astilleroCotizacion.dolar))|number_format(2) }}#}
+                                                    {#</td>#}
+                                                    {#<td class="valoriva" data-valor="{{ (servicioagregado.vars.value.iva / astilleroCotizacion.dolar) }}">#}
+                                                        {#$ {{ ((servicioagregado.vars.value.iva / astilleroCotizacion.dolar))|number_format(2) }}#}
+                                                    {#</td>#}
+                                                    {#<td class="valortotal" data-valor="{{ (servicioagregado.vars.value.total / astilleroCotizacion.dolar) }}">#}
+                                                        {#$ {{ ((servicioagregado.vars.value.total / astilleroCotizacion.dolar))|number_format(2) }}#}
+                                                    {#</td>#}
+                                                {#</tr>#}
+                                            {#{% endif %}#}
+                                        {#{% endfor %}#}
                                         </tbody>
                                     </table>
                                 </div>
@@ -1024,11 +1096,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
-                                <div class="col-sm-12">
-                                    <hr>
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <button type="submit" class="btn btn-azul">
@@ -1041,6 +1108,13 @@
                     </div>
 
                     {{ form_widget(form.barco,{'attr':{'class':'hidden'}}) }}
+                    {% if form.acservicios.1.estatus is defined %}
+                        {{ form_widget(form.acservicios.1.estatus,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios.1.precio is defined %}
+                        {{ form_widget(form.acservicios.1.precio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+
                     {% if form.acservicios.0.cantidad is defined %}
                         {{ form_widget(form.acservicios.0.cantidad,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
@@ -1076,6 +1150,9 @@
                     {% if form.acservicios.7.otroservicio is defined %}
                         {{ form_widget(form.acservicios.7.otroservicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
+                    {% if form.acservicios[8].otroservicio is defined %}
+                        {{ form_widget(form.acservicios[8].otroservicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
 
 
                     {% if form.acservicios.0.producto is defined %}
@@ -1102,6 +1179,9 @@
                     {% if form.acservicios.7.producto is defined %}
                         {{ form_widget(form.acservicios.7.producto,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
+                    {% if form.acservicios[8].producto is defined %}
+                        {{ form_widget(form.acservicios[8].producto,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
 
                     {% if form.acservicios.0.servicio is defined %}
                         {{ form_widget(form.acservicios.0.servicio,{'attr':{'class':'hidden'}}) }}
@@ -1126,6 +1206,9 @@
                     {% endif %}
                     {% if form.acservicios.7.servicio is defined %}
                         {{ form_widget(form.acservicios.7.servicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
+                    {% if form.acservicios[8].servicio is defined %}
+                        {{ form_widget(form.acservicios[8].servicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
 
                     {{ form_end(form) }}
@@ -1154,7 +1237,7 @@
                         var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
                         var dolar = $('#appbundle_astillerocotizacion_dolar').val();
 
-                        fila.children('.valorprecio').html('$ '+parseFloat((datos.precio*dolar)/100).toFixed(2));
+                        fila.children('.valorprecio').html('$ '+parseFloat((datos.precio*dolar)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                         fila.children('.valorprecio').data('valor',(datos.precio*dolar/100));
                         calculaSubtotalesAstillero(fila);
 
@@ -1162,7 +1245,7 @@
 
                         var valormxn = (datos.precio/100);
                         $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').data('valor',valormxn);
-                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat(valormxn).toFixed(2));
+                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat(valormxn).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                         $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.td-producto').html(datos.nombre);
                         fila =  $('#a_nuevacotizacion_mxn>tbody>#'+idfila);
                         calculaSubtotalesAstillero(fila);
@@ -1184,7 +1267,7 @@
                         JSON.stringify(datos);
                         var fila = $('.select-busca-servicio:focus option:selected').parent().parent().parent();
                         var dolar = $('#appbundle_astillerocotizacion_dolar').val();
-                        fila.children('.valorprecio').html('$ '+parseFloat((datos.precio*dolar)/100).toFixed(2));
+                        fila.children('.valorprecio').html('$ '+parseFloat((datos.precio*dolar)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                         fila.children('.valorprecio').data('valor',((datos.precio*dolar)/100));
                         calculaSubtotalesAstillero(fila);
 
@@ -1192,7 +1275,7 @@
 
                         var valormxn = (datos.precio/100);
                         $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').data('valor',valormxn);
-                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat(valormxn).toFixed(2));
+                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat(valormxn).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                         $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.td-servicio').html(datos.nombre);
                         fila =  $('#a_nuevacotizacion_mxn>tbody>#'+idfila);
                         calculaSubtotalesAstillero(fila);
@@ -1200,5 +1283,6 @@
                 });
             }
         });
+        $('#appbundle_astillerocotizacion_acservicios_1_precio').parent().children('.input-group-addon').hide();
     </script>
 {% endblock %}

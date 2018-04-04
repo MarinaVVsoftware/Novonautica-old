@@ -138,6 +138,7 @@
               {% if is_granted('ROLE_MARINA_PAGO') %}
               ${(aceptacion === 2 && pago !== 2) ? `<li><a class="${btnClass}verde" href="{{ app.request.requestUri ~ '${item.id}/pago' }}">Pagos</a></li>` : ''}
               {% endif %}
+              <li><a class="${btnClass}gris" href="{{ app.request.requestUri ~ '${item.id}/adicionales' }}">Adicionales</a></li>
             </ul>
           </td>
         `;

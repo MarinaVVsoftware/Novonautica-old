@@ -695,10 +695,12 @@ class AstilleroCotizacion
 
     /**
      * @param string $mensaje
+     * @return AstilleroCotizacion
      */
     public function setMensaje($mensaje)
     {
         $this->mensaje = $mensaje;
+        return $this;
     }
 
     /**

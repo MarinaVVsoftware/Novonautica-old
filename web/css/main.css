@@ -149,6 +149,14 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     background-color: #3e1e7d;
     color: #fff;
 }
+.btn-gris{
+    background-color: #4b4c50;
+    color: #fff;
+}
+.btn-gris:hover{
+    background-color: #96979c;
+    color: #000;
+}
 /*++ fin botones color ++*/
 
 /*++++ mensajes sistema ++++*/
