@@ -40,14 +40,6 @@
                 ...settings,
                 ajax: '{{ path('solicitud_index_data') }}',
                 order: [[5, 'desc']],
-                {#createdRow: function (row, solicitud) {#}
-                    {#let lastCell = row.cells[5];#}
-                    {#lastCell.innerHTML = `#}
-                    {#{% if  != 0 %}#}
-            {#<a class="btn btn-xs btn-block btn-azul" href="{{ 'nuevo?id=${solicitud[5]}' }}">Cotizar</a>#}
-                    {#{% endif %}#}
-            {#`#}
-                {#},#}
             });
         })(jQuery, datatablesSettings);
     </script>
