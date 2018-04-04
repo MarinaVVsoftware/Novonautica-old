@@ -55,6 +55,8 @@ security:
         - { path: ^/gracias, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/.*/confirma, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/forgot, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: ^/cliente, roles: ROLE_CLIENTE }
 

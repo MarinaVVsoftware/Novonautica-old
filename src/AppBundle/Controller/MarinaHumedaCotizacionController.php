@@ -360,6 +360,8 @@ class MarinaHumedaCotizacionController extends Controller
      * @param \Swift_Mailer $mailer
      *
      * @return RedirectResponse|Response
+     *
+     * @throws \Exception
      */
     public function validaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion, \Swift_Mailer $mailer)
     {
@@ -428,11 +430,7 @@ class MarinaHumedaCotizacionController extends Controller
                             ->setTo($marinaHumedaCotizacion->getCliente()->getCorreo())
                             ->setBcc('admin@novonautica.com')
                             ->setBody(
-                                $this->renderView('marinahumeda/cotizacion/correo-clientevalida.twig', [
-                                    'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
-                                    'tokenAcepta' => $tokenAcepta,
-                                    'tokenRechaza' => $tokenRechaza
-                                ]),
+                                $this->renderView(':mail:cotizacion.html.twig', ['cotizacion' => $marinaHumedaCotizacion]),
                                 'text/html'
                             )
                             ->attach($attachment);

@@ -17,6 +17,13 @@
         <div class="col-sm-6 col-sm-offset-3">
             <div class="panel panel-default panel-login">
                 <div class="panel-heading">
+                    {% for label, messages in app.flashes(['notice', 'warning', 'error']) %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
                     <img src="{{ asset('img/logo.svg') }}" class="img-responsive center-block">
                 </div>
                 <div class="panel-body">
@@ -42,6 +49,9 @@
                                     <input type="password" id="password" class="form-control text-center fondo-blanco"
                                            style="color: #000"
                                            name="_password"/>
+                                </div>
+                                <div class="form-group text-right">
+                                    <a href="{{ path('password_forgot') }}">¿Olvidaste tu contraseña?</a>
                                 </div>
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                                 <button type="submit" class="btn boton-login">Entrar</button>

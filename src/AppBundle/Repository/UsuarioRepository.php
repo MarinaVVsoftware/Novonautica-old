@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Usuario;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -30,6 +31,24 @@ class UsuarioRepository extends EntityRepository implements UserLoaderInterface
             ->where('u.nombreUsuario = :username OR u.correo = :email')
             ->setParameter('username', $username)
             ->setParameter('email', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param string $token
+     *
+     * @return Usuario
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getUserByToken($token)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.recoveryPasswordToken = :token')
+            ->andWhere('u.passwordTokenExpiration > :now')
+            ->setParameter('token', $token)
+            ->setParameter('now', new \DateTime())
             ->getQuery()
             ->getOneOrNullResult();
     }

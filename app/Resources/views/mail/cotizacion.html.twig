@@ -1,0 +1,33 @@
+{% extends ':mail:base.html.twig' %}
+
+{% block body %}
+    <p>
+        {{ cotizacion.mensaje|raw }}
+    </p>
+
+    <div class="text-center">
+        <a href="{{ url('respuesta-cliente', {'token': cotizacion.tokenacepta }) }}" class="btn"
+           style="background-color: #458FCE">
+            Autorizar
+        </a>
+        <a href="{{ url('respuesta-cliente', {'token': cotizacion.tokenrechaza }) }}" class="btn">
+            Rechazar
+        </a>
+    </div>
+{% endblock body %}
+
+{#
+{% block footer %}
+    <hr>
+    <h6 style="color: #458FCE">Términos y condiciones</h6>
+    <p>
+        <small>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aperiam at dolore ea error et eum id
+            magnam nihil nostrum, nulla obcaecati perspiciatis praesentium quaerat quidem sapiente sequi! Autem enim et
+            illo ipsum provident sapiente temporibus. Consectetur, delectus dolorem dolores error est eveniet fuga
+            fugiat maxime minus nesciunt nostrum officiis perspiciatis praesentium quo tempore! Amet dolores maiores
+            officiis quasi quia.
+        </small>
+    </p>
+{% endblock footer %}
+#}
