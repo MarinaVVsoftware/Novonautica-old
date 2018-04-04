@@ -285,6 +285,10 @@ class MarinaHumedaCotizacionController extends Controller
             $foliobase = $sistema[0]['folioMarina'];
             $folionuevo = $foliobase + 1;
 
+            if ($barcoid !== null){
+                $solicitud = $em->getRepository('AppBundle:MarinaHumedaSolicitudGasolina')->find($barcoid);
+                $solicitud->setStatus(1);
+            }
             $marinaGasolina
                 ->setEstatus(1)
                 ->setCantidad($cantidad)

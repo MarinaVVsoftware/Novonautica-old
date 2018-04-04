@@ -92,7 +92,7 @@ class MarinaHumedaSolicitudGasolinaController extends Controller
     /**
      * Deletes a marinaHumedaSolicitudGasolina entity.
      *
-     * @Route("/{id}", name="marinahumedasolicitudgasolina_delete")
+     * @ Route("/{id}", name="marinahumedasolicitudgasolina_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, MarinaHumedaSolicitudGasolina $marinaHumedaSolicitudGasolina)
