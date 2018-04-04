@@ -87,7 +87,7 @@ class MHCGasolinaAppDataTable extends AbstractDataTableHandler
                 $solicitud->getFechaPeticion()->format('d/m/Y H:i a'),
                 $solicitud->getCantidadCombustible(),
                 ($solicitud->getTipoCombustible() == 3) ? "Magna" : ($solicitud->getTipoCombustible() == 4 ? "Premium" : "Diesel"),
-                ($solicitud->getStatus() === 0) ? '<a class="btn btn-xs btn-block btn-azul" href="nuevo?id='.$solicitud->getId().'">Cotizar</a>' : "<span class='label btn-morado-claro'>Solicitud cotizada</span>",
+                [ 'status' => $solicitud->getStatus(), 'id' => $solicitud->getId()],
             ];
         }
 
