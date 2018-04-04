@@ -58,7 +58,7 @@ class SecurityController extends Controller
                 $em->flush();
 
                 $message = (new \Swift_Message('Solicitaste recuperar tu contraseña de Novonautica'))
-                    ->setFrom('noreply@perfectweeks.com')
+                    ->setFrom('noresponder@novonautica.com')
                     ->setTo($usuario->getCorreo())
                     ->setBody(
                         $this->renderView(':mail:recover.html.twig', ['usuario' => $usuario]),
