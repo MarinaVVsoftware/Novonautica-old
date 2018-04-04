@@ -143,9 +143,12 @@
                             <tr>
                                 <td>{{ unservicio.astilleroserviciobasico.nombre }}</td>
                                 <td>
-                                    {{ unservicio.cantidad }}
+
                                     {% if unservicio.astilleroserviciobasico.id is defined and  unservicio.astilleroserviciobasico.id == 2 %}
+                                        {{ unservicio.cantidad/astilleroCotizacion.barco.eslora }}
                                         (pie por día)
+                                    {% else %}
+                                        {{ unservicio.cantidad }}
                                     {% endif %}
                                 </td>
                                 <td>$ {{ (unservicio.precio/100)|number_format(2) }}</td>

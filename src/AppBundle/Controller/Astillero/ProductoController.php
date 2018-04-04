@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Astillero;
 
 use AppBundle\Entity\Astillero\Producto;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use DataTables\DataTablesInterface;
 use Proxies\__CG__\AppBundle\Entity\Astillero\Servicio;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -171,12 +172,17 @@ class ProductoController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($producto);
-            $em->flush();
-        }
+            try{
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($producto);
+                $em->flush();
+                return $this->redirectToRoute('astillero_producto_index');
+            }catch (ForeignKeyConstraintViolationException $e){
+                $this->addFlash('error','Error!, No se puede borrar este producto, esta siendo utilizado en las cotizaciones');
+            }
 
-        return $this->redirectToRoute('astillero_producto_index');
+        }
+        return $this->redirectToRoute('astillero_producto_edit',['id'=>$producto->getId()]);
     }
 
     /**

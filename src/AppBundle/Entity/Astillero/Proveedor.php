@@ -35,11 +35,8 @@ class Proveedor
 
     /**
      * @var string
-     * @Assert\NotBlank(
-     *     message="Razón social no puede quedar vacío"
-     * )
      *
-     * @ORM\Column(name="razonsocial", type="string", length=255)
+     * @ORM\Column(name="razonsocial", type="string", length=255, nullable=true)
      */
     private $razonsocial;
 
@@ -87,28 +84,21 @@ class Proveedor
      *      minMessage = "Error, número de teléfono no válido"
      * )
      *
-     * @ORM\Column(name="telefono", type="string", length=255, nullable=true)
+     * @ORM\Column(name="telefono", type="string", length=255)
      */
     private $telefono;
 
     /**
      * @var string
      *
-     * @Assert\Regex(
-     *     pattern="/^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))((-)?([A-Z\d]{3}))?$/",
-     *     message="El RFC es invalido"
-     *     )
-     *
-     * @ORM\Column(name="rfc", type="string", length=50)
+     * @ORM\Column(name="rfc", type="string", length=50, nullable=true)
      */
     private $rfc;
 
     /**
      * @var string
      *
-     * @Assert\NotBlank(message="Este campo no puede estar vacio")
-     *
-     * @ORM\Column(name="direccionfiscal", type="string", length=255)
+     * @ORM\Column(name="direccionfiscal", type="string", length=255, nullable=true)
      */
     private $direccionfiscal;
 

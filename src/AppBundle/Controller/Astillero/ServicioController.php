@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Astillero;
 
 use AppBundle\Entity\Astillero\Servicio;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
@@ -142,12 +143,17 @@ class ServicioController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($servicio);
-            $em->flush();
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($servicio);
+                $em->flush();
+                return $this->redirectToRoute('astillero_servicio_index');
+            }catch (ForeignKeyConstraintViolationException $e){
+                $this->addFlash('error','Error!, No se puede borrar este servicio, esta siendo utilizado en las cotizaciones');
+            }
         }
 
-        return $this->redirectToRoute('astillero_servicio_index');
+        return $this->redirectToRoute('astillero_servicio_edit',['id'=>$servicio->getId()]);
     }
 
     /**

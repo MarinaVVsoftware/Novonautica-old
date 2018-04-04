@@ -386,6 +386,12 @@
                                         $ {{ (astilleroCotizacion.total/100)|number_format(2) }} USD
                                     </div>
                                 </div>
+                                <div class="col-sm-3">
+                                    <label></label>
+                                    <div class="info-input">
+                                        $ {{ ((astilleroCotizacion.total*astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN
+                                    </div>
+                                </div>
                             </div>
                             <div class="row espacio-linea">
                                 <div class="col-sm-6">
@@ -459,6 +465,12 @@
                                     <label>Saldo faltante</label>
                                     <div class="info-input">
                                         $ {{ ((astilleroCotizacion.total-astilleroCotizacion.pagado)/100)|number_format(2) }} USD
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label></label>
+                                    <div class="info-input">
+                                        $ {{ (((astilleroCotizacion.total-astilleroCotizacion.pagado)*astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN
                                     </div>
                                 </div>
                             </div>
