@@ -1,0 +1,22 @@
+{% extends ':mail:base.html.twig' %}
+
+{% block body %}
+    <h3>¡Hola, {{ usuario.nombre }}!</h3>
+    <p class="lead">Solicitaste restablecer tu contraseña para tu cuenta en Novonautica.</p>
+    <p>
+        Para confirmar tu solicitud y establecer una nueva contraseña para tu cuenta por favor
+        presiona el siguiente enlace.
+    </p>
+
+    <a href="{{ absolute_url(path('password_reset', { 'token': usuario.recoveryPasswordToken })) }}"
+       class="btn" style="margin-bottom: 10px; background-color: #458fce">
+        Reestablecer contraseña
+    </a>
+
+    <p>
+        <strong>Si no solicitaste el restablecimiento de tu contraseña, puedes ignorar este
+            correo.</strong>
+        <strong>Esta solicitud solo podra usarse durante la siguiente hora.</strong>
+    </p>
+    <br/>
+{% endblock body %}

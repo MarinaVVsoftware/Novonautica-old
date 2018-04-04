@@ -96,11 +96,25 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
     private $registro;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      *
      * @ORM\Column(name="update_at", type="datetime_immutable")
      */
     private $updateAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="recovery_password_token", type="string", nullable=true)
+     */
+    private $recoveryPasswordToken;
+
+    /**
+     * @var \DateTimeImmutable
+     *
+     * @ORM\Column(name="password_token_expiration", type="datetime_immutable", nullable=true)
+     */
+    private $passwordTokenExpiration;
 
     public function __construct()
     {
@@ -319,7 +333,7 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getUpdateAt()
     {
@@ -333,6 +347,38 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
     public function setUpdateAt()
     {
         $this->updateAt = new \DateTimeImmutable();
+    }
+
+    /**
+     * @return string
+     */
+    public function getRecoveryPasswordToken()
+    {
+        return $this->recoveryPasswordToken;
+    }
+
+    /**
+     * @param string $recoveryPasswordToken
+     */
+    public function setRecoveryPasswordToken($recoveryPasswordToken)
+    {
+        $this->recoveryPasswordToken = $recoveryPasswordToken;
+    }
+
+    /**
+     * @return \DateTimeImmutable
+     */
+    public function getPasswordTokenExpiration()
+    {
+        return $this->passwordTokenExpiration;
+    }
+
+    /**
+     * @param \DateTimeImmutable $passwordTokenExpiration
+     */
+    public function setPasswordTokenExpiration($passwordTokenExpiration)
+    {
+        $this->passwordTokenExpiration = $passwordTokenExpiration;
     }
 
     /**
