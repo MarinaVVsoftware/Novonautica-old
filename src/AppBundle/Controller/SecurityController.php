@@ -126,15 +126,4 @@ class SecurityController extends Controller
             'form' => $form->createView()
         ]);
     }
-
-    /**
-     * @ Route("/mail")
-     *
-     * @return Response
-     */
-    public function mailAction()
-    {
-        $cotizacion = $this->getDoctrine()->getRepository('AppBundle:MarinaHumedaCotizacion')->find(368);
-        return $this->render(':mail:cotizacion.html.twig', ['cotizacion' => $cotizacion]);
-    }
 }

@@ -26,6 +26,7 @@ class AppKernel extends Kernel
             new Vich\UploaderBundle\VichUploaderBundle(),
             new DataTables\DataTablesBundle(),
             new Hyperion\MultifacturasBundle\MultifacturasBundle(),
+            new \Eschmar\CssInlinerBundle\EschmarCssInlinerBundle(),
             new AppBundle\AppBundle(),
         ];
 

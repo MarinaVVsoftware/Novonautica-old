@@ -1,6 +1,7 @@
+{% cssinline %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
 <head>
     <meta name="viewport" content="width=device-width"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -52,6 +53,8 @@
             background-color: #666;
             padding: 10px 16px;
             font-weight: bold;
+            margin-top: 16px;
+            margin-bottom: 16px;
             margin-right: 10px;
             text-align: center;
             cursor: pointer;
@@ -323,31 +326,6 @@
             display: block;
             clear: both;
         }
-
-        /* -------------------------------------------
-                PHONE
-                For clients that support media queries.
-                Nothing fancy.
-        -------------------------------------------- */
-        @media only screen and (max-width: 600px) {
-
-            a[class="btn"] {
-                display: block !important;
-                margin-bottom: 10px !important;
-                background-image: none !important;
-                margin-right: 0 !important;
-            }
-
-            div[class="column"] {
-                width: auto !important;
-                float: none !important;
-            }
-
-            table.social div[class="column"] {
-                width: auto !important;
-            }
-
-        }
     </style>
 </head>
 
@@ -457,3 +435,4 @@
 
 </body>
 </html>
+{% endcssinline %}
