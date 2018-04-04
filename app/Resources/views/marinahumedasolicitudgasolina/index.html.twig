@@ -41,11 +41,13 @@
                 ajax: '{{ path('solicitud_index_data') }}',
                 order: [[5, 'desc']],
                 createdRow: function (row, solicitud) {
-                    let lastCell = row.cells[5];
-                    lastCell.innerHTML = `
-            <a class="btn btn-xs btn-block btn-azul" href="{{ 'nuevo?id=${solicitud[5]}' }}">Cotizar</a>
-            `
-                },
+                    let ultima = row.cells[5];
+                    if (solicitud[5].status === 0) {
+                        ultima.innerHTML = `<a class="btn btn-xs btn-block btn-azul" href="nuevo?id=${solicitud[5].id}">Cotizar</a>`
+                    }else {
+                    ultima.innerHTML = `<span class='label btn-morado-claro'>Solicitud cotizada</span>`
+                    }
+                }
             });
         })(jQuery, datatablesSettings);
     </script>

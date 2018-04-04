@@ -87,7 +87,7 @@ class MHCGasolinaAppDataTable extends AbstractDataTableHandler
                 $solicitud->getFechaPeticion()->format('d/m/Y H:i a'),
                 $solicitud->getCantidadCombustible(),
                 ($solicitud->getTipoCombustible() == 3) ? "Magna" : ($solicitud->getTipoCombustible() == 4 ? "Premium" : "Diesel"),
-                $solicitud->getId()
+                [ 'status' => $solicitud->getStatus(), 'id' => $solicitud->getId()],
             ];
         }
 

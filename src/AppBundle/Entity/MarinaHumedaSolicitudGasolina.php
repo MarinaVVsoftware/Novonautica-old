@@ -43,6 +43,13 @@ class MarinaHumedaSolicitudGasolina
     private $tipo_combustible;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="integer")
+     */
+    private $status;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="gasolinabarco")
      */
     private $idbarco;
@@ -180,5 +187,29 @@ class MarinaHumedaSolicitudGasolina
     public function getTipoCombustible()
     {
         return $this->tipo_combustible;
+    }
+
+    /**
+     * Set status.
+     *
+     * @param int $status
+     *
+     * @return MarinaHumedaSolicitudGasolina
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status.
+     *
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }
