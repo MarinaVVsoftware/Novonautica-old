@@ -315,7 +315,7 @@ class AstilleroCotizacion
         }else{
             $folioastillero = $this->folio.'-'.$this->foliorecotiza;
         }
-        return 'Folio: '.$folioastillero.' Barco: '.$this->getBarco();
+        return 'Folio: '.$folioastillero.' Barco:  '.$this->getBarco();
     }
 
     /**

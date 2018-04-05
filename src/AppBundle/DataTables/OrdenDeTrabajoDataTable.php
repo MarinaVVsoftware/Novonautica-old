@@ -65,7 +65,6 @@ class OrdenDeTrabajoDataTable extends AbstractDataTableHandler
                 $odt->getAstilleroCotizacion()->getBarco()->getNombre(),
                 $odt->getAstilleroCotizacion()->getCliente()->getNombre(),
                 '$' . number_format($odt->getPrecioTotal() / 100, 2),
-                '$' . number_format($odt->getMaterialesTotal() / 100, 2),
                 '$' . number_format($odt->getPagosTotal() / 100, 2),
                 '$' . number_format($odt->getSaldoTotal() / 100, 2),
                 '$' . number_format($odt->getPreciovvTotal() / 100, 2),

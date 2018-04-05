@@ -58,7 +58,6 @@ class OrdenDeTrabajoController extends Controller
         $ivaTotal = 0;
         $granTotal = 0;
         $saldoTotal = 0;
-        $materialesTotal = 0;
         $pagosTotal = 0;
         $ordenDeTrabajo = new Ordendetrabajo();
         $form = $this->createForm('AppBundle\Form\OrdenDeTrabajoType', $ordenDeTrabajo);
@@ -73,7 +72,6 @@ class OrdenDeTrabajoController extends Controller
                 $utilidadvvTotal+=$contratista->getUtilidadvv();
                 $preciovvTotal+=$contratista->getPreciovv();
                 $saldoTotal+=$contratista->getSaldo();
-                $materialesTotal+=$contratista->getMateriales();
                 $pagosTotal+=$contratista->getPagos();
 
                 $ivatot = ($contratista->getPrecio() * $iva)/100;
@@ -92,7 +90,6 @@ class OrdenDeTrabajoController extends Controller
                 ->setUtilidadvvTotal($utilidadvvTotal)
                 ->setPreciovvTotal($preciovvTotal)
                 ->setSaldoTotal($saldoTotal)
-                ->setMaterialesTotal($materialesTotal)
                 ->setPagosTotal($pagosTotal)
                 ->setIvaTotal($ivaTotal)
                 ->setGranTotal($granTotal)
@@ -198,7 +195,6 @@ class OrdenDeTrabajoController extends Controller
                     $utilidadvvTotal+=$contratista->getUtilidadvv();
                     $preciovvTotal+=$contratista->getPreciovv();
                     $saldoTotal+=$contratista->getSaldo();
-                    $materialesTotal+=$contratista->getMateriales();
                     $pagosTotal+=$contratista->getPagos();
 
                     $ivatot = ($contratista->getPrecio() * $iva)/100;
@@ -219,7 +215,6 @@ class OrdenDeTrabajoController extends Controller
                     $utilidadvvTotal+=$contratistanuevo->getUtilidadvv();
                     $preciovvTotal+=$contratistanuevo->getPreciovv();
                     $saldoTotal+=$contratistanuevo->getSaldo();
-                    $materialesTotal+=$contratistanuevo->getMateriales();
                     $pagosTotal+=$contratistanuevo->getPagos();
 
                     $ivatot = ($contratistanuevo->getPrecio() * $iva)/100;
@@ -238,7 +233,6 @@ class OrdenDeTrabajoController extends Controller
                 ->setUtilidadvvTotal($utilidadvvTotal)
                 ->setPreciovvTotal($preciovvTotal)
                 ->setSaldoTotal($saldoTotal)
-                ->setMaterialesTotal($materialesTotal)
                 ->setPagosTotal($pagosTotal)
                 ->setIvaTotal($ivaTotal)
                 ->setGranTotal($granTotal)

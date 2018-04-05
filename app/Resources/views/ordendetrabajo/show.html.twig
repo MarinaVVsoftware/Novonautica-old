@@ -200,7 +200,6 @@
                                             <th>Contratista</th>
                                             <th>Razón social</th>
                                             <th>Precio</th>
-                                            <th>Materiales a descontar</th>
                                             <th>IVA</th>
                                             <th>Total</th>
                                             <th>Pagos</th>
@@ -216,7 +215,6 @@
                                                 <td>{{ contratista.proveedor.nombre }}</td>
                                                 <td>{{ contratista.proveedor.razonsocial }}</td>
                                                 <td>${{ (contratista.precio/100)|number_format(2) }}</td>
-                                                <td>${{ (contratista.materiales/100)|number_format(2) }}</td>
                                                 <td>${{ (contratista.ivatot/100)|number_format(2) }}</td>
                                                 <td>${{ (contratista.total/100)|number_format(2) }}</td>
                                                 <td>${{ (contratista.pagos/100)|number_format(2) }}</td>
@@ -230,7 +228,6 @@
                                         <tr>
                                             <td colspan="3" class="text-right">Totales:</td>
                                             <td>${{ (ordenDeTrabajo.precioTotal/100)|number_format(2) }}</td>
-                                            <td>${{ (ordenDeTrabajo.materialesTotal/100)|number_format(2) }}</td>
                                             <td>${{ (ordenDeTrabajo.ivaTotal/100)|number_format(2) }}</td>
                                             <td>${{ (ordenDeTrabajo.granTotal/100)|number_format(2) }}</td>
                                             <td>${{ (ordenDeTrabajo.pagosTotal/100)|number_format(2) }}</td>

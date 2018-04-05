@@ -66,13 +66,6 @@ class OrdenDeTrabajo
     /**
      * @var int
      *
-     * @ORM\Column(name="materialesTotal", type="bigint", nullable=true)
-     */
-    private $materialesTotal;
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="pagosTotal", type="bigint", nullable=true)
      */
     private $pagosTotal;
@@ -353,30 +346,6 @@ class OrdenDeTrabajo
     public function getSaldoTotal()
     {
         return $this->saldoTotal;
-    }
-
-    /**
-     * Set materialesTotal.
-     *
-     * @param int|null $materialesTotal
-     *
-     * @return OrdenDeTrabajo
-     */
-    public function setMaterialesTotal($materialesTotal = null)
-    {
-        $this->materialesTotal = $materialesTotal;
-
-        return $this;
-    }
-
-    /**
-     * Get materialesTotal.
-     *
-     * @return int|null
-     */
-    public function getMaterialesTotal()
-    {
-        return $this->materialesTotal;
     }
 
     /**

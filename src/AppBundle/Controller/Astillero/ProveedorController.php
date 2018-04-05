@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -129,6 +130,18 @@ class ProveedorController extends Controller
             'delete_form' => $deleteForm->createView(),
             'title' => 'Editar Proveedor'
         ));
+    }
+
+    /**
+     * @Route("{id}/proveedor.json")
+     *
+     * @return Response
+     */
+    public function getProveedorAction($id)
+    {
+        $barcos = $this->getDoctrine()->getRepository('AppBundle:Astillero\Proveedor')->findOneBy(['id'=>$id]);
+
+        return new JsonResponse($barcos);
     }
 
     /**

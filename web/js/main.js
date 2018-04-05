@@ -494,10 +494,20 @@ $('.lista-pagos').on('click', '.remove-pago', function (e) {
 
 //---------- colection al agregar contratista a ODT -----------------
 jQuery('.add-another-proveedor').click(function (e) {
+    coleccionContratistaODT(e, this,'');
+});
+$('.lista-proveedores').on('click', '.remove-proveedor', function (e) {
+    e.preventDefault();
+    //console.log('quitar motor');
+    $(this).parent().parent().remove();
+
+    return false;
+});
+function coleccionContratistaODT(e,objeto,descripcion){
     e.preventDefault();
     // var elementoMotor = document.getElementsByClassName(this);
-    var totProveedor = $(this).data('cantidad');
-    var lista = $(this).data('idlista');
+    var totProveedor = $(objeto).data('cantidad');
+    var lista = $(objeto).data('idlista');
     var proveedorListPrimero = jQuery('#proveedor-fields-list' + lista);
     //var motorListOtros = jQuery('.lista-motores'+lista);
     // grab the prototype template
@@ -507,7 +517,7 @@ jQuery('.add-another-proveedor').click(function (e) {
     // end name attribute looks like name="contact[emails][2]"
     newWidget = newWidget.replace(/__name__/g, totProveedor);
     totProveedor++;
-    $(this).data('cantidad', totProveedor);
+    $(objeto).data('cantidad', totProveedor);
     // create a new list element and add it to the list
     var newLi = jQuery('<div class="row"></div>').html(newWidget);
     newLi.appendTo(proveedorListPrimero);
@@ -516,19 +526,11 @@ jQuery('.add-another-proveedor').click(function (e) {
         format: 'yyyy-mm-dd',
         orientation: "auto",
     });
+    $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_cotizacionInicial').val(descripcion);
     // also add a remove button, just for this example
     //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
-
     newLi.before(newLi);
-});
-$('.lista-proveedores').on('click', '.remove-proveedor', function (e) {
-    e.preventDefault();
-    //console.log('quitar motor');
-    $(this).parent().parent().remove();
-
-    return false;
-});
-
+}
 //---------- colection al agregar bancos a un proveedor -----------------
 jQuery('.add-another-banco').click(function (e) {
     e.preventDefault();
