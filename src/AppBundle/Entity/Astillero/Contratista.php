@@ -73,13 +73,6 @@ class Contratista
     /**
      * @var int
      *
-     * @ORM\Column(name="materiales", type="bigint")
-     */
-    private $materiales;
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="pagos", type="bigint")
      */
     private $pagos;
@@ -392,30 +385,6 @@ class Contratista
     public function getSaldo()
     {
         return $this->saldo;
-    }
-
-    /**
-     * Set materiales.
-     *
-     * @param int $materiales
-     *
-     * @return Contratista
-     */
-    public function setMateriales($materiales)
-    {
-        $this->materiales = $materiales;
-
-        return $this;
-    }
-
-    /**
-     * Get materiales.
-     *
-     * @return int
-     */
-    public function getMateriales()
-    {
-        return $this->materiales;
     }
 
     /**

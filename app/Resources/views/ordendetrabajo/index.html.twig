@@ -20,7 +20,6 @@
                                 <th>Barco</th>
                                 <th>Cliente</th>
                                 <th>Precio</th>
-                                <th>Materiales</th>
                                 <th>Pagos</th>
                                 <th>Saldo</th>
                                 <th>Precio V&V</th>
@@ -72,16 +71,16 @@
                 ajax: '{{ path('ordendetrabajo_index') }}',
                 order: [[0, 'desc']],
                 createdRow: function (row, data) {
-                let actionsCell = row.cells[11];
+                let actionsCell = row.cells[10];
                 actionsCell.innerHTML = `
             <ul class="unstyled-list list-inline">
                 <li>
-                <a href="${data[11]}">
+                <a href="${data[10]}">
                     <i class="fa fa-eye" aria-hidden="true"></i>
                 </a>
                 </li>
                 <li>
-                <a href="${data[11]}/editar">
+                <a href="${data[10]}/editar">
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                 </a>
                 </li>

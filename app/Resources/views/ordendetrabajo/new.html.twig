@@ -109,7 +109,7 @@
                   'idcotizacion':$(this).val()
                 },
                 success: function (cotizacion) {
-                    console.log(cotizacion);
+                    $('#proveedor-fields-list0').empty();
                     $('#datos-cotizacion').html('<div class="row"><div class="col-sm-12"><div class="letra-azul">Nombre:</div><ul>'+cotizacion[0].cliente.nombre+'</ul></div></div>'+
                                                 '<div class="row"><div class="col-sm-12"><div class="letra-azul">Teléfono:</div><ul>'+cotizacion[0].cliente.telefono+'</ul></div></div>'+
                                                 '<div class="row"><div class="col-sm-12"><div class="letra-azul">Celular:</div><ul>'+cotizacion[0].cliente.celular+'</ul></div></div>'+
@@ -143,6 +143,7 @@
                                 '<td>$ '+(cotizacion[0].acservicios[i].subtotal/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
                                 '<td>$ '+(cotizacion[0].acservicios[i].iva/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
                                 '<td>$ '+(cotizacion[0].acservicios[i].total/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td></tr>');
+                        coleccionContratistaODT(e,'.add-another-proveedor',elemento);
                         }
                     }
                     $('#porcentaje-iva').html(cotizacion[0].iva);
@@ -158,10 +159,11 @@
             }).fail(function () {
                 $('#loading').hide();
             });
-
         });
-
-
+    $(document).on('change','.buscaproveedor',function (e){
+        console.log($(this).val());
+    });
     })(jQuery);
+
 </script>
 {% endblock %}

@@ -14,6 +14,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -26,7 +27,9 @@ class ContratistaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('cotizacionInicial')
+            ->add('cotizacionInicial',TextType::class,[
+                'label' => 'Descripción del trabajo'
+            ])
             ->add('precio',MoneyType::class,[
                 'label' => 'Precio (USD)',
                 'currency' => 'USD',
@@ -51,14 +54,8 @@ class ContratistaType extends AbstractType
             ->add('proveedor',EntityType::class,[
                 'class' => 'AppBundle\Entity\Astillero\Proveedor',
                 'placeholder' => 'Seleccionar...',
+                'attr' => ['class'=>'buscaproveedor'],
 
-            ])
-            ->add('materiales',MoneyType::class,[
-                'label' => 'Materiales a descontar (USD)',
-                'currency' => 'USD',
-                'divisor' => 100,
-                'grouping' => true,
-                'attr' => ['class' => 'esdecimal']
             ])
             ->add('pagos',MoneyType::class,[
                 'label' => 'Pagos (USD)',

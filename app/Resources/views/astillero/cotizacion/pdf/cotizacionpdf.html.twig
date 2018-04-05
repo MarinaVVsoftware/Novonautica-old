@@ -144,7 +144,7 @@
                                 <td>{{ unservicio.astilleroserviciobasico.nombre }}</td>
                                 <td>
 
-                                    {% if unservicio.astilleroserviciobasico.id is defined and  unservicio.astilleroserviciobasico.id == 2 %}
+                                    {% if unservicio.astilleroserviciobasico.id is defined and (unservicio.astilleroserviciobasico.id == 2 or unservicio.astilleroserviciobasico.id == 9) %}
                                         {{ unservicio.cantidad/astilleroCotizacion.barco.eslora }}
                                         (pie por día)
                                     {% else %}
