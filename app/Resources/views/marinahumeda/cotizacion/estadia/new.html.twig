@@ -169,13 +169,13 @@
 
                                         <div class="col-sm-6">
                                             <label>Precio por día:</label>
-                                            {{ form_widget(form.mhcservicios.children.0.precio) }}
+                                            {{ form_widget(form.mhcservicios.children.0.precio, { 'attr': { 'required': 'required' }}) }}
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-6">
                                             <label>Precio electricidad:</label>
-                                            {{ form_widget(form.mhcservicios.children.1.precioAux) }}
+                                            {{ form_widget(form.mhcservicios.children.1.precioAux, { 'attr': { 'required': 'required' }}) }}
                                         </div>
                                     </div>
                                 </div>

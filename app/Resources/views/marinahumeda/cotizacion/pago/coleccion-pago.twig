@@ -1,4 +1,6 @@
 {% block form_widget %}
+    {% set cotizacion = marinaHumedaCotizacion ? marinaHumedaCotizacion : astilleroCotizacion %}
+
     {% spaceless %}
         <td>
             {{ form_widget(form.metodopago) }}
@@ -13,7 +15,11 @@
             {{ form_widget(form.fecharealpago) }}
         </td>
         <td>
-            {{ form_widget(form.dolar,{'value': astilleroCotizacion.dolar/100}) }}
+            {% if cotizacion is defined %}
+                {{ form_widget(form.dolar,{'value': cotizacion.dolar/100}) }}
+            {% else %}
+                {{ form_widget(form.dolar) }}
+            {% endif %}
         </td>
         <td></td>
         <td style="vertical-align: middle">

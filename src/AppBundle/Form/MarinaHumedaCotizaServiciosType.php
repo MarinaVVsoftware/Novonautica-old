@@ -28,7 +28,6 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
             ->add('precio', EntityType::class, [
                 'class' => 'AppBundle:MarinaHumedaTarifa',
                 'label' => 'Precio',
-                'required' => false,
                 'placeholder' => 'Seleccionar...',
                 'choice_value' => 'costo',
                 'query_builder' => function (EntityRepository $er) {
@@ -40,7 +39,6 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
             ->add('precioAux', EntityType::class, [
                 'class' => 'AppBundle:MarinaHumedaTarifa',
                 'label' => 'Precio',
-                'required' => false,
                 'placeholder' => 'Seleccionar...',
                 'choice_value' => 'costo',
                 'query_builder' => function (EntityRepository $er) {
