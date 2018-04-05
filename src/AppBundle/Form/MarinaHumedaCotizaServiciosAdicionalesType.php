@@ -8,9 +8,6 @@
 
 namespace AppBundle\Form;
 
-
-
-use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,9 +33,6 @@ class MarinaHumedaCotizaServiciosAdicionalesType extends AbstractType
                 'required'=>false,
 
             ])
-//            ->add('precio',TextType::class,[
-//                'attr' => ['class' => 'esdecimal']
-//            ])
         ;
     }
 
