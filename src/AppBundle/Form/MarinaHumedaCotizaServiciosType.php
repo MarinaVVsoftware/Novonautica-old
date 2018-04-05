@@ -28,6 +28,7 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
             ->add('precio', EntityType::class, [
                 'class' => 'AppBundle:MarinaHumedaTarifa',
                 'label' => 'Precio',
+                'required' => false,
                 'placeholder' => 'Seleccionar...',
                 'choice_value' => 'costo',
                 'query_builder' => function (EntityRepository $er) {
@@ -39,6 +40,7 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
             ->add('precioAux', EntityType::class, [
                 'class' => 'AppBundle:MarinaHumedaTarifa',
                 'label' => 'Precio',
+                'required' => false,
                 'placeholder' => 'Seleccionar...',
                 'choice_value' => 'costo',
                 'query_builder' => function (EntityRepository $er) {
@@ -59,22 +61,24 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
                 $form = $event->getForm();
                 $form
                     ->add('precio', EntityType::class, [
-                    'class' => 'AppBundle:MarinaHumedaTarifa',
-                    'label' => 'Precio',
-                    'placeholder' => 'Seleccionar...',
-                    'choice_value' => 'costo',
-                    'query_builder' => function (EntityRepository $er) {
-                        return $er->createQueryBuilder('t')
-                            ->select('t')
-                            ->andWhere('t.tipo = 1')->orderBy('t.costo');
-                    },
-                    'choice_attr' => function ($objeto) use ($costo) {
-                        return $objeto->getCosto() === $costo ? ['selected' => 'selected'] : [''];
-                    }
-                ])
+                        'class' => 'AppBundle:MarinaHumedaTarifa',
+                        'label' => 'Precio',
+                        'placeholder' => 'Seleccionar...',
+                        'required' => false,
+                        'choice_value' => 'costo',
+                        'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('t')
+                                ->select('t')
+                                ->andWhere('t.tipo = 1')->orderBy('t.costo');
+                        },
+                        'choice_attr' => function ($objeto) use ($costo) {
+                            return $objeto->getCosto() === $costo ? ['selected' => 'selected'] : [''];
+                        }
+                    ])
                     ->add('precioAux', EntityType::class, [
                         'class' => 'AppBundle:MarinaHumedaTarifa',
                         'label' => 'Precio',
+                        'required' => false,
                         'placeholder' => 'Seleccionar...',
                         'choice_value' => 'costo',
                         'query_builder' => function (EntityRepository $er) {
@@ -85,8 +89,7 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
                         'choice_attr' => function ($objeto) use ($costo) {
                             return $objeto->getCosto() === $costo ? ['selected' => 'selected'] : [''];
                         }
-                    ]);
-                ;
+                    ]);;
             }
         );
     }
