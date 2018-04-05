@@ -138,7 +138,9 @@
               {% if is_granted('ROLE_MARINA_PAGO') %}
               ${(aceptacion === 2 && pago !== 2) ? `<li><a class="${btnClass}verde" href="{{ app.request.requestUri ~ '${item.id}/pago' }}">Pagos</a></li>` : ''}
               {% endif %}
-              <li><a class="${btnClass}gris" href="{{ app.request.requestUri ~ '${item.id}/adicionales' }}">Adicionales</a></li>
+              {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_CREATE") or (user.isAdmin())')) %}
+              ${item.estatus ? `<li><a class="${btnClass}gris" href="{{ app.request.requestUri ~ '${item.id}/adicionales' }}">Adicionales</a></li>` : ''}
+              {% endif %}
             </ul>
           </td>
         `;

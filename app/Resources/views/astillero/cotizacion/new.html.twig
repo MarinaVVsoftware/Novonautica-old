@@ -126,6 +126,14 @@
                                 </div>
                                 </div>
                             </div>
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-morado-claro btnNext" >
+                                        Siguiente
+                                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
@@ -432,7 +440,16 @@
                                     {% endif %}
                                 </div>
                             </div>
-
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-morado-claro btnPrevious" >
+                                        <i class="fa fa-arrow-left" aria-hidden="true"></i> Anterior
+                                    </a>
+                                    <a class="btn btn-morado-claro btnNext" >
+                                        Siguiente <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="total">
                             <div class="row">
@@ -672,6 +689,16 @@
                                     <hr>
                                 </div>
                             </div>
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-morado-claro btnPrevious" >
+                                        <i class="fa fa-arrow-left" aria-hidden="true"></i> Anterior
+                                    </a>
+                                    <a class="btn btn-morado-claro btnNext" >
+                                        Siguiente <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="totalusd">
                             <div class="row">
@@ -877,6 +904,16 @@
                                     <hr>
                                 </div>
                             </div>
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-morado-claro btnPrevious" >
+                                        <i class="fa fa-arrow-left" aria-hidden="true"></i> Anterior
+                                    </a>
+                                    <a class="btn btn-morado-claro btnNext" >
+                                        Siguiente <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="correo">
                             <div class="row">
@@ -902,6 +939,13 @@
                                         <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                         Guardar
                                     </button>
+                                </div>
+                            </div>
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-morado-claro btnPrevious" >
+                                        <i class="fa fa-arrow-left" aria-hidden="true"></i> Anterior
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -1202,6 +1246,12 @@
                     }
                 });
             }
+        });
+        $('.btnNext').click(function(){
+            $('.nav-tabs > .active').next('li').find('a').trigger('click');
+        });
+        $('.btnPrevious').click(function(){
+            $('.nav-tabs > .active').prev('li').find('a').trigger('click');
         });
     </script>
 {% endblock %}

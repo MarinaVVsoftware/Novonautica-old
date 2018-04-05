@@ -1046,7 +1046,7 @@ class AstilleroCotizacionController extends Controller
                 );
             }else{
                 $faltante = $total - $totPagado;
-                if($faltante==0){
+                if($faltante < 1 && $faltante > -1){
                     $astilleroCotizacion->setEstatuspago(2);
                 }else{
                     $astilleroCotizacion->setEstatuspago(1);
@@ -1165,7 +1165,13 @@ class AstilleroCotizacionController extends Controller
      * @return Response
      */
     public function adicionalesAction(Request $request, AstilleroCotizacion $astilleroCotizacionAnterior){
-//        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_CREATE', $astilleroCotizacion);
+        $astilleroCotizacion = new AstilleroCotizacion();
+        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_CREATE', $astilleroCotizacion);
+
+        if($astilleroCotizacionAnterior->isEstatus() == 0){
+            throw new NotFoundHttpException();
+        }
+
         $em = $this->getDoctrine()->getManager();
         $sistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
         $mensaje = $sistema->getMensajeCorreoAstillero();
@@ -1211,7 +1217,6 @@ class AstilleroCotizacionController extends Controller
         $astilleroDiasAdicionales->setPrecio($preciosBasicos[8]['precio'])
         ;
 
-        $astilleroCotizacion = new AstilleroCotizacion();
         $astilleroCotizacion
             ->setFechaLlegada($astilleroCotizacionAnterior->getFechaLlegada())
             ->setFechaSalida($astilleroCotizacionAnterior->getFechaSalida())

@@ -174,9 +174,11 @@
                                             {% if AstilleroServicio.estatus %}
                                                 <tr>
                                                     <td>
-                                                        {{ AstilleroServicio.cantidad }}
-                                                        {% if AstilleroServicio.astilleroserviciobasico.id is defined and  AstilleroServicio.astilleroserviciobasico.id == 2 %}
-                                                            (pie por día)
+                                                        {% if AstilleroServicio.astilleroserviciobasico.id is defined
+                                                            and (AstilleroServicio.astilleroserviciobasico.id == 2 or AstilleroServicio.astilleroserviciobasico.id == 9) %}
+                                                            {{ AstilleroServicio.cantidad/astilleroCotizacion.barco.eslora }} (pie por día)
+                                                        {% else %}
+                                                            {{ AstilleroServicio.cantidad }}
                                                         {% endif %}
                                                     </td>
                                                     {% if AstilleroServicio.astilleroserviciobasico.nombre is defined %}
@@ -291,9 +293,11 @@
                                             {% if AstilleroServicio.estatus %}
                                                 <tr>
                                                     <td>
-                                                        {{ AstilleroServicio.cantidad }}
-                                                        {% if AstilleroServicio.astilleroserviciobasico.id is defined and  AstilleroServicio.astilleroserviciobasico.id == 2 %}
-                                                            (pie por día)
+                                                        {% if AstilleroServicio.astilleroserviciobasico.id is defined
+                                                            and (AstilleroServicio.astilleroserviciobasico.id == 2 or AstilleroServicio.astilleroserviciobasico.id == 9) %}
+                                                            {{ AstilleroServicio.cantidad/astilleroCotizacion.barco.eslora }} (pie por día)
+                                                        {% else %}
+                                                            {{ AstilleroServicio.cantidad }}
                                                         {% endif %}
                                                     </td>
                                                     {% if AstilleroServicio.astilleroserviciobasico.nombre is defined %}
@@ -560,6 +564,19 @@
                                     <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
                                     Reenviar
                                 </button>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if astilleroCotizacion.estatus and
+                        is_granted(expression('has_role("ASTILLERO_COTIZACION_CREATE") or (user.isAdmin())'))
+                    %}
+                        <div class="row espacio-linea-arriba2">
+                            <div class="col-sm-12">
+                                <a class="btn btn-gris pull-right"
+                                   href="{{ path('astillero_cotizacion_adicionales', { 'id': astilleroCotizacion.id }) }}">
+                                    <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                                    Adicional
+                                </a>
                             </div>
                         </div>
                     {% endif %}
