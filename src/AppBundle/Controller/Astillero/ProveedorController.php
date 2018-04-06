@@ -65,7 +65,7 @@ class ProveedorController extends Controller
             $em->persist($proveedor);
             $em->flush();
 
-            return $this->redirectToRoute('astillero_proveedor_index');
+            return $this->redirectToRoute('astillero_proveedor_show',['id'=>$proveedor->getId()]);
         }
 
         return $this->render('astillero/proveedor/new.html.twig', array(
@@ -73,6 +73,24 @@ class ProveedorController extends Controller
             'form' => $form->createView(),
             'title' => 'Nuevo proveedor'
         ));
+    }
+
+    /**
+     * @Route("/buscarproveedor", name="astillero_proveedor_ajax")
+     * @Method({"GET"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function buscarProveedorAction(Request $request){
+        $idproveedor=$request->get('idproveedor');
+        $em = $this->getDoctrine()->getManager();
+        $cotizacion = $em->getRepository('AppBundle:Astillero\Proveedor')
+            ->createQueryBuilder('ap')
+            ->select('ap')
+            ->where('ap.id = '.$idproveedor)
+            ->getQuery()
+            ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        return $this->json($cotizacion[0]);
     }
 
     /**
@@ -130,18 +148,6 @@ class ProveedorController extends Controller
             'delete_form' => $deleteForm->createView(),
             'title' => 'Editar Proveedor'
         ));
-    }
-
-    /**
-     * @Route("{id}/proveedor.json")
-     *
-     * @return Response
-     */
-    public function getProveedorAction($id)
-    {
-        $barcos = $this->getDoctrine()->getRepository('AppBundle:Astillero\Proveedor')->findOneBy(['id'=>$id]);
-
-        return new JsonResponse($barcos);
     }
 
     /**

@@ -494,7 +494,7 @@ $('.lista-pagos').on('click', '.remove-pago', function (e) {
 
 //---------- colection al agregar contratista a ODT -----------------
 jQuery('.add-another-proveedor').click(function (e) {
-    coleccionContratistaODT(e, this,'');
+    coleccionContratistaODT(e, this,'',0);
 });
 $('.lista-proveedores').on('click', '.remove-proveedor', function (e) {
     e.preventDefault();
@@ -503,7 +503,7 @@ $('.lista-proveedores').on('click', '.remove-proveedor', function (e) {
 
     return false;
 });
-function coleccionContratistaODT(e,objeto,descripcion){
+function coleccionContratistaODT(e,objeto,descripcion,total){
     e.preventDefault();
     // var elementoMotor = document.getElementsByClassName(this);
     var totProveedor = $(objeto).data('cantidad');
@@ -527,6 +527,7 @@ function coleccionContratistaODT(e,objeto,descripcion){
         orientation: "auto",
     });
     $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_cotizacionInicial').val(descripcion);
+    $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_preciovv').val((total/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     // also add a remove button, just for this example
     //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
     newLi.before(newLi);

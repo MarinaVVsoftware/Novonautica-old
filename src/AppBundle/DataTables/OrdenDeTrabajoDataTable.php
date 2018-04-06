@@ -64,13 +64,11 @@ class OrdenDeTrabajoDataTable extends AbstractDataTableHandler
                 $odt->getAstilleroCotizacion()->getFoliorecotiza() == 0 ? $odt->getAstilleroCotizacion()->getFolio() : $odt->getAstilleroCotizacion()->getFolio().'-'.$odt->getAstilleroCotizacion()->getFoliorecotiza(),
                 $odt->getAstilleroCotizacion()->getBarco()->getNombre(),
                 $odt->getAstilleroCotizacion()->getCliente()->getNombre(),
-                '$' . number_format($odt->getPrecioTotal() / 100, 2),
-                '$' . number_format($odt->getPagosTotal() / 100, 2),
-                '$' . number_format($odt->getSaldoTotal() / 100, 2),
-                '$' . number_format($odt->getPreciovvTotal() / 100, 2),
-                '$' . number_format($odt->getUtilidadvvTotal() / 100, 2),
-                '$' . number_format($odt->getIvaTotal() / 100, 2),
-                '$' . number_format($odt->getGranTotal() / 100, 2),
+                '$' . number_format(($odt->getPrecioTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',
+                '$' . number_format(($odt->getUtilidadvvTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',
+                '$' . number_format(($odt->getPreciovvTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',
+                '$' . number_format(($odt->getIvaTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',
+                '$' . number_format(($odt->getGranTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',
                 $odt->getId()
             ];
         }

@@ -31,54 +31,35 @@ class ContratistaType extends AbstractType
                 'label' => 'Descripción del trabajo'
             ])
             ->add('precio',MoneyType::class,[
-                'label' => 'Precio (USD)',
+                'label' => 'Precio Contratista (USD)',
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
-                'attr' => ['class' => 'esdecimal']
+                'attr' => ['class' => 'esdecimal preciocontratista','readonly'=>true]
+            ])
+            ->add('porcentajevv',TextType::class,[
+                'label' => '% V&V',
+                'attr' => ['class'=>'porcentajevv','readonly'=>true]
             ])
             ->add('utilidadvv',MoneyType::class,[
                 'label' => 'Utilidad V&V (USD)',
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
-                'attr' => ['class' => 'esdecimal']
+                'attr' => ['class' => 'esdecimal utilidadvv','readonly'=>true]
             ])
             ->add('preciovv',MoneyType::class,[
                 'label' => 'Precio V&V (USD)',
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
-                'attr' => ['class' => 'esdecimal']
+                'attr' => ['class' => 'esdecimal preciovv','readonly'=>true]
             ])
             ->add('proveedor',EntityType::class,[
                 'class' => 'AppBundle\Entity\Astillero\Proveedor',
                 'placeholder' => 'Seleccionar...',
                 'attr' => ['class'=>'buscaproveedor'],
 
-            ])
-            ->add('pagos',MoneyType::class,[
-                'label' => 'Pagos (USD)',
-                'currency' => 'USD',
-                'divisor' => 100,
-                'grouping' => true,
-                'attr' => ['class' => 'esdecimal']
-            ])
-            ->add('fecha',DateType::class,[
-                'widget' => 'single_text',
-                'html5' => false,
-                'attr' => ['class' => 'datepicker-solo input-calendario',
-                    'readonly' => true],
-                'format' => 'yyyy-MM-dd',
-                'data' => new DateTime()
-            ])
-            ->add('formaPago')
-            ->add('saldo',MoneyType::class,[
-                'label' => 'Saldo (USD)',
-                'currency' => 'USD',
-                'divisor' => 100,
-                'grouping' => true,
-                'attr' => ['class' => 'esdecimal']
             ])
         ;
     }

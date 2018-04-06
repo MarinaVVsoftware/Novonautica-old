@@ -1,28 +1,16 @@
 {% block form_widget %}
     {% spaceless %}
-        <div class="row espacio-linea-abajo2">
-            <div class="col-sm-12">
-                <hr>
-            </div>
+        <div class="col-sm-12 espacio-linea-abajo2">
+            <hr>
         </div>
-        <div class="col-sm-2">
-            <div class="form-group">
-                {{ form_row(form.proveedor) }}
-            </div>
-        </div>
-        <div class="col-sm-6">
+        <div class="col-sm-9">
             <div class="form-group">
                 {{ form_row(form.cotizacionInicial) }}
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             <div class="form-group">
-                {{ form_row(form.precio) }}
-            </div>
-        </div>
-        <div class="col-sm-2">
-            <div class="form-group">
-                {{ form_row(form.utilidadvv) }}
+                {{ form_row(form.proveedor) }}
             </div>
         </div>
         <div class="col-sm-2">
@@ -32,29 +20,24 @@
         </div>
         <div class="col-sm-2">
             <div class="form-group">
-                {{ form_row(form.pagos) }}
+                {{ form_row(form.porcentajevv) }}
             </div>
         </div>
         <div class="col-sm-2">
             <div class="form-group">
-                {{ form_row(form.fecha) }}
+                {{ form_row(form.utilidadvv) }}
             </div>
         </div>
         <div class="col-sm-2">
             <div class="form-group">
-                {{ form_row(form.formaPago) }}
+                {{ form_row(form.precio) }}
             </div>
         </div>
-        <div class="col-sm-2">
-            <div class="form-group">
-                {{ form_row(form.saldo) }}
-            </div>
-        </div>
-        <div class="col-sm-2">
-            <a href="#" class="remove-proveedor btn btn-xs btn-naranja">
-                <i class="fa fa-times" aria-hidden="true"></i>
-                Remover Contratista
-            </a>
-        </div>
+        {#<div class="col-sm-2">#}
+            {#<a href="#" class="remove-proveedor btn btn-xs btn-naranja">#}
+                {#<i class="fa fa-times" aria-hidden="true"></i>#}
+                {#Remover Contratista#}
+            {#</a>#}
+        {#</div>#}
     {% endspaceless %}
 {% endblock form_widget %}

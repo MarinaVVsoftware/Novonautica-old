@@ -19,39 +19,14 @@
                                 <th>Folio</th>
                                 <th>Barco</th>
                                 <th>Cliente</th>
-                                <th>Precio</th>
-                                <th>Pagos</th>
-                                <th>Saldo</th>
-                                <th>Precio V&V</th>
+                                <th>Precio Contratista</th>
                                 <th>Utilidad V&V</th>
-                                <th>Iva</th>
-                                <th>Total</th>
+                                <th>Precio V&V</th>
+                                <th>Iva Contratista</th>
+                                <th>Total Contratista</th>
                                 <th></th>
                             </tr>
                             </thead>
-                            {#<tbody>#}
-                            {#{% for ordenDeTrabajo in ordenDeTrabajos %}#}
-                                {#<tr>#}
-                                    {#<td>#}
-                                        {#{% if ordenDeTrabajo.astilleroCotizacion.foliorecotiza == 0 %}#}
-                                            {#{{ ordenDeTrabajo.astilleroCotizacion.folio }}#}
-                                        {#{% else %}#}
-                                            {#{{ ordenDeTrabajo.astilleroCotizacion.folio }}-{{ ordenDeTrabajo.astilleroCotizacion.foliorecotiza }}#}
-                                        {#{% endif %}#}
-                                    {#</td>#}
-                                    {#<td>{{ ordenDeTrabajo.astilleroCotizacion.barco.nombre }}</td>#}
-                                    {#<td>#}
-                                        {#{% if ordenDeTrabajo.astilleroCotizacion.cliente %}#}
-                                            {#{{ ordenDeTrabajo.astilleroCotizacion.cliente.nombre }}#}
-                                        {#{% endif %}#}
-                                    {#</td>#}
-                                    {#<td>#}
-                                        {#<a class="btn btn-morado-claro" href="{{ path('ordendetrabajo_show', { 'id': ordenDeTrabajo.id }) }}">Ver</a>#}
-                                        {#<a class="btn btn-azul" href="{{ path('ordendetrabajo_edit', { 'id': ordenDeTrabajo.id }) }}">Editar</a>#}
-                                    {#</td>#}
-                                {#</tr>#}
-                            {#{% endfor %}#}
-                            {#</tbody>#}
                         </table>
                     </div>
                 </div>
@@ -71,16 +46,16 @@
                 ajax: '{{ path('ordendetrabajo_index') }}',
                 order: [[0, 'desc']],
                 createdRow: function (row, data) {
-                let actionsCell = row.cells[10];
+                let actionsCell = row.cells[8];
                 actionsCell.innerHTML = `
             <ul class="unstyled-list list-inline">
                 <li>
-                <a href="${data[10]}">
+                <a href="${data[8]}">
                     <i class="fa fa-eye" aria-hidden="true"></i>
                 </a>
                 </li>
                 <li>
-                <a href="${data[10]}/editar">
+                <a href="${data[8]}/editar">
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                 </a>
                 </li>

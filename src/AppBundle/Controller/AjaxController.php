@@ -172,7 +172,9 @@ class AjaxController extends Controller
             'mHcotizaciones',
             'mhcotizacionesadicionales',
             'astillerocotizaciones',
-            'embarcacion'
+            'embarcacion',
+            'gasolinabarco',
+
         ]);
 
         $normalizer->setCircularReferenceHandler(function ($entity) {

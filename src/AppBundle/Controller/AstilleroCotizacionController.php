@@ -1197,7 +1197,11 @@ class AstilleroCotizacionController extends Controller
         $astilleroInspeccionar = new AstilleroCotizaServicio();
         $astilleroDiasAdicionales = new AstilleroCotizaServicio();
 
-        $astilleroGrua->setPrecio($preciosBasicos[0]['precio']);
+//        $astilleroGrua->setPrecio($preciosBasicos[0]['precio']);
+        $cantidad = $barco->getEslora();
+        $precio = $preciosBasicos[0]['precio'];
+        $astilleroGrua = $this->calculaServicio($astilleroGrua,$cantidad,$precio,$iva);
+
         $cantidad = 1;
         $precio = $preciosBasicos[2]['precio'];
         $astilleroRampa = $this->calculaServicio($astilleroRampa,$cantidad,$precio,$iva);
@@ -1540,6 +1544,9 @@ class AstilleroCotizacionController extends Controller
             'form' => $form->createView()
         ]);
     }
+
+
+
     /**
      * Elimina una cotizacion
      *
@@ -1595,6 +1602,12 @@ class AstilleroCotizacionController extends Controller
 
 
     private function llenarServicio($servicio,$datos,$dolar){
+//        if($datos===null){
+//            return;
+//        }
+//        if($servicio->getId()===null){
+//            return;
+//        }
         $servicio
             ->setServicio(null)
             ->setProducto(null)

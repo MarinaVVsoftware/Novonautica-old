@@ -1,0 +1,21 @@
+{% block form_widget %}
+    {% spaceless %}
+        <td>
+            {{ form_widget(form.cantidad) }}
+        </td>
+        <td>
+            {{ form_widget(form.divisa) }}
+        </td>
+        <td>
+            {{ form_widget(form.fecha) }}
+        </td>
+        <td>
+            {{ form_widget(form.forma) }}
+        </td>
+        <td style="vertical-align: middle">
+            <a href="#" class="remove-pago btn btn-xs btn-naranja">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </a>
+        </td>
+    {% endspaceless %}
+{% endblock %}

@@ -151,7 +151,7 @@
                                     <table class="table">
                                         <thead>
                                         <tr>
-                                            <th>Cotización inicial</th>
+                                            <th>Descripción del trabajo</th>
                                             <th>Contratista</th>
                                             <th>Razón social</th>
                                             <th>Precio</th>
@@ -175,11 +175,17 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td colspan="3" class="text-right">Totales:</td>
+                                                <td colspan="3" rowspan="2" class="text-right">Totales:</td>
                                                 <td>${{ (ordenDeTrabajo.precioTotal/100)|number_format(2) }}</td>
                                                 <td></td>
                                                 <td>${{ (ordenDeTrabajo.utilidadvvTotal/100)|number_format(2) }}</td>
                                                 <td>${{ (ordenDeTrabajo.preciovvTotal/100)|number_format(2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>${{ ((ordenDeTrabajo.precioTotal*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN</td>
+                                                <td></td>
+                                                <td>${{ ((ordenDeTrabajo.utilidadvvTotal*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN</td>
+                                                <td>${{ ((ordenDeTrabajo.preciovvTotal*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN</td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -196,16 +202,12 @@
                                     <table class="table">
                                         <thead>
                                         <tr>
-                                            <th>Cotización inicial</th>
+                                            <th>Descripción del trabajo</th>
                                             <th>Contratista</th>
                                             <th>Razón social</th>
                                             <th>Precio</th>
                                             <th>IVA</th>
                                             <th>Total</th>
-                                            <th>Pagos</th>
-                                            <th>Fecha</th>
-                                            <th>Forma de pago</th>
-                                            <th>Saldo</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -217,23 +219,20 @@
                                                 <td>${{ (contratista.precio/100)|number_format(2) }}</td>
                                                 <td>${{ (contratista.ivatot/100)|number_format(2) }}</td>
                                                 <td>${{ (contratista.total/100)|number_format(2) }}</td>
-                                                <td>${{ (contratista.pagos/100)|number_format(2) }}</td>
-                                                <td>{{ contratista.fecha ? contratista.fecha|date('d-m-Y'):'' }}</td>
-                                                <td>{{ contratista.formaPago }}</td>
-                                                <td>${{ (contratista.saldo/100)|number_format(2) }}</td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>
                                         <tfoot>
                                         <tr>
-                                            <td colspan="3" class="text-right">Totales:</td>
+                                            <td colspan="3" rowspan="2" class="text-right">Totales:</td>
                                             <td>${{ (ordenDeTrabajo.precioTotal/100)|number_format(2) }}</td>
                                             <td>${{ (ordenDeTrabajo.ivaTotal/100)|number_format(2) }}</td>
                                             <td>${{ (ordenDeTrabajo.granTotal/100)|number_format(2) }}</td>
-                                            <td>${{ (ordenDeTrabajo.pagosTotal/100)|number_format(2) }}</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>${{ (ordenDeTrabajo.saldoTotal/100)|number_format(2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>${{ ((ordenDeTrabajo.precioTotal*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN</td>
+                                            <td>${{ ((ordenDeTrabajo.ivaTotal*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN</td>
+                                            <td>${{ ((ordenDeTrabajo.granTotal*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN</td>
                                         </tr>
                                         </tfoot>
                                     </table>
@@ -241,6 +240,101 @@
                                     </small>
                                 </div>
                             </div>
+                            {% for contratista in ordenDeTrabajo.contratistas %}
+                                <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
+                                    <div class="col-sm-12">
+                                        <hr>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <div class="row espacio-linea-abajo2">
+                                            <div class="col-sm-12">
+                                                <a class="btn btn-verde loadpage"
+                                                   href="{{ path('ordendetrabajo_contratista_pago', { 'id': contratista.id }) }}">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    Pagos
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="letra-azul">Descripción del trabajo:</div>
+                                                <ul>{{ contratista.cotizacionInicial }}</ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="letra-azul">Contratista:</div>
+                                                <ul>{{ contratista.proveedor.nombre }}</ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="letra-azul">Razón Social:</div>
+                                                <ul>{{ contratista.proveedor.razonsocial }}</ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="letra-azul">Precio:</div>
+                                                <ul>
+                                                    ${{ (contratista.precio/100)|number_format(2) }} USD &nbsp;&nbsp;&nbsp;
+                                                    ${{ ((contratista.precio*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="letra-azul">IVA:</div>
+                                                <ul>
+                                                    ${{ (contratista.ivatot/100)|number_format(2) }} USD &nbsp;&nbsp;&nbsp;
+                                                    ${{ ((contratista.ivatot*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="letra-azul">Total:</div>
+                                                <ul>
+                                                    ${{ (contratista.total/100)|number_format(2) }} USD &nbsp;&nbsp;&nbsp;
+                                                    ${{ ((contratista.total*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>Pagos</th>
+                                                <th>Fecha</th>
+                                                <th>Forma de pago</th>
+                                                <th colspan="2">Saldo</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for pago in contratista.contratistapagos %}
+                                                <tr>
+                                                    <td>${{ (pago.cantidad/100)|number_format(2) }} {{ pago.divisa }}</td>
+                                                    <td>
+                                                        {% if pago.fecha %}
+                                                            {{ pago.fecha|date('d-m-Y') }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{ pago.forma }}</td>
+                                                    <td>${{ (pago.saldo/100)|number_format(2) }} USD</td>
+                                                    <td>
+                                                        ${{ ((pago.saldo*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">

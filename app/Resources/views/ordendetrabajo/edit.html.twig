@@ -44,7 +44,60 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
-                                <div id="datos-cotizacion"></div>
+                                <div class="row espacio-linea-arriba2">
+                                    <div class="col-sm-12">
+                                        <div class="letra-azul">Nombre:</div>
+                                        <ul>{{ ordenDeTrabajo.astilleroCotizacion.cliente.nombre }}</ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="letra-azul">Teléfono:</div>
+                                        <ul>{{ ordenDeTrabajo.astilleroCotizacion.cliente.telefono }}</ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="letra-azul">Celular:</div>
+                                        <ul>{{ ordenDeTrabajo.astilleroCotizacion.cliente.celular }}</ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="letra-azul">E-mail:</div>
+                                        <ul>{{ ordenDeTrabajo.astilleroCotizacion.cliente.correo }}</ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="letra-azul">Embarcación:</div>
+                                        <ul>{{ ordenDeTrabajo.astilleroCotizacion.barco.nombre }}</ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="letra-azul">Modelo:</div>
+                                        <ul>{{ ordenDeTrabajo.astilleroCotizacion.barco.modelo }}</ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="letra-azul">Calado:</div>
+                                        <ul>{{ ordenDeTrabajo.astilleroCotizacion.barco.calado }}</ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="letra-azul">Manga:</div>
+                                        <ul>{{ ordenDeTrabajo.astilleroCotizacion.barco.manga }}</ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="letra-azul">Eslora:</div>
+                                        <ul>{{ ordenDeTrabajo.astilleroCotizacion.barco.eslora }}</ul>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-sm-8">
                                 <small class="pull-left">Precios en USD</small>
@@ -107,13 +160,13 @@
                                 </div>
                             {% endfor %}
                         </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <a href="#" id="" class="add-another-proveedor letra-azul" data-cantidad="{{ edit_form.contratistas|length }}" data-idlista="0">
-                                    + Agregar Contratista
-                                </a>
-                            </div>
-                        </div>
+                        {#<div class="row">#}
+                            {#<div class="col-sm-12">#}
+                                {#<a href="#" id="" class="add-another-proveedor letra-azul" data-cantidad="{{ edit_form.contratistas|length }}" data-idlista="0">#}
+                                    {#+ Agregar Contratista#}
+                                {#</a>#}
+                            {#</div>#}
+                        {#</div>#}
                     </div>
                     <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
                         <div class="col-sm-12">
@@ -153,6 +206,39 @@
                     format: 'yyyy-mm-dd',
                     orientation: "auto",
                 })
+            });
+            $(document).on('change','.buscaproveedor',function (e){
+                {#var url = "{{ path('astillero_proveedor_ajax',{'id':'iddelproveedor','_format':'json'}) }}";#}
+                {#var url = "{{ path('astillero_proveedor_ajax') }}";#}
+                {#console.log(url);#}
+                // url = url.replace("iddelproveedor", $(this).val());
+                var idproveedor = $(this);
+                $.ajax({
+                    method: "GET",
+                    url: '{{ path('astillero_proveedor_ajax') }}',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    type: "POST",
+                    data: {
+                        'idproveedor':idproveedor.val()
+                    },
+                    success: function (proveedor) {
+                        var dolar = $('#precio-dolar').data('valor');
+                        var iva = $('#porcentaje-iva').data('valor');
+                        var elemento = $(idproveedor).parent().parent().parent().parent().children('div').children('div').children('div').children('div');
+                        var porcentajeVV =  (proveedor.porcentaje + 100)/100;
+                        var precioVV = elemento.children('.preciovv').val();
+                        var precioContratista = (precioVV.replace(',',''))/porcentajeVV;
+                        var utilidadVv = (precioVV.replace(',','')*proveedor.porcentaje)/(proveedor.porcentaje + 100);
+                        var ivaContratista = (precioContratista * iva)/100;
+                        var totalContratista = precioContratista + ivaContratista;
+                        elemento.children('.preciocontratista').val(precioContratista.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+                        elemento.children('.utilidadvv').val(utilidadVv.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+                        $(idproveedor).parent().parent().parent().parent().children('div').children('div').children('div').children('.porcentajevv').val(porcentajeVV);
+                        console.log(ivaContratista);
+                        console.log(totalContratista);
+                    }
+                });
             });
         })(jQuery);
     </script>
