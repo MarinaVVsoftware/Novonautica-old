@@ -1138,7 +1138,7 @@ class MarinaHumedaCotizacionController extends Controller
      * @param MarinaHumedaCotizacion $marinaHumedaCotizacion
      * @param \Swift_Mailer $mailer
      *
-     * @return void
+     * @return RedirectResponse
      */
     public function reenviaCoreoAction(MarinaHumedaCotizacion $marinaHumedaCotizacion, \Swift_Mailer $mailer)
     {
@@ -1219,6 +1219,8 @@ class MarinaHumedaCotizacionController extends Controller
         $em->persist($historialCorreo);
         $em->persist($marinaHumedaCotizacion);
         $em->flush();
+
+        return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
     }
 
     /**
