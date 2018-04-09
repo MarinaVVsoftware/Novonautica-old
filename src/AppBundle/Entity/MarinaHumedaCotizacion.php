@@ -153,6 +153,13 @@ class MarinaHumedaCotizacion
     private $validacliente;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="quien_acepto", type="string", length=100, nullable=true)
+     */
+    private $quienAcepto;
+
+    /**
      * @var \DateTimeImmutable
      *
      * @ORM\Column(name="registro_valida_cliente", type="datetime_immutable", nullable=true)
@@ -312,6 +319,15 @@ class MarinaHumedaCotizacion
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\CotizacionNota", mappedBy="mhcotizacion",cascade={"persist","remove"})
      */
     private $cotizacionnotas;
+
+    /**
+     * Quien creo esta cotizacion
+     *
+     * @var Usuario
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Usuario")
+     */
+    private $creador;
 
     public function __construct()
     {
@@ -870,11 +886,11 @@ class MarinaHumedaCotizacion
     /**
      * Set cliente
      *
-     * @param \AppBundle\Entity\Cliente $cliente
+     * @param Cliente $cliente
      *
      * @return MarinaHumedaCotizacion
      */
-    public function setCliente(\AppBundle\Entity\Cliente $cliente = null)
+    public function setCliente(Cliente $cliente = null)
     {
         $this->cliente = $cliente;
         return $this;
@@ -883,7 +899,7 @@ class MarinaHumedaCotizacion
     /**
      * Get cliente
      *
-     * @return \AppBundle\Entity\Cliente
+     * @return Cliente
      */
     public function getCliente()
     {
@@ -893,11 +909,11 @@ class MarinaHumedaCotizacion
     /**
      * Set barco
      *
-     * @param \AppBundle\Entity\Barco $barco
+     * @param Barco $barco
      *
      * @return MarinaHumedaCotizacion
      */
-    public function setBarco(\AppBundle\Entity\Barco $barco = null)
+    public function setBarco(Barco $barco = null)
     {
         $this->barco = $barco;
         return $this;
@@ -906,7 +922,7 @@ class MarinaHumedaCotizacion
     /**
      * Get barco
      *
-     * @return \AppBundle\Entity\Barco
+     * @return Barco
      */
     public function getBarco()
     {
@@ -916,11 +932,11 @@ class MarinaHumedaCotizacion
     /**
      * Add marinahumedacotizaservicios
      *
-     * @param \AppBundle\Entity\MarinaHumedaCotizaServicios $marinahumedacotizaservicios
+     * @param MarinaHumedaCotizaServicios $marinahumedacotizaservicios
      *
      * @return MarinaHumedaCotizacion
      */
-    public function addMarinaHumedaCotizaServicios(\AppBundle\Entity\MarinaHumedaCotizaServicios $marinahumedacotizaservicios)
+    public function addMarinaHumedaCotizaServicios(MarinaHumedaCotizaServicios $marinahumedacotizaservicios)
     {
         $marinahumedacotizaservicios->setMarinaHumedaCotizacion($this);
         $this->mhcservicios[] = $marinahumedacotizaservicios;
@@ -930,9 +946,9 @@ class MarinaHumedaCotizacion
     /**
      * Remove marinahumedacotizaservicios
      *
-     * @param \AppBundle\Entity\MarinaHumedaCotizaServicios $marinahumedacotizaservicios
+     * @param MarinaHumedaCotizaServicios $marinahumedacotizaservicios
      */
-    public function removeMarinaHumedaCotizaServicios(\AppBundle\Entity\MarinaHumedaCotizaServicios $marinahumedacotizaservicios)
+    public function removeMarinaHumedaCotizaServicios(MarinaHumedaCotizaServicios $marinahumedacotizaservicios)
     {
         $this->mhcservicios->removeElement($marinahumedacotizaservicios);
     }
@@ -950,11 +966,11 @@ class MarinaHumedaCotizacion
     /**
      * Add mhcservicio
      *
-     * @param \AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio
+     * @param MarinaHumedaCotizaServicios $mhcservicio
      *
      * @return MarinaHumedaCotizacion
      */
-    public function addMhcservicio(\AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio)
+    public function addMhcservicio(MarinaHumedaCotizaServicios $mhcservicio)
     {
         $this->mhcservicios[] = $mhcservicio;
 
@@ -964,9 +980,9 @@ class MarinaHumedaCotizacion
     /**
      * Remove mhcservicio
      *
-     * @param \AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio
+     * @param MarinaHumedaCotizaServicios $mhcservicio
      */
-    public function removeMhcservicio(\AppBundle\Entity\MarinaHumedaCotizaServicios $mhcservicio)
+    public function removeMhcservicio(MarinaHumedaCotizaServicios $mhcservicio)
     {
         $this->mhcservicios->removeElement($mhcservicio);
     }
@@ -991,11 +1007,11 @@ class MarinaHumedaCotizacion
     /**
      * Set slip
      *
-     * @param \AppBundle\Entity\Slip $slip
+     * @param Slip $slip
      *
      * @return MarinaHumedaCotizacion
      */
-    public function setSlip(\AppBundle\Entity\Slip $slip = null)
+    public function setSlip(Slip $slip = null)
     {
         $this->slip = $slip;
 
@@ -1005,7 +1021,7 @@ class MarinaHumedaCotizacion
     /**
      * Get slip
      *
-     * @return \AppBundle\Entity\Slip
+     * @return Slip
      */
     public function getSlip()
     {
@@ -1015,11 +1031,11 @@ class MarinaHumedaCotizacion
     /**
      * Add pago
      *
-     * @param \AppBundle\Entity\Pago $pago
+     * @param Pago $pago
      *
      * @return MarinaHumedaCotizacion
      */
-    public function addPago(\AppBundle\Entity\Pago $pago)
+    public function addPago(Pago $pago)
     {
         $pago->setMhcotizacion($this);
         $this->pagos[] = $pago;
@@ -1030,9 +1046,9 @@ class MarinaHumedaCotizacion
     /**
      * Remove pago
      *
-     * @param \AppBundle\Entity\Pago $pago
+     * @param Pago $pago
      */
-    public function removePago(\AppBundle\Entity\Pago $pago)
+    public function removePago(Pago $pago)
     {
         $this->pagos->removeElement($pago);
     }
@@ -1130,11 +1146,11 @@ class MarinaHumedaCotizacion
     /**
      * Set slipmovimiento
      *
-     * @param \AppBundle\Entity\SlipMovimiento $slipmovimiento
+     * @param SlipMovimiento $slipmovimiento
      *
      * @return MarinaHumedaCotizacion
      */
-    public function setSlipmovimiento(\AppBundle\Entity\SlipMovimiento $slipmovimiento = null)
+    public function setSlipmovimiento(SlipMovimiento $slipmovimiento = null)
     {
         $this->slipmovimiento = $slipmovimiento;
 
@@ -1144,7 +1160,7 @@ class MarinaHumedaCotizacion
     /**
      * Get slipmovimiento
      *
-     * @return \AppBundle\Entity\SlipMovimiento
+     * @return SlipMovimiento
      */
     public function getSlipmovimiento()
     {
@@ -1197,11 +1213,11 @@ class MarinaHumedaCotizacion
     /**
      * Add cotizacionnota.
      *
-     * @param \AppBundle\Entity\CotizacionNota $cotizacionnota
+     * @param CotizacionNota $cotizacionnota
      *
      * @return MarinaHumedaCotizacion
      */
-    public function addCotizacionnota(\AppBundle\Entity\CotizacionNota $cotizacionnota)
+    public function addCotizacionnota(CotizacionNota $cotizacionnota)
     {
         $cotizacionnota->setMhcotizacion($this);
         $this->cotizacionnotas[] = $cotizacionnota;
@@ -1212,11 +1228,11 @@ class MarinaHumedaCotizacion
     /**
      * Remove cotizacionnota.
      *
-     * @param \AppBundle\Entity\CotizacionNota $cotizacionnota
+     * @param CotizacionNota $cotizacionnota
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeCotizacionnota(\AppBundle\Entity\CotizacionNota $cotizacionnota)
+    public function removeCotizacionnota(CotizacionNota $cotizacionnota)
     {
         return $this->cotizacionnotas->removeElement($cotizacionnota);
     }
@@ -1254,5 +1270,37 @@ class MarinaHumedaCotizacion
     public function getRegistroPagoCompletado()
     {
         return $this->registroPagoCompletado;
+    }
+
+    /**
+     * @return Usuario
+     */
+    public function getCreador()
+    {
+        return $this->creador;
+    }
+
+    /**
+     * @param Usuario $creador
+     */
+    public function setCreador($creador)
+    {
+        $this->creador = $creador;
+    }
+
+    /**
+     * @return string
+     */
+    public function getQuienAcepto()
+    {
+        return $this->quienAcepto;
+    }
+
+    /**
+     * @param string $quienAcepto
+     */
+    public function setQuienAcepto($quienAcepto)
+    {
+        $this->quienAcepto = $quienAcepto;
     }
 }
