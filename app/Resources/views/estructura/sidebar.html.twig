@@ -30,7 +30,7 @@
                                 </a>
                             </li>
                         {% endif %}
-                        
+
                     </ul>
                 </li>
             {% endif %}
@@ -46,34 +46,35 @@
                     <ul class="treeview-menu">
                         <!-- START MARINA/MONEDERO -->
                         {% if is_granted('ROLE_MARINA_MONEDERO') %}
-                        <li class="{{ path.check('mh_monedero_index') }}">
-                            <a href="{{ path('mh_monedero_index') }}">
-                                <i class="fa fa-circle-o"></i> Monedero
-                            </a>
-                        </li>
+                            <li class="{{ path.check('mh_monedero_index') }}">
+                                <a href="{{ path('mh_monedero_index') }}">
+                                    <i class="fa fa-circle-o"></i> Monedero
+                                </a>
+                            </li>
                         {% endif %}
                         <!-- END MARINA/MONEDERO -->
 
                         <!-- START MARINA/SLIPS -->
                         {% if is_granted('ROLE_MARINA_SLIP') %}
-                        <li class="treeview {{ path.check(['mapa', 'slipmovimiento_index']) }}">
-                            <a href="#">
-                                <i class="fa fa-circle-o"></i> Slips
-                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="{{ path.check('mapa') }}">
-                                    <a href="{{ path('mapa') }}">
-                                        <i class="fa fa-minus"></i> Mapa
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('slipmovimiento_index') }}">
-                                    <a href="{{ path('slipmovimiento_index') }}">
-                                        <i class="fa fa-minus"></i> Ocupación
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="treeview {{ path.check(['mapa', 'slipmovimiento_index']) }}">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i> Slips
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ path.check('mapa') }}">
+                                        <a href="{{ path('mapa') }}">
+                                            <i class="fa fa-minus"></i> Mapa
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('slipmovimiento_index') }}">
+                                        <a href="{{ path('slipmovimiento_index') }}">
+                                            <i class="fa fa-minus"></i> Ocupación
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         {% endif %}
                         <!-- END MARINA/SLIPS -->
 
@@ -98,18 +99,18 @@
                                             </a>
                                         </li>
                                         {% if is_granted(expression('has_role("MARINA_COTIZACION_CREATE") or (user.isAdmin())')) %}
-                                        <li class="{{ path.check('marina-humeda_estadia_new') }}">
-                                            <a href="{{ path('marina-humeda_estadia_new') }}">
-                                                <i class="fa fa-circle-o"></i> Nueva
-                                            </a>
-                                        </li>
+                                            <li class="{{ path.check('marina-humeda_estadia_new') }}">
+                                                <a href="{{ path('marina-humeda_estadia_new') }}">
+                                                    <i class="fa fa-circle-o"></i> Nueva
+                                                </a>
+                                            </li>
                                         {% endif %}
                                         {% if is_granted(expression('has_role("ROLE_MARINA_TARIFF") or (user.isAdmin())')) %}
-                                        <li class="{{ path.check('marinahumeda-tarifas_index') }}">
-                                            <a href="{{ path('marinahumeda-tarifas_index') }}">
-                                                <i class="fa fa-circle-o"></i> Tarifas
-                                            </a>
-                                        </li>
+                                            <li class="{{ path.check('marinahumeda-tarifas_index') }}">
+                                                <a href="{{ path('marinahumeda-tarifas_index') }}">
+                                                    <i class="fa fa-circle-o"></i> Tarifas
+                                                </a>
+                                            </li>
                                         {% endif %}
                                     </ul>
                                 </li>
@@ -129,11 +130,11 @@
                                             </a>
                                         </li>
                                         {% if is_granted(expression('has_role("MARINA_COTIZACION_CREATE") or (user.isAdmin())')) %}
-                                        <li class="{{ path.check('marina-humeda_gasolina_new') }}">
-                                            <a href="{{ path('marina-humeda_gasolina_new') }}">
-                                                <i class="fa fa-circle-o"></i> Nueva
-                                            </a>
-                                        </li>
+                                            <li class="{{ path.check('marina-humeda_gasolina_new') }}">
+                                                <a href="{{ path('marina-humeda_gasolina_new') }}">
+                                                    <i class="fa fa-circle-o"></i> Nueva
+                                                </a>
+                                            </li>
                                             <li class="{{ path.check('marinahumedasolicitud_gasolina_index') }}">
                                                 <a href="{{ path('marinahumedasolicitud_gasolina_index') }}">
                                                     <i class="fa fa-circle-o"></i> Solicitudes App Móvil
@@ -150,24 +151,25 @@
 
                         <!-- START MARINA/COTIZACION/SERVICIOS ADICIONALES -->
                         {% if is_granted('ROLE_MARINA_SERVICIOADICIONAL') %}
-                        <li class="treeview {{ path.check('cotizacion-adicional_') }}">
-                            <a href="#">
-                                <i class="fa fa-circle-o"></i> Servicios adicionales
-                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="{{ path.check('marina-humeda-cotizacion-adicional_index') }}">
-                                    <a href="{{ path('marina-humeda-cotizacion-adicional_index') }}">
-                                        <i class="fa fa-minus"></i> Listado
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('marina-humeda-cotizacion-adicional_new') }}">
-                                    <a href="{{ path('marina-humeda-cotizacion-adicional_new') }}">
-                                        <i class="fa fa-minus"></i> Nueva
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="treeview {{ path.check('cotizacion-adicional_') }}">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i> Servicios adicionales
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ path.check('marina-humeda-cotizacion-adicional_index') }}">
+                                        <a href="{{ path('marina-humeda-cotizacion-adicional_index') }}">
+                                            <i class="fa fa-minus"></i> Listado
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('marina-humeda-cotizacion-adicional_new') }}">
+                                        <a href="{{ path('marina-humeda-cotizacion-adicional_new') }}">
+                                            <i class="fa fa-minus"></i> Nueva
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         {% endif %}
                         <!-- END MARINA/COTIZACION/SERVICIOS ADICIONALES -->
                     </ul>
@@ -189,18 +191,18 @@
                             </a>
                         </li>
                         {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_CREATE") or (user.isAdmin())')) %}
-                        <li class="{{ path.check('astillero_new') }}">
-                            <a href="{{ path('astillero_new') }}">
-                                <i class="fa fa-circle-o"></i> Nueva
-                            </a>
-                        </li>
+                            <li class="{{ path.check('astillero_new') }}">
+                                <a href="{{ path('astillero_new') }}">
+                                    <i class="fa fa-circle-o"></i> Nueva
+                                </a>
+                            </li>
                         {% endif %}
                         {% if is_granted('ROLE_ASTILLERO_SERVICIOBASICO') %}
-                        <li class="{{ path.check('astillero_servicio-basico_index') }}">
-                            <a href="{{ path('astillero_servicio-basico_index') }}">
-                                <i class="fa fa-circle-o"></i> Servicios básicos
-                            </a>
-                        </li>
+                            <li class="{{ path.check('astillero_servicio-basico_index') }}">
+                                <a href="{{ path('astillero_servicio-basico_index') }}">
+                                    <i class="fa fa-circle-o"></i> Servicios básicos
+                                </a>
+                            </li>
                         {% endif %}
 
                         <!-- START ASTILLERO/SERVICIOS -->
@@ -208,7 +210,8 @@
                             <li class="treeview {{ path.check('astillero_servicio_index') }}">
                                 <a href="#">
                                     <i class="fa fa-circle-o"></i> Servicios
-                                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
                                 </a>
                                 <ul class="treeview-menu">
                                     <li class="{{ path.check('astillero_servicio_index') }}">
@@ -231,7 +234,8 @@
                             <li class="treeview {{ path.check('astillero_producto') }}">
                                 <a href="#">
                                     <i class="fa fa-circle-o"></i> Productos
-                                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
                                 </a>
                                 <ul class="treeview-menu">
                                     <li class="{{ path.check('astillero_producto_index') }}">
@@ -251,24 +255,25 @@
 
                         <!-- START ASTILLERO/ODT -->
                         {% if is_granted('ROLE_ASTILLERO_ODT') %}
-                        <li class="treeview {{ path.check('ordendetrabajo_') }}">
-                            <a href="#">
-                                <i class="fa fa-circle-o"></i> ODT
-                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="{{ path.check('ordendetrabajo_index') }}">
-                                    <a href="{{ path('ordendetrabajo_index') }}">
-                                        <i class="fa fa-minus"></i> Listado
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('ordendetrabajo_new') }}">
-                                    <a href="{{ path('ordendetrabajo_new') }}">
-                                        <i class="fa fa-minus"></i> Nuevo
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="treeview {{ path.check('ordendetrabajo_') }}">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i> ODT
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ path.check('ordendetrabajo_index') }}">
+                                        <a href="{{ path('ordendetrabajo_index') }}">
+                                            <i class="fa fa-minus"></i> Listado
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('ordendetrabajo_new') }}">
+                                        <a href="{{ path('ordendetrabajo_new') }}">
+                                            <i class="fa fa-minus"></i> Nuevo
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         {% endif %}
                         <!-- END ASTILLERO/ODT -->
 
@@ -277,7 +282,8 @@
                             <li class="treeview {{ path.check('_proveedor_') }}">
                                 <a href="#">
                                     <i class="fa fa-circle-o"></i> Proveedores
-                                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
                                 </a>
                                 <ul class="treeview-menu">
                                     <li class="{{ path.check('astillero_proveedor_index') }}">
@@ -318,25 +324,25 @@
                             </a>
                         </li>
                         {% if is_granted(expression('has_role("EMBARCACION_CREATE") or (user.isAdmin())')) %}
-                        <li class="{{ path.check('embarcacion_new') }}">
-                            <a href="{{ path('embarcacion_new') }}">
-                                <i class="fa fa-circle-o"></i> Nueva
-                            </a>
-                        </li>
+                            <li class="{{ path.check('embarcacion_new') }}">
+                                <a href="{{ path('embarcacion_new') }}">
+                                    <i class="fa fa-circle-o"></i> Nueva
+                                </a>
+                            </li>
                         {% endif %}
                         {% if is_granted('ROLE_EMBARCACION_MARCA') %}
-                        <li class="{{ path.check('embarcacion_marca_new') }}">
-                            <a href="{{ path('embarcacion_marca_new') }}">
-                                <i class="fa fa-circle-o"></i> Marcas
-                            </a>
-                        </li>
+                            <li class="{{ path.check('embarcacion_marca_new') }}">
+                                <a href="{{ path('embarcacion_marca_new') }}">
+                                    <i class="fa fa-circle-o"></i> Marcas
+                                </a>
+                            </li>
                         {% endif %}
                         {% if is_granted('ROLE_EMBARCACION_MODELO') %}
-                        <li class="{{ path.check('embarcacion_modelo') }}">
-                            <a href="{{ path('embarcacion_modelo') }}">
-                                <i class="fa fa-circle-o"></i> Modelos
-                            </a>
-                        </li>
+                            <li class="{{ path.check('embarcacion_modelo') }}">
+                                <a href="{{ path('embarcacion_modelo') }}">
+                                    <i class="fa fa-circle-o"></i> Modelos
+                                </a>
+                            </li>
                         {% endif %}
                     </ul>
                 </li>
@@ -357,18 +363,18 @@
                             </a>
                         </li>
                         {% if is_granted(expression('has_role("TIENDA_CREATE") or (user.isAdmin())')) %}
-                        <li class="{{ path.check('tienda_solicitud_new') }}">
-                            <a href="{{ path('tienda_solicitud_new') }}">
-                                <i class="fa fa-circle-o"></i> Nueva
-                            </a>
-                        </li>
+                            <li class="{{ path.check('tienda_solicitud_new') }}">
+                                <a href="{{ path('tienda_solicitud_new') }}">
+                                    <i class="fa fa-circle-o"></i> Nueva
+                                </a>
+                            </li>
                         {% endif %}
                         {% if is_granted('ROLE_TIENDA_PRODUCTO') %}
-                        <li class="{{ path.check('tienda_producto_index') }}">
-                            <a href="{{ path('tienda_producto_index') }}">
-                                <i class="fa fa-circle-o"></i> Productos
-                            </a>
-                        </li>
+                            <li class="{{ path.check('tienda_producto_index') }}">
+                                <a href="{{ path('tienda_producto_index') }}">
+                                    <i class="fa fa-circle-o"></i> Productos
+                                </a>
+                            </li>
                         {% endif %}
                     </ul>
                 </li>
@@ -389,18 +395,18 @@
                             </a>
                         </li>
                         {% if is_granted(expression('has_role("CONTABILIDAD_CREATE") or (user.isAdmin())')) %}
-                        <li class="{{ path.check('contabilidad_facturacion_new') }}">
-                            <a href="{{ path('contabilidad_facturacion_new') }}">
-                                <i class="fa fa-circle-o"></i> Nueva
-                            </a>
-                        </li>
+                            <li class="{{ path.check('contabilidad_facturacion_new') }}">
+                                <a href="{{ path('contabilidad_facturacion_new') }}">
+                                    <i class="fa fa-circle-o"></i> Nueva
+                                </a>
+                            </li>
                         {% endif %}
                         {% if is_granted('ROLE_CONTABILIDAD_EMISOR') %}
-                        <li class="{{ path.check('contabilidad_facturacion_emisor') }}">
-                            <a href="{{ path('contabilidad_facturacion_emisor') }}">
-                                <i class="fa fa-circle-o"></i> Emisores
-                            </a>
-                        </li>
+                            <li class="{{ path.check('contabilidad_facturacion_emisor') }}">
+                                <a href="{{ path('contabilidad_facturacion_emisor') }}">
+                                    <i class="fa fa-circle-o"></i> Emisores
+                                </a>
+                            </li>
                         {% endif %}
                     </ul>
                 </li>
@@ -409,10 +415,25 @@
 
             <!-- START HISTORIAL CORREOS -->
             {% if is_granted('ROLE_HCORREO') %}
-                <li class="{{ path.check('historial-correo') }}">
-                    <a href="{{ path('historial-correo_index') }}">
-                        <i class="fa fa-book"></i> <span>Historial de correos</span>
+                <li class="treeview {{ path.check('historial-correo') }}">
+                    <a href="#">
+                        <i class="fa fa-envelope"></i> <span>Correos</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ path.check('historial-correo_index') }}">
+                            <a href="{{ path('historial-correo_index') }}">
+                                <i class="fa fa-book"></i> <span>Historial de correos</span>
+                            </a>
+                        </li>
+                        {% if is_granted('ROLE_HCORREO_NOTIFICACION') %}
+                        <li class="{{ path.check('historial-correo_notificacion_index') }}">
+                            <a href="{{ path('historial-correo_notificacion_index') }}">
+                                <i class="fa fa-bell"></i> <span>Notificaciones</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
                 </li>
             {% endif %}
             <!-- END HISTORIAL CORREOS -->
@@ -431,11 +452,11 @@
                             </a>
                         </li>
                         {% if is_granted(expression('has_role("RH_CREATE") or (user.isAdmin())')) %}
-                        <li class="{{ path.check('usuario_new') }}">
-                            <a href="{{ path('usuario_new') }}">
-                                <i class="fa fa-circle-o"></i> Nuevo
-                            </a>
-                        </li>
+                            <li class="{{ path.check('usuario_new') }}">
+                                <a href="{{ path('usuario_new') }}">
+                                    <i class="fa fa-circle-o"></i> Nuevo
+                                </a>
+                            </li>
                         {% endif %}
                     </ul>
                 </li>
@@ -456,11 +477,11 @@
                             </a>
                         </li>
                         {% if is_granted('ROLE_AJUSTES_CUENTAS_BANCARIAS') %}
-                        <li class="{{ path.check('cuenta-bancaria_index') }}">
-                            <a href="{{ path('cuenta-bancaria_index') }}">
-                                <i class="fa fa-circle-o"></i> Cuentas Bancarias
-                            </a>
-                        </li>
+                            <li class="{{ path.check('cuenta-bancaria_index') }}">
+                                <a href="{{ path('cuenta-bancaria_index') }}">
+                                    <i class="fa fa-circle-o"></i> Cuentas Bancarias
+                                </a>
+                            </li>
                         {% endif %}
                     </ul>
                 </li>

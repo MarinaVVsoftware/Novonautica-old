@@ -97,10 +97,11 @@ class MarinaHumedaCotizacionController extends Controller
      * @Method({"GET", "POST"})
      *
      * @param Request $request
+     * @param \Swift_Mailer $mailer
      *
      * @return RedirectResponse|Response
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, \Swift_Mailer $mailer)
     {
         $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
 
@@ -208,8 +209,19 @@ class MarinaHumedaCotizacionController extends Controller
                 ->find(1)
                 ->setFolioMarina($folionuevo);
 
+            // Asignarle a esta cotizacion, su creador
+            $marinaHumedaCotizacion->setCreador($this->getUser());
+
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
+
+            // Buscar correos a notificar
+            $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                'evento' => Correo\Notificacion::EVENTO_CREAR,
+                'tipo' => Correo\Notificacion::TIPO_MARINA
+            ]);
+
+            $this->enviaCorreoNotificacion($mailer, $notificables, $marinaHumedaCotizacion);
 
             return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
         }
@@ -228,10 +240,11 @@ class MarinaHumedaCotizacionController extends Controller
      * @Method({"GET", "POST"})
      *
      * @param Request $request
+     * @param \Swift_Mailer $mailer
      *
      * @return RedirectResponse|Response
      */
-    public function newGasolinaAction(Request $request)
+    public function newGasolinaAction(Request $request, \Swift_Mailer $mailer)
     {
 
         $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
@@ -251,26 +264,23 @@ class MarinaHumedaCotizacionController extends Controller
         $mensaje = $sistema[0]['mensajeCorreoMarinaGasolina'];
 
         $barcoid = $request->query->get('id');
-        if ($barcoid !== null){
-        $solicitud = $em->getRepository('AppBundle:MarinaHumedaSolicitudGasolina')->find($barcoid);
-        $cliente = $solicitud->getCliente();
-        $barco = $solicitud->getIdbarco();
-        $cantidadgasolina = $solicitud->getCantidadCombustible();
-        $tipogasolina = $solicitud->getTipoCombustible();
+        if ($barcoid !== null) {
+            $solicitud = $em->getRepository('AppBundle:MarinaHumedaSolicitudGasolina')->find($barcoid);
+            $cliente = $solicitud->getCliente();
+            $barco = $solicitud->getIdbarco();
+            $cantidadgasolina = $solicitud->getCantidadCombustible();
+            $tipogasolina = $solicitud->getTipoCombustible();
 
-        $marinaGasolina
-            ->setTipo($tipogasolina)
-            ->setCantidad($cantidadgasolina)
-        ;
-        $marinaHumedaCotizacion
-            ->setBarco($barco)
-            ->setCliente($cliente)
-        ;
+            $marinaGasolina
+                ->setTipo($tipogasolina)
+                ->setCantidad($cantidadgasolina);
+            $marinaHumedaCotizacion
+                ->setBarco($barco)
+                ->setCliente($cliente);
         }
         $marinaHumedaCotizacion
             ->addMarinaHumedaCotizaServicios($marinaGasolina)
-            ->setMensaje($mensaje)
-        ;
+            ->setMensaje($mensaje);
         $form = $this->createForm(MarinaHumedaCotizacionGasolinaType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
 
@@ -285,7 +295,7 @@ class MarinaHumedaCotizacionController extends Controller
             $foliobase = $sistema[0]['folioMarina'];
             $folionuevo = $foliobase + 1;
 
-            if ($barcoid !== null){
+            if ($barcoid !== null) {
                 $solicitud = $em->getRepository('AppBundle:MarinaHumedaSolicitudGasolina')->find($barcoid);
                 $solicitud->setStatus(1);
             }
@@ -314,9 +324,19 @@ class MarinaHumedaCotizacionController extends Controller
                 ->find(1)
                 ->setFolioMarina($folionuevo);
 
+            $marinaHumedaCotizacion->setCreador($this->getUser());
+
             $em->persist($marinaGasolina);
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
+
+            // Buscar correos a notificar
+            $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                'evento' => Correo\Notificacion::EVENTO_CREAR,
+                'tipo' => Correo\Notificacion::TIPO_MARINA
+            ]);
+
+            $this->enviaCorreoNotificacion($mailer, $notificables, $marinaHumedaCotizacion);
 
             return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
 
@@ -461,6 +481,15 @@ class MarinaHumedaCotizacionController extends Controller
 
                         $em->persist($historialCorreo);
                     }
+
+                    // Buscar correos a notificar
+                    $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                        'evento' => Correo\Notificacion::EVENTO_VALIDAR,
+                        'tipo' => Correo\Notificacion::TIPO_MARINA
+                    ]);
+
+                    $this->enviaCorreoNotificacion($mailer, $notificables, $marinaHumedaCotizacion);
+
                 } else {
                     if ($marinaHumedaCotizacion->getValidanovo() == 1) {
                         $marinaHumedaCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
@@ -471,6 +500,17 @@ class MarinaHumedaCotizacionController extends Controller
             if ($marinaHumedaCotizacion->getValidacliente() === 2) {
                 // Guardar la fecha en la que se valido la cotizacion por el cliente
                 $marinaHumedaCotizacion->setRegistroValidaCliente(new \DateTimeImmutable());
+
+                // Quien valido por el cliente
+                $marinaHumedaCotizacion->setQuienAcepto($this->getUser()->getNombre());
+
+                // Buscar correos a notificar
+                $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                    'evento' => Correo\Notificacion::EVENTO_ACEPTAR,
+                    'tipo' => Correo\Notificacion::TIPO_MARINA
+                ]);
+
+                $this->enviaCorreoNotificacion($mailer, $notificables, $marinaHumedaCotizacion);
             }
 
             // Guardar la fecha en la que se valido la cotizacion por novonautica
@@ -832,6 +872,7 @@ class MarinaHumedaCotizacionController extends Controller
                 ->getRepository(ValorSistema::class)
                 ->find(1)
                 ->setFolioMarina($folionuevo);
+
             $em->persist($marinaHumedaCotizacion);
             $em->flush();
 
@@ -1312,5 +1353,38 @@ class MarinaHumedaCotizacionController extends Controller
         $normalizer->setIgnoredAttributes($ignoredAttributes);
 
         return $serializer->serialize($entity, $format);
+    }
+
+    /**
+     * @param Correo\Notificacion[] $notificables
+     * @param MarinaHumedaCotizacion $cotizacion
+     * @param \Swift_Mailer $mailer
+     *
+     * @return void
+     */
+    private function enviaCorreoNotificacion($mailer, $notificables, $cotizacion)
+    {
+        if (!count($notificables)) {
+            return;
+        }
+
+        $recipientes = [];
+        foreach ($notificables as $key => $notificable) {
+            $recipientes[$key] = $notificable->getCorreo();
+        }
+
+        $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'));
+        $message->setFrom('noresponder@novonautica.com');
+        $message->setTo($recipientes);
+
+        $message->setBody(
+            $this->renderView('mail/notificacion.html.twig', [
+                'notificacion' => $notificables[0],
+                'cotizacion' => $cotizacion
+            ]),
+            'text/html'
+        );
+
+        $mailer->send($message);
     }
 }

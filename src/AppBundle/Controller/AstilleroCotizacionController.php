@@ -43,11 +43,11 @@ class AstilleroCotizacionController extends Controller
      */
     public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
-        if($request->isXmlHttpRequest()){
-            try{
-                $results = $dataTables->handle($request,'cotizacionAstillero');
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $results = $dataTables->handle($request, 'cotizacionAstillero');
                 return $this->json($results);
-            } catch (HttpException $e){
+            } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getCode());
             }
         }
@@ -62,10 +62,11 @@ class AstilleroCotizacionController extends Controller
      * @Method({"GET", "POST"})
      *
      * @param Request $request
+     * @param \Swift_Mailer $mailer
      *
      * @return RedirectResponse|Response
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, \Swift_Mailer $mailer)
     {
         $astilleroCotizacion = new AstilleroCotizacion();
 
@@ -73,7 +74,7 @@ class AstilleroCotizacionController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-        $queryBasico = $qb->select('sb')->from(astilleroServicioBasico::class,'sb')->getQuery();
+        $queryBasico = $qb->select('sb')->from(astilleroServicioBasico::class, 'sb')->getQuery();
         $preciosBasicos = $queryBasico->getArrayResult();
 
         $sistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
@@ -93,20 +94,20 @@ class AstilleroCotizacionController extends Controller
         $astilleroEstadia->setPrecio($preciosBasicos[1]['precio']);
         $cantidad = 1;
         $precio = $preciosBasicos[2]['precio'];
-        $astilleroRampa = $this->calculaServicio($astilleroRampa,$cantidad,$precio,$iva);
+        $astilleroRampa = $this->calculaServicio($astilleroRampa, $cantidad, $precio, $iva);
         $cantidad = 1;
         $precio = $preciosBasicos[3]['precio'];
-        $astilleroKarcher = $this->calculaServicio($astilleroKarcher,$cantidad,$precio,$iva);
+        $astilleroKarcher = $this->calculaServicio($astilleroKarcher, $cantidad, $precio, $iva);
         $cantidad = 1;
         $precio = $preciosBasicos[4]['precio'];
-        $astilleroExplanada = $this->calculaServicio($astilleroExplanada,$cantidad,$precio,$iva);
+        $astilleroExplanada = $this->calculaServicio($astilleroExplanada, $cantidad, $precio, $iva);
         $astilleroElectricidad->setPrecio($preciosBasicos[5]['precio']);
         $cantidad = 1;
         $precio = $preciosBasicos[6]['precio'];
-        $astilleroLimpieza = $this->calculaServicio($astilleroLimpieza,$cantidad,$precio,$iva);
+        $astilleroLimpieza = $this->calculaServicio($astilleroLimpieza, $cantidad, $precio, $iva);
         $cantidad = 1;
         $precio = $preciosBasicos[7]['precio'];
-        $astilleroInspeccionar = $this->calculaServicio($astilleroInspeccionar,$cantidad,$precio,$iva);
+        $astilleroInspeccionar = $this->calculaServicio($astilleroInspeccionar, $cantidad, $precio, $iva);
 
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
@@ -116,8 +117,7 @@ class AstilleroCotizacionController extends Controller
             ->addAcservicio($astilleroExplanada)
             ->addAcservicio($astilleroElectricidad)
             ->addAcservicio($astilleroLimpieza)
-            ->addAcservicio($astilleroInspeccionar)
-          ;
+            ->addAcservicio($astilleroInspeccionar);
 
         $mensaje = $sistema->getMensajeCorreoAstillero();
         $astilleroCotizacion->setDolar($dolar)->setMensaje($mensaje);
@@ -137,7 +137,7 @@ class AstilleroCotizacionController extends Controller
                 ->getRepository(AstilleroServicioBasico::class)
                 ->find(1);
             $cantidad = $eslora;
-            $precio = ($astilleroGrua->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroGrua->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -192,7 +192,7 @@ class AstilleroCotizacionController extends Controller
                 ->getRepository(AstilleroServicioBasico::class)
                 ->find(3);
             $cantidad = $astilleroRampa->getCantidad();
-            $precio = ($astilleroRampa->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroRampa->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -221,7 +221,7 @@ class AstilleroCotizacionController extends Controller
                 ->getRepository(AstilleroServicioBasico::class)
                 ->find(4);
             $cantidad = $astilleroKarcher->getCantidad();
-            $precio = ($astilleroKarcher->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroKarcher->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -249,7 +249,7 @@ class AstilleroCotizacionController extends Controller
                 ->getRepository(AstilleroServicioBasico::class)
                 ->find(5);
             $cantidad = $astilleroExplanada->getCantidad();
-            $precio = ($astilleroExplanada->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroExplanada->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -277,7 +277,7 @@ class AstilleroCotizacionController extends Controller
                 ->getRepository(AstilleroServicioBasico::class)
                 ->find(6);
             $cantidad = $cantidadDias;
-            $precio = ($astilleroElectricidad->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroElectricidad->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -305,7 +305,7 @@ class AstilleroCotizacionController extends Controller
                 ->getRepository(AstilleroServicioBasico::class)
                 ->find(7);
             $cantidad = $astilleroLimpieza->getCantidad();
-            $precio = ($astilleroLimpieza->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroLimpieza->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -333,7 +333,7 @@ class AstilleroCotizacionController extends Controller
                 ->getRepository(AstilleroServicioBasico::class)
                 ->find(8);
             $cantidad = $astilleroInspeccionar->getCantidad();
-            $precio = ($astilleroInspeccionar->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroInspeccionar->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -359,14 +359,14 @@ class AstilleroCotizacionController extends Controller
             foreach ($astilleroCotizacion->getAcservicios() as $servAst) {
                 if ($servAst->getAstilleroserviciobasico() == null) {
                     $cantidad = $servAst->getCantidad();
-                    if($servAst->getOtroservicio() != null){
+                    if ($servAst->getOtroservicio() != null) {
                         $precio = $servAst->getPrecio();
-                        $precio = ($precio/$valordolar)*100;
-                    }elseif ($servAst->getProducto() != null){
+                        $precio = ($precio / $valordolar) * 100;
+                    } elseif ($servAst->getProducto() != null) {
                         $precio = $servAst->getProducto()->getPrecio();
-                    }elseif ($servAst->getServicio()->getPrecio() != null){
+                    } elseif ($servAst->getServicio()->getPrecio() != null) {
                         $precio = $servAst->getServicio()->getPrecio();
-                    }else{
+                    } else {
                         $precio = 0;
                     }
                     $subTotal = $cantidad * $precio;
@@ -411,8 +411,19 @@ class AstilleroCotizacionController extends Controller
             $cliente->addAstilleroCotizacione($astilleroCotizacion);
             $astilleroCotizacion->setCliente($cliente);
 
+            // Asignarle a la cotizacion, quien la creo (El usuario actualmente logueado)
+            $astilleroCotizacion->setCreador($this->getUser());
+
             $em->persist($astilleroCotizacion);
             $em->flush();
+
+            // Buscar correos a notificar
+            $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                'evento' => Correo\Notificacion::EVENTO_CREAR,
+                'tipo' => Correo\Notificacion::TIPO_ASTILLERO
+            ]);
+
+            $this->enviaCorreoNotificacion($mailer, $notificables, $astilleroCotizacion);
 
             return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
         }
@@ -526,6 +537,7 @@ class AstilleroCotizacionController extends Controller
      * @param \Swift_Mailer $mailer
      *
      * @return RedirectResponse|Response
+     * @throws \Exception
      */
     public function validaAction(Request $request, AstilleroCotizacion $astilleroCotizacion, \Swift_Mailer $mailer)
     {
@@ -560,7 +572,7 @@ class AstilleroCotizacionController extends Controller
                     // Se envia un correo si se solicito notificar al cliente
                     if ($astilleroCotizacion->isNotificarCliente()) {
                         $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
-                            'title' => 'Cotizacion-'.$astilleroCotizacion->getFolio().'.pdf',
+                            'title' => 'Cotizacion-' . $astilleroCotizacion->getFolio() . '.pdf',
                             'astilleroCotizacion' => $astilleroCotizacion
                         ]);
                         $htmlMXN = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
@@ -636,6 +648,15 @@ class AstilleroCotizacionController extends Controller
 
                         $em->persist($historialCorreo);
                     }
+
+                    // Buscar correos a notificar
+                    $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                        'evento' => Correo\Notificacion::EVENTO_VALIDAR,
+                        'tipo' => Correo\Notificacion::TIPO_ASTILLERO
+                    ]);
+
+                    $this->enviaCorreoNotificacion($mailer, $notificables, $astilleroCotizacion);
+
                 } else {
                     if ($astilleroCotizacion->getValidanovo() == 1) {
                         $astilleroCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
@@ -646,6 +667,16 @@ class AstilleroCotizacionController extends Controller
             if ($astilleroCotizacion->getValidacliente() === 2) {
                 // Guardar la fecha en la que se valido la cotizacion por el cliente
                 $astilleroCotizacion->setRegistroValidaCliente(new \DateTimeImmutable());
+                // Guardar quien acepto la cotizacion en el caso de un usuario de novo
+                $astilleroCotizacion->setQuienAcepto($this->getUser()->getNombre());
+
+                // Buscar correos a notificar
+                $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                    'evento' => Correo\Notificacion::EVENTO_ACEPTAR,
+                    'tipo' => Correo\Notificacion::TIPO_ASTILLERO
+                ]);
+
+                $this->enviaCorreoNotificacion($mailer, $notificables, $astilleroCotizacion);
             }
 
             // Guardar la fecha en la que se valido la cotizacion por novonautica
@@ -677,7 +708,7 @@ class AstilleroCotizacionController extends Controller
         $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_REQUOTE', $astilleroCotizacionAnterior);
 
         if ($astilleroCotizacionAnterior->getEstatus() == 0 ||
-            $astilleroCotizacionAnterior->getValidacliente() ==2 ||
+            $astilleroCotizacionAnterior->getValidacliente() == 2 ||
             $astilleroCotizacionAnterior->getValidanovo() == 0 ||
             ($astilleroCotizacionAnterior->getValidanovo() == 2 && $astilleroCotizacionAnterior->getValidacliente() == 0)
         ) {
@@ -698,31 +729,29 @@ class AstilleroCotizacionController extends Controller
             ->setIva($astilleroCotizacionAnterior->getIva())
             ->setSubtotal($astilleroCotizacionAnterior->getSubtotal())
             ->setIvatotal($astilleroCotizacionAnterior->getIvatotal())
-            ->setFolio($astilleroCotizacionAnterior->getFolio())
-           ;
+            ->setFolio($astilleroCotizacionAnterior->getFolio());
         $astilleroCotizacion
             ->setDolar($dolar)
-            ->setMensaje($astilleroCotizacionAnterior->getMensaje())
-            ;
+            ->setMensaje($astilleroCotizacionAnterior->getMensaje());
         $astilleroCotizacion
             ->setValidanovo(0);
         $astilleroCotizacion
             ->setValidacliente(0);
         $servicios = $astilleroCotizacionAnterior->getAcservicios();
         $astilleroGrua = new AstilleroCotizaServicio();
-        $astilleroGrua = $this->llenarServicio($astilleroGrua,$servicios[0],$dolar);
+        $astilleroGrua = $this->llenarServicio($astilleroGrua, $servicios[0], $dolar);
         $astilleroRampa = new AstilleroCotizaServicio();
-        $astilleroRampa = $this->llenarServicio($astilleroRampa,$servicios[2],$dolar);
+        $astilleroRampa = $this->llenarServicio($astilleroRampa, $servicios[2], $dolar);
         $astilleroKarcher = new AstilleroCotizaServicio();
-        $astilleroKarcher = $this->llenarServicio($astilleroKarcher,$servicios[3],$dolar);
+        $astilleroKarcher = $this->llenarServicio($astilleroKarcher, $servicios[3], $dolar);
         $astilleroExplanada = new AstilleroCotizaServicio();
-        $astilleroExplanada = $this->llenarServicio($astilleroExplanada,$servicios[4],$dolar);
+        $astilleroExplanada = $this->llenarServicio($astilleroExplanada, $servicios[4], $dolar);
         $astilleroLimpieza = new AstilleroCotizaServicio();
-        $astilleroLimpieza = $this->llenarServicio($astilleroLimpieza,$servicios[6],$dolar);
+        $astilleroLimpieza = $this->llenarServicio($astilleroLimpieza, $servicios[6], $dolar);
         $astilleroInspeccionar = new AstilleroCotizaServicio();
-        $astilleroInspeccionar = $this->llenarServicio($astilleroInspeccionar,$servicios[7],$dolar);
+        $astilleroInspeccionar = $this->llenarServicio($astilleroInspeccionar, $servicios[7], $dolar);
         $astilleroElectricidad = new AstilleroCotizaServicio();
-        $astilleroElectricidad = $this->llenarServicio($astilleroElectricidad,$servicios[5],$dolar);
+        $astilleroElectricidad = $this->llenarServicio($astilleroElectricidad, $servicios[5], $dolar);
         $astilleroEstadia = new AstilleroCotizaServicio();
         $astilleroEstadia
             ->setServicio(null)
@@ -744,8 +773,7 @@ class AstilleroCotizacionController extends Controller
             ->addAcservicio($astilleroExplanada)
             ->addAcservicio($astilleroElectricidad)
             ->addAcservicio($astilleroLimpieza)
-            ->addAcservicio($astilleroInspeccionar)
-           ;
+            ->addAcservicio($astilleroInspeccionar);
         foreach ($servicios as $servAst) {
             if ($servAst->getAstilleroserviciobasico() == null) {
                 $copiaServicio = new AstilleroCotizaServicio();
@@ -754,7 +782,7 @@ class AstilleroCotizacionController extends Controller
                     ->setAstilleroserviciobasico($servAst->getAstilleroserviciobasico())
                     ->setProducto($servAst->getProducto())
                     ->setServicio($servAst->getServicio())
-                    ->setPrecio(($servAst->getPrecio()*$dolar)/100);
+                    ->setPrecio(($servAst->getPrecio() * $dolar) / 100);
                 $copiaServicio->setCantidad($servAst->getCantidad());
                 $copiaServicio->setSubtotal(($servAst->getSubtotal()*$dolar)/100);
                 $copiaServicio->setIva(($servAst->getIva()*$dolar)/100);
@@ -775,8 +803,8 @@ class AstilleroCotizacionController extends Controller
             $cantidadDias = $astilleroCotizacion->getDiasEstadia();
 
             // Uso de grua
-            $cantidad=$eslora;
-            $precio = ($astilleroGrua->getPrecio()/$valordolar)*100;
+            $cantidad = $eslora;
+            $precio = ($astilleroGrua->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -796,7 +824,7 @@ class AstilleroCotizacionController extends Controller
             }
             // Estadía
             $cantidad = $cantidadDias * $eslora;
-            $precio = ($astilleroEstadia->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroEstadia->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -816,7 +844,7 @@ class AstilleroCotizacionController extends Controller
             }
             // Uso de rampa
             $cantidad = $astilleroRampa->getCantidad();
-            $precio = ($astilleroRampa->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroRampa->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -837,7 +865,7 @@ class AstilleroCotizacionController extends Controller
 
             // Uso de karcher
             $cantidad = $astilleroKarcher->getCantidad();
-            $precio = ($astilleroKarcher->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroKarcher->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -858,7 +886,7 @@ class AstilleroCotizacionController extends Controller
 
             //uso de explanada
             $cantidad = $astilleroExplanada->getCantidad();
-            $precio = ($astilleroExplanada->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroExplanada->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -878,7 +906,7 @@ class AstilleroCotizacionController extends Controller
             }
             //Conexión a electricidad
             $cantidad = $cantidadDias;
-            $precio = ($astilleroElectricidad->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroElectricidad->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -898,7 +926,7 @@ class AstilleroCotizacionController extends Controller
             }
             //Limpieza de locación
             $cantidad = $astilleroLimpieza->getCantidad();
-            $precio = ($astilleroLimpieza->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroLimpieza->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -918,7 +946,7 @@ class AstilleroCotizacionController extends Controller
             }
             //Sacar para inspeccionar
             $cantidad = $astilleroInspeccionar->getCantidad();
-            $precio = ($astilleroInspeccionar->getPrecio()/$valordolar)*100;
+            $precio = ($astilleroInspeccionar->getPrecio() / $valordolar) * 100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -940,14 +968,14 @@ class AstilleroCotizacionController extends Controller
             foreach ($astilleroCotizacion->getAcservicios() as $servAst) {
                 if ($servAst->getAstilleroserviciobasico() == null) {
                     $cantidad = $servAst->getCantidad();
-                    if($servAst->getOtroservicio() != null){
+                    if ($servAst->getOtroservicio() != null) {
                         $precio = $servAst->getPrecio();
-                        $precio = ($precio/$valordolar)*100;
-                    }elseif ($servAst->getProducto() != null){
+                        $precio = ($precio / $valordolar) * 100;
+                    } elseif ($servAst->getProducto() != null) {
                         $precio = $servAst->getProducto()->getPrecio();
-                    }elseif ($servAst->getServicio()->getPrecio() != null){
+                    } elseif ($servAst->getServicio()->getPrecio() != null) {
                         $precio = $servAst->getServicio()->getPrecio();
-                    }else{
+                    } else {
                         $precio = 0;
                     }
                     $subTotal = $cantidad * $precio;
@@ -966,7 +994,7 @@ class AstilleroCotizacionController extends Controller
             }
             //------------------------------------------------
             $fechaHoraActual = new \DateTime('now');
-            $foliorecotizado = $astilleroCotizacionAnterior->getFoliorecotiza()+1;
+            $foliorecotizado = $astilleroCotizacionAnterior->getFoliorecotiza() + 1;
 
             $astilleroCotizacion
                 ->setDolar($astilleroCotizacion->getDolar())
@@ -1008,9 +1036,9 @@ class AstilleroCotizacionController extends Controller
     {
         $totPagado = 0;
         $listaPagos = new ArrayCollection();
-        foreach ($astilleroCotizacion->getPagos() as $pago){
-            if($pago->getDivisa()=='MXN'){
-                $pesos = ($pago->getCantidad()*$pago->getDolar())/100;
+        foreach ($astilleroCotizacion->getPagos() as $pago) {
+            if ($pago->getDivisa() == 'MXN') {
+                $pesos = ($pago->getCantidad() * $pago->getDolar()) / 100;
                 $pago->setCantidad($pesos);
             }
             $listaPagos->add($pago);
@@ -1031,24 +1059,24 @@ class AstilleroCotizacionController extends Controller
                 }
             }
             foreach ($astilleroCotizacion->getPagos() as $pago) {
-                if($pago->getDivisa()=='MXN'){
-                    $unpago = ($pago->getCantidad()/$pago->getDolar())*100;
+                if ($pago->getDivisa() == 'MXN') {
+                    $unpago = ($pago->getCantidad() / $pago->getDolar()) * 100;
                     $pago->setCantidad($unpago);
-                }else{
+                } else {
                     $unpago = $pago->getCantidad();
                 }
                 $totPagado += $unpago;
             }
-            if($total < $totPagado) {
+            if ($total < $totPagado) {
                 $this->addFlash(
                     'notice',
                     'Error! Se ha intentado pagar más del total'
                 );
-            }else{
+            } else {
                 $faltante = $total - $totPagado;
                 if($faltante < 1 && $faltante > -1){
                     $astilleroCotizacion->setEstatuspago(2);
-                }else{
+                } else {
                     $astilleroCotizacion->setEstatuspago(1);
                 }
                 $astilleroCotizacion
@@ -1075,13 +1103,14 @@ class AstilleroCotizacionController extends Controller
      *
      * @return RedirectResponse
      */
-    public function reenviaCoreoAction(AstilleroCotizacion $astilleroCotizacion,\Swift_Mailer $mailer){
+    public function reenviaCoreoAction(AstilleroCotizacion $astilleroCotizacion, \Swift_Mailer $mailer)
+    {
         $em = $this->getDoctrine()->getManager();
         $tokenAcepta = $astilleroCotizacion->getTokenacepta();
         $tokenRechaza = $astilleroCotizacion->getTokenrechaza();
 
         $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
-            'title' => 'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf',
+            'title' => 'Cotizacion-' . $astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza() . '.pdf',
             'astilleroCotizacion' => $astilleroCotizacion
         ]);
         $htmlMXN = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
@@ -1105,14 +1134,14 @@ class AstilleroCotizacionController extends Controller
         ];
         $pdfEnviar = new PdfResponse(
             $hojapdf->getOutputFromHtml($html, $options),
-            'Cotizacion-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
+            'Cotizacion-' . $astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza() . '.pdf', 'application/pdf', 'inline'
         );
         $pdfEnviarMXN = new PdfResponse(
             $hojapdf->getOutputFromHtml($htmlMXN, $options),
-            'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf', 'inline'
+            'CotizacionMXN-' . $astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza() . '.pdf', 'application/pdf', 'inline'
         );
-        $attachment = new Swift_Attachment($pdfEnviar, 'CotizacionUSD-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
-        $attachmentMXN = new Swift_Attachment($pdfEnviarMXN, 'CotizacionMXN-'.$astilleroCotizacion->getFolio().'-'.$astilleroCotizacion->getFoliorecotiza().'.pdf', 'application/pdf');
+        $attachment = new Swift_Attachment($pdfEnviar, 'CotizacionUSD-' . $astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza() . '.pdf', 'application/pdf');
+        $attachmentMXN = new Swift_Attachment($pdfEnviarMXN, 'CotizacionMXN-' . $astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza() . '.pdf', 'application/pdf');
 
         // Enviar correo de confirmacion
         $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'))
@@ -1147,8 +1176,7 @@ class AstilleroCotizacionController extends Controller
             ->setTipo('Cotización servicio Astillero')
             ->setDescripcion('Reenvio de cotización de Astillero')
             ->setFolioCotizacion($astilleroCotizacion->getFolio())
-            ->setAcotizacion($astilleroCotizacion)
-        ;
+            ->setAcotizacion($astilleroCotizacion);
 
         $em->persist($historialCorreo);
 
@@ -1545,8 +1573,6 @@ class AstilleroCotizacionController extends Controller
         ]);
     }
 
-
-
     /**
      * Elimina una cotizacion
      *
@@ -1587,9 +1613,10 @@ class AstilleroCotizacionController extends Controller
             ->getForm();
     }
 
-    public function calculaServicio($servicio,$cantidad,$precio,$iva){
-        $subtotal = $cantidad*$precio;
-        $ivatot = ($subtotal * $iva)/100;
+    public function calculaServicio($servicio, $cantidad, $precio, $iva)
+    {
+        $subtotal = $cantidad * $precio;
+        $ivatot = ($subtotal * $iva) / 100;
         $total = $subtotal + $ivatot;
         $servicio
             ->setCantidad($cantidad)
@@ -1601,25 +1628,53 @@ class AstilleroCotizacionController extends Controller
     }
 
 
-    private function llenarServicio($servicio,$datos,$dolar){
-//        if($datos===null){
-//            return;
-//        }
-//        if($servicio->getId()===null){
-//            return;
-//        }
+    private function llenarServicio($servicio, $datos, $dolar)
+    {
         $servicio
             ->setServicio(null)
             ->setProducto(null)
             ->setOtroservicio(null)
             ->setAstilleroserviciobasico($datos->getAstilleroserviciobasico());
         $servicio->setCantidad($datos->getCantidad());
-        $servicio->setPrecio(($datos->getPrecio()*$dolar)/100);
-        $servicio->setIva(($datos->getIva()*$dolar)/100);
-        $servicio->setSubtotal(($datos->getSubtotal()*$dolar)/100);
-        $servicio->setTotal(($datos->getTotal()*$dolar)/100);
+        $servicio->setPrecio(($datos->getPrecio() * $dolar) / 100);
+        $servicio->setIva(($datos->getIva() * $dolar) / 100);
+        $servicio->setSubtotal(($datos->getSubtotal() * $dolar) / 100);
+        $servicio->setTotal(($datos->getTotal() * $dolar) / 100);
         $servicio->setEstatus($datos->getEstatus());
 
         return $servicio;
+    }
+
+    /**
+     * @param Correo\Notificacion[] $notificables
+     * @param AstilleroCotizacion $cotizacion
+     * @param \Swift_Mailer $mailer
+     *
+     * @return void
+     */
+    private function enviaCorreoNotificacion($mailer, $notificables, $cotizacion)
+    {
+        if (!count($notificables)) {
+            return;
+        }
+
+        $recipientes = [];
+        foreach ($notificables as $key => $notificable) {
+            $recipientes[$key] = $notificable->getCorreo();
+        }
+
+        $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'));
+        $message->setFrom('noresponder@novonautica.com');
+        $message->setTo($recipientes);
+
+        $message->setBody(
+            $this->renderView('mail/notificacion.html.twig', [
+                'notificacion' => $notificables[0],
+                'cotizacion' => $cotizacion
+            ]),
+            'text/html'
+        );
+
+        $mailer->send($message);
     }
 }

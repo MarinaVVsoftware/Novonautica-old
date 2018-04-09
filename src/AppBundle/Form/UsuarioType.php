@@ -79,8 +79,9 @@ class UsuarioType extends AbstractType
                         'Cancelar' => 'CONTABILIDAD_CANCEL',
                         'Emisores' => 'ROLE_CONTABILIDAD_EMISOR',
                     ],
-                    'Historial de Correos' => [
-                        'Acceso' => 'ROLE_HCORREO'
+                    'Correos' => [
+                        'Acceso' => 'ROLE_HCORREO',
+                        'Notificaciones' => 'ROLE_HCORREO_NOTIFICACION'
                     ],
                     'Recursos humanos' => [
                         'Acceso' => 'ROLE_RH',
