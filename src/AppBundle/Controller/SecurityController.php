@@ -30,6 +30,21 @@ class SecurityController extends Controller
     }
 
     /**
+     * @Route("clients/login", name="clients_login")
+     *
+     * @param AuthenticationUtils $authUtils
+     *
+     * @return Response
+     */
+    public function clientsLoginAction(AuthenticationUtils $authUtils)
+    {
+       return $this->render(':security:cliente-login.html.twig', [
+          'error' => $authUtils->getLastAuthenticationError(),
+          'last_username' => $authUtils->getLastUsername()
+       ]);
+    }
+
+    /**
      * @Route("/forgot", name="password_forgot")
      *
      * @param Request $request

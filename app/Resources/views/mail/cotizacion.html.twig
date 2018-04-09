@@ -6,12 +6,9 @@
     </p>
 
     <div class="text-center">
-        <a href="{{ absolute_url(url('respuesta-cliente', {'token': cotizacion.tokenacepta })) }}" class="btn"
+        <a href="{{ absolute_url(url('clientes_cotizacion', {'token': cotizacion.token })) }}" class="btn"
            style="background-color: #458FCE">
             Autorizar
-        </a>
-        <a href="{{ absolute_url(url('respuesta-cliente', {'token': cotizacion.tokenrechaza })) }}" class="btn">
-            Rechazar
         </a>
     </div>
 {% endblock body %}

@@ -3,283 +3,151 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\AstilleroCotizacion;
-use AppBundle\Entity\CuentaBancaria;
-use AppBundle\Entity\ValorSistema;
-use AppBundle\Form\AstilleroCotizacionAceptadaType;
-use AppBundle\Form\AstilleroCotizacionRechazadaType;
-use AppBundle\Form\MarinaHumedaCotizacionAceptadaType;
-use AppBundle\Form\MarinaHumedaCotizacionRechazadaType;
+use AppBundle\Entity\MarinaHumedaCotizacion;
+use AppBundle\Entity\Correo;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\MarinaHumedaCotizacion;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DefaultController extends Controller
 {
-
     /**
-     * @Route("/", name="inicio")
+     * @Route("clients/", name="clients_index")
      */
-    public function displayAdminIndex(Request $request)
+    public function clientsAction()
     {
-        // replace this example code with whatever you need
-        return $this->render('inicio.twig', [
-        ]);
-    }
-
-    /**
-     * Genera el pdf de una cotizacion en base a su id
-     *
-     * @Route("/{id}/mhc-pdf", name="marinahc-pdf")
-     * @param MarinaHumedaCotizacion $mhc
-     *
-     * @return Response
-     */
-    public function displayMarinaPDF(MarinaHumedaCotizacion $mhc)
-    {
-        return $this->render('marinahumeda/cotizacion/cotizacionpdf.html.twig', [
-            'marinaHumedaCotizacion' => $mhc
-        ]);
-    }
-
-    /**
-     * Displays a form to edit an existing marinaHumedaCotizacion entity.
-     *
-     * @Route("/{id}/correovalidacion", name="marina-humeda_validaras")
-     **/
-    public function validaAction(Request $request, MarinaHumedaCotizacion $mhc)
-    {
-        return $this->render('marinahumeda/cotizacion/correo-clientevalida.twig', [
-            'marinaHumedaCotizacion' => $mhc,
-            'tokenAcepta' => 'asdas',
-            'tokenRechaza' => 'otro'
-        ]);
-    }
-
-    /**
-     * @Route("/astillero/odt/asigna-dias", name="astillero-odt-dias")
-     */
-    public function displayAstilleroODTDias(Request $request)
-    {
-        return $this->render('astillero-odt-dias.twig', [
-            'astilleroodt' => 1
-        ]);
-    }
-
-    /**
-     * @Route("/astillero/odt/asigna-horas", name="astillero-odt-horas")
-     */
-    public function displayAstilleroODTHoras(Request $request)
-    {
-        return $this->render('astillero-odt-horas.twig', [
-            'astilleroodt' => 1
-        ]);
-    }
-
-    /**
-     * @Route("/gracias", name="cotizacion_gracias")
-     * @Method("GET")
-     */
-    public function graciasMarinaAction()
-    {
-        return $this->render('marinahumeda/cotizacion/gracias.twig', [
-        ]);
+        return $this->render(':default:index.html.twig', ['title' => 'Bienvenido']);
     }
 
     /**
      * Confirma la respuesta de un cliente a una cotizacion de marina
      *
-     * @Route("/{token}/confirma", name="respuesta-cliente")
+     * @Route("clients/cotizacion/{token}", name="clientes_cotizacion")
      * @Method({"GET", "POST"})
      *
      * @param Request $request
-     * @param $token
+     * @param string $token
+     * @param \Swift_Mailer $mailer
      *
      * @return Response
-     *
      * @throws \Exception
      */
-    public function repuestaClienteAction(Request $request, $token)
+    public function repuestaClienteAction(Request $request, $token, \Swift_Mailer $mailer)
     {
         $em = $this->getDoctrine()->getManager();
-        $marinacotizacionAceptar = $em->getRepository(MarinaHumedaCotizacion::class)
-            ->findOneBy(['tokenacepta' => $token]);
-        $astillerocotizacionAceptar = $em->getRepository(AstilleroCotizacion::class)
-            ->findOneBy(['tokenacepta' => $token]);
-        $marinacotizacionRechazar = $em->getRepository(MarinaHumedaCotizacion::class)
-            ->findOneBy(['tokenrechaza' => $token]);
-        $astillerocotizacionRechazar = $em->getRepository(AstilleroCotizacion::class)
-            ->findOneBy(['tokenrechaza' => $token]);
+        $cotizacion = $em->getRepository('AppBundle:MarinaHumedaCotizacion')
+            ->findOneBy([
+                'token' => $token,
+                'validacliente' => 0
+            ])
+            ?: $em->getRepository('AppBundle:AstilleroCotizacion')
+                ->findOneBy([
+                    'token' => $token,
+                    'validacliente' => 0
+                ]);
 
-        if ($marinacotizacionAceptar && !$marinacotizacionAceptar->getValidacliente()) {
-            $cotizacionAceptar = $marinacotizacionAceptar;
-            $cuentaBancaria = $em->getRepository(CuentaBancaria::class)->findAll();
-
-            $qb = $em->createQueryBuilder();
-            $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
-            $sistema = $query->getArrayResult();
-            $diasHabiles = $sistema[0]['diasHabilesMarinaCotizacion'];
-
-            $folio = $cotizacionAceptar->getFoliorecotiza() == 0
-                ? $cotizacionAceptar->getFolio()
-                : $cotizacionAceptar->getFolio() . '-' . $cotizacionAceptar->getFoliorecotiza();
-
-            $valorSistema = new ValorSistema();
-            $codigoSeguimiento = $folio . '-' . $valorSistema->generaToken(10);
-            $cotizacionAceptar->setValidacliente(2);
-            $cotizacionAceptar->setCodigoseguimiento($codigoSeguimiento);
-
-            // Fecha en la que acepto el cliente
-            $cotizacionAceptar->setRegistroValidaCliente(new \DateTimeImmutable());
-
-            $em->persist($cotizacionAceptar);
-            $em->flush();
-
-            $mensaje1 = '¡Enhorabuena!';
-            $mensaje2 = 'La cotización ' . $folio . ' ha sido aprobada.';
-            $suformulario = 1;
-
-            $editForm = $this->createForm(MarinaHumedaCotizacionAceptadaType::class, $cotizacionAceptar);
-            $editForm->handleRequest($request);
-
-            if ($editForm->isSubmitted() && $editForm->isValid()) {
-                $cotizacionAceptar->setFecharespuesta(new \DateTime('now'));
-
-                $em->persist($cotizacionAceptar);
-                $em->flush();
-                return $this->redirectToRoute('cotizacion_gracias');
-            }
-
-            return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', [
-                'mensaje1' => $mensaje1,
-                'mensaje2' => $mensaje2,
-                'suformulario' => $suformulario,
-                'cuentaBancaria' => $cuentaBancaria,
-                'diasHabiles' => $diasHabiles,
-                'form' => $editForm->createView(),
-                'marinaHumedaCotizacion' => $cotizacionAceptar
-            ]);
+        if (null === $cotizacion || $cotizacion->getCliente() !== $this->getUser()) {
+            throw new NotFoundHttpException('No se encontro la cotización');
         }
 
-        if ($marinacotizacionRechazar && !$marinacotizacionRechazar->getValidacliente()) {
-            $cotizacionRechazar = $marinacotizacionRechazar;
-            $cotizacionRechazar->setValidacliente(1);
-            $cotizacionRechazar->setRegistroValidaCliente(new \DateTimeImmutable());
+        $form = $this->createFormBuilder([])
+            ->add('action', ChoiceType::class, [
+                'label' => 'Seleccione una opcion para continuar',
+                'expanded' => true,
+                'data' => true,
+                'choices' => [
+                    'Aceptar' => true,
+                    'Rechazar' => false
+                ],
+            ])
+            ->add('comentarios', TextareaType::class, [
+                'required' => false
+            ])
+            ->getForm();
 
-            $em->persist($cotizacionRechazar);
-            $em->flush();
+        $form->handleRequest($request);
 
-            $folio = $cotizacionRechazar->getFoliorecotiza() == 0
-                ? $cotizacionRechazar->getFolio()
-                : $cotizacionRechazar->getFolio() . '-' . $cotizacionRechazar->getFoliorecotiza();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $response = $form->getData()['action'];
+            $comentarios = $form->getData()['comentarios'];
 
-            $mensaje1 = '¡Oh-oh!';
-            $mensaje2 = 'La cotización ' . $folio . ' no ha sido aprobada.';
-            $mensaje3 = 'Nos gustaría saber su opinión o comentarios del motivo de su rechazo.';
-            $suformulario = 2;
+            $cotizacion->setQuienAcepto($this->getUser()->getNombre());
+            $cotizacion->setRegistroValidaCliente(new \DateTimeImmutable());
 
-            $editForm = $this->createForm(MarinaHumedaCotizacionRechazadaType::class, $cotizacionRechazar);
-            $editForm->handleRequest($request);
-
-            if ($editForm->isSubmitted() && $editForm->isValid()) {
-                $em->persist($cotizacionRechazar);
-                $em->flush();
-                return $this->redirectToRoute('cotizacion_gracias');
+            if (!$response) {
+                $cotizacion->setValidacliente(1);
+                $cotizacion->setNotascliente($comentarios);
+            } else {
+                $cotizacion->setValidacliente(2);
             }
 
-            return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', [
-                'mensaje1' => $mensaje1,
-                'mensaje2' => $mensaje2,
-                'mensaje3' => $mensaje3,
-                'suformulario' => $suformulario,
-                'form' => $editForm->createView()
-            ]);
-        }
-
-        if ($astillerocotizacionAceptar && !$astillerocotizacionAceptar->getValidacliente()) {
-            $cotizacionAceptar = $astillerocotizacionAceptar;
-            $cuentaBancaria = $em->getRepository(CuentaBancaria::class)->findAll();
-
-            $qb = $em->createQueryBuilder();
-            $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
-            $sistema = $query->getArrayResult();
-            $diasHabiles = $sistema[0]['diasHabilesAstilleroCotizacion'];
-
-            $folio = $cotizacionAceptar->getFoliorecotiza() == 0
-                ? $cotizacionAceptar->getFolio()
-                : $cotizacionAceptar->getFolio() . '-' . $cotizacionAceptar->getFoliorecotiza();
-
-            $valorSistema = new ValorSistema();
-            $codigoSeguimiento = $folio . '-' . $valorSistema->generaToken(10);
-
-            $cotizacionAceptar->setValidacliente(2);
-            $cotizacionAceptar->setCodigoseguimiento($codigoSeguimiento);
-
-            $em->persist($cotizacionAceptar);
             $em->flush();
 
-            $mensaje1 = '¡Enhorabuena!';
-            $mensaje2 = 'La cotización ' . $folio . ' ha sido aprobada.';
-            $suformulario = 1;
-
-            $editForm = $this->createForm(AstilleroCotizacionAceptadaType::class, $cotizacionAceptar);
-            $editForm->handleRequest($request);
-
-            if ($editForm->isSubmitted() && $editForm->isValid()) {
-                $cotizacionAceptar->setFecharespuesta(new \DateTime('now'));
-
-                $em->persist($cotizacionAceptar);
-                $em->flush();
-                return $this->redirectToRoute('cotizacion_gracias');
-            }
-
-            return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', [
-                'mensaje1' => $mensaje1,
-                'mensaje2' => $mensaje2,
-                'suformulario' => $suformulario,
-                'cuentaBancaria' => $cuentaBancaria,
-                'diasHabiles' => $diasHabiles,
-                'form' => $editForm->createView(),
-                'marinaHumedaCotizacion' => $cotizacionAceptar
+            // Buscar correos a notificar
+            $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                'evento' => Correo\Notificacion::EVENTO_ACEPTAR,
+                'tipo' => Correo\Notificacion::TIPO_ASTILLERO
             ]);
+
+            $this->enviaCorreoNotificacion($mailer, $notificables, $cotizacion);
+
+            return $this->redirectToRoute('clientes_gracias');
         }
 
-        if ($astillerocotizacionRechazar && !$astillerocotizacionRechazar->getValidacliente()) {
-            $cotizacionRechazar = $astillerocotizacionRechazar;
-            $cotizacionRechazar->setValidacliente(1);
+        return $this->render('default/cotizacion.html.twig', [
+            'title' => 'Confirmación de cotización',
+            'form' => $form->createView()
+        ]);
+    }
 
-            $em->persist($cotizacionRechazar);
-            $em->flush();
+    /**
+     * @Route("clients/gracias", name="clientes_gracias")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function graciasClienteAction()
+    {
+        return $this->render('default/gracias.html.twig', [
+            'title' => '¡Gracias por su respuesta!'
+        ]);
+    }
 
-            $folio = $cotizacionRechazar->getFoliorecotiza() == 0
-                ? $cotizacionRechazar->getFolio()
-                : $cotizacionRechazar->getFolio() . '-' . $cotizacionRechazar->getFoliorecotiza();
-
-            $mensaje1 = '¡Oh-oh!';
-            $mensaje2 = 'La cotización ' . $folio . ' no ha sido aprobada.';
-            $mensaje3 = 'Nos gustaría saber su opinión o comentarios del motivo de su rechazo.';
-            $suformulario = 2;
-
-            $editForm = $this->createForm(AstilleroCotizacionRechazadaType::class, $cotizacionRechazar);
-            $editForm->handleRequest($request);
-
-            if ($editForm->isSubmitted() && $editForm->isValid()) {
-                $em->persist($cotizacionRechazar);
-                $em->flush();
-                return $this->redirectToRoute('cotizacion_gracias');
-            }
-
-            return $this->render('marinahumeda/cotizacion/respuesta-cliente.twig', [
-                'mensaje1' => $mensaje1,
-                'mensaje2' => $mensaje2,
-                'mensaje3' => $mensaje3,
-                'suformulario' => $suformulario,
-                'form' => $editForm->createView()
-            ]);
+    /**
+     * @param Correo\Notificacion[] $notificables
+     * @param MarinaHumedaCotizacion|AstilleroCotizacion $cotizacion
+     * @param \Swift_Mailer $mailer
+     *
+     * @return void
+     */
+    private function enviaCorreoNotificacion($mailer, $notificables, $cotizacion)
+    {
+        if (!count($notificables)) {
+            return;
         }
 
-        return $this->redirectToRoute('cotizacion_gracias');
+        $recipientes = [];
+        foreach ($notificables as $key => $notificable) {
+            $recipientes[$key] = $notificable->getCorreo();
+        }
+
+        $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'));
+        $message->setFrom('noresponder@novonautica.com');
+        $message->setTo($recipientes);
+
+        $message->setBody(
+            $this->renderView('mail/notificacion.html.twig', [
+                'notificacion' => $notificables[0],
+                'cotizacion' => $cotizacion
+            ]),
+            'text/html'
+        );
+
+        $mailer->send($message);
     }
 }

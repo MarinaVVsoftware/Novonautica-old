@@ -5,6 +5,12 @@ app:
 oneup_uploader:
     resource: .
     type: uploader
-
+inicio:
+    path: /
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: inicio.twig
 logout:
     path: /logout
+clients_logout:
+    path: /clients_logout

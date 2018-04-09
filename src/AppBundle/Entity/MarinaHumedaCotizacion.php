@@ -223,16 +223,9 @@ class MarinaHumedaCotizacion
     /**
      * @var string
      *
-     * @ORM\Column(name="tokenacepta", type="string", length=110, nullable=true)
+     * @ORM\Column(name="token", type="string", length=110, nullable=true)
      */
-    private $tokenacepta;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="tokenrechaza", type="string", length=110, nullable=true)
-     */
-    private $tokenrechaza;
+    private $token;
 
     /**
      * @var string
@@ -810,56 +803,6 @@ class MarinaHumedaCotizacion
     }
 
     /**
-     * Set tokenacepta
-     *
-     * @param string $tokenacepta
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setTokenacepta($tokenacepta)
-    {
-        $this->tokenacepta = $tokenacepta;
-
-        return $this;
-    }
-
-    /**
-     * Get tokenacepta
-     *
-     * @return string
-     *
-     */
-    public function getTokenacepta()
-    {
-        return $this->tokenacepta;
-    }
-
-    /**
-     * Set tokenrechaza
-     *
-     * @param string $tokenrechaza
-     *
-     * @return MarinaHumedaCotizacion
-     */
-    public function setTokenrechaza($tokenrechaza)
-    {
-        $this->tokenrechaza = $tokenrechaza;
-
-        return $this;
-    }
-
-    /**
-     * Get tokenrechaza
-     *
-     * @return string
-     *
-     */
-    public function getTokenrechaza()
-    {
-        return $this->tokenrechaza;
-    }
-
-    /**
      * Set fecharegistro
      *
      * @param \DateTime $fecharegistro
@@ -1302,5 +1245,21 @@ class MarinaHumedaCotizacion
     public function setQuienAcepto($quienAcepto)
     {
         $this->quienAcepto = $quienAcepto;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param string $token
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
     }
 }

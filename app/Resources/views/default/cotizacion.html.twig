@@ -1,0 +1,33 @@
+{% extends 'default/base.html.twig' %}
+
+{% block body %}
+    <div class="container" style="padding: 20rem 0;">
+        <div class="row">
+            <div class="col-sm-4 center-block" style="float: none;">
+                {{ form_start(form) }}
+                <div class="novo-checkbox-container">
+                    {{ form_row(form.action) }}
+                </div>
+                <div id="ifdenied" class="hidden">
+                    {{ form_row(form.comentarios) }}
+                </div>
+                <input type="submit" value="Confirmar" class="btn btn-block btn-primary">
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+      (function () {
+        var checkAction = document.querySelectorAll('input[type="radio"]');
+        var hidElement = document.getElementById('ifdenied');
+
+        $(checkAction).on('click', function () {
+          (this.value === '0') ? hidElement.classList.remove('hidden') : hidElement.classList.add('hidden');
+        });
+
+      })();
+    </script>
+{% endblock javascripts %}

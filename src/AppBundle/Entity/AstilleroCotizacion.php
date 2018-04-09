@@ -246,16 +246,9 @@ class AstilleroCotizacion
     /**
      * @var string
      *
-     * @ORM\Column(name="tokenacepta", type="string", length=110, nullable=true)
+     * @ORM\Column(name="token", type="string", length=110, nullable=true)
      */
-    private $tokenacepta;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="tokenrechaza", type="string", length=110, nullable=true)
-     */
-    private $tokenrechaza;
+    private $token;
 
     /**
      * @var bool
@@ -765,33 +758,17 @@ class AstilleroCotizacion
     /**
      * @return string
      */
-    public function getTokenacepta()
+    public function getToken()
     {
-        return $this->tokenacepta;
+        return $this->token;
     }
 
     /**
-     * @param string $tokenacepta
+     * @param $token
      */
-    public function setTokenacepta($tokenacepta)
+    public function setToken($token)
     {
-        $this->tokenacepta = $tokenacepta;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTokenrechaza()
-    {
-        return $this->tokenrechaza;
-    }
-
-    /**
-     * @param string $tokenrechaza
-     */
-    public function setTokenrechaza($tokenrechaza)
-    {
-        $this->tokenrechaza = $tokenrechaza;
+        $this->token = $token;
     }
 
     /**
