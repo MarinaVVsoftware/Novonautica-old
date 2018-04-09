@@ -171,6 +171,7 @@ class AstilleroCotizacion
      */
     private $validanovo;
 
+
     /**
      * @var \DateTimeImmutable
      *
@@ -184,6 +185,15 @@ class AstilleroCotizacion
      * @ORM\Column(name="validacliente", type="smallint")
      */
     private $validacliente;
+
+    /**
+     * Se refiere a un cliente que haya aceptado la cotizacion o a un usuario de novonautica
+     *
+     * @var string
+     *
+     * @ORM\Column(name="quien_acepto", type="string", length=100, nullable=true)
+     */
+    private $quienAcepto;
 
     /**
      * @var \DateTimeImmutable
@@ -225,6 +235,8 @@ class AstilleroCotizacion
     private $foliorecotiza;
 
     /**
+     * Se refiere a que usuario de novonautica valido la cotizacion
+     *
      * @var string
      *
      * @ORM\Column(name="nombrevalidanovo", type="string", length=255, nullable=true)
@@ -298,6 +310,13 @@ class AstilleroCotizacion
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="astilleroCotizaciones")
      */
     private $cliente;
+
+    /**
+     * @var Usuario
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Usuario")
+     */
+    private $creador;
 
     public function __construct() {
         $this->acservicios = new ArrayCollection();
@@ -544,38 +563,14 @@ class AstilleroCotizacion
         return $this->fecharegistro;
     }
 
-//    /**
-//     * Set cliente
-//     *
-//     * @param \AppBundle\Entity\Cliente $cliente
-//     *
-//     * @return AstilleroCotizacion
-//     */
-//    public function setCliente(\AppBundle\Entity\Cliente $cliente = null)
-//    {
-//        $this->cliente = $cliente;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get cliente
-//     *
-//     * @return \AppBundle\Entity\Cliente
-//     */
-//    public function getCliente()
-//    {
-//        return $this->cliente;
-//    }
-
     /**
      * Set barco
      *
-     * @param \AppBundle\Entity\Barco $barco
+     * @param Barco $barco
      *
      * @return AstilleroCotizacion
      */
-    public function setBarco(\AppBundle\Entity\Barco $barco = null)
+    public function setBarco(Barco $barco = null)
     {
         $this->barco = $barco;
 
@@ -585,7 +580,7 @@ class AstilleroCotizacion
     /**
      * Get barco
      *
-     * @return \AppBundle\Entity\Barco
+     * @return Barco
      */
     public function getBarco()
     {
@@ -595,11 +590,11 @@ class AstilleroCotizacion
     /**
      * Add acservicio
      *
-     * @param \AppBundle\Entity\AstilleroCotizaServicio $acservicio
+     * @param AstilleroCotizaServicio $acservicio
      *
      * @return AstilleroCotizacion
      */
-    public function addAcservicio(\AppBundle\Entity\AstilleroCotizaServicio $acservicio)
+    public function addAcservicio(AstilleroCotizaServicio $acservicio)
     {
         $acservicio ->setAstillerocotizacion($this);
         $this->acservicios[] = $acservicio;
@@ -610,9 +605,9 @@ class AstilleroCotizacion
     /**
      * Remove acservicio
      *
-     * @param \AppBundle\Entity\AstilleroCotizaServicio $acservicio
+     * @param AstilleroCotizaServicio $acservicio
      */
-    public function removeAcservicio(\AppBundle\Entity\AstilleroCotizaServicio $acservicio)
+    public function removeAcservicio(AstilleroCotizaServicio $acservicio)
     {
         $this->acservicios->removeElement($acservicio);
     }
@@ -657,6 +652,22 @@ class AstilleroCotizacion
     public function setValidacliente($validacliente)
     {
         $this->validacliente = $validacliente;
+    }
+
+    /**
+     * @return string
+     */
+    public function getQuienAcepto()
+    {
+        return $this->quienAcepto;
+    }
+
+    /**
+     * @param string $quienAcepto
+     */
+    public function setQuienAcepto($quienAcepto)
+    {
+        $this->quienAcepto = $quienAcepto;
     }
 
     /**
@@ -914,11 +925,11 @@ class AstilleroCotizacion
     /**
      * Add pago
      *
-     * @param \AppBundle\Entity\Pago $pago
+     * @param Pago $pago
      *
      * @return AstilleroCotizacion
      */
-    public function addPago(\AppBundle\Entity\Pago $pago)
+    public function addPago(Pago $pago)
     {
         $pago->setAcotizacion($this);
         $this->pagos[] = $pago;
@@ -929,9 +940,9 @@ class AstilleroCotizacion
     /**
      * Remove pago
      *
-     * @param \AppBundle\Entity\Pago $pago
+     * @param Pago $pago
      */
-    public function removePago(\AppBundle\Entity\Pago $pago)
+    public function removePago(Pago $pago)
     {
         $this->pagos->removeElement($pago);
     }
@@ -1112,5 +1123,21 @@ class AstilleroCotizacion
     public function getRegistroPagoCompletado()
     {
         return $this->registroPagoCompletado;
+    }
+
+    /**
+     * @return Usuario
+     */
+    public function getCreador()
+    {
+        return $this->creador;
+    }
+
+    /**
+     * @param Usuario $creador
+     */
+    public function setCreador($creador)
+    {
+        $this->creador = $creador;
     }
 }
