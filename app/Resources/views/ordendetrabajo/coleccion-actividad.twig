@@ -1,0 +1,27 @@
+{% block form_widget %}
+    {% spaceless %}
+        <td>
+            {{ form_widget(form.nombre) }}
+        </td>
+        <td>
+            {{ form_widget(form.inicio) }}
+        </td>
+        <td>
+            {{ form_widget(form.fin) }}
+        </td>
+        <td>
+            {{ form_widget(form.notas) }}
+        </td>
+        <td>
+            {{ form_widget(form.responsable) }}
+        </td>
+        <td>
+            {{ form_widget(form.porcentaje) }}
+        </td>
+        <td style="vertical-align: middle">
+            <a href="#" class="remove-pago btn btn-xs btn-naranja">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </a>
+        </td>
+    {% endspaceless %}
+{% endblock %}

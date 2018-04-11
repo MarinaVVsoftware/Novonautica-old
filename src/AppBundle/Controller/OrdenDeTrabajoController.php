@@ -196,9 +196,6 @@ class OrdenDeTrabajoController extends Controller
                     $precioTotal+=$contratista->getPrecio();
                     $utilidadvvTotal+=$contratista->getUtilidadvv();
                     $preciovvTotal+=$contratista->getPreciovv();
-                    $saldoTotal+=$contratista->getSaldo();
-                    $pagosTotal+=$contratista->getPagos();
-
                     $ivatot = ($contratista->getPrecio() * $iva)/100;
                     $total = $contratista->getPrecio() + $ivatot;
                     $porcentajevv = $contratista->getProveedor()->getPorcentaje();
@@ -216,8 +213,6 @@ class OrdenDeTrabajoController extends Controller
                     $precioTotal+=$contratistanuevo->getPrecio();
                     $utilidadvvTotal+=$contratistanuevo->getUtilidadvv();
                     $preciovvTotal+=$contratistanuevo->getPreciovv();
-                    $saldoTotal+=$contratistanuevo->getSaldo();
-                    $pagosTotal+=$contratistanuevo->getPagos();
 
                     $ivatot = ($contratistanuevo->getPrecio() * $iva)/100;
                     $total = $contratistanuevo->getPrecio() + $ivatot;
@@ -234,8 +229,7 @@ class OrdenDeTrabajoController extends Controller
                 ->setPrecioTotal($precioTotal)
                 ->setUtilidadvvTotal($utilidadvvTotal)
                 ->setPreciovvTotal($preciovvTotal)
-                ->setSaldoTotal($saldoTotal)
-                ->setPagosTotal($pagosTotal)
+                ->setSaldoTotal($granTotal)
                 ->setIvaTotal($ivaTotal)
                 ->setGranTotal($granTotal)
             ;
@@ -315,6 +309,54 @@ class OrdenDeTrabajoController extends Controller
             'edit_form' => $editForm->createView(),
             'pagadoUSD' => $pagadoUSD,
             'saldoUSD' => $saldoUSD
+        ]);
+    }
+    /**
+     * @Route("/{id}/actividad", name="ordendetrabajo_contratista_actividad")
+     * @Method({"GET", "POST"})
+     */
+    public function actividadAction(Request $request, Contratista $contratista)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ASTILLERO_ODT', $contratista);
+        $originalActividades = new ArrayCollection();
+        foreach ($contratista->getContratistaactividades() as $actividad){
+            $originalActividades->add($actividad);
+        }
+        $editForm = $this->createForm('AppBundle\Form\Astillero\ContratistaActividadType', $contratista);
+        $editForm->handleRequest($request);
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            foreach ($originalActividades as $actividad){
+                if (false === $contratista->getContratistaactividades()->contains($actividad)) {
+                    $actividad->getContratista()->removeContratistaactividade($actividad);
+                    $em->persist($actividad);
+                    $em->remove($actividad);
+                }
+
+
+            }
+
+            foreach ($contratista->getContratistaactividades() as $act1){
+                $ban = false;
+                foreach ($originalActividades as $act2){
+                    if($act2->getId() == $act1->getId()){
+                        $ban = true;
+                    }
+                }
+                if(!$ban){
+                    $act1->setUsuario($this->getUser()->getNombre());
+                }
+            }
+
+            $em->persist($contratista);
+            $em->flush();
+            return $this->redirectToRoute('ordendetrabajo_show', ['id' => $contratista->getAstilleroODT()->getId()]);
+        }
+        return $this->render('ordendetrabajo/actividad.html.twig', [
+            'title' => 'Registrar Actividad Contratista',
+            'contratista' => $contratista,
+            'edit_form' => $editForm->createView()
         ]);
     }
 

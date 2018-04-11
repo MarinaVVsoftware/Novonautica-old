@@ -89,6 +89,11 @@ class Contratista
     private $contratistapagos;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Astillero\Contratista\Actividad", mappedBy="contratista", cascade={"persist"})
+     */
+    private $contratistaactividades;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -335,5 +340,42 @@ class Contratista
     public function getContratistapagos()
     {
         return $this->contratistapagos;
+    }
+
+    /**
+     * Add contratistaactividade.
+     *
+     * @param \AppBundle\Entity\Astillero\Contratista\Actividad $contratistaactividade
+     *
+     * @return Contratista
+     */
+    public function addContratistaactividade(\AppBundle\Entity\Astillero\Contratista\Actividad $contratistaactividade)
+    {
+        $contratistaactividade->setContratista($this);
+        $this->contratistaactividades[] = $contratistaactividade;
+
+        return $this;
+    }
+
+    /**
+     * Remove contratistaactividade.
+     *
+     * @param \AppBundle\Entity\Astillero\Contratista\Actividad $contratistaactividade
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeContratistaactividade(\AppBundle\Entity\Astillero\Contratista\Actividad $contratistaactividade)
+    {
+        return $this->contratistaactividades->removeElement($contratistaactividade);
+    }
+
+    /**
+     * Get contratistaactividades.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getContratistaactividades()
+    {
+        return $this->contratistaactividades;
     }
 }

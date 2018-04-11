@@ -35,9 +35,21 @@ class OrdenDeTrabajoDataTable extends AbstractDataTableHandler
 
         $qb = $odtRepo->createQueryBuilder('odt');
         $results->recordsTotal = $qb->select('COUNT(odt.id)')->getQuery()->getSingleScalarResult();
-        $q = $qb->select('odt');
+        $q = $qb
+            ->select('odt','astilleroCotizacion','barco','cliente')
+            ->leftJoin('odt.astilleroCotizacion','astilleroCotizacion')
+            ->leftJoin('astilleroCotizacion.barco','barco')
+            ->leftJoin('astilleroCotizacion.cliente','cliente')
+        ;
 
-
+        if ($request->search->value) {
+            $q->andWhere('(LOWER(astilleroCotizacion.folio) LIKE :search OR ' .
+                'LOWER(cliente.nombre) LIKE :search OR ' .
+                'LOWER(barco.nombre) LIKE :search OR '.
+                'LOWER(astilleroCotizacion.fechaLlegada) LIKE :search)'
+            )
+                ->setParameter('search', strtolower("%{$request->search->value}%"));
+        }
 //        foreach ($request->order as $order) {
 //            if ($order->column === 0) {
 //                $q->addOrderBy('odt.astilleroCotizacion.folio', $order->dir);
@@ -64,6 +76,8 @@ class OrdenDeTrabajoDataTable extends AbstractDataTableHandler
                 $odt->getAstilleroCotizacion()->getFoliorecotiza() == 0 ? $odt->getAstilleroCotizacion()->getFolio() : $odt->getAstilleroCotizacion()->getFolio().'-'.$odt->getAstilleroCotizacion()->getFoliorecotiza(),
                 $odt->getAstilleroCotizacion()->getBarco()->getNombre(),
                 $odt->getAstilleroCotizacion()->getCliente()->getNombre(),
+                $odt->getAstilleroCotizacion()->getFechaLlegada() ? $odt->getAstilleroCotizacion()->getFechaLlegada()->format('d/m/Y'):'',
+                $odt->getAstilleroCotizacion()->getFechaSalida() ? $odt->getAstilleroCotizacion()->getFechaSalida()->format('d/m/Y'):'',
                 '$' . number_format(($odt->getPrecioTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',
                 '$' . number_format(($odt->getUtilidadvvTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',
                 '$' . number_format(($odt->getPreciovvTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',

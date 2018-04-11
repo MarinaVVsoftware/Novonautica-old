@@ -49,9 +49,11 @@ class PagoType extends AbstractType
 
             ])
         ;
-    }/**
- * {@inheritdoc}
- */
+    }
+
+    /**
+    * {@inheritdoc}
+    */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

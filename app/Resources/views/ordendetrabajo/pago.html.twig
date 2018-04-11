@@ -68,6 +68,10 @@
                             <div class='info-input'>{{ contratista.proveedor.razonsocial }}</div>
                         </div>
                         <div class="col-sm-3">
+                            <label>Embarcación</label>
+                            <div class='info-input'>{{ contratista.astilleroODT.astilleroCotizacion.barco }}</div>
+                        </div>
+                        <div class="col-sm-3">
                             <label>Tipo de cambio</label>
                             <div class='info-input'>
                                 $ {{ (dolar/100)|number_format(2) }} MXN

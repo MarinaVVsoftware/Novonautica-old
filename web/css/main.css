@@ -26,7 +26,9 @@ a {
 .fondo-azul {
     background-color: #0097f6;
 }
-
+.fondo-azul2 {
+    background-color: #0064a2;
+}
 .fondo-rojo {
     background-color: #DB235C;
 }
@@ -50,7 +52,9 @@ a {
 .fondo-morado {
     background-color: #292e41;
 }
-
+.fondo-morado-2{
+    background-color: #3e496f;
+}
 /*++ fin colores fondo +++*/
 
 /*++++ colores letra +++++*/
