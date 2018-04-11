@@ -146,12 +146,19 @@ class ClienteController extends Controller
      * @param Cliente $cliente
      *
      * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function showAction(Cliente $cliente)
     {
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Cliente');
+        $totalAdeudo = $repository->getTotalAdeudo($cliente);
+        $totalAbono = $repository->getTotalAbono($cliente);
+
         return $this->render('cliente/show.html.twig', [
             'title' => "Cliente: {$cliente->getNombre()}",
             'cliente' => $cliente,
+            'adeudo' => $totalAdeudo,
+            'abono' => $totalAbono,
         ]);
     }
 
@@ -163,7 +170,7 @@ class ClienteController extends Controller
      *
      * @return JsonResponse
      */
-    public function getShowDataAction(Request $request, Cliente $cliente, DataTablesInterface $dataTables)
+    public function getShowDataAction(Request $request, DataTablesInterface $dataTables)
     {
         try {
             $results = $dataTables->handle($request, 'clienteReporte');

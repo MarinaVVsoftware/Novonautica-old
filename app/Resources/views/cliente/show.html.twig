@@ -214,6 +214,30 @@
                         <div role="tabpanel" class="tab-pane" id="cuentas">
                             <div class="row">
                                 <div class="col-sm-12">
+                                    <form class="row"  style="margin-bottom: 1rem; padding: 1rem 0">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="adeudo">Adeudo total</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">US$</span>
+                                                    <input type="text" class="form-control" id="adeudo" value="{{ (adeudo / 100)|number_format(2) }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="adeudo">Abono total</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">US$</span>
+                                                    <input type="text" class="form-control" id="adeudo" value="{{ (abono / 100)|number_format(2) }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
                                     <table id="table-cuentas" class="table-novo table" style="width: 100%;">
                                         <thead>
                                         <tr>
@@ -238,6 +262,8 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
     <script type="text/javascript">
       (function ($, settings) {
         $('#table-cuentas').DataTable({
@@ -248,7 +274,15 @@
               cliente: '{{ cliente.id }}'
             },
           },
-          order: [[0, 'desc']]
+          order: [[0, 'desc']],
+          createdRow: function (row, cliente) {
+            let dateCell = row.cells[0];
+
+            let lastPayment = moment(cliente[0], 'YYYY-MM-DD HH:mm:ss', true);
+            if(lastPayment.isValid()) {
+              dateCell.innerHTML = lastPayment.fromNow();
+            }
+          }
         });
 
         if (location.hash) {

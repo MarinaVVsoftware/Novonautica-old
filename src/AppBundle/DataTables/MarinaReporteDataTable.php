@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: inrumi
- * Date: 3/28/18
- * Time: 17:13
+ * Date: 4/11/18
+ * Time: 13:41
  */
 
 namespace AppBundle\DataTables;
@@ -14,11 +14,10 @@ use DataTables\DataTableException;
 use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\NonUniqueResultException;
 
-class ReporteDataTable extends AbstractDataTableHandler
+class MarinaReporteDataTable extends AbstractDataTableHandler
 {
-    const ID = 'reporte';
+    const ID = 'marinaReporte';
     private $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)
@@ -31,25 +30,28 @@ class ReporteDataTable extends AbstractDataTableHandler
      *
      * @param DataTableQuery $request
      *
-     * @return DataTableResults
-     *
      * @throws DataTableException
-     * @throws NonUniqueResultException
+     *
+     * @return DataTableResults
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function handle(DataTableQuery $request): DataTableResults
     {
-        $repository = $this->doctrine->getRepository('AppBundle:Cliente\Reporte');
+        $repository = $this->doctrine->getRepository('AppBundle:MarinaHumedaCotizacion');
         $results = new DataTableResults();
 
-        $query = $repository->createQueryBuilder('r')
-            ->select('COUNT(DISTINCT r.cliente)');
+        $query = $repository->createQueryBuilder('mc')
+            ->select('COUNT(DISTINCT mc.cliente)');
 
         $results->recordsTotal = $query->getQuery()->getSingleScalarResult();
 
-        $query = $repository->createQueryBuilder('r')
-            ->select('c.nombre', 'COALESCE(MAX(r.createdAt), \'No hay registro\') AS lastPago', 'SUM(r.adeudo) AS adeudo', 'SUM(r.abono) AS abono', 'c.id')
-            ->addSelect('(SUM(r.adeudo) - SUM(r.abono)) AS total')
-            ->leftJoin('r.cliente', 'c')
+        $query = $repository->createQueryBuilder('mc')
+            ->select('c.nombre', 'SUM(mc.total) AS adeudo', 'SUM(mc.pagado) AS abono')
+            ->addSelect('(SUM(mc.total) - COALESCE(SUM(mc.pagado), 0)) AS total')
+            ->addSelect('COALESCE(MAX(p.fecharealpago), \'No hay registro\') AS lastPago')
+            ->leftJoin('mc.pagos', 'p')
+            ->leftJoin('mc.cliente', 'c')
+            ->andWhere('mc.validacliente = 2')
             ->addGroupBy('c.id');
 
         if ($request->search->value) {
@@ -63,22 +65,24 @@ class ReporteDataTable extends AbstractDataTableHandler
             } elseif ($order->column == 1) {
                 $query->addOrderBy('lastPago', $order->dir);
             } elseif ($order->column == 2) {
-                $query->addOrderBy('adeudo', $order->dir);
-            } elseif ($order->column == 3) {
                 $query->addOrderBy('abono', $order->dir);
+            } elseif ($order->column == 3) {
+                $query->addOrderBy('total', $order->dir);
             } elseif ($order->column == 4) {
                 $query->addOrderBy('total', $order->dir);
             }
         }
 
         $queryCount = clone $query;
-        $queryCount->addSelect('COUNT(DISTINCT r.cliente)');
+        $queryCount->addSelect('COUNT(DISTINCT mc.cliente)');
         $results->recordsFiltered = count($queryCount->getQuery()->getResult());
 
         $query->setMaxResults($request->length);
         $query->setFirstResult($request->start);
 
         $reportes = $query->getQuery()->getResult();
+
+        dump($reportes);
 
         foreach ($reportes as $reporte) {
             $results->data[] = [
@@ -87,7 +91,6 @@ class ReporteDataTable extends AbstractDataTableHandler
                 '$' . number_format(($reporte['adeudo'] / 100), 2) . ' USD',
                 '$' . number_format(($reporte['abono'] / 100), 2) . ' USD',
                 '$' . number_format(($reporte['total'] / 100), 2) . ' USD',
-                $reporte['id'],
             ];
         }
 

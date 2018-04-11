@@ -23,17 +23,25 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class ReporteController extends Controller
 {
     /**
-     * @Route("/", name="reporte_index")
+     * @Route("/", name="cliente_reporte_index")
      *
      * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function indexAction()
     {
-        return $this->render('cliente/reporte/index.html.twig', ['title' => 'Reporte de clientes']);
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Cliente\Reporte');
+
+        return $this->render('cliente/reporte/index.html.twig', [
+            'title' => 'Reporte de clientes',
+            'cliente' => $repository->getBRClient(),
+            'adeudo' => $repository->getAdeudoTotal(),
+            'abono' => $repository->getAbonoTotal()
+        ]);
     }
 
     /**
-     * @Route("/reportes", name="reporte_index_data")
+     * @Route("/reportes", name="cliente_reporte_index_data")
      *
      * @param Request $request
      * @param DataTablesInterface $dataTables

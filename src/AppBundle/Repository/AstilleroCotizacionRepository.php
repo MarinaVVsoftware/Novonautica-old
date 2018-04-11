@@ -61,4 +61,22 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @return string
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function getMostDebtor()
+    {
+        return $this->createQueryBuilder('ac')
+            ->leftJoin('ac.cliente', 'c')
+            ->select('c.nombre', 'SUM(ac.total) AS adeudo', 'SUM(ac.pagado) AS abono')
+            ->where('ac.validacliente = 2')
+            ->groupBy('c.id')
+            ->orderBy('adeudo', 'desc')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }

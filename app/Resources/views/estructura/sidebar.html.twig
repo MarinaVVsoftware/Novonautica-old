@@ -31,6 +31,12 @@
                             </li>
                         {% endif %}
 
+                        <li class="{{ path.check('cliente_reporte_index') }}">
+                            <a href="{{ path('cliente_reporte_index') }}">
+                                <i class="fa fa-circle-o"></i> Reportes
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
             {% endif %}
@@ -172,6 +178,14 @@
                             </li>
                         {% endif %}
                         <!-- END MARINA/COTIZACION/SERVICIOS ADICIONALES -->
+
+                        <!-- START MARINA/REPORTES -->
+                        <li class="{{ path.check('marina-humeda_reporte_index') }}">
+                            <a href="{{ path('marina-humeda_reporte_index') }}">
+                                <i class="fa fa-circle-o"></i> Reportes
+                            </a>
+                        </li>
+                        <!-- END MARINA/REPORTES -->
                     </ul>
                 </li>
             {% endif %}
@@ -305,6 +319,14 @@
                             </li>
                         {% endif %}
                         <!-- END ASTILLERO/PROVEEDORES -->
+
+                        <!-- START ASTILLERO/REPORTE -->
+                        <li class="{{ path.check('astillero_reporte_index') }}">
+                            <a href="{{ path('astillero_reporte_index') }}">
+                                <i class="fa fa-circle-o"></i> Reportes
+                            </a>
+                        </li>
+                        <!-- END ASTILLERO/REPORTE -->
                     </ul>
                 </li>
             {% endif %}
@@ -427,11 +449,11 @@
                             </a>
                         </li>
                         {% if is_granted('ROLE_HCORREO_NOTIFICACION') %}
-                        <li class="{{ path.check('historial-correo_notificacion_index') }}">
-                            <a href="{{ path('historial-correo_notificacion_index') }}">
-                                <i class="fa fa-bell"></i> <span>Notificaciones</span>
-                            </a>
-                        </li>
+                            <li class="{{ path.check('historial-correo_notificacion_index') }}">
+                                <a href="{{ path('historial-correo_notificacion_index') }}">
+                                    <i class="fa fa-bell"></i> <span>Notificaciones</span>
+                                </a>
+                            </li>
                         {% endif %}
                     </ul>
                 </li>

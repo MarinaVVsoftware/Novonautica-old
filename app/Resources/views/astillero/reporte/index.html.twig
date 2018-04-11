@@ -17,7 +17,7 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="tcliente"> Cliente con deuda mayor </label>
-                                <input type="text" class="form-control" value="{{ cliente }}" id="tcliente" disabled>
+                                <input type="text" class="form-control" value="{{ mostDebtor['nombre'] }}" id="tcliente" disabled>
                             </div>
                         </div>
                         <div class="col-sm-4">
@@ -25,7 +25,7 @@
                                 <label for="adeudo">Adeudo total</label>
                                 <div class="input-group">
                                     <span class="input-group-addon">US$</span>
-                                    <input type="text" class="form-control" id="adeudo" value="{{ (adeudo / 100)|number_format(2) }}">
+                                    <input type="text" class="form-control" id="adeudo" value="{{ (mostDebtor['adeudo'] / 100)|number_format(2) }}">
                                 </div>
                             </div>
                         </div>
@@ -34,7 +34,7 @@
                                 <label for="abono">Abono total</label>
                                 <div class="input-group">
                                     <span class="input-group-addon">US$</span>
-                                    <input type="text" class="form-control" id="abono" value="{{ (abono / 100)|number_format(2) }}">
+                                    <input type="text" class="form-control" id="abono" value="{{ (mostDebtor['abono'] / 100)|number_format(2) }}">
                                 </div>
                             </div>
                         </div>
@@ -48,11 +48,10 @@
                         <thead>
                         <tr>
                             <th>Cliente</th>
-                            <th>Ultimo movimiento</th>
+                            <th>Ultimo pago</th>
                             <th>Adeudo</th>
                             <th>Abonado</th>
-                            <th>Adeudo total</th>
-                            <th class="no-sort"></th>
+                            <th>Total adeudo</th>
                         </tr>
                         </thead>
                     </table>
@@ -71,28 +70,15 @@
       (function ($, settings) {
         $('.table-novo').DataTable({
           ...settings,
-          ajax: '{{ path('cliente_reporte_index_data') }}',
+          ajax: '{{ path('astillero_reporte_index_data') }}',
           order: [[1, 'asc']],
-          columns: [
-            {responsivePriority: 1},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 0},
-          ],
           createdRow: function (row, cliente) {
-            let lastCell = row.cells[5];
+            moment.locale('es');
             let dateCell = row.cells[1];
-
             let lastPayment = moment(cliente[1], 'YYYY-MM-DD HH:mm:ss', true);
             if(lastPayment.isValid()) {
               dateCell.innerHTML = lastPayment.fromNow();
             }
-
-            lastCell.innerHTML = `
-            <a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '../${cliente[5]}#cuentas' }}">Detalle</a>
-            `
           },
         });
       })(jQuery, datatablesSettings);

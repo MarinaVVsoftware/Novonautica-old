@@ -10,4 +10,5 @@ namespace AppBundle\Repository;
  */
 class AstilleroContratistaRepository extends \Doctrine\ORM\EntityRepository
 {
+
 }

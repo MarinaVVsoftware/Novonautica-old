@@ -94,4 +94,22 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getOneOrNullResult();
     }
+
+    /**
+     * @return string
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function getMostDebtor()
+    {
+        return $this->createQueryBuilder('mc')
+            ->leftJoin('mc.cliente', 'c')
+            ->select('c.nombre', 'SUM(mc.total) AS adeudo', 'SUM(mc.pagado) AS abono')
+            ->where('mc.validacliente = 2')
+            ->groupBy('c.id')
+            ->orderBy('adeudo', 'desc')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }

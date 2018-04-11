@@ -10,4 +10,39 @@ namespace AppBundle\Repository;
  */
 class ClienteRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $cliente
+     *
+     * @return float
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTotalAdeudo($cliente)
+    {
+        return $this->createQueryBuilder('c')
+            ->join('c.reportes', 'r')
+            ->select('SUM(r.adeudo)')
+            ->where('c = :cliente')
+            ->setParameter('cliente', $cliente)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @param $cliente
+     *
+     * @return float
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTotalAbono($cliente)
+    {
+        return $this->createQueryBuilder('c')
+            ->join('c.reportes', 'r')
+            ->select('SUM(r.abono)')
+            ->where('c = :cliente')
+            ->setParameter('cliente', $cliente)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

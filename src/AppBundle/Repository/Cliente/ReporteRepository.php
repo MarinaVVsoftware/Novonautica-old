@@ -10,4 +10,43 @@ namespace AppBundle\Repository\Cliente;
  */
 class ReporteRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @return string
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getBRClient()
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->join('r.cliente', 'c');
+
+        return $qb->select('c.nombre')
+            ->orderBy('r.adeudo', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return float
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getAdeudoTotal()
+    {
+        return $this->createQueryBuilder('r')
+            ->select('SUM(r.adeudo)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return float
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getAbonoTotal()
+    {
+        return $this->createQueryBuilder('r')
+            ->select('SUM(r.abono)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

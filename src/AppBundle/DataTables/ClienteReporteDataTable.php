@@ -82,7 +82,7 @@ class ClienteReporteDataTable extends AbstractDataTableHandler
 
         foreach ($reportes as $reporte) {
             $results->data[] = [
-                $reporte->getCreatedAt()->format('d M y H:i:s'),
+                $reporte->getCreatedAt()->format('Y-m-d H:i:s'),
                 '$' . number_format(($reporte->getAdeudo() / 100), 2),
                 '$' . number_format(($reporte->getAbono() / 100), 2),
                 $reporte->getConcepto()

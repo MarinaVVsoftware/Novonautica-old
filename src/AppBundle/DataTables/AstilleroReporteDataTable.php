@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: inrumi
- * Date: 3/28/18
- * Time: 17:13
+ * Date: 4/11/18
+ * Time: 15:12
  */
 
 namespace AppBundle\DataTables;
@@ -14,11 +14,10 @@ use DataTables\DataTableException;
 use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\NonUniqueResultException;
 
-class ReporteDataTable extends AbstractDataTableHandler
+class AstilleroReporteDataTable extends AbstractDataTableHandler
 {
-    const ID = 'reporte';
+    const ID = 'astilleroReporte';
     private $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)
@@ -31,25 +30,28 @@ class ReporteDataTable extends AbstractDataTableHandler
      *
      * @param DataTableQuery $request
      *
-     * @return DataTableResults
-     *
      * @throws DataTableException
-     * @throws NonUniqueResultException
+     *
+     * @return DataTableResults
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function handle(DataTableQuery $request): DataTableResults
     {
-        $repository = $this->doctrine->getRepository('AppBundle:Cliente\Reporte');
+        $repository = $this->doctrine->getRepository('AppBundle:AstilleroCotizacion');
         $results = new DataTableResults();
 
-        $query = $repository->createQueryBuilder('r')
-            ->select('COUNT(DISTINCT r.cliente)');
+        $query = $repository->createQueryBuilder('ac')
+            ->select('COUNT(DISTINCT ac.cliente)');
 
         $results->recordsTotal = $query->getQuery()->getSingleScalarResult();
 
-        $query = $repository->createQueryBuilder('r')
-            ->select('c.nombre', 'COALESCE(MAX(r.createdAt), \'No hay registro\') AS lastPago', 'SUM(r.adeudo) AS adeudo', 'SUM(r.abono) AS abono', 'c.id')
-            ->addSelect('(SUM(r.adeudo) - SUM(r.abono)) AS total')
-            ->leftJoin('r.cliente', 'c')
+        $query = $repository->createQueryBuilder('ac')
+            ->select('c.nombre', 'SUM(ac.total) AS adeudo', 'SUM(ac.pagado) AS abono')
+            ->addSelect('(SUM(ac.total) - COALESCE(SUM(ac.pagado), 0)) AS total')
+            ->addSelect('COALESCE(MAX(p.fecharealpago), \'No hay registro\') AS lastPago')
+            ->leftJoin('ac.pagos', 'p')
+            ->leftJoin('ac.cliente', 'c')
+            ->andWhere('ac.validacliente = 2')
             ->addGroupBy('c.id');
 
         if ($request->search->value) {
@@ -61,24 +63,26 @@ class ReporteDataTable extends AbstractDataTableHandler
             if ($order->column == 0) {
                 $query->addOrderBy('c.nombre', $order->dir);
             } elseif ($order->column == 1) {
-                $query->addOrderBy('lastPago', $order->dir);
+                $query->addOrderBy('p.fecharealpago', $order->dir);
             } elseif ($order->column == 2) {
-                $query->addOrderBy('adeudo', $order->dir);
-            } elseif ($order->column == 3) {
                 $query->addOrderBy('abono', $order->dir);
+            } elseif ($order->column == 3) {
+                $query->addOrderBy('total', $order->dir);
             } elseif ($order->column == 4) {
                 $query->addOrderBy('total', $order->dir);
             }
         }
 
         $queryCount = clone $query;
-        $queryCount->addSelect('COUNT(DISTINCT r.cliente)');
+        $queryCount->addSelect('COUNT(DISTINCT ac.cliente)');
         $results->recordsFiltered = count($queryCount->getQuery()->getResult());
 
         $query->setMaxResults($request->length);
         $query->setFirstResult($request->start);
 
         $reportes = $query->getQuery()->getResult();
+
+        dump($reportes);
 
         foreach ($reportes as $reporte) {
             $results->data[] = [
@@ -87,7 +91,6 @@ class ReporteDataTable extends AbstractDataTableHandler
                 '$' . number_format(($reporte['adeudo'] / 100), 2) . ' USD',
                 '$' . number_format(($reporte['abono'] / 100), 2) . ' USD',
                 '$' . number_format(($reporte['total'] / 100), 2) . ' USD',
-                $reporte['id'],
             ];
         }
 
