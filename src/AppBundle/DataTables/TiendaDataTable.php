@@ -49,8 +49,7 @@ class TiendaDataTable extends AbstractDataTableHandler
 
         if ($request->search->value) {
             $query->where('(LOWER(b.nombre) LIKE :search OR ' .
-                'LOWER(t.solicitudEspecial) LIKE :search OR ' .
-                'LOWER(u.correo) LIKE :search)'
+                'LOWER(t.solicitudEspecial) LIKE :search)'
             );
             $query->setParameter('search', strtolower("%{$request->search->value}%"));
         }
