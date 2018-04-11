@@ -20,7 +20,7 @@ monolog:
         console:
             type: console
             process_psr_3_messages: false
-
+            max_files: 7
 knp_snappy:
     pdf:
         enabled:    true
