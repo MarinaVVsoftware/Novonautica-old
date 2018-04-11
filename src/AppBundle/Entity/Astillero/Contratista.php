@@ -71,34 +71,6 @@ class Contratista
     private $total;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="pagos", type="bigint")
-     */
-    private $pagos;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="fecha", type="datetime")
-     */
-    private $fecha;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="formaPago", type="string", length=255)
-     */
-    private $formaPago;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="saldo", type="bigint")
-     */
-    private $saldo;
-
-    /**
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\OrdenDeTrabajo", inversedBy="contratistas")
      * @ORM\JoinColumn(name="idodt", referencedColumnName="id",onDelete="CASCADE")
@@ -110,6 +82,24 @@ class Contratista
      * @ORM\JoinColumn(name="idproveedor", referencedColumnName="id")
      */
     private $proveedor;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Astillero\Contratista\Pago", mappedBy="contratista", cascade={"persist"})
+     */
+    private $contratistapagos;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Astillero\Contratista\Actividad", mappedBy="contratista", cascade={"persist"})
+     */
+    private $contratistaactividades;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->contratistapagos = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id.
@@ -316,98 +306,76 @@ class Contratista
     }
 
     /**
-     * Set fecha.
+     * Add contratistapago.
      *
-     * @param \DateTime $fecha
+     * @param \AppBundle\Entity\Astillero\Contratista\Pago $contratistapago
      *
      * @return Contratista
      */
-    public function setFecha($fecha)
+    public function addContratistapago(\AppBundle\Entity\Astillero\Contratista\Pago $contratistapago)
     {
-        $this->fecha = $fecha;
+        $contratistapago->setContratista($this);
+        $this->contratistapagos[] = $contratistapago;
 
         return $this;
     }
 
     /**
-     * Get fecha.
+     * Remove contratistapago.
      *
-     * @return \DateTime
+     * @param \AppBundle\Entity\Astillero\Contratista\Pago $contratistapago
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function getFecha()
+    public function removeContratistapago(\AppBundle\Entity\Astillero\Contratista\Pago $contratistapago)
     {
-        return $this->fecha;
+        return $this->contratistapagos->removeElement($contratistapago);
     }
 
     /**
-     * Set formaPago.
+     * Get contratistapagos.
      *
-     * @param string $formaPago
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getContratistapagos()
+    {
+        return $this->contratistapagos;
+    }
+
+    /**
+     * Add contratistaactividade.
+     *
+     * @param \AppBundle\Entity\Astillero\Contratista\Actividad $contratistaactividade
      *
      * @return Contratista
      */
-    public function setFormaPago($formaPago)
+    public function addContratistaactividade(\AppBundle\Entity\Astillero\Contratista\Actividad $contratistaactividade)
     {
-        $this->formaPago = $formaPago;
+        $contratistaactividade->setContratista($this);
+        $this->contratistaactividades[] = $contratistaactividade;
 
         return $this;
     }
 
     /**
-     * Get formaPago.
+     * Remove contratistaactividade.
      *
-     * @return string
+     * @param \AppBundle\Entity\Astillero\Contratista\Actividad $contratistaactividade
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function getFormaPago()
+    public function removeContratistaactividade(\AppBundle\Entity\Astillero\Contratista\Actividad $contratistaactividade)
     {
-        return $this->formaPago;
+        return $this->contratistaactividades->removeElement($contratistaactividade);
     }
 
     /**
-     * Set saldo.
+     * Get contratistaactividades.
      *
-     * @param int $saldo
-     *
-     * @return Contratista
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function setSaldo($saldo)
+    public function getContratistaactividades()
     {
-        $this->saldo = $saldo;
-
-        return $this;
-    }
-
-    /**
-     * Get saldo.
-     *
-     * @return int
-     */
-    public function getSaldo()
-    {
-        return $this->saldo;
-    }
-
-    /**
-     * Set pagos.
-     *
-     * @param int $pagos
-     *
-     * @return Contratista
-     */
-    public function setPagos($pagos)
-    {
-        $this->pagos = $pagos;
-
-        return $this;
-    }
-
-    /**
-     * Get pagos.
-     *
-     * @return int
-     */
-    public function getPagos()
-    {
-        return $this->pagos;
+        return $this->contratistaactividades;
     }
 }

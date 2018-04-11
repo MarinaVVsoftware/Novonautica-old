@@ -52,6 +52,9 @@ class OrdenDeTrabajoController extends Controller
      */
     public function newAction(Request $request)
     {
+        $ordenDeTrabajo = new Ordendetrabajo();
+        $this->denyAccessUnlessGranted('ROLE_ASTILLERO_ODT', $ordenDeTrabajo);
+
         $precioTotal = 0;
         $utilidadvvTotal = 0;
         $preciovvTotal = 0;
@@ -59,7 +62,7 @@ class OrdenDeTrabajoController extends Controller
         $granTotal = 0;
         $saldoTotal = 0;
         $pagosTotal = 0;
-        $ordenDeTrabajo = new Ordendetrabajo();
+
         $form = $this->createForm('AppBundle\Form\OrdenDeTrabajoType', $ordenDeTrabajo);
         $form->handleRequest($request);
 
@@ -71,9 +74,6 @@ class OrdenDeTrabajoController extends Controller
                 $precioTotal+=$contratista->getPrecio();
                 $utilidadvvTotal+=$contratista->getUtilidadvv();
                 $preciovvTotal+=$contratista->getPreciovv();
-                $saldoTotal+=$contratista->getSaldo();
-                $pagosTotal+=$contratista->getPagos();
-
                 $ivatot = ($contratista->getPrecio() * $iva)/100;
                 $total = $contratista->getPrecio() + $ivatot;
                 $porcentajevv = $contratista->getProveedor()->getPorcentaje();
@@ -89,10 +89,10 @@ class OrdenDeTrabajoController extends Controller
                 ->setPrecioTotal($precioTotal)
                 ->setUtilidadvvTotal($utilidadvvTotal)
                 ->setPreciovvTotal($preciovvTotal)
-                ->setSaldoTotal($saldoTotal)
-                ->setPagosTotal($pagosTotal)
                 ->setIvaTotal($ivaTotal)
                 ->setGranTotal($granTotal)
+                ->setPagosTotal(0)
+                ->setSaldoTotal($granTotal)
                 ->setFecha($fechaHoraActual)
             ;
             $em->persist($ordenDeTrabajo);
@@ -156,6 +156,8 @@ class OrdenDeTrabajoController extends Controller
      */
     public function editAction(Request $request, OrdenDeTrabajo $ordenDeTrabajo)
     {
+        $this->denyAccessUnlessGranted('ROLE_ASTILLERO_ODT', $ordenDeTrabajo);
+
         $precioTotal = 0;
         $utilidadvvTotal = 0;
         $preciovvTotal = 0;
@@ -194,9 +196,6 @@ class OrdenDeTrabajoController extends Controller
                     $precioTotal+=$contratista->getPrecio();
                     $utilidadvvTotal+=$contratista->getUtilidadvv();
                     $preciovvTotal+=$contratista->getPreciovv();
-                    $saldoTotal+=$contratista->getSaldo();
-                    $pagosTotal+=$contratista->getPagos();
-
                     $ivatot = ($contratista->getPrecio() * $iva)/100;
                     $total = $contratista->getPrecio() + $ivatot;
                     $porcentajevv = $contratista->getProveedor()->getPorcentaje();
@@ -214,8 +213,6 @@ class OrdenDeTrabajoController extends Controller
                     $precioTotal+=$contratistanuevo->getPrecio();
                     $utilidadvvTotal+=$contratistanuevo->getUtilidadvv();
                     $preciovvTotal+=$contratistanuevo->getPreciovv();
-                    $saldoTotal+=$contratistanuevo->getSaldo();
-                    $pagosTotal+=$contratistanuevo->getPagos();
 
                     $ivatot = ($contratistanuevo->getPrecio() * $iva)/100;
                     $total = $contratistanuevo->getPrecio() + $ivatot;
@@ -232,8 +229,7 @@ class OrdenDeTrabajoController extends Controller
                 ->setPrecioTotal($precioTotal)
                 ->setUtilidadvvTotal($utilidadvvTotal)
                 ->setPreciovvTotal($preciovvTotal)
-                ->setSaldoTotal($saldoTotal)
-                ->setPagosTotal($pagosTotal)
+                ->setSaldoTotal($granTotal)
                 ->setIvaTotal($ivaTotal)
                 ->setGranTotal($granTotal)
             ;
@@ -248,6 +244,119 @@ class OrdenDeTrabajoController extends Controller
             'ordenDeTrabajo' => $ordenDeTrabajo,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/contratista-pago", name="ordendetrabajo_contratista_pago")
+     * @Method({"GET", "POST"})
+     */
+    public function pagoAction(Request $request, Contratista $contratista)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ASTILLERO_ODT', $contratista);
+
+        $pagadoUSD =0;
+        $saldoUSD = 0;
+        $dolar = $contratista->getAstilleroODT()->getAstilleroCotizacion()->getDolar();
+        $originalPagos = new ArrayCollection();
+        foreach ($contratista->getContratistapagos() as $pago){
+            $originalPagos->add($pago);
+            if($pago->getDivisa()=='MXN'){
+                $pagadoUSD+=($pago->getCantidad()/$dolar)*100;
+            }else{
+                $pagadoUSD+=$pago->getCantidad();
+            }
+        }
+        $saldoUSD = $contratista->getTotal() - $pagadoUSD;
+        $editForm = $this->createForm('AppBundle\Form\Astillero\ContratistaPagoType', $contratista);
+        $editForm->handleRequest($request);
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            foreach ($originalPagos as $pago){
+                if (false === $contratista->getContratistapagos()->contains($pago)) {
+                    $pago->getContratista()->removeContratistapago($pago);
+                    $em->persist($pago);
+                    $em->remove($pago);
+                }
+            }
+            $cantidadPago = 0;
+            $saldo = 0;
+            foreach ($contratista->getContratistapagos() as $unpago){
+                if($unpago->getDivisa()=='MXN'){
+                    $cantidadPago+=($unpago->getCantidad()/$dolar)*100;
+                }else{
+                    $cantidadPago+=$unpago->getCantidad();
+                }
+                $saldo = $contratista->getTotal() - $cantidadPago;
+                $unpago->setSaldo($saldo);
+            }
+            if($saldo < -1){
+                $this->addFlash(
+                    'notice',
+                    'Error! Se ha intentado pagar más que el saldo restante'
+                );
+            }else{
+                $em->persist($contratista);
+                $em->flush();
+                return $this->redirectToRoute('ordendetrabajo_show', ['id' => $contratista->getAstilleroODT()->getId()]);
+            }
+
+        }
+
+        return $this->render('ordendetrabajo/pago.html.twig', [
+            'title' => 'Registrar Pago Contratista',
+            'contratista' => $contratista,
+            'edit_form' => $editForm->createView(),
+            'pagadoUSD' => $pagadoUSD,
+            'saldoUSD' => $saldoUSD
+        ]);
+    }
+    /**
+     * @Route("/{id}/actividad", name="ordendetrabajo_contratista_actividad")
+     * @Method({"GET", "POST"})
+     */
+    public function actividadAction(Request $request, Contratista $contratista)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ASTILLERO_ODT', $contratista);
+        $originalActividades = new ArrayCollection();
+        foreach ($contratista->getContratistaactividades() as $actividad){
+            $originalActividades->add($actividad);
+        }
+        $editForm = $this->createForm('AppBundle\Form\Astillero\ContratistaActividadType', $contratista);
+        $editForm->handleRequest($request);
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            foreach ($originalActividades as $actividad){
+                if (false === $contratista->getContratistaactividades()->contains($actividad)) {
+                    $actividad->getContratista()->removeContratistaactividade($actividad);
+                    $em->persist($actividad);
+                    $em->remove($actividad);
+                }
+
+
+            }
+
+            foreach ($contratista->getContratistaactividades() as $act1){
+                $ban = false;
+                foreach ($originalActividades as $act2){
+                    if($act2->getId() == $act1->getId()){
+                        $ban = true;
+                    }
+                }
+                if(!$ban){
+                    $act1->setUsuario($this->getUser()->getNombre());
+                }
+            }
+
+            $em->persist($contratista);
+            $em->flush();
+            return $this->redirectToRoute('ordendetrabajo_show', ['id' => $contratista->getAstilleroODT()->getId()]);
+        }
+        return $this->render('ordendetrabajo/actividad.html.twig', [
+            'title' => 'Registrar Actividad Contratista',
+            'contratista' => $contratista,
+            'edit_form' => $editForm->createView()
         ]);
     }
 

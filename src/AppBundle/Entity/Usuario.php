@@ -123,6 +123,11 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
         $this->registro = new \DateTimeImmutable();
     }
 
+    public function __toString()
+    {
+        return $this->nombre;
+    }
+
     /**
      * Get id.
      *

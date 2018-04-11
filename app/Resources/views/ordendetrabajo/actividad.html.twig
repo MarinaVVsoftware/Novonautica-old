@@ -1,0 +1,177 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root .content-wrapper hr {
+            margin-top: 1rem !important;
+            margin-bottom: 1rem !important;
+        }
+
+        .table > tbody > tr.pago-agregado > td .input-group-addon {
+            border-radius: 0;
+        }
+
+        .table > tbody > tr.pago-agregado > td {
+            padding: 0;
+        }
+    </style>
+{% endblock %}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    {% for message in app.flashes('notice') %}
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×
+                            </button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">{{ title }}</h3>
+                            <span>
+                                 {% if contratista.astilleroODT.astilleroCotizacion.foliorecotiza == 0 %}
+                                     {{ contratista.astilleroODT.astilleroCotizacion.folio }}
+                                 {% else %}
+                                     {{ contratista.astilleroODT.astilleroCotizacion.folio }}-{{ contratista.astilleroODT.astilleroCotizacion.foliorecotiza }}
+                                 {% endif %}
+                            </span>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="{{ path('ordendetrabajo_show',{'id':contratista.astilleroODT.id}) }}"
+                               class="btn btn-contorno-azul pull-right">
+                                Regresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>Trabajo</label>
+                            <div class='info-input'>{{ contratista.cotizacionInicial }}</div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>Contratista</label>
+                            <div class='info-input'>{{ contratista.proveedor.nombre }}</div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>Razón social</label>
+                            <div class='info-input'>{{ contratista.proveedor.razonsocial }}</div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>Embarcación</label>
+                            <div class='info-input'>{{ contratista.astilleroODT.astilleroCotizacion.barco }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>Fecha inicio</label>
+                            <div class='info-input'>{{ contratista.astilleroODT.astilleroCotizacion.fechaLlegada|date('d/m/Y') }}</div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>Fecha fin</label>
+                            <div class='info-input'>{{ contratista.astilleroODT.astilleroCotizacion.fechaSalida|date('d/m/Y') }}</div>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
+                        <div class="col-sm-12">
+                            <hr>
+                        </div>
+                    </div>
+                    {{ form_start(edit_form) }}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p style="margin-bottom: 5px">Actividades</p>
+                            <table id="servicioAdicional" class="table text-center">
+                                <thead>
+                                <tr>
+                                    <th>Actividad</th>
+                                    <th>Inicio</th>
+                                    <th>Fin</th>
+                                    <th>Observaciones</th>
+                                    <th>Responsable</th>
+                                    <th>Porcentaje</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id="pago-fields-list0"
+                                       class="lista-pagos"
+                                       data-prototype="
+                                     {% filter escape %}
+                                     {{ include('ordendetrabajo/coleccion-actividad.twig', { 'form': edit_form.contratistaactividades.vars.prototype }) }}
+                                     {% endfilter %}
+                                     ">
+                                {% for i, actividadField in edit_form.contratistaactividades %}
+                                    {% form_theme actividadField 'marinahumeda/cotizacion/pago/coleccion-actividad.twig' %}
+                                    <tr class="pago-agregado">
+                                        <td>{{ form_widget(actividadField.nombre) }} </td>
+                                        <td>{{ form_widget(actividadField.inicio) }} </td>
+                                        <td>{{ form_widget(actividadField.fin) }} </td>
+                                        <td>{{ form_widget(actividadField.notas) }}</td>
+                                        <td>{{ form_widget(actividadField.responsable,{'selected':actividadField.responsable.vars.data}) }}</td>
+                                        <td>{{ form_widget(actividadField.porcentaje) }}</td>
+                                        <td style="vertical-align: middle">
+                                            <a href="#" class="remove-pago btn btn-xs btn-naranja">
+                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <a href="#" id="" class="add-another-pago letra-azul pull-right"
+                               data-cantidad="{{ edit_form.contratistaactividades|length }}" data-idlista="0">
+                                + Agregar Actividad
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button type="submit" class="pull-right btn btn-azul">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                    {{ form_end(edit_form) }}
+                    <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
+                        <div class="col-sm-12">
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).on('keypress','.esdecimal', function () {
+            return esNumeroDecimal(event, this);
+        });
+        $(document).on('input','.limite100', function () {
+            var value = $(this).val();
+            if ((value !== '') && (value.indexOf('.') === -1)) {
+                $(this).val(Math.max(Math.min(value, 100), 0));
+            }
+        });
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            orientation: "bottom auto",
+            autoclose: true
+        });
+    </script>
+{% endblock %}

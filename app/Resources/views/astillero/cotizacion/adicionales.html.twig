@@ -864,7 +864,7 @@
                                             <td id="grua_iva_mxn" class="valoriva" data-valor="{{ (astilleroCotizacion.acservicios.0.iva / astilleroCotizacion.dolar)}}">
                                                 $ {{ ((astilleroCotizacion.acservicios.0.iva / astilleroCotizacion.dolar))|number_format(2) }}
                                             </td>
-                                            <td id="grua_total_mxn" class="valortotal" data-valor="{{ (astilleroCotizacion.acservicios.0.total * astilleroCotizacion.dolar)/10000 }}">
+                                            <td id="grua_total_mxn" class="valortotal" data-valor="{{ (astilleroCotizacion.acservicios.0.total / astilleroCotizacion.dolar) }}">
                                                 $ {{ ((astilleroCotizacion.acservicios.0.total / astilleroCotizacion.dolar))|number_format(2) }}
                                             </td>
                                         </tr>
