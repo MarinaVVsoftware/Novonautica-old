@@ -730,7 +730,7 @@ class AstilleroCotizacionController extends Controller
             ->setSubtotal(($servicios[1]->getSubtotal()))
             ->setTotal(($servicios[1]->getTotal()))
             ->setEstatus($servicios[1]->getEstatus());
-
+//dump($servicios);
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
             ->addAcservicio($astilleroEstadia)

@@ -1,4 +1,12 @@
 {% extends 'estructura/plantilla.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet"
+          href="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.9.4/scheduler.min.css') }}">
+    {#<link rel="stylesheet" href="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.print.css') }}">#}
+{% endblock %}
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -33,7 +41,7 @@
                             <a href="#hojapagos" aria-controls="hojapagos" role="tab" data-toggle="tab">Hoja de
                                 pagos</a>
                         </li>
-                        <li role="presentation">
+                        <li class="flujograma" role="presentation">
                             <a href="#flujograma" aria-controls="flujograma" role="tab" data-toggle="tab">Flujograma</a>
                         </li>
                     </ul>
@@ -367,6 +375,11 @@
                         </div>
                         <div role="tabpanel" class="tab-pane" id="flujograma">
                             <div class="row">
+                                <div class="col-sm-12">
+                                    <div id='calendario'></div>
+                                </div>
+                            </div>
+                            <div class="row espacio-linea-arriba2">
                                 <div class="col-sm-4">
                                     <label>Fecha incio</label>
                                     <div class="info-input">{{ ordenDeTrabajo.astilleroCotizacion.fechaLlegada|date('d/m/Y') }}</div>
@@ -397,8 +410,8 @@
                                                     {{ contratista.cotizacionInicial }}
                                                     <a class="btn btn-azul pull-right loadpage"
                                                        href="{{ path('ordendetrabajo_contratista_actividad', { 'id': contratista.id }) }}">
-                                                        <i class="fa fa-pencil" aria-hidden="true"></i>
-                                                        Editar
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        Agregar
                                                     </a>
                                                 </td>
                                             </tr>
@@ -418,6 +431,7 @@
                                     </table>
                                 </div>
                             </div>
+
                         </div>
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
@@ -433,4 +447,72 @@
             </div>
         </section>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js') }}"></script>
+    <script src="{{ asset('bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js') }}"></script>
+    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.9.4/scheduler.min.js') }}"></script>
+    <script src="{{ asset('bower_components/fullcalendar/dist/locale/es.js') }}"></script>
+    <script>
+        $('.flujograma').on('click',function () {
+            setTimeout(mostrarCalendario, 200);
+        });
+        function mostrarCalendario() {
+
+            $('#calendario').fullCalendar({
+                schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                defaultView: 'timelineFourDays',
+                defaultDate: "{{ ordenDeTrabajo.astilleroCotizacion.fechaLlegada|date('Y-m-d') }}",
+                locale: 'es',
+                height: 300,
+                header: {
+                    left: '',
+                    center: 'prev,title,next',
+                    right: ''
+                },
+                views: {
+                    timelineFourDays: {
+                        type: 'timeline',
+                        duration: {days: 25},
+                        slotDuration: '24:00:00'
+                    }
+                },
+                events: [
+                    {% for contratista in ordenDeTrabajo.contratistas %}
+                    {% for actividad in contratista.contratistaactividades %}
+                    {
+                        title: "{{ actividad.nombre }}",
+                        start: "{{ actividad.inicio|date('Y-m-d') }}",
+                        end: "{{ actividad.fin|date('Y-m-d') }}",
+                        className: ["lineaevento"],
+                        textColor: '#fff',
+                        // borderColor: '#0097f6',
+                        backgroundColor: '#DB235C'
+                    },
+                    {% endfor %}
+                    {% endfor %}
+
+                ],
+                eventMouseover: function (data, event, view) {
+                    tooltip = '<div class="tooltiptopicevent" style="width:auto;height:auto;background:#292e41;border: 1px solid #0097f6;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;line-height: 200%;border-radius:5px;">' +
+                                'Actividad: ' + data.title +  '</br>' + 'Inicia: ' + data.start._i + '</br>' + 'Termina: ' + data.end._i +'</div>';
+                    $("body").append(tooltip);
+                    $(this).mouseover(function (e) {
+                        $(this).css('z-index', 10000);
+                        $('.tooltiptopicevent').fadeIn('500');
+                        $('.tooltiptopicevent').fadeTo('10', 1.9);
+                    }).mousemove(function (e) {
+                        $('.tooltiptopicevent').css('top', e.pageY + 10);
+                        $('.tooltiptopicevent').css('left', e.pageX + 20);
+                    });
+                },
+                eventMouseout: function (data, event, view) {
+                    $(this).css('z-index', 8);
+                    $('.tooltiptopicevent').remove();
+                }
+            });
+        }
+    </script>
 {% endblock %}

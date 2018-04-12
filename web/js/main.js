@@ -552,6 +552,37 @@ $('.lista-bancos').on('click', '.remove-banco', function (e) {
     return false;
 });
 
+//collectio al actividades al flujograma ODT
+jQuery('.add-another-actividad').click(function (e) {
+    e.preventDefault();
+    // var elementoMotor = document.getElementsByClassName(this);
+    var totActividades = $(this).data('cantidad');
+    var lista = $(this).data('idlista');
+    var actividadListPrimero = jQuery('#actividad-fields-list' + lista);
+    //var motorListOtros = jQuery('.lista-motores'+lista);
+    // grab the prototype template
+    var newWidget = $(actividadListPrimero).data('prototype');
+    // replace the "__name__" used in the id and name of the prototype
+    // with a number that's unique to your emails
+    // end name attribute looks like name="contact[emails][2]"
+    newWidget = newWidget.replace(/__name__/g, totActividades);
+    totActividades++;
+    $(this).data('cantidad', totActividades);
+    var newLi = jQuery('<div class="row"></div>').html(newWidget);
+    newLi.appendTo(actividadListPrimero);
+    newLi.find('.input-calendario').datepicker({
+        autoclose: true,
+        format: 'yyyy-mm-dd',
+        orientation: 'bottom',
+    });
+    newLi.before(newLi);
+});
+$('.lista-actividades').on('click', '.remove-actividad', function (e) {
+    e.preventDefault();
+    $(this).parent().parent().remove();
+    return false;
+});
+
 //--- select dependiente para marina humeda cotización ---
 var elclientemh = $('#appbundle_marinahumedacotizacion_cliente');
 elclientemh.change(function () {

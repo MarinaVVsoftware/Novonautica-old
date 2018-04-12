@@ -291,29 +291,6 @@ class Actividad
         return $this->contratista;
     }
 
-    /**
-     * Set porcentae.
-     *
-     * @param float|null $porcentae
-     *
-     * @return Actividad
-     */
-    public function setPorcentae($porcentae = null)
-    {
-        $this->porcentae = $porcentae;
-
-        return $this;
-    }
-
-    /**
-     * Get porcentae.
-     *
-     * @return float|null
-     */
-    public function getPorcentae()
-    {
-        return $this->porcentae;
-    }
 
     /**
      * Set responsable.

@@ -34,21 +34,25 @@ class ActividadType extends AbstractType
             ->add('inicio',DateType::class,[
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['class' => 'datepicker input-calendario',
-                    'readonly' => true],
-                'format' => 'yyyy-MM-dd'
+                'attr' => [
+                    'class' => 'datepicker input-calendario',
+                    'readonly' => true
+                    ],
+                'format' => 'yyyy-MM-dd',
+//                'data' => new \DateTime('now')
             ])
             ->add('fin',DateType::class,[
                 'widget' => 'single_text',
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
                     'readonly' => true],
-                'format' => 'yyyy-MM-dd'
+                'format' => 'yyyy-MM-dd',
+//                'data' => new \DateTime('now')
             ])
             ->add('notas',TextareaType::class,[
-                'label' => 'Observaciones',
+                'label' => 'Notas',
                 'required'=>false,
-                'attr' =>['rows'=> 1]
+                'attr' =>['rows'=> 3]
             ])
             ->add('responsable', EntityType::class, [
                 'class' => 'AppBundle:Usuario',
