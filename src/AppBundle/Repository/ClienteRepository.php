@@ -19,7 +19,7 @@ class ClienteRepository extends \Doctrine\ORM\EntityRepository
     public function getTotalAdeudo($cliente)
     {
         return $this->createQueryBuilder('c')
-            ->join('c.reportes', 'r')
+            ->leftJoin('c.reportes', 'r')
             ->select('SUM(r.adeudo)')
             ->where('c = :cliente')
             ->setParameter('cliente', $cliente)
@@ -37,7 +37,7 @@ class ClienteRepository extends \Doctrine\ORM\EntityRepository
     public function getTotalAbono($cliente)
     {
         return $this->createQueryBuilder('c')
-            ->join('c.reportes', 'r')
+            ->leftJoin('c.reportes', 'r')
             ->select('SUM(r.abono)')
             ->where('c = :cliente')
             ->setParameter('cliente', $cliente)

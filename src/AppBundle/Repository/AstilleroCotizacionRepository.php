@@ -71,12 +71,37 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->createQueryBuilder('ac')
             ->leftJoin('ac.cliente', 'c')
-            ->select('c.nombre', 'SUM(ac.total) AS adeudo', 'SUM(ac.pagado) AS abono')
+            ->select('c.nombre')
             ->where('ac.validacliente = 2')
             ->groupBy('c.id')
-            ->orderBy('adeudo', 'desc')
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleResult();
+    }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTotalAdeudo()
+    {
+        return $this->createQueryBuilder('ac')
+            ->select('SUM(ac.total)')
+            ->where('ac.validacliente = 2')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTotalAbono()
+    {
+        return $this->createQueryBuilder('ac')
+            ->select('SUM(ac.pagado)')
+            ->where('ac.validacliente = 2')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

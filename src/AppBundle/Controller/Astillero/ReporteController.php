@@ -35,13 +35,7 @@ class ReporteController extends AbstractController
      */
     public function indexReporteAction()
     {
-        $repository = $this->getDoctrine()->getRepository('AppBundle:AstilleroCotizacion');
-        $mostDebtor = $repository->getMostDebtor();
-
-        return $this->render('astillero/reporte/index.html.twig', [
-            'title' => 'Reportes Astillero',
-            'mostDebtor' => $mostDebtor,
-        ]);
+        return $this->render('astillero/reporte/index.html.twig', ['title' => 'Reportes Astillero']);
     }
 
     /**

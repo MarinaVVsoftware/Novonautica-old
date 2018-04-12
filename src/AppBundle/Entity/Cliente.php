@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Cliente\Notificacion;
 use AppBundle\Entity\Cliente\RazonSocial;
 use AppBundle\Entity\Cliente\Reporte;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -177,6 +178,13 @@ class Cliente implements UserInterface, \Serializable
      */
     private $reportes;
 
+    /**
+     * @var Notificacion
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Cliente\Notificacion", mappedBy="cliente")
+     */
+    private $notificaciones;
+
     public function __construct() {
         $this->barcos = new ArrayCollection();
         $this->monederomovimientos = new ArrayCollection();
@@ -186,6 +194,7 @@ class Cliente implements UserInterface, \Serializable
         $this->astilleroCotizaciones = new ArrayCollection();
         $this->appgasolinasolicitudes = new ArrayCollection();
         $this->reportes = new ArrayCollection();
+        $this->notificaciones = new ArrayCollection();
         $this->idioma = 1;
     }
 
@@ -813,5 +822,41 @@ class Cliente implements UserInterface, \Serializable
             $this->nombre,
             $this->password,
             ) = unserialize($serialized, ['allowed_classes' => false]);
+    }
+
+    /**
+     * Add notificacione.
+     *
+     * @param Notificacion $notificacione
+     *
+     * @return Cliente
+     */
+    public function addNotificacione(Notificacion $notificacione)
+    {
+        $this->notificaciones[] = $notificacione;
+
+        return $this;
+    }
+
+    /**
+     * Remove notificacione.
+     *
+     * @param Notificacion $notificacione
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeNotificacione(Notificacion $notificacione)
+    {
+        return $this->notificaciones->removeElement($notificacione);
+    }
+
+    /**
+     * Get notificaciones.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNotificaciones()
+    {
+        return $this->notificaciones;
     }
 }

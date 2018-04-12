@@ -25,7 +25,7 @@
                                 <label for="adeudo">Adeudo total</label>
                                 <div class="input-group">
                                     <span class="input-group-addon">US$</span>
-                                    <input type="text" class="form-control" id="adeudo" value="{{ (adeudo / 100)|number_format(2) }}">
+                                    <input type="text" class="form-control" id="adeudo" value="{{ (adeudo / 100)|number_format(2) }}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -34,7 +34,7 @@
                                 <label for="abono">Abono total</label>
                                 <div class="input-group">
                                     <span class="input-group-addon">US$</span>
-                                    <input type="text" class="form-control" id="abono" value="{{ (abono / 100)|number_format(2) }}">
+                                    <input type="text" class="form-control" id="abono" value="{{ (abono / 100)|number_format(2) }}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -92,6 +92,7 @@
 
             lastCell.innerHTML = `
             <a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '../${cliente[5]}#cuentas' }}">Detalle</a>
+            <a class="btn btn-xs btn-block btn-naranja" href="{{ path('cliente_notificacion_index') }}?u=${cliente[5]}">Notificar</a>
             `
           },
         });

@@ -46,12 +46,10 @@ class AstilleroReporteDataTable extends AbstractDataTableHandler
         $results->recordsTotal = $query->getQuery()->getSingleScalarResult();
 
         $query = $repository->createQueryBuilder('ac')
-            ->select('c.nombre', 'SUM(ac.total) AS adeudo', 'SUM(ac.pagado) AS abono')
+            ->select('c.nombre', 'SUM(ac.total) AS adeudo', 'SUM(ac.pagado) AS abono', 'c.id')
             ->addSelect('(SUM(ac.total) - COALESCE(SUM(ac.pagado), 0)) AS total')
-            ->addSelect('COALESCE(MAX(p.fecharealpago), \'No hay registro\') AS lastPago')
-            ->leftJoin('ac.pagos', 'p')
             ->leftJoin('ac.cliente', 'c')
-            ->andWhere('ac.validacliente = 2')
+            ->andWhere('ac.validacliente = 2 AND c.nombre IS NOT NULL')
             ->addGroupBy('c.id');
 
         if ($request->search->value) {
@@ -63,12 +61,10 @@ class AstilleroReporteDataTable extends AbstractDataTableHandler
             if ($order->column == 0) {
                 $query->addOrderBy('c.nombre', $order->dir);
             } elseif ($order->column == 1) {
-                $query->addOrderBy('p.fecharealpago', $order->dir);
-            } elseif ($order->column == 2) {
                 $query->addOrderBy('abono', $order->dir);
-            } elseif ($order->column == 3) {
+            } elseif ($order->column == 2) {
                 $query->addOrderBy('total', $order->dir);
-            } elseif ($order->column == 4) {
+            } elseif ($order->column == 3) {
                 $query->addOrderBy('total', $order->dir);
             }
         }
@@ -82,15 +78,13 @@ class AstilleroReporteDataTable extends AbstractDataTableHandler
 
         $reportes = $query->getQuery()->getResult();
 
-        dump($reportes);
-
         foreach ($reportes as $reporte) {
             $results->data[] = [
                 $reporte['nombre'],
-                $reporte['lastPago'],
                 '$' . number_format(($reporte['adeudo'] / 100), 2) . ' USD',
                 '$' . number_format(($reporte['abono'] / 100), 2) . ' USD',
                 '$' . number_format(($reporte['total'] / 100), 2) . ' USD',
+                $reporte['id'],
             ];
         }
 
