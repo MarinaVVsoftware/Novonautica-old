@@ -47,9 +47,10 @@ class ReporteDataTable extends AbstractDataTableHandler
         $results->recordsTotal = $query->getQuery()->getSingleScalarResult();
 
         $query = $repository->createQueryBuilder('r')
-            ->select('c.nombre', 'r.createdAt', 'SUM(r.adeudo) AS adeudo', 'SUM(r.abono) AS abono', '(SUM(r.adeudo) - SUM(r.abono)) AS total', 'c.id')
+            ->select('c.nombre', 'COALESCE(MAX(r.createdAt), \'No hay registro\') AS lastPago', 'SUM(r.adeudo) AS adeudo', 'SUM(r.abono) AS abono', 'c.id')
+            ->addSelect('(SUM(r.adeudo) - SUM(r.abono)) AS total')
             ->leftJoin('r.cliente', 'c')
-            ->addGroupBy('r.cliente');
+            ->addGroupBy('c.id');
 
         if ($request->search->value) {
             $query->where('(LOWER(c.nombre) LIKE :search)');
@@ -60,16 +61,18 @@ class ReporteDataTable extends AbstractDataTableHandler
             if ($order->column == 0) {
                 $query->addOrderBy('c.nombre', $order->dir);
             } elseif ($order->column == 1) {
-                $query->addOrderBy('r.createdAt', $order->dir);
+                $query->addOrderBy('lastPago', $order->dir);
             } elseif ($order->column == 2) {
                 $query->addOrderBy('adeudo', $order->dir);
             } elseif ($order->column == 3) {
                 $query->addOrderBy('abono', $order->dir);
+            } elseif ($order->column == 4) {
+                $query->addOrderBy('total', $order->dir);
             }
         }
 
         $queryCount = clone $query;
-        $queryCount->select('COUNT(DISTINCT r.cliente)');
+        $queryCount->addSelect('COUNT(DISTINCT r.cliente)');
         $results->recordsFiltered = count($queryCount->getQuery()->getResult());
 
         $query->setMaxResults($request->length);
@@ -80,7 +83,7 @@ class ReporteDataTable extends AbstractDataTableHandler
         foreach ($reportes as $reporte) {
             $results->data[] = [
                 $reporte['nombre'],
-                $reporte['createdAt']->format('d M Y'),
+                $reporte['lastPago'],
                 '$' . number_format(($reporte['adeudo'] / 100), 2) . ' USD',
                 '$' . number_format(($reporte['abono'] / 100), 2) . ' USD',
                 '$' . number_format(($reporte['total'] / 100), 2) . ' USD',

@@ -17,10 +17,10 @@ monolog:
             type: stream
             path: '%kernel.logs_dir%/%kernel.environment%.log'
             level: debug
+            max_files: 7
         console:
             type: console
             process_psr_3_messages: false
-
 knp_snappy:
     pdf:
         enabled:    true

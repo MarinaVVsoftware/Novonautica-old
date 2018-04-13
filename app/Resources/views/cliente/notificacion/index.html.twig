@@ -1,0 +1,82 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Nueva notificación</h3>
+                        </div>
+                        <div class="panel-body" style="min-height: initial">
+                            {{ form_start(form) }}
+                            {{ form_row(form.cliente) }}
+                            {{ form_row(form.tipo) }}
+                            <div id="fecha-vencimiento">
+                                {{ form_row(form.fechaNotificacionCobro) }}
+                            </div>
+                            <input type="submit" value="Enviar" class="btn btn-azul pull-right">
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Notificaciones enviadas</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table-novo table text-center">
+                                <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Transmisor</th>
+                                    <th>Tipo de notificación</th>
+                                    <th>Enviadas</th>
+                                    <th>Fecha de envío</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, settings) {
+        const noticeType = document.getElementById('appbundle_cliente_notificacion_tipo');
+        const fechaVencimiento = document.getElementById('fecha-vencimiento');
+
+        checkNoticeType();
+
+        noticeType.addEventListener('change', checkNoticeType);
+
+        function checkNoticeType() {
+          (noticeType.value === '1') ? fechaVencimiento.classList.remove('hidden') : fechaVencimiento.classList.add('hidden');
+        }
+
+        $('.table-novo').DataTable({
+          ...settings,
+          ajax: '{{ path('cliente_notificacion_index_data') }}',
+          createdRow: function (row, notificacion) {
+            row.cells[3].innerHTML = `
+                <small class="label bg-green-active">${notificacion[3]}</small>
+            `;
+          }
+        });
+
+      })(jQuery, datatablesSettings);
+    </script>
+{% endblock %}

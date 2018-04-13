@@ -1,0 +1,37 @@
+{% extends ':mail:base.html.twig' %}
+
+{% if notificacion.evento == 'Nueva' %}
+    {% set evento = 'Se ha generado una nueva cotización' %}
+{% elseif notificacion.evento == 'Validar' %}
+    {% set evento = 'La cotización se ha validado' %}
+{% elseif notificacion.evento == 'Aceptar' %}
+    {% set evento = 'El cliente ha revisado la cotizacón' %}
+{% endif %}
+
+{% block body %}
+    {% if notificacion.tipo == 'Marina' %}
+        <h3>Notificacion de Marina</h3>
+    {% else %}
+        <h3>Notificacion de Astillero</h3>
+    {% endif %}
+
+    <p class="lead">Se le ha enviado este correo para notificarle el siguiente evento:</p>
+    <p>
+        <strong>Folio: </strong> {{ cotizacion.foliorecotiza ? cotizacion.folio ~ '-' ~ cotizacion.foliorecotiza : cotizacion.folio }}
+        <br>
+        <strong>Evento: </strong> {{ evento }}
+        <br>
+        <strong>Creada por: </strong> {{ cotizacion.creador.nombre }}
+        <br>
+
+        {% if cotizacion.validanovo == 2 %}
+            <strong>Validada por: </strong> {{ cotizacion.nombrevalidanovo }}
+            <br>
+        {% endif %}
+
+        {% if cotizacion.validacliente == 2 %}
+            <strong>Aceptada por: </strong> {{ cotizacion.quienAcepto }}
+        {% endif %}
+    </p>
+    <br/>
+{% endblock body %}

@@ -1,0 +1,22 @@
+{% extends ':mail:base.html.twig' %}
+
+{% block body %}
+    <h2 class="marina-color text-center">V&V MARINA</h2>
+
+    <p style="text-align: right;">Zona Continental Isla Mujeres, {{ 'now'|date('d/m/Y') }}</p>
+
+    {% if notificacion.tipo == constant('AVISO_RECORDATORIO_PAGO', notificacion) %}
+        {% include 'mail/avisos/recordatorio-pago.html.twig' %}
+    {% elseif notificacion.tipo == constant('AVISO_MORATORIO', notificacion) %}
+        {% include 'mail/avisos/moratorios.html.twig' %}
+    {% elseif notificacion.tipo == constant('AVISO_SUSPENSION', notificacion) %}
+        {% include ':mail/avisos:suspencion.html.twig' %}
+    {% endif %}
+
+    <div class="text-center">
+        <h5>ATENTAMENTE</h5>
+        <p>
+            SUPERVISOR ADMINISTRATIVO V&V MARNA
+        </p>
+    </div>
+{% endblock body %}
