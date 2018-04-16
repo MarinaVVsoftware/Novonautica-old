@@ -1056,7 +1056,7 @@
                 $("#info-barco").empty();
                 $("#info-cliente").empty();
 
-                var url = "{{ path('ajax_busca_barco_todo',{'id':'iddelbarco','_format':'json'}) }}";
+                var url = "{{ path('ajax_busca_barco_todo',{'id':'iddelbarco'}) }}";
                 url = url.replace("iddelbarco", $(this).val());
                 $.ajax({
                     method: "GET",
@@ -1106,7 +1106,7 @@
                 $("#info-barco").empty();
                 $("#info-cliente").empty();
 
-                var url = "{{ path('ajax_busca_cliente_todo',{'id':'iddelcliente','_format':'json'}) }}";
+                var url = "{{ path('ajax_busca_cliente_todo',{'id':'iddelcliente'}) }}";
                 url = url.replace("iddelcliente", $(this).val());
                 $.ajax({
                     method: "GET",
@@ -1190,7 +1190,7 @@
             //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
             var idservicio = $('.select-busca-producto:focus option:selected' ).val();
             if(idservicio > 0){
-                var url = "{{ path('ajax_astillero_busca_producto',{'id':'iddelserivicio','_format':'json'}) }}";
+                var url = "{{ path('ajax_astillero_busca_producto',{'id':'iddelserivicio'}) }}";
                 url = url.replace("iddelserivicio", idservicio);
                 $.ajax({
                     method: "GET",
@@ -1221,7 +1221,7 @@
             //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
             var idservicio = $('.select-busca-servicio:focus option:selected' ).val();
             if(idservicio > 0){
-                var url = "{{ path('ajax_astillero_busca_servicio',{'id':'iddelserivicio','_format':'json'}) }}";
+                var url = "{{ path('ajax_astillero_busca_servicio',{'id':'iddelserivicio'}) }}";
                 url = url.replace("iddelserivicio", idservicio);
                 $.ajax({
                     method: "GET",

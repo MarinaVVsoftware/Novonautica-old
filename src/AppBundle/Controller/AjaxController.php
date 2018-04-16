@@ -11,6 +11,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Barco;
 use AppBundle\Entity\Cliente;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -20,6 +21,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
@@ -159,31 +162,19 @@ class AjaxController extends Controller
     }
 
     /**
-     * @Route("/buscabarcotodo/{id}.{_format}", name="ajax_busca_barco_todo", defaults={"_format"="JSON"})
+     * @Route("/buscabarcotodo/{id}", name="ajax_busca_barco_todo")
      * @Method({"GET"})
      */
     public function buscaBarcoActionTodo(Request $request, Barco $barco)
     {
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
 
-        $normalizer = new ObjectNormalizer();
-        $normalizer->setIgnoredAttributes([
-            'motores',
-            'mHcotizaciones',
-            'mhcotizacionesadicionales',
-            'astillerocotizaciones',
-            'embarcacion',
-            'gasolinabarco',
+        $normalizer = new ObjectNormalizer($classMetadataFactory);
+        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
 
-        ]);
+        $response = $serializer->normalize($barco, null, ['groups' => ['cotizaciones']]);
 
-        $normalizer->setCircularReferenceHandler(function ($entity) {
-            return $entity->getId();
-        });
-
-        $normalizers = [new DateTimeNormalizer(), $normalizer];
-        $serializer = new Serializer($normalizers, $encoders);
-        return new Response($serializer->serialize($barco, $request->getRequestFormat()));
+        return $this->json($response);
     }
 
 }
