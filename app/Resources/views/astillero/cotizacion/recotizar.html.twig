@@ -269,6 +269,12 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
+                                    <label>Días</label>
+                                    {% if form.acservicios.5.cantidad is defined %}
+                                        {{ form_widget(form.acservicios.5.cantidad) }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-3">
                                     <label>Precio x día (MXN)</label>
                                     {% if form.acservicios.5.precio is defined %}
                                         {{ form_widget(form.acservicios.5.precio) }}
@@ -1047,10 +1053,6 @@
                     {% if form.acservicios.1.cantidad is defined %}
                         {{ form_widget(form.acservicios.1.cantidad,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-                    {% if form.acservicios.5.cantidad is defined %}
-                        {{ form_widget(form.acservicios.5.cantidad,{'attr':{'class':'hidden'}}) }}
-                    {% endif %}
-
 
                     {% if form.acservicios.0.otroservicio is defined %}
                         {{ form_widget(form.acservicios.0.otroservicio,{'attr':{'class':'hidden'}}) }}

@@ -1147,6 +1147,9 @@ input[type="file"] + label * {
 .lineaevento{
     margin-top: 10px;
 }
+.fc-event{
+    border: none;
+}
 /*.fc-scroller-canvas{*/
     /*width: 0px;*/
     /*min-width: 1584px;*/

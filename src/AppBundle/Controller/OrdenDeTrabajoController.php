@@ -267,7 +267,7 @@ class OrdenDeTrabajoController extends Controller
                 $pagadoUSD+=$pago->getCantidad();
             }
         }
-        $saldoUSD = $contratista->getTotal() - $pagadoUSD;
+        $saldoUSD = $contratista->getPrecio() - $pagadoUSD;
         $editForm = $this->createForm('AppBundle\Form\Astillero\ContratistaPagoType', $contratista);
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {

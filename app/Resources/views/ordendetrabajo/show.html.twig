@@ -227,8 +227,8 @@
                                             <th>Descripción del trabajo</th>
                                             <th>Contratista</th>
                                             <th>Razón social</th>
-                                            <th>Precio</th>
-                                            <th>IVA</th>
+                                            <th>Precio contratista</th>
+                                            <th>IVA {{ ordenDeTrabajo.astilleroCotizacion.iva }}%</th>
                                             <th>Total</th>
                                         </tr>
                                         </thead>
@@ -310,7 +310,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <div class="letra-azul">Precio:</div>
+                                                <div class="letra-azul">Precio contratista:</div>
                                                 <ul>
                                                     ${{ (contratista.precio/100)|number_format(2) }} USD &nbsp;&nbsp;&nbsp;
                                                     ${{ ((contratista.precio*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }}
@@ -488,7 +488,7 @@
                         end: "{{ actividad.fin|date('Y-m-d') }}",
                         className: ["lineaevento"],
                         textColor: '#fff',
-                        // borderColor: '#0097f6',
+                        borderColor: '#DB235C',
                         backgroundColor: '#DB235C'
                     },
                     {% endfor %}

@@ -12,7 +12,7 @@
 
     .fondo-bicolor-arriba {
         background: url("{{ absolute_url(asset('img/imagen-03.jpg')) }}") no-repeat top right;
-        background-size: 100% 100%;
+        background-size: 100% 120%;
     }
 </style>
 <body>
@@ -21,11 +21,14 @@
         <div class="col-xs-3" style="margin-top: 5px">
             <img src="{{ absolute_url(asset('img/cotizacion-03.png') ) }}" class="img-responsive imagenlogo">
         </div>
-        <div class="col-xs-9 text-right letra-blanca fondo-bicolor-arriba" style="height: 70px; padding-top: 3px">
+        <div class="col-xs-9 text-right letra-blanca fondo-bicolor-arriba" style="height: 90px; padding-top: 3px">
             <h4 style="margin: 0;">
                 <strong>Cotización</strong>
             </h4>
             <p style="margin: 0;">
+                <strong>Folio:</strong> {% if astilleroCotizacion.foliorecotiza == 0 %} {{ astilleroCotizacion.folio }}
+                {% else %} {{ astilleroCotizacion.folio }}-{{ astilleroCotizacion.foliorecotiza }} {% endif %}
+                <br>
                 <strong>Fecha:</strong> {{ astilleroCotizacion.fecharegistro|date('d-m-Y') }}
                 <br>
                 <strong>Tipo de cambio:</strong> {{ (astilleroCotizacion.dolar / 100)|number_format(2) }}
