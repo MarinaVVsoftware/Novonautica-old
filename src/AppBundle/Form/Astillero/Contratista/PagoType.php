@@ -42,7 +42,8 @@ class PagoType extends AbstractType
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario',
                     'readonly' => true],
-                'format' => 'yyyy-MM-dd'
+                'format' => 'yyyy-MM-dd',
+                'data' => new \DateTime('now')
             ])
             ->add('forma',TextType::class,[
                 'label' => 'Forma de pago',

@@ -73,7 +73,7 @@ class ServicioController extends Controller
         ));
     }
     /**
-     * @Route("/buscarservicio/{id}.{_format}", name="ajax_astillero_busca_servicio", defaults={"_format"="JSON"})
+     * @Route("/buscarservicio/{id}.{_format}", name="ajax_astillero_busca_servicio", defaults={"_format"="json"})
      *
      */
     public function buscarAction(Request $request, Servicio $servicio){

@@ -100,8 +100,11 @@ class AstilleroCotizacionController extends Controller
         $astilleroKarcher = $this->calculaServicio($astilleroKarcher, $cantidad, $precio, $iva);
         $cantidad = 1;
         $precio = $preciosBasicos[4]['precio'];
-        $astilleroExplanada = $this->calculaServicio($astilleroExplanada, $cantidad, $precio, $iva);
-        $astilleroElectricidad->setPrecio($preciosBasicos[5]['precio']);
+        $astilleroExplanada = $this->calculaServicio($astilleroExplanada,$cantidad,$precio,$iva);
+        $cantidad = 1;
+        $precio = $preciosBasicos[5]['precio'];
+        $astilleroElectricidad = $this->calculaServicio($astilleroElectricidad,$cantidad,$precio,$iva);
+//        $astilleroElectricidad->setPrecio($preciosBasicos[5]['precio']);
         $cantidad = 1;
         $precio = $preciosBasicos[6]['precio'];
         $astilleroLimpieza = $this->calculaServicio($astilleroLimpieza, $cantidad, $precio, $iva);
@@ -276,8 +279,8 @@ class AstilleroCotizacionController extends Controller
             $servicio = $this->getDoctrine()
                 ->getRepository(AstilleroServicioBasico::class)
                 ->find(6);
-            $cantidad = $cantidadDias;
-            $precio = ($astilleroElectricidad->getPrecio() / $valordolar) * 100;
+            $cantidad = $astilleroElectricidad->getCantidad();
+            $precio = ($astilleroElectricidad->getPrecio()/$valordolar)*100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -730,7 +733,7 @@ class AstilleroCotizacionController extends Controller
             ->setSubtotal(($servicios[1]->getSubtotal()))
             ->setTotal(($servicios[1]->getTotal()))
             ->setEstatus($servicios[1]->getEstatus());
-
+//dump($servicios);
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
             ->addAcservicio($astilleroEstadia)
@@ -871,8 +874,8 @@ class AstilleroCotizacionController extends Controller
                 $granTotal += $total;
             }
             //Conexión a electricidad
-            $cantidad = $cantidadDias;
-            $precio = ($astilleroElectricidad->getPrecio() / $valordolar) * 100;
+            $cantidad = $astilleroElectricidad->getCantidad();
+            $precio = ($astilleroElectricidad->getPrecio()/$valordolar)*100;
             if ($precio == null) {
                 $precio = 0;
             }
@@ -1181,7 +1184,10 @@ class AstilleroCotizacionController extends Controller
         $cantidad = 1;
         $precio = $preciosBasicos[4]['precio'];
         $astilleroExplanada = $this->calculaServicio($astilleroExplanada,$cantidad,$precio,$iva);
-        $astilleroElectricidad->setPrecio($preciosBasicos[5]['precio']);
+        $cantidad = 1;
+        $precio = $preciosBasicos[5]['precio'];
+        $astilleroElectricidad = $this->calculaServicio($astilleroElectricidad,$cantidad,$precio,$iva);
+        //$astilleroElectricidad->setPrecio($preciosBasicos[5]['precio']);
         $cantidad = 1;
         $precio = $preciosBasicos[6]['precio'];
         $astilleroLimpieza = $this->calculaServicio($astilleroLimpieza,$cantidad,$precio,$iva);
@@ -1345,7 +1351,7 @@ class AstilleroCotizacionController extends Controller
             $servicio = $this->getDoctrine()
                 ->getRepository(AstilleroServicioBasico::class)
                 ->find(6);
-            $cantidad = $astilleroDiasAdicionales->getCantidad();
+            $cantidad = $astilleroElectricidad->getCantidad();
             $precio = ($astilleroElectricidad->getPrecio()/$valordolar)*100;
             if ($precio == null) {
                 $precio = 0;
@@ -1570,8 +1576,7 @@ class AstilleroCotizacionController extends Controller
     }
 
 
-    private function llenarServicio($servicio, $datos, $dolar)
-    {
+    private function llenarServicio($servicio,$datos,$dolar){
         $servicio
             ->setServicio(null)
             ->setProducto(null)
@@ -1583,7 +1588,6 @@ class AstilleroCotizacionController extends Controller
         $servicio->setSubtotal(($datos->getSubtotal() * $dolar) / 100);
         $servicio->setTotal(($datos->getTotal() * $dolar) / 100);
         $servicio->setEstatus($datos->getEstatus());
-
         return $servicio;
     }
 

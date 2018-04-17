@@ -838,7 +838,7 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
 .fc-unthemed td,
 .fc-unthemed th,
 .fc-unthemed thead {
-    border-color: #282d40;
+    border-color: #363c52;
 }
 
 /*+++ fin calendario agenda +++++*/
@@ -1144,3 +1144,21 @@ input[type="file"] + label * {
 .sin-linea:before{
     width: 0px;
 }
+.lineaevento{
+    margin-top: 10px;
+}
+.fc-event{
+    border: none;
+}
+/*.fc-scroller-canvas{*/
+    /*width: 0px;*/
+    /*min-width: 1584px;*/
+/*}*/
+/*.fc-timeline .fc-body .fc-scroller{*/
+    /*overflow: auto;*/
+    /*margin: 0px;*/
+    /*height: 186px;*/
+/*}*/
+/*.fc-time-area col{*/
+    /*min-width: 63px;*/
+/*}*/

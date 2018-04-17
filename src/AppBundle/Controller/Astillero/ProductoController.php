@@ -82,7 +82,7 @@ class ProductoController extends Controller
     }
 
     /**
-     * @Route("/buscarproducto/{id}.{_format}", name="ajax_astillero_busca_producto", defaults={"_format"="JSON"})
+     * @Route("/buscarproducto/{id}.{_format}", name="ajax_astillero_busca_producto", defaults={"_format"="json"})
      *
      * @param Request $request
      * @param Producto $producto
