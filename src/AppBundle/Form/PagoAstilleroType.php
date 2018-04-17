@@ -30,7 +30,6 @@ class PagoAstilleroType extends AbstractType
                 ],
                 'placeholder' => 'Seleccionar...',
                 'label' => 'Método de pago',
-//                'required' => false
             ])
             ->add('divisa',ChoiceType::class,[
                 'choices'  => ['USD' => 'USD','MXN' => 'MXN'],
@@ -38,7 +37,6 @@ class PagoAstilleroType extends AbstractType
             ])
             ->add('cantidad',MoneyType::class,[
                 'label' => 'Pago',
-//                'required' => false,
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
@@ -48,13 +46,12 @@ class PagoAstilleroType extends AbstractType
                 'label' => 'Fecha de pago',
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['class' => 'datepicker-solo input-calendario',
-                    'readonly' => true],
-                'format' => 'yyyy-MM-dd'
+                'attr' => ['class' => 'datepicker-solo input-calendario', 'readonly' => true],
+                'format' => 'yyyy-MM-dd',
+                'empty_data' => new \DateTime()
             ])
             ->add('dolar',MoneyType::class,[
                 'label' => 'Valor del dolar',
-//                'required' => false,
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,

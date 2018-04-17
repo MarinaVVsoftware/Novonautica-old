@@ -26,7 +26,6 @@ class MarinaHumedaCotizacionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $builder
             ->add('cliente', EntityType::class, [
                 'class' => 'AppBundle:Cliente',
@@ -39,17 +38,17 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'label' => 'Fecha llegada',
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['class' => 'datepicker input-calendario',
-                    'readonly' => true],
-                'format' => 'yyyy-MM-dd'
+                'attr' => ['class' => 'datepicker input-calendario', 'readonly' => true],
+                'format' => 'yyyy-MM-dd',
+                'data' => new \DateTime(),
             ])
             ->add('fechaSalida', DateType::class, [
                 'label' => 'Fecha Salida',
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['class' => 'datepicker input-calendario',
-                    'readonly' => true],
-                'format' => 'yyyy-MM-dd'
+                'attr' => ['class' => 'datepicker input-calendario', 'readonly' => true],
+                'format' => 'yyyy-MM-dd',
+                'data' => new \DateTime('+1 week')
             ])
             ->add('diasEstadia',TextType::class,[
                 'label'=>'Días Estadia',
