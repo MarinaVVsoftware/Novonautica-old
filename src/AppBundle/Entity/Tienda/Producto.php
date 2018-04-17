@@ -30,7 +30,7 @@ class Producto
      *
      * @Groups({"facturacion"})
      *
-     * @ORM\Column(name="solicitud", type="string", length=100)
+     * @ORM\Column(name="nombre", type="string", length=100)
      */
     private $nombre;
 
@@ -51,6 +51,13 @@ class Producto
      * @ORM\Column(name="preciocolaborador", type="bigint")
      */
     private $preciocolaborador;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigo_barras", type="string", length=30)
+     */
+    private $codigoBarras;
 
     /**
      * @var ClaveProdServ
@@ -251,5 +258,21 @@ class Producto
     public function getPreciocolaborador()
     {
         return $this->preciocolaborador;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCodigoBarras()
+    {
+        return $this->codigoBarras;
+    }
+
+    /**
+     * @param string $codigoBarras
+     */
+    public function setCodigoBarras($codigoBarras)
+    {
+        $this->codigoBarras = $codigoBarras;
     }
 }
