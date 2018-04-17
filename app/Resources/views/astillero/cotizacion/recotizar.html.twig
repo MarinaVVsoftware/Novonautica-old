@@ -141,6 +141,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-morado-claro btnNext" >
+                                        Siguiente
+                                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
@@ -451,11 +459,16 @@
                                     {% endif %}
                                 </div>
                             </div>
-                            {#{% if form.acservicios.5.estatus is defined %}#}
-                                {#{{ form_errors(form.acservicios.5.estatus) }}#}
-                                {#{{ form_widget(form.acservicios.5.estatus,{'attr':{'class':'hidden'}}) }}#}
-                                {#{{ form_label(form.acservicios.5.estatus) }}#}
-                            {#{% endif %}#}
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-morado-claro btnPrevious" >
+                                        <i class="fa fa-arrow-left" aria-hidden="true"></i> Anterior
+                                    </a>
+                                    <a class="btn btn-morado-claro btnNext" >
+                                        Siguiente <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="total">
                             <div class="row">
@@ -551,7 +564,7 @@
                                         </tr>
                                         <tr id="fila_estadia" class="{% if astilleroCotizacion.acservicios.1.estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="fila_estadia_mxn">
                                             <td id="estadia_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios.1.cantidad }}" data-dias="{{ astilleroCotizacion.diasEstadia }}" data-eslora="{{ astilleroCotizacion.barco.eslora }}">
-                                                {{ astilleroCotizacion.acservicios.1.cantidad }} (pie por día)
+                                                {{ astilleroCotizacion.diasEstadia }} (pie por día)
                                             </td>
                                             <td>Estadía</td>
                                             <td id="estadia_precio" class="valorprecio" data-valor="{{ (astilleroCotizacion.acservicios.1.precio * astilleroCotizacion.dolar)/10000 }}">
@@ -757,6 +770,16 @@
                                     <hr>
                                 </div>
                             </div>
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-morado-claro btnPrevious" >
+                                        <i class="fa fa-arrow-left" aria-hidden="true"></i> Anterior
+                                    </a>
+                                    <a class="btn btn-morado-claro btnNext" >
+                                        Siguiente <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="totalmxn">
                             <div class="row">
@@ -838,7 +861,7 @@
                                         </tr>
                                         <tr id="fila_estadia_mxn" class="{% if astilleroCotizacion.acservicios.1.estatus == 0 %}hidden{% endif %} servicio-agregado">
                                             <td id="estadia_cantidad_mxn" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios.1.cantidad }}" data-dias="{{ astilleroCotizacion.diasEstadia }}" data-eslora="{{ astilleroCotizacion.barco.eslora }}">
-                                                {{ astilleroCotizacion.acservicios.1.cantidad }} (pie por día)
+                                                {{ astilleroCotizacion.diasEstadia }} (pie por día)
                                             </td>
                                             <td>Estadía</td>
                                             <td id="estadia_precio_mxn" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios.1.precio/100 }}">
@@ -1016,6 +1039,16 @@
                                     <hr>
                                 </div>
                             </div>
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-morado-claro btnPrevious" >
+                                        <i class="fa fa-arrow-left" aria-hidden="true"></i> Anterior
+                                    </a>
+                                    <a class="btn btn-morado-claro btnNext" >
+                                        Siguiente <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="correo">
                             <div class="row">
@@ -1041,6 +1074,13 @@
                                         <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                         Guardar
                                     </button>
+                                </div>
+                            </div>
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-morado-claro btnPrevious" >
+                                        <i class="fa fa-arrow-left" aria-hidden="true"></i> Anterior
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -1201,6 +1241,12 @@
                     }
                 });
             }
+        });
+        $('.btnNext').click(function(){
+            $('.nav-tabs > .active').next('li').find('a').trigger('click');
+        });
+        $('.btnPrevious').click(function(){
+            $('.nav-tabs > .active').prev('li').find('a').trigger('click');
         });
     </script>
 {% endblock %}

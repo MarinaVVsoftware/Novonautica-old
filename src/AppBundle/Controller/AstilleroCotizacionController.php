@@ -366,7 +366,7 @@ class AstilleroCotizacionController extends Controller
                         $precio = $servAst->getPrecio();
                         $precio = ($precio / $valordolar) * 100;
                     } elseif ($servAst->getProducto() != null) {
-                        $precio = $servAst->getProducto()->getPrecio();
+                        $precio = ($servAst->getProducto()->getPrecio()/$valordolar)*100;
                     } elseif ($servAst->getServicio()->getPrecio() != null) {
                         $precio = $servAst->getServicio()->getPrecio();
                     } else {
@@ -733,7 +733,7 @@ class AstilleroCotizacionController extends Controller
             ->setSubtotal(($servicios[1]->getSubtotal()))
             ->setTotal(($servicios[1]->getTotal()))
             ->setEstatus($servicios[1]->getEstatus());
-//dump($servicios);
+
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
             ->addAcservicio($astilleroEstadia)
@@ -793,7 +793,7 @@ class AstilleroCotizacionController extends Controller
             }
             // Estadía
             $cantidad = $cantidadDias * $eslora;
-            $precio = ($astilleroEstadia->getPrecio() / $valordolar) * 100;
+            $precio = $astilleroEstadia->getPrecio();
             if ($precio == null) {
                 $precio = 0;
             }
@@ -941,7 +941,7 @@ class AstilleroCotizacionController extends Controller
                         $precio = $servAst->getPrecio();
                         $precio = ($precio / $valordolar) * 100;
                     } elseif ($servAst->getProducto() != null) {
-                        $precio = $servAst->getProducto()->getPrecio();
+                        $precio = ($servAst->getProducto()->getPrecio()/$valordolar)*100;
                     } elseif ($servAst->getServicio()->getPrecio() != null) {
                         $precio = $servAst->getServicio()->getPrecio();
                     } else {
@@ -1463,7 +1463,7 @@ class AstilleroCotizacionController extends Controller
                         $precio = $servAst->getPrecio();
                         $precio = ($precio/$valordolar)*100;
                     }elseif ($servAst->getProducto() != null){
-                        $precio = $servAst->getProducto()->getPrecio();
+                        $precio = ($servAst->getProducto()->getPrecio()/$valordolar)*100;
                     }elseif ($servAst->getServicio()->getPrecio() != null){
                         $precio = $servAst->getServicio()->getPrecio();
                     }else{
