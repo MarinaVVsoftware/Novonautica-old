@@ -26,35 +26,32 @@ class PagoType extends AbstractType
     {
         $builder
             ->add('cantidad', MoneyType::class, [
-                'required'=>false,
-                'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
+                'required' => false,
+                'attr' => ['class' => 'esdecimal', 'autocomplete' => 'off'],
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
                 'empty_data' => 0,
             ])
-            ->add('divisa',ChoiceType::class,[
-                'choices'  => ['MXN' => 'MXN','USD' => 'USD'],
+            ->add('divisa', ChoiceType::class, [
+                'choices' => ['MXN' => 'MXN', 'USD' => 'USD'],
 
             ])
-            ->add('fecha',DateType::class,[
+            ->add('fecha', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['class' => 'datepicker input-calendario',
-                    'readonly' => true],
+                'attr' => ['class' => 'datepicker input-calendario', 'readonly' => true],
                 'format' => 'yyyy-MM-dd',
-                'data' => new \DateTime('now')
+                'empty_data' => new \DateTime()
             ])
-            ->add('forma',TextType::class,[
+            ->add('forma', TextType::class, [
                 'label' => 'Forma de pago',
-
-            ])
-        ;
+            ]);
     }
 
     /**
-    * {@inheritdoc}
-    */
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

@@ -2,17 +2,11 @@
 
 namespace AppBundle\Form;
 
-//use Doctrine\DBAL\Types\DateType;
-use AppBundle\Entity\Pago;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PagoType extends AbstractType
@@ -23,29 +17,28 @@ class PagoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('metodopago',ChoiceType::class,[
-                'choices'  => ['Efectivo' => 'Efectivo',
+            ->add('metodopago', ChoiceType::class, [
+                'choices' => [
+                    'Efectivo' => 'Efectivo',
                     'Transferencia' => 'Transferencia',
                     'Tarjeta de crédito' => 'Tarjeta de crédito',
                     'Monedero' => 'Monedero',
-                    ],
+                ],
                 'placeholder' => 'Seleccionar...',
                 'label' => 'Método de pago',
-//                'required' => false
             ])
-            ->add('divisa',ChoiceType::class,[
-                    'choices'  => ['USD' => 'USD','MXN' => 'MXN'],
-                    'label' => 'Divisa',
+            ->add('divisa', ChoiceType::class, [
+                'choices' => ['USD' => 'USD', 'MXN' => 'MXN'],
+                'label' => 'Divisa',
             ])
-            ->add('cantidad',MoneyType::class,[
+            ->add('cantidad', MoneyType::class, [
                 'label' => 'Pago',
-//                'required' => false,
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
                 'attr' => ['class' => 'esdecimal']
             ])
-            ->add('fecharealpago',DateType::class,[
+            ->add('fecharealpago', DateType::class, [
                 'label' => 'Fecha de pago',
                 'widget' => 'single_text',
                 'html5' => false,
@@ -54,18 +47,17 @@ class PagoType extends AbstractType
                     'readonly' => true
                 ],
                 'format' => 'yyyy-MM-dd',
-                'data' => new \DateTime()
+                'empty_data' => new \DateTime()
             ])
-            ->add('dolar',MoneyType::class,[
+            ->add('dolar', MoneyType::class, [
                 'label' => 'Valor del dolar',
-//                'required' => false,
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
                 'attr' => ['class' => 'esdecimal']
             ]);
     }
-    
+
     /**
      * {@inheritdoc}
      */
