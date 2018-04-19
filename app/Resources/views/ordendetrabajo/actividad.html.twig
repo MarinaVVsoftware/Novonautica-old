@@ -1,7 +1,10 @@
 {% extends 'estructura/plantilla.twig' %}
 
+{% set cotizacion = contratista.astilleroODT.astilleroCotizacion %}
+
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
     <style>
         :root .content-wrapper hr {
             margin-top: 1rem !important;
@@ -14,6 +17,11 @@
 
         .table > tbody > tr.pago-agregado > td {
             padding: 0;
+        }
+
+        .bordered-group > .form-group {
+            border: 1px solid #2A3141;
+            padding: 1rem;
         }
     </style>
 {% endblock %}
@@ -37,11 +45,7 @@
                         <div class="col-sm-6">
                             <h3 class="panel-title">{{ title }}</h3>
                             <span>
-                                 {% if contratista.astilleroODT.astilleroCotizacion.foliorecotiza == 0 %}
-                                     {{ contratista.astilleroODT.astilleroCotizacion.folio }}
-                                 {% else %}
-                                     {{ contratista.astilleroODT.astilleroCotizacion.folio }}-{{ contratista.astilleroODT.astilleroCotizacion.foliorecotiza }}
-                                 {% endif %}
+                                {{ cotizacion.foliorecotiza ? cotizacion.folio ~ '-' ~ cotizacion.foliorecotiza : cotizacion.folio }}
                             </span>
                         </div>
                         <div class="col-sm-6">
@@ -68,17 +72,17 @@
                         </div>
                         <div class="col-sm-3">
                             <label>Embarcación</label>
-                            <div class='info-input'>{{ contratista.astilleroODT.astilleroCotizacion.barco }}</div>
+                            <div class='info-input'>{{ cotizacion.barco }}</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-3">
                             <label>Fecha inicio</label>
-                            <div class='info-input'>{{ contratista.astilleroODT.astilleroCotizacion.fechaLlegada|date('d/m/Y') }}</div>
+                            <div class='info-input'>{{ cotizacion.fechaLlegada|date('d/m/Y') }}</div>
                         </div>
                         <div class="col-sm-3">
                             <label>Fecha fin</label>
-                            <div class='info-input'>{{ contratista.astilleroODT.astilleroCotizacion.fechaSalida|date('d/m/Y') }}</div>
+                            <div class='info-input'>{{ cotizacion.fechaSalida|date('d/m/Y') }}</div>
                         </div>
                     </div>
                     <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
@@ -90,71 +94,13 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <h3 class="letra-azul">Actividades</h3>
-                            <div id="actividad-fields-list0" class="lista-actividades"
-                            data-prototype="{% filter escape %}{{ include('ordendetrabajo/coleccion-actividad.twig', { 'form': edit_form.contratistaactividades.vars.prototype }) }}{% endfilter %}">
-                                {% for i, actividadField in edit_form.contratistaactividades %}
-                                {% form_theme actividadField 'marinahumeda/cotizacion/pago/coleccion-actividad.twig' %}
-                                <div class="row">
-                                    <div class="col-sm-5">{{ form_row(actividadField.nombre) }} </div>
-                                    <div class="col-sm-3">{{ form_row(actividadField.inicio) }} </div>
-                                    <div class="col-sm-3">{{ form_row(actividadField.fin) }} </div>
-                                    <div class="col-sm-1">
-                                        <a href="#" class="remove-actividad btn btn-xs btn-naranja">
-                                            <i class="fa fa-times" aria-hidden="true"></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-5">{{ form_row(actividadField.notas) }}</div>
-                                    <div class="col-sm-3">
-                                        {{ form_row(actividadField.responsable,{'selected':actividadField.responsable.vars.data}) }}
-                                    </div>
-                                    <div class="col-sm-3">{{ form_row(actividadField.porcentaje) }}</div>
-                                </div>
-                                {% endfor %}
-                            </div>
-
-                            {#<table id="servicioAdicional" class="table text-center">#}
-                                {#<thead>#}
-                                {#<tr>#}
-                                    {#<th>Actividad</th>#}
-                                    {#<th>Inicio</th>#}
-                                    {#<th>Fin</th>#}
-                                    {#<th>Observaciones</th>#}
-                                    {#<th>Responsable</th>#}
-                                    {#<th>Porcentaje</th>#}
-                                    {#<th></th>#}
-                                {#</tr>#}
-                                {#</thead>#}
-                                {#<tbody id="actividad-fields-list0"#}
-                                       {#class="lista-actividades"#}
-                                       {#data-prototype="#}
-                                     {#{% filter escape %}#}
-                                     {#{{ include('ordendetrabajo/coleccion-actividad.twig', { 'form': edit_form.contratistaactividades.vars.prototype }) }}#}
-                                     {#{% endfilter %}#}
-                                     {#">#}
-                                {#{% for i, actividadField in edit_form.contratistaactividades %}#}
-                                    {#{% form_theme actividadField 'marinahumeda/cotizacion/pago/coleccion-actividad.twig' %}#}
-                                    {#<tr class="actividad-agregada">#}
-                                        {#<td>{{ form_widget(actividadField.nombre) }} </td>#}
-                                        {#<td>{{ form_widget(actividadField.inicio) }} </td>#}
-                                        {#<td>{{ form_widget(actividadField.fin) }} </td>#}
-                                        {#<td>{{ form_widget(actividadField.notas) }}</td>#}
-                                        {#<td>{{ form_widget(actividadField.responsable,{'selected':actividadField.responsable.vars.data}) }}</td>#}
-                                        {#<td>{{ form_widget(actividadField.porcentaje) }}</td>#}
-                                        {#<td style="vertical-align: middle">#}
-                                            {#<a href="#" class="remove-actividad btn btn-xs btn-naranja">#}
-                                                {#<i class="fa fa-times" aria-hidden="true"></i>#}
-                                            {#</a>#}
-                                        {#</td>#}
-                                    {#</tr>#}
-                                {#{% endfor %}#}
-                                {#</tbody>#}
-                            {#</table>#}
+                            {% form_theme edit_form.contratistaactividades 'ordendetrabajo/coleccion-actividad.twig' %}
+                            {{ form_row(edit_form.contratistaactividades, { 'attr': { 'class': 'bordered-group' }}) }}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-11">
-                            <a href="#" id="" class="add-another-actividad letra-azul pull-right"
-                               data-cantidad="{{ edit_form.contratistaactividades|length }}" data-idlista="0">
+                            <a href="#" id="add-another-actividad" class="letra-azul pull-right">
                                 + Agregar Actividad
                             </a>
                         </div>
@@ -168,6 +114,7 @@
                         </div>
                     </div>
                     {{ form_end(edit_form) }}
+
                     <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
                         <div class="col-sm-12">
                             <hr>
@@ -178,22 +125,182 @@
         </section>
     </div>
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/dropzone.js') }}"></script>
+
     <script type="text/javascript">
-        $(document).on('keypress','.esdecimal', function () {
+      /**
+       * Coleccion de actividades
+       */
+      (function ($) {
+        const actividadForm = document.querySelector('[name="appbundle_astillerocontratista"]');
+        const addLink = document.getElementById('add-another-actividad');
+        const prototypeHolder = document.getElementById('appbundle_astillerocontratista_contratistaactividades');
+        let existingDropzones = [];
+        let eDZCounter = 0;
+        let addedFiles = false;
+        let counter = '{{ edit_form.contratistaactividades|length }}';
+
+        Array
+            .from(prototypeHolder.children)
+            .forEach(function (element) {
+              appendRemoveLink(element);
+              existingDropzones.push(appendDropzone(element));
+            });
+
+        addLink.addEventListener('click', function (e) {
+          e.preventDefault();
+          const prototype = prototypeHolder.dataset.prototype.replace(/__name__/g, counter);
+          const tempContainer = document.createElement('div');
+          tempContainer.innerHTML = prototype;
+
+          let element = tempContainer.firstElementChild;
+          appendFunctions(element);
+          appendRemoveLink(element);
+          prototypeHolder.appendChild(element);
+          counter++;
+        });
+
+        function appendRemoveLink(element) {
+          let removeElementLink = element.querySelector('.remove-actividad');
+
+          removeElementLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            this.parentNode.parentNode.parentNode.remove(this)
+          });
+        }
+
+        function appendFunctions(element) {
+          $(element).on('keypress', '.esdecimal', function () {
             return esNumeroDecimal(event, this);
-        });
-        $(document).on('input','.limite100', function () {
-            var value = $(this).val();
+          });
+
+          $(element).on('input', '.limite100', function () {
+            let value = $(this).val();
+
             if ((value !== '') && (value.indexOf('.') === -1)) {
-                $(this).val(Math.max(Math.min(value, 100), 0));
+              $(this).val(Math.max(Math.min(value, 100), 0));
             }
-        });
-        $('.datepicker').datepicker({
+          });
+
+          $(element).find('.datepicker').datepicker({
             format: 'yyyy-mm-dd',
             orientation: "bottom auto",
             autoclose: true
+          });
+
+          existingDropzones.push(appendDropzone(element));
+        }
+
+        /**
+         *  Dropzone
+         */
+        function appendDropzone(container) {
+          const fotoContainer = container.querySelector('.foto-container');
+          const dzContainer = container.querySelector('.dropzone');
+          let count = parseInt(fotoContainer.dataset.length);
+
+          Dropzone.autoDiscover = false;
+
+          return new Dropzone(dzContainer, {
+            url: '{{ oneup_uploader_endpoint('actividad_fotos') }}',
+            acceptedFiles: 'image/*',
+            maxFilesize: 1,
+            dictFileTooBig: 'La imagen es demasiado pesada el tamaño maximo es de 1MiB',
+            parallelUploads: 1,
+            addRemoveLinks: true,
+            autoProcessQueue: false,
+            init: function () {
+              let that = this;
+              this
+                  .on('success', function (file, response) {
+                    const imgPrototype = fotoContainer.dataset.prototype.replace(/__foto__/g, count);
+                    dropzoneSuccess(fotoContainer, imgPrototype, file, response);
+                    count++;
+                    that.processQueue();
+                  })
+                  .on('removedfile', function (file) {
+                    $(`input[value="${file.name}"]`).parent().parent().remove();
+                  })
+                  .on('addedfile', function (file) {
+                    if (file.upload) {
+                      addedFiles = true;
+                    }
+                    // const delBtn = Dropzone.createElement("<a data-dz-remove class='btn btn-xs btn-danger'><span class='glyphicon glyphicon-trash'></span></a>");
+                    // file.previewElement.append(delBtn);
+
+                    /*delBtn.addEventListener('click', function () {
+                      $.ajax('../foto/' + file.name, {type: 'DELETE'})
+                          .done(function () {
+                            that.removeFile(file);
+                          })
+                    });*/
+                  })
+              ;
+            }
+          });
+        }
+
+        actividadForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (!addedFiles) {
+            this.submit();
+            return;
+          }
+          processDropzoneQueues();
         });
+
+          {% for a, actividad in contratista.contratistaactividades %}
+          {% for f, foto in actividad.fotos %}
+        emitThumbnail(existingDropzones[{{ a }}], {
+          name: '{{ foto.basename }}',
+          size: {{ foto.size }},
+          dataURL: '{{ app.request.basePath }}/uploads/actividad_fotos/{{ foto.basename }}'
+        });
+          {% endfor %}
+          {% endfor %}
+
+        function processDropzoneQueues() {
+          let dz = existingDropzones[eDZCounter];
+
+          dz.processQueue();
+
+          eDZCounter++;
+
+          if (eDZCounter === existingDropzones.length) {
+            setTimeout(() => {
+              actividadForm.submit()
+            }, 1000);
+            return;
+          }
+
+          processDropzoneQueues()
+        }
+
+        function dropzoneSuccess(contenedor, prototipo, archivo, respuesta) {
+          let divContainer = document.createElement('div');
+          divContainer.innerHTML = prototipo;
+          let imgInput = divContainer.querySelector('[name*="[basename]"]');
+          let sizeInput = divContainer.querySelector('[name*="[size]"]');
+          imgInput.dataset.uuid = archivo.upload.uuid;
+          imgInput.value = respuesta.baseFileName;
+          sizeInput.value = archivo.size;
+          contenedor.appendChild(divContainer.firstChild);
+        }
+
+        function emitThumbnail(dz, thumb) {
+          dz.files.push(thumb);
+          dz.emit('addedfile', thumb);
+          dz.createThumbnailFromUrl(thumb,
+              dz.options.thumbnailWidth, dz.options.thumbnailHeight,
+              dz.options.thumbnailMethod, true, function (thumbnail) {
+                dz.emit('thumbnail', thumb, thumbnail);
+              });
+          dz.emit('complete', thumb);
+        }
+
+      })(jQuery);
     </script>
 {% endblock %}
