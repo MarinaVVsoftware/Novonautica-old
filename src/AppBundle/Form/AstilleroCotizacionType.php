@@ -46,6 +46,7 @@ class AstilleroCotizacionType extends AbstractType
             ->add('diasEstadia',TextType::class,[
                 'label'=>'Días Estadia',
                 'attr' => ['class' => 'esnumero'],
+                'data' => '7'
             ])
             ->add('dolar', MoneyType::class, [
                 'required'=>false,

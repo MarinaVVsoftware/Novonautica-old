@@ -43,6 +43,11 @@ services:
         tags:
             - { name: doctrine.orm.entity_listener }
 
+    AppBundle\Entity\Astillero\Contratista\Actividad\FotoListener:
+        autowire: true
+        tags:
+            - { name: doctrine.orm.entity_listener }
+
     AppBundle\EventListener\ReportePagoListener:
         tags:
             - { name: doctrine.event_subscriber }

@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -25,12 +25,14 @@ class OrdenDeTrabajoController extends Controller
      *
      * @Route("/", name="ordendetrabajo_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $ordenDeTrabajos = $em->getRepository('AppBundle:OrdenDeTrabajo')->findAll();
         if ($request->isXmlHttpRequest()) {
             try {
                 $results = $dataTables->handle($request, 'ODT');
@@ -39,9 +41,10 @@ class OrdenDeTrabajoController extends Controller
                 return $this->json($e->getMessage(), $e->getStatusCode());
             }
         }
-        return $this->render('ordendetrabajo/index.html.twig', array(
+
+        return $this->render('ordendetrabajo/index.html.twig', [
             'title' => 'Ordenes de trabajo'
-        ));
+        ]);
     }
 
     /**
@@ -49,6 +52,9 @@ class OrdenDeTrabajoController extends Controller
      *
      * @Route("/nueva", name="ordendetrabajo_new")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function newAction(Request $request)
     {
@@ -70,19 +76,19 @@ class OrdenDeTrabajoController extends Controller
             $em = $this->getDoctrine()->getManager();
             $iva = $ordenDeTrabajo->getAstilleroCotizacion()->getIva();
 
-            foreach ($ordenDeTrabajo->getContratistas() as $contratista){
-                $precioTotal+=$contratista->getPrecio();
-                $utilidadvvTotal+=$contratista->getUtilidadvv();
-                $preciovvTotal+=$contratista->getPreciovv();
-                $ivatot = ($contratista->getPrecio() * $iva)/100;
+            foreach ($ordenDeTrabajo->getContratistas() as $contratista) {
+                $precioTotal += $contratista->getPrecio();
+                $utilidadvvTotal += $contratista->getUtilidadvv();
+                $preciovvTotal += $contratista->getPreciovv();
+                $ivatot = ($contratista->getPrecio() * $iva) / 100;
                 $total = $contratista->getPrecio() + $ivatot;
                 $porcentajevv = $contratista->getProveedor()->getPorcentaje();
                 $contratista
                     ->setPorcentajevv($porcentajevv)
                     ->setIvatot($ivatot)
                     ->setTotal($total);
-                $ivaTotal+=$ivatot;
-                $granTotal+=$total;
+                $ivaTotal += $ivatot;
+                $granTotal += $total;
             }
             $fechaHoraActual = new \DateTime('now');
             $ordenDeTrabajo
@@ -93,8 +99,7 @@ class OrdenDeTrabajoController extends Controller
                 ->setGranTotal($granTotal)
                 ->setPagosTotal(0)
                 ->setSaldoTotal($granTotal)
-                ->setFecha($fechaHoraActual)
-            ;
+                ->setFecha($fechaHoraActual);
             $em->persist($ordenDeTrabajo);
             $em->flush();
 
@@ -111,21 +116,26 @@ class OrdenDeTrabajoController extends Controller
     /**
      * @Route("/buscarcotizacion", name="odt_busca_cotizacion")
      * @Method({"GET"})
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function buscarCotizacionAction(Request $request){
-        $idcotizacion=$request->get('idcotizacion');
+    public function buscarCotizacionAction(Request $request)
+    {
+        $idcotizacion = $request->get('idcotizacion');
         $em = $this->getDoctrine()->getManager();
 
         $cotizacion = $em->getRepository('AppBundle:AstilleroCotizacion')
             ->createQueryBuilder('ac')
-            ->select('ac','cliente','barco','AstilleroCotizaServicio','AstilleroServicioBasico','AstilleroProducto','AstilleroServicio')
-            ->join('ac.cliente','cliente')
-            ->join('ac.barco','barco')
-            ->join('ac.acservicios','AstilleroCotizaServicio')
-            ->leftJoin('AstilleroCotizaServicio.astilleroserviciobasico','AstilleroServicioBasico')
-            ->leftJoin('AstilleroCotizaServicio.producto','AstilleroProducto')
-            ->leftJoin('AstilleroCotizaServicio.servicio','AstilleroServicio')
-            ->andWhere('ac.id = '.$idcotizacion)
+            ->select('ac', 'cliente', 'barco', 'AstilleroCotizaServicio', 'AstilleroServicioBasico', 'AstilleroProducto', 'AstilleroServicio')
+            ->join('ac.cliente', 'cliente')
+            ->join('ac.barco', 'barco')
+            ->join('ac.acservicios', 'AstilleroCotizaServicio')
+            ->leftJoin('AstilleroCotizaServicio.astilleroserviciobasico', 'AstilleroServicioBasico')
+            ->leftJoin('AstilleroCotizaServicio.producto', 'AstilleroProducto')
+            ->leftJoin('AstilleroCotizaServicio.servicio', 'AstilleroServicio')
+            ->andWhere('ac.id = ' . $idcotizacion)
             ->getQuery()
             ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         return $this->json($cotizacion);
@@ -136,6 +146,10 @@ class OrdenDeTrabajoController extends Controller
      *
      * @Route("/{id}", name="ordendetrabajo_show")
      * @Method("GET")
+     *
+     * @param OrdenDeTrabajo $ordenDeTrabajo
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction(OrdenDeTrabajo $ordenDeTrabajo)
     {
@@ -153,6 +167,11 @@ class OrdenDeTrabajoController extends Controller
      *
      * @Route("/{id}/editar", name="ordendetrabajo_edit")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param OrdenDeTrabajo $ordenDeTrabajo
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, OrdenDeTrabajo $ordenDeTrabajo)
     {
@@ -169,7 +188,7 @@ class OrdenDeTrabajoController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $originalContratistas = new ArrayCollection();
-        foreach ($ordenDeTrabajo->getContratistas() as $contratista){
+        foreach ($ordenDeTrabajo->getContratistas() as $contratista) {
             $originalContratistas->add($contratista);
         }
         $deleteForm = $this->createDeleteForm($ordenDeTrabajo);
@@ -180,49 +199,49 @@ class OrdenDeTrabajoController extends Controller
 
             $iva = $ordenDeTrabajo->getAstilleroCotizacion()->getIva();
             //$this->getDoctrine()->getManager()->flush();
-            foreach ($originalContratistas as $contratista){
+            foreach ($originalContratistas as $contratista) {
                 if (false === $ordenDeTrabajo->getContratistas()->contains($contratista)) {
 
-                        // remove the Task from the Tag
-                        $contratista->getAstilleroODT()->removeContratista($contratista);
+                    // remove the Task from the Tag
+                    $contratista->getAstilleroODT()->removeContratista($contratista);
 
-                        // if it was a many-to-one relationship, remove the relationship like this
-                        //$motor->setBarco(null);
-                        $em->persist($contratista);
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    //$motor->setBarco(null);
+                    $em->persist($contratista);
 
-                        // if you wanted to delete the Tag entirely, you can also do that
-                        $em->remove($contratista);
-                }else{
-                    $precioTotal+=$contratista->getPrecio();
-                    $utilidadvvTotal+=$contratista->getUtilidadvv();
-                    $preciovvTotal+=$contratista->getPreciovv();
-                    $ivatot = ($contratista->getPrecio() * $iva)/100;
+                    // if you wanted to delete the Tag entirely, you can also do that
+                    $em->remove($contratista);
+                } else {
+                    $precioTotal += $contratista->getPrecio();
+                    $utilidadvvTotal += $contratista->getUtilidadvv();
+                    $preciovvTotal += $contratista->getPreciovv();
+                    $ivatot = ($contratista->getPrecio() * $iva) / 100;
                     $total = $contratista->getPrecio() + $ivatot;
                     $porcentajevv = $contratista->getProveedor()->getPorcentaje();
                     $contratista
                         ->setPorcentajevv($porcentajevv)
                         ->setIvatot($ivatot)
                         ->setTotal($total);
-                    $ivaTotal+=$ivatot;
-                    $granTotal+=$total;
+                    $ivaTotal += $ivatot;
+                    $granTotal += $total;
 
                 }
             }
-            foreach ($ordenDeTrabajo->getContratistas() as $contratistanuevo){
-                if($contratistanuevo->getId() == null){
-                    $precioTotal+=$contratistanuevo->getPrecio();
-                    $utilidadvvTotal+=$contratistanuevo->getUtilidadvv();
-                    $preciovvTotal+=$contratistanuevo->getPreciovv();
+            foreach ($ordenDeTrabajo->getContratistas() as $contratistanuevo) {
+                if ($contratistanuevo->getId() == null) {
+                    $precioTotal += $contratistanuevo->getPrecio();
+                    $utilidadvvTotal += $contratistanuevo->getUtilidadvv();
+                    $preciovvTotal += $contratistanuevo->getPreciovv();
 
-                    $ivatot = ($contratistanuevo->getPrecio() * $iva)/100;
+                    $ivatot = ($contratistanuevo->getPrecio() * $iva) / 100;
                     $total = $contratistanuevo->getPrecio() + $ivatot;
                     $porcentajevv = $contratistanuevo->getProveedor()->getPorcentaje();
                     $contratistanuevo
                         ->setPorcentajevv($porcentajevv)
                         ->setIvatot($ivatot)
                         ->setTotal($total);
-                    $ivaTotal+=$ivatot;
-                    $granTotal+=$total;
+                    $ivaTotal += $ivatot;
+                    $granTotal += $total;
                 }
             }
             $ordenDeTrabajo
@@ -231,8 +250,7 @@ class OrdenDeTrabajoController extends Controller
                 ->setPreciovvTotal($preciovvTotal)
                 ->setSaldoTotal($granTotal)
                 ->setIvaTotal($ivaTotal)
-                ->setGranTotal($granTotal)
-            ;
+                ->setGranTotal($granTotal);
             $em->persist($ordenDeTrabajo);
             $em->flush();
 
@@ -250,21 +268,26 @@ class OrdenDeTrabajoController extends Controller
     /**
      * @Route("/{id}/contratista-pago", name="ordendetrabajo_contratista_pago")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param Contratista $contratista
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function pagoAction(Request $request, Contratista $contratista)
     {
         $this->denyAccessUnlessGranted('ROLE_ASTILLERO_ODT', $contratista);
 
-        $pagadoUSD =0;
+        $pagadoUSD = 0;
         $saldoUSD = 0;
         $dolar = $contratista->getAstilleroODT()->getAstilleroCotizacion()->getDolar();
         $originalPagos = new ArrayCollection();
-        foreach ($contratista->getContratistapagos() as $pago){
+        foreach ($contratista->getContratistapagos() as $pago) {
             $originalPagos->add($pago);
-            if($pago->getDivisa()=='MXN'){
-                $pagadoUSD+=($pago->getCantidad()/$dolar)*100;
-            }else{
-                $pagadoUSD+=$pago->getCantidad();
+            if ($pago->getDivisa() == 'MXN') {
+                $pagadoUSD += ($pago->getCantidad() / $dolar) * 100;
+            } else {
+                $pagadoUSD += $pago->getCantidad();
             }
         }
         $saldoUSD = $contratista->getPrecio() - $pagadoUSD;
@@ -272,7 +295,7 @@ class OrdenDeTrabajoController extends Controller
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            foreach ($originalPagos as $pago){
+            foreach ($originalPagos as $pago) {
                 if (false === $contratista->getContratistapagos()->contains($pago)) {
                     $pago->getContratista()->removeContratistapago($pago);
                     $em->persist($pago);
@@ -281,21 +304,21 @@ class OrdenDeTrabajoController extends Controller
             }
             $cantidadPago = 0;
             $saldo = 0;
-            foreach ($contratista->getContratistapagos() as $unpago){
-                if($unpago->getDivisa()=='MXN'){
-                    $cantidadPago+=($unpago->getCantidad()/$dolar)*100;
-                }else{
-                    $cantidadPago+=$unpago->getCantidad();
+            foreach ($contratista->getContratistapagos() as $unpago) {
+                if ($unpago->getDivisa() == 'MXN') {
+                    $cantidadPago += ($unpago->getCantidad() / $dolar) * 100;
+                } else {
+                    $cantidadPago += $unpago->getCantidad();
                 }
                 $saldo = $contratista->getTotal() - $cantidadPago;
                 $unpago->setSaldo($saldo);
             }
-            if($saldo < -1){
+            if ($saldo < -1) {
                 $this->addFlash(
                     'notice',
                     'Error! Se ha intentado pagar más que el saldo restante'
                 );
-            }else{
+            } else {
                 $em->persist($contratista);
                 $em->flush();
                 return $this->redirectToRoute('ordendetrabajo_show', ['id' => $contratista->getAstilleroODT()->getId()]);
@@ -311,48 +334,75 @@ class OrdenDeTrabajoController extends Controller
             'saldoUSD' => $saldoUSD
         ]);
     }
+
     /**
      * @Route("/{id}/actividad", name="ordendetrabajo_contratista_actividad")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param Contratista $contratista
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function actividadAction(Request $request, Contratista $contratista)
     {
         $this->denyAccessUnlessGranted('ROLE_ASTILLERO_ODT', $contratista);
         $originalActividades = new ArrayCollection();
-        foreach ($contratista->getContratistaactividades() as $actividad){
+        $oldFotos = new ArrayCollection();
+
+        /** @var Contratista\Actividad $actividad */
+        foreach ($contratista->getContratistaactividades() as $a => $actividad) {
             $originalActividades->add($actividad);
+
+            $realOldFotos = new ArrayCollection();
+
+            foreach ($actividad->getFotos() as $foto) {
+                $realOldFotos->add($foto);
+            }
+
+            $oldFotos->add($realOldFotos);
         }
+
         $editForm = $this->createForm('AppBundle\Form\Astillero\ContratistaActividadType', $contratista);
         $editForm->handleRequest($request);
+
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
-            foreach ($originalActividades as $actividad){
-                if (false === $contratista->getContratistaactividades()->contains($actividad)) {
-                    $actividad->getContratista()->removeContratistaactividade($actividad);
-                    $em->persist($actividad);
+            foreach ($originalActividades as $a => $actividad) {
+                if (!$contratista->getContratistaactividades()->contains($actividad)) {
+                    $actividad->setContratista(null);
                     $em->remove($actividad);
                 }
 
-
+                foreach ($oldFotos[$a] as $dFoto) {
+                    if (!$actividad->getFotos()->contains($dFoto)) {
+                        $dFoto->setActividad(null);
+                        $em->remove($dFoto);
+                    }
+                }
             }
 
-            foreach ($contratista->getContratistaactividades() as $act1){
+            foreach ($contratista->getContratistaactividades() as $act1) {
                 $ban = false;
-                foreach ($originalActividades as $act2){
-                    if($act2->getId() == $act1->getId()){
+
+                foreach ($originalActividades as $act2) {
+                    if ($act2->getId() == $act1->getId()) {
                         $ban = true;
                     }
                 }
-                if(!$ban){
+
+                if (!$ban) {
                     $act1->setUsuario($this->getUser()->getNombre());
                 }
             }
 
             $em->persist($contratista);
             $em->flush();
+
             return $this->redirectToRoute('ordendetrabajo_show', ['id' => $contratista->getAstilleroODT()->getId()]);
         }
+
         return $this->render('ordendetrabajo/actividad.html.twig', [
             'title' => 'Registrar Actividad Contratista',
             'contratista' => $contratista,
@@ -365,6 +415,11 @@ class OrdenDeTrabajoController extends Controller
      *
      * @Route("/{id}", name="ordendetrabajo_delete")
      * @Method("DELETE")
+     *
+     * @param Request $request
+     * @param OrdenDeTrabajo $ordenDeTrabajo
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, OrdenDeTrabajo $ordenDeTrabajo)
     {
@@ -385,14 +440,13 @@ class OrdenDeTrabajoController extends Controller
      *
      * @param OrdenDeTrabajo $ordenDeTrabajo The ordenDeTrabajo entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function createDeleteForm(OrdenDeTrabajo $ordenDeTrabajo)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('ordendetrabajo_delete', array('id' => $ordenDeTrabajo->getId())))
+            ->setAction($this->generateUrl('ordendetrabajo_delete', ['id' => $ordenDeTrabajo->getId()]))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

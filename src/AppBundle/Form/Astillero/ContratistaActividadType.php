@@ -24,6 +24,7 @@ class ContratistaActividadType extends AbstractType
         $builder
             ->add('contratistaactividades',CollectionType::class,[
                 'entry_type' => Contratista\ActividadType::class,
+                'entry_options' => ['label' => false],
                 'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,

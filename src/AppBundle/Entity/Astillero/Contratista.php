@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Astillero;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Contratista
@@ -89,6 +90,8 @@ class Contratista
     private $contratistapagos;
 
     /**
+     * @Assert\Valid()
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Astillero\Contratista\Actividad", mappedBy="contratista", cascade={"persist"})
      */
     private $contratistaactividades;

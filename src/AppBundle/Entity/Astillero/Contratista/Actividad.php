@@ -2,7 +2,11 @@
 
 namespace AppBundle\Entity\Astillero\Contratista;
 
+use AppBundle\Entity\Astillero\Contratista\Actividad\Foto;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Actividad
@@ -23,6 +27,8 @@ class Actividad
 
     /**
      * @var string
+     *
+     * @Assert\NotBlank(message="Debe indicar una actividad.")
      *
      * @ORM\Column(name="nombre", type="string", length=255)
      */
@@ -83,10 +89,18 @@ class Actividad
      */
     private $contratista;
 
+    /**
+     * @var Foto
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Astillero\Contratista\Actividad\Foto", mappedBy="actividad", cascade={"persist", "remove"})
+     */
+    private $fotos;
+
     public function __construct()
     {
         $this->porcentaje = 0;
         $this->fecha = new \DateTime('now');
+        $this->fotos = new ArrayCollection();
     }
 
     /**
@@ -314,5 +328,43 @@ class Actividad
     public function getResponsable()
     {
         return $this->responsable;
+    }
+
+    /**
+     * Add foto.
+     *
+     * @param Foto $foto
+     *
+     * @return Actividad
+     */
+    public function addFoto(Foto $foto)
+    {
+        $foto->setActividad($this);
+        $this->fotos[] = $foto;
+
+        return $this;
+    }
+
+    /**
+     * Remove foto.
+     *
+     * @param Foto $foto
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeFoto(Foto $foto)
+    {
+
+        return $this->fotos->removeElement($foto);
+    }
+
+    /**
+     * Get fotos.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFotos()
+    {
+        return $this->fotos;
     }
 }

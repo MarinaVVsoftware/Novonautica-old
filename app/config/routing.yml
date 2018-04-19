@@ -5,6 +5,7 @@ app:
 oneup_uploader:
     resource: .
     type: uploader
+
 inicio:
     path: /
     defaults:

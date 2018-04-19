@@ -75,6 +75,8 @@ oneup_uploader:
     mappings:
         embarcacion:
             frontend: dropzone
+        actividad_fotos:
+            frontend: dropzone
 
 vich_uploader:
     db_driver: orm

@@ -1,27 +1,43 @@
-{% block form_widget %}
+{% block appbundle_astillero_contratista_actividad_widget %}
     {% spaceless %}
-        <div class="col-sm-5">
-            {{ form_row(form.nombre) }}
-        </div>
-        <div class="col-sm-3">
-            {{ form_row(form.inicio) }}
-        </div>
-        <div class="col-sm-3">
-            {{ form_row(form.fin) }}
-        </div>
-        <div class="col-sm-1">
-            <a href="#" class="remove-actividad btn btn-xs btn-naranja">
-                <i class="fa fa-times" aria-hidden="true"></i>
-            </a>
-        </div>
-        <div class="col-sm-5">
-            {{ form_row(form.notas) }}
-        </div>
-        <div class="col-sm-3">
-            {{ form_row(form.responsable) }}
-        </div>
-        <div class="col-sm-3">
-            {{ form_row(form.porcentaje) }}
+        <div class="row">
+            <div class="col-sm-6">
+                {{ form_row(form.nombre) }}
+                <div class="row">
+                    <div class="col-sm-6">
+                        {{ form_row(form.inicio) }}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(form.fin) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        {{ form_row(form.responsable) }}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(form.porcentaje) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                {{ form_row(form.notas) }}
+                {{ form_row(form.fotos, { 'attr': {'data-length': form.fotos|length }}) }}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="dropzone">
+                            <div class="dz-message imagenes-message">
+                                Puedes arrastrar tus imagenes aquí.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 text-right espacio-linea-arriba2">
+                <a href="#" class="remove-actividad btn btn-xs btn-naranja">
+                    <i class="fa fa-times" aria-hidden="true"></i> Eliminar actividad
+                </a>
+            </div>
         </div>
     {% endspaceless %}
 {% endblock %}
