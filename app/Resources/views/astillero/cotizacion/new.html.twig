@@ -1217,16 +1217,12 @@
                         JSON.stringify(datos);
                         var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
                         var dolar = $('#appbundle_astillerocotizacion_dolar').val();
-
-                        fila.children('.valorprecio').html('$ '+parseFloat((datos.precio*dolar)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-                        fila.children('.valorprecio').data('valor',((datos.precio*dolar)/100));
+                        fila.children('.valorprecio').html('$ '+parseFloat((datos.precio)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+                        fila.children('.valorprecio').data('valor',((datos.precio)/100));
                         calculaSubtotalesAstillero(fila);
-
                         var idfila = fila.data('id');
-
-                        var valormxn = (datos.precio/100);
-                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').data('valor',valormxn);
-                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat(valormxn).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').data('valor',(datos.precio/dolar)/100);
+                        $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat((datos.precio/dolar)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                         $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.td-producto').html(datos.nombre);
                         fila =  $('#a_nuevacotizacion_mxn>tbody>#'+idfila);
                         calculaSubtotalesAstillero(fila);

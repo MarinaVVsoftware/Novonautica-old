@@ -8,6 +8,13 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <h3 class="panel-title">Cotización Astillero</h3>
+                            <span>
+                                 {% if astilleroCotizacion.foliorecotiza == 0 %}
+                                     {{ astilleroCotizacion.folio }}
+                                 {% else %}
+                                     {{ astilleroCotizacion.folio }}-{{ astilleroCotizacion.foliorecotiza }}
+                                 {% endif %}
+                            </span>
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right"
