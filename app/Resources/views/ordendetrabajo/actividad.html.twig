@@ -147,7 +147,6 @@
             .from(prototypeHolder.children)
             .forEach(function (element) {
               appendRemoveLink(element);
-              appendFunctions(element);
               existingDropzones.push(appendDropzone(element));
             });
 
@@ -192,7 +191,7 @@
             autoclose: true
           });
 
-          existingDropzones.push(appendDropzone(element));
+          // existingDropzones.push(appendDropzone(element));
         }
 
         /**
