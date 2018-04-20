@@ -22,6 +22,7 @@
             </div>
             <div class="col-sm-6">
                 {{ form_row(form.notas) }}
+                <div class="hidden">
                 {{ form_row(form.fotos, { 'attr': {'data-length': form.fotos|length }}) }}
                 <div class="row">
                     <div class="col-md-12">
@@ -32,6 +33,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
             <div class="col-sm-12 text-right espacio-linea-arriba2">
                 <a href="#" class="remove-actividad btn btn-xs btn-naranja">
