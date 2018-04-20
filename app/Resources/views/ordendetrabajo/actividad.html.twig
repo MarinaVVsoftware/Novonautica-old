@@ -147,6 +147,7 @@
             .from(prototypeHolder.children)
             .forEach(function (element) {
               appendRemoveLink(element);
+              appendFunctions(element);
               existingDropzones.push(appendDropzone(element));
             });
 

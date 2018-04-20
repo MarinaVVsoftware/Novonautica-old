@@ -41,7 +41,7 @@ class ActividadType extends AbstractType
                     'readonly' => true
                 ],
                 'format' => 'yyyy-MM-dd',
-                'data' => new \DateTime()
+                'empty_data' => new \DateTime()
             ])
             ->add('fin', DateType::class, [
                 'widget' => 'single_text',
@@ -49,7 +49,7 @@ class ActividadType extends AbstractType
                 'attr' => ['class' => 'datepicker input-calendario',
                     'readonly' => true],
                 'format' => 'yyyy-MM-dd',
-                'data' => (new \DateTime())->modify('+1 day')
+                'empty_data' => (new \DateTime())->modify('+1 day')
             ])
             ->add('notas', TextareaType::class, [
                 'label' => 'Notas',
