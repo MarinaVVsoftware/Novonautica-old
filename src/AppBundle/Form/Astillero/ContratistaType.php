@@ -31,8 +31,8 @@ class ContratistaType extends AbstractType
                 'label' => 'Descripción del trabajo'
             ])
             ->add('precio',MoneyType::class,[
-                'label' => 'Precio Contratista (USD)',
-                'currency' => 'USD',
+                'label' => 'Precio Contratista (MXN)',
+                'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
                 'attr' => ['class' => 'esdecimal preciocontratista','readonly'=>true]
@@ -42,15 +42,15 @@ class ContratistaType extends AbstractType
                 'attr' => ['class'=>'porcentajevv','readonly'=>true]
             ])
             ->add('utilidadvv',MoneyType::class,[
-                'label' => 'Utilidad V&V (USD)',
-                'currency' => 'USD',
+                'label' => 'Utilidad V&V (MXN)',
+                'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
                 'attr' => ['class' => 'esdecimal utilidadvv','readonly'=>true]
             ])
             ->add('preciovv',MoneyType::class,[
-                'label' => 'Precio V&V (USD)',
-                'currency' => 'USD',
+                'label' => 'Precio V&V (MXN)',
+                'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
                 'attr' => ['class' => 'esdecimal preciovv','readonly'=>true]

@@ -86,26 +86,26 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <label>Precio contratista</label>
-                            <div class='info-input'>$ {{ (contratista.precio/100)|number_format(2) }} USD</div>
+                            <div class='info-input'>$ {{ (contratista.precio/100)|number_format(2) }} MXN</div>
                             <br>
                             <div class='info-input'>
-                                $ {{ (contratista.precio*dolar/10000)|number_format(2) }} MXN
+                                $ {{ (contratista.precio/dolar)|number_format(2) }} USD
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <label>IVA {{ contratista.astilleroODT.astilleroCotizacion.iva }}%</label>
-                            <div class='info-input'>$ {{ (contratista.ivatot/100)|number_format(2) }} USD</div>
+                            <div class='info-input'>$ {{ (contratista.ivatot/100)|number_format(2) }} MXN</div>
                             <br>
                             <div class='info-input'>
-                                $ {{ (contratista.ivatot*dolar/10000)|number_format(2) }} MXN
+                                $ {{ (contratista.ivatot/dolar)|number_format(2) }} USD
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <label>Total</label>
-                            <div class='info-input'>$ {{ (contratista.total/100)|number_format(2) }} USD</div>
+                            <div class='info-input'>$ {{ (contratista.total/100)|number_format(2) }} MXN</div>
                             <br>
                             <div class='info-input'>
-                                $ {{ (contratista.total*dolar/10000)|number_format(2) }} MXN
+                                $ {{ (contratista.total/dolar)|number_format(2) }} USD
                             </div>
                         </div>
                     </div>
@@ -184,15 +184,15 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <label>Pagado</label>
-                            <div class='info-input'>$ {{ (pagadoUSD/100)|number_format(2) }} USD</div>
+                            <div class='info-input'>$ {{ (pagadoMXN/100)|number_format(2) }} MXN</div>
                             <br>
-                            <div class='info-input'>$ {{ ((pagadoUSD*dolar)/10000)|number_format(2) }} MXN</div>
+                            <div class='info-input'>$ {{ (pagadoMXN/dolar)|number_format(2) }} USD</div>
                         </div>
                         <div class="col-sm-4">
                             <label>Saldo</label>
-                            <div class='info-input'>$ {{ (saldoUSD/100)|number_format(2) }} USD</div>
+                            <div class='info-input'>$ {{ (saldoMXN/100)|number_format(2) }} MXN</div>
                             <br>
-                            <div class='info-input'>$ {{ ((saldoUSD*dolar)/10000)|number_format(2) }} MXN</div>
+                            <div class='info-input'>$ {{ (saldoMXN/dolar)|number_format(2) }} USD</div>
                         </div>
                     </div>
                 </div>

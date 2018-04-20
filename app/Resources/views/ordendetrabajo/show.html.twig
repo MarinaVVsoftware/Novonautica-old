@@ -155,7 +155,7 @@
                         <div role="tabpanel" class="tab-pane" id="contratistas">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <small class="pull-left">Precios en USD</small>
+                                    <small class="pull-left">Precios en MXN</small>
                                     <small class="pull-right">Tipo de cambio:
                                         <span>{{ (ordenDeTrabajo.astilleroCotizacion.dolar/100)| number_format(2) }}</span>
                                         MXN
@@ -166,7 +166,7 @@
                                             <th>Descripción del trabajo</th>
                                             <th>Contratista</th>
                                             <th>Razón social</th>
-                                            <th>Precio</th>
+                                            <th>Precio contratista</th>
                                             <th>% V&V</th>
                                             <th>Utilidad V&V</th>
                                             <th>Precio V&V</th>
@@ -195,17 +195,17 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                ${{ ((ordenDeTrabajo.precioTotal*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }}
-                                                MXN
+                                                ${{ ((ordenDeTrabajo.precioTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
+                                                USD
                                             </td>
                                             <td></td>
                                             <td>
-                                                ${{ ((ordenDeTrabajo.utilidadvvTotal*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }}
-                                                MXN
+                                                ${{ ((ordenDeTrabajo.utilidadvvTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
+                                                USD
                                             </td>
                                             <td>
-                                                ${{ ((ordenDeTrabajo.preciovvTotal*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }}
-                                                MXN
+                                                ${{ ((ordenDeTrabajo.preciovvTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
+                                                USD
                                             </td>
                                         </tr>
                                         </tfoot>
@@ -216,7 +216,7 @@
                         <div role="tabpanel" class="tab-pane" id="hojapagos">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <small class="pull-left">Precios en USD</small>
+                                    <small class="pull-left">Precios en MXN</small>
                                     <small class="pull-right">Tipo de cambio:
                                         <span>{{ (ordenDeTrabajo.astilleroCotizacion.dolar/100)| number_format(2) }}</span>
                                         MXN
@@ -253,16 +253,16 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                ${{ ((ordenDeTrabajo.precioTotal*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }}
-                                                MXN
+                                                ${{ ((ordenDeTrabajo.precioTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
+                                                USD
                                             </td>
                                             <td>
-                                                ${{ ((ordenDeTrabajo.ivaTotal*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }}
-                                                MXN
+                                                ${{ ((ordenDeTrabajo.ivaTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
+                                                USD
                                             </td>
                                             <td>
-                                                ${{ ((ordenDeTrabajo.granTotal*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }}
-                                                MXN
+                                                ${{ ((ordenDeTrabajo.granTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
+                                                USD
                                             </td>
                                         </tr>
                                         </tfoot>
@@ -312,9 +312,9 @@
                                             <div class="col-sm-12">
                                                 <div class="letra-azul">Precio contratista:</div>
                                                 <ul>
-                                                    ${{ (contratista.precio/100)|number_format(2) }} USD &nbsp;&nbsp;&nbsp;
-                                                    ${{ ((contratista.precio*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }}
-                                                    MXN
+                                                    ${{ (contratista.precio/100)|number_format(2) }} MXN &nbsp;&nbsp;&nbsp;
+                                                    ${{ (contratista.precio/ordenDeTrabajo.astilleroCotizacion.dolar)|number_format(2) }}
+                                                    USD
                                                 </ul>
                                             </div>
                                         </div>
@@ -322,9 +322,9 @@
                                             <div class="col-sm-12">
                                                 <div class="letra-azul">IVA:</div>
                                                 <ul>
-                                                    ${{ (contratista.ivatot/100)|number_format(2) }} USD &nbsp;&nbsp;&nbsp;
-                                                    ${{ ((contratista.ivatot*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }}
-                                                    MXN
+                                                    ${{ (contratista.ivatot/100)|number_format(2) }} MXN &nbsp;&nbsp;&nbsp;
+                                                    ${{ (contratista.ivatot/ordenDeTrabajo.astilleroCotizacion.dolar)|number_format(2) }}
+                                                    USD
                                                 </ul>
                                             </div>
                                         </div>
@@ -332,9 +332,9 @@
                                             <div class="col-sm-12">
                                                 <div class="letra-azul">Total:</div>
                                                 <ul>
-                                                    ${{ (contratista.total/100)|number_format(2) }} USD &nbsp;&nbsp;&nbsp;
-                                                    ${{ ((contratista.total*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }}
-                                                    MXN
+                                                    ${{ (contratista.total/100)|number_format(2) }} MXN &nbsp;&nbsp;&nbsp;
+                                                    ${{ (contratista.total/ordenDeTrabajo.astilleroCotizacion.dolar)|number_format(2) }}
+                                                    USD
                                                 </ul>
                                             </div>
                                         </div>
@@ -360,10 +360,10 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>{{ pago.forma }}</td>
-                                                    <td>${{ (pago.saldo/100)|number_format(2) }} USD</td>
+                                                    <td>${{ (pago.saldo/100)|number_format(2) }} MXN</td>
                                                     <td>
-                                                        ${{ ((pago.saldo*ordenDeTrabajo.astilleroCotizacion.dolar)/10000)|number_format(2) }}
-                                                        MXN
+                                                        ${{ (pago.saldo/ordenDeTrabajo.astilleroCotizacion.dolar)|number_format(2) }}
+                                                        USD
                                                     </td>
                                                 </tr>
                                             {% endfor %}

@@ -277,20 +277,18 @@ class OrdenDeTrabajoController extends Controller
     public function pagoAction(Request $request, Contratista $contratista)
     {
         $this->denyAccessUnlessGranted('ROLE_ASTILLERO_ODT', $contratista);
-
-        $pagadoUSD = 0;
-        $saldoUSD = 0;
+        $pagadoMXN =0;
         $dolar = $contratista->getAstilleroODT()->getAstilleroCotizacion()->getDolar();
         $originalPagos = new ArrayCollection();
         foreach ($contratista->getContratistapagos() as $pago) {
             $originalPagos->add($pago);
-            if ($pago->getDivisa() == 'MXN') {
-                $pagadoUSD += ($pago->getCantidad() / $dolar) * 100;
-            } else {
-                $pagadoUSD += $pago->getCantidad();
+            if($pago->getDivisa()=='USD'){
+                $pagadoMXN+=($pago->getCantidad()*$dolar)/100;
+            }else{
+                $pagadoMXN+=$pago->getCantidad();
             }
         }
-        $saldoUSD = $contratista->getPrecio() - $pagadoUSD;
+        $saldoMXN = $contratista->getTotal() - $pagadoMXN;
         $editForm = $this->createForm('AppBundle\Form\Astillero\ContratistaPagoType', $contratista);
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -304,11 +302,11 @@ class OrdenDeTrabajoController extends Controller
             }
             $cantidadPago = 0;
             $saldo = 0;
-            foreach ($contratista->getContratistapagos() as $unpago) {
-                if ($unpago->getDivisa() == 'MXN') {
-                    $cantidadPago += ($unpago->getCantidad() / $dolar) * 100;
-                } else {
-                    $cantidadPago += $unpago->getCantidad();
+            foreach ($contratista->getContratistapagos() as $unpago){
+                if($unpago->getDivisa()=='USD'){
+                    $cantidadPago+=($unpago->getCantidad()*$dolar)/100;
+                }else{
+                    $cantidadPago+=$unpago->getCantidad();
                 }
                 $saldo = $contratista->getTotal() - $cantidadPago;
                 $unpago->setSaldo($saldo);
@@ -330,8 +328,8 @@ class OrdenDeTrabajoController extends Controller
             'title' => 'Registrar Pago Contratista',
             'contratista' => $contratista,
             'edit_form' => $editForm->createView(),
-            'pagadoUSD' => $pagadoUSD,
-            'saldoUSD' => $saldoUSD
+            'pagadoMXN' => $pagadoMXN,
+            'saldoMXN' => $saldoMXN
         ]);
     }
 
