@@ -570,14 +570,14 @@
                                             <td id="estadia_precio" class="valorprecio" data-valor="{{ (astilleroCotizacion.acservicios.1.precio * astilleroCotizacion.dolar)/10000 }}">
                                                 $ {{ ((astilleroCotizacion.acservicios.1.precio * astilleroCotizacion.dolar)/10000)|number_format(2) }}
                                             </td>
-                                            <td id="estadia_subtotal" class="valorsubtotal" data-valor="{{ (astilleroCotizacion.acservicios.1.subtotal * astilleroCotizacion.dolar)/10000 }}">
-                                                $ {{ ((astilleroCotizacion.acservicios.1.subtotal * astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                            <td id="estadia_subtotal" class="valorsubtotal" data-valor="{{ (astilleroCotizacion.acservicios.1.subtotal /100) }}">
+                                                $ {{ (astilleroCotizacion.acservicios.1.subtotal/100)|number_format(2) }}
                                             </td>
-                                            <td id="estadia_iva" class="valoriva" data-valor="{{ (astilleroCotizacion.acservicios.1.iva * astilleroCotizacion.dolar)/10000 }}">
-                                                $ {{ ((astilleroCotizacion.acservicios.1.iva * astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                            <td id="estadia_iva" class="valoriva" data-valor="{{ (astilleroCotizacion.acservicios.1.iva /100) }}">
+                                                $ {{ (astilleroCotizacion.acservicios.1.iva /100)|number_format(2) }}
                                             </td>
-                                            <td id="estadia_total" class="valortotal" data-valor="{{ (astilleroCotizacion.acservicios.1.total * astilleroCotizacion.dolar)/10000 }}">
-                                                $ {{ ((astilleroCotizacion.acservicios.1.total * astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                            <td id="estadia_total" class="valortotal" data-valor="{{ (astilleroCotizacion.acservicios.1.total /100) }}">
+                                                $ {{ (astilleroCotizacion.acservicios.1.total / 100)|number_format(2) }}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -732,7 +732,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
-                                        $ <span id="gransubtot">{{ ((astilleroCotizacion.subtotal*astilleroCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        $ <span id="gransubtot">{{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -746,7 +746,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
-                                        $ <span id="graniva">{{ ((astilleroCotizacion.ivatotal*astilleroCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        $ <span id="graniva">{{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -760,7 +760,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
-                                        $ <span id="grantot">{{ ((astilleroCotizacion.total*astilleroCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        $ <span id="grantot">{{ (astilleroCotizacion.total/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -821,7 +821,7 @@
                                             <td id="grua_iva_mxn" class="valoriva" data-valor="{{ (astilleroCotizacion.acservicios.0.iva / astilleroCotizacion.dolar)}}">
                                                 $ {{ ((astilleroCotizacion.acservicios.0.iva / astilleroCotizacion.dolar))|number_format(2) }}
                                             </td>
-                                            <td id="grua_total_mxn" class="valortotal" data-valor="{{ (astilleroCotizacion.acservicios.0.total * astilleroCotizacion.dolar)/10000 }}">
+                                            <td id="grua_total_mxn" class="valortotal" data-valor="{{ (astilleroCotizacion.acservicios.0.total / astilleroCotizacion.dolar) }}">
                                                 $ {{ ((astilleroCotizacion.acservicios.0.total / astilleroCotizacion.dolar))|number_format(2) }}
                                             </td>
                                         </tr>
@@ -867,14 +867,14 @@
                                             <td id="estadia_precio_mxn" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios.1.precio/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.1.precio/100)|number_format(2) }}
                                             </td>
-                                            <td id="estadia_subtotal_mxn" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios.1.subtotal/100 }}">
-                                                $ {{ (astilleroCotizacion.acservicios.1.subtotal/100)|number_format(2) }}
+                                            <td id="estadia_subtotal_mxn" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios.1.subtotal/astilleroCotizacion.dolar }}">
+                                                $ {{ (astilleroCotizacion.acservicios.1.subtotal/astilleroCotizacion.dolar)|number_format(2) }}
                                             </td>
-                                            <td id="estadia_iva_mxn" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios.1.iva/100 }}">
-                                                $ {{ (astilleroCotizacion.acservicios.1.iva/100)|number_format(2) }}
+                                            <td id="estadia_iva_mxn" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios.1.iva/astilleroCotizacion.dolar }}">
+                                                $ {{ (astilleroCotizacion.acservicios.1.iva/astilleroCotizacion.dolar)|number_format(2) }}
                                             </td>
-                                            <td id="estadia_total_mxn" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios.1.total/100 }}">
-                                                $ {{ (astilleroCotizacion.acservicios.1.total/100)|number_format(2) }}
+                                            <td id="estadia_total_mxn" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios.1.total/astilleroCotizacion.dolar }}">
+                                                $ {{ (astilleroCotizacion.acservicios.1.total/astilleroCotizacion.dolar)|number_format(2) }}
                                             </td>
                                         </tr>
                                         <tr id="cotizalimpieza_mxn" class="{% if astilleroCotizacion.acservicios.6.estatus == 0 %}hidden{% endif %} servicio-agregado">
@@ -959,7 +959,7 @@
                                                 {% elseif servicioagregado.servicio.vars.value is not empty %}
                                                     <td class="td-servicio">{{ servicioagregado.servicio.vars.data.nombre }}</td>
                                                     <td class="valorprecio" data-valor="{{ servicioagregado.precio.vars.data/astilleroCotizacion.dolar }}">
-                                                        $ {{ (servicioagregado.precio.vars.data/astilleroCotizacion.dolar) }}
+                                                        $ {{ ((servicioagregado.precio.vars.data/astilleroCotizacion.dolar))|number_format(2) }}
                                                     </td>
                                                 {% elseif servicioagregado.otroservicio.vars.value is not empty %}
                                                     <td class="td-otroservicio">{{ servicioagregado.otroservicio.vars.value }}</td>
@@ -1001,7 +1001,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
-                                        $ <span id="gransubtot_mxn">{{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</span>
+                                        $ <span id="gransubtot_mxn">{{ (astilleroCotizacion.subtotal/astilleroCotizacion.dolar)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -1015,7 +1015,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
-                                        $ <span id="graniva_mxn">{{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</span>
+                                        $ <span id="graniva_mxn">{{ (astilleroCotizacion.ivatotal/astilleroCotizacion.dolar)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -1029,7 +1029,7 @@
                                 <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
-                                        $ <span id="grantot_mxn">{{ (astilleroCotizacion.total/100)|number_format(2) }}</span>
+                                        $ <span id="grantot_mxn">{{ (astilleroCotizacion.total/astilleroCotizacion.dolar)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>

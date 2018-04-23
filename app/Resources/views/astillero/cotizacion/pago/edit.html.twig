@@ -63,14 +63,11 @@
                             <label>Barco</label>
                             <div class='info-input'>{{ astilleroCotizacion.barco }}</div>
                             <label>Total Cotización</label>
-                            {#<div class='info-input'>$ {{ (astilleroCotizacion.total/100)|number_format(2) }} USD</div>#}
-                            <div class='info-input'>$ {{ ((astilleroCotizacion.total*astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN</div>
+                            <div class='info-input'>$ {{ (astilleroCotizacion.total/100)|number_format(2) }} MXN</div>
                             <label>Pagado hasta el momento</label>
-                            {#<div class='info-input'>$ {{ (astilleroCotizacion.pagado/100)|number_format(2) }} USD</div>#}
-                            <div class='info-input'>$ {{ ((astilleroCotizacion.pagado*astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN</div>
+                            <div class='info-input'>$ {{ (astilleroCotizacion.pagado/100)|number_format(2) }} MXN</div>
                             <label>Faltante</label>
-                            {#<div class='info-input'>$ {{ ((astilleroCotizacion.total-astilleroCotizacion.pagado)/100)|number_format(2) }} USD</div>#}
-                            <div class='info-input'>$ {{ (((astilleroCotizacion.total-astilleroCotizacion.pagado)*astilleroCotizacion.dolar)/10000)|number_format(2) }} MXN</div>
+                            <div class='info-input'>$ {{ ((astilleroCotizacion.total-astilleroCotizacion.pagado)/100)|number_format(2) }} MXN</div>
                         </div>
                         {% form_theme form 'estructura/temaerror.html.twig' %}
                         {{ form_start(form) }}

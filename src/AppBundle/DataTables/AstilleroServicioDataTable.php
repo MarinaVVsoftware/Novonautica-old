@@ -72,7 +72,7 @@ class AstilleroServicioDataTable extends AbstractDataTableHandler
 
             $results->data[] = [
                 $servicio->getNombre(),
-                '$' . number_format($servicio->getPrecio() / 100, 2).' USD',
+                '$' . number_format($servicio->getPrecio() / 100, 2).' MXN',
                 $servicio->getUnidad(),
                 $servicio->getDescripcion(),
                 $servicio->getId()

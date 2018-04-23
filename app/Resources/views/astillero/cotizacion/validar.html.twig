@@ -31,10 +31,10 @@
                             <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Información</a>
                         </li>
                         <li role="presentation">
-                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Total (USD)</a>
+                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Total (MXN)</a>
                         </li>
                         <li role="presentation">
-                            <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
+                            <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (USD)</a>
                         </li>
                         <li role="presentation">
                             <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
@@ -119,7 +119,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label>Dolar</label>
-                                    <div class='info-input'>{{ (astilleroCotizacion.dolar/100)|number_format(2) }}</div>
+                                    <div class='info-input'>${{ (astilleroCotizacion.dolar/100)|number_format(2) }} MXN</div>
                                 </div>
                             </div>
                         </div>
@@ -135,7 +135,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <small>Precios en USD</small>
+                                    <small>Precios en MXN</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -199,7 +199,7 @@
                                     <p>
                                         $
                                         <span id="gransubtot">{{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</span>
-                                        <span class="tipo-letra2">USD</span>
+                                        <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
                             </div>
@@ -214,7 +214,7 @@
                                     <p>
                                         $
                                         <span id="graniva">{{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</span>
-                                        <span class="tipo-letra2">USD</span>
+                                        <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
                             </div>
@@ -229,7 +229,7 @@
                                     <p>
                                         $
                                         <span id="grantot">{{ (astilleroCotizacion.total/100)|number_format(2) }}</span>
-                                        <span class="tipo-letra2">USD</span>
+                                        <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
                             </div>
@@ -246,7 +246,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <small>Precios en MXN</small>
+                                    <small>Precios en USD</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -281,10 +281,10 @@
                                                     {% elseif AstilleroServicio.servicio is not null %}
                                                         <td>{{ AstilleroServicio.servicio.nombre }}</td>
                                                     {% endif %}
-                                                    <td>$ {{ ((AstilleroServicio.precio*astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>
-                                                    <td>$ {{ ((AstilleroServicio.subtotal*astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>
-                                                    <td>$ {{ ((AstilleroServicio.iva*astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>
-                                                    <td>$ {{ ((AstilleroServicio.total*astilleroCotizacion.dolar)/10000)|number_format(2) }}</td>
+                                                    <td>$ {{ ((AstilleroServicio.precio/astilleroCotizacion.dolar))|number_format(2) }}</td>
+                                                    <td>$ {{ ((AstilleroServicio.subtotal/astilleroCotizacion.dolar))|number_format(2) }}</td>
+                                                    <td>$ {{ ((AstilleroServicio.iva/astilleroCotizacion.dolar))|number_format(2) }}</td>
+                                                    <td>$ {{ ((AstilleroServicio.total/astilleroCotizacion.dolar))|number_format(2) }}</td>
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}
@@ -309,8 +309,8 @@
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
                                         $
-                                        <span>{{ ((astilleroCotizacion.subtotal*astilleroCotizacion.dolar)/10000)|number_format(2) }}</span>
-                                        <span class="tipo-letra2">MXN</span>
+                                        <span>{{ ((astilleroCotizacion.subtotal/astilleroCotizacion.dolar))|number_format(2) }}</span>
+                                        <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
                             </div>
@@ -324,8 +324,8 @@
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
                                         $
-                                        <span>{{ ((astilleroCotizacion.ivatotal*astilleroCotizacion.dolar)/10000)|number_format(2) }}</span>
-                                        <span class="tipo-letra2">MXN</span>
+                                        <span>{{ ((astilleroCotizacion.ivatotal/astilleroCotizacion.dolar))|number_format(2) }}</span>
+                                        <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
                             </div>
@@ -339,8 +339,8 @@
                                     <p class="letra-azul">Total:</p>
                                     <p>
                                         $
-                                        <span>{{ ((astilleroCotizacion.total*astilleroCotizacion.dolar)/10000)|number_format(2) }}</span>
-                                        <span class="tipo-letra2">MXN</span>
+                                        <span>{{ ((astilleroCotizacion.total/astilleroCotizacion.dolar))|number_format(2) }}</span>
+                                        <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
                             </div>

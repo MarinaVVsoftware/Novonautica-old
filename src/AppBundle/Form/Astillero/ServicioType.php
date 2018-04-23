@@ -19,11 +19,11 @@ class ServicioType extends AbstractType
             ->add('nombre')
             ->add('precio',MoneyType::class,[
                 'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
-                'currency' => 'USD',
+                'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
                 'empty_data' => 0,
-                'label' => 'Precio (USD)'
+                'label' => 'Precio (MXN)'
             ])
             ->add('unidad')
             ->add('descripcion',TextareaType::class,[
