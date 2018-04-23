@@ -107,7 +107,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <button type="submit" class="pull-right btn btn-azul">
+                            <button type="submit" class="pull-right btn btn-azul" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Guardando...">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 Guardar
                             </button>
@@ -139,7 +139,7 @@
         const addLink = document.getElementById('add-another-actividad');
         const prototypeHolder = document.getElementById('appbundle_astillerocontratista_contratistaactividades');
         let existingDropzones = [];
-        let eDZCounter = 0;
+        let dropzoneCounter = 0;
         let addedFiles = false;
         let counter = '{{ edit_form.contratistaactividades|length }}';
 
@@ -191,7 +191,7 @@
             autoclose: true
           });
 
-          // existingDropzones.push(appendDropzone(element));
+          existingDropzones.push(appendDropzone(element));
         }
 
         /**
@@ -206,6 +206,7 @@
 
           return new Dropzone(dzContainer, {
             url: '{{ oneup_uploader_endpoint('actividad_fotos') }}',
+            haveNewFiles: false,
             acceptedFiles: 'image/*',
             maxFilesize: 1,
             dictFileTooBig: 'La imagen es demasiado pesada el tamaño maximo es de 1MiB',
@@ -227,16 +228,13 @@
                   .on('addedfile', function (file) {
                     if (file.upload) {
                       addedFiles = true;
+                      that.haveNewFiles = true;
                     }
-                    // const delBtn = Dropzone.createElement("<a data-dz-remove class='btn btn-xs btn-danger'><span class='glyphicon glyphicon-trash'></span></a>");
-                    // file.previewElement.append(delBtn);
-
-                    /*delBtn.addEventListener('click', function () {
-                      $.ajax('../foto/' + file.name, {type: 'DELETE'})
-                          .done(function () {
-                            that.removeFile(file);
-                          })
-                    });*/
+                  })
+                  .on('queuecomplete', function () {
+                    if (that.haveNewFiles) {
+                      dropzoneQueue();
+                    }
                   })
               ;
             }
@@ -245,12 +243,33 @@
 
         actividadForm.addEventListener('submit', function (e) {
           e.preventDefault();
+
+          $(':input[type="submit"]').button('loading');
+
           if (!addedFiles) {
             this.submit();
             return;
           }
-          processDropzoneQueues();
+
+          dropzoneQueue();
         });
+
+        function dropzoneQueue() {
+          dropzoneCounter++;
+          let currentDropzone = existingDropzones[dropzoneCounter - 1];
+
+          if (dropzoneCounter > existingDropzones.length) {
+            actividadForm.submit();
+            return;
+          }
+
+          if (!currentDropzone.haveNewFiles) {
+            dropzoneQueue();
+            return;
+          }
+
+          currentDropzone.processQueue();
+        }
 
           {% for a, actividad in contratista.contratistaactividades %}
           {% for f, foto in actividad.fotos %}
@@ -261,23 +280,6 @@
         });
           {% endfor %}
           {% endfor %}
-
-        function processDropzoneQueues() {
-          let dz = existingDropzones[eDZCounter];
-
-          dz.processQueue();
-
-          eDZCounter++;
-
-          if (eDZCounter === existingDropzones.length) {
-            setTimeout(() => {
-              actividadForm.submit()
-            }, 1000);
-            return;
-          }
-
-          processDropzoneQueues()
-        }
 
         function dropzoneSuccess(contenedor, prototipo, archivo, respuesta) {
           let divContainer = document.createElement('div');
