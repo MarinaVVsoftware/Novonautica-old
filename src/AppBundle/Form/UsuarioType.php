@@ -53,12 +53,19 @@ class UsuarioType extends AbstractType
                         'Validar' => 'ASTILLERO_COTIZACION_VALIDATE',
                         'Recotizar' => 'ASTILLERO_COTIZACION_REQUOTE',
                         'Pagos' => 'ROLE_ASTILLERO_PAGO',
-                        'ODT' => 'ROLE_ASTILLERO_ODT',
                         'Productos' => 'ROLE_ASTILLERO_PRODUCTO',
                         'Servicios' => 'ROLE_ASTILLERO_SERVICIO',
                         'Proveedores' => 'ROLE_ASTILLERO_PROVEEDOR',
                         'Servicios básicos' => 'ROLE_ASTILLERO_SERVICIOBASICO',
                         'Responsable' =>'ROLE_ASTILLERO_RESPONSABLE'
+                    ],
+                    'ODT' => [
+                        'Acceso' => 'ROLE_ODT',
+                        'Crear' => 'ROLE_ODT_CREATE',
+                        'Pagos' => 'ROLE_ODT_PAGO',
+                        'Actividad' => 'ROLE_ODT_ACTIVIDAD',
+                        'Editar contratista' => 'ROLE_ODT_CONTRATISTA_EDIT',
+                        'Eliminar' => 'ROLE_ODT_DELETE'
                     ],
                     'Ocean Deal' => [
                         'Acceso' => 'ROLE_EMBARCACION',

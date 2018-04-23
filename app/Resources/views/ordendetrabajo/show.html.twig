@@ -281,6 +281,7 @@
 
                                 <div class="row">
                                     <div class="col-sm-5">
+                                        {% if is_granted(expression('has_role("ROLE_ODT_PAGO") or (user.isAdmin())')) %}
                                         <div class="row espacio-linea-abajo2">
                                             <div class="col-sm-12">
                                                 <a class="btn btn-verde loadpage"
@@ -290,6 +291,7 @@
                                                 </a>
                                             </div>
                                         </div>
+                                        {% endif %}
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <div class="letra-azul">Descripción del trabajo:</div>
@@ -408,11 +410,13 @@
                                             <tr class="fondo-morado-2">
                                                 <td colspan="7">
                                                     {{ contratista.cotizacionInicial }}
+                                                    {% if is_granted(expression('has_role("ROLE_ODT_ACTIVIDAD") or (user.isAdmin())')) %}
                                                     <a class="btn btn-azul pull-right loadpage"
                                                        href="{{ path('ordendetrabajo_contratista_actividad', { 'id': contratista.id }) }}">
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                         Agregar
                                                     </a>
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                             {% for actividad in contratista.contratistaactividades %}
@@ -433,15 +437,17 @@
                             </div>
 
                         </div>
+                        {% if is_granted(expression('has_role("ROLE_ODT_CONTRATISTA_EDIT") or (user.isAdmin())')) %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
                                 <a class="btn btn-azul"
                                    href="{{ path('ordendetrabajo_edit',{'id': ordenDeTrabajo.id}) }}">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                    Editar
+                                    Editar contratistas
                                 </a>
                             </div>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -456,9 +462,10 @@
     <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.9.4/scheduler.min.js') }}"></script>
     <script src="{{ asset('bower_components/fullcalendar/dist/locale/es.js') }}"></script>
     <script>
-        $('.flujograma').on('click',function () {
+        $('.flujograma').on('click', function () {
             setTimeout(mostrarCalendario, 200);
         });
+
         function mostrarCalendario() {
 
             $('#calendario').fullCalendar({
@@ -481,23 +488,55 @@
                 },
                 events: [
                     {% for contratista in ordenDeTrabajo.contratistas %}
+                    {% set blanco = '#fff' %}
+                    {% set naranja = '#d14c1f' %}
+                    {% set verde = '#00652a' %}
+                    {% set azul = '#0064a2' %}
+                    {% set morado = '#7d2d8c' %}
+                    {% set rojo = '#941d33' %}
+                    {% set elige = 1 %}
                     {% for actividad in contratista.contratistaactividades %}
                     {
+                        {% if elige == 1 %}
+                        {% set fondo = naranja %}
+                        {% set elige = 2 %}
+                        {% elseif elige == 2 %}
+                        {% set fondo = verde %}
+                        {% set elige = 3 %}
+                        {% elseif elige == 3 %}
+                        {% set fondo = azul %}
+                        {% set elige = 4 %}
+                        {% elseif elige == 4 %}
+                        {% set fondo = morado %}
+                        {% set elige = 5 %}
+                        {% elseif elige == 5 %}
+                        {% set fondo = rojo %}
+                        {% set elige = 1 %}
+                        {% endif %}
                         title: "{{ actividad.nombre }}",
                         start: "{{ actividad.inicio|date('Y-m-d') }}",
-                        end: "{{ actividad.fin|date('Y-m-d') }}",
+                        end: "{{ actividad.fin|date_modify("+1 day")|date('Y-m-d') }}",
                         className: ["lineaevento"],
-                        textColor: '#fff',
-                        borderColor: '#DB235C',
-                        backgroundColor: '#DB235C'
+                        textColor: "{{ blanco }}",
+                        borderColor: "{{ fondo }}",
+                        backgroundColor: "{{ fondo }}"
                     },
                     {% endfor %}
                     {% endfor %}
 
                 ],
                 eventMouseover: function (data, event, view) {
+                    var diafin = data.end._d.getDate();
+                    var mesfin = data.end._d.getMonth() + 1;
+                    if (diafin < 10) {
+                        diafin = '0' + diafin;
+                    }
+                    if (mesfin < 10) {
+                        mesfin = '0' + mesfin;
+                    }
+                    var fechafin = data.end._d.getFullYear() + '-' + mesfin + '-' + diafin;
                     tooltip = '<div class="tooltiptopicevent" style="width:auto;height:auto;background:#292e41;border: 1px solid #0097f6;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;line-height: 200%;border-radius:5px;">' +
-                                'Actividad: ' + data.title +  '</br>' + 'Inicia: ' + data.start._i + '</br>' + 'Termina: ' + data.end._i +'</div>';
+                        'Actividad: ' + data.title + '</br>' + 'Inicia: ' + data.start._i + '</br>' + 'Termina: ' + fechafin + '</div>';
                     $("body").append(tooltip);
                     $(this).mouseover(function (e) {
                         $(this).css('z-index', 10000);

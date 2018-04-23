@@ -183,11 +183,13 @@
                     </div>
                 </div>
                 {{ form_end(edit_form) }}
+                {% if is_granted(expression('has_role("ROLE_ODT_DELETE") or (user.isAdmin())')) %}
                 <div class="row espacio-linea-arriba2">
                     <div class="col-sm-12">
                         {{ delete_form is defined ? modal.deleteButton('ODT') : '' }}
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </section>

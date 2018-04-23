@@ -59,7 +59,7 @@ class OrdenDeTrabajoController extends Controller
     public function newAction(Request $request)
     {
         $ordenDeTrabajo = new Ordendetrabajo();
-        $this->denyAccessUnlessGranted('ROLE_ASTILLERO_ODT', $ordenDeTrabajo);
+        $this->denyAccessUnlessGranted('ROLE_ODT_CREATE', $ordenDeTrabajo);
 
         $precioTotal = 0;
         $utilidadvvTotal = 0;
@@ -153,6 +153,7 @@ class OrdenDeTrabajoController extends Controller
      */
     public function showAction(OrdenDeTrabajo $ordenDeTrabajo)
     {
+        $this->denyAccessUnlessGranted('ROLE_ODT', $ordenDeTrabajo);
         $deleteForm = $this->createDeleteForm($ordenDeTrabajo);
 
         return $this->render('ordendetrabajo/show.html.twig', [
@@ -175,7 +176,7 @@ class OrdenDeTrabajoController extends Controller
      */
     public function editAction(Request $request, OrdenDeTrabajo $ordenDeTrabajo)
     {
-        $this->denyAccessUnlessGranted('ROLE_ASTILLERO_ODT', $ordenDeTrabajo);
+        $this->denyAccessUnlessGranted('ROLE_ODT_CONTRATISTA_EDIT', $ordenDeTrabajo);
 
         $precioTotal = 0;
         $utilidadvvTotal = 0;
@@ -276,7 +277,7 @@ class OrdenDeTrabajoController extends Controller
      */
     public function pagoAction(Request $request, Contratista $contratista)
     {
-        $this->denyAccessUnlessGranted('ROLE_ASTILLERO_ODT', $contratista);
+        $this->denyAccessUnlessGranted('ROLE_ODT_PAGO', $contratista);
         $pagadoMXN =0;
         $dolar = $contratista->getAstilleroODT()->getAstilleroCotizacion()->getDolar();
         $originalPagos = new ArrayCollection();
@@ -344,7 +345,7 @@ class OrdenDeTrabajoController extends Controller
      */
     public function actividadAction(Request $request, Contratista $contratista)
     {
-        $this->denyAccessUnlessGranted('ROLE_ASTILLERO_ODT', $contratista);
+        $this->denyAccessUnlessGranted('ROLE_ODT_ACTIVIDAD', $contratista);
         $originalActividades = new ArrayCollection();
         $oldFotos = new ArrayCollection();
 
@@ -421,6 +422,8 @@ class OrdenDeTrabajoController extends Controller
      */
     public function deleteAction(Request $request, OrdenDeTrabajo $ordenDeTrabajo)
     {
+        $this->denyAccessUnlessGranted('ROLE_ODT_DELETE', $ordenDeTrabajo);
+
         $form = $this->createDeleteForm($ordenDeTrabajo);
         $form->handleRequest($request);
 
