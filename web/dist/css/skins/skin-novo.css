@@ -245,7 +245,6 @@
 }
 
 .skin-novo li.treeview.active.menu-open > a:first-of-type {
-    background: transparent;
     border-left: 3px solid #0097f6;
 }
 

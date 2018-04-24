@@ -40,6 +40,9 @@ class ProductoType extends AbstractType
                 'currency' => 'MXN',
                 'label' => 'Precio Colaborador'
             ])
+            ->add('codigoBarras', TextType::class, [
+                'label' => 'Código de Barras',
+            ])
             ->add('claveUnidad', TextType::class)
             ->add('claveProdServ', TextType::class, [
                 'label' => 'Clave Producto'
