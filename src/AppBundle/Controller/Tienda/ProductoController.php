@@ -3,9 +3,12 @@
 namespace AppBundle\Controller\Tienda;
 
 use AppBundle\Entity\Tienda\Producto;
+use DataTables\DataTablesInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Producto controller.
@@ -35,12 +38,6 @@ class ProductoController extends Controller
         $form = $this->createForm('AppBundle\Form\Tienda\ProductoType', $producto);
         $form->handleRequest($request);
 
-        $deleteForms = [];
-
-        foreach ($listado as $formborrar) {
-            $deleteForms[] = $this->createDeleteForm($formborrar)->createView();
-        }
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($producto);
             $em->flush();
@@ -53,51 +50,47 @@ class ProductoController extends Controller
             'producto' => $producto,
             'productos' => $listado,
             'form' => $form->createView(),
-            'deleteForms' => $deleteForms,
         ]);
     }
 
     /**
-     * Deletes a producto entity.
-     *
-     * @Route("/{id}", name="tienda_producto_delete")
-     * @Method("DELETE")
+     * @Route("/eliminar/{id}", name="tienda_producto_borrar")
+     * @Method({"GET", "POST"})
      */
-    public function deleteAction(Request $request, Producto $producto)
+    public function eliminarAction(Producto $producto)
     {
-        $form = $this->createDeleteForm($producto);
-        $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
+        $productos = $em->getRepository('AppBundle:Tienda\Producto');
 
-        $encontrar = $em->getRepository('AppBundle:Tienda\Peticion')->findby(array('peticion' => $producto->getId()));
+        $producto = $productos->find($producto);
 
-        if (empty($encontrar)){
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($producto);
-            $em->flush();
-        }
+        $encontrar = $em->getRepository('AppBundle:Tienda\Peticion')->findby(array('producto' => $producto->getId()));
+
+        if (empty($encontrar)) {
+            $productos->borrarProducto($producto->getId());
             $this->addFlash('notice', 'El producto ha sido eliminado');
             return $this->redirectToRoute('tienda_producto_index');
-        }else{
+        } else {
             $this->addFlash('notice', 'No puede eliminar este producto hasta que se elimine la solicitud que la contiene');
             return $this->redirectToRoute('tienda_producto_index');
         }
     }
 
     /**
-     * Creates a form to delete a producto entity.
+     * @Route("/productos", name="tienda_producto_index_data")
      *
-     * @param Producto $producto The producto entity
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
      *
-     * @return \Symfony\Component\Form\FormInterface The form
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    private function createDeleteForm(Producto $producto)
+    public function getUsuariosDataAction(Request $request, DataTablesInterface $dataTables)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('tienda_producto_delete', array('id' => $producto->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+        try {
+            $results = $dataTables->handle($request, 'tienda_producto');
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
+        }
     }
 }

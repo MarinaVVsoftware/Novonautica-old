@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
     <style>
         .autocomplete-suggestions {
             background: #3e4766;
@@ -39,6 +40,9 @@
             display: block;
             border-bottom: 1px solid #000;
         }
+        .list-unstyled li {
+            margin-bottom: .5rem;
+        }
     </style>
 {% endblock %}
 
@@ -69,6 +73,7 @@
                             {{ form_row(form.nombre) }}
                             {{ form_row(form.precio) }}
                             {{ form_row(form.preciocolaborador) }}
+                            {{ form_row(form.codigoBarras) }}
                             {{ form_row(form.claveProdServ) }}
                             {{ form_row(form.claveUnidad) }}
                             {% if producto.id is not null %}
@@ -88,42 +93,17 @@
                         <div class="panel-heading">
                             <h3 class="panel-title">Listado de productos</h3>
                         </div>
-                        <div class="panel-body no-padding">
-                            <div class="table-responsive">
-                                <table class="table table-novo">
+                        <div class="panel-body">
+                            <div class="table-responsive scroll-novo">
+                                <table class="table table-novo text-center">
                                     <thead>
                                     <tr>
-                                        <th class="text-center">Nombre</th>
-                                        <th class="text-center">Precio Público</th>
-                                        <th class="text-center">Precio Colaborador</th>
-                                        <th class="text-center" width="25%">Acciones</th>
+                                        <th>Nombre</th>
+                                        <th>Precio Público</th>
+                                        <th>Precio Colaborador</th>
+                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    {% for i, item in productos %}
-                                        <tr>
-                                            <td align="center" valign="middle">{{ item.nombre }}</td>
-                                            <td align="center" valign="middle">
-                                                $ {{ (item.precio/100)|number_format(2,'.',',') }}</td>
-                                            <td align="center" valign="middle">
-                                                $ {{ (item.preciocolaborador/100)|number_format(2,'.',',') }}</td>
-                                            <td align="center" valign="middle">
-                                                <ul class="list-inline">
-                                                    <li>
-                                                        <a href="{{ path('tienda_producto_index', {'producto': item.id}) }}"
-                                                           class="btn btn-xs btn-azul">Editar</a>
-                                                    </li>
-                                                    <li>
-                                                        {{ form_start(deleteForms[i]) }}
-                                                        <input type="submit" class="btn btn-xs btn-naranja"
-                                                               value="Eliminar">
-                                                        {{ form_end(deleteForms[i]) }}
-                                                    </li>
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -137,55 +117,78 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/jquery.autocomplete.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
-      (function ($) {
-        const conceptoSettings = {
-          dataType: 'json',
-          deferRequestBy: 150,
-          showNoSuggestionNotice: true,
-          noSuggestionNotice: 'No se encontraron resultados',
-          triggerSelectOnValidInput: true,
-          minChars: 1,
-          paramName: 'q',
-          params: {},
-          autoSelectFirst: true,
-          onSearchStart: function (params) {
-            if (params.q.includes('/')) {
-              params.q = params.q.split(' / ')[1].trim();
-            }
-            return params;
-          },
-        };
+        (function ($) {
+            const conceptoSettings = {
+                dataType: 'json',
+                deferRequestBy: 150,
+                showNoSuggestionNotice: true,
+                noSuggestionNotice: 'No se encontraron resultados',
+                triggerSelectOnValidInput: true,
+                minChars: 1,
+                paramName: 'q',
+                params: {},
+                autoSelectFirst: true,
+                onSearchStart: function (params) {
+                    if (params.q.includes('/')) {
+                        params.q = params.q.split(' / ')[1].trim();
+                    }
+                    return params;
+                },
+            };
 
-        $('#appbundle_tienda_producto_claveProdServ').autocomplete({
-          ...conceptoSettings,
-          serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/claveprodserv.json`,
-          transformResult: function (claves) {
-            return {
-              suggestions: claves.map(clave => {
-                return {
-                  value: `${clave.claveProdServ} / ${clave.descripcion}`,
-                  data: clave.id
+            $('#appbundle_tienda_producto_claveProdServ').autocomplete({
+                ...conceptoSettings,
+                serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/claveprodserv.json`,
+                transformResult: function (claves) {
+                    return {
+                        suggestions: claves.map(clave => {
+                            return {
+                                value: `${clave.claveProdServ} / ${clave.descripcion}`,
+                                data: clave.id
+                            }
+                        })
+                    }
                 }
-              })
-            }
-          }
-        });
+            });
 
-        $('#appbundle_tienda_producto_claveUnidad').autocomplete({
-          ...conceptoSettings,
-          serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/clave_unidad.json`,
-          transformResult: function (claves) {
-            return {
-              suggestions: claves.map(clave => {
-                return {
-                  value: `${clave.claveUnidad} / ${clave.nombre}`,
-                  data: clave.id
+            $('#appbundle_tienda_producto_claveUnidad').autocomplete({
+                ...conceptoSettings,
+                serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/clave_unidad.json`,
+                transformResult: function (claves) {
+                    return {
+                        suggestions: claves.map(clave => {
+                            return {
+                                value: `${clave.claveUnidad} / ${clave.nombre}`,
+                                data: clave.id
+                            }
+                        })
+                    }
                 }
-              })
-            }
-          }
-        });
-      })(jQuery);
+            });
+        })(jQuery);
+
+        (function ($, datatableSettings) {
+
+            $('.table-novo').DataTable({
+                ...datatableSettings,
+                ajax: '{{ path('tienda_producto_index_data') }}',
+                order: [[0, 'desc']],
+                createdRow: function (row, usuario) {
+                    let lastCell = row.cells[3];
+                    lastCell.innerHTML = `
+            <ul class="list-unstyled">
+            <li>
+            <a href="{{ app.request.requestUri ~ '?producto=${usuario[3]}' }}" class="btn btn-xs btn-block btn-azul">Editar</a>
+            </li>
+            <li>
+            <a href="{{ app.request.requestUri ~ 'eliminar/${usuario[3]}' }}" class="btn btn-xs btn-block btn-naranja">Eliminar</a>
+            </li>
+            </ul>
+            `
+                },
+            });
+        })(jQuery, datatablesSettings);
     </script>
 {% endblock %}

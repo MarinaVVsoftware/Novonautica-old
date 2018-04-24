@@ -10,4 +10,14 @@ namespace AppBundle\Repository\Tienda;
  */
 class ProductoRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function borrarProducto($producto)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->delete('AppBundle:Tienda\Producto', 'prod')
+            ->where('prod.id = :producto')
+            ->setParameter('producto', $producto)
+            ->getQuery()
+            ->execute();
+    }
 }
