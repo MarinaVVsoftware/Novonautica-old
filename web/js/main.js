@@ -1634,3 +1634,9 @@ const datatablesSettings = {
     return false;
   }
 })(jQuery);
+const formularioGeneral = document.querySelector('form');
+formularioGeneral.addEventListener('submit', function (e) {
+    // e.preventDefault();
+    $(':input[type="submit"]').button('loading');
+});
+$(':input[type="submit"]').data('loading-text','<i class="fa fa-spinner fa-spin"></i> Guardando...');
