@@ -521,11 +521,12 @@ function coleccionContratistaODT(e,objeto,descripcion,total){
     // create a new list element and add it to the list
     var newLi = jQuery('<div class="row"></div>').html(newWidget);
     newLi.appendTo(proveedorListPrimero);
-    newLi.find('.input-calendario').datepicker({
-        autoclose: true,
-        format: 'yyyy-mm-dd',
-        orientation: "auto",
-    });
+    // newLi.find('.input-daterange').datepicker({
+    //     format: 'yyyy-mm-dd',
+    //     language: "es",
+    //     orientation: "bottom auto",
+    //     autoclose: true
+    // });
     $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_cotizacionInicial').val(descripcion);
     $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_preciovv').val((total/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     // also add a remove button, just for this example

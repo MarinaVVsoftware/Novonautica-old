@@ -274,7 +274,7 @@
                         <!-- END ASTILLERO/PRODUCTOS -->
 
                         <!-- START ASTILLERO/ODT -->
-                        {% if is_granted('ROLE_ASTILLERO_ODT') %}
+                        {% if is_granted('ROLE_ODT') %}
                             <li class="treeview {{ path.check('ordendetrabajo_') }}">
                                 <a href="#">
                                     <i class="fa fa-circle-o"></i> ODT
@@ -287,11 +287,13 @@
                                             <i class="fa fa-minus"></i> Listado
                                         </a>
                                     </li>
+                                    {% if is_granted(expression('has_role("ROLE_ODT_CREATE") or (user.isAdmin())')) %}
                                     <li class="{{ path.check('ordendetrabajo_new') }}">
                                         <a href="{{ path('ordendetrabajo_new') }}">
                                             <i class="fa fa-minus"></i> Nuevo
                                         </a>
                                     </li>
+                                    {% endif %}
                                 </ul>
                             </li>
                         {% endif %}
