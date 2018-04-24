@@ -56,18 +56,19 @@ class ProductoController extends Controller
     /**
      * @Route("/eliminar/{id}", name="tienda_producto_borrar")
      * @Method({"GET", "POST"})
+     * @param Producto $producto
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function eliminarAction(Producto $producto)
     {
         $em = $this->getDoctrine()->getManager();
-        $productos = $em->getRepository('AppBundle:Tienda\Producto');
 
-        $producto = $productos->find($producto);
 
-        $encontrar = $em->getRepository('AppBundle:Tienda\Peticion')->findby(array('producto' => $producto->getId()));
+        $encontrar = $em->getRepository('AppBundle:Tienda\Peticion')->findOneBy(array('producto' => $producto->getId()));
 
         if (empty($encontrar)) {
-            $productos->borrarProducto($producto->getId());
+            $em->remove($producto);
+            $em->flush();
             $this->addFlash('notice', 'El producto ha sido eliminado');
             return $this->redirectToRoute('tienda_producto_index');
         } else {
