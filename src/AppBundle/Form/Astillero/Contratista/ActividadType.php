@@ -37,7 +37,7 @@ class ActividadType extends AbstractType
                 'widget' => 'single_text',
                 'html5' => false,
                 'attr' => [
-                    'class' => 'datepicker input-calendario',
+                    'class' => 'input-calendario',
                     'readonly' => true
                 ],
                 'format' => 'yyyy-MM-dd',
@@ -46,7 +46,7 @@ class ActividadType extends AbstractType
             ->add('fin', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['class' => 'datepicker input-calendario',
+                'attr' => ['class' => 'input-calendario',
                     'readonly' => true],
                 'format' => 'yyyy-MM-dd',
                 'empty_data' => (new \DateTime())->modify('+1 day')

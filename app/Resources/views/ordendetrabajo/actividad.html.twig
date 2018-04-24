@@ -185,10 +185,11 @@
             }
           });
 
-          $(element).find('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
-            orientation: "bottom auto",
-            autoclose: true
+          $(element).find('.input-daterange').datepicker({
+              format: 'yyyy-mm-dd',
+              language: "es",
+              orientation: "bottom auto",
+              autoclose: true
           });
 
           existingDropzones.push(appendDropzone(element));
