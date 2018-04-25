@@ -104,4 +104,20 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function getWorkedBoatsByDaterange(\DateTime $start, \DateTime $end)
+    {
+        return $this->createQueryBuilder('ac')
+            ->select('ac.fechaLlegada AS fecha' ,'COUNT(ac.id) AS total')
+            ->where('ac.fechaLlegada BETWEEN :start AND :end')
+            ->andWhere('ac.validacliente = 2')
+            ->setParameters([
+                'start' => $start,
+                'end' => $end,
+            ])
+            ->groupBy('ac.fechaLlegada')
+            ->orderBy('ac.fechaLlegada', 'ASC')
+            ->getQuery()
+            ->getScalarResult();
+    }
 }

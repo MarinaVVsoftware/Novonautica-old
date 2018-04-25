@@ -10,4 +10,29 @@ namespace AppBundle\Repository;
  */
 class AstilleroCotizaServicioRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getIncomeReport(\DateTime $start, \DateTime $end)
+    {
+        return $this->createQueryBuilder('acs')
+//            ->select('SUM(acs.total) AS Total')
+            ->select('a.fechaLlegada AS fecha')
+            ->addSelect('(SUM(CASE WHEN acs.astilleroserviciobasico IS NOT NULL THEN acs.total ELSE 0 END) / 100) AS basicos')
+            ->addSelect('(SUM(CASE WHEN acs.producto IS NOT NULL THEN acs.total ELSE 0 END) / 100) AS productos')
+            ->addSelect('(SUM(CASE WHEN acs.servicio IS NOT NULL THEN acs.total ELSE 0 END) / 100) AS servicios')
+            ->addSelect('(SUM(CASE WHEN ' .
+                '((acs.servicio IS NULL) AND ' .
+                '(acs.producto IS NULL) AND ' .
+                '(acs.astilleroserviciobasico IS NULL)) ' .
+                'THEN acs.total ELSE 0 END) / 100) AS otros')
+            ->leftJoin('acs.astillerocotizacion', 'a')
+            ->where('a.fechaLlegada BETWEEN :start AND :end')
+            ->andWhere('a.validacliente = 2')
+            ->groupBy('a.fechaLlegada')
+            ->orderBy('a.fechaLlegada', 'ASC')
+            ->setParameters([
+                'start' => $start,
+                'end' => $end,
+            ])
+            ->getQuery()
+            ->getScalarResult();
+    }
 }

@@ -2,7 +2,33 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
+    <style>
+        :root .btn {
+            min-width: initial;
+            text-align: center;
+        }
+
+        :root .panel-body form.form-inline input {
+            width: 250px;
+        }
+
+        .daterangepicker {
+            color: initial;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+            background-color: #292f41;
+            border-color: #2a3041;
+        }
+
+        .ranges li {
+            background-color: hsl(225, 23%, 21%);
+            border: 1px solid #292f41;
+        }
+
+        .form-inline {
+            margin-bottom: 2rem;
+        }
+    </style>
 {% endblock %}
 
 {% block contwrapper %}
@@ -10,20 +36,27 @@
         <section class="content">
             <div class="panel panel-novo">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Reporte de Astillero</h3>
+                    <h3 class="panel-title">Reportes de embarcaciones</h3>
                 </div>
                 <div class="panel-body">
-                    <table class="table-novo table text-center">
-                        <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Adeudo</th>
-                            <th>Abonado</th>
-                            <th>Total adeudo</th>
-                            <th class="no-sort"></th>
-                        </tr>
-                        </thead>
-                    </table>
+                    <div class="col-sm-12">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label for="date-range">Rango</label>
+                                <input type="text" class="form-control" id="date-range">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="chart-container">
+                        <div class="line-chart">
+                            <h4>Embarcaciones subidas fecha</h4>
+                            <canvas id="history" height="300"></canvas>
+                        </div>
+                        <div class="bar-chart">
+                            <h4>Ingresos por fecha</h4>
+                            <canvas id="income" height="300"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -32,36 +65,152 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/chart.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/daterangepicker.js') }}"></script>
     <script type="text/javascript">
-      (function ($, settings) {
+      (function ($) {
         moment.locale('es');
 
-        $('.table-novo').DataTable({
-          ...settings,
-          ajax: '{{ path('astillero_reporte_index_data') }}',
-          order: [[1, 'asc']],
-          columns: [
-            {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 0},
-          ],
-          createdRow: function (row, cliente) {
-            let dateCell = row.cells[1];
-            let lastPayment = moment(cliente[1], 'YYYY-MM-DD HH:mm:ss', true);
-            if(lastPayment.isValid()) {
-              dateCell.innerHTML = lastPayment.fromNow();
-            }
+        const history = document.getElementById('history').getContext('2d');
+        const income = document.getElementById('income').getContext('2d');
+        const inicio = moment().subtract(29, 'days');
+        const final = moment();
+        const $dateRange = $('#date-range');
 
-            row.cells[4].innerHTML = `
-                <a class="btn btn-xs btn-block btn-naranja" href="{{ path('cliente_notificacion_index') }}?u=${cliente[4]}">Notificar</a>
-            `;
-          },
+        getChartsData(inicio.format('YYYY-MM-DD'), final.format('YYYY-MM-DD'));
+
+        Chart.defaults.global.defaultFontColor = '#0094f6';
+
+        let lineData = {
+          datasets: [{
+            label: 'Embarcaciones subidas',
+            fill: false,
+            borderColor: '#0097f6',
+            lineTension: 0,
+          }]
+        };
+
+        const hChart = new Chart(history, {
+          type: 'line',
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false
+            },
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }
+              ]
+            }
+          }
         });
-      })(jQuery, datatablesSettings);
+
+        const irChart = new Chart(income, {
+          type: 'bar',
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                beforeLabel: function (tooltipItem, data) {
+                  tooltipItem.yLabel = '$' + tooltipItem.yLabel.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+                }
+              }
+            },
+            scales: {
+              yAxes:[{
+                ticks: {
+                  callback: function (value) {
+                    return '$' + value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+                  }
+                }
+              }]
+            }
+          }
+        });
+
+        $dateRange.daterangepicker({
+          startDate: inicio,
+          endDate: final,
+          autoApply: true,
+          ranges: {
+            'Hoy': [moment(), moment()],
+            'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 días': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 días': [moment().subtract(29, 'days'), moment()],
+            'Este mes': [moment().startOf('month'), moment().endOf('month')],
+            'Mes pasado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          locale: {
+            applyLabel: 'Aplicar',
+            cancelLabel: 'Cancelar',
+            fromLabel: 'Desde',
+            toLabel: 'Hasta',
+            customRangeLabel: 'Definido por usuario',
+          }
+        });
+
+        $dateRange.on('apply.daterangepicker', function (e, picker) {
+          getChartsData(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
+        });
+
+        function getChartsData(start, end) {
+          $.ajax('boats-history.json', {data: {start, end}})
+              .done(function (d) {
+                updateHistoryLine(d);
+              });
+
+          $.ajax('income-report.json', {data: {start, end}})
+              .done(function (d) {
+                return updateIncomePie(d);
+              });
+        }
+
+        function updateHistoryLine(d) {
+          lineData.labels = d.map((label) => moment(label.fecha).format('DD MMM YY').toUpperCase());
+          lineData.datasets[0].data = d.map((datum) => datum.total);
+          hChart.data = lineData;
+
+          hChart.update();
+        }
+
+        function updateIncomePie(d) {
+          irChart.data.labels = [];
+          irChart.data.datasets = [];
+
+          irChart.data.labels = d.map(label => moment(label.fecha).format('DD MMM YY').toUpperCase());
+          irChart.data.datasets.push(
+              {
+                label: 'Basicos',
+                backgroundColor: '#2E5576',
+                data: d.map(datum => datum.basicos)
+              }, {
+                label: 'Servicios',
+                backgroundColor: '#4682B4',
+                data: d.map(datum => datum.servicios)
+              }, {
+                label: 'Productos',
+                backgroundColor: '#7BA7CC',
+                data: d.map(datum => datum.productos)
+              }, {
+                label: 'Otros',
+                backgroundColor: '#B6CEE2',
+                data: d.map(datum => datum.otros)
+              },
+          );
+
+          irChart.update();
+        }
+
+      })(jQuery);
     </script>
 {% endblock %}

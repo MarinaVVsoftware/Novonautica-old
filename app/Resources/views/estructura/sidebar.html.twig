@@ -329,10 +329,19 @@
                         <!-- END ASTILLERO/PROVEEDORES -->
 
                         <!-- START ASTILLERO/REPORTE -->
-                        <li class="{{ path.check('astillero_reporte_index') }}">
-                            <a href="{{ path('astillero_reporte_index') }}">
+                        <li class="treeview {{ path.check('_reporte_') }}">
+                            <a href="#">
                                 <i class="fa fa-circle-o"></i> Reportes
+                                <span class="pull-right-container"><i
+                                            class="fa fa-angle-left pull-right"></i></span>
                             </a>
+                            <ul class="treeview-menu">
+                                <li class="{{ path.check('astillero_reporte_index') }}">
+                                    <a href="{{ path('astillero_reporte_index') }}">
+                                        <i class="fa fa-minus"></i> Embarcaciones
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <!-- END ASTILLERO/REPORTE -->
                     </ul>

@@ -13,8 +13,12 @@ use DataTables\DataTablesInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class ReporteController
@@ -30,8 +34,6 @@ class ReporteController extends AbstractController
      * @Method("GET")
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\NoResultException
      */
     public function indexReporteAction()
     {
@@ -39,23 +41,68 @@ class ReporteController extends AbstractController
     }
 
     /**
-     * Rellena la tabla de reportes de astillero
-     *
-     * @Route("/data", name="astillero_reporte_index_data")
+     * @Route("/boats-history.json")
      * @Method("GET")
-     *
      * @param Request $request
-     * @param DataTablesInterface $dataTables
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
+     * @throws \Exception
      */
-    public function indexDataReporteAction(Request $request, DataTablesInterface $dataTables)
+    public function getBoatHistoryAction(Request $request)
     {
-        try {
-            $results = $dataTables->handle($request, 'astilleroReporte');
-            return $this->json($results);
-        } catch (HttpException $e) {
-            return $this->json($e->getMessage(), $e->getStatusCode());
+        $cotizacionRepository = $this->getDoctrine()->getRepository('AppBundle:AstilleroCotizacion');
+
+        $start = $request->query->get('start')
+            ? new \DateTime($request->query->get('start'))
+            : new \DateTime('-29 days');
+
+        $end = $request->query->get('end')
+            ? new \DateTime($request->query->get('end'))
+            : new \DateTime();
+
+        $dates = $cotizacionRepository
+            ->getWorkedBoatsByDaterange($start, $end);
+
+        /*$fechas = array_column($dates, 'fecha');
+
+        $days = new \DatePeriod($start, new \DateInterval('P1D'), $end);
+
+        foreach ($days as $day) {
+            $keyTime = $day->format('Y-m-d H:i:s');
+            if (!in_array($keyTime, $fechas)) {
+                $dates[] = [
+                    'fecha' => $keyTime,
+                    'total' => 0,
+                ];
+            }
         }
+
+        sort($dates);*/
+
+        return (new JsonResponse($dates))->setEncodingOptions(JSON_NUMERIC_CHECK);
+    }
+
+    /**
+     * @Route("/income-report.json")
+     * @Method("GET")
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getIncomeAction(Request $request)
+    {
+        $serviciosRepository = $this->getDoctrine()->getRepository('AppBundle:AstilleroCotizaServicio');
+
+        $start = $request->query->get('start')
+            ? new \DateTime($request->query->get('start'))
+            : new \DateTime('-29 days');
+
+        $end = $request->query->get('end')
+            ? new \DateTime($request->query->get('end'))
+            : new \DateTime();
+
+        $incomeReport = $serviciosRepository->getIncomeReport($start, $end);
+
+        return (new JsonResponse($incomeReport))->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 }
