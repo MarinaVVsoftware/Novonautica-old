@@ -248,21 +248,22 @@
 
                 let adeudo = trabajos.reduce((a, b) => a + b.total, 0);
                 let pagado = trabajos.map(function (trabajo) {
-                  let pagos = trabajo.contratistapagos.reduce((a, b) => a + b.cantidad, 0);
+                  let dolarCambio = (trabajo.astilleroODT.astilleroCotizacion.dolar / 100);
+                  let pagos = trabajo.contratistapagos.reduce((a, b) => b.divisa === 'USD' ? a + (b.cantidad * dolarCambio) : a + b.cantidad, 0);
                   let row = rTabla.insertRow();
 
                   row.insertCell().innerText = trabajo.cotizacionInicial;
-                  row.insertCell().innerText = (trabajo.total / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-                  row.insertCell().innerText = (pagos / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+                  row.insertCell().innerText = '$' + (trabajo.total / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'MXN';
+                  row.insertCell().innerText = '$' + (pagos / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'MXN';
                   row.insertCell().innerText = trabajo.astilleroODT.fecha;
 
                   return pagos;
                 })[0];
                 let total = (adeudo - pagado);
 
-                adeudoInput.value = (adeudo / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-                pagadoInput.value = (pagado / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-                totalInput.value = (total / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+                adeudoInput.value = (adeudo / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'MXN';
+                pagadoInput.value = (pagado / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'MXN';
+                totalInput.value = (total / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'MXN';
 
               });
         });

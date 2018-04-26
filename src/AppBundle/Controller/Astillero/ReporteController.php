@@ -9,7 +9,6 @@
 namespace AppBundle\Controller\Astillero;
 
 
-use AppBundle\Entity\OrdenDeTrabajo;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -77,15 +76,8 @@ class ReporteController extends AbstractController
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
 
         $encoders = [new JsonEncoder()];
-        $gsNormalizer = new GetSetMethodNormalizer($classMetadataFactory);
-        $normalizers = [new DateTimeNormalizer(), $gsNormalizer];
+        $normalizers = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory)];
         $serializer = new Serializer($normalizers, $encoders);
-
-        $gsNormalizer->setCallbacks([
-            'astilleroODT' => function ($odt) {
-                return $odt instanceof OrdenDeTrabajo ? $odt->getFecha() : '';
-            }
-        ]);
 
         $response = $serializer->serialize($trabajos, 'json', [
             'groups' => ['AstilleroReporte'],
@@ -104,9 +96,7 @@ class ReporteController extends AbstractController
     {
         $query = $request->query->get('query');
 
-        if (null === $query) {
-            return $this->json([]);
-        }
+        if (null === $query) { return $this->json([]); }
 
         $proveedorRepository = $this->getDoctrine()->getRepository('AppBundle:Astillero\Proveedor');
         $proveedores = $proveedorRepository->findProveedorNameLike($query);

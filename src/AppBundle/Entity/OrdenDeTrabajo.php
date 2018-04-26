@@ -88,6 +88,8 @@ class OrdenDeTrabajo
     private $fecha;
 
     /**
+     * @Groups({"AstilleroReporte"})
+     *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\AstilleroCotizacion", inversedBy="odt")
      * @ORM\JoinColumn(name="idastillerocotizacion", referencedColumnName="id")
      */
