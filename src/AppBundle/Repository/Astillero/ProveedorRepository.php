@@ -10,4 +10,14 @@ namespace AppBundle\Repository\Astillero;
  */
 class ProveedorRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findProveedorNameLike($query)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.id AS id', 'p.nombre AS nombre')
+            ->where('p.nombre LIKE :query')
+            ->setParameter('query', "%{$query}%")
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -9,14 +9,19 @@
 namespace AppBundle\Controller\Astillero;
 
 
-use DataTables\DataTablesInterface;
+use AppBundle\Entity\OrdenDeTrabajo;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -37,7 +42,76 @@ class ReporteController extends AbstractController
      */
     public function indexReporteAction()
     {
-        return $this->render('astillero/reporte/index.html.twig', ['title' => 'Reportes Astillero']);
+        return $this->render('astillero/reporte/index.html.twig', ['title' => 'Embarcaciones']);
+    }
+
+    /**
+     * @Route("/contratista", name="astillero_reporte_contratista")
+     * @Method("GET")
+     */
+    public function contratistaReporteAction()
+    {
+        return $this->render('astillero/reporte/contratista.html.twig', ['title' => 'Contratistas']);
+    }
+
+
+    /**
+     * @Route("/datum.json", name="astillero_reporte_contratista_data")
+     * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
+    public function getContratistaReporteDataAction(Request $request)
+    {
+        $proveedor = $request->query->get('proveedor');
+        $inicio = $request->query->get('start');
+        $fin = $request->query->get('end');
+
+        $em = $this->getDoctrine();
+        $contratistaRepository = $em->getRepository('AppBundle:Astillero\Contratista');
+        $trabajos = $contratistaRepository->getTrabajosByProveedor($proveedor, $inicio, $fin);
+
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+
+        $encoders = [new JsonEncoder()];
+        $gsNormalizer = new GetSetMethodNormalizer($classMetadataFactory);
+        $normalizers = [new DateTimeNormalizer(), $gsNormalizer];
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $gsNormalizer->setCallbacks([
+            'astilleroODT' => function ($odt) {
+                return $odt instanceof OrdenDeTrabajo ? $odt->getFecha() : '';
+            }
+        ]);
+
+        $response = $serializer->serialize($trabajos, 'json', [
+            'groups' => ['AstilleroReporte'],
+            DateTimeNormalizer::FORMAT_KEY => 'd-m-Y'
+        ]);
+
+        return JsonResponse::fromJsonString($response)
+            ->setEncodingOptions(JSON_NUMERIC_CHECK);
+    }
+
+    /**
+     * @Route("/proveedores.json")
+     * @Method("GET")
+     */
+    public function getProveedoresAction(Request $request)
+    {
+        $query = $request->query->get('query');
+
+        if (null === $query) {
+            return $this->json([]);
+        }
+
+        $proveedorRepository = $this->getDoctrine()->getRepository('AppBundle:Astillero\Proveedor');
+        $proveedores = $proveedorRepository->findProveedorNameLike($query);
+
+        return $this->json($proveedores);
     }
 
     /**
@@ -63,6 +137,7 @@ class ReporteController extends AbstractController
         $dates = $cotizacionRepository
             ->getWorkedBoatsByDaterange($start, $end);
 
+        // Rellena las fechas faltantes
         /*$fechas = array_column($dates, 'fecha');
 
         $days = new \DatePeriod($start, new \DateInterval('P1D'), $end);

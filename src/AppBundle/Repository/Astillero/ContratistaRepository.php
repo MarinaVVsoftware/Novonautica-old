@@ -10,4 +10,22 @@ namespace AppBundle\Repository\Astillero;
  */
 class ContratistaRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getTrabajosByProveedor($proveedor, $inicio, $fin)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t', 'o', 'pa')
+//            ->select('t.cotizacionInicial descripcion', 't.total saldo', 'o.fecha fecha')
+            ->leftJoin('t.proveedor', 'p')
+            ->leftJoin('t.astilleroODT', 'o')
+            ->leftJoin('t.contratistapagos', 'pa')
+            ->where('o.fecha BETWEEN :inicio AND :fin')
+            ->andWhere('p.id = :proveedor')
+            ->setParameters([
+                'proveedor' => $proveedor,
+                'inicio' => $inicio,
+                'fin' => $fin
+            ])
+            ->getQuery()
+            ->getResult();
+    }
 }

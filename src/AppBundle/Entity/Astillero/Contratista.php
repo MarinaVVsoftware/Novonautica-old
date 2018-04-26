@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Astillero;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -24,6 +25,8 @@ class Contratista
 
     /**
      * @var string
+     *
+     * @Groups({"AstilleroReporte"})
      *
      * @ORM\Column(name="cotizacionInicial", type="string", length=255)
      */
@@ -67,11 +70,14 @@ class Contratista
     /**
      * @var int
      *
+     * @Groups({"AstilleroReporte"})
+     *
      * @ORM\Column(name="total", type="bigint")
      */
     private $total;
 
     /**
+     * @Groups({"AstilleroReporte"})
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\OrdenDeTrabajo", inversedBy="contratistas")
      * @ORM\JoinColumn(name="idodt", referencedColumnName="id",onDelete="CASCADE")
@@ -85,6 +91,8 @@ class Contratista
     private $proveedor;
 
     /**
+     * @Groups({"AstilleroReporte"})
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Astillero\Contratista\Pago", mappedBy="contratista", cascade={"persist"})
      */
     private $contratistapagos;

@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * OrdenDeTrabajo
@@ -79,6 +80,8 @@ class OrdenDeTrabajo
 
     /**
      * @var \DateTime
+     *
+     * @Groups({"AstilleroReporte"})
      *
      * @ORM\Column(name="fecha", type="datetime")
      */
