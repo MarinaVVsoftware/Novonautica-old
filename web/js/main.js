@@ -1561,43 +1561,37 @@ const datatablesSettings = {
   },
   searchDelay: 500,
   columnDefs: [
-      {targets: 'no-sort', orderable: false},
-      {targets: 'no-show', visible:false, searchable:false}
-      ],
+    {targets: 'no-sort', orderable: false},
+    {targets: 'no-show', visible: false, searchable: false}
+  ],
   initComplete: function () {
     this.api().columns('.with-choices').every(function () {
       const column = this;
       const columnHeader = column.header();
       const select = document.createElement('select');
-      let columnName = columnHeader.innerHTML.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+      let columnName = columnHeader.innerHTML.toLowerCase().normalize('NFD').replace(/#[\u0300-\u036f]/g, "");
 
       select.add(new Option(columnHeader.innerHTML, ''));
       columnHeader.innerHTML = '';
       columnHeader.appendChild(select);
 
-      select.addEventListener('click', e => e.stopPropagation()
-      )
-      ;
+      select.addEventListener('click', e => e.stopPropagation());
       select.addEventListener('change', function () {
         let val = $.fn.dataTable.util.escapeRegex(this.value);
         column.search(val, true, true).draw();
       });
 
       $.ajax({
-        url: `${location.href}${columnName}.json`,
+        url: `${location.protocol + '//' + location.host + location.pathname}${columnName}.json`,
         success: function (options) {
           options
-              .map(opt => opt.nombre || opt.name
-              )
-              .filter((item, index, array) => array.indexOf(item || '') === index
-              )
+              .map(opt => opt.nombre || opt.name)
+              .filter((item, index, array) => array.indexOf(item || '') === index)
               .sort()
-              .forEach(optionValue => select.add(new Option(optionValue, optionValue))
-              )
+              .forEach(optionValue => select.add(new Option(optionValue, optionValue)))
           ;
         }
       });
-
       // LIMITADO A LOS DATOS QUE RECIBE EN EL PRIMER QUERY
       // this.data().unique().sort().map((optionValue) => { select.add(new Option(optionValue, optionValue)) });
     });

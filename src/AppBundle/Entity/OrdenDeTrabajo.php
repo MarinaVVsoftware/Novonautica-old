@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * OrdenDeTrabajo
@@ -80,11 +81,15 @@ class OrdenDeTrabajo
     /**
      * @var \DateTime
      *
+     * @Groups({"AstilleroReporte"})
+     *
      * @ORM\Column(name="fecha", type="datetime")
      */
     private $fecha;
 
     /**
+     * @Groups({"AstilleroReporte"})
+     *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\AstilleroCotizacion", inversedBy="odt")
      * @ORM\JoinColumn(name="idastillerocotizacion", referencedColumnName="id")
      */

@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Astillero\Contratista;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Pago
@@ -24,6 +25,8 @@ class Pago
     /**
      * @var int
      *
+     * @Groups({"AstilleroReporte"})
+     *
      * @ORM\Column(name="cantidad", type="bigint")
      */
     private $cantidad;
@@ -31,12 +34,16 @@ class Pago
     /**
      * @var string
      *
+     * @Groups({"AstilleroReporte"})
+     *
      * @ORM\Column(name="divisa", type="string", length=3)
      */
     private $divisa;
 
     /**
      * @var \DateTime
+     *
+     * @Groups({"AstilleroReporte"})
      *
      * @ORM\Column(name="fecha", type="datetime")
      */
