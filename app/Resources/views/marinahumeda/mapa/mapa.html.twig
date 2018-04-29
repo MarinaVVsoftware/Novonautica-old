@@ -25,7 +25,7 @@
     <div class="content-wrapper">
         <section class="content">
             <div class="row">
-                <div class="col-md-12">
+                <div id="alert-container" class="col-md-12">
                     {% for message in app.flashes('danger') %}
                         <div class="alert alert-danger">
                             {{ message }}
@@ -1148,14 +1148,6 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {#{% for key, porcentaje in porcentajes %}
-                                    <tr>
-                                        <td>{{ key }}</td>
-                                        <td>{{ porcentaje['total'] }}</td>
-                                        <td>{{ porcentaje['ocupacion'] }}</td>
-                                        <td>{{ porcentaje['porcentaje'] }} %</td>
-                                    </tr>
-                                {% endfor %}#}
                                 </tbody>
                             </table>
                         </div>
@@ -1187,7 +1179,7 @@
     <script type="text/javascript" src="{{ asset('js/svg-pan-zoom.min.js') }}"></script>
     <script type="text/javascript">
       (function ($) {
-
+        const errorContainer = document.getElementById('alert-container');
         const embarcaciones = document.querySelectorAll('#embarcaciones > g');
         const $mapData = $('#map-data');
         const $modal = $('#slip-info');
@@ -1195,32 +1187,36 @@
         const $modalTitle = $modal.find('.modal-title');
         let slip = null;
 
-        $
-            .ajax({
-              url: '{{ path('mapa-data') }}',
-              dataType: 'json',
-            })
-            .done(function ({data, slips}) {
-              let totalRow = {pies: 'Total', amarres: 0, ocupacion: 0, porcentaje: 0};
+        reloadMap();
 
-              embarcaciones.forEach(function (embarcacion) {
-                slips.forEach(function ({slip}) {
-                  if (`e${slip.num}` === embarcacion.id) {
-                    embarcacion.children[0].classList = 'st4';
-                    embarcacion.classList.add('busy');
-                  }
+        function reloadMap() {
+          $
+              .ajax({
+                url: '{{ path('mapa-data') }}',
+                dataType: 'json',
+              })
+              .done(function ({data, slips}) {
+                let totalRow = {pies: 'Total', amarres: 0, ocupacion: 0, porcentaje: 0};
+
+                embarcaciones.forEach(function (embarcacion) {
+                  slips.forEach(function ({slip}) {
+                    if (`e${slip.num}` === embarcacion.id) {
+                      embarcacion.children[0].classList = 'st4';
+                      embarcacion.classList.add('busy');
+                    }
+                  });
                 });
-              });
 
-              data.forEach(function (item) {
-                totalRow.amarres += Number(item.amarres);
-                totalRow.ocupacion += Number(item.ocupacion);
-                createDataMapRow(item);
-              });
+                data.forEach(function (item) {
+                  totalRow.amarres += Number(item.amarres);
+                  totalRow.ocupacion += Number(item.ocupacion);
+                  createDataMapRow(item);
+                });
 
-              totalRow.porcentaje = ((totalRow.ocupacion * 100) / totalRow.amarres);
-              createDataMapRow(totalRow);
-            });
+                totalRow.porcentaje = ((totalRow.ocupacion * 100) / totalRow.amarres);
+                createDataMapRow(totalRow);
+              });
+        }
 
         svgPanZoom('#mapa', {
           zoomEnabled: true,
@@ -1244,26 +1240,78 @@
         });
 
         $(document).on('click', '#embarcaciones > g', function () {
-          slip = this.id.replace('e', '');
+          let idSlip = this.id.replace('e', '');
 
           if (this.classList.contains('busy')) {
             $
                 .ajax({
-                  url: `{{ app.request.requestUri }}/${slip}/detail`,
+                  url: `{{ app.request.requestUri }}/${idSlip}/detail`,
                   dataType: 'json'
                 })
                 .done(function (slip) {
                   $modalTitle.text('Detalles');
                   $modalBody.html(createSlipDetails(slip[0], false));
+                  let $relocateBtn = $modalBody.find('.relocate-btn');
+                  let $relocateFormContainer = $modalBody.find('.relocate-form');
+                  let $unassignBtn = $modalBody.find('.unassign-btn');
+
+                  $unassignBtn.on('click', function (e) {
+                    e.preventDefault();
+
+                    $.ajax(`{{ app.request.requestUri }}/${slip[0].id}/remove`, {type: 'DELETE'})
+                        .fail(function () {
+                          errorContainer.innerHTML = `
+                            <div class="alert alert-warning">
+                              Hubo un error al intentar desasignar la cotización, por favor intentalo de nuevo.
+                            </div>
+                          `;
+
+                          setTimeout(function () {
+                            errorContainer.innerHTML = '';
+                          }, 8000);
+                        })
+                        .done(function () {
+                          window.location.reload();
+                        });
+                  });
+
+                  $relocateBtn.on('click', function (e) {
+                    e.preventDefault();
+
+                    $
+                        .get(`{{ app.request.requestUri }}/${slip[0].id}/relocate`)
+                        .done(function (form) {
+                          $relocateFormContainer.html(form);
+                        })
+                  });
+
+                  $relocateFormContainer.on('change', '#appbundle_slipmovimiento_slip', function () {
+                    $.ajax(`{{ app.request.requestUri }}/${slip[0].marinahumedacotizacion.folio}/isopen`, {
+                      dataType: 'json',
+                      data: {'slip': this.value}
+                    }).done(function (busySlip) {
+                      let $closed = $('#slipClosed');
+                      let $submitBtn = $modalBody.find('.btn-azul');
+
+                      if (busySlip.length) {
+                        $closed.html(createSlipDetails(busySlip[0], {llegada: slip[0].fechaLlegada, salida: slip[0].fechaSalida}, true));
+                        $submitBtn.attr('disabled', 'disabled')
+                      } else {
+                        $closed.html('');
+                        $submitBtn.removeAttr('disabled');
+                      }
+                    })
+                  });
+
                 })
                 .done(function () {
                   $modal.modal('show');
                 })
           } else {
             $
-                .get(`{{ app.request.requestUri }}/${slip}/assign`)
+                .get(`{{ app.request.requestUri }}/${idSlip}/assign`)
                 .done(function (form) {
-                  $modalTitle.text('Asignacion de Slip #' + slip);
+                  $modalTitle.text('Asignacion de Slip #' + idSlip);
                   $modalBody.html(form);
                 })
                 .done(function () {
@@ -1284,9 +1332,9 @@
                 data: {'slip': slip}
               })
               .done(function (slip) {
-                const $detail = $('#cotizacion-detail');
-                const $closed = $('#slipClosed');
-                const $submitBtn = $modalBody.find('.btn-azul');
+                let $detail = $('#cotizacion-detail');
+                let $closed = $('#slipClosed');
+                let $submitBtn = $modalBody.find('.btn-azul');
 
                 $detail.html(`
                 <dl class="dl-horizontal">
@@ -1304,7 +1352,7 @@
                   $closed.html('');
                   $submitBtn.removeAttr('disabled');
                 }
-              })
+              });
         });
 
         function createDataMapRow(dataRow) {
@@ -1316,10 +1364,11 @@
                   <td>${dataRow.porcentaje.toFixed(1)}%</td>
                 </tr>
                 `;
+
           $mapData.append(row);
         }
 
-        function createSlipDetails(slip, shouldWarn) {
+        function createSlipDetails(slip, shouldWarn, relocate) {
           let llegada = new Date(slip.fechaLlegada);
           let salida = new Date(slip.fechaSalida);
           let folio = slip.marinahumedacotizacion.folio + (slip.marinahumedacotizacion.foliorecotiza ? '-' + slip.marinahumedacotizacion.foliorecotiza : '');
@@ -1345,6 +1394,11 @@
             <div class="text-center">
               <a href="{{ app.request.baseUrl }}/marina/cotizacion/${slip.marinahumedacotizacion.id}" class="btn btn-xs btn-morado-claro margin-bottom" target="_blank">Ver Cotización</a>
             </div>
+            <div class="text-center">
+                <a href="#" class="unassign-btn btn btn-xs btn-naranja margin-bottom">Desasignar</a>
+                ${!relocate ? '<a href="#" class="relocate-btn btn btn-xs btn-azul margin-bottom">Reasignar</a>' : ''}
+            </div>
+            <div class="relocate-form"></div>
           `;
 
           return shouldWarn ? warnTemplate + template : template;

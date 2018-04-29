@@ -1569,7 +1569,7 @@ const datatablesSettings = {
       const column = this;
       const columnHeader = column.header();
       const select = document.createElement('select');
-      let columnName = columnHeader.innerHTML.toLowerCase().normalize('NFD').replace(/#[\u0300-\u036f]/g, "");
+      let columnName = columnHeader.innerHTML.toLowerCase().normalize('NFD').replace(/#/g, "").replace(/[\u0300-\u036f]/g, "");
 
       select.add(new Option(columnHeader.innerHTML, ''));
       columnHeader.innerHTML = '';

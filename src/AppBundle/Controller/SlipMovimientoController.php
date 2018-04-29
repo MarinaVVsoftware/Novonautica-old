@@ -9,6 +9,7 @@ use AppBundle\Serializer\NotNullObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -111,6 +112,7 @@ class SlipMovimientoController extends Controller
      * @Route("/mapa/{id}/assign", name="assign-slip")
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function createAssignSlipAction(Request $request, Slip $slip)
@@ -127,7 +129,8 @@ class SlipMovimientoController extends Controller
             $cotizacion = $slipMovimiento->getMarinahumedacotizacion();
             $fechaLlegada = $cotizacion->getFechaLlegada();
             $fechaSalida = $cotizacion->getFechaSalida();
-            $smExists = $em->getRepository('AppBundle:SlipMovimiento')->isSlipOpen($slip->getId(), $fechaLlegada, $fechaSalida);
+            $smExists = $em->getRepository('AppBundle:SlipMovimiento')
+                ->isSlipOpen($slip->getId(), $fechaLlegada, $fechaSalida);
 
             if ($smExists) {
                 $this->addFlash('danger', 'La cotización asignada al slip, coincide con otra cotización');
@@ -145,6 +148,7 @@ class SlipMovimientoController extends Controller
 
             return $this->redirect($request->headers->get('referer'));
         }
+
         /*
          * En este caso se hace una validacion para no reasignarle un slip a una cotizacion
          * La validacion se hace desde la entidad SlipMovimiento y el slip asignado en la MHC
@@ -153,6 +157,64 @@ class SlipMovimientoController extends Controller
         return $this->render('marinahumeda/mapa/form/assign-slip.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/mapa/{id}/relocate", name="relocate-slip")
+     *
+     * @param Request $request
+     * @param SlipMovimiento $slipMovimiento
+     *
+     * @return Response
+     */
+    public function relocateSlipAction(Request $request, SlipMovimiento $slipMovimiento)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $form = $this->createForm(
+            'AppBundle\Form\SlipMovimientoType',
+            $slipMovimiento,
+            [
+                'action' => $this->generateUrl(
+                    'relocate-slip',
+                    [
+                        'id' => $slipMovimiento->getId(),
+                    ]
+                )
+            ]);
+
+        $form->remove('marinahumedacotizacion');
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $slip = $slipMovimiento->getSlip();
+            $slipMovimiento->getMarinahumedacotizacion()->setSlip($slip);
+
+            $em->persist($slipMovimiento);
+            $em->flush();
+
+            return $this->redirect($request->headers->get('referer'));
+        }
+
+        return $this->render('marinahumeda/mapa/form/assign-slip.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/mapa/{id}/remove", name="remove-slip")
+     * @Method("DELETE")
+     */
+    public function removeSlipAction(SlipMovimiento $slipMovimiento)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $slipMovimiento->getMarinahumedacotizacion()->setSlip(null);
+
+        $em->remove($slipMovimiento);
+        $em->flush();
+
+        return new Response(null, Response::HTTP_CREATED);
     }
 
     /**
@@ -209,7 +271,8 @@ class SlipMovimientoController extends Controller
     }
 
     /**
-     * @Route("/buscar-movimiento/{slip}/{llegada}/{salida}/{id}.{_format}", name="ajax_buscar__movimientos_slip", defaults={"_format"="JSON"})
+     * @Route("/buscar-movimiento/{slip}/{llegada}/{salida}/{id}.{_format}", name="ajax_buscar__movimientos_slip",
+     *     defaults={"_format"="JSON"})
      * @Method({"GET"})
      */
     public function buscaMovimientoSlipActionTodo($slip, $llegada, $salida, Request $request)

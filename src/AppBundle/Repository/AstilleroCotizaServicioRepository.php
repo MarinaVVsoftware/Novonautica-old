@@ -21,11 +21,10 @@ class AstilleroCotizaServicioRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect('(SUM(CASE WHEN ' .
                 '((acs.servicio IS NULL) AND ' .
                 '(acs.producto IS NULL) AND ' .
-                '(acs.astilleroserviciobasico IS NULL)) ' .
-                'THEN acs.total ELSE 0 END) / 100) AS otros')
+                '(acs.astilleroserviciobasico IS NULL)) THEN acs.total ELSE 0 END) / 100) AS otros')
             ->leftJoin('acs.astillerocotizacion', 'a')
             ->where('a.fechaLlegada BETWEEN :start AND :end')
-            ->andWhere('a.validacliente = 2')
+            ->andWhere('acs.estatus = 1 AND a.validacliente = 2')
             ->groupBy('a.fechaLlegada')
             ->orderBy('a.fechaLlegada', 'ASC')
             ->setParameters([

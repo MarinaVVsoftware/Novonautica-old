@@ -9,6 +9,7 @@
 namespace AppBundle\Controller\Astillero;
 
 
+use DataTables\DataTablesInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -16,25 +17,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class ReporteController
  * @package AppBundle\Controller\Astillero
- * @Route("/astillero/reporte")
+ * @Route("/reporte/astillero")
  */
 class ReporteController extends AbstractController
 {
     /**
      * Muestra los adeudos y abonos sumados de los clientes que han cotizado en astillero
      *
-     * @Route("/", name="astillero_reporte_index")
+     * @Route("/", name="reporte_ast_index")
      * @Method("GET")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -45,7 +46,7 @@ class ReporteController extends AbstractController
     }
 
     /**
-     * @Route("/contratista", name="astillero_reporte_contratista")
+     * @Route("/contratista", name="reporte_ast_contratista")
      * @Method("GET")
      */
     public function contratistaReporteAction()
@@ -53,9 +54,36 @@ class ReporteController extends AbstractController
         return $this->render('astillero/reporte/contratista.html.twig', ['title' => 'Contratistas']);
     }
 
+    /**
+     * @Route("/cliente", name="reporte_ast_client")
+     * @Method("GET")
+     */
+    public function clienteReporteAction()
+    {
+        return $this->render('astillero/reporte/cliente.html.twig', ['title' => 'Clientes']);
+    }
 
     /**
-     * @Route("/datum.json", name="astillero_reporte_contratista_data")
+     * @Route("/clientes-datum.json", name="reporte_ast_client_data")
+     * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return JsonResponse
+     */
+    public function clienteDataReporteAction(Request $request, DataTablesInterface $dataTables)
+    {
+        try {
+            $results = $dataTables->handle($request, 'astilleroReporte');
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
+        }
+    }
+
+    /**
+     * @Route("/datum.json", name="reporte_ast_contratista_data")
      * @Method("GET")
      *
      * @param Request $request
@@ -91,6 +119,9 @@ class ReporteController extends AbstractController
     /**
      * @Route("/proveedores.json")
      * @Method("GET")
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function getProveedoresAction(Request $request)
     {
@@ -143,7 +174,6 @@ class ReporteController extends AbstractController
         }
 
         sort($dates);*/
-
         return (new JsonResponse($dates))->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 

@@ -302,7 +302,7 @@ class MarinaHumedaCotizacion
     private $pagos;
 
     /**
-     * @ORM\OneToOne(targetEntity="SlipMovimiento", mappedBy="marinahumedacotizacion")
+     * @ORM\OneToOne(targetEntity="SlipMovimiento", mappedBy="marinahumedacotizacion", cascade={"persist"})
      */
     private $slipmovimiento;
 

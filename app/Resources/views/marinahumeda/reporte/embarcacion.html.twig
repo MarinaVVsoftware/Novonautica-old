@@ -1,0 +1,152 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
+    <style>
+        :root .btn {
+            min-width: initial;
+            text-align: center;
+        }
+
+        :root .panel-body form.form-inline input {
+            width: 250px;
+        }
+
+        .daterangepicker {
+            color: initial;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+            background-color: #292f41;
+            border-color: #2a3041;
+        }
+
+        .ranges li {
+            background-color: hsl(225, 23%, 21%);
+            border: 1px solid #292f41;
+        }
+
+        .form-inline {
+            margin-bottom: 2rem;
+        }
+    </style>
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Reportes de embarcaciones</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-12">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label for="date-range">Rango</label>
+                                <input type="text" class="form-control" id="date-range">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="chart-container">
+                        <div class="line-chart">
+                            <h4>Embarcaciones subidas fecha</h4>
+                            <canvas id="history" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/chart.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/daterangepicker.js') }}"></script>
+    <script type="text/javascript">
+      (function ($) {
+        moment.locale('es');
+
+        const history = document.getElementById('history').getContext('2d');
+        const inicio = moment().subtract(29, 'days');
+        const final = moment();
+        const $dateRange = $('#date-range');
+
+        getChartsData(inicio.format('YYYY-MM-DD'), final.format('YYYY-MM-DD'));
+
+        Chart.defaults.global.defaultFontColor = '#0094f6';
+
+        let lineData = {
+          datasets: [{
+            label: 'Embarcaciones subidas',
+            fill: false,
+            borderColor: '#0097f6',
+            lineTension: 0,
+          }]
+        };
+
+        const hChart = new Chart(history, {
+          type: 'line',
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false
+            },
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }
+              ]
+            }
+          }
+        });
+
+        $dateRange.daterangepicker({
+          startDate: inicio,
+          endDate: final,
+          autoApply: true,
+          ranges: {
+            'Hoy': [moment(), moment()],
+            'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 días': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 días': [moment().subtract(29, 'days'), moment()],
+            'Este mes': [moment().startOf('month'), moment().endOf('month')],
+            'Mes pasado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          locale: {
+            applyLabel: 'Aplicar',
+            cancelLabel: 'Cancelar',
+            fromLabel: 'Desde',
+            toLabel: 'Hasta',
+            customRangeLabel: 'Definido por usuario',
+          }
+        });
+
+        $dateRange.on('apply.daterangepicker', function (e, picker) {
+          getChartsData(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
+        });
+
+        function getChartsData(start, end) {
+          $.ajax('boats-history.json', {data: {start, end}})
+              .done(function (d) {
+                updateHistoryLine(d);
+              });
+        }
+
+        function updateHistoryLine(d) {
+          lineData.labels = d.map((label) => moment(label.fecha).format('DD MMM YY').toUpperCase());
+          lineData.datasets[0].data = d.map((datum) => datum.total);
+          hChart.data = lineData;
+
+          hChart.update();
+        }
+
+      })(jQuery);
+    </script>
+{% endblock %}
