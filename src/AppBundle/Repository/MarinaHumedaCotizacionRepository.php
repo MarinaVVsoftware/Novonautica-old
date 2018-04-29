@@ -1,7 +1,6 @@
 <?php
 
 namespace AppBundle\Repository;
-use AppBundle\Entity\MarinaHumedaCotizacion;
 
 /**
  * MarinaHumedaCotizacionRepository
@@ -111,5 +110,21 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleResult();
+    }
+
+    public function getWorkedBoatsByDaterange(\DateTime $start, \DateTime $end)
+    {
+        return $this->createQueryBuilder('mc')
+            ->select('mc.fechaLlegada AS fecha' ,'COUNT(mc.id) AS total')
+            ->where('mc.fechaLlegada BETWEEN :start AND :end')
+            ->andWhere('mc.validacliente = 2')
+            ->setParameters([
+                'start' => $start,
+                'end' => $end,
+            ])
+            ->groupBy('mc.fechaLlegada')
+            ->orderBy('mc.fechaLlegada', 'ASC')
+            ->getQuery()
+            ->getScalarResult();
     }
 }

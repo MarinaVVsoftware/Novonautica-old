@@ -31,18 +31,11 @@
                             </li>
                         {% endif %}
 
-                        <li class="{{ path.check('cliente_reporte_index') }}">
-                            <a href="{{ path('cliente_reporte_index') }}">
-                                <i class="fa fa-circle-o"></i> Reportes
-                            </a>
-                        </li>
-
                         <li class="{{ path.check('cliente_notificacion_index') }}">
                             <a href="{{ path('cliente_notificacion_index') }}">
                                 <i class="fa fa-circle-o"></i> Notificaciones
                             </a>
                         </li>
-
                     </ul>
                 </li>
             {% endif %}
@@ -157,7 +150,6 @@
                                 </li>
                                 <!-- END MARINA/COTIZACION/GASOLINA -->
                             </ul>
-
                         </li>
                         <!-- END MARINA/COTIZACIONES -->
 
@@ -184,14 +176,6 @@
                             </li>
                         {% endif %}
                         <!-- END MARINA/COTIZACION/SERVICIOS ADICIONALES -->
-
-                        <!-- START MARINA/REPORTES -->
-                        <li class="{{ path.check('marina-humeda_reporte_index') }}">
-                            <a href="{{ path('marina-humeda_reporte_index') }}">
-                                <i class="fa fa-circle-o"></i> Reportes
-                            </a>
-                        </li>
-                        <!-- END MARINA/REPORTES -->
                     </ul>
                 </li>
             {% endif %}
@@ -227,7 +211,7 @@
 
                         <!-- START ASTILLERO/SERVICIOS -->
                         {% if is_granted('ROLE_ASTILLERO_SERVICIO') %}
-                            <li class="treeview {{ path.check('astillero_servicio_index') }}">
+                            <li class="treeview {{ path.check('astillero_servicio_') }}">
                                 <a href="#">
                                     <i class="fa fa-circle-o"></i> Servicios
                                     <span class="pull-right-container"><i
@@ -288,71 +272,88 @@
                                         </a>
                                     </li>
                                     {% if is_granted(expression('has_role("ROLE_ODT_CREATE") or (user.isAdmin())')) %}
-                                    <li class="{{ path.check('ordendetrabajo_new') }}">
-                                        <a href="{{ path('ordendetrabajo_new') }}">
-                                            <i class="fa fa-minus"></i> Nuevo
-                                        </a>
-                                    </li>
+                                        <li class="{{ path.check('ordendetrabajo_new') }}">
+                                            <a href="{{ path('ordendetrabajo_new') }}">
+                                                <i class="fa fa-minus"></i> Nuevo
+                                            </a>
+                                        </li>
                                     {% endif %}
                                 </ul>
                             </li>
                         {% endif %}
                         <!-- END ASTILLERO/ODT -->
+                    </ul>
+                </li>
+            {% endif %}
+            <!-- END ASTILLERO -->
 
-                        <!-- START ASTILLERO/PROVEEDORES -->
-                        {% if is_granted('ROLE_ASTILLERO_PROVEEDOR') %}
-                            <li class="treeview {{ path.check('_proveedor_') }}">
-                                <a href="#">
-                                    <i class="fa fa-circle-o"></i> Proveedores
-                                    <span class="pull-right-container"><i
-                                                class="fa fa-angle-left pull-right"></i></span>
-                                </a>
-                                <ul class="treeview-menu">
-                                    <li class="{{ path.check('astillero_proveedor_index') }}">
-                                        <a href="{{ path('astillero_proveedor_index') }}">
-                                            <i class="fa fa-minus"></i> Listado
-                                        </a>
-                                    </li>
-                                    <li class="{{ path.check('astillero_proveedor_new') }}">
-                                        <a href="{{ path('astillero_proveedor_new') }}">
-                                            <i class="fa fa-minus"></i> Nuevo
-                                        </a>
-                                    </li>
-                                    <li class="{{ path.check('astillero_proveedor_trabajo_index') }}">
-                                        <a href="{{ path('astillero_proveedor_trabajo_index') }}">
-                                            <i class="fa fa-minus"></i> Catálogo oficios
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        {% endif %}
-                        <!-- END ASTILLERO/PROVEEDORES -->
+            <!-- START REPORTES -->
+            {% if is_granted('ROLE_REPORTE') %}
+                <li class="treeview {{ path.check('reporte') }}">
+                    <a href="#">
+                        <i class="fa fa-line-chart"></i> <span>Reportes</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
 
-                        <!-- START ASTILLERO/REPORTE -->
-                        <li class="treeview {{ path.check('_reporte_') }}">
+                        <!-- START REPORTE/MARINA -->
+                        {% if is_granted('ROLE_REPORTE_MARINA') %}
+                        <li class="treeview {{ path.check('reporte_mar_') }}">
                             <a href="#">
-                                <i class="fa fa-circle-o"></i> Reportes
-                                <span class="pull-right-container"><i
-                                            class="fa fa-angle-left pull-right"></i></span>
+                                <i class="fa fa-circle-o"></i> Marina
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                             </a>
                             <ul class="treeview-menu">
-                                <li class="{{ path.check('astillero_reporte_index') }}">
-                                    <a href="{{ path('astillero_reporte_index') }}">
+                                {% if is_granted(expression('has_role("CLIENTE_EDIT") or (user.isAdmin())')) %}
+                                <li class="{{ path.check('reporte_mar_index') }}">
+                                    <a href="{{ path('reporte_mar_index') }}">
+                                        <i class="fa fa-minus"></i> Clientes
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li class="{{ path.check('reporte_mar_embarcaciones') }}">
+                                    <a href="{{ path('reporte_mar_embarcaciones') }}">
                                         <i class="fa fa-minus"></i> Embarcaciones
                                     </a>
                                 </li>
-                                <li class="{{ path.check('astillero_reporte_contratista') }}">
-                                    <a href="{{ path('astillero_reporte_contratista') }}">
+                            </ul>
+                        </li>
+                        {% endif %}
+                        <!-- END REPORTE/MARINA -->
+
+                        <!-- START REPORTE/ASTILLERO -->
+                        {% if is_granted('ROLE_REPORTE_ASTILLERO') %}
+                        <li class="treeview {{ path.check('reporte_ast_') }}">
+                            <a href="#">
+                                <i class="fa fa-circle-o"></i> Astillero
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                            </a>
+                            <ul class="treeview-menu">
+                                {% if is_granted(expression('has_role("CLIENTE_EDIT") or (user.isAdmin())')) %}
+                                <li class="{{ path.check('reporte_ast_client') }}">
+                                    <a href="{{ path('reporte_ast_client') }}">
+                                        <i class="fa fa-minus"></i> Clientes
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li class="{{ path.check('reporte_ast_index') }}">
+                                    <a href="{{ path('reporte_ast_index') }}">
+                                        <i class="fa fa-minus"></i> Embarcaciones
+                                    </a>
+                                </li>
+                                <li class="{{ path.check('reporte_ast_contratista') }}">
+                                    <a href="{{ path('reporte_ast_contratista') }}">
                                         <i class="fa fa-minus"></i> Contratistas
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <!-- END ASTILLERO/REPORTE -->
+                        {% endif %}
+                        <!-- END REPORTE/ASTILLERO -->
                     </ul>
                 </li>
             {% endif %}
-            <!-- END ASTILLERO -->
+            <!-- END REPORTES -->
 
             <!-- START EMBARCACION|OCEANDEAL -->
             {% if is_granted('ROLE_EMBARCACION') %}

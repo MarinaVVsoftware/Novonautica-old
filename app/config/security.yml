@@ -107,16 +107,15 @@ security:
         - { path: ^/marina/cotizacion/estadia/tarifas, roles: ROLE_MARINA_TARIFF }
         - { path: ^/marina, roles: ROLE_MARINA }
 
-#        - { path: ^/astillero/odt, roles: ROLE_ASTILLERO_ODT }
         - { path: ^/astillero/producto, roles: ROLE_ASTILLERO_PRODUCTO }
         - { path: ^/astillero/servicio-basico/, roles: ROLE_ASTILLERO_SERVICIOBASICO }
         - { path: ^/astillero/servicio/, roles: ROLE_ASTILLERO_SERVICIO }
         - { path: ^/astillero, roles: ROLE_ASTILLERO }
-
-#        - { path: ^/astillero/odt/.*/actividad, roles: ROLE_ODT_ACTIVIDAD }
-#        - { path: ^/astillero/odt/.*/contratista-pago, roles: ROLE_ODT_PAGO }
-#        - { path: ^/astillero/odt/.*/editar, roles: ROLE_ODT_CONTRATISTA_EDIT }
         - { path: ^/astillero/odt, roles: ROLE_ODT }
+
+        - { path: ^/reporte/astillero, roles: ROLE_REPORTE_ASTILLERO }
+        - { path: ^/reporte/marina, roles: ROLE_EMBARCACION_MARINA }
+        - { path: ^/reporte, roles: ROLE_REPORTE }
 
         - { path: ^/embarcacion/marca/, roles: ROLE_EMBARCACION_MARCA }
         - { path: ^/embarcacion/modelo/, roles: ROLE_EMBARCACION_MODELO }
@@ -149,7 +148,6 @@ security:
             - ROLE_MARINA_PAGO
         ROLE_WHOLE_ASTILLERO:
             - ROLE_ASTILLERO
-#            - ROLE_ASTILLERO_ODT
             - ROLE_ASTILLERO_PRODUCTO
             - ROLE_ASTILLERO_SERVICIO
             - ROLE_ASTILLERO_PAGO
@@ -161,6 +159,10 @@ security:
             - ROLE_ODT_PAGO
             - ROLE_ODT_ACTIVIDAD
             - ROLE_ODT_DELETE
+        ROLE_WHOLE_REPORTE:
+            - ROLE_REPORTE
+            - ROLE_REPORTE_MARINA
+            - ROLE_REPORTE_ASTILLERO
         ROLE_WHOLE_EMBARCACION:
             - ROLE_EMBARCACION
             - ROLE_EMBARCACION_MARCA
@@ -183,6 +185,7 @@ security:
             - ROLE_WHOLE_MARINA
             - ROLE_WHOLE_ASTILLERO
             - ROLE_WHOLE_ODT
+            - ROLE_WHOLE_REPORTE
             - ROLE_WHOLE_EMBARCACION
             - ROLE_WHOLE_TIENDA
             - ROLE_WHOLE_CONTABILIDAD

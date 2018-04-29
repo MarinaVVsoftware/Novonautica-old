@@ -59,6 +59,11 @@ class UsuarioType extends AbstractType
                         'Servicios básicos' => 'ROLE_ASTILLERO_SERVICIOBASICO',
                         'Responsable' =>'ROLE_ASTILLERO_RESPONSABLE'
                     ],
+                    'Reporte' => [
+                        'Acceso' => 'ROLE_REPORTE',
+                        'Marina' => 'ROLE_REPORTE_MARINA',
+                        'Astillero' => 'ROLE_REPORTE_ASTILLERO',
+                    ],
                     'ODT' => [
                         'Acceso' => 'ROLE_ODT',
                         'Crear' => 'ROLE_ODT_CREATE',

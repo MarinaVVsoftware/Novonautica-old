@@ -81,9 +81,9 @@ class AstilleroReporteDataTable extends AbstractDataTableHandler
         foreach ($reportes as $reporte) {
             $results->data[] = [
                 $reporte['nombre'],
-                '$' . number_format(($reporte['adeudo'] / 100), 2) . ' USD',
-                '$' . number_format(($reporte['abono'] / 100), 2) . ' USD',
-                '$' . number_format(($reporte['total'] / 100), 2) . ' USD',
+                '$' . number_format(($reporte['adeudo'] / 100), 2) . ' MXN',
+                '$' . number_format(($reporte['abono'] / 100), 2) . ' MXN',
+                '$' . number_format(($reporte['total'] / 100), 2) . ' MXN',
                 $reporte['id'],
             ];
         }
