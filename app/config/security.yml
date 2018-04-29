@@ -114,7 +114,7 @@ security:
         - { path: ^/astillero/odt, roles: ROLE_ODT }
 
         - { path: ^/reporte/astillero, roles: ROLE_REPORTE_ASTILLERO }
-        - { path: ^/reporte/marina, roles: ROLE_EMBARCACION_MARINA }
+        - { path: ^/reporte/marina, roles: ROLE_REPORTE_MARINA }
         - { path: ^/reporte, roles: ROLE_REPORTE }
 
         - { path: ^/embarcacion/marca/, roles: ROLE_EMBARCACION_MARCA }
