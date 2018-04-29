@@ -9,6 +9,7 @@ use AppBundle\Serializer\NotNullObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -198,6 +199,22 @@ class SlipMovimientoController extends Controller
         return $this->render('marinahumeda/mapa/form/assign-slip.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/mapa/{id}/remove", name="remove-slip")
+     * @Method("DELETE")
+     */
+    public function removeSlipAction(SlipMovimiento $slipMovimiento)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $slipMovimiento->getMarinahumedacotizacion()->setSlip(null);
+
+        $em->remove($slipMovimiento);
+        $em->flush();
+
+        return new Response(null, Response::HTTP_CREATED);
     }
 
     /**

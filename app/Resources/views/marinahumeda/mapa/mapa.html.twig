@@ -25,7 +25,7 @@
     <div class="content-wrapper">
         <section class="content">
             <div class="row">
-                <div class="col-md-12">
+                <div id="alert-container" class="col-md-12">
                     {% for message in app.flashes('danger') %}
                         <div class="alert alert-danger">
                             {{ message }}
@@ -1179,6 +1179,7 @@
     <script type="text/javascript" src="{{ asset('js/svg-pan-zoom.min.js') }}"></script>
     <script type="text/javascript">
       (function ($) {
+        const errorContainer = document.getElementById('alert-container');
         const embarcaciones = document.querySelectorAll('#embarcaciones > g');
         const $mapData = $('#map-data');
         const $modal = $('#slip-info');
@@ -1252,6 +1253,27 @@
                   $modalBody.html(createSlipDetails(slip[0], false));
                   let $relocateBtn = $modalBody.find('.relocate-btn');
                   let $relocateFormContainer = $modalBody.find('.relocate-form');
+                  let $unassignBtn = $modalBody.find('.unassign-btn');
+
+                  $unassignBtn.on('click', function (e) {
+                    e.preventDefault();
+
+                    $.ajax(`{{ app.request.requestUri }}/${slip[0].id}/remove`, {type: 'DELETE'})
+                        .fail(function () {
+                          errorContainer.innerHTML = `
+                            <div class="alert alert-warning">
+                              Hubo un error al intentar desasignar la cotización, por favor intentalo de nuevo.
+                            </div>
+                          `;
+
+                          setTimeout(function () {
+                            errorContainer.innerHTML = '';
+                          }, 8000);
+                        })
+                        .done(function () {
+                          window.location.reload();
+                        });
+                  });
 
                   $relocateBtn.on('click', function (e) {
                     e.preventDefault();
@@ -1342,6 +1364,7 @@
                   <td>${dataRow.porcentaje.toFixed(1)}%</td>
                 </tr>
                 `;
+
           $mapData.append(row);
         }
 
@@ -1370,7 +1393,10 @@
             </dl>
             <div class="text-center">
               <a href="{{ app.request.baseUrl }}/marina/cotizacion/${slip.marinahumedacotizacion.id}" class="btn btn-xs btn-morado-claro margin-bottom" target="_blank">Ver Cotización</a>
-              ${!relocate ? '<a href="#" class="relocate-btn btn btn-xs btn-azul margin-bottom">Reasignar</a>' : ''}
+            </div>
+            <div class="text-center">
+                <a href="#" class="unassign-btn btn btn-xs btn-naranja margin-bottom">Desasignar</a>
+                ${!relocate ? '<a href="#" class="relocate-btn btn btn-xs btn-azul margin-bottom">Reasignar</a>' : ''}
             </div>
             <div class="relocate-form"></div>
           `;
