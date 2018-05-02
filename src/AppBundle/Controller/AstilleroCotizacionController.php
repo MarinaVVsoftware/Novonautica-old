@@ -86,26 +86,36 @@ class AstilleroCotizacionController extends Controller
         $astilleroElectricidad = new AstilleroCotizaServicio();
         $astilleroLimpieza = new AstilleroCotizaServicio();
         $astilleroInspeccionar = new AstilleroCotizaServicio();
-        $astilleroGrua->setPrecio($preciosBasicos[0]['precio']);
-        $astilleroEstadia->setPrecio($preciosBasicos[1]['precio']);
+        $astilleroGrua
+            ->setPrecio($preciosBasicos[0]['precio'])
+            ->setDivisa('MXN');
+        $astilleroEstadia
+            ->setCantidad(7)
+            ->setPrecio($preciosBasicos[1]['precio'])
+            ->setDivisa('USD');
+        $astilleroInspeccionar
+            ->setPrecio($preciosBasicos[7]['precio'])
+            ->setDivisa('MXN');
         $cantidad = 1;
         $precio = $preciosBasicos[2]['precio'];
-        $astilleroRampa = $this->calculaServicio($astilleroRampa, $cantidad, $precio, $iva);
+        $divisa = 'MXN';
+        $astilleroRampa = $this->calculaServicio($astilleroRampa, $cantidad, $precio, $iva,$divisa);
         $cantidad = 1;
         $precio = $preciosBasicos[3]['precio'];
-        $astilleroKarcher = $this->calculaServicio($astilleroKarcher, $cantidad, $precio, $iva);
+        $divisa = 'MXN';
+        $astilleroKarcher = $this->calculaServicio($astilleroKarcher, $cantidad, $precio, $iva,$divisa);
         $cantidad = 1;
         $precio = $preciosBasicos[4]['precio'];
-        $astilleroExplanada = $this->calculaServicio($astilleroExplanada,$cantidad,$precio,$iva);
+        $divisa = 'MXN';
+        $astilleroExplanada = $this->calculaServicio($astilleroExplanada,$cantidad,$precio,$iva,$divisa);
         $cantidad = 1;
         $precio = $preciosBasicos[5]['precio'];
-        $astilleroElectricidad = $this->calculaServicio($astilleroElectricidad,$cantidad,$precio,$iva);
+        $divisa = 'MXN';
+        $astilleroElectricidad = $this->calculaServicio($astilleroElectricidad,$cantidad,$precio,$iva,$divisa);
         $cantidad = 1;
         $precio = $preciosBasicos[6]['precio'];
-        $astilleroLimpieza = $this->calculaServicio($astilleroLimpieza, $cantidad, $precio, $iva);
-        $cantidad = 1;
-        $precio = $preciosBasicos[7]['precio'];
-        $astilleroInspeccionar = $this->calculaServicio($astilleroInspeccionar, $cantidad, $precio, $iva);
+        $divisa = 'MXN';
+        $astilleroLimpieza = $this->calculaServicio($astilleroLimpieza, $cantidad, $precio, $iva,$divisa);
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
             ->addAcservicio($astilleroEstadia)
@@ -161,7 +171,7 @@ class AstilleroCotizacionController extends Controller
             $sumas = $this->guardarServicioBasico($astilleroLimpieza,$servicio,$cantidad,$precio,$iva,$sumas);
             //Sacar para inspeccionar
             $servicio = $this->getDoctrine()->getRepository(AstilleroServicioBasico::class)->find(8);
-            $cantidad = $astilleroInspeccionar->getCantidad();
+            $cantidad = $eslora;
             $precio = $astilleroInspeccionar->getPrecio();
             $sumas = $this->guardarServicioBasico($astilleroInspeccionar,$servicio,$cantidad,$precio,$iva,$sumas);
 
@@ -1039,7 +1049,7 @@ class AstilleroCotizacionController extends Controller
             ->getForm();
     }
 
-    public function calculaServicio($servicio, $cantidad, $precio, $iva)
+    public function calculaServicio($servicio, $cantidad, $precio, $iva, $divisa)
     {
         $subtotal = $cantidad * $precio;
         $ivatot = ($subtotal * $iva) / 100;
@@ -1049,7 +1059,8 @@ class AstilleroCotizacionController extends Controller
             ->setPrecio($precio)
             ->setSubtotal($subtotal)
             ->setIva($ivatot)
-            ->setTotal($total);
+            ->setTotal($total)
+            ->setDivisa($divisa);
         return $servicio;
     }
 

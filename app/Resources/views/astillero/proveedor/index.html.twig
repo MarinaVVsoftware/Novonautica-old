@@ -16,8 +16,9 @@
                         <table class="table table-novo">
                             <thead>
                             <tr>
+                                <th>Tipo Trabajador</th>
                                 <th>Nombre</th>
-                                <th>Razón social</th>
+                                <th>Razón Social</th>
                                 <th>RFC</th>
                                 <th>Dirección Fiscal</th>
                                 <th>Correo</th>
@@ -58,18 +59,18 @@
             $('.table-novo').DataTable({
                     ...settings,
                 ajax: '{{ path('astillero_proveedor_index') }}',
-                order: [[0, 'desc']],
+                order: [[1, 'desc']],
                 createdRow: function (row, data) {
-                let actionsCell = row.cells[8];
+                let actionsCell = row.cells[9];
                 actionsCell.innerHTML = `
             <ul class="unstyled-list list-inline" style="margin: 0">
                 <li>
-                <a href="${data[8]}">
+                <a href="${data[9]}">
                     <i class="fa fa-eye" aria-hidden="true"></i>
                 </a>
                 </li>
                 <li>
-                <a href="${data[8]}/editar">
+                <a href="${data[9]}/editar">
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                 </a>
                 </li>

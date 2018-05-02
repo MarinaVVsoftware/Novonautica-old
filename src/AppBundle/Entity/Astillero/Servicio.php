@@ -47,6 +47,13 @@ class Servicio
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="divisa", type="string", length=3)
+     */
+    private $divisa;
+
+    /**
+     * @var string
      * @Assert\NotBlank(
      *     message="Unidad no puede quedar vacío"
      * )
@@ -171,5 +178,29 @@ class Servicio
     public function getDescripcion()
     {
         return $this->descripcion;
+    }
+
+    /**
+     * Set divisa.
+     *
+     * @param string $divisa
+     *
+     * @return Servicio
+     */
+    public function setDivisa($divisa)
+    {
+        $this->divisa = $divisa;
+
+        return $this;
+    }
+
+    /**
+     * Get divisa.
+     *
+     * @return string
+     */
+    public function getDivisa()
+    {
+        return $this->divisa;
     }
 }

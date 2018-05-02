@@ -124,18 +124,22 @@
                     for(var i=0;i<cotizacion[0].acservicios.length;i++){
                         if(cotizacion[0].acservicios[i].estatus){
                             var elemento = '';
-                            var unidad = '';
+                            var tipoelemento = '';
                             if(cotizacion[0].acservicios[i].servicio){
                                 elemento = cotizacion[0].acservicios[i].servicio.nombre;
+                                tipoelemento = 1;
                             }
                             if(cotizacion[0].acservicios[i].producto){
                                 elemento = cotizacion[0].acservicios[i].producto.nombre;
+                                tipoelemento = 2;
                             }
                             if(cotizacion[0].acservicios[i].astilleroserviciobasico){
                                 elemento = cotizacion[0].acservicios[i].astilleroserviciobasico.nombre;
+                                tipoelemento = 1;
                             }
                             if(cotizacion[0].acservicios[i].otroservicio){
                                 elemento = cotizacion[0].acservicios[i].otroservicio;
+                                tipoelemento = 1;
                             }
                             $('#servicios-cotizacion').append('<tr><td>'+cotizacion[0].acservicios[i].cantidad+'</td>' +
                                 '<td>'+elemento+'</td>' +
@@ -144,7 +148,7 @@
                                 '<td>$ '+(cotizacion[0].acservicios[i].iva/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
                                 '<td>$ '+(cotizacion[0].acservicios[i].total/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td></tr>');
                             if(!cotizacion[0].acservicios[i].astilleroserviciobasico){
-                                coleccionContratistaODT(e,'.add-another-proveedor',elemento,cotizacion[0].acservicios[i].subtotal);
+                                coleccionContratistaODT(e,'.add-another-proveedor',elemento,cotizacion[0].acservicios[i].subtotal,tipoelemento);
                             }
                         }
                     }
@@ -192,8 +196,7 @@
                 elemento.children('.preciocontratista').val(precioContratista.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                 elemento.children('.utilidadvv').val(utilidadVv.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                 $(idproveedor).parent().parent().parent().parent().children('div').children('div').children('div').children('.porcentajevv').val(porcentajeVV);
-                console.log(ivaContratista);
-                console.log(totalContratista);
+
             }
         });
     });

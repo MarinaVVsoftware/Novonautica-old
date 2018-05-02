@@ -9,7 +9,9 @@
 namespace AppBundle\Form\Astillero;
 
 
+use AppBundle\Entity\Astillero\Proveedor;
 use DateTime;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -28,10 +30,10 @@ class ContratistaType extends AbstractType
     {
         $builder
             ->add('cotizacionInicial',TextType::class,[
-                'label' => 'Descripción del trabajo'
+                'label' => 'Descripción'
             ])
             ->add('precio',MoneyType::class,[
-                'label' => 'Precio Contratista (MXN)',
+                'label' => 'Precio Trabajador (MXN)',
                 'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
@@ -57,8 +59,16 @@ class ContratistaType extends AbstractType
             ])
             ->add('proveedor',EntityType::class,[
                 'class' => 'AppBundle\Entity\Astillero\Proveedor',
+                'label' => 'Trabajador',
                 'placeholder' => 'Seleccionar...',
-                'attr' => ['class'=>'buscaproveedor'],
+                'attr' => ['class'=>'buscaproveedor lista-trabajadores'],
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('t')
+                        ->orderBy('t.nombre', 'ASC');
+                },
+                'choice_attr' => function(Proveedor $proveedor, $key, $index) {
+                    return ['data-trabajador' => $proveedor->getProveedorcontratista()];
+                },
 
             ])
         ;

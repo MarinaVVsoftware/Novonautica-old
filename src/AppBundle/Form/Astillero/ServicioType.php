@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Astillero;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,11 +20,14 @@ class ServicioType extends AbstractType
             ->add('nombre')
             ->add('precio',MoneyType::class,[
                 'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
-                'currency' => 'MXN',
+                'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
                 'empty_data' => 0,
-                'label' => 'Precio (MXN)'
+                'label' => 'Precio'
+            ])
+            ->add('divisa',ChoiceType::class,[
+                'choices' => ['USD' => 'USD', 'MXN' => 'MXN'],
             ])
             ->add('unidad')
             ->add('descripcion',TextareaType::class,[

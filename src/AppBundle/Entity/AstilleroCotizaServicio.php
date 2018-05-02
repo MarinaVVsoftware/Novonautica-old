@@ -65,6 +65,13 @@ class AstilleroCotizaServicio
     /**
      * @var string
      *
+     * @ORM\Column(name="divisa", type="string", length=3, nullable=true)
+     */
+    private $divisa;
+
+    /**
+     * @var string
+     *
      * @Groups({"facturacion"})
      *
      * @ORM\Column(name="otroservicio", type="string", length=255, nullable=true)
@@ -363,4 +370,28 @@ class AstilleroCotizaServicio
         return $this;
     }
 
+
+    /**
+     * Set divisa.
+     *
+     * @param string|null $divisa
+     *
+     * @return AstilleroCotizaServicio
+     */
+    public function setDivisa($divisa = null)
+    {
+        $this->divisa = $divisa;
+
+        return $this;
+    }
+
+    /**
+     * Get divisa.
+     *
+     * @return string|null
+     */
+    public function getDivisa()
+    {
+        return $this->divisa;
+    }
 }

@@ -21,6 +21,15 @@
                             <table class="table">
                                 <tbody>
                                 <tr>
+                                    <th>Tipo trabajador</th>
+                                    <td>{% if proveedor.proveedorcontratista == 0 %}
+                                            Proveedor
+                                        {% else %}
+                                            Contratista
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th>Nombre</th>
                                     <td>{{ proveedor.nombre }}</td>
                                 </tr>
@@ -49,7 +58,7 @@
                                     <td>{{ proveedor.porcentaje|number_format(2) }}%</td>
                                 </tr>
                                 <tr>
-                                    <th>Tipo de proveedor</th>
+                                    <th>Tipo</th>
                                     <td>{% if proveedor.tipo == 1 %}
                                             Interno
                                         {% else %}
