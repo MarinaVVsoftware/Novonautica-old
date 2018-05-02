@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -29,6 +30,22 @@ class UsuarioController extends Controller
     public function indexAction()
     {
         return $this->render('usuario/index.html.twig', ['title' => 'Usuarios']);
+    }
+
+    /**
+     * @Route("/")
+     * @Method("POST")
+     *
+     * @param Request $request
+     * @param SessionInterface $session
+     *
+     * @return JsonResponse
+     */
+    public function setSidebarAction(Request $request, SessionInterface $session)
+    {
+        $session->set('isExpanded', $request->request->get('isExpanded'));
+
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
