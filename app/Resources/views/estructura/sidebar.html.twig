@@ -282,6 +282,35 @@
                             </li>
                         {% endif %}
                         <!-- END ASTILLERO/ODT -->
+
+                        <!-- START ASTILLERO/PROVEEDORES -->
+                        {% if is_granted('ROLE_ASTILLERO_PROVEEDOR') %}
+                            <li class="treeview {{ path.check('_proveedor_') }}">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i> Proveedores
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ path.check('astillero_proveedor_index') }}">
+                                        <a href="{{ path('astillero_proveedor_index') }}">
+                                            <i class="fa fa-minus"></i> Listado
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('astillero_proveedor_new') }}">
+                                        <a href="{{ path('astillero_proveedor_new') }}">
+                                            <i class="fa fa-minus"></i> Nuevo
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('astillero_proveedor_trabajo_index') }}">
+                                        <a href="{{ path('astillero_proveedor_trabajo_index') }}">
+                                            <i class="fa fa-minus"></i> Catálogo oficios
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                        <!-- END ASTILLERO/PROVEEDORES -->
                     </ul>
                 </li>
             {% endif %}
