@@ -107,7 +107,8 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <button type="submit" class="pull-right btn btn-azul" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Guardando...">
+                            <button type="submit" class="pull-right btn btn-azul"
+                                    data-loading-text="<i class='fa fa-spinner fa-spin '></i> Guardando...">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 Guardar
                             </button>
@@ -186,10 +187,10 @@
           });
 
           $(element).find('.input-daterange').datepicker({
-              format: 'yyyy-mm-dd',
-              language: "es",
-              orientation: "bottom auto",
-              autoclose: true
+            format: 'yyyy-mm-dd',
+            language: "es",
+            orientation: "bottom auto",
+            autoclose: true
           });
 
           existingDropzones.push(appendDropzone(element));
@@ -227,10 +228,12 @@
                     $(`input[value="${file.name}"]`).parent().parent().remove();
                   })
                   .on('addedfile', function (file) {
-                    if (file.upload) {
-                      addedFiles = true;
-                      that.haveNewFiles = true;
-                    }
+                    setTimeout(() => {
+                      if (file.accepted) {
+                        addedFiles = true;
+                        that.haveNewFiles = true;
+                      }
+                    }, 100);
                   })
                   .on('queuecomplete', function () {
                     if (that.haveNewFiles) {
