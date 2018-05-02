@@ -1529,6 +1529,7 @@ const datatablesSettings = {
   serverSide: true,
   processing: true,
   responsive: true,
+  stateSave: true,
   language: {
     lengthMenu: 'Mostrar _MENU_ entradas',
     zeroRecords: 'No hay entradas',

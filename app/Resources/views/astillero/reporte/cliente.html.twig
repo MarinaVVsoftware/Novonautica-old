@@ -16,10 +16,13 @@
                     <table class="table-novo table text-center">
                         <thead>
                         <tr>
+                            <th>Cotización</th>
                             <th>Cliente</th>
+                            <th>Inicio</th>
+                            <th>Final</th>
+                            <th>Último pago</th>
                             <th>Adeudo</th>
-                            <th>Abonado</th>
-                            <th>Total adeudo</th>
+                            <th>Pagado</th>
                             <th class="no-sort"></th>
                         </tr>
                         </thead>
@@ -38,6 +41,7 @@
     <script type="text/javascript">
       (function ($, settings) {
         moment.locale('es');
+
         $('.table-novo').DataTable({
           ...settings,
           ajax: '{{ path('reporte_ast_client_data') }}',
@@ -47,19 +51,24 @@
             {responsivePriority: 2},
             {responsivePriority: 2},
             {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
             {responsivePriority: 0},
           ],
           createdRow: function (row, cliente) {
-            let dateCell = row.cells[1];
-            let lastPayment = moment(cliente[1], 'YYYY-MM-DD HH:mm:ss', true);
-            if(lastPayment.isValid()) {
-              dateCell.innerHTML = lastPayment.fromNow();
-            }
-            row.cells[4].innerHTML = `
-                <a class="btn btn-xs btn-block btn-naranja" href="{{ path('cliente_notificacion_index') }}?u=${cliente[4]}">Notificar</a>
+            let paymentDate = moment(cliente[4], 'YYYY-MM-DD HH:mm:ss', true);
+            row.cells[2].innerHTML = moment(cliente[2], 'YYYY-MM-DD HH:mm:ss', true).format('D-MM-YYYY');
+            row.cells[3].innerHTML = moment(cliente[3], 'YYYY-MM-DD HH:mm:ss', true).format('D-MM-YYYY');
+            row.cells[4].innerHTML = paymentDate.isValid() ? paymentDate.format('D-MM-YYYY') : cliente[4];
+
+            row.cells[7].innerHTML = `
+                <a class="btn btn-xs btn-block btn-naranja" href="{{ path('cliente_notificacion_index') }}?u=${cliente[7].cliente}&f=${cliente[0]}">Notificar</a>
+                <a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.baseUrl }}/astillero/${cliente[7].cotizacion}">Ver cotización</a>
             `;
           },
         });
+
       })(jQuery, datatablesSettings);
     </script>
 {% endblock %}
