@@ -1,0 +1,222 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
+    <style>
+        :root .btn {
+            min-width: initial;
+            text-align: center;
+        }
+
+        :root .panel-body form.form-inline input {
+            width: 250px;
+        }
+
+        .daterangepicker {
+            color: initial;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+            background-color: #292f41;
+            border-color: #2a3041;
+        }
+
+        .ranges li {
+            background-color: hsl(225, 23%, 21%);
+            border: 1px solid #292f41;
+        }
+
+        .form-inline {
+            margin-bottom: 2rem;
+        }
+
+        .form-inline .form-group {
+            margin-right: 1rem;
+        }
+    </style>
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Reportes de cotizaciones</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-12">
+                        <form class="form-inline" id="reporte-data">
+                            <div class="form-group">
+                                <label for="date-range">Rango</label>
+                                <input type="text" class="form-control" id="date-range">
+                            </div>
+                            <div class="form-group">
+                                <label for="novo">Novonautica</label>
+                                <select name="novo" id="novo" class="form-control">
+                                    <option selected></option>
+                                    <option value="0">Pendiente</option>
+                                    <option value="1">Rechazada</option>
+                                    <option value="2">Aceptada</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cliente">Cliente</label>
+                                <select name="cliente" id="cliente" class="form-control">
+                                    <option selected></option>
+                                    <option value="0">Pendiente</option>
+                                    <option value="1">Rechazada</option>
+                                    <option value="2">Aceptada</option>
+                                </select>
+                            </div>
+                            <input type="submit" value="Consultar" id="consultar" class="btn btn-azul"
+                                   style="width: initial;">
+                        </form>
+                    </div>
+                    <div class="chart-container">
+                        <div class="line-chart">
+                            <h4>Cotizaciones realizadas por fecha subidas fecha</h4>
+                            <canvas id="history" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/chart.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/daterangepicker.js') }}"></script>
+    <script type="text/javascript">
+      (function ($) {
+        moment.locale('es');
+
+        const rForm = document.getElementById('reporte-data');
+        const rNovo = document.getElementById('novo');
+        const rClient = document.getElementById('cliente');
+        const history = document.getElementById('history').getContext('2d');
+        const inicio = moment().subtract(29, 'days');
+        const final = moment();
+        const $dateRange = $('#date-range');
+
+        let searchData = {
+          start: inicio.format('YYYY-MM-DD'),
+          end: final.format('YYYY-MM-DD'),
+        };
+
+        getChartsData(searchData.start, searchData.end);
+
+        Chart.defaults.global.defaultFontColor = '#0094f6';
+
+        let lineData = {
+          datasets: [
+            {
+              label: 'Cotizaciones de estadias',
+              borderColor: '#0097f6',
+              backgroundColor: '#0097f6',
+              fill: false,
+              yAxisID: 'estadias',
+              tension: 0
+            },
+            {
+              label: 'Cotizaciones de gasolina',
+              borderColor: '#FF6600',
+              backgroundColor: '#FF6600',
+              fill: false,
+              yAxisID: 'gasolina',
+              tension: 0
+            }
+          ]
+        };
+
+        const hChart = new Chart(history, {
+          type: 'line',
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            stacked: false,
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+            },
+            hover: {
+              mode: 'nearest',
+              intersect: true
+            },
+            scales: {
+              yAxes: [
+                {
+                  type: 'linear',
+                  display: true,
+                  position: 'left',
+                  id: 'estadias'
+                },
+                {
+                  type: 'linear',
+                  display: true,
+                  position: 'right',
+                  id: 'gasolina',
+                  gridLines: {
+                    drawOnChartArea: false
+                  }
+                },
+              ]
+            }
+          }
+        });
+
+        $dateRange.daterangepicker({
+          startDate: inicio,
+          endDate: final,
+          autoApply: true,
+          ranges: {
+            'Hoy': [moment(), moment()],
+            'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 días': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 días': [moment().subtract(29, 'days'), moment()],
+            'Este mes': [moment().startOf('month'), moment().endOf('month')],
+            'Mes pasado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          locale: {
+            applyLabel: 'Aplicar',
+            cancelLabel: 'Cancelar',
+            fromLabel: 'Desde',
+            toLabel: 'Hasta',
+            customRangeLabel: 'Definido por usuario',
+          }
+        });
+
+        $dateRange.on('apply.daterangepicker', function (e, picker) {
+          searchData.start = picker.startDate.format('YYYY-MM-DD');
+          searchData.end = picker.endDate.format('YYYY-MM-DD');
+        });
+
+        rForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          searchData.novo = rNovo.value;
+          searchData.client = rClient.value;
+
+          getChartsData();
+        });
+
+        function getChartsData() {
+          $.ajax('cotizacion-history.json', {data: searchData})
+              .done(function (d) {
+                updateHistoryLine(d);
+              });
+        }
+
+        function updateHistoryLine(d) {
+          lineData.labels = d.map((label) => moment(label.fecha).format('DD MMM YY').toUpperCase());
+          lineData.datasets[0].data = d.map((datum) => datum.estadias);
+          lineData.datasets[1].data = d.map((datum) => datum.gasolinas);
+          hChart.data = lineData;
+
+          hChart.update();
+        }
+
+      })(jQuery);
+    </script>
+{% endblock %}

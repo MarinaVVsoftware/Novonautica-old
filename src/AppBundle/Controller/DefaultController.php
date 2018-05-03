@@ -91,7 +91,7 @@ class DefaultController extends Controller
             // Buscar correos a notificar
             $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                 'evento' => Correo\Notificacion::EVENTO_ACEPTAR,
-                'tipo' => Correo\Notificacion::TIPO_ASTILLERO
+                'tipo' => $cotizacion instanceof AstilleroCotizacion ? Correo\Notificacion::TIPO_ASTILLERO : Correo\Notificacion::TIPO_MARINA,
             ]);
 
             $this->enviaCorreoNotificacion($mailer, $notificables, $cotizacion);
