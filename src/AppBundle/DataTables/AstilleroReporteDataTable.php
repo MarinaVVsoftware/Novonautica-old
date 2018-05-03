@@ -59,31 +59,29 @@ class AstilleroReporteDataTable extends AbstractDataTableHandler
             ->where('pf.acotizacion = ac.id');
 
         $query = $repository->createQueryBuilder('ac')
-            ->select('CASE WHEN  ac.foliorecotiza = 0 THEN ac.folio ELSE CONCAT(ac.folio, \'-\', ac.foliorecotiza) END AS folio')
+            ->select('CASE WHEN  ac.foliorecotiza = 0 THEN ac.folio ' .
+                'ELSE CONCAT(ac.folio, \'-\', ac.foliorecotiza) END AS folio')
             ->addSelect('c.id AS id_cliente', 'ac.id AS id_cotizacion')
             ->addSelect('c.nombre', 'ac.fechaLlegada', 'ac.fechaSalida', 'ac.total')
             ->addSelect("({$adeudoSubquery->getDQL()}) AS pagado")
             ->addSelect('COALESCE(p.fecharealpago, \'No se han realizado pagos\') AS lastPago')
             ->leftJoin('ac.cliente', 'c')
             ->leftJoin('ac.pagos', 'p')
-            ->where("p.fecharealpago = ({$fechaSubquery->getDQL()}) AND ac.estatuspago = 1 OR ac.estatuspago IS NULL AND ac.validacliente = 2");
+            ->where("p.fecharealpago = ({$fechaSubquery->getDQL()}) " .
+                "AND ac.estatuspago = 1 OR ac.estatuspago IS NULL AND ac.validacliente = 2");
 
-        /*if ($request->search->value) {
+        if ($request->search->value) {
             $query->where('(LOWER(c.nombre) LIKE :search)');
             $query->setParameter('search', strtolower("%{$request->search->value}%"));
-        }*/
+        }
 
-        /*foreach ($request->order as $order) {
+        foreach ($request->order as $order) {
             if ($order->column == 0) {
-                $query->addOrderBy('c.nombre', $order->dir);
+                $query->addOrderBy('ac.folio', $order->dir);
             } elseif ($order->column == 1) {
-                $query->addOrderBy('abono', $order->dir);
-            } elseif ($order->column == 2) {
-                $query->addOrderBy('total', $order->dir);
-            } elseif ($order->column == 3) {
-                $query->addOrderBy('total', $order->dir);
+                $query->addOrderBy('c.nombre', $order->dir);
             }
-        }*/
+        }
 
         $queryCount = clone $query;
         $queryCount->select('COUNT(ac.id)');

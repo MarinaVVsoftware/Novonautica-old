@@ -47,6 +47,11 @@ class Notificacion
     private $fechaNotificacionCobro;
 
     /**
+     * @var string
+     */
+    private $folioCotizacion;
+
+    /**
      * @var Usuario
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Usuario")
@@ -176,6 +181,22 @@ class Notificacion
     public function setFechaNotificacionCobro($fechaNotificacionCobro)
     {
         $this->fechaNotificacionCobro = $fechaNotificacionCobro;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFolioCotizacion()
+    {
+        return $this->folioCotizacion;
+    }
+
+    /**
+     * @param string $folioCotizacion
+     */
+    public function setFolioCotizacion($folioCotizacion)
+    {
+        $this->folioCotizacion = $folioCotizacion;
     }
 
     /**

@@ -18,11 +18,11 @@
                         <tr>
                             <th>Cotización</th>
                             <th>Cliente</th>
-                            <th>Inicio</th>
-                            <th>Final</th>
-                            <th>Último pago</th>
-                            <th>Adeudo</th>
-                            <th>Pagado</th>
+                            <th class="no-sort">Inicio</th>
+                            <th class="no-sort">Final</th>
+                            <th class="no-sort">Último pago</th>
+                            <th class="no-sort">Adeudo</th>
+                            <th class="no-sort">Pagado</th>
                             <th class="no-sort"></th>
                         </tr>
                         </thead>
@@ -63,8 +63,11 @@
             row.cells[4].innerHTML = paymentDate.isValid() ? paymentDate.format('D-MM-YYYY') : cliente[4];
 
             row.cells[7].innerHTML = `
-                <a class="btn btn-xs btn-block btn-naranja" href="{{ path('cliente_notificacion_index') }}?u=${cliente[7].cliente}&f=${cliente[0]}">Notificar</a>
-                <a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.baseUrl }}/astillero/${cliente[7].cotizacion}">Ver cotización</a>
+                <a class="btn btn-xs btn-block btn-naranja"
+                href="{{ path('cliente_notificacion_index') }}?u=${cliente[7].cliente}&f=${cliente[0]}">Notificar</a>
+
+                <a class="btn btn-xs btn-block btn-morado-claro"
+                href="{{ app.request.baseUrl }}/astillero/${cliente[7].cotizacion}">Ver cotización</a>
             `;
           },
         });

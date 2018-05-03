@@ -3,6 +3,10 @@
 <h5>Asunto: Recordatorio de Pago de Estadía y Servicios</h5>
 <h5>Atención: Propietarios y Administradores</h5>
 
+{% if notificacion.folioCotizacion is defined %}
+    <h6>Folio de cotización: {{ notificacion.folioCotizacion }}</h6>
+{% endif %}
+
 <p>
     Estimado Cliente, el presente recordatorio se le envía con el fin de informarle que en la fecha
     <span class="red-color">{{ notificacion.fechaNotificacionCobro|date('d/m/Y') }}</span> vence la mensualidad de su estadía. Le solicitamos amablemente
