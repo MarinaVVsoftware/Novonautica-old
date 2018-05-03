@@ -133,7 +133,8 @@
                             <table class="table table-novo">
                                 <thead>
                                 <tr>
-                                    <th width="50%">Descripcion</th>
+                                    <th width="30%">Descripcion</th>
+                                    <th width="15%">Embarcación</th>
                                     <th width="15%">Adeudo</th>
                                     <th width="15%">Pagado</th>
                                     <th width="20%">Fecha</th>
@@ -238,6 +239,7 @@
               .done(function (trabajos) {
                 clearData();
 
+
                 if (!trabajos.length) {
                   rTabla.innerHTML = `
                     <tr><td colspan="4" class="text-center">No existen registros en la fecha seleccionada</td></tr>
@@ -253,6 +255,7 @@
                   let row = rTabla.insertRow();
 
                   row.insertCell().innerText = trabajo.cotizacionInicial;
+                  row.insertCell().innerText = trabajo.astilleroODT.astilleroCotizacion.barco.nombre;
                   row.insertCell().innerText = '$' + (trabajo.total / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'MXN';
                   row.insertCell().innerText = '$' + (pagos / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'MXN';
                   row.insertCell().innerText = trabajo.astilleroODT.fecha;

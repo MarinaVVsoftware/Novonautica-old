@@ -13,11 +13,12 @@ class ContratistaRepository extends \Doctrine\ORM\EntityRepository
     public function getTrabajosByProveedor($proveedor, $inicio, $fin)
     {
         return $this->createQueryBuilder('t')
-            ->select('t', 'o', 'pa', 'c')
+            ->select('t', 'o', 'pa', 'c', 'b')
             ->leftJoin('t.proveedor', 'p')
             ->leftJoin('t.astilleroODT', 'o')
             ->leftJoin('t.contratistapagos', 'pa')
             ->leftJoin('o.astilleroCotizacion', 'c')
+            ->leftJoin('c.barco', 'b')
             ->where('o.fecha BETWEEN :inicio AND :fin')
             ->andWhere('p.id = :proveedor')
             ->setParameters([
