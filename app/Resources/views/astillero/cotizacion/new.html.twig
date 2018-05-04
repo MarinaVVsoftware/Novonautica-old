@@ -455,7 +455,7 @@
                             <div class="row">
                                 <div class="col-sm-12 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="valdolar" class="" ><span class="dolarval">{{ (valdolar/100)|number_format(2) }}</span> MXN</div>
+                                    <div id="valdolar" class="" ><span class="dolarval">{{ (valdolar/100)|number_format(2) }}</span> <small>MXN</small></div>
                                 </div>
                             </div>
                             <div class="row">
@@ -1510,7 +1510,11 @@
             }
 
         })(jQuery);
-        $('table>tbody').change('.select-busca-producto',function (e) {
+
+
+        $('#productos').change('.select-busca-producto',function (e) {
+            //console.log($(this).children('td-producto').focus());
+            //console.log($(this).children('.servicio-agregado').children('.td-producto').children('select').focus());
             //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
             var idservicio = $('.select-busca-producto:focus option:selected' ).val();
             if(idservicio > 0){
@@ -1522,6 +1526,7 @@
                     dataType: 'json',
                     success: function(datos) {
                         JSON.stringify(datos);
+                        //console.log(datos);
                         var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
                         var dolar = $('#appbundle_astillerocotizacion_dolar').val();
                         fila.children('.valorprecio').html('$ '+parseFloat((datos.precio)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');

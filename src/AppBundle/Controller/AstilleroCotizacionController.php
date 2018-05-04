@@ -138,69 +138,102 @@ class AstilleroCotizacionController extends Controller
             $servicio = $this->getDoctrine()->getRepository(AstilleroServicioBasico::class)->find(1);
             $cantidad = $eslora;
             $precio = $astilleroGrua->getPrecio();
-            $sumas = $this->guardarServicioBasico($astilleroGrua,$servicio,$cantidad,$precio,$iva,$sumas);
+            $sumas = $this->guardarServicioBasico($astilleroGrua,$servicio,$cantidad,$precio,$iva,$sumas,$valordolar);
             // Estadía
             $servicio = $this->getDoctrine()->getRepository(AstilleroServicioBasico::class)->find(2);
             $cantidad = $cantidadDias * $eslora;
-            $precio = ($astilleroEstadia->getPrecio()*$valordolar)/100; //esta en dolares
-            $sumas = $this->guardarServicioBasico($astilleroEstadia,$servicio,$cantidad,$precio,$iva,$sumas);
+            $precio = $astilleroEstadia->getPrecio();
+            $sumas = $this->guardarServicioBasico($astilleroEstadia,$servicio,$cantidad,$precio,$iva,$sumas,$valordolar);
             // Uso de rampa
             $servicio = $this->getDoctrine()->getRepository(AstilleroServicioBasico::class)->find(3);
             $cantidad = $astilleroRampa->getCantidad();
             $precio = $astilleroRampa->getPrecio();
-            $sumas = $this->guardarServicioBasico($astilleroRampa,$servicio,$cantidad,$precio,$iva,$sumas);
+            $sumas = $this->guardarServicioBasico($astilleroRampa,$servicio,$cantidad,$precio,$iva,$sumas,$valordolar);
             // Uso de karcher
             $servicio = $this->getDoctrine()->getRepository(AstilleroServicioBasico::class)->find(4);
             $cantidad = $astilleroKarcher->getCantidad();
             $precio = $astilleroKarcher->getPrecio();
-            $sumas = $this->guardarServicioBasico($astilleroKarcher,$servicio,$cantidad,$precio,$iva,$sumas);
+            $sumas = $this->guardarServicioBasico($astilleroKarcher,$servicio,$cantidad,$precio,$iva,$sumas,$valordolar);
             //uso de explanada
             $servicio = $this->getDoctrine()->getRepository(AstilleroServicioBasico::class)->find(5);
             $cantidad = $astilleroExplanada->getCantidad();
             $precio = $astilleroExplanada->getPrecio();
-            $sumas = $this->guardarServicioBasico($astilleroExplanada,$servicio,$cantidad,$precio,$iva,$sumas);
+            $sumas = $this->guardarServicioBasico($astilleroExplanada,$servicio,$cantidad,$precio,$iva,$sumas,$valordolar);
             //Conexión a electricidad
             $servicio = $this->getDoctrine()->getRepository(AstilleroServicioBasico::class)->find(6);
             $cantidad = $astilleroElectricidad->getCantidad();
             $precio = $astilleroElectricidad->getPrecio();
-            $sumas = $this->guardarServicioBasico($astilleroElectricidad,$servicio,$cantidad,$precio,$iva,$sumas);
+            $sumas = $this->guardarServicioBasico($astilleroElectricidad,$servicio,$cantidad,$precio,$iva,$sumas,$valordolar);
             //Limpieza de locación
             $servicio = $this->getDoctrine()->getRepository(AstilleroServicioBasico::class)->find(7);
             $cantidad = $astilleroLimpieza->getCantidad();
             $precio = $astilleroLimpieza->getPrecio();
-            $sumas = $this->guardarServicioBasico($astilleroLimpieza,$servicio,$cantidad,$precio,$iva,$sumas);
+            $sumas = $this->guardarServicioBasico($astilleroLimpieza,$servicio,$cantidad,$precio,$iva,$sumas,$valordolar);
             //Sacar para inspeccionar
             $servicio = $this->getDoctrine()->getRepository(AstilleroServicioBasico::class)->find(8);
             $cantidad = $eslora;
             $precio = $astilleroInspeccionar->getPrecio();
-            $sumas = $this->guardarServicioBasico($astilleroInspeccionar,$servicio,$cantidad,$precio,$iva,$sumas);
-
+            $sumas = $this->guardarServicioBasico($astilleroInspeccionar,$servicio,$cantidad,$precio,$iva,$sumas,$valordolar);
             foreach ($astilleroCotizacion->getAcservicios() as $servAst) {
                 if ($servAst->getAstilleroserviciobasico() == null) {
                     $cantidad = $servAst->getCantidad();
-                    if ($servAst->getOtroservicio() != null) {
-                        $precio = $servAst->getPrecio();
-                    } elseif ($servAst->getProducto() != null) {
-                        $precio = $servAst->getProducto()->getPrecio();
-                    } elseif ($servAst->getServicio()->getPrecio() != null) {
+                    if ($servAst->getServicio() != null) {
+                        $divisa = $servAst->getServicio()->getDivisa();
                         $precio = $servAst->getServicio()->getPrecio();
-                    } else {
+                    }elseif($servAst->getOtroservicio() != null){
+                        $divisa = 'MXN';
+                        $precio = $servAst->getPrecio();
+                    }elseif($servAst->getProducto() != null){
+                        $divisa = 'MXN';
+                        $precio = $servAst->getProducto()->getPrecio();
+                    }else{
+                        $divisa = 'MXN';
                         $precio = 0;
                     }
-                    $subTotal = $cantidad * $precio;
+
+                    if($divisa == 'USD'){
+                        $subTotal = ($cantidad * $precio * $valordolar)/100;
+                    }else{
+                        $subTotal = $cantidad * $precio;
+                    }
                     $ivaTot = ($subTotal * $iva) / 100;
                     $total = $subTotal + $ivaTot;
-                    $servAst->setPrecio($precio);
-                    $servAst->setSubtotal($subTotal);
-                    $servAst->setIva($ivaTot);
-                    $servAst->setTotal($total);
-                    $servAst->setEstatus(true);
+                    $servAst->setPrecio($precio)
+                            ->setSubtotal($subTotal)
+                            ->setIva($ivaTot)
+                            ->setTotal($total)
+                            ->setDivisa($divisa)
+                            ->setEstatus(true);
                     $sumas = ['granSubtotal'=>$sumas['granSubtotal']+=$subTotal,
                               'granIva'=>$sumas['granIva']+=$ivaTot,
                               'granTotal'=>$sumas['granTotal']+=$total];
                 }
             }
-
+//            foreach ($astilleroCotizacion->getAcservicios() as $servAst) {
+//                if ($servAst->getAstilleroserviciobasico() == null) {
+//                    $cantidad = $servAst->getCantidad();
+//                    if ($servAst->getOtroservicio() != null) {
+//                        $precio = $servAst->getPrecio();
+//                    } elseif ($servAst->getProducto() != null) {
+//                        $precio = $servAst->getProducto()->getPrecio();
+//                    } elseif ($servAst->getServicio()->getPrecio() != null) {
+//                        $precio = $servAst->getServicio()->getPrecio();
+//                    } else {
+//                        $precio = 0;
+//                    }
+//                    $subTotal = $cantidad * $precio;
+//                    $ivaTot = ($subTotal * $iva) / 100;
+//                    $total = $subTotal + $ivaTot;
+//                    $servAst->setPrecio($precio);
+//                    $servAst->setSubtotal($subTotal);
+//                    $servAst->setIva($ivaTot);
+//                    $servAst->setTotal($total);
+//                    $servAst->setEstatus(true);
+//                    $sumas = ['granSubtotal'=>$sumas['granSubtotal']+=$subTotal,
+//                              'granIva'=>$sumas['granIva']+=$ivaTot,
+//                              'granTotal'=>$sumas['granTotal']+=$total];
+//                }
+//            }
             //------------------------------------------------
             $fechaHoraActual = new \DateTime('now');
             $foliobase = $sistema->getFolioMarina();
@@ -1113,8 +1146,12 @@ class AstilleroCotizacionController extends Controller
         $mailer->send($message);
     }
 
-    private function guardarServicioBasico($objeto,$servicio,$cantidad,$precio,$iva,$sumas){
-        $subTotal = $cantidad * $precio;
+    private function guardarServicioBasico($objeto,$servicio,$cantidad,$precio,$iva,$sumas,$dolar){
+        if($objeto->getDivisa()=='USD'){
+            $subTotal = ($cantidad * $precio * $dolar)/100;
+        }else{
+            $subTotal = $cantidad * $precio;
+        }
         $ivaTot = ($subTotal * $iva) / 100;
         $total = $subTotal + $ivaTot;
         $objeto

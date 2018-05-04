@@ -337,7 +337,7 @@ $('.add-producto').click(function (e) {
   $('#serviciosextra').data('cantidad', totServicios);
   var newLi = jQuery('<tr class="servicio-agregado" data-id="' + (totServicios - 1) + '"></tr>').html(newWidget);
   newLi.appendTo(servicioListPrimero);
-  $('.select-buscador').select2();
+  //$('.select-busca-producto').select2();
   newLi.before(newLi);
   // $('.select-busca-producto').select2();
   // $('#a_nuevacotizacion_mxn > tbody').append('<tr class="servicio-agregado_mxn" id="' + (totServicios - 1) + '">' +
@@ -377,7 +377,10 @@ $('.add-servicio').click(function (e) {
     }else{
       precio = ($(this).data('precio')/100).toFixed(2);
     }
+    var precioreal = ($(this).data('precio')/100).toFixed(2);
     $(fila.children('.valorprecio')).data('valor',precio);
+    $(fila.children('.valorprecio')).data('valorreal',precioreal);
+    $(fila.children('.valorprecio')).data('divisa',$(this).data('divisa'));
     //$('.select-busca-producto').select2();
     // $('#a_nuevacotizacion_mxn > tbody').append('<tr class="servicio-agregado_mxn" id="' + (totServicios - 1) + '">' +
     //     '<td class="valorcantidad" data-valor="0">0</td>' +
@@ -1034,26 +1037,36 @@ $('#appbundle_astillerocotizacion_dolar').keyup(function () {
     var estadia_precio = $('#appbundle_astillerocotizacion_acservicios_1_precio').val();
     var estadia_precio_mxn = estadia_precio * dolar;
     $('#estadia_precio').data('valor', estadia_precio_mxn);
-    $('#estadia_precio').html('$ ' + parseFloat(estadia_precio_mxn).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    //$('#estadia_precio').html('$ ' + parseFloat(estadia_precio_mxn).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     var fila = $('#fila_estadia');
     calculaSubtotalesAstillero(fila);
+    $('#serviciosextra .servicio-agregado').each(function () {
+        divisa = $(this).children('.valorprecio').data('divisa');
+        precio = $(this).children('.valorprecio').data('valorreal');
+        if (divisa === 'USD'){
+            preciomxn = precio * dolar;
+            $(this).children('.valorprecio').data('valor',(preciomxn).toFixed(2));
+        }
+        calculaSubtotalesAstillero($(this));
 
-    var dia_adicional_precio = $('#appbundle_astillerocotizacion_acservicios_8_precio').val();
-    var dia_adicional_precio_mxn = dia_adicional_precio * dolar;
-    $('#dia_adicional_precio').data('valor', dia_adicional_precio_mxn);
-    $('#dia_adicional_precio').html('$ ' + parseFloat(dia_adicional_precio_mxn).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-    var fila = $('#fila_dia_adicional');
-    calculaSubtotalesAstillero(fila);
-
-  var idfila = 0;
-  $("#a_nuevacotizacion tbody .servicio-agregado").each(function () {
-    precio = $(this).children('.valorprecio').data('valor');
-    auxprecio = (precio / dolar).toFixed(2);
-    idfila = $(this).data('id');
-    $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.valorprecio').data('valor', auxprecio);
-    $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.valorprecio').html('$ ' + parseFloat(auxprecio).toFixed(2));
-    calculaSubtotalesAstillero($('#a_nuevacotizacion_mxn>tbody>#' + idfila));
-  });
+    });
+  //
+  //   var dia_adicional_precio = $('#appbundle_astillerocotizacion_acservicios_8_precio').val();
+  //   var dia_adicional_precio_mxn = dia_adicional_precio * dolar;
+  //   $('#dia_adicional_precio').data('valor', dia_adicional_precio_mxn);
+  //   $('#dia_adicional_precio').html('$ ' + parseFloat(dia_adicional_precio_mxn).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+  //   var fila = $('#fila_dia_adicional');
+  //   calculaSubtotalesAstillero(fila);
+  //
+  // var idfila = 0;
+  // $("#a_nuevacotizacion tbody .servicio-agregado").each(function () {
+  //   precio = $(this).children('.valorprecio').data('valor');
+  //   auxprecio = (precio / dolar).toFixed(2);
+  //   idfila = $(this).data('id');
+  //   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.valorprecio').data('valor', auxprecio);
+  //   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.valorprecio').html('$ ' + parseFloat(auxprecio).toFixed(2));
+  //   calculaSubtotalesAstillero($('#a_nuevacotizacion_mxn>tbody>#' + idfila));
+  // });
 });
 
 // -- fecha llegada --
@@ -1145,7 +1158,7 @@ $('#appbundle_astillerocotizacion_acservicios_8_estatus').on('click', function (
 //-- Uso de grua (sacar varada y botadura) --
 $('#appbundle_astillerocotizacion_acservicios_0_precio').keyup(function () {
     var grua_precio = $(this).val().replace(',','');
-    $('#grua_precio').html('$ ' +  parseFloat(grua_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#grua_precio').html('$ ' +  parseFloat(grua_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
     $('#grua_precio').data('valor', grua_precio);
     var fila = $('#fila_grua');
     calculaSubtotalesAstillero(fila);
@@ -1173,7 +1186,7 @@ $('#appbundle_astillerocotizacion_acservicios_3_cantidad').keyup(function () {
 $('#appbundle_astillerocotizacion_acservicios_3_precio').keyup(function () {
     var karcher_precio = $(this).val().replace(',','');
     //console.log((karcher_precio).replace(',',''));
-    $('#karcher_precio').html('$ ' + parseFloat(karcher_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#karcher_precio').html('$ ' + parseFloat(karcher_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
     $('#karcher_precio').data('valor', karcher_precio);
     var fila = $('#cotizakarcher');
     calculaSubtotalesAstillero(fila);
@@ -1200,7 +1213,7 @@ $('#appbundle_astillerocotizacion_acservicios_5_cantidad').keyup(function () {
 });
 $('#appbundle_astillerocotizacion_acservicios_5_precio').keyup(function () {
   var electricidad_precio = $(this).val().replace(',','');
-    $('#electricidad_precio').html('$ ' + parseFloat(electricidad_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#electricidad_precio').html('$ ' + parseFloat(electricidad_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
     $('#electricidad_precio').data('valor', electricidad_precio);
     var fila = $('#cotizaelectricidad');
     calculaSubtotalesAstillero(fila);
@@ -1218,8 +1231,8 @@ $('#appbundle_astillerocotizacion_acservicios_1_precio').keyup(function () {
     var estadia_precio = $(this).val().replace(',','');
     var dolar = $('#appbundle_astillerocotizacion_dolar').val();
     var estadia_precio_usd = estadia_precio * dolar;
-    $('#estadia_precio').data('valor', estadia_precio_usd);
-    $('#estadia_precio').html('$ ' + parseFloat(estadia_precio_usd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#estadia_precio').data('valor', estadia_precio_usd.toFixed(2));
+    $('#estadia_precio').html('$ ' + parseFloat(estadia_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>USD</small>');
     var fila = $('#fila_estadia');
     calculaSubtotalesAstillero(fila);
     // var estadia_precio_mxn = estadia_precio;
@@ -1243,7 +1256,7 @@ $('#appbundle_astillerocotizacion_acservicios_6_cantidad').keyup(function () {
 });
 $('#appbundle_astillerocotizacion_acservicios_6_precio').keyup(function () {
     var limpieza_precio = $(this).val().replace(',','');
-    $('#limpieza_precio').html('$ ' + parseFloat(limpieza_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#limpieza_precio').html('$ ' + parseFloat(limpieza_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
     $('#limpieza_precio').data('valor', limpieza_precio);
     var fila = $('#cotizalimpieza');
     calculaSubtotalesAstillero(fila);
@@ -1268,7 +1281,7 @@ $('#appbundle_astillerocotizacion_acservicios_2_cantidad').keyup(function () {
 });
 $('#appbundle_astillerocotizacion_acservicios_2_precio').keyup(function () {
     var rampa_precio = $(this).val().replace(',','');
-    $('#rampa_precio').html('$ ' + parseFloat(rampa_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#rampa_precio').html('$ ' + parseFloat(rampa_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
     $('#rampa_precio').data('valor', rampa_precio);
     var fila = $('#cotizarampa');
     calculaSubtotalesAstillero(fila);
@@ -1293,7 +1306,7 @@ $('#appbundle_astillerocotizacion_acservicios_4_cantidad').keyup(function () {
 });
 $('#appbundle_astillerocotizacion_acservicios_4_precio').keyup(function () {
   var explanada_precio = $(this).val().replace(',','');
-  $('#explanada_precio').html('$ ' + parseFloat(explanada_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+  $('#explanada_precio').html('$ ' + parseFloat(explanada_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
   $('#explanada_precio').data('valor', explanada_precio);
   var fila = $('#cotizaexplanada');
   calculaSubtotalesAstillero(fila);
@@ -1318,7 +1331,7 @@ $('#appbundle_astillerocotizacion_acservicios_4_precio').keyup(function () {
 // });
 $('#appbundle_astillerocotizacion_acservicios_7_precio').keyup(function () {
     var inspeccionar_precio = $(this).val().replace(',','');
-    $('#inspeccionar_precio').html('$ ' + parseFloat(inspeccionar_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#inspeccionar_precio').html('$ ' + parseFloat(inspeccionar_precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
     $('#inspeccionar_precio').data('valor', inspeccionar_precio);
     var fila = $('#cotizainspeccionar');
     calculaSubtotalesAstillero(fila);
@@ -1350,21 +1363,31 @@ $('#appbundle_astillerocotizacion_acservicios_8_cantidad').keyup(function () {
 });
 
 $('table').on('keyup', 'input', function () {
-  $(this).parent().data('valor', $(this).val());
-  var fila = $(this).parent().parent();
-  calculaSubtotalesAstillero(fila);
-  //
-  // var idfila = $(this).parent().parent().data('id');
-  // var clasecelda = $(this).parent().attr('class');
-  //
-  // if (clasecelda == 'td-otroservicio') {
-  //   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.td-otroservicio').html($(this).val());
-  // } else {
-  //   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.valorcantidad').data('valor', $(this).val());
-  //   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.valorcantidad').html($(this).val());
-  //   fila = $('#a_nuevacotizacion_mxn>tbody>#' + idfila);
-  //   calculaSubtotalesAstillero(fila);
-  // }
+    // var precio_mxn = 0;
+    //var precioreal = $(this).parent().parent().children('.valorprecio').data('valorreal');
+    // var divisa = $(this).parent().parent().children('.valorprecio').data('divisa');
+    var clasecelda = $(this).parent().attr('class');
+    if(clasecelda === 'input-group'){
+        $(this).parent().parent().data('valor', $(this).val());
+        fila = $(this).parent().parent().parent();
+    }else{
+        $(this).parent().data('valor', $(this).val());
+        fila = $(this).parent().parent();
+    }
+    calculaSubtotalesAstillero(fila);
+    //
+    // var idfila = $(this).parent().parent().data('id');
+    //  var clasecelda = $(this).parent().attr('class');
+    //  console.log(clasecelda);
+    //
+    // if (clasecelda == 'td-otroservicio') {
+    //   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.td-otroservicio').html($(this).val());
+    // } else {
+    //   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.valorcantidad').data('valor', $(this).val());
+    //   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.valorcantidad').html($(this).val());
+    //   fila = $('#a_nuevacotizacion_mxn>tbody>#' + idfila);
+    //   calculaSubtotalesAstillero(fila);
+    // }
 });
 
 $('#a_nuevacotizacion').on('keyup', '.valorprecio>.input-group>input', function () {

@@ -120,7 +120,7 @@
     </div>
     <div class="row text-right">
         <div class="col-xs-6 text-left">Tipo cambio: ${{ (astilleroCotizacion.dolar/100)|number_format(2) }} MXN</div>
-        <div class="col-xs-6">Precios en: USD</div>
+        {#<div class="col-xs-6">Precios en: USD</div>#}
     </div>
     <div class="row">
         {% if servicioBasicoExists %}
@@ -149,7 +149,7 @@
                                         {{ unservicio.cantidad }}
                                     {% endif %}
                                 </td>
-                                <td>$ {{ ((unservicio.precio / astilleroCotizacion.dolar))|number_format(2) }}</td>
+                                <td>$ {{ ((unservicio.precio / astilleroCotizacion.dolar))|number_format(2) }} {{ unservicio.divisa }}</td>
                                 <td>$ {{ ((unservicio.subtotal / astilleroCotizacion.dolar ))|number_format(2) }}</td>
                             </tr>
                             {% set sumaserv=sumaserv+unservicio.subtotal %}
