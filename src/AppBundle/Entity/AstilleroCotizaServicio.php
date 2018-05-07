@@ -63,6 +63,7 @@ class AstilleroCotizaServicio
     private $total;
 
     /**
+     * divisa solo de variable precio, los demas estan en mxn
      * @var string
      *
      * @ORM\Column(name="divisa", type="string", length=3, nullable=true)
