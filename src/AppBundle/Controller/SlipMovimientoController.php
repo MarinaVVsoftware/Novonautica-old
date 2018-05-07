@@ -6,6 +6,7 @@ use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\Slip;
 use AppBundle\Entity\SlipMovimiento;
 use AppBundle\Serializer\NotNullObjectNormalizer;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -34,6 +35,10 @@ class SlipMovimientoController extends Controller
      *
      * @Route("/ocupacion", name="slipmovimiento_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse|Response
      */
     public function indexAction(Request $request)
     {
@@ -52,8 +57,9 @@ class SlipMovimientoController extends Controller
 
     /**
      * @Route("/mapa", name="mapa")
+     * @Method("GET")
      */
-    public function currentSlipsAction(Request $request)
+    public function currentSlipsAction()
     {
         return $this->render('marinahumeda/mapa/mapa.html.twig', [
             'title' => 'Slips',
@@ -63,42 +69,49 @@ class SlipMovimientoController extends Controller
     /**
      * @Route("/mapa-slips/data", name="mapa-data")
      *
+     * @param Request $request
+     *
      * @return Response
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
-    public function fillMapAction()
+    public function fillMapAction(Request $request)
     {
+        $fecha = $request->request->get('f') ? $request->request->get('f') : new \DateTime();
+
+        $repository = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
+        $currentSlips = $repository->getCurrentOcupation();
+        $stats = $repository->getCurrentOcupationStats($fecha);
+
+
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $normalizer = new ObjectNormalizer($classMetadataFactory);
+        $serializer = new Serializer([new DateTimeNormalizer(), $normalizer], [new JsonEncoder()]);
+
+        $data = [
+            'data' => $stats,
+            'boats' => $currentSlips,
+        ];
+
         try {
-            $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
-            $currentSlips = $smRepo->getCurrentOcupation();
-            $allSlips = $smRepo->calculoOcupaciones2(new \DateTime());
-
-            $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-            $normalizer = new ObjectNormalizer($classMetadataFactory);
-            $serializer = new Serializer([new DateTimeNormalizer(), $normalizer], [new JsonEncoder()]);
-
-            $data = [
-                'data' => $allSlips,
-                'slips' => $currentSlips,
-            ];
-
             $response = $serializer->serialize($data, 'json', ['groups' => ['currentOcupation']]);
-
-            return new Response($response);
+            return JsonResponse::fromJsonString($response)->setEncodingOptions(JSON_NUMERIC_CHECK);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
         }
     }
 
     /**
-     * @Route("/mapa/{id}/detail", name="detalle-slip")
+     * @Route("/mapa/{slip}/detail", name="detalle-slip")
      *
+     * @param $slip
+     *
+     * @return Response
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
-    public function showSlipDetailAction(Request $request, Slip $slip)
+    public function showSlipDetailAction($slip)
     {
         $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
-        $currentSlips = $smRepo->getCurrentOcupation($slip->getId());
+        $currentSlips = $smRepo->getCurrentOcupation($slip);
 
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $normalizer = new ObjectNormalizer($classMetadataFactory);
@@ -112,6 +125,7 @@ class SlipMovimientoController extends Controller
      * @Route("/mapa/{id}/assign", name="assign-slip")
      *
      * @param Request $request
+     * @param Slip $slip
      *
      * @return Response
      */
@@ -146,13 +160,9 @@ class SlipMovimientoController extends Controller
             $em->persist($slipMovimiento);
             $em->flush();
 
+            // TODO: No redireccionar, solo enviar una respuesta de movimiento creado
             return $this->redirect($request->headers->get('referer'));
         }
-
-        /*
-         * En este caso se hace una validacion para no reasignarle un slip a una cotizacion
-         * La validacion se hace desde la entidad SlipMovimiento y el slip asignado en la MHC
-        */
 
         return $this->render('marinahumeda/mapa/form/assign-slip.html.twig', [
             'form' => $form->createView()
@@ -202,8 +212,45 @@ class SlipMovimientoController extends Controller
     }
 
     /**
+     * @Route("/mapa/{slip}/isopen", name="check-open-slip")
+     *
+     * @param Request $request
+     * @param string $slip
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
+     *
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
+    public function checkOpenSlipAction(Request $request, $slip)
+    {
+        $start = $request->request->get('start');
+        $end = $request->request->get('end');
+
+        // TODO: Mostrar el slip si esta ocupado
+
+        $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
+
+        try {
+            $openSlip = $smRepo->isSlipOpen($slip, $start, $end);
+            $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+            $normalizer = new ObjectNormalizer($classMetadataFactory);
+            $serializer = new Serializer([new DateTimeNormalizer(), $normalizer], [new JsonEncoder()]);
+
+            $response = $serializer->serialize($openSlip, 'json', ['groups' => ['currentOcupation']]);
+
+            return JsonResponse::fromJsonString($response);
+        } catch (NonUniqueResultException $e) {
+            return $this->json($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
      * @Route("/mapa/{id}/remove", name="remove-slip")
      * @Method("DELETE")
+     *
+     * @param SlipMovimiento $slipMovimiento
+     *
+     * @return Response
      */
     public function removeSlipAction(SlipMovimiento $slipMovimiento)
     {
@@ -215,220 +262,5 @@ class SlipMovimientoController extends Controller
         $em->flush();
 
         return new Response(null, Response::HTTP_CREATED);
-    }
-
-    /**
-     * @Route("/mapa/{id}/isopen", name="check-open-slip")
-     *
-     * @param Request $request
-     * @param MarinaHumedaCotizacion $mhc
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
-     *
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     */
-    public function checkOpenSlipAction(Request $request, MarinaHumedaCotizacion $mhc)
-    {
-        $slip = $request->query->get('slip');
-        $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
-        $openSlip = $smRepo->isSlipOpen($slip, $mhc->getFechaLlegada(), $mhc->getFechaSalida());
-
-        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-        $normalizer = new ObjectNormalizer($classMetadataFactory);
-        $serializer = new Serializer([new DateTimeNormalizer(), $normalizer], [new JsonEncoder()]);
-
-        $response = $serializer->serialize($openSlip, 'json', ['groups' => ['currentOcupation']]);
-
-        return new Response($response);
-    }
-
-    /**
-     * @Route("/buscar/{eslora}/{id}.{_format}", name="ajax_buscar_slips", defaults={"_format"="JSON"})
-     * @Method({"GET"})
-     */
-    public function buscaSlipActionTodo($eslora, Request $request, Slip $slip)
-    {
-        $em = $this->getDoctrine()->getManager();
-        //$slipsProbables = $em->getRepository('AppBundle:Slip')->findBy(['pies'=>$eslora]);
-        $qb = $em->getRepository('AppBundle:Slip')->createQueryBuilder('s');
-        $slipsProbables = $qb
-            ->where('s.pies >= ' . $eslora)
-            ->getQuery()
-            ->getResult();
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizer = new ObjectNormalizer();
-//        $normalizer->setCircularReferenceLimit(1);
-//        $normalizer->setCircularReferenceHandler(function ($object) {
-//            return $object->getId();
-//        });
-        $normalizer->setIgnoredAttributes(['mhcotizaciones', 'movimientos']);
-        $normalizers = [$normalizer];
-        $serializer = new Serializer($normalizers, $encoders);
-        //dump($slipsProbables);
-        //dump($serializer->serialize($slipsProbables,$request->getRequestFormat()));
-        return new Response($serializer->serialize($slipsProbables, $request->getRequestFormat()));
-        //return new Response('');
-    }
-
-    /**
-     * @Route("/buscar-movimiento/{slip}/{llegada}/{salida}/{id}.{_format}", name="ajax_buscar__movimientos_slip",
-     *     defaults={"_format"="JSON"})
-     * @Method({"GET"})
-     */
-    public function buscaMovimientoSlipActionTodo($slip, $llegada, $salida, Request $request)
-    {
-        $dateTime = new DateTimeNormalizer();
-
-        $em = $this->getDoctrine()->getManager();
-        //$slipsProbables = $em->getRepository('AppBundle:Slip')->findBy(['pies'=>$eslora]);
-        $qb = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
-        $slipsProbables = $qb
-            ->where('sm.slip = :slipcomparar AND ((:fecha_llegada BETWEEN sm.fechaLlegada AND sm.fechaSalida) OR (:fecha_salida BETWEEN sm.fechaLlegada AND sm.fechaSalida))')
-            ->getQuery()
-            ->setParameter('slipcomparar', $slip)
-            ->setParameter('fecha_llegada', new \DateTime($llegada), \Doctrine\DBAL\Types\Type::DATETIME)
-            ->setParameter('fecha_salida', new \DateTime($salida), \Doctrine\DBAL\Types\Type::DATETIME)
-            ->getResult();
-
-
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-
-        $normalizer = new ObjectNormalizer();
-//        $normalizer->setCircularReferenceLimit(1);
-//        $normalizer->setCircularReferenceHandler(function ($object) {
-//            return $object->getId();
-//        });
-        $normalizer->setIgnoredAttributes(['marinahumedacotizacion', 'slip']);
-
-        $serializer = new Serializer([new DateTimeNormalizer('Y-m-d'), $normalizer], $encoders);
-        //dump($slipsProbables);
-        //dump($serializer->serialize($slipsProbables,$request->getRequestFormat()));
-        return new Response($serializer->serialize($slipsProbables, $request->getRequestFormat()));
-        //return new Response('');
-    }
-
-    /**
-     * No seguiran siendo requeridas?
-     *
-     * @Route("/ocupacion/nuevo", name="slipmovimiento_new")
-     * @Method({"GET", "POST"})
-     */
-    public function newAction(Request $request)
-    {
-        $slipMovimiento = new Slipmovimiento();
-        $form = $this->createForm('AppBundle\Form\SlipMovimientoType', $slipMovimiento);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $slip = $slipMovimiento->getSlip()->getId();
-            $llegada = $slipMovimiento->getMarinahumedacotizacion()->getFechaLlegada();
-            $salida = $slipMovimiento->getMarinahumedacotizacion()->getFechaSalida();
-            $slipMovimiento->getMarinahumedacotizacion()->setSlip($slipMovimiento->getSlip());
-            $qb = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
-            $slipsProbables = $qb
-                ->where('sm.slip = :slipcomparar AND ((:fecha_llegada BETWEEN sm.fechaLlegada AND sm.fechaSalida) OR (:fecha_salida BETWEEN sm.fechaLlegada AND sm.fechaSalida))')
-                ->getQuery()
-                ->setParameter('slipcomparar', $slip)
-                ->setParameter('fecha_llegada', $llegada)
-                ->setParameter('fecha_salida', $salida)
-                ->getResult();
-            if (empty($slipsProbables)) {
-                $slipMovimiento->setFechaLlegada($llegada)->setFechaSalida($salida);
-                $em->persist($slipMovimiento);
-                $em->flush();
-                return $this->redirectToRoute('slipmovimiento_index');
-            } else {
-                $this->addFlash(
-                    'notice',
-                    'Error, el slip que intenta asignar ya esta ocupado'
-                );
-            }
-        }
-
-        return $this->render('slipmovimiento/new.html.twig', array(
-            'slipMovimiento' => $slipMovimiento,
-            'form' => $form->createView(),
-            'title' => 'Asignar Slip'
-        ));
-    }
-
-    /**
-     * No seguira siendo requerido?
-     *
-     * @Route("/ocupacion/{id}/editar", name="slipmovimiento_edit")
-     * @Method({"GET", "POST"})
-     */
-    public function editAction(Request $request, SlipMovimiento $slipMovimiento)
-    {
-        $slipActual = $slipMovimiento->getSlip()->getNum();
-        $deleteForm = $this->createDeleteForm($slipMovimiento);
-        $editForm = $this->createForm('AppBundle\Form\SlipMovimientoType', $slipMovimiento);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $esloraBarco = $slipMovimiento->getMarinahumedacotizacion()->getBarco()->getEslora();
-            $esloraSlip = $slipMovimiento->getSlip()->getPies();
-            if ($esloraSlip < $esloraBarco) {
-                $this->addFlash(
-                    'notice',
-                    'Error, el tamaño del slip es menor que la eslora de la embarcación'
-                );
-            } else {
-                $em = $this->getDoctrine()->getManager();
-                $slip = $slipMovimiento->getSlip()->getId();
-                $llegada = $slipMovimiento->getMarinahumedacotizacion()->getFechaLlegada();
-                $salida = $slipMovimiento->getMarinahumedacotizacion()->getFechaSalida();
-                $qb = $em->getRepository('AppBundle:SlipMovimiento')->createQueryBuilder('sm');
-                $slipsProbables = $qb
-                    ->where('sm.slip = :slipcomparar AND ((:fecha_llegada BETWEEN sm.fechaLlegada AND sm.fechaSalida) OR (:fecha_salida BETWEEN sm.fechaLlegada AND sm.fechaSalida))')
-                    ->getQuery()
-                    ->setParameter('slipcomparar', $slip)
-                    ->setParameter('fecha_llegada', $llegada)
-                    ->setParameter('fecha_salida', $salida)
-                    ->getResult();
-                if (empty($slipsProbables)) {
-                    $slipMovimiento->setFechaLlegada($llegada)->setFechaSalida($salida);
-                    $em->persist($slipMovimiento);
-                    $em->flush();
-                    return $this->redirectToRoute('slipmovimiento_index');
-                } else {
-                    $this->addFlash(
-                        'notice',
-                        'Error, el slip que intenta asignar ya esta ocupado'
-                    );
-                }
-            }
-        }
-
-        return $this->render('slipmovimiento/edit.html.twig', array(
-            'slipMovimiento' => $slipMovimiento,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            'title' => 'Editar Slip Asignado',
-            'slipActual' => $slipActual
-        ));
-    }
-
-    public function deleteAction(Request $request, SlipMovimiento $slipMovimiento)
-    {
-        $form = $this->createDeleteForm($slipMovimiento);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($slipMovimiento);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('slipmovimiento_index');
-    }
-
-    private function createDeleteForm(SlipMovimiento $slipMovimiento)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('slipmovimiento_delete', array('id' => $slipMovimiento->getId())))
-            ->setMethod('DELETE')
-            ->getForm();
     }
 }
