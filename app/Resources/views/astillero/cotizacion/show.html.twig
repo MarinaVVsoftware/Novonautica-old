@@ -393,7 +393,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-7 col-sm-offset-5 text-right tipo-letra1">
+                                <div class="col-sm-4 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
                                         $
@@ -401,19 +401,12 @@
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6 col-sm-offset-6">
-                                    <hr>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-7 col-sm-offset-5 text-right tipo-letra1">
-                                    <p class="letra-azul">I.V.A:</p>
+                                <div class="col-sm-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Sub-Total:</p>
                                     <p>
                                         $
-                                        <span id="graniva">{{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</span>
-                                        <span class="tipo-letra2">MXN</span>
+                                        <span id="gransubtot">{{ (astilleroCotizacion.subtotal/astilleroCotizacion.dolar)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
                             </div>
@@ -423,12 +416,43 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-7 col-sm-offset-5 text-right tipo-letra1">
+                                <div class="col-sm-4 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $
+                                        <span id="graniva">{{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                                <div class="col-sm-4 text-right tipo-letra1">
+                                    <p class="letra-azul">I.V.A:</p>
+                                    <p>
+                                        $
+                                        <span id="graniva">{{ (astilleroCotizacion.ivatotal/astilleroCotizacion.dolar)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-6">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
                                         $
                                         <span id="grantot">{{ (astilleroCotizacion.total/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                                <div class="col-sm-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Total:</p>
+                                    <p>
+                                        $
+                                        <span id="grantot">{{ (astilleroCotizacion.total/astilleroCotizacion.dolar)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
                             </div>

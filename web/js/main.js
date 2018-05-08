@@ -1040,6 +1040,13 @@ $('#appbundle_astillerocotizacion_dolar').keyup(function () {
     //$('#estadia_precio').html('$ ' + parseFloat(estadia_precio_mxn).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     var fila = $('#fila_estadia');
     calculaSubtotalesAstillero(fila);
+
+    var dias_adicionales = $('#appbundle_astillerocotizacion_acservicios_8_precio').val();
+    var dias_adicionales_mxn = dias_adicionales * dolar;
+    $('#dia_adicional_precio').data('valor', dias_adicionales_mxn);
+    var fila = $('#fila_dia_adicional');
+    calculaSubtotalesAstillero(fila);
+
     $('#serviciosextra .servicio-agregado').each(function () {
         divisa = $(this).children('.valorprecio').data('divisa');
         precio = $(this).children('.valorprecio').data('valorreal');
@@ -1350,17 +1357,27 @@ $('#appbundle_astillerocotizacion_acservicios_8_cantidad').keyup(function () {
     $("#dia_adicional_cantidad").data('valor', nuevo_dias_adicionales_cantidad);
     $("#dia_adicional_cantidad").html(dias_adicionales + ' (pie por día)');
     calculaSubtotalesAstillero($('#fila_dia_adicional'));
-    $("#dia_adicional_cantidad_mxn").data('dias', dias_adicionales);
-    $("#dia_adicional_cantidad_mxn").data('valor', nuevo_dias_adicionales_cantidad);
-    $("#dia_adicional_cantidad_mxn").html(dias_adicionales + ' (pie por día)');
-    calculaSubtotalesAstillero($('#fila_dia_adicional_mxn'));
+    // $("#dia_adicional_cantidad_mxn").data('dias', dias_adicionales);
+    // $("#dia_adicional_cantidad_mxn").data('valor', nuevo_dias_adicionales_cantidad);
+    // $("#dia_adicional_cantidad_mxn").html(dias_adicionales + ' (pie por día)');
+    // calculaSubtotalesAstillero($('#fila_dia_adicional_mxn'));
     $("#electricidad_cantidad").data('valor', dias_adicionales);
     $("#electricidad_cantidad").html(dias_adicionales);
     calculaSubtotalesAstillero($("#cotizaelectricidad"));
-    $("#electricidad_cantidad_mxn").data('valor', dias_adicionales);
-    $("#electricidad_cantidad_mxn").html(dias_adicionales);
-    calculaSubtotalesAstillero($("#cotizaelectricidad_mxn"));
+    // $("#electricidad_cantidad_mxn").data('valor', dias_adicionales);
+    // $("#electricidad_cantidad_mxn").html(dias_adicionales);
+    // calculaSubtotalesAstillero($("#cotizaelectricidad_mxn"));
 });
+$('#appbundle_astillerocotizacion_acservicios_8_precio').keyup(function () {
+    //var dias_adicionales = $('#appbundle_astillerocotizacion_acservicios_8_cantidad').val();
+    var dias_adicionales_precio = $(this).val();
+    var dolar = $('#appbundle_astillerocotizacion_dolar').val();
+    var dias_adicionales_precio_mxn = dias_adicionales_precio * dolar;
+    $("#dia_adicional_precio").data('valor',dias_adicionales_precio_mxn);
+    $("#dia_adicional_precio").html(dias_adicionales_precio+' <small>USD</small>');
+    calculaSubtotalesAstillero($('#fila_dia_adicional'));
+});
+
 
 $('table').on('keyup', 'input', function () {
     // var precio_mxn = 0;

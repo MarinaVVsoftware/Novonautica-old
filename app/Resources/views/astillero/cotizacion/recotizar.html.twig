@@ -190,6 +190,43 @@
 
                                 </div>
                             </div>
+                            {% if astilleroCotizacion.acservicios[8] is defined and astilleroCotizacion.acservicios[8].astilleroServicioBasico %}
+                            <div class="row espacio-linea">
+                                <div class="col-sm-7">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-1">
+                                    <label class="tipo-letra1">Días adicionales</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <div class="input-estatus">
+                                        <span class="cont-label-novo">
+                                             {% if form.acservicios[8].estatus is defined %}
+                                                 {{ form_errors(form.acservicios[8].estatus) }}
+                                                 {{ form_widget(form.acservicios[8].estatus) }}
+                                                 {{ form_label(form.acservicios[8].estatus) }}
+                                             {% endif %}
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Días</label>
+                                    {% if form.acservicios[8].cantidad is defined %}
+                                        {{ form_widget(form.acservicios[8].cantidad,{'attr':{'value':astilleroCotizacion.acservicios[8].cantidad/astilleroCotizacion.barco.eslora}}) }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Precio x pie x día (USD)</label>
+                                    {% if form.acservicios[8].precio is defined %}
+                                        {{ form_widget(form.acservicios[8].precio) }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
                             <div class="row espacio-linea">
                                 <div class="col-sm-7">
                                     <hr>
@@ -289,19 +326,24 @@
                                     {% endif %}
                                 </div>
                             </div>
-                            <div class="row espacio-linea">
-                                <div class="col-sm-7">
-                                    <hr>
+                            {% if astilleroCotizacion.acservicios[8] is defined and astilleroCotizacion.acservicios[8].astilleroserviciobasico %}
+
+                                {{ form_widget(form.acservicios.1.estatus,{'attr':{'class':'hidden'}}) }}
+                                {{ form_widget(form.acservicios.1.precio,{'attr':{'class':'hidden'}}) }}
+                            {% else %}
+                                <div class="row espacio-linea">
+                                    <div class="col-sm-7">
+                                        <hr>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6 col-sm-offset-1">
-                                    <label class="tipo-letra1">Estadía</label>
+                                <div class="row">
+                                    <div class="col-sm-6 col-sm-offset-1">
+                                        <label class="tipo-letra1">Estadía</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-1">
-                                    <div class="input-estatus">
+                                <div class="row">
+                                    <div class="col-sm-1">
+                                        <div class="input-estatus">
                                         <span class="cont-label-novo">
                                              {% if form.acservicios.1.estatus is defined %}
                                                  {{ form_errors(form.acservicios.1.estatus) }}
@@ -309,15 +351,16 @@
                                                  {{ form_label(form.acservicios.1.estatus) }}
                                              {% endif %}
                                          </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>Precio x pie x día (USD)</label>
+                                        {% if form.acservicios.1.precio is defined %}
+                                            {{ form_widget(form.acservicios.1.precio) }}
+                                        {% endif %}
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
-                                    <label>Precio x pie x día (USD)</label>
-                                    {% if form.acservicios.1.precio is defined %}
-                                        {{ form_widget(form.acservicios.1.precio) }}
-                                    {% endif %}
-                                </div>
-                            </div>
+                            {% endif %}
                             <div class="row espacio-linea">
                                 <div class="col-sm-7">
                                     <hr>
@@ -507,6 +550,36 @@
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        {% if astilleroCotizacion.acservicios[8] is defined and astilleroCotizacion.acservicios[8].astilleroServicioBasico %}
+                                        <tr id="fila_dia_adicional" class="{% if astilleroCotizacion.acservicios.8.estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="fila_estadia_mxn">
+                                            <td id="dia_adicional_cantidad" class="valorcantidad"
+                                                data-valor="{{ astilleroCotizacion.acservicios.8.cantidad }}"
+                                                data-dias="{{ astilleroCotizacion.acservicios.8.cantidad/astilleroCotizacion.barco.eslora }}"
+                                                data-eslora="{{ astilleroCotizacion.barco.eslora }}">
+                                                {{ astilleroCotizacion.acservicios.8.cantidad / astilleroCotizacion.barco.eslora }} (pie por día)
+                                            </td>
+                                            <td>Días adicionales</td>
+                                            <td id="dia_adicional_precio" class="valorprecio"
+                                                data-valor="{{ (astilleroCotizacion.acservicios.8.precio * astilleroCotizacion.dolar)/10000 }}">
+                                                $ {{ ((astilleroCotizacion.acservicios.8.precio)/100)|number_format(2) }}
+                                                <small>{{ astilleroCotizacion.acservicios[8].divisa }}</small>
+                                            </td>
+                                            <td id="dia_adicional_subtotal" class="valorsubtotal" data-valor="{{ (astilleroCotizacion.acservicios.8.subtotal /100) }}">
+                                                $ {{ (astilleroCotizacion.acservicios.8.subtotal/100)|number_format(2) }}
+                                                <small>MXN</small>
+                                            </td>
+                                            <td id="dia_adicional_iva" class="valoriva" data-valor="{{ (astilleroCotizacion.acservicios.8.iva /100) }}">
+                                                $ {{ (astilleroCotizacion.acservicios.8.iva /100)|number_format(2) }}
+                                                <small>MXN</small>
+                                            </td>
+                                            <td id="dia_adicional_total" class="valortotal" data-valor="{{ (astilleroCotizacion.acservicios.8.total /100) }}">
+                                                $ {{ (astilleroCotizacion.acservicios.8.total / 100)|number_format(2) }}
+                                                <small>MXN</small>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        {% endif %}
+
                                         <tr id="fila_grua" class="{% if astilleroCotizacion.acservicios[0].estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="fila_grua_mxn">
                                             <td id="grua_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[0].cantidad }}">
                                                 {{ astilleroCotizacion.acservicios[0].cantidad }}
@@ -1501,7 +1574,11 @@
                     {% if form.acservicios.7.servicio is defined %}
                         {{ form_widget(form.acservicios.7.servicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-
+                    {% if astilleroCotizacion.acservicios[8].astilleroserviciobasico is defined %}
+                        {{ form_widget(form.acservicios[8].servicio,{'attr':{'class':'hidden'}}) }}
+                        {{ form_widget(form.acservicios[8].producto,{'attr':{'class':'hidden'}}) }}
+                        {{ form_widget(form.acservicios[8].otroservicio,{'attr':{'class':'hidden'}}) }}
+                    {% endif %}
                     {{ form_end(form) }}
                 </div>
                 <div class="panel-footer">
@@ -1579,6 +1656,7 @@
                 {#});#}
             {#}#}
         {#});#}
+        $('#appbundle_astillerocotizacion_acservicios_1_precio').parent().children('.input-group-addon').hide();
         $('.btnNext').click(function(){
             $('.nav-tabs > .active').next('li').find('a').trigger('click');
         });
