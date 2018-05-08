@@ -31,31 +31,40 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
                 ')
             ->setParameters([
                 'slip' => $slip,
-                'fechaLlegada' => $start,
-                'fechaSalida' => $end,
+                'fechaLlegada' => $start->format('Y-m-d'),
+                'fechaSalida' => $end->format('Y-m-d'),
             ])
             ->getQuery()
             ->getOneOrNullResult();
     }
 
-    public function getCurrentOcupation($slip = null)
+    public function getSlipInformation($slip, $cotizacion)
     {
-        $qb = $this->createQueryBuilder('sm');
+        return $this->createQueryBuilder('sm')
+            ->select('sm', 'slip', 'cotizacion', 'cliente', 'barco')
+            ->where('sm.slip = :slip AND sm.marinahumedacotizacion = :cotizacion')
+            ->leftJoin('sm.slip', 'slip')
+            ->leftJoin('sm.marinahumedacotizacion', 'cotizacion')
+            ->leftJoin('cotizacion.cliente', 'cliente')
+            ->leftJoin('cotizacion.barco', 'barco')
+            ->setParameters([
+                'slip' => $slip,
+                'cotizacion' => $cotizacion
+            ])
+            ->getQuery()
+            ->getResult();
+    }
 
-        $qb
+    public function getCurrentOcupation($fecha)
+    {
+        return $this->createQueryBuilder('sm')
             ->select('sm', 'slip', 'cotizacion', 'cliente', 'barco')
             ->leftJoin('sm.slip', 'slip')
             ->leftJoin('sm.marinahumedacotizacion', 'cotizacion')
             ->leftJoin('cotizacion.cliente', 'cliente')
             ->leftJoin('cotizacion.barco', 'barco')
-            ->where('CURRENT_DATE() BETWEEN sm.fechaLlegada AND sm.fechaSalida');
-
-        if (null !== $slip) {
-            $qb->andWhere('slip.id = :slip')
-                ->setParameter('slip', $slip);
-        }
-
-        return $qb
+            ->where(':fecha BETWEEN sm.fechaLlegada AND sm.fechaSalida')
+            ->setParameter('fecha', $fecha->format('Y-m-d'))
             ->getQuery()
             ->getResult();
     }
@@ -76,7 +85,7 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
             ->where(':fecha BETWEEN sm.fechaLlegada AND sm.fechaSalida')
             ->groupBy('s.pies')
             ->orderBy('s.pies', 'ASC')
-            ->setParameter('fecha', $fecha)
+            ->setParameter('fecha', $fecha->format('Y-m-d'))
             ->getQuery()
             ->getScalarResult();
     }

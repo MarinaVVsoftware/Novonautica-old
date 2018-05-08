@@ -76,10 +76,12 @@ class SlipMovimientoController extends Controller
      */
     public function fillMapAction(Request $request)
     {
-        $fecha = $request->request->get('f') ? $request->request->get('f') : new \DateTime();
+        $fecha = $request->query->get('f')
+            ? \DateTime::createFromFormat('d/m/Y', $request->query->get('f'))
+            : new \DateTime();
 
         $repository = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
-        $currentSlips = $repository->getCurrentOcupation();
+        $currentSlips = $repository->getCurrentOcupation($fecha);
         $stats = $repository->getCurrentOcupationStats($fecha);
 
 
@@ -103,22 +105,26 @@ class SlipMovimientoController extends Controller
     /**
      * @Route("/mapa/{slip}/detail", name="detalle-slip")
      *
+     * @param Request $request
      * @param $slip
      *
      * @return Response
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
-    public function showSlipDetailAction($slip)
+    public function showSlipDetailAction(Request $request, $slip)
     {
+        $cotizacion = $request->query->get('cotizacion');
+
         $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
-        $currentSlips = $smRepo->getCurrentOcupation($slip);
+        $currentSlips = $smRepo->getSlipInformation($slip, $cotizacion);
 
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $normalizer = new ObjectNormalizer($classMetadataFactory);
 
         $serializer = new Serializer([new DateTimeNormalizer(), $normalizer], [new JsonEncoder(), new XmlEncoder()]);
         $response = $serializer->serialize($currentSlips, 'json', ['groups' => ['currentOcupation']]);
-        return new Response($response);
+
+        return JsonResponse::fromJsonString($response);
     }
 
     /**
@@ -128,6 +134,7 @@ class SlipMovimientoController extends Controller
      * @param Slip $slip
      *
      * @return Response
+     * @throws NonUniqueResultException
      */
     public function createAssignSlipAction(Request $request, Slip $slip)
     {
@@ -147,8 +154,10 @@ class SlipMovimientoController extends Controller
                 ->isSlipOpen($slip->getId(), $fechaLlegada, $fechaSalida);
 
             if ($smExists) {
-                $this->addFlash('danger', 'La cotización asignada al slip, coincide con otra cotización');
-                return $this->redirect($request->headers->get('referer'));
+                return $this->json([
+                    'code' => Response::HTTP_BAD_REQUEST,
+                    'message' => 'La cotización asignada al slip, coincide con otra cotización'
+                ], Response::HTTP_BAD_REQUEST);
             }
 
             $slipMovimiento
@@ -160,8 +169,7 @@ class SlipMovimientoController extends Controller
             $em->persist($slipMovimiento);
             $em->flush();
 
-            // TODO: No redireccionar, solo enviar una respuesta de movimiento creado
-            return $this->redirect($request->headers->get('referer'));
+            return $this->json('', Response::HTTP_CREATED);
         }
 
         return $this->render('marinahumeda/mapa/form/assign-slip.html.twig', [
@@ -223,10 +231,8 @@ class SlipMovimientoController extends Controller
      */
     public function checkOpenSlipAction(Request $request, $slip)
     {
-        $start = $request->request->get('start');
-        $end = $request->request->get('end');
-
-        // TODO: Mostrar el slip si esta ocupado
+        $start = \DateTime::createFromFormat('d-m-Y', $request->query->get('start'));
+        $end = \DateTime::createFromFormat('d-m-Y', $request->query->get('end'));
 
         $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
 
