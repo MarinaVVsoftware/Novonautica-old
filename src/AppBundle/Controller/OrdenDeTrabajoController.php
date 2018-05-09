@@ -53,10 +53,11 @@ class OrdenDeTrabajoController extends Controller
      * @Route("/nueva", name="ordendetrabajo_new")
      * @Method({"GET", "POST"})
      * @param Request $request
+     * @param \Swift_Mailer $mailer
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, \Swift_Mailer $mailer)
     {
         $ordenDeTrabajo = new Ordendetrabajo();
         $this->denyAccessUnlessGranted('ROLE_ODT_CREATE', $ordenDeTrabajo);
@@ -75,7 +76,7 @@ class OrdenDeTrabajoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $iva = $ordenDeTrabajo->getAstilleroCotizacion()->getIva();
-
+            $notificados = [];
             foreach ($ordenDeTrabajo->getContratistas() as $contratista) {
                 $precioTotal += $contratista->getPrecio();
                 $utilidadvvTotal += $contratista->getUtilidadvv();
@@ -89,6 +90,9 @@ class OrdenDeTrabajoController extends Controller
                     ->setTotal($total);
                 $ivaTotal += $ivatot;
                 $granTotal += $total;
+                if($contratista->getProveedor()->getCorreo()){
+                    array_push($notificados,$contratista->getProveedor()->getCorreo());
+                }
             }
             $fechaHoraActual = new \DateTime('now');
             $ordenDeTrabajo
@@ -102,6 +106,25 @@ class OrdenDeTrabajoController extends Controller
                 ->setFecha($fechaHoraActual);
             $em->persist($ordenDeTrabajo);
             $em->flush();
+
+            //enviar correo para avisar a contratistas y proveedores
+            if(!empty($notificados)){
+                if($ordenDeTrabajo->getAstilleroCotizacion()->getFoliorecotiza() == 0){
+                    $folio = $ordenDeTrabajo->getAstilleroCotizacion()->getFolio();
+                }else{
+                    $folio = $ordenDeTrabajo->getAstilleroCotizacion()->getFolio().'-'.$ordenDeTrabajo->getAstilleroCotizacion()->getFoliorecotiza();
+                }
+                $message = (new \Swift_Message('¡Asignación de orden de trabajo!'));
+                $message->setFrom('noresponder@novonautica.com');
+                $message->setTo($notificados);
+                $message->setBody(
+                    $this->renderView('mail/asignacionODT.twig', [
+                        'folio' => $folio
+                    ]),
+                    'text/html'
+                );
+                $mailer->send($message);
+            }
 
             return $this->redirectToRoute('ordendetrabajo_index');
         }
