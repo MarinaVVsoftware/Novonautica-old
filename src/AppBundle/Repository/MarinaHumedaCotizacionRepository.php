@@ -112,6 +112,35 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->getSingleResult();
     }
 
+    public function getCotizacionHistoryByDateRange($start, $end, $novoResponse, $clientResponse)
+    {
+        $query = $this->createQueryBuilder('mc')
+            ->select(
+                'SUBSTRING(mc.fecharegistro, 1, 10) AS fecha',
+                'COUNT(mc.fechaLlegada) AS estadias',
+                'SUM(CASE WHEN mc.fechaLlegada IS NULL THEN 1 ELSE 0 END) AS gasolinas'
+            )
+            ->where('mc.fecharegistro BETWEEN :start AND :end')
+            ->groupBy('fecha')
+            ->setParameters([
+                'start' => $start,
+                'end' => $end,
+            ])
+            ->orderBy('mc.fecharegistro');
+
+        if ($novoResponse) {
+            $query->andWhere('mc.validanovo = :novoResponse');
+            $query->setParameter('novoResponse', $novoResponse);
+        }
+
+        if ($novoResponse && $clientResponse) {
+            $query->andWhere('mc.validacliente = :clientResponse');
+            $query->setParameter('clientResponse', $clientResponse);
+        }
+
+        return $query->getQuery()->getScalarResult();
+    }
+
     public function getWorkedBoatsByDaterange(\DateTime $start, \DateTime $end)
     {
         return $this->createQueryBuilder('mc')

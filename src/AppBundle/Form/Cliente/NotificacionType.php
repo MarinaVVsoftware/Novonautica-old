@@ -19,6 +19,7 @@ class NotificacionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('folioCotizacion')
             ->add('cliente', EntityType::class, [
                 'class' => Cliente::class,
                 'attr' => ['class' => 'select-buscador'],

@@ -14,14 +14,14 @@
         <link rel="stylesheet" href="{{ asset('dist/css/skins/skin-novo.css') }}">
         <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.css') }}">
         <link rel="stylesheet" href="{{ asset('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
-        {#<link rel="stylesheet" href="{{ asset('bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">#}
         <link rel="stylesheet" href="{{ asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.css') }}">
     {% endblock %}
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 </head>
-<body class="skin-novo sidebar-mini sidebar-collapse">
+<body class="skin-novo sidebar-mini {{ app.session.get('isExpanded') == 'true' ?: 'sidebar-collapse'}}">
 <div id="loading">
     <i id="loading-image" class="fa fa-refresh fa-spin fa-4x fa-fw"></i>
+
 </div>
 <div class="wrapper">
     {% include 'estructura/encabezado.twig' %}
@@ -29,13 +29,6 @@
     {% block contwrapper %}{% endblock %}
     {% block modals %}{% endblock %}
 
-    {#<footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>Versión</b> 1.0
-        </div>
-        <strong>Copyright &copy; 2017.</strong> All rights
-        reserved.
-    </footer>#}
 </div>
 {% block javascripts %}
     <script src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
@@ -43,10 +36,20 @@
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
     <script src="{{ asset('bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
     <script src="{{ asset('bower_components/select2/dist/js/select2.js') }}"></script>
-    {#<script src="{{ asset('bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>#}
     <script src="{{ asset('bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
+    <script type="text/javascript">
+      (function ($) {
+        $(document).on('expanded.pushMenu collapsed.pushMenu', function (e) {
+          $.ajax('{{ app.request.baseUrl }}/usuario/', {
+            type: 'POST',
+            data: {isExpanded: e.type === 'expanded'}
+          })
+        })
+      })(jQuery);
+    </script>
 {% endblock %}
 </body>
 </html>

@@ -41,16 +41,34 @@ class MarinaReporteDataTable extends AbstractDataTableHandler
         $results = new DataTableResults();
 
         $query = $repository->createQueryBuilder('mc')
-            ->select('COUNT(DISTINCT mc.cliente)');
+            ->select('COUNT(mc.cliente)')
+            ->where('mc.validacliente = 2 AND mc.estatuspago IS NULL OR mc.estatuspago <> 2');
 
         $results->recordsTotal = $query->getQuery()->getSingleScalarResult();
 
+        $pagoRepository = $this->doctrine->getRepository('AppBundle:Pago');
+
+        $adeudoSubquery = $pagoRepository->createQueryBuilder('pa')
+            ->select('SUM(pa.cantidad)')
+            ->where('pa.acotizacion = mc.id')
+            ->groupBy('pa.acotizacion');
+
+        $fechaSubquery = $pagoRepository->createQueryBuilder('pf')
+            ->select('MAX(pf.fecharealpago)')
+            ->where('pf.acotizacion = mc.id');
+
         $query = $repository->createQueryBuilder('mc')
-            ->select('c.nombre', 'SUM(mc.total) AS adeudo', 'SUM(mc.pagado) AS abono', 'c.id')
-            ->addSelect('(SUM(mc.total) - COALESCE(SUM(mc.pagado), 0)) AS total')
+            ->select('CASE WHEN  mc.foliorecotiza = 0 THEN mc.folio ' .
+                'ELSE CONCAT(mc.folio, \'-\', mc.foliorecotiza) END AS folio')
+            ->addSelect('c.id AS id_cliente', 'mc.id AS id_cotizacion')
+            ->addSelect('c.nombre', 'mc.fechaLlegada', 'mc.fechaSalida', 'mc.total')
+            ->addSelect("({$adeudoSubquery->getDQL()}) AS pagado")
+            ->addSelect('COALESCE(p.fecharealpago, \'No se han realizado pagos\') AS lastPago')
             ->leftJoin('mc.cliente', 'c')
-            ->andWhere('mc.validacliente = 2')
-            ->addGroupBy('c.id');
+            ->leftJoin('mc.pagos', 'p')
+            ->where("p.fecharealpago = ({$fechaSubquery->getDQL()})" .
+                " AND mc.estatuspago = 1 OR mc.estatuspago IS NULL AND mc.validacliente = 2"
+            );
 
         if ($request->search->value) {
             $query->where('(LOWER(c.nombre) LIKE :search)');
@@ -59,19 +77,15 @@ class MarinaReporteDataTable extends AbstractDataTableHandler
 
         foreach ($request->order as $order) {
             if ($order->column == 0) {
-                $query->addOrderBy('c.nombre', $order->dir);
+                $query->addOrderBy('ac.folio', $order->dir);
             } elseif ($order->column == 1) {
-                $query->addOrderBy('adeudo', $order->dir);
-            } elseif ($order->column == 2) {
-                $query->addOrderBy('abono', $order->dir);
-            } elseif ($order->column == 3) {
-                $query->addOrderBy('total', $order->dir);
+                $query->addOrderBy('c.nombre', $order->dir);
             }
         }
 
         $queryCount = clone $query;
-        $queryCount->addSelect('COUNT(DISTINCT mc.cliente)');
-        $results->recordsFiltered = count($queryCount->getQuery()->getResult());
+        $queryCount->select('COUNT(mc.id)');
+        $results->recordsFiltered = $queryCount->getQuery()->getSingleScalarResult();
 
         $query->setMaxResults($request->length);
         $query->setFirstResult($request->start);
@@ -80,11 +94,17 @@ class MarinaReporteDataTable extends AbstractDataTableHandler
 
         foreach ($reportes as $reporte) {
             $results->data[] = [
+                $reporte['folio'],
                 $reporte['nombre'],
-                '$' . number_format(($reporte['adeudo'] / 100), 2) . ' USD',
-                '$' . number_format(($reporte['abono'] / 100), 2) . ' USD',
-                '$' . number_format(($reporte['total'] / 100), 2) . ' USD',
-                $reporte['id'],
+                $reporte['fechaLlegada']->format('Y-m-d H:i:s'),
+                $reporte['fechaSalida']->format('Y-m-d H:i:s'),
+                $reporte['lastPago'],
+                '$' . number_format(($reporte['total'] / 100), 2),
+                '$' . number_format(($reporte['pagado'] / 100), 2),
+                [
+                    'cliente' => $reporte['id_cliente'],
+                    'cotizacion' => $reporte['id_cotizacion']
+                ],
             ];
         }
 

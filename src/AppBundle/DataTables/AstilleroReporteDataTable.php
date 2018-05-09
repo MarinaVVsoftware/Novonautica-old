@@ -14,6 +14,7 @@ use DataTables\DataTableException;
 use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
 
 class AstilleroReporteDataTable extends AbstractDataTableHandler
 {
@@ -41,16 +42,33 @@ class AstilleroReporteDataTable extends AbstractDataTableHandler
         $results = new DataTableResults();
 
         $query = $repository->createQueryBuilder('ac')
-            ->select('COUNT(DISTINCT ac.cliente)');
+            ->select('COUNT(ac.cliente)')
+            ->where('ac.validacliente = 2 AND ac.estatuspago IS NULL OR ac.estatuspago <> 2');
 
         $results->recordsTotal = $query->getQuery()->getSingleScalarResult();
 
+        $pagoRepository = $this->doctrine->getRepository('AppBundle:Pago');
+
+        $adeudoSubquery = $pagoRepository->createQueryBuilder('pa')
+            ->select('SUM(pa.cantidad)')
+            ->where('pa.acotizacion = ac.id')
+            ->groupBy('pa.acotizacion');
+
+        $fechaSubquery = $pagoRepository->createQueryBuilder('pf')
+            ->select('MAX(pf.fecharealpago)')
+            ->where('pf.acotizacion = ac.id');
+
         $query = $repository->createQueryBuilder('ac')
-            ->select('c.nombre', 'SUM(ac.total) AS adeudo', 'SUM(ac.pagado) AS abono', 'c.id')
-            ->addSelect('(SUM(ac.total) - COALESCE(SUM(ac.pagado), 0)) AS total')
+            ->select('CASE WHEN  ac.foliorecotiza = 0 THEN ac.folio ' .
+                'ELSE CONCAT(ac.folio, \'-\', ac.foliorecotiza) END AS folio')
+            ->addSelect('c.id AS id_cliente', 'ac.id AS id_cotizacion')
+            ->addSelect('c.nombre', 'ac.fechaLlegada', 'ac.fechaSalida', 'ac.total')
+            ->addSelect("({$adeudoSubquery->getDQL()}) AS pagado")
+            ->addSelect('COALESCE(p.fecharealpago, \'No se han realizado pagos\') AS lastPago')
             ->leftJoin('ac.cliente', 'c')
-            ->andWhere('ac.validacliente = 2 AND c.nombre IS NOT NULL')
-            ->addGroupBy('c.id');
+            ->leftJoin('ac.pagos', 'p')
+            ->where("p.fecharealpago = ({$fechaSubquery->getDQL()}) " .
+                "AND ac.estatuspago = 1 OR ac.estatuspago IS NULL AND ac.validacliente = 2");
 
         if ($request->search->value) {
             $query->where('(LOWER(c.nombre) LIKE :search)');
@@ -59,19 +77,15 @@ class AstilleroReporteDataTable extends AbstractDataTableHandler
 
         foreach ($request->order as $order) {
             if ($order->column == 0) {
-                $query->addOrderBy('c.nombre', $order->dir);
+                $query->addOrderBy('ac.folio', $order->dir);
             } elseif ($order->column == 1) {
-                $query->addOrderBy('abono', $order->dir);
-            } elseif ($order->column == 2) {
-                $query->addOrderBy('total', $order->dir);
-            } elseif ($order->column == 3) {
-                $query->addOrderBy('total', $order->dir);
+                $query->addOrderBy('c.nombre', $order->dir);
             }
         }
 
         $queryCount = clone $query;
-        $queryCount->addSelect('COUNT(DISTINCT ac.cliente)');
-        $results->recordsFiltered = count($queryCount->getQuery()->getResult());
+        $queryCount->select('COUNT(ac.id)');
+        $results->recordsFiltered = $queryCount->getQuery()->getSingleScalarResult();
 
         $query->setMaxResults($request->length);
         $query->setFirstResult($request->start);
@@ -80,11 +94,17 @@ class AstilleroReporteDataTable extends AbstractDataTableHandler
 
         foreach ($reportes as $reporte) {
             $results->data[] = [
+                $reporte['folio'],
                 $reporte['nombre'],
-                '$' . number_format(($reporte['adeudo'] / 100), 2) . ' MXN',
-                '$' . number_format(($reporte['abono'] / 100), 2) . ' MXN',
-                '$' . number_format(($reporte['total'] / 100), 2) . ' MXN',
-                $reporte['id'],
+                $reporte['fechaLlegada']->format('Y-m-d H:i:s'),
+                $reporte['fechaSalida']->format('Y-m-d H:i:s'),
+                $reporte['lastPago'],
+                '$' . number_format(($reporte['total'] / 100), 2),
+                '$' . number_format(($reporte['pagado'] / 100), 2),
+                [
+                    'cliente' => $reporte['id_cliente'],
+                    'cotizacion' => $reporte['id_cotizacion']
+                ],
             ];
         }
 

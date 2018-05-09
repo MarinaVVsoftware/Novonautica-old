@@ -34,8 +34,8 @@ class SlipMovimientoType extends AbstractType
                             $qb->expr()->eq('servicios.tipo', 1),
                             $qb->expr()->eq('mhc.validacliente', 2),
                             $qb->expr()->gt('mhc.fechaSalida', 'CURRENT_DATE()'),
-                            $qb->expr()->isNull('mhc.slip'),
-                            $qb->expr()->isNull('slipmovimiento.id')
+                            $qb->expr()->isNotNull('mhc.slip'),
+                            $qb->expr()->isNotNull('slipmovimiento.id')
                         )
                         ->orderBy('mhc.folio', 'DESC');
                 },

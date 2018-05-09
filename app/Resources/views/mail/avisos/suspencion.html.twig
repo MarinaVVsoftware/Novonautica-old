@@ -8,6 +8,10 @@
     embarcación y solo se aceptara el paso del capitán o representante legal para la supervisión de la misma.
 </p>
 
+{% if notificacion.folioCotizacion is defined %}
+    <h6>Folio de cotización: {{ notificacion.folioCotizacion }}</h6>
+{% endif %}
+
 <p>
     Solicitamos de su colaboración para seguir ofreciéndole un buen servicio, de no recibir el pago vencido en la
     fecha estipulada será aplicado lo siguiente:

@@ -29,7 +29,7 @@ class Barco
     /**
      * @var string
      *
-     * @Groups({"currentOcupation", "cotizaciones"})
+     * @Groups({"currentOcupation", "cotizaciones", "AstilleroReporte"})
      *
      * @Assert\NotBlank(message="Nombre del barco no puede quedar vacío")
      *

@@ -1,0 +1,14 @@
+{{ form_start(form) }}
+{{ form_row(form.nota) }}
+<div class="row">
+    <div class="col-sm-6">
+        {{ form_row(form.fechaLlegada) }}
+    </div>
+    <div class="col-sm-6">
+        {{ form_row(form.fechaSalida) }}
+    </div>
+</div>
+<div id="cotizacion-detail"></div>
+<div id="slipClosed"></div>
+<input type="submit" value="Bloquear" class="btn btn-block btn-azul" disabled="disabled">
+{{ form_end(form) }}

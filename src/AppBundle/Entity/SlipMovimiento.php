@@ -13,9 +13,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="slip_movimiento")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SlipMovimientoRepository")
  * @UniqueEntity(
- *      fields={"marinahumedacotizacion"},
+ *     fields={"marinahumedacotizacion"},
  *     errorPath="port",
- *     message="Esta cotización ya ha sido asignada a otro slip"
+ *     message="Esta cotización ya ha sido asignada a otro slip."
  * )
  */
 class SlipMovimiento
@@ -36,7 +36,7 @@ class SlipMovimiento
      *
      * @Groups({"currentOcupation"})
      *
-     * @ORM\Column(name="fecha_llegada", type="date", nullable=true)
+     * @ORM\Column(name="fecha_llegada", type="date")
      */
     private $fechaLlegada;
 
@@ -45,18 +45,18 @@ class SlipMovimiento
      *
      * @Groups({"currentOcupation"})
      *
-     * @ORM\Column(name="fecha_salida", type="date", nullable=true)
+     * @ORM\Column(name="fecha_salida", type="date")
      */
     private $fechaSalida;
 
     /**
-     * @var int
+     * @var string
      *
      * @Groups({"currentOcupation"})
      *
-     * @ORM\Column(name="estatus", type="smallint")
+     * @ORM\Column(name="nota", type="string", nullable=true)
      */
-    private $estatus;
+    private $nota;
 
     /**
      * @var \DateTime
@@ -86,8 +86,12 @@ class SlipMovimiento
 
     public function __construct()
     {
-        $this->setEstatus(0);
         $this->setCreatedAt(new \DateTime('now'));
+    }
+
+    public function __toString()
+    {
+        return 'hello world';
     }
 
     /**
@@ -149,30 +153,6 @@ class SlipMovimiento
     }
 
     /**
-     * Set estatus
-     *
-     * @param integer $estatus
-     *
-     * @return SlipMovimiento
-     */
-    public function setEstatus($estatus)
-    {
-        $this->estatus = $estatus;
-
-        return $this;
-    }
-
-    /**
-     * Get estatus
-     *
-     * @return int
-     */
-    public function getEstatus()
-    {
-        return $this->estatus;
-    }
-
-    /**
      * Set createdAt
      *
      * @param \DateTime $createdAt
@@ -218,6 +198,22 @@ class SlipMovimiento
     public function getSlip()
     {
         return $this->slip;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNota()
+    {
+        return $this->nota;
+    }
+
+    /**
+     * @param string $nota
+     */
+    public function setNota($nota)
+    {
+        $this->nota = $nota;
     }
 
     /**

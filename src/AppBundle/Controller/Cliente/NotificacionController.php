@@ -50,8 +50,10 @@ class NotificacionController extends AbstractController
 
         $clienteRepository = $em->getRepository('AppBundle:Cliente');
         $cliente = null === ($request->query->get('u')) ? null : $clienteRepository->find($request->query->get('u'));
+        $folio = $request->query->get('f');
 
         $notificacion->setCliente($cliente);
+        $notificacion->setFolioCotizacion($folio);
 
         $form = $this->createForm('AppBundle\Form\Cliente\NotificacionType', $notificacion);
         $form->handleRequest($request);

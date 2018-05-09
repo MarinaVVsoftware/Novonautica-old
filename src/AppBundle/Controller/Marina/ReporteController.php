@@ -70,6 +70,47 @@ class ReporteController extends AbstractController
     }
 
     /**
+     * @Route("/cotizaciones", name="reporte_mar_cotizaciones")
+     * @Method("GET")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cotizacionReporteAction()
+    {
+        return $this->render('marinahumeda/reporte/cotizacion.html.twig', ['title' => 'Cotizaciones']);
+    }
+
+    /**
+     * @Route("/cotizacion-history.json")
+     * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getCotizacionHistoryAction(Request $request)
+    {
+        $cotizacionRepository = $this->getDoctrine()->getRepository('AppBundle:MarinaHumedaCotizacion');
+
+        $start = $request->query->get('start')
+            ? new \DateTime($request->query->get('start'))
+            : new \DateTime('-29 days');
+
+        $end = $request->query->get('end')
+            ? (new \DateTime($request->query->get('end')))->modify('+1 days')
+            : new \DateTime();
+
+        $cotizaciones = $cotizacionRepository->getCotizacionHistoryByDateRange(
+            $start,
+            $end,
+            $request->query->get('novo'),
+            $request->query->get('client')
+        );
+
+        return (new JsonResponse($cotizaciones))->setEncodingOptions(JSON_NUMERIC_CHECK);
+    }
+
+    /**
      * @Route("/boats-history.json")
      * @Method("GET")
      * @param Request $request
@@ -86,8 +127,8 @@ class ReporteController extends AbstractController
             : new \DateTime('-29 days');
 
         $end = $request->query->get('end')
-            ? new \DateTime($request->query->get('end'))
-            : new \DateTime();
+            ? (new \DateTime($request->query->get('end')))->modify('+1 day')
+            : new \DateTime('+1 day');
 
         $dates = $cotizacionRepository
             ->getWorkedBoatsByDaterange($start, $end);

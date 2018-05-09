@@ -18,7 +18,7 @@ class AstilleroCotizacion
     /**
      * @var int
      *
-     * @Groups({"facturacion"})
+     * @Groups({"facturacion", "AstilleroReporte"})
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -142,6 +142,7 @@ class AstilleroCotizacion
     private $fecharegistro;
 
     /**
+     * @Groups({"AstilleroReporte"})
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Barco", inversedBy="astillerocotizaciones")
      * @ORM\JoinColumn(name="idbarco", referencedColumnName="id",onDelete="CASCADE")
