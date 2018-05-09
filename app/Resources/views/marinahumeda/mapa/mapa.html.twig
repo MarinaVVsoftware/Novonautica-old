@@ -56,11 +56,6 @@
         <section class="content">
             <div class="row">
                 <div id="alert-container" class="col-md-12">
-                    {% for message in app.flashes('danger') %}
-                        <div class="alert alert-danger">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
                 </div>
             </div>
             <div class="panel panel-novo">
@@ -132,6 +127,15 @@
         const $modal = $('#slip-info');
         const $modalBody = $modal.find('.modal-body');
         const $modalTitle = $modal.find('.modal-title');
+
+        const datepickerConfig = {
+          language: 'es',
+          autoclose: true,
+          format: 'dd/mm/yyyy',
+          orientation: 'auto bottom',
+          setDate: new Date()
+        };
+
         let mapData = null;
 
         svgPanZoom('#mapa', {
@@ -159,11 +163,7 @@
 
         $fechaInput
             .datepicker({
-              language: 'es',
-              autoclose: true,
-              format: 'dd/mm/yyyy',
-              orientation: 'auto bottom',
-              setDate: new Date(),
+              ...datepickerConfig,
               todayBtn: 'linked'
             })
             .datepicker('setDate', 'today')
@@ -184,58 +184,44 @@
 
         $('#slips').on('click', 'g', function () {
           let detail = this.dataset.detail;
-          (detail) ? setDetailModal(detail) : setAssignModal(this.id.replace('e', ''));
+          (detail) ? setDetailModal(detail) : setOptionsModal(this.id.replace('e', ''));
         });
+
+        function setOptionsModal(slip) {
+          $modalTitle.text('Detalles');
+          $modalBody.html(`
+            <div class="text-center">
+              <button class="assign-btn btn btn-azul margin-bottom">Asignar</button>
+              <button class="lock-btn btn btn-naranja margin-bottom">Bloquear</button>
+            </div>
+          `);
+
+          $modalBody
+              .find('.assign-btn')
+              .on('click', function () {
+                setAssignModal(slip);
+              });
+
+          $modalBody
+              .find('.lock-btn')
+              .on('click', function () {
+                setLockModal(slip);
+              });
+
+          $modal.modal('show');
+        }
 
         function setDetailModal(detail) {
           let data = mapData[detail];
 
           $modalTitle.text('Detalles');
           $modalBody.html(generateDetails(data));
-          $modalBody.find('.unassign-btn').on('click', e => {
-            e.preventDefault();
-            unAssignSlip(data);
-          });
-          $modal.modal('show');
-        }
-
-        function generateMap(fecha) {
-          $.ajax('{{ path('mapa-data') }}', {
-            dataType: 'json',
-            data: {f: fecha && (fecha.toLocaleDateString('en-GB'))},
-            beforeSend: clearData
-          })
-              .done(function ({data, boats}) {
-                let totalAmarres = 0;
-                let totalOcupacion = 0;
-                mapData = boats;
-
-                slips.forEach(function (slip) {
-                  boats.forEach(function ({slip: boat}, key) {
-                    if (`e${boat.num}` !== slip.id) return;
-                    slip.children[0].classList.remove('st1');
-                    slip.children[0].classList.add('st4');
-                    slip.dataset.detail = key;
-                  });
-                });
-
-                data.forEach(function ({pies, ocupados, total}) {
-                  let row = mapTableBody.insertRow();
-                  totalAmarres += ocupados;
-                  totalOcupacion += total;
-
-                  row.insertCell().innerText = pies;
-                  row.insertCell().innerText = total;
-                  row.insertCell().innerText = ocupados;
-                  row.insertCell().innerText = ((ocupados / total) * 100).toFixed(2);
-                });
-
-                let totalRow = mapTableBody.insertRow();
-                totalRow.insertCell().innerText = 'Total';
-                totalRow.insertCell().innerText = totalOcupacion.toString();
-                totalRow.insertCell().innerText = totalAmarres.toString();
-                totalRow.insertCell().innerText = ((totalAmarres / totalOcupacion) * 100).toFixed(2);
+          $modalBody.find('.unassign-btn')
+              .on('click', e => {
+                e.preventDefault();
+                unAssignSlip(data);
               });
+          $modal.modal('show');
         }
 
         function setAssignModal(slip) {
@@ -266,6 +252,102 @@
               })
               .done(function () {
                 $modal.modal('show');
+              });
+        }
+
+        function setLockModal(slip) {
+          $.get(`{{ app.request.requestUri }}/${slip}/lock`)
+              .done(function (form) {
+                $modalTitle.text('Bloqueo de Slip #' + slip);
+                $modalBody.html(form);
+
+                let startPicker = $modalBody.find('#appbundle_slipmovimiento_lock_fechaLlegada')
+                    .datepicker(datepickerConfig);
+
+                let endPicker = $modalBody.find('#appbundle_slipmovimiento_lock_fechaSalida')
+                    .datepicker(datepickerConfig)
+                    .datepicker('setStartDate', startPicker.valueAsDate)
+                ;
+
+                startPicker.on('changeDate', function (e) {
+                  endPicker.datepicker('setStartDate', e.date);
+                  endPicker.datepicker('setDate', e.date);
+                });
+
+                endPicker.on('hide', function () {
+                  isSlipOpen(slip, startPicker.val().replace(/\//g, '-'), $(this).val().replace(/\//g, '-'))
+                });
+
+                $modalBody
+                    .find('#appbundle_slipmovimiento_marinahumedacotizacion')
+                    .on('change', function () {
+                      let $selectedOption = $(this).find(':selected');
+                      isSlipOpen(slip, $selectedOption.data('llegada'), $selectedOption.data('salida'));
+                    });
+
+                $modalBody.find('form[name="appbundle_slipmovimiento_lock"]')
+                    .on('submit', function (e) {
+                      e.preventDefault();
+
+                      $.post(this.action, $(this).serialize(), 'json')
+                          .done(function () {
+                            generateMap($fechaInput.datepicker('getDate'));
+                            $modal.modal('hide');
+                          })
+                          .fail(function ({responseJSON}) {
+                            createAlert(responseJSON.message);
+                            $modal.modal('hide');
+                          });
+                    });
+              })
+              .done(function () {
+                $modal.modal('show');
+              });
+        }
+
+        function generateMap(fecha) {
+          $.ajax('{{ path('mapa-data') }}', {
+            dataType: 'json',
+            data: {f: fecha && (fecha.toLocaleDateString('en-GB'))},
+            beforeSend: clearData
+          })
+              .done(function ({data, boats}) {
+                let totalAmarres = 0;
+                let totalOcupacion = 0;
+                mapData = boats;
+
+                slips.forEach(function (slip) {
+                  boats.forEach(function (boat, key) {
+                    if (`e${boat.slip.num}` !== slip.id) return;
+
+                    slip.children[0].classList.remove('st1');
+                    slip.dataset.detail = key;
+
+                    if (boat.nota) {
+                      slip.children[0].classList.add('st3');
+                      return;
+                    }
+
+                    slip.children[0].classList.add('st4');
+                  });
+                });
+
+                data.forEach(function ({pies, ocupados, total}) {
+                  let row = mapTableBody.insertRow();
+                  totalAmarres += ocupados;
+                  totalOcupacion += total;
+
+                  row.insertCell().innerText = pies;
+                  row.insertCell().innerText = total;
+                  row.insertCell().innerText = ocupados;
+                  row.insertCell().innerText = ((ocupados / total) * 100).toFixed(2);
+                });
+
+                let totalRow = mapTableBody.insertRow();
+                totalRow.insertCell().innerText = 'Total';
+                totalRow.insertCell().innerText = totalOcupacion.toString();
+                totalRow.insertCell().innerText = totalAmarres.toString();
+                totalRow.insertCell().innerText = ((totalAmarres / totalOcupacion) * 100).toFixed(2);
               });
         }
 
@@ -305,9 +387,12 @@
                       <dd>${new Date(slip.fechaSalida).toLocaleDateString('es-MX')}</dd>
                     </dl>
                   `);
-
-                  $submitBtn.attr('disabled', 'disabled')
+                  $submitBtn.attr('disabled', 'disabled');
+                  return;
                 }
+
+                $closed.html('');
+                $submitBtn.removeAttr('disabled', 'disabled');
               })
           ;
         }
@@ -321,11 +406,12 @@
         }
 
         function generateDetails(boat) {
-          let llegada = new Date(boat.fechaLlegada);
-          let salida = new Date(boat.fechaSalida);
-          let folio = boat.marinahumedacotizacion.folio + (boat.marinahumedacotizacion.foliorecotiza ? '-' + boat.marinahumedacotizacion.foliorecotiza : '');
+          if (!boat.nota) {
+            let llegada = new Date(boat.fechaLlegada);
+            let salida = new Date(boat.fechaSalida);
+            let folio = boat.marinahumedacotizacion.folio + (boat.marinahumedacotizacion.foliorecotiza ? '-' + boat.marinahumedacotizacion.foliorecotiza : '');
 
-          return `
+            return `
             <dl class="dl-horizontal">
               <dt>Folio</dt>
               <dd>${folio}</dd>
@@ -339,8 +425,18 @@
               <dd>${salida.toLocaleDateString('es-MX')}</dd>
             </dl>
             <div class="text-center">
-              <a href="{{ app.request.baseUrl }}/marina/cotizacion/${boat.marinahumedacotizacion.id}" class="btn btn-xs btn-morado-claro margin-bottom" target="_blank">Ver Cotización</a>
-              <a href="#" class="unassign-btn btn btn-xs btn-naranja margin-bottom">Desasignar</a>
+              <a href="{{ app.request.baseUrl }}/marina/cotizacion/${boat.marinahumedacotizacion.id}" class="btn btn-xs btn-morado-claro" target="_blank">Ver Cotización</a>
+              <a href="#" class="unassign-btn btn btn-xs btn-naranja">Desasignar</a>
+            </div>
+          `;
+          }
+
+          return `
+            <p>
+            ${boat.nota}
+            </p>
+            <div class="text-center">
+              <a href="#" class="unassign-btn btn btn-xs btn-naranja">Desasignar</a>
             </div>
           `;
         }
@@ -348,9 +444,8 @@
         function generateTooltipDetail(slip) {
           let llegada = new Date(slip.fechaLlegada);
           let salida = new Date(slip.fechaSalida);
-          let folio = slip.marinahumedacotizacion.folio + (slip.marinahumedacotizacion.foliorecotiza ? '-' + slip.marinahumedacotizacion.foliorecotiza : '');
 
-          return `
+          return slip.nota ? slip.nota : `
             <dl class="dl-horizontal" style="margin-bottom: 0">
               <dt>${slip.marinahumedacotizacion.barco.nombre}</dt>
               <dd></dd>
@@ -374,7 +469,7 @@
           mapTableBody.innerHTML = '';
 
           slips.forEach(function (slip) {
-            slip.children[0].classList.remove('st4');
+            slip.children[0].classList.remove('st4', 'st3');
             slip.children[0].classList.add('st1');
 
             if (slip.dataset.detail) {

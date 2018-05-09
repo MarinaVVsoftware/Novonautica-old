@@ -562,6 +562,7 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     padding: 20px 15px;
 }
 
+.ventanainfomapa form input[type="text"],
 .panel-body form input[type="text"],
 .panel-body form input[type="email"],
 .panel-body form input[type="password"],
@@ -710,6 +711,7 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
 }
 
 /*++++ datepicker calendario ++++*/
+.ventanainfomapa form .input-calendario,
 .panel-body form .input-calendario {
     border: 1px solid #0097f6 !important;
     border-radius: 0px !important;

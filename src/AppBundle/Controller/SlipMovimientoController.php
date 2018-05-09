@@ -178,6 +178,50 @@ class SlipMovimientoController extends Controller
     }
 
     /**
+     * @Route("/mapa/{id}/lock", name="lock-slip")
+     *
+     * @param Request $request
+     * @param Slip $slip
+     *
+     * @return Response
+     * @throws NonUniqueResultException
+     */
+    public function createLockSlipAction(Request $request, Slip $slip)
+    {
+        $slipMovimiento = new Slipmovimiento();
+        $form = $this->createForm('AppBundle\Form\SlipMovimientoLockType', $slipMovimiento, [
+            'action' => $this->generateUrl('lock-slip', ['id' => $slip->getId()])
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            $smExists = $em->getRepository('AppBundle:SlipMovimiento')
+                ->isSlipOpen($slip->getId(), $slipMovimiento->getFechaLlegada(), $slipMovimiento->getFechaSalida());
+
+            if ($smExists) {
+                return $this->json([
+                    'code' => Response::HTTP_BAD_REQUEST,
+                    'message' => 'No se puede bloquear este slip, coincide con una cotización'
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            $slipMovimiento
+                ->setSlip($slip);
+
+            $em->persist($slipMovimiento);
+            $em->flush();
+
+            return $this->json('', Response::HTTP_CREATED);
+        }
+
+        return $this->render('marinahumeda/mapa/form/lock-slip.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
      * @Route("/mapa/{id}/relocate", name="relocate-slip")
      *
      * @param Request $request
@@ -262,7 +306,9 @@ class SlipMovimientoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $slipMovimiento->getMarinahumedacotizacion()->setSlip(null);
+        if (null === $slipMovimiento->getNota()) {
+            $slipMovimiento->getMarinahumedacotizacion()->setSlip(null);
+        }
 
         $em->remove($slipMovimiento);
         $em->flush();
