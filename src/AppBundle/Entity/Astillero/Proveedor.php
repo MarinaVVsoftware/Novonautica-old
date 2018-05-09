@@ -58,6 +58,13 @@ class Proveedor
     private $tipo;
 
     /**
+     * @var int Estatus: 0 Proveedor, 1 Contratista
+     *
+     * @ORM\Column(name="proveedorcontratista", type="smallint")
+     */
+    private $proveedorcontratista;
+
+    /**
      * @var string
      *
      * @Assert\NotBlank(
@@ -440,5 +447,29 @@ class Proveedor
     public function getDireccionfiscal()
     {
         return $this->direccionfiscal;
+    }
+
+    /**
+     * Set proveedorcontratista.
+     *
+     * @param int $proveedorcontratista
+     *
+     * @return Proveedor
+     */
+    public function setProveedorcontratista($proveedorcontratista)
+    {
+        $this->proveedorcontratista = $proveedorcontratista;
+
+        return $this;
+    }
+
+    /**
+     * Get proveedorcontratista.
+     *
+     * @return int
+     */
+    public function getProveedorcontratista()
+    {
+        return $this->proveedorcontratista;
     }
 }

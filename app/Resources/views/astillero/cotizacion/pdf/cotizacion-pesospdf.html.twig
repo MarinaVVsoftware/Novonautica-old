@@ -149,7 +149,13 @@
                                         {{ unservicio.cantidad }}
                                     {% endif %}
                                 </td>
-                                <td>$ {{ ((unservicio.precio / astilleroCotizacion.dolar))|number_format(2) }}</td>
+                                <td>
+                                    {% if unservicio.divisa == 'MXN' %}
+                                        $ {{ (unservicio.precio/astilleroCotizacion.dolar)|number_format(2) }}
+                                    {% else %}
+                                        $ {{ (unservicio.precio/100)|number_format(2) }}
+                                    {% endif %}
+                                </td>
                                 <td>$ {{ ((unservicio.subtotal / astilleroCotizacion.dolar ))|number_format(2) }}</td>
                             </tr>
                             {% set sumaserv=sumaserv+unservicio.subtotal %}
@@ -188,7 +194,13 @@
                                 <td>{{ unservicio.servicio.nombre }}</td>
                                 <td>{{ unservicio.cantidad }}</td>
                                 <td>Serv.</td>
-                                <td>$ {{ ((unservicio.precio / astilleroCotizacion.dolar))|number_format(2) }}</td>
+                                <td>
+                                    {% if unservicio.divisa == 'MXN' %}
+                                        $ {{ (unservicio.precio/astilleroCotizacion.dolar)|number_format(2) }}
+                                    {% else %}
+                                        $ {{ (unservicio.precio/100)|number_format(2) }}
+                                    {% endif %}
+                                </td>
                                 <td>$ {{ ((unservicio.subtotal / astilleroCotizacion.dolar))|number_format(2) }}</td>
                             </tr>
                             {% set sumaserv=sumaserv+unservicio.subtotal %}
@@ -265,7 +277,7 @@
                             <tr>
                                 <td>{{ unservicio.otroservicio }}</td>
                                 <td>{{ unservicio.cantidad }}</td>
-                                <td>Otros</td>
+                                <td>Serv.</td>
                                 <td>$ {{ ((unservicio.precio /astilleroCotizacion.dolar))|number_format(2) }}</td>
                                 <td>$ {{ ((unservicio.subtotal / astilleroCotizacion.dolar))|number_format(2) }}</td>
                             </tr>

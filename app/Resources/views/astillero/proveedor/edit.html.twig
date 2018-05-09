@@ -132,6 +132,11 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-sm-6">
+                        {{ form_row(edit_form.proveedorcontratista) }}
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-12">
                         {% form_theme edit_form.trabajos 'astillero/proveedor/coleccion-trabajo.twig' %}
                         {{ form_row(edit_form.trabajos) }}

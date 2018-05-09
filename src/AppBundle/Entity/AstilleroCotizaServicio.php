@@ -63,6 +63,14 @@ class AstilleroCotizaServicio
     private $total;
 
     /**
+     * divisa solo de variable precio, los demas estan en mxn
+     * @var string
+     *
+     * @ORM\Column(name="divisa", type="string", length=3, nullable=true)
+     */
+    private $divisa;
+
+    /**
      * @var string
      *
      * @Groups({"facturacion"})
@@ -363,4 +371,28 @@ class AstilleroCotizaServicio
         return $this;
     }
 
+
+    /**
+     * Set divisa.
+     *
+     * @param string|null $divisa
+     *
+     * @return AstilleroCotizaServicio
+     */
+    public function setDivisa($divisa = null)
+    {
+        $this->divisa = $divisa;
+
+        return $this;
+    }
+
+    /**
+     * Get divisa.
+     *
+     * @return string|null
+     */
+    public function getDivisa()
+    {
+        return $this->divisa;
+    }
 }

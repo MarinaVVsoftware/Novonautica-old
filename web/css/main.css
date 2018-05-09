@@ -21,7 +21,15 @@ a {
 .btn {
     min-width: 120px;
 }
-
+.mt-0{
+    margin-top: 0px;
+}
+.mt-1{
+    margin-top: 1em;
+}
+.pt-1{
+    padding-top: 1em;
+}
 /*++++ colores fondo ++++*/
 .fondo-azul {
     background-color: #0097f6;

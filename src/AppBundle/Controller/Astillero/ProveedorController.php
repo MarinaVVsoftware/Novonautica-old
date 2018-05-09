@@ -42,7 +42,7 @@ class ProveedorController extends Controller
 
         return $this->render('astillero/proveedor/index.html.twig', [
 //            'proveedors' => $proveedors,
-            'title' => 'Proveedores',
+            'title' => 'Proveedores / Contratistas',
         ]);
     }
 
@@ -71,7 +71,7 @@ class ProveedorController extends Controller
         return $this->render('astillero/proveedor/new.html.twig', array(
             'proveedor' => $proveedor,
             'form' => $form->createView(),
-            'title' => 'Nuevo proveedor'
+            'title' => 'Nuevo proveedor / contratista'
         ));
     }
 
@@ -106,7 +106,7 @@ class ProveedorController extends Controller
         return $this->render('astillero/proveedor/show.html.twig', array(
             'proveedor' => $proveedor,
 
-            'title' => 'Detalle proveedor'
+            'title' => 'Detalle proveedor / Contratista'
         ));
     }
 
@@ -146,7 +146,7 @@ class ProveedorController extends Controller
             'proveedor' => $proveedor,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'title' => 'Editar Proveedor'
+            'title' => 'Editar Proveedor / contratista'
         ));
     }
 

@@ -13,6 +13,7 @@ use AppBundle\Entity\AstilleroCotizacion;
 use AppBundle\Entity\AstilleroCotizaServicio;
 use AppBundle\Entity\Astillero\Producto;
 use AppBundle\Entity\Astillero\Servicio;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -47,6 +48,10 @@ class AstilleroCotizaServicioType extends AbstractType
                 'placeholder' => 'Seleccionar...',
                 'attr' => ['class' => 'select-busca-producto'],
                 'required'=>false,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('p')
+                        ->orderBy('p.nombre', 'ASC');
+                },
             ])
             ->add('servicio',EntityType::class,[
                 'class' => 'AppBundle:Astillero\Servicio',

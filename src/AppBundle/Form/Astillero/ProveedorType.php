@@ -34,7 +34,7 @@ class ProveedorType extends AbstractType
             ])
             ->add('tipo',ChoiceType::class,[
                 'choices'=>[ 'Externo'=>'0','Interno'=>'1' ],
-                'label'=>'Tipo proveedor'
+                'label'=>'Tipo'
             ])
             ->add('bancos',CollectionType::class,[
                 'entry_type' => BancoType::class,
@@ -57,6 +57,10 @@ class ProveedorType extends AbstractType
             ->add('direccionfiscal',TextType::class,[
                 'label' => 'Dirección fiscal',
                 'required' => false
+            ])
+            ->add('proveedorcontratista',ChoiceType::class,[
+                'choices'=>[ 'Proveedor'=>'0','Contratista'=>'1' ],
+                'label'=>'Tipo Trabajador'
             ])
         ;
     }/**
