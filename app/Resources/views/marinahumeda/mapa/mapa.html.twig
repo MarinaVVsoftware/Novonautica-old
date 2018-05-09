@@ -390,6 +390,9 @@
                   }
                   else {
                     $closed.html(`
+                    <div class="alert alert-danger text-center" role="alert">
+                      La fecha de la cotización elegida coincide con un bloqueo con la nota:
+                    </div>
                     <p>${boat.nota}</p>
                   `);
                   }
