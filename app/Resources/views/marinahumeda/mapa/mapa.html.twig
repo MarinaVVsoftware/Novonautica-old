@@ -245,7 +245,7 @@
                             $modal.modal('hide');
                           })
                           .fail(function ({responseJSON}) {
-                            createAlert(responseJSON.message);
+                            responseJSON.errors.forEach(error => createAlert(error));
                             $modal.modal('hide');
                           });
                     });
@@ -295,7 +295,7 @@
                             $modal.modal('hide');
                           })
                           .fail(function ({responseJSON}) {
-                            createAlert(responseJSON.message);
+                            responseJSON.errors.forEach(error => createAlert(error));
                             $modal.modal('hide');
                           });
                     });
@@ -353,7 +353,7 @@
 
         function isSlipOpen(slip, start, end) {
           $.ajax(`{{ app.request.requestUri }}/${slip}/isopen`, {data: {start, end}, dataType: 'json'})
-              .done(function (slip) {
+              .done(function (boat) {
                 let $detail = $('#cotizacion-detail');
                 let $closed = $('#slipClosed');
                 let $submitBtn = $modalBody.find('.btn-azul');
@@ -367,26 +367,32 @@
                 </dl>
                 `);
 
-                if (slip) {
-                  let folio = slip.marinahumedacotizacion.folio + (slip.marinahumedacotizacion.foliorecotiza ? '-' + slip.marinahumedacotizacion.foliorecotiza : '');
-
-                  $closed.html(`
+                if (boat) {
+                  let cotizacion = boat.marinahumedacotizacion;
+                  if (cotizacion) {
+                    $closed.html(`
                     <div class="alert alert-danger text-center" role="alert">
                       La fecha de la cotización elegida coincide con la cotización:
                     </div>
                     <dl class="dl-horizontal">
                       <dt>Folio</dt>
-                      <dd>${folio}</dd>
+                      <dd>${cotizacion.folio + (cotizacion.foliorecotiza ? '-' + cotizacion.foliorecotiza : '')}</dd>
                       <dt>Cliente</dt>
-                      <dd>${slip.marinahumedacotizacion.cliente.nombre}</dd>
+                      <dd>${cotizacion.cliente.nombre}</dd>
                       <dt>Barco</dt>
-                      <dd>${slip.marinahumedacotizacion.barco.nombre}</dd>
+                      <dd>${cotizacion.barco.nombre}</dd>
                       <dt>Fecha de llegada</dt>
-                      <dd>${new Date(slip.fechaLlegada).toLocaleDateString('es-MX')}</dd>
+                      <dd>${new Date(boat.fechaLlegada).toLocaleDateString('es-MX')}</dd>
                       <dt>Fecha de salida</dt>
-                      <dd>${new Date(slip.fechaSalida).toLocaleDateString('es-MX')}</dd>
+                      <dd>${new Date(boat.fechaSalida).toLocaleDateString('es-MX')}</dd>
                     </dl>
                   `);
+                  }
+                  else {
+                    $closed.html(`
+                    <p>${boat.nota}</p>
+                  `);
+                  }
                   $submitBtn.attr('disabled', 'disabled');
                   return;
                 }

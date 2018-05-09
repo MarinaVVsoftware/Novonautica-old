@@ -10,6 +10,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -145,6 +146,14 @@ class SlipMovimientoController extends Controller
         $form->remove('slip');
         $form->handleRequest($request);
 
+        if ($form->isSubmitted() && !$form->isValid()) {
+            return $this->json([
+                'code' => Response::HTTP_BAD_REQUEST,
+                'type' => 'validation',
+                'errors' => $this->getErrorsFromForm($form),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $cotizacion = $slipMovimiento->getMarinahumedacotizacion();
@@ -156,7 +165,8 @@ class SlipMovimientoController extends Controller
             if ($smExists) {
                 return $this->json([
                     'code' => Response::HTTP_BAD_REQUEST,
-                    'message' => 'La cotización asignada al slip, coincide con otra cotización'
+                    'type' => 'validation',
+                    'message' => ['La cotización asignada al slip, coincide con otra cotización']
                 ], Response::HTTP_BAD_REQUEST);
             }
 
@@ -203,7 +213,8 @@ class SlipMovimientoController extends Controller
             if ($smExists) {
                 return $this->json([
                     'code' => Response::HTTP_BAD_REQUEST,
-                    'message' => 'No se puede bloquear este slip, coincide con una cotización'
+                    'type' => 'validation',
+                    'message' => ['No se puede bloquear este slip, coincide con una cotización']
                 ], Response::HTTP_BAD_REQUEST);
             }
 
@@ -314,5 +325,16 @@ class SlipMovimientoController extends Controller
         $em->flush();
 
         return new Response(null, Response::HTTP_CREATED);
+    }
+
+    private function getErrorsFromForm(FormInterface $form)
+    {
+        $errors = [];
+
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $error->getMessage();
+        }
+
+        return $errors;
     }
 }

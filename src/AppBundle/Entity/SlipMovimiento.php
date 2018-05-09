@@ -13,9 +13,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="slip_movimiento")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SlipMovimientoRepository")
  * @UniqueEntity(
- *      fields={"marinahumedacotizacion"},
+ *     fields={"marinahumedacotizacion"},
  *     errorPath="port",
- *     message="Esta cotización ya ha sido asignada a otro slip"
+ *     message="Esta cotización ya ha sido asignada a otro slip."
  * )
  */
 class SlipMovimiento
@@ -87,6 +87,11 @@ class SlipMovimiento
     public function __construct()
     {
         $this->setCreatedAt(new \DateTime('now'));
+    }
+
+    public function __toString()
+    {
+        return 'hello world';
     }
 
     /**
