@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,27 +30,6 @@ class AstilleroCotizacionType extends AbstractType
                 'placeholder' => 'Seleccionar...',
                 'attr' => ['class' => 'select-buscador selectbarcobuscar']
             ])
-//            ->add('fechaLlegada',DateType::class,[
-//                'label' => 'Fecha inicio',
-//                'widget' => 'single_text',
-//                'html5' => false,
-//                'attr' => ['class' => 'datepicker input-calendario', 'readonly' => true],
-//                'format' => 'yyyy-MM-dd',
-//                'data' => new \DateTime(),
-//            ])
-//            ->add('fechaSalida',DateType::class,[
-//                'label' => 'Fecha fin',
-//                'widget' => 'single_text',
-//                'html5' => false,
-//                'attr' => ['class' => 'datepicker input-calendario', 'readonly' => true],
-//                'format' => 'yyyy-MM-dd',
-//                'data' => new \DateTime('+1 week'),
-//            ])
-//            ->add('diasEstadia',TextType::class,[
-//                'label'=>'Días Estadia',
-//                'attr' => ['class' => 'esnumero'],
-//                'data' => '7'
-//            ])
             ->add('dolar', MoneyType::class, [
                 'required'=>false,
                 'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
@@ -76,8 +56,14 @@ class AstilleroCotizacionType extends AbstractType
                 'label' => '¿Notificar al cliente?',
                 'required' => false
             ])
-        ;
-
+            ->add('guardareditable',SubmitType::class,[
+                'label' => 'Guardar y editar después',
+                'attr' =>['class'=>'btn btn-azul inline-block']
+            ])
+            ->add('guardarfinalizar',SubmitType::class,[
+                'label' => 'Guardar y finalizar',
+                'attr' =>['class'=>'btn btn-naranja inline-block']
+            ]);
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $cotizacion = $event->getData();
             $form = $event->getForm();
@@ -104,6 +90,7 @@ class AstilleroCotizacionType extends AbstractType
                         'attr' => ['class' => 'esnumero'],
                         'data' => '7'
                     ]);
+
             }else{
                 $form
                     ->add('fechaLlegada',DateType::class,[

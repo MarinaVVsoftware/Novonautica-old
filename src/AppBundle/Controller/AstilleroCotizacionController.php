@@ -208,36 +208,8 @@ class AstilleroCotizacionController extends Controller
                               'granTotal'=>$sumas['granTotal']+=$total];
                 }
             }
-//            foreach ($astilleroCotizacion->getAcservicios() as $servAst) {
-//                if ($servAst->getAstilleroserviciobasico() == null) {
-//                    $cantidad = $servAst->getCantidad();
-//                    if ($servAst->getOtroservicio() != null) {
-//                        $precio = $servAst->getPrecio();
-//                    } elseif ($servAst->getProducto() != null) {
-//                        $precio = $servAst->getProducto()->getPrecio();
-//                    } elseif ($servAst->getServicio()->getPrecio() != null) {
-//                        $precio = $servAst->getServicio()->getPrecio();
-//                    } else {
-//                        $precio = 0;
-//                    }
-//                    $subTotal = $cantidad * $precio;
-//                    $ivaTot = ($subTotal * $iva) / 100;
-//                    $total = $subTotal + $ivaTot;
-//                    $servAst->setPrecio($precio);
-//                    $servAst->setSubtotal($subTotal);
-//                    $servAst->setIva($ivaTot);
-//                    $servAst->setTotal($total);
-//                    $servAst->setEstatus(true);
-//                    $sumas = ['granSubtotal'=>$sumas['granSubtotal']+=$subTotal,
-//                              'granIva'=>$sumas['granIva']+=$ivaTot,
-//                              'granTotal'=>$sumas['granTotal']+=$total];
-//                }
-//            }
             //------------------------------------------------
             $fechaHoraActual = new \DateTime('now');
-            $foliobase = $sistema->getFolioMarina();
-            $folionuevo = $foliobase + 1;
-
             $astilleroCotizacion
                 ->setDolar($astilleroCotizacion->getDolar())
                 ->setIva($iva)
@@ -246,34 +218,48 @@ class AstilleroCotizacionController extends Controller
                 ->setTotal($sumas['granTotal'])
                 ->setFecharegistro($fechaHoraActual)
                 ->setEstatus(true);
-            $astilleroCotizacion->setValidanovo(0);
-            $astilleroCotizacion->setValidacliente(0);
-            $astilleroCotizacion->setFolio($folionuevo);
-            $astilleroCotizacion->setFoliorecotiza(0);
-            $this->getDoctrine()
-                ->getRepository(ValorSistema::class)
-                ->find(1)
-                ->setFolioMarina($folionuevo);
+//            $astilleroCotizacion->setValidanovo(0);
+//            $astilleroCotizacion->setValidacliente(0);
+//            $astilleroCotizacion->setFoliorecotiza(0);
 
             // Asignacion de cotizacion al cliente y viceversa
             $cliente = $astilleroCotizacion->getBarco()->getCliente();
             $cliente->addAstilleroCotizacione($astilleroCotizacion);
             $astilleroCotizacion->setCliente($cliente);
 
-            // Asignarle a la cotizacion, quien la creo (El usuario actualmente logueado)
-            $astilleroCotizacion->setCreador($this->getUser());
+            $guardarEditable = $form->get('guardareditable')->isClicked();
+            $guardarFinalizar = $form->get('guardarfinalizar')->isClicked();
+            if($guardarEditable){
+                $astilleroCotizacion->setBorrador(true);
+                $astilleroCotizacion->setFolio(0);
+
+            } else {
+                $foliobase = $sistema->getFolioMarina();
+                $folionuevo = $foliobase + 1;
+                $astilleroCotizacion->setFolio($folionuevo);
+                $astilleroCotizacion->setBorrador(false);
+                $this->getDoctrine()
+                    ->getRepository(ValorSistema::class)
+                    ->find(1)
+                    ->setFolioMarina($folionuevo);
+
+                // Asignarle a la cotizacion, quien la creo (El usuario actualmente logueado)
+                $astilleroCotizacion->setCreador($this->getUser());
+
+            }
 
             $em->persist($astilleroCotizacion);
             $em->flush();
 
-            // Buscar correos a notificar
-            $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
-                'evento' => Correo\Notificacion::EVENTO_CREAR,
-                'tipo' => Correo\Notificacion::TIPO_ASTILLERO
-            ]);
+            if($guardarFinalizar){
+                // Buscar correos a notificar
+                $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                    'evento' => Correo\Notificacion::EVENTO_CREAR,
+                    'tipo' => Correo\Notificacion::TIPO_ASTILLERO
+                ]);
+                $this->enviaCorreoNotificacion($mailer, $notificables, $astilleroCotizacion);
 
-            $this->enviaCorreoNotificacion($mailer, $notificables, $astilleroCotizacion);
-
+            }
             return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
         }
 
@@ -375,6 +361,191 @@ class AstilleroCotizacionController extends Controller
         );
     }
 
+
+    /**
+     * @Route("/{id}/editar", name="astillero_editar")
+     * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param AstilleroCotizacion $astilleroCotizacion
+     * @param \Swift_Mailer $mailer
+     *
+     * @return RedirectResponse|Response
+     * @throws \Exception
+     */
+    public function editAction(Request $request, AstilleroCotizacion $astilleroCotizacion, \Swift_Mailer $mailer)
+    {
+        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_CREATE', $astilleroCotizacion);
+        if($astilleroCotizacion->getBorrador() == false){
+            throw new NotFoundHttpException();
+        }
+        $servicios = $astilleroCotizacion->getAcservicios();
+        $astilleroGrua = $servicios[0];
+        $astilleroRampa = $servicios[2];
+        $astilleroKarcher = $servicios[3];
+        $astilleroExplanada = $servicios[4];
+        $astilleroLimpieza = $servicios[6];
+        $astilleroInspeccionar = $servicios[7];
+        $astilleroElectricidad = $servicios[5];
+        $astilleroEstadia = $servicios[1];
+
+        $serviciosOriginales = new ArrayCollection();
+        foreach ($astilleroCotizacion->getAcservicios() as $servicioOriginal){
+            //if($servicioOriginal->getAstilleroserviciobasico() == null){
+                $serviciosOriginales->add($servicioOriginal);
+            //}
+        }
+        $deleteForm = $this->createDeleteForm($astilleroCotizacion);
+        $form = $this->createForm(AstilleroCotizacionType::class, $astilleroCotizacion);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $valordolar = $astilleroCotizacion->getDolar();
+            $iva = $astilleroCotizacion->getIva();
+            $eslora = $astilleroCotizacion->getBarco()->getEslora();
+            $cantidadDias = $astilleroCotizacion->getDiasEstadia();
+            $sumas = ['granSubtotal'=>0,'granIva'=>0,'granTotal'=>0];
+            // Uso de grua
+            $cantidad = $eslora;
+            $precio = $astilleroGrua->getPrecio();
+            $sumas = $this->guardarServicioBasicoRecotizado($astilleroGrua,$cantidad,$precio,$iva,$sumas,$valordolar);
+            // Estadía
+            $cantidad = $cantidadDias * $eslora;
+            $precio = $astilleroEstadia->getPrecio();
+            $sumas = $this->guardarServicioBasicoRecotizado($astilleroEstadia,$cantidad,$precio,$iva,$sumas,$valordolar);
+            // Uso de rampa
+            $cantidad = $astilleroRampa->getCantidad();
+            $precio = $astilleroRampa->getPrecio();
+            $sumas = $this->guardarServicioBasicoRecotizado($astilleroRampa,$cantidad,$precio,$iva,$sumas,$valordolar);
+            // Uso de karcher
+            $cantidad = $astilleroKarcher->getCantidad();
+            $precio = $astilleroKarcher->getPrecio();
+            $sumas = $this->guardarServicioBasicoRecotizado($astilleroKarcher,$cantidad,$precio,$iva,$sumas,$valordolar);
+            //uso de explanada
+            $cantidad = $astilleroExplanada->getCantidad();
+            $precio = $astilleroExplanada->getPrecio();
+            $sumas = $this->guardarServicioBasicoRecotizado($astilleroExplanada,$cantidad,$precio,$iva,$sumas,$valordolar);
+            //Conexión a electricidad
+            $cantidad = $astilleroElectricidad->getCantidad();
+            $precio = $astilleroElectricidad->getPrecio();
+            $sumas = $this->guardarServicioBasicoRecotizado($astilleroElectricidad,$cantidad,$precio,$iva,$sumas,$valordolar);
+            //Limpieza de locación
+            $cantidad = $astilleroLimpieza->getCantidad();
+            $precio = $astilleroLimpieza->getPrecio();
+            $sumas = $this->guardarServicioBasicoRecotizado($astilleroLimpieza,$cantidad,$precio,$iva,$sumas,$valordolar);
+            //Sacar para inspeccionar
+            $cantidad = $eslora;
+            $precio = $astilleroInspeccionar->getPrecio();
+            $sumas = $this->guardarServicioBasicoRecotizado($astilleroInspeccionar,$cantidad,$precio,$iva,$sumas,$valordolar);
+            $em = $this->getDoctrine()->getManager();
+            foreach ($serviciosOriginales as $servicioOriginal) {
+                if (false === $astilleroCotizacion->getAcservicios()->contains($servicioOriginal)) {
+                    $servicioOriginal->getAstillerocotizacion()->removeAcservicio($servicioOriginal);
+                    //$servicioOriginal->setAstillerocotizacion(null);
+                    $em->persist($servicioOriginal);
+                    $em->remove($servicioOriginal);
+                }
+            }
+            foreach ($astilleroCotizacion->getAcservicios() as $servAst){
+                if ($servAst->getAstilleroserviciobasico() == null){
+                    $cantidad = $servAst->getCantidad();
+                    if ($servAst->getServicio() != null) {
+                        $divisa = $servAst->getServicio()->getDivisa();
+                        $precio = $servAst->getServicio()->getPrecio();
+                    }elseif($servAst->getOtroservicio() != null){
+                        $divisa = 'MXN';
+                        $precio = $servAst->getPrecio();
+                    }elseif($servAst->getProducto() != null){
+                        $divisa = 'MXN';
+                        $precio = $servAst->getProducto()->getPrecio();
+                    }else{
+                        $divisa = 'MXN';
+                        $precio = 0;
+                    }
+                    if($divisa == 'USD'){
+                        $subTotal = ($cantidad * $precio * $valordolar)/100;
+                    }else{
+                        $subTotal = $cantidad * $precio;
+                    }
+                    $ivaTot = ($subTotal * $iva) / 100;
+                    $total = $subTotal + $ivaTot;
+                    $servAst->setPrecio($precio)
+                        ->setSubtotal($subTotal)
+                        ->setIva($ivaTot)
+                        ->setTotal($total)
+                        ->setDivisa($divisa)
+                        ->setEstatus(true);
+                    $sumas = ['granSubtotal'=>$sumas['granSubtotal']+=$subTotal,
+                        'granIva'=>$sumas['granIva']+=$ivaTot,
+                        'granTotal'=>$sumas['granTotal']+=$total];
+                }
+            }
+
+            //------------------------------------------------
+
+            $fechaHoraActual = new \DateTime('now');
+            $astilleroCotizacion
+                ->setDolar($astilleroCotizacion->getDolar())
+                ->setIva($iva)
+                ->setSubtotal($sumas['granSubtotal'])
+                ->setIvatotal($sumas['granIva'])
+                ->setTotal($sumas['granTotal'])
+                ->setFecharegistro($fechaHoraActual)
+                ->setEstatus(true);
+
+            $guardarEditable = $form->get('guardareditable')->isClicked();
+            $guardarFinalizar = $form->get('guardarfinalizar')->isClicked();
+            if($guardarEditable){
+                $astilleroCotizacion->setBorrador(true);
+                //$astilleroCotizacion->setFolio(0);
+
+            } else {
+                $astilleroCotizacion->setBorrador(false);
+                //calcular folio para cotizacion nueva y recotizada
+                if($astilleroCotizacion->getFolio() == 0){ // si tiene folio 0 significa que es cotizacion nueva
+                    $sistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
+                    $foliobase = $sistema->getFolioMarina();
+                    $folionuevo = $foliobase + 1;
+                    $astilleroCotizacion->setFolio($folionuevo);
+                    $this->getDoctrine()
+                        ->getRepository(ValorSistema::class)
+                        ->find(1)
+                        ->setFolioMarina($folionuevo);
+                }
+
+                // Asignacion de cotizacion al cliente y viceversa
+                $cliente = $astilleroCotizacion->getBarco()->getCliente();
+                $cliente->addAstilleroCotizacione($astilleroCotizacion);
+                $astilleroCotizacion->setCliente($cliente);
+
+                // Asignarle a la cotizacion, quien la creo (El usuario actualmente logueado)
+                $astilleroCotizacion->setCreador($this->getUser());
+
+            }
+
+            $em->persist($astilleroCotizacion);
+
+            $em->flush();
+
+            if($guardarFinalizar){
+                // Buscar correos a notificar
+                $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                    'evento' => Correo\Notificacion::EVENTO_CREAR,
+                    'tipo' => Correo\Notificacion::TIPO_ASTILLERO
+                ]);
+                $this->enviaCorreoNotificacion($mailer, $notificables, $astilleroCotizacion);
+
+            }
+            return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
+        }
+        return $this->render('astillero/cotizacion/edit.html.twig', [
+            'title' => 'Editar',
+            'astilleroCotizacion' => $astilleroCotizacion,
+            'form' => $form->createView(),
+            'delete_form' => $deleteForm->createView()
+        ]);
+
+    }
+
     /**
      * Confirma la respuesta de un cliente a una cotizacion
      *
@@ -395,7 +566,8 @@ class AstilleroCotizacionController extends Controller
         if ($astilleroCotizacion->isEstatus() == 0 ||
             $astilleroCotizacion->getValidanovo() == 1 ||
             $astilleroCotizacion->getValidacliente() == 1 ||
-            $astilleroCotizacion->getValidacliente() == 2
+            $astilleroCotizacion->getValidacliente() == 2 ||
+            $astilleroCotizacion->getBorrador()
         ) {
             throw new NotFoundHttpException();
         }
@@ -710,7 +882,6 @@ class AstilleroCotizacionController extends Controller
             }
             //------------------------------------------------
             $fechaHoraActual = new \DateTime('now');
-            $foliorecotizado = $astilleroCotizacionAnterior->getFoliorecotiza() + 1;
 
             $astilleroCotizacion
                 ->setDolar($astilleroCotizacion->getDolar())
@@ -719,18 +890,25 @@ class AstilleroCotizacionController extends Controller
                 ->setTotal($sumas['granTotal'])
                 ->setFecharegistro($fechaHoraActual)
                 ->setEstatus(true);
-            $astilleroCotizacion->setValidanovo(0);
-            $astilleroCotizacion->setValidacliente(0);
+//            $astilleroCotizacion->setValidanovo(0);
+//            $astilleroCotizacion->setValidacliente(0);
+            $astilleroCotizacionAnterior->setEstatus(false);
+            $foliorecotizado = $astilleroCotizacionAnterior->getFoliorecotiza() + 1;
             $astilleroCotizacion->setFoliorecotiza($foliorecotizado);
 
-            $astilleroCotizacionAnterior->setEstatus(false);
-
-            // Asignarle la recotizacion a quien la creo
-            $astilleroCotizacion->setCreador($this->getUser());
-
-            $em->persist($astilleroCotizacion);
+            $guardarEditable = $form->get('guardareditable')->isClicked();
+            //$guardarFinalizar = $form->get('guardarfinalizar')->isClicked();
+            if(isset($guardarEditable) && $guardarEditable){
+                $astilleroCotizacion->setBorrador(true);
+            }else{
+                $astilleroCotizacion->setBorrador(false);
+                // Asignarle la recotizacion a quien la creo
+                $astilleroCotizacion->setCreador($this->getUser());
+            }
             $em->persist($astilleroCotizacionAnterior);
+            $em->persist($astilleroCotizacion);
             $em->flush();
+
             return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
         }
 
@@ -886,7 +1064,8 @@ class AstilleroCotizacionController extends Controller
         $astilleroCotizacion = new AstilleroCotizacion();
         $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_CREATE', $astilleroCotizacion);
 
-        if($astilleroCotizacionAnterior->isEstatus() == 0){
+        if($astilleroCotizacionAnterior->isEstatus() == 0 || $astilleroCotizacionAnterior->getBorrador()
+           || $astilleroCotizacionAnterior->getValidacliente() == 0 || $astilleroCotizacionAnterior->getValidacliente() == 1 ){
             throw new NotFoundHttpException();
         }
 
@@ -964,8 +1143,7 @@ class AstilleroCotizacionController extends Controller
             ->addAcservicio($astilleroElectricidad)
             ->addAcservicio($astilleroLimpieza)
             ->addAcservicio($astilleroInspeccionar)
-            ->addAcservicio($astilleroDiasAdicionales)
-        ;
+            ->addAcservicio($astilleroDiasAdicionales);
         $form = $this->createForm('AppBundle\Form\AstilleroCotizacionType', $astilleroCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -1090,6 +1268,7 @@ class AstilleroCotizacionController extends Controller
                 ->setIvatotal($sumas['granIva'])
                 ->setTotal($sumas['granTotal'])
                 ->setFecharegistro($fechaHoraActual)
+                ->setBorrador(false)
                 ->setEstatus(true);
             $astilleroCotizacion->setValidanovo(0);
             $astilleroCotizacion->setValidacliente(0);
@@ -1136,6 +1315,17 @@ class AstilleroCotizacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $folioRecotiza = $astilleroCotizacion->getFoliorecotiza();
+            if($folioRecotiza > 0){
+                $folioRecotizaPrincipal = $folioRecotiza-1;
+                $this->getDoctrine()
+                    ->getRepository(AstilleroCotizacion::class)
+                    ->findOneBy(['folio' => $astilleroCotizacion->getFolio(),'foliorecotiza' => $folioRecotizaPrincipal])
+                    ->setEstatus(true);
+                //dump($folioRecotiza);
+            }
+
+
             $em = $this->getDoctrine()->getManager();
             $em->remove($astilleroCotizacion);
             $em->flush();

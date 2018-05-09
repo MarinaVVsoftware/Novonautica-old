@@ -845,15 +845,15 @@
                                                             $ {{ (servicioagregado.vars.value.total/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
+                                                        <td class="hide">
+                                                            {{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}
+                                                        </td>
                                                         <td>
                                                             <a href="#" class="remove-servicio btn-xs btn-naranja">
                                                                 <i class="fa fa-times" aria-hidden="true"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
-                                                    <div class="hide">
-                                                        {{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}
-                                                    </div>
                                                 {% endif %}
                                             {% endif %}
                                         {% endfor %}
@@ -937,15 +937,15 @@
                                                             $ {{ (servicioagregado.vars.value.total/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
+                                                        <td class="hide">
+                                                            {{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}
+                                                        </td>
                                                         <td>
                                                             <a href="#" class="remove-servicio btn-xs btn-naranja">
                                                                 <i class="fa fa-times" aria-hidden="true"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
-                                                    <div class="hide">
-                                                        {{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}
-                                                    </div>
                                                 {% endif %}
                                             {% endif %}
                                         {% endfor %}
@@ -1019,15 +1019,15 @@
                                                             $ {{ (servicioagregado.vars.value.total/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
+                                                        <td class="hide">
+                                                            {{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}
+                                                        </td>
                                                         <td>
                                                             <a href="#" class="remove-servicio btn-xs btn-naranja">
                                                                 <i class="fa fa-times" aria-hidden="true"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
-                                                    <div class="hide">
-                                                        {{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}
-                                                    </div>
                                                 {% endif %}
                                             {% endif %}
                                         {% endfor %}
@@ -1471,12 +1471,21 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <button type="submit" class="btn btn-azul">
-                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                        Guardar
-                                    </button>
-                                </div>
+                                {% if astilleroCotizacion.acservicios[8] is defined and astilleroCotizacion.acservicios[8].astilleroServicioBasico %}
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-azul">
+                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                            Guardar
+                                        </button>
+                                    </div>
+                                    {{ form_widget(form.guardareditable,{'attr':{'class':'hidden'}}) }}
+                                    {{ form_widget(form.guardarfinalizar,{'attr':{'class':'hidden'}}) }}
+                                {% else %}
+                                    <div class="col-sm-12 text-center">
+                                        {{ form_widget(form.guardareditable) }}
+                                        {{ form_widget(form.guardarfinalizar) }}
+                                    </div>
+                                {% endif %}
                             </div>
                             <div class="row espacio-linea-arriba2">
                                 <div class="col-sm-12 text-right">

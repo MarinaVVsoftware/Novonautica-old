@@ -1254,11 +1254,13 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <button type="submit" class="btn btn-azul">
-                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                        Guardar
-                                    </button>
+                                <div class="col-sm-12 text-center">
+                                    {#<button type="submit" class="btn btn-azul">#}
+                                        {#<i class="fa fa-floppy-o" aria-hidden="true"></i>#}
+                                        {#Guardar#}
+                                    {#</button>#}
+                                    {{ form_widget(form.guardareditable) }}
+                                    {{ form_widget(form.guardarfinalizar) }}
                                 </div>
                             </div>
                             <div class="row espacio-linea-arriba2">

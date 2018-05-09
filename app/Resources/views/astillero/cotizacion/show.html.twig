@@ -9,11 +9,15 @@
                         <div class="col-sm-6">
                             <h3 class="panel-title">Cotización Astillero</h3>
                             <span>
-                                 {% if astilleroCotizacion.foliorecotiza == 0 %}
-                                     {{ astilleroCotizacion.folio }}
-                                 {% else %}
-                                     {{ astilleroCotizacion.folio }}-{{ astilleroCotizacion.foliorecotiza }}
-                                 {% endif %}
+                                {% if astilleroCotizacion.folio == 0 %}
+                                    Pendiente para finalizar
+                                {% else %}
+                                    {% if astilleroCotizacion.foliorecotiza == 0 %}
+                                        {{ astilleroCotizacion.folio }}
+                                    {% else %}
+                                        {{ astilleroCotizacion.folio }}-{{ astilleroCotizacion.foliorecotiza }}
+                                    {% endif %}
+                                {% endif %}
                             </span>
                         </div>
                         <div class="col-sm-6">
@@ -57,10 +61,14 @@
                                         <tr>
                                             <th>Folio</th>
                                             <td>
-                                                {% if astilleroCotizacion.foliorecotiza == 0 %}
-                                                    {{ astilleroCotizacion.folio }}
+                                                {% if astilleroCotizacion.borrador %}
+                                                    Pendiente para finalizar
                                                 {% else %}
-                                                    {{ astilleroCotizacion.folio }}-{{ astilleroCotizacion.foliorecotiza }}
+                                                    {% if astilleroCotizacion.foliorecotiza == 0 %}
+                                                        {{ astilleroCotizacion.folio }}
+                                                    {% else %}
+                                                        {{ astilleroCotizacion.folio }}-{{ astilleroCotizacion.foliorecotiza }}
+                                                    {% endif %}
                                                 {% endif %}
                                             </td>
                                         </tr>
@@ -92,6 +100,7 @@
                                             <th>Fecha cotización</th>
                                             <td>{% if astilleroCotizacion.fecharegistro %}{{ astilleroCotizacion.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
                                         </tr>
+                                        {% if astilleroCotizacion.borrador == false %}
                                         <tr>
                                             <th>Estatus validación</th>
                                             <td>
@@ -116,6 +125,7 @@
                                                 {% endif %}
                                             </td>
                                         </tr>
+                                        {% endif %}
                                         {% if astilleroCotizacion.validacliente == 2 %}
                                             <tr>
                                                 <th>Estatus Pago</th>
@@ -705,7 +715,8 @@
                         </div>
                     </div>
                     {% if astilleroCotizacion.validanovo == 0 and
-                        is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") or (user.isAdmin())'))
+                        is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") or (user.isAdmin())')) and
+                        astilleroCotizacion.borrador == false
                     %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">
@@ -773,15 +784,28 @@
                     {% if astilleroCotizacion.estatus and
                         is_granted(expression('has_role("ASTILLERO_COTIZACION_CREATE") or (user.isAdmin())'))
                     %}
-                        <div class="row espacio-linea-arriba2">
-                            <div class="col-sm-12">
-                                <a class="btn btn-gris pull-right"
-                                   href="{{ path('astillero_cotizacion_adicionales', { 'id': astilleroCotizacion.id }) }}">
-                                    <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-                                    Adicional
-                                </a>
+                        {% if astilleroCotizacion.borrador %}
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12">
+                                    <a class="btn btn-azul pull-right"
+                                       href="{{ path('astillero_editar', { 'id': astilleroCotizacion.id }) }}">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        Editar
+                                    </a>
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
+                        {% if  astilleroCotizacion.validacliente == 2 %}
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12">
+                                    <a class="btn btn-gris pull-right"
+                                       href="{{ path('astillero_cotizacion_adicionales', { 'id': astilleroCotizacion.id }) }}">
+                                        <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                                        Adicional
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

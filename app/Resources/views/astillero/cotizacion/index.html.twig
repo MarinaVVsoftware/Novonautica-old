@@ -130,8 +130,10 @@
             <ul class="list-unstyled">
               <li><a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.requestUri ~ '${item.id}' }}">Detalle</a></li>
               {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
-              ${validacion === 0 ? `<li><a class="${btnClass}azul" href="{{ app.request.requestUri ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
-              ${(validacion === 2 && aceptacion === 0) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '${item.id}/validar' }}">Aceptar</a></li>` : ''}
+                    {% if '${item.borrador}' == false %}
+                        ${validacion === 0 ? `<li><a class="${btnClass}azul" href="{{ app.request.requestUri ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
+                        ${(validacion === 2 && aceptacion === 0) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '${item.id}/validar' }}">Aceptar</a></li>` : ''}
+                    {% endif %}
               {% endif %}
               {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_REQUOTE") or (user.isAdmin())')) %}
               ${(validacion === 1 || aceptacion === 1) && item.estatus ? `<li><a class="${btnClass}naranja" href="{{ app.request.requestUri ~ '${item.id}/recotizar' }}">Recotizar</a></li>` : ''}
@@ -140,8 +142,10 @@
               ${(aceptacion === 2 && pago !== 2) ? `<li><a class="${btnClass}verde" href="{{ app.request.requestUri ~ '${item.id}/pago' }}">Pagos</a></li>` : ''}
               {% endif %}
               {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_CREATE") or (user.isAdmin())')) %}
-              ${item.estatus ? `<li><a class="${btnClass}gris" href="{{ app.request.requestUri ~ '${item.id}/adicionales' }}">Adicionales</a></li>` : ''}
+                        ${item.borrador ? `<li><a class="${btnClass}azul" href="{{ app.request.requestUri ~ '${item.id}/editar' }}">Editar</a></li>` : ''}
+                        ${aceptacion == 2 ? `<li><a class="${btnClass}gris" href="{{ app.request.requestUri ~ '${item.id}/adicionales' }}">Adicionales</a></li>` : ''}
               {% endif %}
+
             </ul>
           </td>
         `;

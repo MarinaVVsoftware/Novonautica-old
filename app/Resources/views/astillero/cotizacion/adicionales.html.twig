@@ -1533,6 +1533,8 @@
                         </div>
                     </div>
 
+                    {{ form_widget(form.guardareditable,{'attr':{'class':'hidden'}}) }}
+                    {{ form_widget(form.guardarfinalizar,{'attr':{'class':'hidden'}}) }}
                     {{ form_widget(form.barco,{'attr':{'class':'hidden'}}) }}
                     {% if form.acservicios.1.estatus is defined %}
                         {{ form_widget(form.acservicios.1.estatus,{'attr':{'class':'hidden'}}) }}

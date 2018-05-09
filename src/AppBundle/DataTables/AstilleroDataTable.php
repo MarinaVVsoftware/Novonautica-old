@@ -123,6 +123,7 @@ class AstilleroDataTable extends AbstractDataTableHandler
             }
         }
 
+        //$acotizaciones = $q->addOrderBy('ac.id','DESC')->getQuery()->getResult();
         $acotizaciones = $q->getQuery()->getResult();
         $results->recordsFiltered = count($acotizaciones);
         for ($i = 0; $i < $request->length || $request->length === -1; $i++) {
@@ -150,7 +151,10 @@ class AstilleroDataTable extends AbstractDataTableHandler
                 $cotizacion->getValidanovo(),
                 $cotizacion->getValidacliente(),
                 $cotizacion->getEstatuspago(),
-                ['id' => $cotizacion->getId(), 'estatus' => $cotizacion->getEstatus()]
+                ['id' => $cotizacion->getId(),
+                    'estatus' => $cotizacion->getEstatus(),
+                    'borrador' => $cotizacion->getBorrador()
+                ]
             ];
         }
         return $results;
