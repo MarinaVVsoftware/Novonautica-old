@@ -68,6 +68,30 @@ class SlipMovimientoController extends Controller
     }
 
     /**
+     * @Route("/timeline", name="slipmovimiento_timeline")
+     * @Method("GET")
+     */
+    public function timelineAction()
+    {
+        return $this->render('marinahumeda/mapa/timeline.html.twig', ['title' => 'Timeline']);
+    }
+
+    /**
+     * @Route("/events.json")
+     * @Method("GET")
+     */
+    public function getTimelineEventsAction(Request $request)
+    {
+        $repository = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
+        $response = $repository->getTimelineEvents(
+            new \DateTime($request->query->get('start')),
+            new \DateTime($request->query->get('end'))
+        );
+
+        return new JsonResponse($response);
+    }
+
+    /**
      * @Route("/mapa-slips/data", name="mapa-data")
      *
      * @param Request $request

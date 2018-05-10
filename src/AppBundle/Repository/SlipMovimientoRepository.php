@@ -89,4 +89,29 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getScalarResult();
     }
+
+    public function getTimelineEvents($start, $end)
+    {
+        return $this->createQueryBuilder('sm')
+            ->select(
+                'sm.id AS id',
+                'IDENTITY(sm.slip) AS resourceId',
+                'sm.fechaLlegada AS start',
+                'sm.fechaSalida AS end',
+                'CASE WHEN sm.nota IS NOT NULL THEN sm.nota ELSE b.nombre END AS title',
+                'CASE WHEN sm.nota IS NOT NULL THEN \'#f3b41b\' ELSE \'#db245d\' END AS backgroundColor',
+                'CASE WHEN sm.nota IS NOT NULL THEN \'#000\' ELSE \'#fff\' END AS textColor'
+            )
+            ->leftJoin('sm.marinahumedacotizacion', 'mhc')
+            ->leftJoin('mhc.barco', 'b')
+            ->where('((:start BETWEEN sm.fechaLlegada AND sm.fechaSalida) 
+                OR (:end BETWEEN sm.fechaLlegada AND sm.fechaSalida))')
+            ->orderBy('sm.slip')
+            ->setParameters([
+                'start' => $start->format('Y-m-d'),
+                'end' => $end->format('Y-m-d')
+            ])
+            ->getQuery()
+            ->getScalarResult();
+    }
 }
