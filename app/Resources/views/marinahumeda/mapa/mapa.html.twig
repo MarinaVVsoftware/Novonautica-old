@@ -2,10 +2,18 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet"
+          href="{{ asset('css/fullcalendar.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.9.4/scheduler.min.css') }}">
     <style>
         :root .btn {
             min-width: initial;
             text-align: center;
+        }
+
+        :root .panel-novo > .panel-body {
+            min-height: initial;
         }
 
         :root .panel-body form.form-inline input {
@@ -48,11 +56,52 @@
             text-align: left;
             margin-left: 100px;
         }
+
+        .fc-toolbar.fc-header-toolbar {
+            margin-bottom: 0;
+        }
+
+        :root .fc-toolbar .fc-center {
+            padding-top: 0;
+        }
+
+        .fc-center > div > button, .fc-center > div > h2 {
+            font-size: 1.6rem;
+            line-height: 3rem;
+        }
+
+        .fc button .fc-icon {
+            vertical-align: initial;
+        }
+
+        .fc-toolbar {
+            padding: 0;
+        }
     </style>
 {% endblock %}
 
 {% block contwrapper %}
     <div class="content-wrapper">
+        <section class="content" style="min-height: initial; padding-bottom: 0;">
+            <div class="panel panel-novo" style="margin-bottom: 0;">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="display: inline-block">Timeline</h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" type="button" data-widget="collapse" data-toggle="collapse"
+                                data-target="#timeline-body" aria-expanded="true" aria-controls="timeline-body">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body collapse in" id="timeline-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div id='timeline'></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section class="content">
             <div class="row">
                 <div id="alert-container" class="col-md-12">
@@ -60,7 +109,7 @@
             </div>
             <div class="panel panel-novo">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Slip</h3>
+                    <h3 class="panel-title">Mapa</h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -117,11 +166,16 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/svg-pan-zoom.min.js') }}"></script>
+    <script src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js') }}"></script>
+    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.9.4/scheduler.min.js') }}"></script>
+    <script src="{{ asset('bower_components/fullcalendar/dist/locale/es.js') }}"></script>
     <script type="text/javascript">
       (function ($) {
         const errorContainer = document.getElementById('alert-container');
         const slips = document.querySelectorAll('#slips > g');
         const $tooltips = $(slips);
+        const $timeline = $('#timeline');
         const mapTableBody = document.querySelector('#map-data > tbody');
         const $fechaInput = $('#fecha');
         const $modal = $('#slip-info');
@@ -141,6 +195,7 @@
         svgPanZoom('#mapa', {
           zoomEnabled: true,
           controlIconsEnabled: true,
+          mouseWheelZoomEnabled: false,
           fit: true,
           center: true,
           viewportSelector: document.getElementById('mapa-total'),
@@ -182,10 +237,61 @@
             })
         ;
 
+        $timeline.fullCalendar({
+          schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+          defaultView: 'timelineMonth',
+          header: {
+            left: '',
+            center: 'prev,title,next',
+            right: ''
+          },
+          views: {
+            timelineMonth: {
+              slotLabelFormat: [
+                'D'
+              ]
+            }
+          },
+          height: 250,
+          resourceAreaWidth: '8%',
+          resourceLabelText: 'Slips',
+          resources: getResources(),
+          events: 'events.json',
+          eventRender: function (event, $element) {
+            $element.tooltip({
+              container: '.content-wrapper',
+              html: true,
+              placement: 'auto bottom',
+              title: function () {
+                return `
+                    <dl class="dl-horizontal" style="margin-bottom: 0">
+                      <dt>${event.title}</dt>
+                      <dd></dd>
+                      <dt>Llegada</dt>
+                      <dd>${event.start.format('DD/MM/YYYY')}</dd>
+                      <dt>Salida</dt>
+                      <dd>${event.end.format('DD/MM/YYYY')}</dd>
+                    </dl>
+                `
+              }
+            })
+          }
+        });
+
         $('#slips').on('click', 'g', function () {
           let detail = this.dataset.detail;
           (detail) ? setDetailModal(detail) : setOptionsModal(this.id.replace('e', ''));
         });
+
+        function getResources() {
+          let resources = [];
+
+          for (let i = 1; i <= 176; i++) {
+            resources.push({id: i, title: '#' + i});
+          }
+
+          return resources;
+        }
 
         function setOptionsModal(slip) {
           $modalTitle.text('Detalles');
@@ -242,6 +348,7 @@
                       $.post(this.action, $(this).serialize(), 'json')
                           .done(function () {
                             generateMap($fechaInput.datepicker('getDate'));
+                            $timeline.fullCalendar('refetchEvents');
                             $modal.modal('hide');
                           })
                           .fail(function ({responseJSON}) {
@@ -292,6 +399,7 @@
                       $.post(this.action, $(this).serialize(), 'json')
                           .done(function () {
                             generateMap($fechaInput.datepicker('getDate'));
+                            $timeline.fullCalendar('refetchEvents');
                             $modal.modal('hide');
                           })
                           .fail(function ({responseJSON}) {
@@ -410,6 +518,7 @@
           $.ajax(`{{ app.request.requestUri }}/${movimiento}/remove`, {type: 'DELETE'})
               .done(() => {
                 generateMap($fechaInput.datepicker('getDate'));
+                $timeline.fullCalendar('refetchEvents');
                 $modal.modal('hide');
               });
         }
