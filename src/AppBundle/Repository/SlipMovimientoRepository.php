@@ -112,6 +112,6 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
                 'end' => $end->format('Y-m-d')
             ])
             ->getQuery()
-            ->getScalarResult();
+            ->getResult();
     }
 }

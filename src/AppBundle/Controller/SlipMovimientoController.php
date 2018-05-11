@@ -83,12 +83,17 @@ class SlipMovimientoController extends Controller
     public function getTimelineEventsAction(Request $request)
     {
         $repository = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
-        $response = $repository->getTimelineEvents(
+        $events = $repository->getTimelineEvents(
             new \DateTime($request->query->get('start')),
             new \DateTime($request->query->get('end'))
         );
 
-        return new JsonResponse($response);
+        foreach ($events as $i => $event) {
+            $events[$i]['start'] = $event['start']->format(\DateTime::ISO8601);
+            $events[$i]['end'] = $event['end']->setTime(23, 59, 59)->format(\DateTime::ISO8601);
+        }
+
+        return $this->json($events)->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 
     /**
