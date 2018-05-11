@@ -1621,11 +1621,12 @@ const datatablesSettings = {
     return false;
   }
 })(jQuery);
+
 const formularioGeneral = document.querySelector('form');
-if(formularioGeneral){
-    formularioGeneral.addEventListener('submit', function (e) {
-        // e.preventDefault();
+if( formularioGeneral ) {
+  $(':input[type="submit"]').data('loading-text', 'Cargando...');
+
+    formularioGeneral.addEventListener('submit', function () {
         $(':input[type="submit"]').button('loading');
     });
-    $(':input[type="submit"]').data('loading-text','<i class="fa fa-spinner fa-spin"></i> Guardando...');
 }
