@@ -181,6 +181,8 @@ class AstilleroCotizacion
     private $registroValidaNovo;
 
     /**
+     * 0 = pendiente, 1 = rechazado, 2 = aceptado
+     *
      * @var int
      *
      * @ORM\Column(name="validacliente", type="smallint")
@@ -259,6 +261,13 @@ class AstilleroCotizacion
     private $estatus;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="borrador", type="boolean")
+     */
+    private $borrador;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="metodopago", type="string", length=100, nullable=true)
@@ -319,6 +328,9 @@ class AstilleroCotizacion
         $this->registroValidaNovo = null;
         $this->registroValidaCliente = null;
         $this->registroPagoCompletado = null;
+        $this->validanovo = 0;
+        $this->validacliente = 0;
+        $this->foliorecotiza = 0;
     }
 
     public function __toString()
@@ -674,10 +686,13 @@ class AstilleroCotizacion
 
     /**
      * @param bool $estatus
+     *
+     * @return AstilleroCotizacion
      */
     public function setEstatus($estatus)
     {
         $this->estatus = $estatus;
+        return $this;
     }
 
     /**
@@ -734,10 +749,13 @@ class AstilleroCotizacion
 
     /**
      * @param int $foliorecotiza
+     *
+     * @return AstilleroCotizacion
      */
     public function setFoliorecotiza($foliorecotiza)
     {
         $this->foliorecotiza = $foliorecotiza;
+        return $this;
     }
 
     /**
@@ -1117,5 +1135,29 @@ class AstilleroCotizacion
     public function setCreador($creador)
     {
         $this->creador = $creador;
+    }
+
+    /**
+     * Set borrador.
+     *
+     * @param bool $borrador
+     *
+     * @return AstilleroCotizacion
+     */
+    public function setBorrador($borrador)
+    {
+        $this->borrador = $borrador;
+
+        return $this;
+    }
+
+    /**
+     * Get borrador.
+     *
+     * @return bool
+     */
+    public function getBorrador()
+    {
+        return $this->borrador;
     }
 }

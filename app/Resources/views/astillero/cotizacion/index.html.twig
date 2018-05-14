@@ -15,7 +15,7 @@
         <section class="content">
             <div class="panel panel-novo">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Astillero Cotizaciones</h3>
+                    <h3 class="panel-title">{{ title }}</h3>
                     <small>Divisa: MXN</small>
                 </div>
                 <div class="panel-body">
@@ -56,7 +56,11 @@
 
         const $tabla = $('.table-novo').DataTable({
           ...settings,
-          ajax: '{{ path('astillero_index') }}',
+            {%  if borrador == 0 %}
+                ajax: '{{ path('astillero_index') }}',
+            {% else %}
+                ajax: '{{ path('astillero_borrador_index') }}',
+            {%  endif %}
           order: [[0, 'desc']],
           columns: [
             {responsivePriority: 1},
@@ -128,20 +132,24 @@
           return `
           <td>
             <ul class="list-unstyled">
-              <li><a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.requestUri ~ '${item.id}' }}">Detalle</a></li>
+              <li><a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}' }}">Detalle</a></li>
               {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
-              ${validacion === 0 ? `<li><a class="${btnClass}azul" href="{{ app.request.requestUri ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
-              ${(validacion === 2 && aceptacion === 0) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '${item.id}/validar' }}">Aceptar</a></li>` : ''}
+                    {% if '${item.borrador}' == 0 %}
+                        ${validacion === 0 ? `<li><a class="${btnClass}azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
+                        ${(validacion === 2 && aceptacion === 0) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/validar' }}">Aceptar</a></li>` : ''}
+                    {% endif %}
               {% endif %}
               {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_REQUOTE") or (user.isAdmin())')) %}
-              ${(validacion === 1 || aceptacion === 1) && item.estatus ? `<li><a class="${btnClass}naranja" href="{{ app.request.requestUri ~ '${item.id}/recotizar' }}">Recotizar</a></li>` : ''}
+              ${(validacion === 1 || aceptacion === 1) && item.estatus ? `<li><a class="${btnClass}naranja" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/recotizar' }}">Recotizar</a></li>` : ''}
               {% endif %}
               {% if is_granted('ROLE_MARINA_PAGO') %}
-              ${(aceptacion === 2 && pago !== 2) ? `<li><a class="${btnClass}verde" href="{{ app.request.requestUri ~ '${item.id}/pago' }}">Pagos</a></li>` : ''}
+              ${(aceptacion === 2 && pago !== 2) ? `<li><a class="${btnClass}verde" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/pago' }}">Pagos</a></li>` : ''}
               {% endif %}
               {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_CREATE") or (user.isAdmin())')) %}
-              ${item.estatus ? `<li><a class="${btnClass}gris" href="{{ app.request.requestUri ~ '${item.id}/adicionales' }}">Adicionales</a></li>` : ''}
+                        ${item.borrador == 1 ? `<li><a class="${btnClass}azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/editar' }}">Editar</a></li>` : ''}
+                        ${aceptacion == 2 ? `<li><a class="${btnClass}gris" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/adicionales' }}">Adicionales</a></li>` : ''}
               {% endif %}
+
             </ul>
           </td>
         `;
