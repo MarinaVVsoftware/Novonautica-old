@@ -2,6 +2,7 @@ security:
     encoders:
         AppBundle\Entity\Usuario: bcrypt
         AppBundle\Entity\Cliente: plaintext
+        AppBundle\Entity\Astillero\Proveedor: plaintext
 
     providers:
         Usuario:
@@ -13,6 +14,10 @@ security:
                 class: AppBundle:Cliente
                 property: correo
 
+        Supplier:
+            entity:
+                class: AppBundle:Astillero\Proveedor
+                property: correo
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -50,6 +55,40 @@ security:
             logout:
                 path: clients_logout
                 target: clients_login
+                invalidate_session: false
+
+        proveedores:
+            provider: Supplier
+            pattern: ^/suppliers
+            anonymous: ~
+            logout_on_user_change: true
+            form_login:
+                check_path: suppliers_login
+                login_path: suppliers_login
+
+                # Login correctamente
+                always_use_default_target_path: false
+                default_target_path: suppliers_index
+                target_path_parameter: _target_path
+                use_referer: false
+
+                # Login erroneo
+                failure_path: suppliers_login
+                failure_forward: false
+                failure_path_parameter: _failure_path
+
+                # Parametros para formulario de login
+                username_parameter: _email
+                password_parameter: _password
+
+                # Solo permite login a traves del metodo post
+                post_only: true
+
+                # Guarda la sesion para evitar doble login
+                require_previous_session: true
+            logout:
+                path: suppliers_logout
+                target: suppliers_login
                 invalidate_session: false
 
         main:
@@ -91,6 +130,10 @@ security:
                 invalidate_session: false
 
     access_control:
+        - { path: ^/suppliers/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/suppliers/.*, roles: ROLE_SUPPLIERS }
+        - { path: ^/suppliers, roles: ROLE_SUPPLIERS }
+
         - { path: ^/clients/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/clients/.*, roles: ROLE_CLIENTS }
         - { path: ^/clients, roles: ROLE_CLIENTS }

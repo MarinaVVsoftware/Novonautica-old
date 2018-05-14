@@ -335,12 +335,13 @@ class AstilleroCotizacion
 
     public function __toString()
     {
-        if($this->foliorecotiza == 0){
-            $folioastillero = $this->folio;
-        }else{
-            $folioastillero = $this->folio.'-'.$this->foliorecotiza;
-        }
-        return 'Folio: '.$folioastillero.' Barco:  '.$this->getBarco();
+        $folio = !$this->foliorecotiza ? $this->folio : $this->folio . '-' . $this->foliorecotiza;
+        return 'Folio: ' . $folio . ' Barco:  ' . $this->getBarco();
+    }
+
+    public function getFolioString()
+    {
+        return !$this->foliorecotiza ? $this->folio : $this->folio . '-' . $this->foliorecotiza;
     }
 
     /**

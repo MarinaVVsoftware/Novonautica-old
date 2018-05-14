@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,6 +22,7 @@ class ProveedorType extends AbstractType
     {
         $builder
             ->add('nombre')
+            ->add('password', TextType::class)
             ->add('razonsocial',TextType::class,[
                 'label' => 'Razón Social',
                 'required' => false
@@ -80,6 +82,4 @@ class ProveedorType extends AbstractType
     {
         return 'appbundle_astillero_proveedor';
     }
-
-
 }

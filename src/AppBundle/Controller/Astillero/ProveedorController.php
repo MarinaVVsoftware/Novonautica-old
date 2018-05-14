@@ -4,6 +4,8 @@ namespace AppBundle\Controller\Astillero;
 
 use AppBundle\Entity\Astillero\Proveedor;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -25,23 +27,24 @@ class ProveedorController extends Controller
      *
      * @Route("/", name="astillero_proveedor_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse|Response
      */
     public function indexAction(Request $request)
     {
-        if($request->isXmlHttpRequest()){
-            try{
+        if ($request->isXmlHttpRequest()) {
+            try {
                 $datatables = $this->get('datatables');
-                $results = $datatables->handle($request,'AstilleroProveedor');
+                $results = $datatables->handle($request, 'AstilleroProveedor');
                 return $this->json($results);
-            }catch (HttpException $e){
-                return $this->json($e->getMessage(),$e->getStatusCode());
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getStatusCode());
             }
         }
-//        $em = $this->getDoctrine()->getManager();
-//        $proveedors = $em->getRepository('AppBundle:Astillero\Proveedor')->findAll();
 
         return $this->render('astillero/proveedor/index.html.twig', [
-//            'proveedors' => $proveedors,
             'title' => 'Proveedores / Contratistas',
         ]);
     }
@@ -51,12 +54,19 @@ class ProveedorController extends Controller
      *
      * @Route("/nuevo", name="astillero_proveedor_new")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
         $proveedor = new Proveedor();
         $banco = new Proveedor\Banco();
+
+        $proveedor->setPassword($this->generateRandomString());
         $proveedor->addBanco($banco);
+
         $form = $this->createForm('AppBundle\Form\Astillero\ProveedorType', $proveedor);
         $form->handleRequest($request);
 
@@ -65,7 +75,7 @@ class ProveedorController extends Controller
             $em->persist($proveedor);
             $em->flush();
 
-            return $this->redirectToRoute('astillero_proveedor_show',['id'=>$proveedor->getId()]);
+            return $this->redirectToRoute('astillero_proveedor_show', ['id' => $proveedor->getId()]);
         }
 
         return $this->render('astillero/proveedor/new.html.twig', array(
@@ -78,19 +88,22 @@ class ProveedorController extends Controller
     /**
      * @Route("/buscarproveedor", name="astillero_proveedor_ajax")
      * @Method({"GET"})
+     *
      * @param Request $request
+     *
      * @return JsonResponse
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function buscarProveedorAction(Request $request){
-        $idproveedor=$request->get('idproveedor');
-        $em = $this->getDoctrine()->getManager();
-        $cotizacion = $em->getRepository('AppBundle:Astillero\Proveedor')
-            ->createQueryBuilder('ap')
-            ->select('ap')
-            ->where('ap.id = '.$idproveedor)
-            ->getQuery()
-            ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-        return $this->json($cotizacion[0]);
+    public function buscarProveedorAction(Request $request)
+    {
+        $idproveedor = $request->get('idproveedor');
+        $proveedor = $this->getDoctrine()
+            ->getRepository('AppBundle:Astillero\Proveedor')
+            ->getOneByArray($idproveedor);
+
+        unset($proveedor['password']);
+
+        return $this->json($proveedor);
     }
 
     /**
@@ -98,14 +111,15 @@ class ProveedorController extends Controller
      *
      * @Route("/{id}", name="astillero_proveedor_show")
      * @Method("GET")
+     *
+     * @param Proveedor $proveedor
+     *
+     * @return Response
      */
     public function showAction(Proveedor $proveedor)
     {
-
-
         return $this->render('astillero/proveedor/show.html.twig', array(
             'proveedor' => $proveedor,
-
             'title' => 'Detalle proveedor / Contratista'
         ));
     }
@@ -115,12 +129,17 @@ class ProveedorController extends Controller
      *
      * @Route("/{id}/editar", name="astillero_proveedor_edit")
      * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param Proveedor $proveedor
+     *
+     * @return RedirectResponse|Response
      */
     public function editAction(Request $request, Proveedor $proveedor)
     {
         $em = $this->getDoctrine()->getManager();
         $originalBancos = new ArrayCollection();
-        foreach ($proveedor->getBancos() as $banco){
+        foreach ($proveedor->getBancos() as $banco) {
             $originalBancos->add($banco);
         }
         $deleteForm = $this->createDeleteForm($proveedor);
@@ -128,7 +147,7 @@ class ProveedorController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach ($originalBancos as $banco){
+            foreach ($originalBancos as $banco) {
                 if (false === $proveedor->getBancos()->contains($banco)) {
                     $banco->getProveedor()->removeBanco($banco);
                     $em->persist($banco);
@@ -139,7 +158,7 @@ class ProveedorController extends Controller
             $em->persist($proveedor);
             $em->flush();
 
-            return $this->redirectToRoute('astillero_proveedor_show',['id'=>$proveedor->getId()]);
+            return $this->redirectToRoute('astillero_proveedor_show', ['id' => $proveedor->getId()]);
         }
 
         return $this->render('astillero/proveedor/edit.html.twig', array(
@@ -175,14 +194,27 @@ class ProveedorController extends Controller
      *
      * @param Proveedor $proveedor The proveedor entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function createDeleteForm(Proveedor $proveedor)
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('astillero_proveedor_delete', array('id' => $proveedor->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
+    }
+
+    private function generateRandomString()
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $charactersLength = strlen($characters);
+        $randomString = '';
+
+        for ($i = 0; $i < 8; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+
+        return $randomString;
     }
 }

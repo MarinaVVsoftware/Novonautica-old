@@ -2,6 +2,9 @@
 
 namespace AppBundle\Repository\Astillero;
 
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\Query;
+
 /**
  * ProveedorRepository
  *
@@ -19,5 +22,21 @@ class ProveedorRepository extends \Doctrine\ORM\EntityRepository
             ->setMaxResults(10)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param $id
+     *
+     * @return mixed
+     * @throws NonUniqueResultException
+     */
+    public function getOneByArray($id)
+    {
+        return $this->createQueryBuilder('ap')
+            ->where('ap.id = :proveedor')
+            ->setParameter('proveedor', $id)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult(Query::HYDRATE_ARRAY);
     }
 }

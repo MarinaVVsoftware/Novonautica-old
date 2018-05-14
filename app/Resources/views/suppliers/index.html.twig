@@ -1,0 +1,72 @@
+{% extends 'suppliers/plantilla.html.twig' %}
+
+{% block contwrapper %}
+    <section class="content">
+        <div class="row">
+            <div class="col-md-4">
+
+                <div class="panel panel-novo">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Busqueda
+                        </h3>
+                    </div>
+                    <div class="panel-body" style="min-height: initial">
+                        {{ form_start(form) }}
+                        {{ form_rest(form) }}
+                        <input type="submit" class="btn btn-block btn-azul" value="Buscar">
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="panel panel-novo">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Actividades
+                        </h3>
+                    </div>
+                    <div class="panel-body no-padding" style="min-height: initial">
+                        <div class="table-responsive">
+                            <table class="table table-novo">
+                                <thead>
+                                <tr>
+                                    <th>Actividad</th>
+                                    <th>Inicio</th>
+                                    <th>Fin</th>
+                                    <th>Detalles, avances, demoras y observaciones</th>
+                                    <th>Responsable</th>
+                                    <th>Ejecutor</th>
+                                    <th>Porcentaje</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for contratista in trabajos %}
+                                    <tr class="fondo-morado-2">
+                                        <td colspan="7">
+                                            {{ contratista.cotizacionInicial }}
+                                        </td>
+                                    </tr>
+                                    {% for actividad in contratista.contratistaactividades %}
+                                        <tr class="fondo-morado-claro">
+                                            <td>{{ actividad.nombre }}</td>
+                                            <td>{{ actividad.inicio|date('d/m/Y') }}</td>
+                                            <td>{{ actividad.fin|date('d/m/Y') }}</td>
+                                            <td>{{ actividad.notas }}</td>
+                                            <td>{{ actividad.responsable }}</td>
+                                            <td>{{ contratista.proveedor.nombre }}</td>
+                                            <td>{{ actividad.porcentaje|number_format(2) }}%</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}
