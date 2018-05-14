@@ -51,7 +51,37 @@ class AstilleroCotizacionController extends Controller
                 return $this->json($e->getMessage(), $e->getCode());
             }
         }
-        return $this->render('astillero/cotizacion/index.html.twig', ['title' => 'Cotizaciones']);
+        return $this->render('astillero/cotizacion/index.html.twig', [
+            'title' => 'Cotizaciones',
+            'borrador' => '0'
+        ]);
+    }
+
+    /**
+     * Enlista todas las cotizaciones de astillero
+     *
+     * @Route("/borradores/", name="astillero_borrador_index")
+     * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return JsonResponse|Response
+     */
+    public function indexBorradorAction(Request $request, DataTablesInterface $dataTables)
+    {
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $results = $dataTables->handle($request, 'cotizacionAstilleroBorrador');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getCode());
+            }
+        }
+        return $this->render('astillero/cotizacion/index.html.twig', [
+            'title' => 'Borrador Cotizaciones',
+            'borrador' => '1'
+        ]);
     }
 
     /**
@@ -274,6 +304,7 @@ class AstilleroCotizacionController extends Controller
 
     /**
      * @Route("/cliente.json")
+     * @Route("/borradores/cliente.json")
      *
      * @return Response
      */
@@ -286,6 +317,7 @@ class AstilleroCotizacionController extends Controller
 
     /**
      * @Route("/barco.json")
+     * @Route("/borradores/barco.json")
      *
      * @return Response
      */
@@ -343,6 +375,7 @@ class AstilleroCotizacionController extends Controller
         $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
             'astilleroCotizacion' => $ac
         ]);
+        $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig');
 
         $hojapdf = $this->get('knp_snappy.pdf');
 
@@ -351,6 +384,7 @@ class AstilleroCotizacionController extends Controller
             'margin-right' => 0,
             'margin-left' => 0,
             'header-html' => utf8_decode($header),
+            'footer-html' => utf8_decode($footer)
         ];
 
         return new PdfResponse(

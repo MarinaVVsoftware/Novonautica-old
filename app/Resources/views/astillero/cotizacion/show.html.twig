@@ -22,7 +22,9 @@
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right"
-                               href="{{ path('astillero_index') }}">Regresar</a>
+                               href="{% if astilleroCotizacion.borrador %} {{ path('astillero_borrador_index') }} {% else %} {{ path('astillero_index') }} {% endif %}">
+                                Regresar
+                            </a>
                         </div>
                     </div>
                 </div>

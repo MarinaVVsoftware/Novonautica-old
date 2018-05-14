@@ -2,12 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: Luiz
- * Date: 21/02/2018
- * Time: 05:44 PM
+ * Date: 14/05/2018
+ * Time: 12:09 PM
  */
 
 namespace AppBundle\DataTables;
-
 
 use AppBundle\Entity\AstilleroCotizacion;
 use DataTables\AbstractDataTableHandler;
@@ -16,9 +15,9 @@ use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-class AstilleroDataTable extends AbstractDataTableHandler
+class AstilleroBorradorDataTable extends AbstractDataTableHandler
 {
-    const ID = 'cotizacionAstillero';
+    const ID = 'cotizacionAstilleroBorrador';
     private $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)
@@ -40,7 +39,7 @@ class AstilleroDataTable extends AbstractDataTableHandler
         $acRepo = $this->doctrine->getRepository('AppBundle:AstilleroCotizacion');
         $results = new DataTableResults();
         $qb = $acRepo->createQueryBuilder('ac')
-            ->where('ac.borrador = 0');
+            ->where('ac.borrador = 1');
         $results->recordsTotal = $qb->select('COUNT(ac.id)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -136,27 +135,27 @@ class AstilleroDataTable extends AbstractDataTableHandler
 
             /** @var AstilleroCotizacion $cotizacion */
             $cotizacion = $acotizaciones[$index];
-                $folio = $cotizacion->getFoliorecotiza()
-                    ? $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza()
-                    : $cotizacion->getFolio();
+            $folio = $cotizacion->getFoliorecotiza()
+                ? $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza()
+                : $cotizacion->getFolio();
 
-                $results->data[] = [
-                    $folio,
-                    $cotizacion->getCliente()->getNombre(),
-                    $cotizacion->getBarco()->getNombre(),
-                    $cotizacion->getFechaLlegada()->format('d/m/Y') ?? '',
-                    $cotizacion->getFechaSalida()->format('d/m/Y') ?? '',
-                    '$' . number_format($cotizacion->getSubtotal()/100, 2),
-                    '$' . number_format($cotizacion->getIvatotal()/100, 2),
-                    '$' . number_format($cotizacion->getTotal()/100, 2),
-                    $cotizacion->getValidanovo(),
-                    $cotizacion->getValidacliente(),
-                    $cotizacion->getEstatuspago(),
-                    ['id' => $cotizacion->getId(),
-                        'estatus' => $cotizacion->getEstatus(),
-                        'borrador' => $cotizacion->getBorrador()
-                    ]
-                ];
+            $results->data[] = [
+                $folio,
+                $cotizacion->getCliente()->getNombre(),
+                $cotizacion->getBarco()->getNombre(),
+                $cotizacion->getFechaLlegada()->format('d/m/Y') ?? '',
+                $cotizacion->getFechaSalida()->format('d/m/Y') ?? '',
+                '$' . number_format($cotizacion->getSubtotal()/100, 2),
+                '$' . number_format($cotizacion->getIvatotal()/100, 2),
+                '$' . number_format($cotizacion->getTotal()/100, 2),
+                $cotizacion->getValidanovo(),
+                $cotizacion->getValidacliente(),
+                $cotizacion->getEstatuspago(),
+                ['id' => $cotizacion->getId(),
+                    'estatus' => $cotizacion->getEstatus(),
+                    'borrador' => $cotizacion->getBorrador()
+                ]
+            ];
         }
         return $results;
     }
