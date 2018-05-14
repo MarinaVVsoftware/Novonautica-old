@@ -21,6 +21,7 @@ class AstilleroVoter extends Voter
     const CREATE = 'ASTILLERO_COTIZACION_CREATE';
     const VALIDATE = 'ASTILLERO_COTIZACION_VALIDATE';
     const REQUOTE = 'ASTILLERO_COTIZACION_REQUOTE';
+    const DELETE = 'ASTILLERO_COTIZACION_DELETE';
 
     private $decisionManager;
 
@@ -39,7 +40,7 @@ class AstilleroVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, [self::CREATE, self::VALIDATE, self::REQUOTE])) {
+        if (!in_array($attribute, [self::CREATE, self::VALIDATE, self::REQUOTE, self::DELETE])) {
             return false;
         }
 
@@ -82,6 +83,9 @@ class AstilleroVoter extends Voter
             case self::REQUOTE:
                 return $this->canRequote($user);
                 break;
+            case self::DELETE:
+                return $this->canDelete($user);
+                break;
         }
 
         throw new \LogicException('Olvidaste validar la acción?');
@@ -108,6 +112,14 @@ class AstilleroVoter extends Voter
     private function canRequote(Usuario $usuario)
     {
         if (!in_array(self::REQUOTE, $usuario->getRoles())) {
+            return false;
+        }
+
+        return true;
+    }
+    private function canDelete(Usuario $usuario)
+    {
+        if (!in_array(self::DELETE, $usuario->getRoles())) {
             return false;
         }
 

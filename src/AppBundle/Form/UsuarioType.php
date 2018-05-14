@@ -50,6 +50,7 @@ class UsuarioType extends AbstractType
                     'Astillero' => [
                         'Acceso' => 'ROLE_ASTILLERO',
                         'Crear' => 'ASTILLERO_COTIZACION_CREATE',
+                        'Eliminar' => 'ASTILLERO_COTIZACION_DELETE',
                         'Validar' => 'ASTILLERO_COTIZACION_VALIDATE',
                         'Recotizar' => 'ASTILLERO_COTIZACION_REQUOTE',
                         'Pagos' => 'ROLE_ASTILLERO_PAGO',

@@ -1,5 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
-
+{% import 'estructura/modalborrar.twig' as modal %}
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -809,6 +809,15 @@
                             </div>
                         {% endif %}
                     {% endif %}
+                    {% if  astilleroCotizacion.validanovo == 0 and
+                        is_granted(expression('has_role("ASTILLERO_COTIZACION_DELETE") or (user.isAdmin())'))
+                    %}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ delete_form is defined ? modal.deleteButton('Cotización') : '' }}
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </section>
@@ -849,4 +858,5 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}
