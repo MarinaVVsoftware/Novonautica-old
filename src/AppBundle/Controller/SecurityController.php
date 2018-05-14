@@ -45,6 +45,21 @@ class SecurityController extends Controller
     }
 
     /**
+     * @Route("suppliers/login", name="suppliers_login")
+     *
+     * @param AuthenticationUtils $authUtils
+     *
+     * @return Response
+     */
+    public function supplierLoginAction(AuthenticationUtils $authUtils)
+    {
+        return $this->render('security/supplier-login.html.twig', [
+            'error' => $authUtils->getLastAuthenticationError(),
+            'last_username' => $authUtils->getLastUsername()
+        ]);
+    }
+
+    /**
      * @Route("/forgot", name="password_forgot")
      *
      * @param Request $request

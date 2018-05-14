@@ -229,12 +229,9 @@ class ClienteController extends Controller
                 $om = $barcomotores[$barco->getId()]; //extraemos la coleccion de motores del barco correspondiente
                 foreach ($om as $motor) {
                     if (false === $barco->getMotores()->contains($motor)) {
-                        // remove the Task from the Tag
                         $motor->getBarco()->removeMotore($motor);
-                        // if it was a many-to-one relationship, remove the relationship like this
                         $motor->setBarco(null);
                         $em->persist($motor);
-                        // if you wanted to delete the Tag entirely, you can also do that
                         $em->remove($motor);
                     }
 
@@ -251,7 +248,6 @@ class ClienteController extends Controller
 
             $em->flush();
 
-// redirect back to some edit page
             return $this->redirectToRoute('cliente_show', ['id' => $cliente->getId()]);
         }
 

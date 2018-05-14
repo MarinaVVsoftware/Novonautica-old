@@ -50,15 +50,16 @@ class OrdenDeTrabajoDataTable extends AbstractDataTableHandler
             )
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
         }
-//        foreach ($request->order as $order) {
-//            if ($order->column === 0) {
-//                $q->addOrderBy('odt.astilleroCotizacion.folio', $order->dir);
-//            } elseif ($order->column === 1) {
-//                $q->addOrderBy('odt.astilleroCotizacion.barco', $order->dir);
-//            } elseif ($order->column === 2) {
-//                $q->addOrderBy('odt.astilleroCotizacion.cliente', $order->dir);
-//            }
-//        }
+
+        foreach ($request->order as $order) {
+            if ($order->column === 0) {
+                $q->addOrderBy('astilleroCotizacion.folio', $order->dir);
+            } elseif ($order->column === 1) {
+                $q->addOrderBy('astilleroCotizacion.barco', $order->dir);
+            } elseif ($order->column === 2) {
+                $q->addOrderBy('astilleroCotizacion.cliente', $order->dir);
+            }
+        }
 
         $odts = $q->getQuery()->getResult();
         $results->recordsFiltered = count($odts);

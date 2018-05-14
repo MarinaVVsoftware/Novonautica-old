@@ -29,4 +29,9 @@ class ContratistaRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getTrabajosByOdt()
+    {
+
+    }
 }

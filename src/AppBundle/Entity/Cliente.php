@@ -416,7 +416,7 @@ class Cliente implements UserInterface, \Serializable
     public function addBarco(Barco $barco)
     {
         $barco->setCliente($this);
-        //$this->barcos->add($barco);
+
         $this->barcos[] = $barco;
 
         return $this;

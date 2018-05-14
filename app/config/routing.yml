@@ -15,3 +15,5 @@ logout:
     path: /logout
 clients_logout:
     path: /clients_logout
+suppliers_logout:
+    path: /suppliers_logout

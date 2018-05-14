@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Astillero;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -12,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="astillero_proveedor")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Astillero\ProveedorRepository")
  */
-class Proveedor
+class Proveedor implements UserInterface, \Serializable
 {
     /**
      * @var int
@@ -86,6 +87,20 @@ class Proveedor
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="password", type="string", length=64)
+     */
+    private $password;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * @var string
      * @Assert\Length(
      *      min = 10,
      *      minMessage = "Error, número de teléfono no válido"
@@ -129,18 +144,19 @@ class Proveedor
     private $Trabajos;
 
 
-    public function __toString()
-    {
-        return $this->nombre;
-    }
-
     /**
      * Constructor
      */
     public function __construct()
     {
+        $this->isActive = true;
         $this->AContratistas = new ArrayCollection();
         $this->Bancos = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->nombre;
     }
 
     /**
@@ -235,6 +251,7 @@ class Proveedor
 
     /**
      * @param int $tipo
+     *
      * @return Proveedor
      */
     public function setTipo($tipo)
@@ -246,11 +263,11 @@ class Proveedor
     /**
      * Add aContratista.
      *
-     * @param \AppBundle\Entity\Astillero\Contratista $aContratista
+     * @param Contratista $aContratista
      *
      * @return Proveedor
      */
-    public function addAContratista(\AppBundle\Entity\Astillero\Contratista $aContratista)
+    public function addAContratista(Contratista $aContratista)
     {
         $this->AContratistas[] = $aContratista;
 
@@ -260,11 +277,11 @@ class Proveedor
     /**
      * Remove aContratista.
      *
-     * @param \AppBundle\Entity\Astillero\Contratista $aContratista
+     * @param Contratista $aContratista
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeAContratista(\AppBundle\Entity\Astillero\Contratista $aContratista)
+    public function removeAContratista(Contratista $aContratista)
     {
         return $this->AContratistas->removeElement($aContratista);
     }
@@ -282,11 +299,11 @@ class Proveedor
     /**
      * Add banco.
      *
-     * @param \AppBundle\Entity\Astillero\Proveedor\Banco $banco
+     * @param Proveedor\Banco $banco
      *
      * @return Proveedor
      */
-    public function addBanco(\AppBundle\Entity\Astillero\Proveedor\Banco $banco)
+    public function addBanco(Proveedor\Banco $banco)
     {
         $banco->setProveedor($this);
         $this->Bancos[] = $banco;
@@ -297,11 +314,11 @@ class Proveedor
     /**
      * Remove banco.
      *
-     * @param \AppBundle\Entity\Astillero\Proveedor\Banco $banco
+     * @param Proveedor\Banco $banco
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeBanco(\AppBundle\Entity\Astillero\Proveedor\Banco $banco)
+    public function removeBanco(Proveedor\Banco $banco)
     {
         return $this->Bancos->removeElement($banco);
     }
@@ -320,11 +337,11 @@ class Proveedor
     /**
      * Add trabajo.
      *
-     * @param \AppBundle\Entity\Astillero\Proveedor\Trabajo $trabajo
+     * @param Proveedor\Trabajo $trabajo
      *
      * @return Proveedor
      */
-    public function addTrabajo(\AppBundle\Entity\Astillero\Proveedor\Trabajo $trabajo)
+    public function addTrabajo(Proveedor\Trabajo $trabajo)
     {
         $this->Trabajos[] = $trabajo;
 
@@ -334,11 +351,11 @@ class Proveedor
     /**
      * Remove trabajo.
      *
-     * @param \AppBundle\Entity\Astillero\Proveedor\Trabajo $trabajo
+     * @param Proveedor\Trabajo $trabajo
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeTrabajo(\AppBundle\Entity\Astillero\Proveedor\Trabajo $trabajo)
+    public function removeTrabajo(Proveedor\Trabajo $trabajo)
     {
         return $this->Trabajos->removeElement($trabajo);
     }
@@ -375,6 +392,22 @@ class Proveedor
     public function getCorreo()
     {
         return $this->correo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
     }
 
     /**
@@ -471,5 +504,82 @@ class Proveedor
     public function getProveedorcontratista()
     {
         return $this->proveedorcontratista;
+    }
+
+    /**
+     * Returns the roles granted to the user.
+     *
+     * @return string[] The user roles
+     */
+    public function getRoles()
+    {
+        return ['ROLE_SUPPLIERS'];
+    }
+
+    /**
+     * Returns the salt that was originally used to encode the password.
+     *
+     * This can return null if the password was not encoded using a salt.
+     *
+     * @return string|null The salt
+     */
+    public function getSalt()
+    {
+        return null;
+    }
+
+    /**
+     * Returns the username used to authenticate the user.
+     *
+     * @return string The username
+     */
+    public function getUsername()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Removes sensitive data from the user.
+     *
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
+     */
+    public function eraseCredentials()
+    {
+    }
+
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->nombre,
+            $this->password,
+        ));
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     *
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     *
+     * @return void
+     * @since 5.1.0
+     */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->nombre,
+            $this->password,
+            ) = unserialize($serialized, ['allowed_classes' => false]);
     }
 }

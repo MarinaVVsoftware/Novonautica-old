@@ -102,42 +102,21 @@
                 <div class="row">
                     <div class="col-sm-6">
                         {{ form_row(edit_form.nombre) }}
+                        {{ form_row(edit_form.correo) }}
+                        {{ form_row(edit_form.password) }}
+                        {{ form_row(edit_form.porcentaje) }}
+                        {{ form_row(edit_form.rfc) }}
+                        {{ form_row(edit_form.proveedorcontratista) }}
                     </div>
                     <div class="col-sm-6">
                         {{ form_row(edit_form.razonsocial) }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        {{ form_row(edit_form.correo) }}
-                    </div>
-                    <div class="col-sm-6">
                         {{ form_row(edit_form.telefono) }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        {{ form_row(edit_form.porcentaje) }}
-                    </div>
-                    <div class="col-sm-6">
                         {{ form_row(edit_form.tipo) }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        {{ form_row(edit_form.rfc) }}
-                    </div>
-                    <div class="col-sm-6">
                         {{ form_row(edit_form.direccionfiscal) }}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
-                        {{ form_row(edit_form.proveedorcontratista) }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-12 {{ edit_form.proveedorcontratista.vars.value == '1' ?: 'hidden' }}">
                         {% form_theme edit_form.trabajos 'astillero/proveedor/coleccion-trabajo.twig' %}
                         {{ form_row(edit_form.trabajos) }}
                     </div>
@@ -173,9 +152,6 @@
             </div>
             <div class="panel-footer">
                 {{ delete_form is defined ? modal.deleteButton() : '' }}
-                {#{{ form_start(delete_form) }}#}
-                {#<input type="submit" value="Delete">#}
-                {#{{ form_end(delete_form) }}#}
             </div>
         </div>
     </section>
@@ -184,3 +160,22 @@
 {% block modals %}
     {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      (function () {
+        const supplierInput = document.getElementById('appbundle_astillero_proveedor_proveedorcontratista');
+        const oficiosContainer = document.getElementById('appbundle_astillero_proveedor_trabajos')
+            .parentElement
+            .parentElement;
+
+        supplierInput.addEventListener('change', function () {
+          (this.value === '0')
+              ? oficiosContainer.classList.add('hidden')
+              : oficiosContainer.classList.remove('hidden');
+        });
+
+      })();
+    </script>
+{% endblock javascripts %}
