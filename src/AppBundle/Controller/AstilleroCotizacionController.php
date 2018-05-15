@@ -1345,24 +1345,24 @@ class AstilleroCotizacionController extends Controller
      */
     public function deleteAction(Request $request, AstilleroCotizacion $astilleroCotizacion)
     {
+        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_DELETE', $astilleroCotizacion);
         $form = $this->createDeleteForm($astilleroCotizacion);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $folioRecotiza = $astilleroCotizacion->getFoliorecotiza();
-            if($folioRecotiza > 0){
-                $folioRecotizaPrincipal = $folioRecotiza-1;
-                $this->getDoctrine()
-                    ->getRepository(AstilleroCotizacion::class)
-                    ->findOneBy(['folio' => $astilleroCotizacion->getFolio(),'foliorecotiza' => $folioRecotizaPrincipal])
-                    ->setEstatus(true);
-                //dump($folioRecotiza);
+            if($astilleroCotizacion->getBorrador() || $astilleroCotizacion->getValidanovo() == 0){
+                $folioRecotiza = $astilleroCotizacion->getFoliorecotiza();
+                if($folioRecotiza > 0){
+                    $folioRecotizaPrincipal = $folioRecotiza-1;
+                    $this->getDoctrine()
+                        ->getRepository(AstilleroCotizacion::class)
+                        ->findOneBy(['folio' => $astilleroCotizacion->getFolio(),'foliorecotiza' => $folioRecotizaPrincipal])
+                        ->setEstatus(true);
+                    //dump($folioRecotiza);
+                }
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($astilleroCotizacion);
+                $em->flush();
             }
-
-
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($astilleroCotizacion);
-            $em->flush();
         }
 
         return $this->redirectToRoute('astillero_index');
