@@ -61,4 +61,13 @@ class EmbarcacionRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findCategorias()
+    {
+        $qb = $this->createQueryBuilder('em');
+
+        return $qb->select('em.categoria as nombre')
+            ->getQuery()
+            ->getResult();
+    }
 }

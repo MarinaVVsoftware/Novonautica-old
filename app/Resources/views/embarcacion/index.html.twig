@@ -19,6 +19,7 @@
                                 <thead>
                                 <tr>
                                     <th>Embarcación</th>
+                                    <th>Categoría</th>
                                     <th class="with-choices">Países</th>
                                     <th class="with-choices">Modelos</th>
                                     <th class="with-choices">Marcas</th>
@@ -47,11 +48,11 @@
         $('.table-novo').DataTable({
           ...datatableSettings,
           ajax: '{{ path('embarcacion_index') }}',
-          order: [[7, 'desc']],
+          order: [[8, 'desc']],
           createdRow: function (tr, data) {
             let lastTd = tr.querySelector('td:last-child');
-            let entryPath = `{{ app.request.requestUri }}${data[7]}/edit`;
-            let pdfPath = `{{ app.request.requestUri }}${data[7]}/brochure`;
+            let entryPath = `{{ app.request.requestUri }}${data[8]}/edit`;
+            let pdfPath = `{{ app.request.requestUri }}${data[8]}/brochure`;
             lastTd.innerHTML = `
                 <ul class="list-unstyled list-inline">
                 {% if is_granted(expression('has_role("EMBARCACION_EDIT") or (user.isAdmin())')) %}

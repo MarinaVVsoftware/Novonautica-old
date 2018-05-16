@@ -55,6 +55,7 @@ class EmbarcacionDataTable extends AbstractDataTableHandler
             $query
                 ->orWhere(
                     $query->expr()->like('LOWER(em.nombre)', ':search'),
+                    $query->expr()->like('LOWER(em.categoria)', ':search'),
                     $query->expr()->like('LOWER(mo.nombre)', ':search'),
                     $query->expr()->like('LOWER(ma.nombre)', ':search'),
                     $query->expr()->like('LOWER(pa.name)', ':search'),
@@ -72,28 +73,32 @@ class EmbarcacionDataTable extends AbstractDataTableHandler
                     ->setParameter(0, strtolower("%{$column->search->value}%"));
             } elseif ($column->data == 1 && $column->search->value) {
                 $query
-                    ->andWhere($query->expr()->like('LOWER(pa.name)', '?1'))
+                    ->andWhere($query->expr()->like('LOWER(em.categoria)', '?1'))
                     ->setParameter(1, strtolower("%{$column->search->value}%"));
-            } elseif ($column->data == 2 && $column->search->value) {
+            }elseif ($column->data == 2 && $column->search->value) {
                 $query
-                    ->andWhere($query->expr()->like('LOWER(mo.nombre)', '?2'))
+                    ->andWhere($query->expr()->like('LOWER(pa.name)', '?2'))
                     ->setParameter(2, strtolower("%{$column->search->value}%"));
             } elseif ($column->data == 3 && $column->search->value) {
                 $query
-                    ->andWhere($query->expr()->like('LOWER(ma.nombre)', '?3'))
+                    ->andWhere($query->expr()->like('LOWER(mo.nombre)', '?3'))
                     ->setParameter(3, strtolower("%{$column->search->value}%"));
             } elseif ($column->data == 4 && $column->search->value) {
                 $query
-                    ->andWhere($query->expr()->like('LOWER(em.longitud)', '?4'))
+                    ->andWhere($query->expr()->like('LOWER(ma.nombre)', '?4'))
                     ->setParameter(4, strtolower("%{$column->search->value}%"));
             } elseif ($column->data == 5 && $column->search->value) {
                 $query
-                    ->andWhere($query->expr()->like('LOWER(em.precio)', '?5'))
+                    ->andWhere($query->expr()->like('LOWER(em.longitud)', '?5'))
                     ->setParameter(5, strtolower("%{$column->search->value}%"));
             } elseif ($column->data == 6 && $column->search->value) {
                 $query
-                    ->andWhere($query->expr()->like('LOWER(em.ano)', '?6'))
+                    ->andWhere($query->expr()->like('LOWER(em.precio)', '?6'))
                     ->setParameter(6, strtolower("%{$column->search->value}%"));
+            } elseif ($column->data == 7 && $column->search->value) {
+                $query
+                    ->andWhere($query->expr()->like('LOWER(em.ano)', '?7'))
+                    ->setParameter(7, strtolower("%{$column->search->value}%"));
             }
         }
 
@@ -101,16 +106,18 @@ class EmbarcacionDataTable extends AbstractDataTableHandler
             if ($order->column === 0) {
                 $query->addOrderBy('em.nombre', $order->dir);
             } elseif ($order->column === 1) {
-                $query->addOrderBy('em.pais', $order->dir);
+                $query->addOrderBy('em.categoria', $order->dir);
             } elseif ($order->column === 2) {
-                $query->addOrderBy('em.modelo', $order->dir);
+                $query->addOrderBy('em.pais', $order->dir);
             } elseif ($order->column === 3) {
-                $query->addOrderBy('em.marca', $order->dir);
+                $query->addOrderBy('em.modelo', $order->dir);
             } elseif ($order->column === 4) {
-                $query->addOrderBy('em.longitud', $order->dir);
+                $query->addOrderBy('em.marca', $order->dir);
             } elseif ($order->column === 5) {
-                $query->addOrderBy('em.precio', $order->dir);
+                $query->addOrderBy('em.longitud', $order->dir);
             } elseif ($order->column === 6) {
+                $query->addOrderBy('em.precio', $order->dir);
+            } elseif ($order->column === 7) {
                 $query->addOrderBy('em.ano', $order->dir);
             }
         }
@@ -131,6 +138,7 @@ class EmbarcacionDataTable extends AbstractDataTableHandler
 
             $results->data[] = [
                 $embarcacion->getNombre(),
+                $embarcacion->getCategoriaNombre(),
                 $embarcacion->getPais() ? $embarcacion->getPais()->getName() : '',
                 $embarcacion->getModelo() ? $embarcacion->getModelo()->getNombre() : 'Custom',
                 $embarcacion->getMarca() ? $embarcacion->getMarca()->getNombre() : 'Custom',

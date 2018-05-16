@@ -130,6 +130,9 @@ class EmbarcacionType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true
             ])
+            ->add('categoria', ChoiceType::class, [
+                'choices' => array_flip(Embarcacion::getCategoriaList())
+            ])
         ;
 
         $formModifier = function (FormInterface $form, EmbarcacionMarca $marca = null) {
