@@ -334,12 +334,14 @@ class EmbarcacionController extends Controller
      */
     public function buscarCotizacionAction(Request $request)
     {
+        $idembarcacion = $request->get('idembarcacion');
         $idcategoria = $request->get('idcategoria');
-        $anio = '2018';
-        $idmarca = 2;
-        $buscarPrecio = true;
-        $precioMenor = 0;
-        $precioMayor = 40000000;
+        $anio = $request->get('anio');
+        $idmarca = $request->get('idmarca');
+        $buscarPrecio = $request->get('buscarPrecio');
+        $precioMenor = $request->get('precioMenor');
+        $precioMayor = $request->get('precioMayor');
+        $idpais = $request->get('idpais');
 
         $em = $this->getDoctrine()->getManager()->getRepository('AppBundle:Embarcacion')
             ->createQueryBuilder('e');
@@ -362,17 +364,22 @@ class EmbarcacionController extends Controller
 //            ->setParameter('mayor',$precioMayor)
 //            ->getQuery()
 //            ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-        $em ->select('e','EmbarcacionImagen','EmbarcacionLayout','EmbarcacionMarca','EmbarcacionModelo')
+        $em ->select('e','EmbarcacionImagen','EmbarcacionLayout','EmbarcacionMarca','EmbarcacionModelo','Pais')
             ->leftJoin('e.imagenes','EmbarcacionImagen')
             ->leftJoin('e.layouts','EmbarcacionLayout')
             ->leftJoin('e.marca','EmbarcacionMarca')
-            ->leftJoin('e.modelo','EmbarcacionModelo');
+            ->leftJoin('e.modelo','EmbarcacionModelo')
+            ->leftJoin('e.pais','Pais');
 
+        if($idembarcacion != 0){
+            $em ->andWhere($em->expr()->eq('e.id',':idembarcacion'))
+                ->setParameter('idembarcacion',$idembarcacion);
+        }
         if($idcategoria != 0){
             $em ->andWhere($em->expr()->eq('e.categoria',':idcategoria'))
                 ->setParameter('idcategoria',$idcategoria);
         }
-        if($anio != ''){
+        if($anio != 0){
             $em ->andWhere($em->expr()->eq('e.ano',':anio'))
                 ->setParameter('anio',$anio);
         }
@@ -380,10 +387,14 @@ class EmbarcacionController extends Controller
             $em ->andWhere($em->expr()->eq('e.marca',':idmarca'))
                 ->setParameter('idmarca',$idmarca);
         }
-        if($buscarPrecio){
+        if($buscarPrecio != 0){
             $em ->andWhere($em->expr()->between('e.precio',':menor',':mayor'))
                 ->setParameter('menor',$precioMenor)
                 ->setParameter('mayor',$precioMayor);
+        }
+        if($idpais != 0){
+            $em ->andWhere($em->expr()->eq('e.pais',':idpais'))
+                ->setParameter('idpais',$idpais);
         }
         $cotizacion = $em->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         return $this->json($cotizacion);
