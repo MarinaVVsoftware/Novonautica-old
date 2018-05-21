@@ -280,7 +280,7 @@ class EmbarcacionController extends Controller
     }
 
     /**
-     * @Route("/categoria.json", defaults={"_format" = "json"})
+     * @Route("/categoria.json")
      *
      * @param Request $request
      *
@@ -302,7 +302,7 @@ class EmbarcacionController extends Controller
             }
             array_push($nombres,['nombre'=>$nombre]);
         }
-        return new Response($this->json($nombres, $request->getRequestFormat()));
+        return $this->json($nombres, $request->getRequestFormat());
     }
 
 

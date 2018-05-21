@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ApiController extends Controller
 {
     /**
-     * @Route("/embarcacion.json", defaults={"_format" = "json"})
+     * @Route("/embarcacion.json")
      * @Method("GET")
      *
      * @param Request $request
