@@ -70,4 +70,51 @@ class EmbarcacionRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function filtrarBarcos($request)
+    {
+        $idembarcacion = $request->get('idembarcacion');
+        $idcategoria = $request->get('idcategoria');
+        $anio = $request->get('anio');
+        $idmarca = $request->get('idmarca');
+        $buscarPrecio = $request->get('buscarPrecio');
+        $precioMenor = $request->get('precioMenor');
+        $precioMayor = $request->get('precioMayor');
+        $idpais = $request->get('idpais');
+
+        $em = $this->createQueryBuilder('e');
+        $em ->select('e','EmbarcacionImagen','EmbarcacionLayout','EmbarcacionMarca','EmbarcacionModelo','Pais')
+            ->leftJoin('e.imagenes','EmbarcacionImagen')
+            ->leftJoin('e.layouts','EmbarcacionLayout')
+            ->leftJoin('e.marca','EmbarcacionMarca')
+            ->leftJoin('e.modelo','EmbarcacionModelo')
+            ->leftJoin('e.pais','Pais');
+
+        if($idembarcacion !== '0'){
+            $em ->andWhere($em->expr()->eq('e.id',':idembarcacion'))
+                ->setParameter('idembarcacion',$idembarcacion);
+        }
+        if($idcategoria !== '0'){
+            $em ->andWhere($em->expr()->eq('e.categoria',':idcategoria'))
+                ->setParameter('idcategoria',$idcategoria);
+        }
+        if($anio !== '0'){
+            $em ->andWhere($em->expr()->eq('e.ano',':anio'))
+                ->setParameter('anio',$anio);
+        }
+        if($idmarca !== '0'){
+            $em ->andWhere($em->expr()->eq('e.marca',':idmarca'))
+                ->setParameter('idmarca',$idmarca);
+        }
+        if($buscarPrecio !== '0'){
+            $em ->andWhere($em->expr()->between('e.precio',':menor',':mayor'))
+                ->setParameter('menor',$precioMenor)
+                ->setParameter('mayor',$precioMayor);
+        }
+        if($idpais !== '0'){
+            $em ->andWhere($em->expr()->eq('e.pais',':idpais'))
+                ->setParameter('idpais',$idpais);
+        }
+        $embarcaciones = $em->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        return $embarcaciones;
+    }
 }

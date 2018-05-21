@@ -130,6 +130,8 @@ security:
                 invalidate_session: false
 
     access_control:
+        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
         - { path: ^/suppliers/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/suppliers/.*, roles: ROLE_SUPPLIERS }
         - { path: ^/suppliers, roles: ROLE_SUPPLIERS }
@@ -160,7 +162,6 @@ security:
         - { path: ^/reporte/marina, roles: ROLE_REPORTE_MARINA }
         - { path: ^/reporte, roles: ROLE_REPORTE }
 
-        - { path: ^/embarcacion/embarcacion, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/embarcacion/marca/, roles: ROLE_EMBARCACION_MARCA }
         - { path: ^/embarcacion/modelo/, roles: ROLE_EMBARCACION_MODELO }
         - { path: ^/embarcacion, roles: ROLE_EMBARCACION }

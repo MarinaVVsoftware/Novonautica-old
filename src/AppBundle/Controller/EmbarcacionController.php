@@ -280,13 +280,13 @@ class EmbarcacionController extends Controller
     }
 
     /**
-     * @Route("/categoria.{_format}", defaults={"_format" = "json"})
+     * @Route("/categoria.json", defaults={"_format" = "json"})
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function getCateforiaAction(Request $request)
+    public function getCategoriaAction(Request $request)
     {
         $categorias = $this->getDoctrine()->getRepository('AppBundle:Embarcacion')->findCategorias();
         $nombres = [];
@@ -302,102 +302,7 @@ class EmbarcacionController extends Controller
             }
             array_push($nombres,['nombre'=>$nombre]);
         }
-        return new Response($this->serializeEntities($nombres, $request->getRequestFormat()));
-    }
-
-//    /**
-//     * @Route("/embarcacion.{_format}", defaults={"_format" = "json"})
-//     *
-//     * @param Request $request
-//     *
-//     * @return Response
-//     */
-//    public function getEmbarcacionesAction(Request $request)
-//    {
-//        $embarcaciones = $this->getDoctrine()->getRepository('AppBundle:Embarcacion')->findAllLight();
-//
-//        //dump($embarcaciones);
-//        return new Response($this->serializeEntities($embarcaciones, $request->getRequestFormat(),[
-//            'modelo',
-//            'marca',
-//            'motores'
-//        ]));
-//    }
-
-    /**
-     * @Route("/embarcacion.{_format}", defaults={"_format" = "json"})
-     * @Method("GET")
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function buscarCotizacionAction(Request $request)
-    {
-        $idembarcacion = $request->get('idembarcacion');
-        $idcategoria = $request->get('idcategoria');
-        $anio = $request->get('anio');
-        $idmarca = $request->get('idmarca');
-        $buscarPrecio = $request->get('buscarPrecio');
-        $precioMenor = $request->get('precioMenor');
-        $precioMayor = $request->get('precioMayor');
-        $idpais = $request->get('idpais');
-
-        $em = $this->getDoctrine()->getManager()->getRepository('AppBundle:Embarcacion')
-            ->createQueryBuilder('e');
-//        $cotizacion = $em
-//            ->select('e','EmbarcacionImagen','EmbarcacionLayout','EmbarcacionMarca','EmbarcacionModelo')
-//            ->leftJoin('e.imagenes','EmbarcacionImagen')
-//            ->leftJoin('e.layouts','EmbarcacionLayout')
-//            ->leftJoin('e.marca','EmbarcacionMarca')
-//            ->leftJoin('e.modelo','EmbarcacionModelo')
-//            ->where($em->expr()->andX($em->expr()->eq('e.categoria',':idcategoria'),
-//                                      $em->expr()->eq('e.ano',':anio'),
-//                                      $em->expr()->eq('e.marca',':idmarca'),
-//                                      $em->expr()->between('e.precio',':menor',':mayor')
-//                                      )
-//                    )
-//            ->setParameter('idcategoria',$idcategoria)
-//            ->setParameter('anio',$anio)
-//            ->setParameter('idmarca',$idmarca)
-//            ->setParameter('menor',$precioMenor)
-//            ->setParameter('mayor',$precioMayor)
-//            ->getQuery()
-//            ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-        $em ->select('e','EmbarcacionImagen','EmbarcacionLayout','EmbarcacionMarca','EmbarcacionModelo','Pais')
-            ->leftJoin('e.imagenes','EmbarcacionImagen')
-            ->leftJoin('e.layouts','EmbarcacionLayout')
-            ->leftJoin('e.marca','EmbarcacionMarca')
-            ->leftJoin('e.modelo','EmbarcacionModelo')
-            ->leftJoin('e.pais','Pais');
-
-        if($idembarcacion != 0){
-            $em ->andWhere($em->expr()->eq('e.id',':idembarcacion'))
-                ->setParameter('idembarcacion',$idembarcacion);
-        }
-        if($idcategoria != 0){
-            $em ->andWhere($em->expr()->eq('e.categoria',':idcategoria'))
-                ->setParameter('idcategoria',$idcategoria);
-        }
-        if($anio != 0){
-            $em ->andWhere($em->expr()->eq('e.ano',':anio'))
-                ->setParameter('anio',$anio);
-        }
-        if($idmarca != 0){
-            $em ->andWhere($em->expr()->eq('e.marca',':idmarca'))
-                ->setParameter('idmarca',$idmarca);
-        }
-        if($buscarPrecio != 0){
-            $em ->andWhere($em->expr()->between('e.precio',':menor',':mayor'))
-                ->setParameter('menor',$precioMenor)
-                ->setParameter('mayor',$precioMayor);
-        }
-        if($idpais != 0){
-            $em ->andWhere($em->expr()->eq('e.pais',':idpais'))
-                ->setParameter('idpais',$idpais);
-        }
-        $cotizacion = $em->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-        return $this->json($cotizacion);
+        return new Response($this->json($nombres, $request->getRequestFormat()));
     }
 
 
