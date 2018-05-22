@@ -117,4 +117,16 @@ class EmbarcacionRepository extends EntityRepository
         $embarcaciones = $em->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         return $embarcaciones;
     }
+
+    public function encuentraAniosUnicos()
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        return $qb->select('a.ano as id','a.ano as nombre')
+            ->groupBy('nombre')
+            ->orderBy('nombre','DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
 }

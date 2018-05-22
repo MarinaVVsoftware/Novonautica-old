@@ -34,4 +34,41 @@ class ApiController extends Controller
         $embarcaciones = $this->getDoctrine()->getManager()->getRepository('AppBundle:Embarcacion')->filtrarBarcos($request);
         return $this->json($embarcaciones);
     }
+
+    /**
+     * @Route("/marcas.json")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function buscarMarcasAction()
+    {
+        $marcas = $this->getDoctrine()->getManager()->getRepository('AppBundle:EmbarcacionMarca')->encuentraMarcas();
+        return $this->json($marcas);
+    }
+
+    /**
+     * @Route("/paises.json")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function buscarPaisesAction()
+    {
+        $paises = $this->getDoctrine()->getManager()->getRepository('AppBundle:Pais')->encuentraPaises();
+        return $this->json($paises);
+    }
+
+    /**
+     * @Route("/anios.json")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function buscarAniosAction()
+    {
+        $anios = $this->getDoctrine()->getManager()->getRepository('AppBundle:Embarcacion')->encuentraAniosUnicos();
+        return $this->json($anios);
+    }
+
 }

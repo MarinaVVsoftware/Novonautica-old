@@ -302,7 +302,7 @@ class EmbarcacionController extends Controller
             }
             array_push($nombres,['nombre'=>$nombre]);
         }
-        return $this->json($nombres, $request->getRequestFormat());
+        return $this->json($nombres);
     }
 
 
