@@ -19,6 +19,13 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class Embarcacion
 {
+    const DINGUI = 1;
+    const EXPRESS = 2;
+    const FLY_BRIDGE = 3;
+    const MEGA_YATES = 4;
+    const SPORT_FISHING = 5;
+    const VELA = 6;
+
     /**
      * @var int
      *
@@ -234,6 +241,22 @@ class Embarcacion
      * @ORM\Column(type="datetime")
      */
     private $updateAt;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="categoria", type="smallint")
+     */
+    private $categoria;
+
+    private static $categoriaList = [
+        Embarcacion::DINGUI => 'Dingui',
+        Embarcacion::EXPRESS => 'Express',
+        Embarcacion::FLY_BRIDGE => 'Fly Bridge',
+        Embarcacion::MEGA_YATES => 'Mega Yates',
+        Embarcacion::SPORT_FISHING => 'Sport Fishing',
+        Embarcacion::VELA => 'Vela',
+    ];
 
     /**
      * Constructor
@@ -907,6 +930,37 @@ class Embarcacion
     public function getPais()
     {
         return $this->pais;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCategoria()
+    {
+        return $this->categoria;
+    }
+
+    /**
+     * @param int $categoria
+     */
+    public function setCategoria($categoria)
+    {
+        $this->categoria = $categoria;
+    }
+
+    public static function getCategoriaList()
+    {
+        return self::$categoriaList;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCategoriaNombre()
+    {
+        if (null === $this->categoria) { return null; }
+
+        return self::$categoriaList[$this->categoria];
     }
 
     /**

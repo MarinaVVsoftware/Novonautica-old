@@ -10,4 +10,12 @@ namespace AppBundle\Repository;
  */
 class PaisRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function encuentraPaises()
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        return $qb->select('p.id','p.name as nombre')
+            ->getQuery()
+            ->getResult();
+    }
 }

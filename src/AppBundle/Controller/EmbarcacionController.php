@@ -279,6 +279,33 @@ class EmbarcacionController extends Controller
         return new Response($this->serializeEntities($years, $request->getRequestFormat()));
     }
 
+    /**
+     * @Route("/categoria.json")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getCategoriaAction(Request $request)
+    {
+        $categorias = $this->getDoctrine()->getRepository('AppBundle:Embarcacion')->findCategorias();
+        $nombres = [];
+        foreach ($categorias as $categoria) {
+            switch ($categoria['nombre']){
+                case 1: $nombre= 'Dingui';  break;
+                case 2: $nombre= 'Express'; break;
+                case 3: $nombre= 'Fly Bridge'; break;
+                case 4: $nombre= 'Mega Yates'; break;
+                case 5: $nombre= 'Sport Fishing'; break;
+                case 6: $nombre= 'Vela'; break;
+                default: $nombre= '-'; break;
+            }
+            array_push($nombres,['nombre'=>$nombre]);
+        }
+        return $this->json($nombres);
+    }
+
+
     private function serializeEntities($entity, $format, $ignoredAttributes = [])
     {
         $normalizer = new ObjectNormalizer();

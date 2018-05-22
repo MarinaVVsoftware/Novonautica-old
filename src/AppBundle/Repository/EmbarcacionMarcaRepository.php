@@ -34,4 +34,12 @@ class EmbarcacionMarcaRepository extends EntityRepository
 
         return ['marcas' => $paginator, 'total' => $total, 'pages' => $pages];
     }
+
+    public function encuentraMarcas()
+    {
+        $qb = $this->createQueryBuilder('ma');
+        return $qb->select('ma.id','ma.nombre')
+            ->getQuery()
+            ->getResult();
+    }
 }
