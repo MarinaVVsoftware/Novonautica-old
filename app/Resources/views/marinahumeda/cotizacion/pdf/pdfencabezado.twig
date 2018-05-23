@@ -45,7 +45,7 @@
                 <br>
                 Fecha: {{ marinaHumedaCotizacion.fecharegistro|date('d-m-Y') }}
                 <br>
-                Moneda: USD (US Dollar)
+                Tipo de cambio: $ {{ (marinaHumedaCotizacion.dolar/100 )|number_format(2) }} MXN
             </p>
         </div>
     </div>
