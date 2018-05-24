@@ -32,7 +32,7 @@ class ApiController extends Controller
     public function buscarEmbarcacionAction(Request $request)
     {
         $embarcaciones = $this->getDoctrine()->getManager()->getRepository('AppBundle:Embarcacion')->filtrarBarcos($request);
-        return $this->json($embarcaciones,200,['Access-Control-Allow-Origin'=> '*']);
+        return $this->json($embarcaciones,200,['Access-Control-Allow-Origin'=> 'http://www.oceandeal.com']);
     }
 
     /**
@@ -44,7 +44,7 @@ class ApiController extends Controller
     public function buscarMarcasAction()
     {
         $marcas = $this->getDoctrine()->getManager()->getRepository('AppBundle:EmbarcacionMarca')->encuentraMarcas();
-        return $this->json($marcas,200,['Access-Control-Allow-Origin'=> '*']);
+        return $this->json($marcas,200,['Access-Control-Allow-Origin'=> 'http://www.oceandeal.com']);
     }
 
     /**
@@ -56,7 +56,7 @@ class ApiController extends Controller
     public function buscarPaisesAction()
     {
         $paises = $this->getDoctrine()->getManager()->getRepository('AppBundle:Pais')->encuentraPaises();
-        return $this->json($paises,200,['Access-Control-Allow-Origin'=> '*']);
+        return $this->json($paises,200,['Access-Control-Allow-Origin'=> 'http://www.oceandeal.com']);
     }
 
     /**
@@ -68,7 +68,7 @@ class ApiController extends Controller
     public function buscarAniosAction()
     {
         $anios = $this->getDoctrine()->getManager()->getRepository('AppBundle:Embarcacion')->encuentraAniosUnicos();
-        return $this->json($anios,200,['Access-Control-Allow-Origin'=> '*']);
+        return $this->json($anios,200,['Access-Control-Allow-Origin'=> 'http://www.oceandeal.com']);
     }
 
 }
