@@ -36,7 +36,7 @@ class SlipMovimiento
      *
      * @Groups({"currentOcupation"})
      *
-     * @ORM\Column(name="fecha_llegada", type="date")
+     * @ORM\Column(name="fecha_llegada", type="datetime")
      */
     private $fechaLlegada;
 
@@ -45,7 +45,7 @@ class SlipMovimiento
      *
      * @Groups({"currentOcupation"})
      *
-     * @ORM\Column(name="fecha_salida", type="date")
+     * @ORM\Column(name="fecha_salida", type="datetime")
      */
     private $fechaSalida;
 

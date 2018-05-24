@@ -31,9 +31,10 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
                 ')
             ->setParameters([
                 'slip' => $slip,
-                'fechaLlegada' => $start->format('Y-m-d'),
-                'fechaSalida' => $end->format('Y-m-d'),
+                'fechaLlegada' => $start,
+                'fechaSalida' => $end,
             ])
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -64,7 +65,7 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin('cotizacion.cliente', 'cliente')
             ->leftJoin('cotizacion.barco', 'barco')
             ->where(':fecha BETWEEN sm.fechaLlegada AND sm.fechaSalida')
-            ->setParameter('fecha', $fecha->format('Y-m-d'))
+            ->setParameter('fecha', $fecha)
             ->getQuery()
             ->getResult();
     }
@@ -85,7 +86,7 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
             ->where(':fecha BETWEEN sm.fechaLlegada AND sm.fechaSalida')
             ->groupBy('s.pies')
             ->orderBy('s.pies', 'ASC')
-            ->setParameter('fecha', $fecha->format('Y-m-d'))
+            ->setParameter('fecha', $fecha)
             ->getQuery()
             ->getScalarResult();
     }
@@ -104,8 +105,8 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
             )
             ->leftJoin('sm.marinahumedacotizacion', 'mhc')
             ->leftJoin('mhc.barco', 'b')
-            ->where('((:start BETWEEN sm.fechaLlegada AND sm.fechaSalida) 
-                OR (:end BETWEEN sm.fechaLlegada AND sm.fechaSalida))')
+            ->where('((sm.fechaLlegada BETWEEN :start AND :end) 
+                OR (sm.fechaSalida BETWEEN :start AND :end))')
             ->orderBy('sm.slip')
             ->setParameters([
                 'start' => $start->format('Y-m-d'),

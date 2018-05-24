@@ -47,6 +47,7 @@ class SlipMovimientoController extends Controller
             try {
                 $datatables = $this->get('datatables');
                 $results = $datatables->handle($request, 'SlipMovimiento');
+
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getCode());
@@ -68,15 +69,6 @@ class SlipMovimientoController extends Controller
     }
 
     /**
-     * @Route("/timeline", name="slipmovimiento_timeline")
-     * @Method("GET")
-     */
-    public function timelineAction()
-    {
-        return $this->render('marinahumeda/mapa/timeline.html.twig', ['title' => 'Timeline']);
-    }
-
-    /**
      * @Route("/events.json")
      * @Method("GET")
      */
@@ -90,10 +82,11 @@ class SlipMovimientoController extends Controller
 
         foreach ($events as $i => $event) {
             $events[$i]['start'] = $event['start']->format(\DateTime::ISO8601);
-            $events[$i]['end'] = $event['end']->setTime(23, 59, 59)->format(\DateTime::ISO8601);
+            $events[$i]['end'] = $event['end']->format(\DateTime::ISO8601);
         }
 
-        return $this->json($events)->setEncodingOptions(JSON_NUMERIC_CHECK);
+        return $this->json($events)
+            ->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 
     /**
@@ -109,6 +102,8 @@ class SlipMovimientoController extends Controller
         $fecha = $request->query->get('f')
             ? \DateTime::createFromFormat('d/m/Y', $request->query->get('f'))
             : new \DateTime();
+
+        $fecha->setTime(15, 0, 0);
 
         $repository = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
         $currentSlips = $repository->getCurrentOcupation($fecha);
@@ -126,6 +121,7 @@ class SlipMovimientoController extends Controller
 
         try {
             $response = $serializer->serialize($data, 'json', ['groups' => ['currentOcupation']]);
+
             return JsonResponse::fromJsonString($response)->setEncodingOptions(JSON_NUMERIC_CHECK);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
@@ -170,40 +166,47 @@ class SlipMovimientoController extends Controller
     {
         $slipMovimiento = new Slipmovimiento();
         $form = $this->createForm('AppBundle\Form\SlipMovimientoType', $slipMovimiento, [
-            'action' => $this->generateUrl('assign-slip', ['id' => $slip->getId()])
+            'action' => $this->generateUrl('assign-slip', ['id' => $slip->getId()]),
         ]);
         $form->remove('slip');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && !$form->isValid()) {
-            return $this->json([
-                'code' => Response::HTTP_BAD_REQUEST,
-                'type' => 'validation',
-                'errors' => $this->getErrorsFromForm($form),
-            ], Response::HTTP_BAD_REQUEST);
+            return $this->json(
+                [
+                    'code' => Response::HTTP_BAD_REQUEST,
+                    'type' => 'validation',
+                    'errors' => $this->getErrorsFromForm($form),
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $cotizacion = $slipMovimiento->getMarinahumedacotizacion();
-            $fechaLlegada = $cotizacion->getFechaLlegada();
-            $fechaSalida = $cotizacion->getFechaSalida();
+            $fechaLlegada = $cotizacion->getFechaLlegada()->setTime(15, 0, 0);
+            $fechaSalida = $cotizacion->getFechaSalida()->setTime(11, 0, 0);
+
             $smExists = $em->getRepository('AppBundle:SlipMovimiento')
-                ->isSlipOpen($slip->getId(), $fechaLlegada, $fechaSalida);
+                ->isSlipOpen(
+                    $slip->getId(),
+                    $fechaLlegada,
+                    $fechaSalida
+                );
 
             if ($smExists) {
                 return $this->json([
                     'code' => Response::HTTP_BAD_REQUEST,
                     'type' => 'validation',
-                    'message' => ['La cotización asignada al slip, coincide con otra cotización']
+                    'errors' => ['La cotización asignada al slip, coincide con otra cotización'],
                 ], Response::HTTP_BAD_REQUEST);
             }
 
-            $slipMovimiento
-                ->setFechaLlegada($slipMovimiento->getMarinahumedacotizacion()->getFechaLlegada())
-                ->setFechaSalida($slipMovimiento->getMarinahumedacotizacion()->getFechaSalida())
-                ->setSlip($slip)
-                ->getMarinahumedacotizacion()->setSlip($slip);
+            $slipMovimiento->setFechaLlegada($fechaLlegada);
+            $slipMovimiento->setFechaSalida($fechaSalida);
+            $slipMovimiento->setSlip($slip);
+            $cotizacion->setSlip($slip);
 
             $em->persist($slipMovimiento);
             $em->flush();
@@ -212,7 +215,7 @@ class SlipMovimientoController extends Controller
         }
 
         return $this->render('marinahumeda/mapa/form/assign-slip.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -228,22 +231,31 @@ class SlipMovimientoController extends Controller
     public function createLockSlipAction(Request $request, Slip $slip)
     {
         $slipMovimiento = new Slipmovimiento();
-        $form = $this->createForm('AppBundle\Form\SlipMovimientoLockType', $slipMovimiento, [
-            'action' => $this->generateUrl('lock-slip', ['id' => $slip->getId()])
-        ]);
+        $form = $this->createForm(
+            'AppBundle\Form\SlipMovimientoLockType',
+            $slipMovimiento,
+            [
+                'action' => $this->generateUrl('lock-slip', ['id' => $slip->getId()]),
+            ]
+        );
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
             $smExists = $em->getRepository('AppBundle:SlipMovimiento')
-                ->isSlipOpen($slip->getId(), $slipMovimiento->getFechaLlegada(), $slipMovimiento->getFechaSalida());
+                ->isSlipOpen(
+                    $slip->getId(),
+                    $slipMovimiento->getFechaLlegada()->setTime(15, 0, 0),
+                    $slipMovimiento->getFechaSalida()->setTime(11, 0, 0)
+                );
 
             if ($smExists) {
                 return $this->json([
                     'code' => Response::HTTP_BAD_REQUEST,
                     'type' => 'validation',
-                    'message' => ['No se puede bloquear este slip, coincide con una cotización']
+                    'errors' => ['No se puede bloquear este slip, coincide con una cotización'],
                 ], Response::HTTP_BAD_REQUEST);
             }
 
@@ -257,7 +269,7 @@ class SlipMovimientoController extends Controller
         }
 
         return $this->render('marinahumeda/mapa/form/lock-slip.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -279,10 +291,8 @@ class SlipMovimientoController extends Controller
             [
                 'action' => $this->generateUrl(
                     'relocate-slip',
-                    [
-                        'id' => $slipMovimiento->getId(),
-                    ]
-                )
+                    ['id' => $slipMovimiento->getId()]
+                ),
             ]);
 
         $form->remove('marinahumedacotizacion');
@@ -299,18 +309,18 @@ class SlipMovimientoController extends Controller
         }
 
         return $this->render('marinahumeda/mapa/form/assign-slip.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/mapa/{slip}/isopen", name="check-open-slip")
+     * @Route("/mapa/{slip}/isopen.json", name="check-open-slip")
      *
      * @param Request $request
      * @param string $slip
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
-     *
+     * @throws NonUniqueResultException
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function checkOpenSlipAction(Request $request, $slip)
@@ -318,20 +328,22 @@ class SlipMovimientoController extends Controller
         $start = \DateTime::createFromFormat('d-m-Y', $request->query->get('start'));
         $end = \DateTime::createFromFormat('d-m-Y', $request->query->get('end'));
 
+        $start->setTime(15, 0, 0);
+        $end->setTime(11, 0, 0);
+
         $smRepo = $this->getDoctrine()->getRepository('AppBundle:SlipMovimiento');
+        $openSlip = $smRepo->isSlipOpen($slip, $start, $end);
 
-        try {
-            $openSlip = $smRepo->isSlipOpen($slip, $start, $end);
-            $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-            $normalizer = new ObjectNormalizer($classMetadataFactory);
-            $serializer = new Serializer([new DateTimeNormalizer(), $normalizer], [new JsonEncoder()]);
-
-            $response = $serializer->serialize($openSlip, 'json', ['groups' => ['currentOcupation']]);
-
-            return JsonResponse::fromJsonString($response);
-        } catch (NonUniqueResultException $e) {
-            return $this->json($e->getMessage(), $e->getCode());
+        if (!$openSlip) {
+            return $this->json('', JsonResponse::HTTP_NO_CONTENT);
         }
+
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $normalizer = new ObjectNormalizer($classMetadataFactory);
+        $serializer = new Serializer([new DateTimeNormalizer(), $normalizer]);
+
+        $norm = $serializer->normalize($openSlip, null, ['groups' => ['currentOcupation']]);
+        return $this->json($norm);
     }
 
     /**
