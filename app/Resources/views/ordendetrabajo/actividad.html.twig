@@ -234,6 +234,13 @@
                         that.haveNewFiles = true;
                       }
                     }, 100);
+
+                    file.previewElement
+                        .querySelector('.dz-filename')
+                        .innerHTML = `
+                            <a href="${file.dataURL}" target="_blank">Ver imagen</a>
+                        `
+
                   })
                   .on('queuecomplete', function () {
                     if (that.haveNewFiles) {
@@ -299,11 +306,7 @@
         function emitThumbnail(dz, thumb) {
           dz.files.push(thumb);
           dz.emit('addedfile', thumb);
-          dz.createThumbnailFromUrl(thumb,
-              dz.options.thumbnailWidth, dz.options.thumbnailHeight,
-              dz.options.thumbnailMethod, true, function (thumbnail) {
-                dz.emit('thumbnail', thumb, thumbnail);
-              });
+          dz.emit('thumbnail', thumb, thumb.dataURL);
           dz.emit('complete', thumb);
         }
 
