@@ -23,6 +23,7 @@ class MarinaHumedaVoter extends Voter
     const VALIDATE = 'MARINA_COTIZACION_VALIDATE';
     const REQUOTE = 'MARINA_COTIZACION_REQUOTE';
     const RENEW = 'MARINA_COTIZACION_RENEW';
+    const MORATORIA = 'MARINA_COTIZACION_MORATORIA';
 
     private $decisionManager;
 
@@ -41,7 +42,7 @@ class MarinaHumedaVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, [self::CREATE, self::VALIDATE, self::REQUOTE, self::RENEW, self::DELETE])) {
+        if (!in_array($attribute, [self::CREATE, self::VALIDATE, self::REQUOTE, self::RENEW, self::DELETE, self::MORATORIA])) {
             return false;
         }
 
@@ -93,6 +94,9 @@ class MarinaHumedaVoter extends Voter
             case self::RENEW:
                 return $this->canRenew($user);
                 break;
+            case self::MORATORIA:
+                return $this->canMoratoria($user);
+                break;
         }
 
         throw new \LogicException('This code should not be reached!');
@@ -137,6 +141,14 @@ class MarinaHumedaVoter extends Voter
     private function canRenew(Usuario $usuario)
     {
         if (!in_array(self::RENEW, $usuario->getRoles())) {
+            return false;
+        }
+
+        return true;
+    }
+    private function canMoratoria(Usuario $usuario)
+    {
+        if (!in_array(self::MORATORIA, $usuario->getRoles())) {
             return false;
         }
 

@@ -42,6 +42,7 @@ class UsuarioType extends AbstractType
                         'Recotizar' => 'MARINA_COTIZACION_REQUOTE',
                         'Eliminar' => 'MARINA_COTIZACION_DELETE',
                         'Pagos' => 'ROLE_MARINA_PAGO',
+                        'Moratoria' => 'MARINA_COTIZACION_MORATORIA',
                         'Monedero' => 'ROLE_MARINA_MONEDERO',
                         'Slips' => 'ROLE_MARINA_SLIP',
                         'Tarifas' => 'ROLE_MARINA_TARIFF',
@@ -68,7 +69,7 @@ class UsuarioType extends AbstractType
                     'ODT' => [
                         'Acceso' => 'ROLE_ODT',
                         'Crear' => 'ROLE_ODT_CREATE',
-                        'Pagos' => 'ROLE_ODT_PAGO',
+
                         'Actividad' => 'ROLE_ODT_ACTIVIDAD',
                         'Editar contratista' => 'ROLE_ODT_CONTRATISTA_EDIT',
                         'Eliminar' => 'ROLE_ODT_DELETE'
@@ -91,6 +92,7 @@ class UsuarioType extends AbstractType
                         'Crear' => 'CONTABILIDAD_CREATE',
                         'Cancelar' => 'CONTABILIDAD_CANCEL',
                         'Emisores' => 'ROLE_CONTABILIDAD_EMISOR',
+                        'Pagos ODT' => 'ROLE_ODT_PAGO',
                     ],
                     'Correos' => [
                         'Acceso' => 'ROLE_HCORREO',

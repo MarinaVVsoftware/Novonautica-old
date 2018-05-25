@@ -322,6 +322,21 @@ class MarinaHumedaCotizacion
      */
     private $creador;
 
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="porcentajeMoratorio", type="float", nullable=true)
+     */
+    private $porcentajeMoratorio;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="moratoriaTotal", type="bigint", nullable=true)
+     */
+    private $moratoriaTotal;
+
+
     public function __construct()
     {
         $this->mhcservicios = new ArrayCollection();
@@ -1261,5 +1276,53 @@ class MarinaHumedaCotizacion
     public function setToken($token)
     {
         $this->token = $token;
+    }
+
+    /**
+     * Set porcentajeMoratorio.
+     *
+     * @param float|null $porcentajeMoratorio
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setPorcentajeMoratorio($porcentajeMoratorio = null)
+    {
+        $this->porcentajeMoratorio = $porcentajeMoratorio;
+
+        return $this;
+    }
+
+    /**
+     * Get porcentajeMoratorio.
+     *
+     * @return float|null
+     */
+    public function getPorcentajeMoratorio()
+    {
+        return $this->porcentajeMoratorio;
+    }
+
+    /**
+     * Set moratoriaTotal.
+     *
+     * @param int|null $moratoriaTotal
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setMoratoriaTotal($moratoriaTotal = null)
+    {
+        $this->moratoriaTotal = $moratoriaTotal;
+
+        return $this;
+    }
+
+    /**
+     * Get moratoriaTotal.
+     *
+     * @return int|null
+     */
+    public function getMoratoriaTotal()
+    {
+        return $this->moratoriaTotal;
     }
 }

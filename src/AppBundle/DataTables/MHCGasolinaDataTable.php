@@ -75,21 +75,21 @@ class MHCGasolinaDataTable extends AbstractDataTableHandler
                 } else if ($column->data == 2) {
                     $q->andWhere('LOWER(barco.nombre) LIKE :barco')
                         ->setParameter('barco', "%{$value}%");
-                } else if ($column->data == 7) {
+                } else if ($column->data == 8) {
                     if ($value) {
                         $q->andWhere('mhce.validanovo = :validacion')
                             ->setParameter('validacion', $value);
                     } else {
                         $q->andWhere('mhce.validanovo = 0');
                     }
-                } else if ($column->data == 8) {
+                } else if ($column->data == 9) {
                     if ($value) {
                         $q->andWhere('mhce.validacliente = :aceptacion')
                             ->setParameter('aceptacion', $value);
                     } else {
                         $q->andWhere('mhce.validacliente = 0');
                     }
-                } else if ($column->data == 9) {
+                } else if ($column->data == 10) {
                     if ($value) {
                         $q->andWhere('mhce.estatuspago = :pago')->setParameter('pago', $value);
                     } else {
@@ -113,12 +113,14 @@ class MHCGasolinaDataTable extends AbstractDataTableHandler
             } elseif ($order->column === 5) {
                 $q->addOrderBy('mhce.descuentototal', $order->dir);
             } elseif ($order->column === 6) {
-                $q->addOrderBy('mhce.total', $order->dir);
+                $q->addOrderBy('mhce.moratoriaTotal', $order->dir);
             } elseif ($order->column === 7) {
-                $q->addOrderBy('mhce.validanovo', $order->dir);
+                $q->addOrderBy('mhce.total', $order->dir);
             } elseif ($order->column === 8) {
-                $q->addOrderBy('mhce.validacliente', $order->dir);
+                $q->addOrderBy('mhce.validanovo', $order->dir);
             } elseif ($order->column === 9) {
+                $q->addOrderBy('mhce.validacliente', $order->dir);
+            } elseif ($order->column === 10) {
                 $q->addOrderBy('mhce.estatuspago', $order->dir);
             }
         }
@@ -145,6 +147,7 @@ class MHCGasolinaDataTable extends AbstractDataTableHandler
                 '$' . number_format($cotizacion->getSubtotal() / 100, 2),
                 '$' . number_format($cotizacion->getIvatotal() / 100, 2),
                 '$' . number_format($cotizacion->getDescuentototal() / 100, 2),
+                '$' . number_format($cotizacion->getMoratoriaTotal() / 100, 2),
                 '$' . number_format($cotizacion->getTotal() / 100, 2),
                 $cotizacion->getValidanovo(),
                 $cotizacion->getValidacliente(),

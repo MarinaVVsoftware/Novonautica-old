@@ -89,6 +89,16 @@ class ValorSistema
     private $diasHabilesAstilleroCotizacion;
 
     /**
+     * @var float
+     * @Assert\NotBlank(
+     *     message="El porcentaje moratorio no puede quedar vacío"
+     * )
+     *
+     * @ORM\Column(name="porcentajeMoratorio", type="float")
+     */
+    private $porcentajeMoratorio;
+
+    /**
      * Generate a token
      *
      * @return string (100 characters)
@@ -261,4 +271,28 @@ class ValorSistema
     }
 
 
+
+    /**
+     * Set porcentajeMoratorio.
+     *
+     * @param float $porcentajeMoratorio
+     *
+     * @return ValorSistema
+     */
+    public function setPorcentajeMoratorio($porcentajeMoratorio)
+    {
+        $this->porcentajeMoratorio = $porcentajeMoratorio;
+
+        return $this;
+    }
+
+    /**
+     * Get porcentajeMoratorio.
+     *
+     * @return float
+     */
+    public function getPorcentajeMoratorio()
+    {
+        return $this->porcentajeMoratorio;
+    }
 }

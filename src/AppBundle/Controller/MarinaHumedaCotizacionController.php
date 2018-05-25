@@ -10,6 +10,7 @@ use AppBundle\Entity\MarinaHumedaSolicitudGasolina;
 use AppBundle\Entity\MonederoMovimiento;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Form\CotizacionNotaType;
+use AppBundle\Form\Marina\CotizacionMoratoriaType;
 use AppBundle\Form\MarinaHumedaCotizacionGasolinaType;
 use AppBundle\Form\MarinaHumedaCotizacionType;
 use DataTables\DataTablesInterface;
@@ -683,6 +684,59 @@ class MarinaHumedaCotizacionController extends Controller
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     *
+     * @Route("/{id}/moratoria", name="marina-humeda_moratoria")
+     * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param MarinaHumedaCotizacion $marinaHumedaCotizacion
+     *
+     * @return RedirectResponse|Response
+     * @throws \Exception
+     */
+    public function agregaMoratoriaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacion)
+    {
+        $this->denyAccessUnlessGranted('MARINA_COTIZACION_MORATORIA', $marinaHumedaCotizacion);
+        if ($marinaHumedaCotizacion->getValidacliente() !== 2) {
+            throw new NotFoundHttpException();
+        }
+        $em = $this->getDoctrine()->getManager();
+
+        $totalAnterior = $marinaHumedaCotizacion->getSubtotal() + $marinaHumedaCotizacion->getIvatotal() - $marinaHumedaCotizacion->getDescuentototal();
+        if($marinaHumedaCotizacion->getPorcentajeMoratorio()){
+            $porcentajeMoratorio = $marinaHumedaCotizacion->getPorcentajeMoratorio();
+            $totalMoratorio = $marinaHumedaCotizacion->getMoratoriaTotal();
+        }else{
+            $qb = $em->getRepository('AppBundle:ValorSistema')->findOneBy(['id' => 1]);
+            $porcentajeMoratorio = $qb->getPorcentajeMoratorio();
+            $totalMoratorio = ($porcentajeMoratorio * $totalAnterior)/100;
+        }
+        $totalNuevo = $totalMoratorio + $totalAnterior;
+        $marinaHumedaCotizacion->setPorcentajeMoratorio($porcentajeMoratorio);
+        $form = $this->createForm( CotizacionMoratoriaType::class,$marinaHumedaCotizacion);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $totalMoratorio = ($marinaHumedaCotizacion->getPorcentajeMoratorio() * $totalAnterior)/100;
+            $totalNuevo = $totalMoratorio + $totalAnterior;
+            $marinaHumedaCotizacion
+                ->setMoratoriaTotal($totalMoratorio)
+                ->setTotal($totalNuevo);
+            $em->persist($marinaHumedaCotizacion);
+            $em->flush();
+            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
+        }
+        return $this->render('marinahumeda/cotizacion/moratoria.twig',[
+            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+            'form' => $form->createView(),
+            'totalMoratorio' => $totalMoratorio,
+            'totalAnterior' => $totalAnterior,
+            'totalNuevo' => $totalNuevo
+        ]);
+
     }
 
     /**

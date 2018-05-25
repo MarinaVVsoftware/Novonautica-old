@@ -69,7 +69,9 @@ a {
 .letra-azul {
     color: #0097f6;
 }
-
+.letra-blanca{
+    color: #ffffff;
+}
 /*++ fin colores letra ++++*/
 
 /*++++ tamaño letra +++++*/
@@ -411,7 +413,8 @@ form > .btn-borrar:hover, .btn-borrar:hover {
 }
 
 .panel-novo > .panel-body,
-.panel-novo > .panel-footer {
+.panel-novo > .panel-footer,
+.panel-novo >.box-body{
     background-color: #363c52;
 }
 

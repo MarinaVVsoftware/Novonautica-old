@@ -1630,3 +1630,4 @@ if( formularioGeneral ) {
         $(':input[type="submit"]').button('loading');
     });
 }
+
