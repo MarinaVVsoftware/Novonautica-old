@@ -22,15 +22,21 @@ class SlipMovimientoLockType extends AbstractType
                 'required' => true,
                 'html5' => false,
                 'widget' => 'single_text',
-                'attr' => ['class' => 'input-calendario'],
-                'format' => 'dd/MM/yyyy'
+                'attr' => [
+                    'class' => 'input-calendario',
+                    'readonly' => 'readonly',
+                ],
+                'format' => 'dd/MM/yyyy',
             ])
             ->add('fechaSalida', DateType::class, [
                 'required' => true,
                 'html5' => false,
                 'widget' => 'single_text',
-                'attr' => ['class' => 'input-calendario'],
-                'format' => 'dd/MM/yyyy'
+                'attr' => [
+                    'class' => 'input-calendario',
+                    'readonly' => 'readonly',
+                ],
+                'format' => 'dd/MM/yyyy',
             ]);
     }
 
@@ -40,7 +46,7 @@ class SlipMovimientoLockType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\SlipMovimiento'
+            'data_class' => 'AppBundle\Entity\SlipMovimiento',
         ));
     }
 

@@ -117,7 +117,7 @@
                             <form class="form-inline" id="reporte-data">
                                 <div class="form-group">
                                     <label for="fecha">Fecha</label>
-                                    <input type="text" class="form-control input-calendario" id="fecha">
+                                    <input type="text" class="form-control input-calendario" id="fecha" readonly>
                                 </div>
                             </form>
                         </div>
@@ -334,7 +334,9 @@
         function setAssignModal(slip) {
           $.get(`{{ app.request.requestUri }}/${slip}/assign`)
               .done(function (form) {
+
                 $modalTitle.text('Asignacion de Slip #' + slip);
+
                 $modalBody.html(form);
                 $modalBody
                     .find('#appbundle_slipmovimiento_marinahumedacotizacion')
@@ -342,6 +344,7 @@
                       let $selectedOption = $(this).find(':selected');
                       isSlipOpen(slip, $selectedOption.data('llegada'), $selectedOption.data('salida'));
                     });
+
                 $modalBody.find('form[name="appbundle_slipmovimiento"]')
                     .on('submit', function (e) {
                       e.preventDefault();
@@ -353,10 +356,12 @@
                             $modal.modal('hide');
                           })
                           .fail(function ({responseJSON}) {
+                            console.log(responseJSON);
                             responseJSON.errors.forEach(error => createAlert(error));
                             $modal.modal('hide');
                           });
                     });
+
               })
               .done(function () {
                 $modal.modal('show');
@@ -461,7 +466,7 @@
         }
 
         function isSlipOpen(slip, start, end) {
-          $.ajax(`{{ app.request.requestUri }}/${slip}/isopen`, {data: {start, end}, dataType: 'json'})
+          $.ajax(`{{ app.request.requestUri }}/${slip}/isopen.json`, {data: {start, end}, dataType: 'json'})
               .done(function (boat) {
                 let $detail = $('#cotizacion-detail');
                 let $closed = $('#slipClosed');
@@ -478,6 +483,7 @@
 
                 if (boat) {
                   let cotizacion = boat.marinahumedacotizacion;
+
                   if (cotizacion) {
                     $closed.html(`
                     <div class="alert alert-danger text-center" role="alert">
@@ -496,15 +502,15 @@
                       <dd>${new Date(boat.fechaSalida).toLocaleDateString('es-MX')}</dd>
                     </dl>
                   `);
-                  }
-                  else {
+                  } else {
                     $closed.html(`
-                    <div class="alert alert-danger text-center" role="alert">
-                      La fecha de la cotización elegida coincide con un bloqueo con la nota:
-                    </div>
-                    <p>${boat.nota}</p>
-                  `);
+                        <div class="alert alert-danger text-center" role="alert">
+                          La fecha de la cotización elegida coincide con un bloqueo con la nota:
+                        </div>
+                        <p>${boat.nota}</p>
+                    `);
                   }
+
                   $submitBtn.attr('disabled', 'disabled');
                   return;
                 }
@@ -568,8 +574,10 @@
             <dl class="dl-horizontal" style="margin-bottom: 0">
               <dt>${slip.marinahumedacotizacion.barco.nombre}</dt>
               <dd></dd>
-              <dt>Llegada - Salida</dt>
-              <dd>${llegada.toLocaleDateString('es-MX')} - ${salida.toLocaleDateString('es-MX')}</dd>
+              <dt>Llegada</dt>
+              <dd>${llegada.toLocaleDateString('es-MX')}</dd>
+              <dt>Salida</dt>
+              <dd>${salida.toLocaleDateString('es-MX')}</dd>
             </dl>
           `;
         }

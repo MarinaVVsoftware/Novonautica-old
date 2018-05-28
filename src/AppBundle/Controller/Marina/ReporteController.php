@@ -15,7 +15,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class ReporteController
@@ -24,6 +29,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class ReporteController extends AbstractController
 {
+
     /**
      * Muestra los adeudos y abonos sumados de los clientes que han cotizado en marina
      *
@@ -52,6 +58,7 @@ class ReporteController extends AbstractController
     {
         try {
             $results = $dataTables->handle($request, 'marinaReporte');
+
             return $this->json($results);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
@@ -81,12 +88,12 @@ class ReporteController extends AbstractController
     }
 
     /**
-     * @Route("/cotizacion-history.json")
+     * @Route("/cotizacion-history.{_format}")
      * @Method("GET")
      *
      * @param Request $request
      *
-     * @return JsonResponse
+     * @return Response|JsonResponse
      */
     public function getCotizacionHistoryAction(Request $request)
     {
@@ -107,15 +114,27 @@ class ReporteController extends AbstractController
             $request->query->get('client')
         );
 
-        return (new JsonResponse($cotizaciones))->setEncodingOptions(JSON_NUMERIC_CHECK);
+        if ($request->getRequestFormat() === 'csv') {
+            $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
+            $csvData = $serializer->encode($cotizaciones, 'csv');
+
+            return new Response(
+                $csvData,
+                Response::HTTP_OK,
+                ['Content-type' => 'text/csv']
+            );
+        }
+
+        return $this->json($cotizaciones)
+            ->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 
     /**
-     * @Route("/boats-history.json")
+     * @Route("/boats-history.{_format}")
      * @Method("GET")
      * @param Request $request
      *
-     * @return JsonResponse
+     * @return Response|JsonResponse
      * @throws \Exception
      */
     public function getBoatHistoryAction(Request $request)
@@ -130,9 +149,25 @@ class ReporteController extends AbstractController
             ? (new \DateTime($request->query->get('end')))->modify('+1 day')
             : new \DateTime('+1 day');
 
-        $dates = $cotizacionRepository
+        $history = $cotizacionRepository
             ->getWorkedBoatsByDaterange($start, $end);
 
-        return (new JsonResponse($dates))->setEncodingOptions(JSON_NUMERIC_CHECK);
+        if ($request->getRequestFormat() === 'csv') {
+            foreach ($history as $i => $item) {
+                $history[$i]['fecha'] = substr($history[$i]['fecha'], 0, -9);
+            }
+
+            $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
+            $csvData = $serializer->encode($history, 'csv');
+
+            return new Response(
+                $csvData,
+                Response::HTTP_OK,
+                ['Content-type' => 'text/csv']
+            );
+        }
+
+        return $this->json($history)
+            ->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 }
