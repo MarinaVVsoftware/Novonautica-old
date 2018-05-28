@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
@@ -136,11 +137,11 @@ class ReporteController extends AbstractController
     }
 
     /**
-     * @Route("/boats-history.json")
+     * @Route("/boats-history.{_format}")
      * @Method("GET")
      * @param Request $request
      *
-     * @return JsonResponse
+     * @return Response|JsonResponse
      * @throws \Exception
      */
     public function getBoatHistoryAction(Request $request)
@@ -155,30 +156,30 @@ class ReporteController extends AbstractController
             ? new \DateTime($request->query->get('end'))
             : new \DateTime();
 
-        $dates = $cotizacionRepository
+        $history = $cotizacionRepository
             ->getWorkedBoatsByDaterange($start, $end);
 
-        // Rellena las fechas faltantes
-        /*$fechas = array_column($dates, 'fecha');
-
-        $days = new \DatePeriod($start, new \DateInterval('P1D'), $end);
-
-        foreach ($days as $day) {
-            $keyTime = $day->format('Y-m-d H:i:s');
-            if (!in_array($keyTime, $fechas)) {
-                $dates[] = [
-                    'fecha' => $keyTime,
-                    'total' => 0,
-                ];
+        if ($request->getRequestFormat() === 'csv') {
+            foreach ($history as $i => $item) {
+                $history[$i]['fecha'] = substr($history[$i]['fecha'], 0, -9);
             }
+
+            $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
+            $csvData = $serializer->encode($history, 'csv');
+
+            return new Response(
+                $csvData,
+                Response::HTTP_OK,
+                ['Content-type' => 'text/csv']
+            );
         }
 
-        sort($dates);*/
-        return (new JsonResponse($dates))->setEncodingOptions(JSON_NUMERIC_CHECK);
+        return $this->json($history)
+            ->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 
     /**
-     * @Route("/income-report.json")
+     * @Route("/income-report.{_format}")
      * @Method("GET")
      * @param Request $request
      *
@@ -198,6 +199,22 @@ class ReporteController extends AbstractController
 
         $incomeReport = $serviciosRepository->getIncomeReport($start, $end);
 
-        return (new JsonResponse($incomeReport))->setEncodingOptions(JSON_NUMERIC_CHECK);
+        if ($request->getRequestFormat() === 'csv') {
+            foreach ($incomeReport as $i => $item) {
+                $incomeReport[$i]['fecha'] = substr($incomeReport[$i]['fecha'], 0, -9);
+            }
+
+            $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
+            $csvData = $serializer->encode($incomeReport, 'csv');
+
+            return new Response(
+                $csvData,
+                Response::HTTP_OK,
+                ['Content-type' => 'text/csv']
+            );
+        }
+
+        return $this->json($incomeReport)
+            ->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 }
