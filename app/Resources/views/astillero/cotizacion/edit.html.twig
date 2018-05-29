@@ -871,6 +871,7 @@
                                                    data-nombre="{{ serv.data.nombre }}"
                                                    data-precio="{{ serv.data.precio }}"
                                                    data-divisa="{{ serv.data.divisa }}"
+                                                   data-productos="{{ serv.data.productos|json_encode }}"
                                                 >
                                                     + {{ serv.data.nombre }}
                                                 </a>
@@ -1375,26 +1376,31 @@
             }
 
         })(jQuery);
+        {#$('#productos').change('.select-busca-producto',function (e) {#}
+            {#var idservicio = $('.select-busca-producto:focus option:selected' ).val();#}
+            {#if(idservicio > 0){#}
+                {#var url = "{{ path('ajax_astillero_busca_producto',{'id':'iddelserivicio'}) }}";#}
+                {#url = url.replace("iddelserivicio", idservicio);#}
+                {#$.ajax({#}
+                    {#method: "GET",#}
+                    {#url: url,#}
+                    {#dataType: 'json',#}
+                    {#success: function(datos) {#}
+                        {#JSON.stringify(datos);#}
+                        {#//console.log(datos);#}
+                        {#var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();#}
+                        {#var dolar = $('#appbundle_astillerocotizacion_dolar').val();#}
+                        {#fila.children('.valorprecio').html('$ '+parseFloat((datos.precio)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');#}
+                        {#fila.children('.valorprecio').data('valor',((datos.precio)/100));#}
+                        {#calculaSubtotalesAstillero(fila);#}
+                    {#}#}
+                {#});#}
+            {#}#}
+        {#});#}
         $('#productos').change('.select-busca-producto',function (e) {
             var idservicio = $('.select-busca-producto:focus option:selected' ).val();
-            if(idservicio > 0){
-                var url = "{{ path('ajax_astillero_busca_producto',{'id':'iddelserivicio'}) }}";
-                url = url.replace("iddelserivicio", idservicio);
-                $.ajax({
-                    method: "GET",
-                    url: url,
-                    dataType: 'json',
-                    success: function(datos) {
-                        JSON.stringify(datos);
-                        //console.log(datos);
-                        var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-                        var dolar = $('#appbundle_astillerocotizacion_dolar').val();
-                        fila.children('.valorprecio').html('$ '+parseFloat((datos.precio)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
-                        fila.children('.valorprecio').data('valor',((datos.precio)/100));
-                        calculaSubtotalesAstillero(fila);
-                    }
-                });
-            }
+            var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
+            astilleroBuscaProducto(idservicio,fila);
         });
         $('.btnNext').click(function(){
             $('.nav-tabs > .active').next('li').find('a').trigger('click');

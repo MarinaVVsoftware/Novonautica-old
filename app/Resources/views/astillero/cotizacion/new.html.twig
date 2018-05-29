@@ -707,6 +707,7 @@
                                                    data-nombre="{{ serv.data.nombre }}"
                                                    data-precio="{{ serv.data.precio }}"
                                                    data-divisa="{{ serv.data.divisa }}"
+                                                   data-productos="{{ serv.data.productos|json_encode }}"
                                                 >
                                                     + {{ serv.data.nombre }}
                                                 </a>
@@ -1127,75 +1128,22 @@
                             : slip.style.display = 'block');
                     },
                     complete: () => { $("#loading").hide(); }
-            })
+            });
             }
-
         })(jQuery);
 
 
         $('#productos').change('.select-busca-producto',function (e) {
-            //console.log($(this).children('td-producto').focus());
-            //console.log($(this).children('.servicio-agregado').children('.td-producto').children('select').focus());
-            //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
             var idservicio = $('.select-busca-producto:focus option:selected' ).val();
-            if(idservicio > 0){
-                var url = "{{ path('ajax_astillero_busca_producto',{'id':'iddelserivicio'}) }}";
-                url = url.replace("iddelserivicio", idservicio);
-                $.ajax({
-                    method: "GET",
-                    url: url,
-                    dataType: 'json',
-                    success: function(datos) {
-                        JSON.stringify(datos);
-                        //console.log(datos);
-                        var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-                        var dolar = $('#appbundle_astillerocotizacion_dolar').val();
-                        fila.children('.valorprecio').html('$ '+parseFloat((datos.precio)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
-                        fila.children('.valorprecio').data('valor',((datos.precio)/100));
-                        calculaSubtotalesAstillero(fila);
-                        // var idfila = fila.data('id');
-                        // $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').data('valor',(datos.precio/dolar)/100);
-                        // $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat((datos.precio/dolar)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-                        // $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.td-producto').html(datos.nombre);
-                        // fila =  $('#a_nuevacotizacion_mxn>tbody>#'+idfila);
-                        // calculaSubtotalesAstillero(fila);
-                    }
-                });
-            }
+            var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
+            astilleroBuscaProducto(idservicio,fila);
         });
-        {#$('#a_nuevacotizacion>tbody').change('.select-busca-servicio',function (e) {#}
-            {#//console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());#}
-            {#var idservicio = $('.select-busca-servicio:focus option:selected' ).val();#}
-            {#if(idservicio > 0){#}
-                {#var url = "{{ path('ajax_astillero_busca_servicio',{'id':'iddelserivicio'}) }}";#}
-                {#url = url.replace("iddelserivicio", idservicio);#}
-                {#$.ajax({#}
-                    {#method: "GET",#}
-                    {#url: url,#}
-                    {#dataType: 'json',#}
-                    {#success: function(datos) {#}
-                        {#JSON.stringify(datos);#}
-                        {#var fila = $('.select-busca-servicio:focus option:selected').parent().parent().parent();#}
-                        {#var dolar = $('#appbundle_astillerocotizacion_dolar').val();#}
 
-                        {#fila.children('.valorprecio').html('$ '+parseFloat(datos.precio/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));#}
-                        {#fila.children('.valorprecio').data('valor',(datos.precio/100));#}
-                        {#calculaSubtotalesAstillero(fila);#}
-                        {#// var idfila = fila.data('id');#}
-                        {#// $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').data('valor',(datos.precio/dolar)/100);#}
-                        {#// $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat((datos.precio/dolar)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));#}
-                        {#// $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.td-servicio').html(datos.nombre);#}
-                        {#// fila =  $('#a_nuevacotizacion_mxn>tbody>#'+idfila);#}
-                        {#// calculaSubtotalesAstillero(fila);#}
-                    {#}#}
-                {#});#}
-            {#}#}
-        {#});#}
-        $('.btnNext').click(function(){
-            $('.nav-tabs > .active').next('li').find('a').trigger('click');
-        });
         $('.btnPrevious').click(function(){
             $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+        });
+        $('.btnNext').click(function(){
+            $('.nav-tabs > .active').next('li').find('a').trigger('click');
         });
     </script>
 {% endblock %}

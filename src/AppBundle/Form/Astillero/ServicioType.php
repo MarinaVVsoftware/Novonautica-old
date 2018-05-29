@@ -2,6 +2,9 @@
 
 namespace AppBundle\Form\Astillero;
 
+use AppBundle\Entity\Astillero\Producto;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -32,7 +35,20 @@ class ServicioType extends AbstractType
             ->add('unidad')
             ->add('descripcion',TextareaType::class,[
                 'label' => 'Descripción',
-                'attr' => ['rows'=>5]
+                'attr' => ['rows'=>5],
+                'required' => false
+            ])
+            ->add('productos',EntityType::class,[
+                'class' => 'AppBundle\Entity\Astillero\Producto' ,
+                'choice_label' => 'nombre',
+                'multiple' => true,
+                'expanded' => true,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('p')
+                        ->orderBy('p.nombre', 'ASC')
+                        ;
+                },
+                'label' => false
             ]);
     }
     

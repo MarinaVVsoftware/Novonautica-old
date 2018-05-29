@@ -871,6 +871,7 @@
                                                    data-nombre="{{ serv.data.nombre }}"
                                                    data-precio="{{ serv.data.precio }}"
                                                    data-divisa="{{ serv.data.divisa }}"
+                                                   data-productos="{{ serv.data.productos|json_encode }}"
                                                 >
                                                     + {{ serv.data.nombre }}
                                                 </a>
@@ -1599,47 +1600,10 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        $('#productos').change('.select-busca-producto',function (e) {
-            //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
-            var idservicio = $('.select-busca-producto:focus option:selected' ).val();
-            if(idservicio > 0){
-                var url = "{{ path('ajax_astillero_busca_producto',{'id':'iddelserivicio'}) }}";
-                url = url.replace("iddelserivicio", idservicio);
-                $.ajax({
-                    method: "GET",
-                    url: url,
-                    dataType: 'json',
-                    success: function(datos) {
-                        JSON.stringify(datos);
-                        var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-                        var dolar = $('#appbundle_astillerocotizacion_dolar').val();
-                        fila.children('.valorprecio').html('$ '+parseFloat((datos.precio)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
-                        fila.children('.valorprecio').data('valor',((datos.precio)/100));
-                        calculaSubtotalesAstillero(fila);
-                        // var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-                        // var dolar = $('#appbundle_astillerocotizacion_dolar').val();
-                        //
-                        // fila.children('.valorprecio').html('$ '+parseFloat((datos.precio*dolar)/100).toFixed(2));
-                        // fila.children('.valorprecio').data('valor',(datos.precio*dolar/100));
-                        // calculaSubtotalesAstillero(fila);
-                        //
-                        // var idfila = fila.data('id');
-                        //
-                        // var valormxn = (datos.precio/100);
-                        // $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').data('valor',valormxn);
-                        // $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat(valormxn).toFixed(2));
-                        // $('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.td-producto').html(datos.nombre);
-                        // fila =  $('#a_nuevacotizacion_mxn>tbody>#'+idfila);
-                        // calculaSubtotalesAstillero(fila);
-                    }
-                });
-            }
-        });
-        {#$('#a_nuevacotizacion>tbody').change('.select-busca-servicio',function (e) {#}
-            {#//console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());#}
-            {#var idservicio = $('.select-busca-servicio:focus option:selected' ).val();#}
+        {#$('#productos').change('.select-busca-producto',function (e) {#}
+            {#var idservicio = $('.select-busca-producto:focus option:selected' ).val();#}
             {#if(idservicio > 0){#}
-                {#var url = "{{ path('ajax_astillero_busca_servicio',{'id':'iddelserivicio','_format':'json'}) }}";#}
+                {#var url = "{{ path('ajax_astillero_busca_producto',{'id':'iddelserivicio'}) }}";#}
                 {#url = url.replace("iddelserivicio", idservicio);#}
                 {#$.ajax({#}
                     {#method: "GET",#}
@@ -1647,24 +1611,20 @@
                     {#dataType: 'json',#}
                     {#success: function(datos) {#}
                         {#JSON.stringify(datos);#}
-                        {#var fila = $('.select-busca-servicio:focus option:selected').parent().parent().parent();#}
+                        {#var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();#}
                         {#var dolar = $('#appbundle_astillerocotizacion_dolar').val();#}
-                        {#fila.children('.valorprecio').html('$ '+parseFloat((datos.precio*dolar)/100).toFixed(2));#}
-                        {#fila.children('.valorprecio').data('valor',((datos.precio*dolar)/100));#}
-                        {#calculaSubtotalesAstillero(fila);#}
-
-                        {#var idfila = fila.data('id');#}
-
-                        {#var valormxn = (datos.precio/100);#}
-                        {#$('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').data('valor',valormxn);#}
-                        {#$('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.valorprecio').html('$ '+parseFloat(valormxn).toFixed(2));#}
-                        {#$('#a_nuevacotizacion_mxn>tbody>#'+idfila+'>.td-servicio').html(datos.nombre);#}
-                        {#fila =  $('#a_nuevacotizacion_mxn>tbody>#'+idfila);#}
+                        {#fila.children('.valorprecio').html('$ '+parseFloat((datos.precio)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');#}
+                        {#fila.children('.valorprecio').data('valor',((datos.precio)/100));#}
                         {#calculaSubtotalesAstillero(fila);#}
                     {#}#}
                 {#});#}
             {#}#}
         {#});#}
+        $('#productos').change('.select-busca-producto',function (e) {
+            var idservicio = $('.select-busca-producto:focus option:selected' ).val();
+            var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
+            astilleroBuscaProducto(idservicio,fila);
+        });
         $('#appbundle_astillerocotizacion_acservicios_1_precio').parent().children('.input-group-addon').hide();
         $('.btnNext').click(function(){
             $('.nav-tabs > .active').next('li').find('a').trigger('click');

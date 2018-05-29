@@ -279,9 +279,7 @@ jQuery('.add-another-motor').click(function (e) {
 // handle the removal, just for this example
 $('.lista-motores').on('click', '.remove-motor', function (e) {
   e.preventDefault();
-  //console.log('quitar motor');
   $(this).parent().parent().parent().remove();
-
   return false;
 });
 
@@ -301,54 +299,70 @@ jQuery('.add-another-servicio').click(function (e) {
   var newLi = jQuery('<tr class="servicio-agregado" data-id="' + (totServicios - 1) + '"></tr>').html(newWidget);
   newLi.appendTo(servicioListPrimero);
   newLi.before(newLi);
-  // $('#a_nuevacotizacion_mxn > tbody').append('<tr class="servicio-agregado_mxn" id="' + (totServicios - 1) + '">' +
-  //     '<td class="valorcantidad" data-valor="0">0</td>' +
-  //     '<td class="td-otroservicio"></td>' +
-  //     '<td class="valorprecio" data-valor="0">$ 0.00</td>' +
-  //     '<td  class="valorsubtotal" data-valor="0">$ 0.00</td>' +
-  //     '<td class="valoriva" data-valor="0">$ 0.00</td>' +
-  //     '<td class="valortotal" data-valor="0">$ 0.00</td>' +
-  //     '</tr>');
 });
 
 $('.lista-servicios').on('click', '.remove-servicio', function (e) {
   e.preventDefault();
+  var fila = $(this).parent().parent();
+  var idservicio = fila.data('idservicio');
+  if(idservicio > 0){ //si se borra un servicio
+      $.each($('#productos tr'), function (i,filaproducto) {
+          if($(filaproducto).data('servicio-pertenece') === idservicio){  // si pertenecen al mismo kit los productos con los servicios
+              $(filaproducto).remove();
+          }
+      });
+  }
   $(this).parent().parent().remove();
   calculaTotalesAstillero();
-  // var idfila = $(this).parent().parent().data('id');
-  // console.log(idfila);
-  // $('#a_nuevacotizacion_mxn>tbody>#' + idfila).remove();
-  // calculaTotalesAstilleroMXN();
   return false;
 });
 
 //---- aparecer form collection con select de productos ----
-$('.add-producto').click(function (e) {
-  e.preventDefault();
-  var totServicios = $('#serviciosextra').data('cantidad');
-  var servicioListPrimero = jQuery('#productos');
-  var newWidget = $('#serviciosextra').data('prototype');
-  newWidget = newWidget.replace(/__name__/g, totServicios);
-  newWidget = newWidget.replace('td-otroservicio', 'hide');
-  newWidget = newWidget.replace('td-servicio', 'hide');
-  newWidget = newWidget.replace('td-libre', 'hide');
-  newWidget = newWidget.replace('input-group', 'hide');
-  totServicios++;
-  $('#serviciosextra').data('cantidad', totServicios);
-  var newLi = jQuery('<tr class="servicio-agregado" data-id="' + (totServicios - 1) + '"></tr>').html(newWidget);
-  newLi.appendTo(servicioListPrimero);
-  //$('.select-busca-producto').select2();
-  newLi.before(newLi);
-  // $('.select-busca-producto').select2();
-  // $('#a_nuevacotizacion_mxn > tbody').append('<tr class="servicio-agregado_mxn" id="' + (totServicios - 1) + '">' +
-  //     '<td class="valorcantidad" data-valor="0">0</td>' +
-  //     '<td class="td-producto"></td>' +
-  //     '<td class="valorprecio" data-valor="0">$ 0.00</td>' +
-  //     '<td  class="valorsubtotal" data-valor="0">$ 0.00</td>' +
-  //     '<td class="valoriva" data-valor="0">$ 0.00</td>' +
-  //     '<td class="valortotal" data-valor="0">$ 0.00</td>' +
-  //     '</tr>');
+$('.add-producto').click(function (e){
+    e.preventDefault();
+    astilleroAgregaProducto(0,0);
 });
+
+function astilleroAgregaProducto(idproducto,idservicio){
+    var totServicios = $('#serviciosextra').data('cantidad');
+    var servicioListPrimero = jQuery('#productos');
+    var newWidget = $('#serviciosextra').data('prototype');
+    newWidget = newWidget.replace(/__name__/g, totServicios);
+    newWidget = newWidget.replace('td-otroservicio', 'hide');
+    newWidget = newWidget.replace('td-servicio', 'hide');
+    newWidget = newWidget.replace('td-libre', 'hide');
+    newWidget = newWidget.replace('input-group', 'hide');
+    totServicios++;
+    $('#serviciosextra').data('cantidad', totServicios);
+    var newLi = jQuery('<tr class="servicio-agregado" data-id="' + (totServicios - 1) + '"></tr>').html(newWidget);
+    newLi.appendTo(servicioListPrimero);
+    newLi.before(newLi);
+    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').val(1);
+    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').parent().data('valor', 1);
+    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_producto').val(idproducto);
+    var fila = $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_producto').parent().parent();
+    fila.data('servicio-pertenece',idservicio);
+    astilleroBuscaProducto(idproducto,fila);
+}
+function astilleroBuscaProducto(idservicio,fila){
+    var url = `${location.protocol + '//' + location.host}/novonautica/web/app_dev.php/astillero/producto/buscarproducto/${idservicio}`;
+    if(idservicio > 0){
+        //url = url.replace("iddelserivicio", idservicio);
+        $.ajax({
+            method: "GET",
+            url: url,
+            dataType: 'json',
+            success: function(datos) {
+                JSON.stringify(datos);
+                var dolar = $('#appbundle_astillerocotizacion_dolar').val();
+                fila.children('.valorprecio').html('$ '+parseFloat((datos.precio)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
+                fila.children('.valorprecio').data('valor',((datos.precio)/100));
+                calculaSubtotalesAstillero(fila);
+            }
+        });
+    }
+}
+
 //---- aparecer form collection con select de servicios ----
 $('.add-servicio').click(function (e) {
     e.preventDefault();
@@ -367,11 +381,15 @@ $('.add-servicio').click(function (e) {
     var newLi = jQuery('<tr class="servicio-agregado" data-id="' + (totServicios - 1) + '"></tr>').html(newWidget);
     newLi.appendTo(servicioListPrimero);
     //$('.select-buscador').select2();
+    newLi.before(newLi);
+    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').val(1);
+    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').parent().data('valor',1);
     $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_servicio').val($(this).data('id'));
     var fila = $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_servicio').parent().parent();
+    var idservicio = $(this).data('id');
+    fila.data('idservicio',idservicio);
     $(fila.children('.td-libre')).html($(this).data('nombre'));
     $(fila.children('.valorprecio')).html('$'+($(this).data('precio')/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' '+$(this).data('divisa'));
-    newLi.before(newLi);
     if($(this).data('divisa')==='USD'){
       precio = (($(this).data('precio') * dolar)/100).toFixed(2);
     }else{
@@ -381,48 +399,30 @@ $('.add-servicio').click(function (e) {
     $(fila.children('.valorprecio')).data('valor',precio);
     $(fila.children('.valorprecio')).data('valorreal',precioreal);
     $(fila.children('.valorprecio')).data('divisa',$(this).data('divisa'));
-    //$('.select-busca-producto').select2();
-    // $('#a_nuevacotizacion_mxn > tbody').append('<tr class="servicio-agregado_mxn" id="' + (totServicios - 1) + '">' +
-    //     '<td class="valorcantidad" data-valor="0">0</td>' +
-    //     '<td class="td-servicio"></td>' +
-    //     '<td class="valorprecio" data-valor="0">$ 0.00</td>' +
-    //     '<td  class="valorsubtotal" data-valor="0">$ 0.00</td>' +
-    //     '<td class="valoriva" data-valor="0">$ 0.00</td>' +
-    //     '<td class="valortotal" data-valor="0">$ 0.00</td>' +
-    //     '</tr>');
+    calculaSubtotalesAstillero(fila);
+    $.each($(this).data('productos'), function (i, idproducto) {
+        astilleroAgregaProducto(idproducto,idservicio);
+    });
 });
+
 
 //collectio al agregar servicios adicionales marina humeda
 jQuery('.add-another-servicio-adicional').click(function (e) {
   e.preventDefault();
-  // var elementoMotor = document.getElementsByClassName(this);
   var totServicios = $(this).data('cantidad');
   var lista = $(this).data('idlista');
   var servicioListPrimero = jQuery('#servicio-adicional-fields-list' + lista);
-  //var motorListOtros = jQuery('.lista-motores'+lista);
-  // grab the prototype template
   var newWidget = $(servicioListPrimero).data('prototype');
-
-  // replace the "__name__" used in the id and name of the prototype
-  // with a number that's unique to your emails
-  // end name attribute looks like name="contact[emails][2]"
   newWidget = newWidget.replace(/__name__/g, totServicios);
   newWidget = newWidget.replace('td-producto', 'hide');
   totServicios++;
   $(this).data('cantidad', totServicios);
-  // create a new list element and add it to the list
   var newLi = jQuery('<tr class="servicio-agregado"></tr>').html(newWidget);
   newLi.appendTo(servicioListPrimero);
-
-  // also add a remove button, just for this example
-  //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
-
   newLi.before(newLi);
-  //$('.select-busca-producto').select2();
 });
 $('.lista-servicios-adicionales').on('click', '.remove-servicio-adicional', function (e) {
   e.preventDefault();
-  //console.log('quitar motor');
   $(this).parent().parent().remove();
   calculaTotalesAdicionales();
   return false;
@@ -431,39 +431,25 @@ $('.lista-servicios-adicionales').on('click', '.remove-servicio-adicional', func
 //collectio al agregar pagos a una cotización marina húmeda
 jQuery('.add-another-pago').click(function (e) {
   e.preventDefault();
-  // var elementoMotor = document.getElementsByClassName(this);
   var totPagos = $(this).data('cantidad');
   var lista = $(this).data('idlista');
   var pagoListPrimero = jQuery('#pago-fields-list' + lista);
-  //var motorListOtros = jQuery('.lista-motores'+lista);
-  // grab the prototype template
   var newWidget = $(pagoListPrimero).data('prototype');
-  // replace the "__name__" used in the id and name of the prototype
-  // with a number that's unique to your emails
-  // end name attribute looks like name="contact[emails][2]"
   newWidget = newWidget.replace(/__name__/g, totPagos);
   totPagos++;
   $(this).data('cantidad', totPagos);
-
-  // create a new list element and add it to the list
   var newLi = jQuery('<tr class="pago-agregado"></tr>').html(newWidget);
   newLi.appendTo(pagoListPrimero);
-
   newLi.find('.input-calendario').datepicker({
     autoclose: true,
     format: 'yyyy-mm-dd',
     orientation: 'bottom',
   });
-  // also add a remove button, just for this example
-  //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
-
   newLi.before(newLi);
 });
 $('.lista-pagos').on('click', '.remove-pago', function (e) {
   e.preventDefault();
-  //console.log('quitar motor');
   $(this).parent().parent().remove();
-
   return false;
 });
 
@@ -1392,33 +1378,17 @@ $('table').on('keyup', 'input', function () {
         fila = $(this).parent().parent();
     }
     calculaSubtotalesAstillero(fila);
-    //
-    // var idfila = $(this).parent().parent().data('id');
-    //  var clasecelda = $(this).parent().attr('class');
-    //  console.log(clasecelda);
-    //
-    // if (clasecelda == 'td-otroservicio') {
-    //   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.td-otroservicio').html($(this).val());
-    // } else {
-    //   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.valorcantidad').data('valor', $(this).val());
-    //   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.valorcantidad').html($(this).val());
-    //   fila = $('#a_nuevacotizacion_mxn>tbody>#' + idfila);
-    //   calculaSubtotalesAstillero(fila);
-    // }
 });
 
 $('#a_nuevacotizacion').on('keyup', '.valorprecio>.input-group>input', function () {
-
   $(this).parent().parent().data('valor', $(this).val());
   var fila = $(this).parent().parent().parent();
   calculaSubtotalesAstillero(fila);
-
   var idfila = $(this).parent().parent().parent().data('id');
   var dolar = $('#appbundle_astillerocotizacion_dolar').val();
   var valormxn = $(this).val() / dolar;
   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.valorprecio').data('valor', valormxn);
   $('#a_nuevacotizacion_mxn>tbody>#' + idfila + '>.valorprecio').html('$ ' + parseFloat(valormxn).toFixed(2));
-
   fila = $('#a_nuevacotizacion_mxn>tbody>#' + idfila);
   calculaSubtotalesAstillero(fila);
 });

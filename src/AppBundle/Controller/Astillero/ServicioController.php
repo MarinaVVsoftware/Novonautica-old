@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Astillero;
 
 use AppBundle\Entity\Astillero\Servicio;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -59,6 +60,13 @@ class ServicioController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $productos = [];
+            foreach ($servicio->getProductos() as $producto){
+                array_push($productos,$producto->getId());
+            }
+            $servicio->setProductos($productos);
+            //dump($servicio);
             $em = $this->getDoctrine()->getManager();
             $em->persist($servicio);
             $em->flush();
@@ -113,11 +121,25 @@ class ServicioController extends Controller
      */
     public function editAction(Request $request, Servicio $servicio)
     {
+        $productos = $servicio->getProductos();
+        $coleccionProductos = new ArrayCollection();
+        foreach ($productos as $producto){
+            $prod = $this->getDoctrine()->getManager()->getRepository('AppBundle:Astillero\Producto')->findOneBy(['id'=>$producto]);
+            $coleccionProductos->add($prod);
+        }
+        $servicio->setProductos($coleccionProductos);
+
+
         $deleteForm = $this->createDeleteForm($servicio);
         $editForm = $this->createForm('AppBundle\Form\Astillero\ServicioType', $servicio);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $productos = [];
+            foreach ($servicio->getProductos() as $producto){
+                array_push($productos,$producto->getId());
+            }
+            $servicio->setProductos($productos);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('astillero_servicio_index');

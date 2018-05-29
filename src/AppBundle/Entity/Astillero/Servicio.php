@@ -69,6 +69,13 @@ class Servicio
      */
     private $descripcion;
 
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="productos", type="json")
+     */
+    private $productos;
+
     public function __toString()
     {
         return $this->nombre;
@@ -202,5 +209,29 @@ class Servicio
     public function getDivisa()
     {
         return $this->divisa;
+    }
+
+    /**
+     * Set productos.
+     *
+     * @param array $productos
+     *
+     * @return Servicio
+     */
+    public function setProductos($productos)
+    {
+        $this->productos = $productos;
+
+        return $this;
+    }
+
+    /**
+     * Get productos.
+     *
+     * @return array
+     */
+    public function getProductos()
+    {
+        return $this->productos;
     }
 }
