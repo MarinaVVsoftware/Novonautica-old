@@ -729,7 +729,7 @@ class MarinaHumedaCotizacionController extends Controller
             $em->flush();
             return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
         }
-        return $this->render('marinahumeda/cotizacion/moratoria.twig',[
+        return $this->render('marinahumeda/cotizacion/moratoria.html.twig',[
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'form' => $form->createView(),
             'totalMoratorio' => $totalMoratorio,

@@ -63,7 +63,7 @@ class ODTController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_ODT_PAGO', $ordenDeTrabajo);
 
-        return $this->render('ordendetrabajo/hoja-pagos.twig', [
+        return $this->render('ordendetrabajo/hoja-pagos.html.twig', [
             'title' => 'Detalle ODT',
             'ordenDeTrabajo' => $ordenDeTrabajo
         ]);
