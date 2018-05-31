@@ -345,6 +345,11 @@
                                 <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                             </a>
                             <ul class="treeview-menu">
+                                <li class="{{ path.check('reporte_mar_ocupacion') }}">
+                                    <a href="{{ path('reporte_mar_ocupacion') }}">
+                                        <i class="fa fa-minus"></i> Ocupación
+                                    </a>
+                                </li>
                                 {% if is_granted(expression('has_role("CLIENTE_EDIT") or (user.isAdmin())')) %}
                                 <li class="{{ path.check('reporte_mar_index') }}">
                                     <a href="{{ path('reporte_mar_index') }}">

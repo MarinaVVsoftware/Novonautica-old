@@ -115,4 +115,34 @@ class SlipMovimientoRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getOcupationRateByDaterange(\DateTime $start, \DateTime $end)
+    {
+        return $this->createQueryBuilder('sm')
+            ->select(
+                'IDENTITY(sm.slip) AS slip',
+                'cliente.nombre AS nombreCliente',
+                'barco.nombre AS nombreEmbarcacion',
+                'sm.fechaLlegada AS llegada',
+                'sm.fechaSalida AS salida',
+                '(CASE WHEN DATE_DIFF(sm.fechaSalida, sm.fechaLlegada) = 0 ' .
+                'THEN 1 ELSE DATE_DIFF(sm.fechaSalida, sm.fechaLlegada) END) AS diasOcupados',
+                'DATE_DIFF(:end, :start) AS diasTotal',
+                '(CASE WHEN DATE_DIFF(sm.fechaSalida, sm.fechaLlegada) = 0' .
+                'THEN (1 / DATE_DIFF(:end, :start))' .
+                'ELSE (DATE_DIFF(sm.fechaSalida, sm.fechaLlegada) * 100) / DATE_DIFF(:end, :start) END) ' .
+                'AS porcentajeOcupacion'
+            )
+            ->leftJoin('sm.marinahumedacotizacion', 'cotizacion')
+            ->leftJoin('cotizacion.barco', 'barco')
+            ->leftJoin('cotizacion.cliente', 'cliente')
+            ->where('sm.fechaLlegada >= :start AND sm.fechaSalida <= :end AND sm.nota IS NULL')
+            ->setParameters([
+                'start' => $start,
+                'end' => $end
+            ])
+            ->orderBy('sm.slip')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }
