@@ -345,7 +345,7 @@ function astilleroAgregaProducto(idproducto,idservicio){
     astilleroBuscaProducto(idproducto,fila);
 }
 function astilleroBuscaProducto(idservicio,fila){
-    var url = `${location.protocol + '//' + location.host}/novonautica/web/app_dev.php/astillero/producto/buscarproducto/${idservicio}`;
+    var url = `${location.protocol + '//' + location.host}/astillero/producto/buscarproducto/${idservicio}`;
     if(idservicio > 0){
         //url = url.replace("iddelserivicio", idservicio);
         $.ajax({
