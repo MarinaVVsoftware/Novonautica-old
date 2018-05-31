@@ -77,6 +77,17 @@ class ReporteController extends AbstractController
     }
 
     /**
+     * @Route("/ocupacion", name="reporte_mar_ocupacion")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function ocupacionReporteAction()
+    {
+        return $this->render('marinahumeda/reporte/ocupacion.html.twig', ['title' => 'Ocupacion']);
+    }
+
+    /**
      * @Route("/cotizaciones", name="reporte_mar_cotizaciones")
      * @Method("GET")
      *
@@ -85,6 +96,43 @@ class ReporteController extends AbstractController
     public function cotizacionReporteAction()
     {
         return $this->render('marinahumeda/reporte/cotizacion.html.twig', ['title' => 'Cotizaciones']);
+    }
+
+    /**
+     * @Route("/ocupacion-data.{_format}")
+     * @Method("GET")
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getOcupacionDataAction(Request $request)
+    {
+        $response = [];
+        $ocupacionTotal = 0;
+
+        $start = $request->query->get('start')
+            ? \DateTime::createFromFormat('Y-m-d', $request->query->get('start'))
+            : new \DateTime('first day of this month');
+
+        $end = $request->query->get('end')
+            ? \DateTime::createFromFormat('Y-m-d', $request->query->get('end'))
+            : new \DateTime('last day of this month');
+
+        $movimientos = $this->getDoctrine()
+            ->getRepository('AppBundle:SlipMovimiento')
+            ->getOcupationRateByDaterange($start, $end);
+
+        foreach ($movimientos as $i => $movimiento) {
+            $ocupacionTotal += (float) $movimiento['porcentajeOcupacion'];
+        }
+
+        $response['movimientos'] = $movimientos;
+        $response['fechas'] = [
+            'inicio' => $start,
+            'final' => $end,
+        ];
+
+        return $this->json($response)->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 
     /**
