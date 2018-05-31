@@ -1,0 +1,105 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">Agregar Moratoria</h3>
+                            <span>
+                                 {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
+                                     {{ marinaHumedaCotizacion.folio }}
+                                 {% else %}
+                                     {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
+                                 {% endif %}
+                            </span>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('marina-humeda_show',{'id':marinaHumedaCotizacion.id}) }}">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>Embarcación</label>
+                            <div class='info-input'>{{ marinaHumedaCotizacion.barco }}</div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Cliente</label>
+                            <div class='info-input'>{{ marinaHumedaCotizacion.cliente }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>Subtotal</label>
+                            <div class='info-input'>$ {{ (marinaHumedaCotizacion.subtotal/100)|number_format(2) }} <small>USD</small></div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>Descuento</label>
+                            <div class='info-input'>$ {{ (marinaHumedaCotizacion.descuentoTotal/100)|number_format(2) }} <small>USD</small></div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>IVA</label>
+                            <div class='info-input'>$ {{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }} <small>USD</small></div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>Total anterior</label>
+                            <div id="totalAnterior" class='info-input' data-valor="{{ totalAnterior/100 }}">
+                                $ {{ (totalAnterior/100)|number_format(2) }} <small>USD</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
+                        <div class="col-sm-12">
+                            <hr>
+                        </div>
+                    </div>
+                    {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {{ form_row(form.porcentajeMoratorio) }}
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Moratoria Total</label>
+                            <div class="info-input">
+                                $ <span id="totalMoratorio">{{ (totalMoratorio/100)|number_format(2) }}</span><small> USD</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>Total</label>
+                            <div class="info-input">
+                                $ <span id="totalNuevo">{{ (totalNuevo/100)|number_format(2) }}</span><small> USD</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        var totalAnterior =  $('#totalAnterior').data('valor');
+        $('#appbundle_marinahumedacotizacion_porcentajeMoratorio').on('keyup',function () {
+            var porcentajeMoratorio = $(this).val();
+            var totalMoratorio  = (porcentajeMoratorio * totalAnterior)/100;
+            var totalNuevo = totalAnterior + totalMoratorio;
+            $('#totalMoratorio').html(totalMoratorio.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+            $('#totalNuevo').html(totalNuevo.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+        });
+    </script>
+{% endblock %}

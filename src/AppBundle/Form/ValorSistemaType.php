@@ -64,6 +64,11 @@ class ValorSistemaType extends AbstractType
                 'required' => false,
                 'label' => 'Mensaje en correo de astillero cotización'
             ])
+            ->add('porcentajeMoratorio',TextType::class,[
+                'attr' => ['class' => 'esdecimal'],
+                'label' => 'Porcentaje moratorio (marina húmeda)',
+                'required' => false
+            ])
         ;
     }
     
