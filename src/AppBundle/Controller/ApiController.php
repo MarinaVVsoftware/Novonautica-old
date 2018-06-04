@@ -33,11 +33,7 @@ class ApiController extends Controller
     {
         $headers = $request->headers->all();
         $embarcaciones = $this->getDoctrine()->getManager()->getRepository('AppBundle:Embarcacion')->filtrarBarcos($request);
-        if($headers['origin'][0] === 'http://www.oceandeal.com' || $headers['origin'][0] === 'https://www.oceandeal.com'){
-            return $this->json($embarcaciones,200,['Access-Control-Allow-Origin'=> $headers['origin'][0]]);
-        }else{
-            return $this->json(null);
-        }
+        return $this->compruebaDominio($headers['origin'][0],$embarcaciones);
     }
 
     /**
@@ -52,11 +48,7 @@ class ApiController extends Controller
     {
         $headers = $request->headers->all();
         $marcas = $this->getDoctrine()->getManager()->getRepository('AppBundle:EmbarcacionMarca')->encuentraMarcas();
-        if($headers['origin'][0] === 'http://www.oceandeal.com' || $headers['origin'][0] === 'https://www.oceandeal.com'){
-            return $this->json($marcas,200,['Access-Control-Allow-Origin'=> $headers['origin'][0]]);
-        }else{
-            return $this->json(null);
-        }
+        return $this->compruebaDominio($headers['origin'][0],$marcas);
     }
 
     /**
@@ -71,11 +63,7 @@ class ApiController extends Controller
     {
         $headers = $request->headers->all();
         $paises = $this->getDoctrine()->getManager()->getRepository('AppBundle:Pais')->encuentraPaises();
-        if($headers['origin'][0] === 'http://www.oceandeal.com' || $headers['origin'][0] === 'https://www.oceandeal.com'){
-            return $this->json($paises,200,['Access-Control-Allow-Origin'=> $headers['origin'][0]]);
-        }else{
-            return $this->json(null);
-        }
+        return $this->compruebaDominio($headers['origin'][0],$paises);
     }
 
     /**
@@ -90,10 +78,21 @@ class ApiController extends Controller
     {
         $headers = $request->headers->all();
         $anios = $this->getDoctrine()->getManager()->getRepository('AppBundle:Embarcacion')->encuentraAniosUnicos();
-        if($headers['origin'][0] === 'http://www.oceandeal.com' || $headers['origin'][0] === 'https://www.oceandeal.com'){
-            return $this->json($anios,200,['Access-Control-Allow-Origin'=> $headers['origin'][0]]);
-        }else{
-            return $this->json(null);
+        return $this->compruebaDominio($headers['origin'][0],$anios);
+    }
+
+    private function compruebaDominio($dominio,$objeto){
+        switch ($dominio){
+            case 'http://www.oceandeal.com':
+                return $this->json($objeto,200,['Access-Control-Allow-Origin'=> $dominio]);
+            case 'https://www.oceandeal.com':
+                return $this->json($objeto,200,['Access-Control-Allow-Origin'=> $dominio]);
+            case 'http://oceandeal.com':
+                return $this->json($objeto,200,['Access-Control-Allow-Origin'=> $dominio]);
+            case 'https://oceandeal.com':
+                return $this->json($objeto,200,['Access-Control-Allow-Origin'=> $dominio]);
+            default:
+                return $this->json(null);
         }
     }
 }
