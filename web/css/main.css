@@ -1163,15 +1163,14 @@ input[type="file"] + label * {
 .fc-event{
     border: none;
 }
-/*.fc-scroller-canvas{*/
-    /*width: 0px;*/
-    /*min-width: 1584px;*/
-/*}*/
-/*.fc-timeline .fc-body .fc-scroller{*/
-    /*overflow: auto;*/
-    /*margin: 0px;*/
-    /*height: 186px;*/
-/*}*/
-/*.fc-time-area col{*/
-    /*min-width: 63px;*/
-/*}*/
+.gcontainercol::-webkit-scrollbar {
+    width: 12px;
+}
+.gcontainercol::-webkit-scrollbar-track {
+    background: #474d6b;
+    border-radius: 7px;
+}
+.gcontainercol::-webkit-scrollbar-thumb {
+    border-radius: 7px;
+    background: #292e41;
+}
