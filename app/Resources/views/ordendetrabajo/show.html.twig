@@ -2,10 +2,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet"
-          href="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css') }}">
-    <link rel="stylesheet"
-          href="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.9.4/scheduler.min.css') }}">
-    {#<link rel="stylesheet" href="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.print.css') }}">#}
+          href="{{ asset('css/jsgantt.css') }}">
 {% endblock %}
 {% block contwrapper %}
     <div class="content-wrapper">
@@ -377,8 +374,8 @@
                         </div>
                         <div role="tabpanel" class="tab-pane" id="flujograma">
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <div id='calendario'></div>
+                                <div class="col-sm-12 table-responsive">
+                                    <div style="position:relative; " class="gantt" id="GanttChartDIV" ></div>
                                 </div>
                             </div>
                             <div class="row espacio-linea-arriba2">
@@ -453,6 +450,7 @@
             </div>
         </section>
     </div>
+
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -461,97 +459,132 @@
     <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js') }}"></script>
     <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.9.4/scheduler.min.js') }}"></script>
     <script src="{{ asset('bower_components/fullcalendar/dist/locale/es.js') }}"></script>
-    <script>
-        $('.flujograma').on('click', function () {
-            setTimeout(mostrarCalendario, 200);
+    <script src="{{ asset('js/jsgantt.js') }}"></script>
+    <script type="text/javascript">
+        var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day' );
+        g.addLang('espanol', {
+            'january': 'Enero',
+            'february': 'Febrero',
+            'march': 'Marzo',
+            'april': 'Abril',
+            'maylong': 'Mayo',
+            'june': 'Junio',
+            'july': 'Julio',
+            'august': 'Agosto',
+            'september': 'Septiembre',
+            'october': 'Octubre',
+            'november': 'Noviembre',
+            'december': 'Deciembre',
+            'jan': 'Ene',
+            'feb': 'Feb',
+            'mar': 'Mar',
+            'apr': 'Abr',
+            'may': 'May',
+            'jun': 'Jun',
+            'jul': 'Jul',
+            'aug': 'Ago',
+            'sep': 'Sep',
+            'oct': 'Oct',
+            'nov': 'Nov',
+            'dec': 'Dic',
+            'sunday': 'Domingo',
+            'monday': 'Lunes',
+            'tuesday': 'Martes',
+            'wednesday': 'Miércoles',
+            'thursday': 'Jueves',
+            'friday': 'Viernes',
+            'saturday': 'Sábado',
+            'sun': 'Dom',
+            'mon': 'Lun',
+            'tue': 'Mar',
+            'wed': 'Mie',
+            'thu': 'Jue',
+            'fri': 'Vie',
+            'sat': 'Sab',
+            'resource': 'Responsable',
+            'duration': 'Duración',
+            'comp': '% Comp.',
+            'completion': 'Terminación',
+            'startdate': 'Inicia',
+            'enddate': 'Termina',
+            'moreinfo': 'Más información',
+            'notes': 'Notas',
+            'format': 'Formato',
+            'hour': 'Hora',
+            'day': 'Día',
+            'week': 'Semana',
+            'month': 'Mes',
+            'quarter': 'Trimestre',
+            'hours': 'Horas',
+            'days': 'Días',
+            'weeks': 'Semanas',
+            'months': 'Meses',
+            'quarters': 'Trimestres',
+            'hr': 'Hr',
+            'dy': 'D',
+            'wk': 'S',
+            'mth': 'M',
+            'qtr': 'Tri',
+            'hrs': 'Hrs',
+            'dys': 'Dias',
+            'wks': 'Sems',
+            'mths': 'Ms',
+            'qtrs': 'Tris'
         });
-
-        function mostrarCalendario() {
-
-            $('#calendario').fullCalendar({
-                schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
-                defaultView: 'timelineFourDays',
-                defaultDate: "{{ ordenDeTrabajo.astilleroCotizacion.fechaLlegada|date('Y-m-d') }}",
-                locale: 'es',
-                height: 300,
-                header: {
-                    left: '',
-                    center: 'prev,title,next',
-                    right: ''
-                },
-                views: {
-                    timelineFourDays: {
-                        type: 'timeline',
-                        duration: {days: 25},
-                        slotDuration: '24:00:00'
-                    }
-                },
-                events: [
-                    {% for contratista in ordenDeTrabajo.contratistas %}
-                    {% set blanco = '#fff' %}
-                    {% set naranja = '#d14c1f' %}
-                    {% set verde = '#00652a' %}
-                    {% set azul = '#0064a2' %}
-                    {% set morado = '#7d2d8c' %}
-                    {% set rojo = '#941d33' %}
-                    {% set elige = 1 %}
-                    {% for actividad in contratista.contratistaactividades %}
-                    {
-                        {% if elige == 1 %}
-                        {% set fondo = naranja %}
-                        {% set elige = 2 %}
-                        {% elseif elige == 2 %}
-                        {% set fondo = verde %}
-                        {% set elige = 3 %}
-                        {% elseif elige == 3 %}
-                        {% set fondo = azul %}
-                        {% set elige = 4 %}
-                        {% elseif elige == 4 %}
-                        {% set fondo = morado %}
-                        {% set elige = 5 %}
-                        {% elseif elige == 5 %}
-                        {% set fondo = rojo %}
-                        {% set elige = 1 %}
-                        {% endif %}
-                        title: "{{ actividad.nombre }}",
-                        start: "{{ actividad.inicio|date('Y-m-d') }}",
-                        end: "{{ actividad.fin|date_modify("+1 day")|date('Y-m-d') }}",
-                        className: ["lineaevento"],
-                        textColor: "{{ blanco }}",
-                        borderColor: "{{ fondo }}",
-                        backgroundColor: "{{ fondo }}"
-                    },
-                    {% endfor %}
-                    {% endfor %}
-
-                ],
-                eventMouseover: function (data, event, view) {
-                    var diafin = data.end._d.getDate();
-                    var mesfin = data.end._d.getMonth() + 1;
-                    if (diafin < 10) {
-                        diafin = '0' + diafin;
-                    }
-                    if (mesfin < 10) {
-                        mesfin = '0' + mesfin;
-                    }
-                    var fechafin = data.end._d.getFullYear() + '-' + mesfin + '-' + diafin;
-                    tooltip = '<div class="tooltiptopicevent" style="width:auto;height:auto;background:#292e41;border: 1px solid #0097f6;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;line-height: 200%;border-radius:5px;">' +
-                        'Actividad: ' + data.title + '</br>' + 'Inicia: ' + data.start._i + '</br>' + 'Termina: ' + fechafin + '</div>';
-                    $("body").append(tooltip);
-                    $(this).mouseover(function (e) {
-                        $(this).css('z-index', 10000);
-                        $('.tooltiptopicevent').fadeIn('500');
-                        $('.tooltiptopicevent').fadeTo('10', 1.9);
-                    }).mousemove(function (e) {
-                        $('.tooltiptopicevent').css('top', e.pageY + 10);
-                        $('.tooltiptopicevent').css('left', e.pageX + 20);
-                    });
-                },
-                eventMouseout: function (data, event, view) {
-                    $(this).css('z-index', 8);
-                    $('.tooltiptopicevent').remove();
-                }
-            });
+        if( g.getDivId() != null ) {
+            g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
+            g.setQuarterColWidth(36);
+            g.setRowHeight(30);
+            g.setDayColWidth(45);
+            g.setWeekColWidth(60);
+            g.setMonthColWidth(60);
+            g.setDateTaskDisplayFormat('day dd month yyyy'); // Shown in tool tip box
+            g.setDayMajorDateDisplayFormat('mon yyyy - Week ww') // Set format to display dates in the "Major" header of the "Day" view
+            g.setWeekMinorDateDisplayFormat('dd mon') // Set format to display dates in the "Minor" header of the "Week" view
+            g.setShowTaskInfoLink(0); //Show link in tool tip (0/1)
+            g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
+            g.setUseSingleCell(10000); // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
+            g.setFormatArr('Day'); // Even with setUseSingleCell using Hour format on such a large chart can cause issues in some browsers
+            g.setLang('espanol');
+            g.setShowRes(0);
+            g.setShowDur(1);
+            g.setShowStartDate(0);
+            g.setShowEndDate(0);
+            g.setShowTaskInfoNotes(0);
+            // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pMile, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
+            {% set x = 1 %}
+            {% set y = 1 %}
+            {% for contratista in ordenDeTrabajo.contratistas %}
+                g.AddTaskItem(new JSGantt.TaskItem({{ x }},
+                    '{{ contratista.cotizacionInicial }}',
+                    '',
+                    '',
+                    'ggroupblack',
+                    'link',
+                    0,
+                    'Responsable',
+                    0,1,0,1,'','',
+                    '',
+                    g));
+                {% for actividad in contratista.contratistaactividades %}
+                    g.AddTaskItem(new JSGantt.TaskItem({{ x~y }},
+                        '{{ actividad.nombre }}',
+                        '{{ actividad.inicio|date('Y-m-d') }}',
+                        '{{ actividad.fin|date('Y-m-d') }}',
+                        'gtaskgreen',
+                        '',
+                        0,
+                        '{{ actividad.responsable }}',{{ actividad.porcentaje }},
+                        0,{{ x }},
+                        1, '', '', '{{ actividad.notas }}', g));
+                    {% set y = y+1 %}
+                {% endfor %}
+                {% set x = x+1 %}
+                {% set y = 1 %}
+            {% endfor %}
+            g.Draw();
+        } else {
+            alert("Error, unable to create Gantt Chart");
         }
     </script>
 {% endblock %}
