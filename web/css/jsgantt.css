@@ -114,7 +114,7 @@ span.gfoldercollapse		{ color:#000000; cursor:pointer; font-weight:bold; font-si
 }
 .gtaskgreen {
 	background: rgb(80,193,58); /* Old browsers */
-	background: linear-gradient(to bottom,  rgba(80,193,58,1) 0%,rgba(88,209,64,1) 20%,rgba(102,237,75,1) 40%,rgba(80,193,58,1) 70%,rgba(53,132,37,1) 100%); /* W3C */
+	/*background: linear-gradient(to bottom,  rgba(80,193,58,1) 0%,rgba(88,209,64,1) 20%,rgba(102,237,75,1) 40%,rgba(80,193,58,1) 70%,rgba(53,132,37,1) 100%); !* W3C *!*/
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#66ED4B', endColorstr='#50c13a',GradientType=0 ); /* IE6-9 */
 }
 .gtaskyellow {
