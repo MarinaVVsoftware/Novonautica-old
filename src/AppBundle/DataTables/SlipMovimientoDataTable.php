@@ -45,23 +45,9 @@ class SlipMovimientoDataTable extends AbstractDataTableHandler
             $query
                 ->orWhere(
                     $query->expr()->like('LOWER(barco.nombre)', ':search')
-//                    $query->expr()->like('mhc.fechaLlegada', ':search')
                 )
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
         }
-
-        /*foreach ($request->columns as $column) {
-            if ($column->search->value) {
-                $value = strtolower($column->search->value);
-
-                if ($column->data == 5) {
-                    if ($value) {
-                        $query->andWhere('sm.estatus = :estatus')
-                            ->setParameter('estatus', $value);
-                    }
-                }
-            }
-        }*/
 
         foreach ($request->order as $order) {
             if ($order->column === 0) {
@@ -74,8 +60,6 @@ class SlipMovimientoDataTable extends AbstractDataTableHandler
                 $query->addOrderBy('sm.fechaLlegada', $order->dir);
             } elseif ($order->column === 4) {
                 $query->addOrderBy('sm.fechaSalida', $order->dir);
-//            } elseif ($order->column === 5) {
-//                $query->addOrderBy('sm.estatus', $order->dir);
             } elseif ($order->column === 6) {
                 $query->addOrderBy('sm.createdAt', $order->dir);
             } elseif ($order->column === 7) {
@@ -97,10 +81,14 @@ class SlipMovimientoDataTable extends AbstractDataTableHandler
             $movimiento = $movimientos[$index];
             $cotizacion = $movimiento->getMarinahumedacotizacion();
 
+            if ($cotizacion) {
+                $folio = !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza();
+            }
+
             $results->data[] = [
-                $cotizacion->getBarco()->getNombre(),
+                null === $cotizacion ? $movimiento->getNota() : $cotizacion->getBarco()->getNombre(),
                 $movimiento->getSlip()->getId(),
-                !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza(),
+                $folio,
                 $movimiento->getFechaLlegada()->format('Y-m-d'),
                 $movimiento->getFechaSalida()->format('Y-m-d'),
                 $movimiento->getCreatedAt()->format('Y-m-d H:s'),
