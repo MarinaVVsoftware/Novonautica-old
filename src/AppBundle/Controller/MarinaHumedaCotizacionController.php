@@ -565,21 +565,42 @@ class MarinaHumedaCotizacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($marinaHumedaCotizacion->getFoliorecotiza()) {
+                $folioCotizacion = $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza();
+            } else {
+                $folioCotizacion = $marinaHumedaCotizacion->getFolio();
+            }
             $continuarpago = true;
             $total = $marinaHumedaCotizacion->getTotal();
             $pagado = $marinaHumedaCotizacion->getPagado();
             $monedero = $marinaHumedaCotizacion->getCliente()->getMonederomarinahumeda();
 
             $em = $this->getDoctrine()->getManager();
-
+            $monederoDevuelto = 0;
             foreach ($listaPagos as $pago) {
                 if (false === $marinaHumedaCotizacion->getPagos()->contains($pago)) {
+                    if($pago->getMetodopago() === 'Monedero'){
+                        $monederoDevuelto +=  $pago->getCantidad();
+                        $notaMonedero = 'Devolución de pago de cotización. Folio: '.$folioCotizacion;
+                        $fechaHoraActual = new \DateTime('now');
+                        $monederoMovimiento = new MonederoMovimiento();
+                        $monederoMovimiento
+                            ->setCliente($marinaHumedaCotizacion->getCliente())
+                            ->setFecha($fechaHoraActual)
+                            ->setMonto($pago->getCantidad())
+                            ->setOperacion(1)
+                            ->setResultante($marinaHumedaCotizacion->getCliente()->getMonederomarinahumeda() + $monederoDevuelto)
+                            ->setTipo(1)
+                            ->setDescripcion($notaMonedero);
+                        $em->persist($monederoMovimiento);
+
+                    }
                     $pago->getMhcotizacion()->removePago($pago);
                     $em->persist($pago);
                     $em->remove($pago);
                 }
             }
-
+            //$marinaHumedaCotizacion->getCliente()->setMonederomarinahumeda($marinaHumedaCotizacion->getCliente()->getMonederomarinahumeda() + $monederoDevuelto);
             // Conversion de la vista (MXN) a la DB (USD)
             foreach ($marinaHumedaCotizacion->getPagos() as $pago) {
                 if ($pago->getDivisa() == 'MXN') {
@@ -594,12 +615,6 @@ class MarinaHumedaCotizacionController extends Controller
                 if ($pago->getMetodopago() == 'Monedero' && $pago->getId() == null) {
                     $totPagadoMonedero += $unpago;
                     $monederotot = $monedero - $totPagadoMonedero;
-
-                    if ($marinaHumedaCotizacion->getFoliorecotiza()) {
-                        $folioCotizacion = $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza();
-                    } else {
-                        $folioCotizacion = $marinaHumedaCotizacion->getFolio();
-                    }
 
                     if ($marinaHumedaCotizacion->getMHCservicios()->first()->getTipo() == 1 || $marinaHumedaCotizacion->getMHCservicios()->first()->getTipo() == 2) {
                         $notaMonedero = 'Pago de servicio de estadía y electricidad. Folio cotización: ' . $folioCotizacion;
@@ -638,7 +653,7 @@ class MarinaHumedaCotizacionController extends Controller
 
                     $monederoRestante = $monedero - $totPagadoMonedero;
                     $marinaHumedaCotizacion->setPagado($totPagado);
-                    $marinaHumedaCotizacion->getCliente()->setMonederomarinahumeda($monederoRestante);
+                    $marinaHumedaCotizacion->getCliente()->setMonederomarinahumeda($monederoRestante + $monederoDevuelto);
 
                     $em->persist($marinaHumedaCotizacion);
                     $em->flush();

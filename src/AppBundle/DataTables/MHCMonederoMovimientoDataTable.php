@@ -48,16 +48,19 @@ class MHCMonederoMovimientoDataTable extends AbstractDataTableHandler
             )
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
         }
+
         foreach ($request->order as $order) {
-            if ($order->column === 0) {
-                $q->addOrderBy('mm.fecha', $order->dir);
+            if ($order->column == 0) {
+                $q->addOrderBy('mm.id', $order->dir);
             } elseif ($order->column === 1) {
+                $q->addOrderBy('mm.fecha', $order->dir);
+            }elseif ($order->column === 2) {
                 $q->addOrderBy('mm.monto', $order->dir);
-            } elseif ($order->column === 2) {
-                $q->addOrderBy('mm.operacion', $order->dir);
             } elseif ($order->column === 3) {
-                $q->addOrderBy('mm.resultante', $order->dir);
+                $q->addOrderBy('mm.operacion', $order->dir);
             } elseif ($order->column === 4) {
+                $q->addOrderBy('mm.resultante', $order->dir);
+            } elseif ($order->column === 5) {
                 $q->addOrderBy('mm.descripcion', $order->dir);
             }
         }
@@ -77,10 +80,11 @@ class MHCMonederoMovimientoDataTable extends AbstractDataTableHandler
             $monederoMovimiento = $monederoMovimientos[$index];
 
             $results->data[] = [
+                $monederoMovimiento->getId(),
                 $monederoMovimiento->getFecha() ? $monederoMovimiento->getFecha()->format('d/m/Y h:i a') : '',
-                '$'.number_format($monederoMovimiento->getMonto()/100,2),
+                '$'.number_format($monederoMovimiento->getMonto()/100,2).' USD',
                 $monederoMovimiento->getOperacion() == 1 ? 'SUMA': 'RESTA',
-                '$'.number_format($monederoMovimiento->getResultante()/100,2),
+                '$'.number_format($monederoMovimiento->getResultante()/100,2).' USD',
                 $monederoMovimiento->getDescripcion()
             ];
         }
