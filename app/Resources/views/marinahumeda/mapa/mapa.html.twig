@@ -148,7 +148,7 @@
 {% endblock %}
 
 {% block modals %}
-    <div class="modal ventanainfomapa" id="slip-info" tabindex="-1" role="dialog" aria-labelledby="slip-info">
+    <div class="modal ventanainfomapa" id="slip-info" role="dialog" aria-labelledby="slip-info">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -343,6 +343,7 @@
                 $modalBody.html(form);
                 $modalBody
                     .find('#appbundle_slipmovimiento_marinahumedacotizacion')
+                    .select2()
                     .on('change', function () {
                       let $selectedOption = $(this).find(':selected');
                       isSlipOpen(slip, $selectedOption.data('llegada'), $selectedOption.data('salida'));
