@@ -26,6 +26,7 @@ class SlipMovimientoType extends AbstractType
                 'placeholder' => 'Seleccionar...',
                 'query_builder' => function (EntityRepository $er) {
                     $qb = $er->createQueryBuilder('mhc');
+
                     return $qb
                         ->select('mhc', 'servicios')
                         ->leftJoin('mhc.mhcservicios', 'servicios', 'slipmovimiento')
@@ -39,18 +40,25 @@ class SlipMovimientoType extends AbstractType
                         )
                         ->orderBy('mhc.folio', 'DESC');
                 },
+                'choice_label' => function ($cotizacion) {
+                    /** @var MarinaHumedaCotizacion $cotizacion */
+                    $f = $cotizacion->getFolio().($cotizacion->getFoliorecotiza() ? '-'.$cotizacion->getFoliorecotiza() : '');
+
+                    return "#{$f}, Ship: {$cotizacion->getBarco()}";
+                },
                 'choice_attr' => function ($mhc) {
-                    return ['data-eslora' => $mhc->getBarco()->getEslora(),
+                    return [
+                        'data-eslora' => $mhc->getBarco()->getEslora(),
                         'data-llegada' => $mhc->getFechaLlegada()->format('d-m-Y'),
-                        'data-salida' => $mhc->getFechaSalida()->format('d-m-Y')];
-                }
+                        'data-salida' => $mhc->getFechaSalida()->format('d-m-Y'),
+                    ];
+                },
             ])
-            ->add('slip',EntityType::class,[
+            ->add('slip', EntityType::class, [
                 'class' => 'AppBundle:Slip',
                 'label' => 'Slip',
                 'placeholder' => 'Seleccionar...',
-            ])
-        ;
+            ]);
     }
 
     /**
@@ -59,7 +67,7 @@ class SlipMovimientoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\SlipMovimiento'
+            'data_class' => 'AppBundle\Entity\SlipMovimiento',
         ));
     }
 
