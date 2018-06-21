@@ -14,7 +14,8 @@
                             <h3 class="panel-title">Detalle del evento</h3>
                         </div>
                         <div class="col-sm-6">
-                            <a href="{{ path('marina-agenda') }}" class="btn btn-contorno-azul pull-right">Regresar</a>
+                            <a href="{{ path('evento_index') }}"
+                               class="btn btn-contorno-azul pull-right">Regresar</a>
                         </div>
                     </div>
                 </div>
@@ -29,46 +30,57 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+
                                 <tr>
-                                    <th>Id</th>
-                                    <td>{{ evento.id }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Titulo</th>
+                                    <th>Título</th>
                                     <td>{{ evento.titulo }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Fechainicio</th>
+                                    <th>Fecha inicio</th>
                                     <td>{% if evento.fechainicio %}{{ evento.fechainicio|date('Y-m-d') }}{% endif %}</td>
                                 </tr>
                                 <tr>
-                                    <th>Fechafin</th>
+                                    <th>Fecha fin</th>
                                     <td>{% if evento.fechafin %}{{ evento.fechafin|date('Y-m-d') }}{% endif %}</td>
                                 </tr>
                                 <tr>
-                                    <th>Horainicio</th>
+                                    <th>Hora inicio</th>
                                     <td>{% if evento.horainicio %}{{ evento.horainicio|date('H:i:s') }}{% endif %}</td>
                                 </tr>
                                 <tr>
-                                    <th>Horafin</th>
+                                    <th>Hora fin</th>
                                     <td>{% if evento.horafin %}{{ evento.horafin|date('H:i:s') }}{% endif %}</td>
                                 </tr>
                                 <tr>
-                                    <th>Descripcion</th>
+                                    <th>Descripción</th>
                                     <td>{{ evento.descripcion }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Agregado por</th>
+                                    <td>{{ evento.usuario }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha de creación</th>
+                                    <td>{{ evento.fecharegistro | date('d M. Y H:s') }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Visibilidad</th>
+                                    <td>{% if evento.isPublico %} Público {% else %} Privado {% endif %}</td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <a href="{{ path('evento_edit', { 'id': evento.id }) }}" class="btn btn-azul">
-                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                Editar
-                            </a>
+                    {% if is_granted(expression('has_role("AGENDA_EDIT") or (user.isAdmin())')) and editable %}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <a href="{{ path('evento_edit', { 'id': evento.id }) }}" class="btn btn-azul">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    Editar
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </section>

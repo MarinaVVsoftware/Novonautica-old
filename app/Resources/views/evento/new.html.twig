@@ -14,7 +14,7 @@
                             <h3 class="panel-title">Nuevo Evento</h3>
                         </div>
                         <div class="col-sm-6">
-                            <a href="{{ path('marina-agenda') }}" class="btn btn-contorno-azul pull-right">Regresar</a>
+                            <a href="{{ path('evento_index') }}" class="btn btn-contorno-azul pull-right">Regresar</a>
                         </div>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
                     {% form_theme form 'estructura/temaerror.html.twig' %}
                     {{ form_start(form) }}
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             {{ form_errors(form.titulo) }}
                             {{ form_errors(form.fechainicio) }}
                             {{ form_errors(form.fechafin) }}
@@ -36,42 +36,58 @@
                             {{ form_label(form.titulo) }}
                             {{ form_widget(form.titulo) }}
                         </div>
-                    </div>
-                    <div class="input-daterange" id="rangoFehas">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            {{ form_label(form.fechainicio) }}
-                            {{ form_widget(form.fechainicio) }}
-                        </div>
-                        <div class="col-sm-3">
-                            {{ form_label(form.fechafin) }}
-                            {{ form_widget(form.fechafin) }}
-                        </div>
-                    </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p>
-                                {{ form_label(form.horainicio) }}
-                            </p>
-                            <p>
-                                {{ form_widget(form.horainicio) }}
-                            </p>
-
-                        </div>
-                        <div class="col-sm-3">
-                            <p>
-                                {{ form_label(form.horafin) }}
-                            </p>
-                            <p>
-                                {{ form_widget(form.horafin) }}
-                            </p>
+                        <div class="col-sm-6">
+                            <div class="input-daterange" id="rangoFehas">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        {{ form_label(form.fechainicio) }}
+                                        {{ form_widget(form.fechainicio) }}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        {{ form_label(form.fechafin) }}
+                                        {{ form_widget(form.fechafin) }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
                             {{ form_label(form.descripcion) }}
                             {{ form_widget(form.descripcion) }}
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <p>{{ form_label(form.horainicio) }}</p>
+                                    <p>{{ form_widget(form.horainicio) }}</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <p>{{ form_label(form.horafin) }}</p>
+                                    <p>{{ form_widget(form.horafin) }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {{ form_label(form.fondocolor) }}
+                                    {{ form_widget(form.fondocolor) }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ form_label(form.letracolor) }}
+                                    {{ form_widget(form.letracolor) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {{ form_row(form.isPublico) }}
+                        </div>
+                    </div>
+                    <div class="row espacio-linea">
+                        <div class="col-sm-12">
+                            <hr>
                         </div>
                     </div>
                     <div class="row">
@@ -83,14 +99,6 @@
                         </div>
                     </div>
                     {{ form_end(form) }}
-                    <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-12">
-                            <a href="{{ path('marina-agenda') }}" class="btn btn-naranja pull-right">
-                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                Cancelar
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>

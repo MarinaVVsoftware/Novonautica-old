@@ -1,5 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
-
+{% import 'estructura/modalborrar.twig' as modal %}
 {% block title %}
     Novonautiva | Editar Evento
 {% endblock %}
@@ -14,7 +14,7 @@
                             <h3 class="panel-title">Editar Evento</h3>
                         </div>
                         <div class="col-sm-6">
-                            <a href="{{ path('marina-agenda') }}" class="btn btn-contorno-azul pull-right">Regresar</a>
+                            <a href="{{ path('evento_index') }}" class="btn btn-contorno-azul pull-right">Regresar</a>
                         </div>
                     </div>
 
@@ -37,42 +37,57 @@
                             {{ form_label(edit_form.titulo) }}
                             {{ form_widget(edit_form.titulo) }}
                         </div>
-                    </div>
-                    <div class="input-daterange" id="rangoFehas">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                {{ form_label(edit_form.fechainicio) }}
-                                {{ form_widget(edit_form.fechainicio) }}
+                        <div class="col-sm-6">
+                            <div class="input-daterange" id="rangoFehas">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        {{ form_label(edit_form.fechainicio) }}
+                                        {{ form_widget(edit_form.fechainicio) }}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        {{ form_label(edit_form.fechafin) }}
+                                        {{ form_widget(edit_form.fechafin) }}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-sm-3">
-                                {{ form_label(edit_form.fechafin) }}
-                                {{ form_widget(edit_form.fechafin) }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p>
-                                {{ form_label(edit_form.horainicio) }}
-                            </p>
-                            <p>
-                                {{ form_widget(edit_form.horainicio) }}
-                            </p>
-
-                        </div>
-                        <div class="col-sm-3">
-                            <p>
-                                {{ form_label(edit_form.horafin) }}
-                            </p>
-                            <p>
-                                {{ form_widget(edit_form.horafin) }}
-                            </p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
                             {{ form_label(edit_form.descripcion) }}
                             {{ form_widget(edit_form.descripcion) }}
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <p>{{ form_label(edit_form.horainicio) }}</p>
+                                    <p>{{ form_widget(edit_form.horainicio) }}</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <p>{{ form_label(edit_form.horafin) }}</p>
+                                    <p>{{ form_widget(edit_form.horafin) }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {{ form_label(edit_form.fondocolor) }}
+                                    {{ form_widget(edit_form.fondocolor) }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ form_label(edit_form.letracolor) }}
+                                    {{ form_widget(edit_form.letracolor) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {{ form_row(edit_form.isPublico) }}
+                        </div>
+                    </div>
+                    <div class="row espacio-linea">
+                        <div class="col-sm-12">
+                            <hr>
                         </div>
                     </div>
                     <div class="row">
@@ -84,38 +99,18 @@
                         </div>
                     </div>
                     {{ form_end(edit_form) }}
-                    <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-12">
-                            <a href="{{ path('marina-agenda') }}" class="btn btn-naranja pull-right">
-                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                Cancelar
-                            </a>
+                    {% if is_granted(expression('has_role("AGENDA_DELETE") or (user.isAdmin())')) %}
+                        <div class="row espacio-linea-arriba2">
+                            <div class="col-sm-12">
+                                {{ delete_form is defined ? modal.deleteButton('Evento') : '' }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-12">
-                            <button type="button" class="btn btn-borrar pull-right" data-toggle="modal"
-                                    data-target="#modalBorrar">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                Borrar
-                            </button>
-                        </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </section>
     </div>
 {% endblock %}
-
 {% block modals %}
-    {% embed 'estructura/modalborrar.twig' %}
-        {% block botonborra %}
-            {{ form_start(delete_form) }}
-            <button type="submit" class="btn btn-borrar">
-                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                Borrar
-            </button>
-            {{ form_end(delete_form) }}
-        {% endblock %}
-    {% endembed %}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}

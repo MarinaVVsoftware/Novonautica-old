@@ -18,10 +18,13 @@
                         <div class="col-sm-6">
                             <h3 class="panel-title">Agenda</h3>
                         </div>
-                        <div class="col-sm-6">
-                            <a href="{{ path('evento_new') }}" class="btn btn-contorno-azul pull-right">+ Nuevo
-                                evento</a>
-                        </div>
+                        {% if is_granted(expression('has_role("AGENDA_CREATE") or (user.isAdmin())')) %}
+                            <div class="col-sm-6">
+                                <a href="{{ path('evento_new') }}" class="btn btn-contorno-azul pull-right">
+                                    + Nuevo evento
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="panel-body panel-pestanias">
@@ -50,12 +53,14 @@
         locale: 'es',
         events: [
             {% for evento in marinaEventos %}
-          {
-            title: "{{ evento.titulo }} {{ evento.descripcion }}",
-            start: "{{ evento.fechainicio|date('Y-m-d') }} {{ evento.horainicio|date('H:i:s') }}",
-            end: "{{ evento.fechafin|date('Y-m-d') }} {{ evento.horafin|date('H:i:s') }}",
-            url: "{{ path('evento_show', { 'id': evento.id }) }}"
-          },
+            {
+                title: "{{ evento.titulo }} {{ evento.descripcion }}",
+                start: "{{ evento.fechainicio|date('Y-m-d') }} {{ evento.horainicio|date('H:i:s') }}",
+                end: "{{ evento.fechafin|date('Y-m-d') }} {{ evento.horafin|date('H:i:s') }}",
+                url: "{{ path('evento_show', { 'id': evento.id }) }}",
+                color: "{{ evento.fondocolor }}",
+                textColor: "{{ evento.letracolor }}"
+            },
             {% endfor %}
         ]
       });
