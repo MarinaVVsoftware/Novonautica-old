@@ -298,20 +298,22 @@
           $modalTitle.text('Detalles');
           $modalBody.html(`
             <div class="text-center">
-              <button class="assign-btn btn btn-azul margin-bottom">Asignar</button>
-              <button class="lock-btn btn btn-naranja margin-bottom">Bloquear</button>
+              <button class="assign-btn btn btn-azul margin-bottom" data-loading-text="Cargando...">Asignar</button>
+              <button class="lock-btn btn btn-naranja margin-bottom" data-loading-text="Cargando...">Bloquear</button>
             </div>
           `);
 
           $modalBody
               .find('.assign-btn')
               .on('click', function () {
+                $(this).button('loading');
                 setAssignModal(slip);
               });
 
           $modalBody
               .find('.lock-btn')
               .on('click', function () {
+                $(this).button('loading');
                 setLockModal(slip);
               });
 
@@ -324,8 +326,9 @@
           $modalTitle.text('Detalles');
           $modalBody.html(generateDetails(data));
           $modalBody.find('.unassign-btn')
-              .on('click', e => {
+              .on('click', function (e) {
                 e.preventDefault();
+                $(this).button('loading');
                 unAssignSlip(data);
               });
           $modal.modal('show');
@@ -349,6 +352,9 @@
                     .on('submit', function (e) {
                       e.preventDefault();
 
+                      const $submitBtn = $(this).find('[type="submit"]');
+                      $submitBtn.button('loading');
+
                       $.post(this.action, $(this).serialize(), 'json')
                           .done(function () {
                             generateMap($fechaInput.datepicker('getDate'));
@@ -359,7 +365,11 @@
                             console.log(responseJSON);
                             responseJSON.errors.forEach(error => createAlert(error));
                             $modal.modal('hide');
-                          });
+                          })
+                          .always(function () {
+                            $submitBtn.button('reset');
+                          })
+                      ;
                     });
 
               })
@@ -401,6 +411,9 @@
                 $modalBody.find('form[name="appbundle_slipmovimiento_lock"]')
                     .on('submit', function (e) {
                       e.preventDefault();
+                      const $submitBtn = $(this).find('[type="submit"]');
+
+                      $submitBtn.button('loading');
 
                       $.post(this.action, $(this).serialize(), 'json')
                           .done(function () {
@@ -411,7 +424,11 @@
                           .fail(function ({responseJSON}) {
                             responseJSON.errors.forEach(error => createAlert(error));
                             $modal.modal('hide');
+                          })
+                          .always(function () {
+                            $submitBtn.button('reset');
                           });
+                      ;
                     });
               })
               .done(function () {
@@ -551,7 +568,7 @@
             </dl>
             <div class="text-center">
               <a href="{{ app.request.baseUrl }}/marina/cotizacion/${boat.marinahumedacotizacion.id}" class="btn btn-xs btn-morado-claro" target="_blank">Ver Cotización</a>
-              <a href="#" class="unassign-btn btn btn-xs btn-naranja">Desasignar</a>
+              <a href="#" class="unassign-btn btn btn-xs btn-naranja" data-loading-text="Cargando...">Desasignar</a>
             </div>
           `;
           }
@@ -561,7 +578,7 @@
             ${boat.nota}
             </p>
             <div class="text-center">
-              <a href="#" class="unassign-btn btn btn-xs btn-naranja">Desbloquear</a>
+              <a href="#" class="unassign-btn btn btn-xs btn-naranja" data-loading-text="Cargando...">Desbloquear</a>
             </div>
           `;
         }
