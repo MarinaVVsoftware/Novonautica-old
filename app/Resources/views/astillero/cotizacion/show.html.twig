@@ -102,6 +102,10 @@
                                             <th>Fecha cotización</th>
                                             <td>{% if astilleroCotizacion.fecharegistro %}{{ astilleroCotizacion.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
                                         </tr>
+                                        <tr>
+                                            <th>Creó la cotización</th>
+                                            <td>{{ astilleroCotizacion.creador }}</td>
+                                        </tr>
                                         {% if astilleroCotizacion.borrador == false %}
                                         <tr>
                                             <th>Estatus validación</th>

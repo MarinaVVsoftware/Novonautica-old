@@ -15,9 +15,9 @@ use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-class MHCGasolinaDataTable extends AbstractDataTableHandler
+class CombustibleDataTable extends AbstractDataTableHandler
 {
-    const ID = 'cotizacionGasolina';
+    const ID = 'cotizacionCombustible';
     private $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)

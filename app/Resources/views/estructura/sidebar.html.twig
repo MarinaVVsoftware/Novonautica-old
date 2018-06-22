@@ -84,20 +84,20 @@
                         <!-- END MARINA/SLIPS -->
 
                         <!-- START MARINA/COTIZACIONES -->
-                        <li class="treeview {{ path.check('_estadia_') }} {{ path.check('_gasolina_') }} {{ path.check('tarifas_') }}">
+                        <li class="treeview {{ path.check('_estadia_') }} {{ path.check('tarifas_') }}">
                             <a href="#">
-                                <i class="fa fa-circle-o"></i> Cotizaciónes
+                                <i class="fa fa-circle-o"></i> Cotizaciónes Estadía
                                 <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                             </a>
                             <ul class="treeview-menu">
                                 <!-- START MARINA/COTIZACION/ESTADIA -->
-                                <li class="treeview {{ path.check('_estadia_') }} {{ path.check('tarifas_') }}">
-                                    <a href="#">
-                                        <i class="fa fa-minus"></i> Estadía
-                                        <span class="pull-right-container"><i
-                                                    class="fa fa-angle-left pull-right"></i></span>
-                                    </a>
-                                    <ul class="treeview-menu">
+                                {#<li class="treeview {{ path.check('_estadia_') }} {{ path.check('tarifas_') }}">#}
+                                    {#<a href="#">#}
+                                        {#<i class="fa fa-minus"></i> Estadía#}
+                                        {#<span class="pull-right-container"><i#}
+                                                    {#class="fa fa-angle-left pull-right"></i></span>#}
+                                    {#</a>#}
+                                    {#<ul class="treeview-menu">#}
                                         <li class="{{ path.check('marina-humeda_estadia_index') }}">
                                             <a href="{{ path('marina-humeda_estadia_index') }}">
                                                 <i class="fa fa-circle-o"></i> Listado
@@ -117,38 +117,10 @@
                                                 </a>
                                             </li>
                                         {% endif %}
-                                    </ul>
-                                </li>
+                                    {#</ul>#}
+                                {#</li>#}
                                 <!-- END MARINA/COTIZACION/ESTADIA -->
-
-                                <!-- START MARINA/COTIZACION/GASOLINA -->
-                                <li class="treeview {{ path.check('_gasolina_') }}">
-                                    <a href="#">
-                                        <i class="fa fa-minus"></i> Gasolina
-                                        <span class="pull-right-container"><i
-                                                    class="fa fa-angle-left pull-right"></i></span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li class="{{ path.check('marina-humeda_gasolina_index') }}">
-                                            <a href="{{ path('marina-humeda_gasolina_index') }}">
-                                                <i class="fa fa-circle-o"></i> Listado
-                                            </a>
-                                        </li>
-                                        {% if is_granted(expression('has_role("MARINA_COTIZACION_CREATE") or (user.isAdmin())')) %}
-                                            <li class="{{ path.check('marina-humeda_gasolina_new') }}">
-                                                <a href="{{ path('marina-humeda_gasolina_new') }}">
-                                                    <i class="fa fa-circle-o"></i> Nueva
-                                                </a>
-                                            </li>
-                                            <li class="{{ path.check('marinahumedasolicitud_gasolina_index') }}">
-                                                <a href="{{ path('marinahumedasolicitud_gasolina_index') }}">
-                                                    <i class="fa fa-circle-o"></i> Solicitudes App Móvil
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                    </ul>
-                                </li>
-                                <!-- END MARINA/COTIZACION/GASOLINA -->
+                                <!-- START MARINA/COTIZACION/GASOLINA --><!-- END MARINA/COTIZACION/GASOLINA -->
                             </ul>
                         </li>
                         <!-- END MARINA/COTIZACIONES -->
@@ -185,6 +157,36 @@
                 </li>
             {% endif %}
             <!-- END MARINA -->
+
+            <!-- START SERVICIOS MARINOS -->
+            <li class="treeview {{ path.check('combustible_index') }} {{ path.check('combustible_new') }} {{ path.check('combustible_show') }}">
+                <a href="#">
+                    <i class="fa fa-tachometer"></i><span>Combustible</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{ path.check('combustible_index') }} {{ path.check('combustible_show') }}">
+                        <a href="{{ path('combustible_index') }}">
+                            <i class="fa fa-circle-o"></i> Listado
+                        </a>
+                    </li>
+                    {% if is_granted(expression('has_role("MARINA_COTIZACION_CREATE") or (user.isAdmin())')) %}
+                        <li class="{{ path.check('combustible_new') }}">
+                            <a href="{{ path('combustible_new') }}">
+                                <i class="fa fa-circle-o"></i> Nueva
+                            </a>
+                        </li>
+                        <li class="{{ path.check('marinahumedasolicitud_gasolina_index') }}">
+                            <a href="{{ path('marinahumedasolicitud_gasolina_index') }}">
+                                <i class="fa fa-circle-o"></i> Solicitudes App Móvil
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </li>
+            <!-- END SERVICIOS MARINOS -->
 
             <!-- START ASTILLERO -->
             {% if is_granted('ROLE_ASTILLERO') %}

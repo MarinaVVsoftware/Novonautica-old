@@ -72,10 +72,10 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Nueva Cotización Gasolina</h3>
+                            <h3 class="panel-title">{{ title }}</h3>
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_gasolina_index') }}">Regresar</a>
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('combustible_index') }}">Regresar</a>
                         </div>
                     </div>
                 </div>
@@ -135,7 +135,7 @@
                                     {{ form_widget(form.mhcservicios.children.0.cantidad) }}
                                 </div>
                                 <div class="col-sm-3">
-                                    <label>Precio por litro:</label>
+                                    <label>Precio por litro (mxn):</label>
                                     {{ form_widget(form.mhcservicios.children.0.precio,{'value':0}) }}
                                 </div>
                             </div>

@@ -1,0 +1,230 @@
+{% extends 'estructura/plantilla.twig' %}
+{% import 'estructura/modalborrar.twig' as modal %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+        .timeline > li > .timeline-item {
+            border-radius: 0;
+            background-color: #292e41;
+        }
+
+        .timeline > li > .timeline-item > .timeline-header {
+            color: #fff;
+            border-bottom-color: #0097f6;
+        }
+
+        .timeline > li > .timeline-item > .timeline-body {
+            color: #fff;
+        }
+    </style>
+{% endblock %}
+{% block contwrapper %}
+ <div class="content-wrapper">
+     <section class="content">
+         <div class="panel panel-novo">
+             <div class="panel-heading">
+                 <div class="row">
+                     <div class="col-sm-6">
+                         <h3 class="panel-title">{{ title }}</h3>
+                         <span>{{ folio }}</span>
+                     </div>
+                     <div class="col-sm-6">
+                         <a class="btn btn-contorno-azul pull-right" href="{{ path('combustible_index') }}">Regresar</a>
+                     </div>
+                 </div>
+             </div>
+             <div class="panel-body panel-pestanias">
+                 <ul class="nav nav-tabs" role="tablist">
+                     <li role="presentation" class="primero active">
+                         <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
+                     </li>
+                     <li role="presentation">
+                         <a href="#totales" aria-controls="totales" role="tab" data-toggle="tab">Totales (USD)</a>
+                     </li>
+                     <li role="presentation">
+                         <a href="#totalesmxn" aria-controls="totalesmxn" role="tab" data-toggle="tab">Totales
+                             (MXN)</a>
+                     </li>
+                     {% if marinaHumedaCotizacion.notificarCliente %}
+                         <li role="presentation">
+                             <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
+                         </li>
+                     {% endif %}
+                     {% if marinaHumedaCotizacion.validacliente == 2 %}
+                         <li role="presentation">
+                             <a href="#pagos" aria-controls="pagos" role="tab" data-toggle="tab">Pagos</a>
+                         </li>
+                     {% endif %}
+                     {% if  marinaHumedaCotizacion.cotizacionnotas[0] is defined %}
+                         <li role="presentation">
+                             <a href="#notas" aria-controls="notas" role="tab" data-toggle="tab">Notas</a>
+                         </li>
+                     {% endif %}
+                     <li role="timeline">
+                         <a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">
+                             Timeline
+                         </a>
+                     </li>
+                 </ul>
+                 <div class="tab-content">
+                     <div role="tabpanel" class="tab-pane active" id="generales">
+                         <div class="row">
+                             <div class="col-sm-10 col-sm-offset-1">
+                                 <table class="table">
+                                     <thead>
+                                     <tr>
+                                         <th></th>
+                                         <th></th>
+                                     </tr>
+                                     </thead>
+                                     <tbody>
+                                     <tr>
+                                         <th>Folio</th>
+                                         <td>{{ folio }}</td>
+                                     </tr>
+                                     <tr>
+                                         <th>Cliente</th>
+                                         <td>{{ marinaHumedaCotizacion.cliente }}</td>
+                                     </tr>
+                                     <tr>
+                                         <th>Correo</th>
+                                         <td>{{ marinaHumedaCotizacion.cliente.correo }}</td>
+                                     </tr>
+                                     <tr>
+                                         <th>Barco</th>
+                                         <td>{{ marinaHumedaCotizacion.barco }}</td>
+                                     </tr>
+                                     <tr>
+                                         <th>Eslora</th>
+                                         <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
+                                     </tr>
+                                     {% if marinaHumedaCotizacion.fechaLlegada %}
+                                         <tr>
+                                             <th>Fecha llegada</th>
+                                             <td>{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}</td>
+                                         </tr>
+                                     {% endif %}
+                                     {% if marinaHumedaCotizacion.fechaSalida %}
+                                         <tr>
+                                             <th>Fecha salida</th>
+                                             <td>{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}</td>
+                                         </tr>
+                                     {% endif %}
+                                     {% if marinaHumedaCotizacion.slip %}
+                                         <tr>
+                                             <th>Slip</th>
+                                             <td>{{ marinaHumedaCotizacion.slip }}</td>
+                                         </tr>
+                                     {% endif %}
+                                     <tr>
+                                         <th>Descuento %</th>
+                                         <td>{{ marinaHumedaCotizacion.descuento }}%</td>
+                                     </tr>
+                                     <tr>
+                                         <th>Estatus validación</th>
+                                         <td>{{ validacion }}</td>
+                                     </tr>
+                                     <tr>
+                                         <th>Estatus aceptación</th>
+                                         <td>{{ aceptacion }}</td>
+                                     </tr>
+                                     {% if marinaHumedaCotizacion.validacliente == 2 %}
+                                         <tr>
+                                             <th>Estatus Pago</th>
+                                             <td>{{ pago }}</td>
+                                         </tr>
+                                     {% endif %}
+                                     </tbody>
+                                 </table>
+                             </div>
+                         </div>
+                         {% if marinaHumedaCotizacion.validanovo == 1 %}
+                             <div class="row">
+                                 <div class="col-sm-10 col-sm-offset-1">
+                                     <label>Observaciones:</label>
+                                     <div class="info-input"><p>{{ marinaHumedaCotizacion.notasnovo }}</p></div>
+                                 </div>
+                             </div>
+                         {% endif %}
+                         {% if marinaHumedaCotizacion.validacliente == 1 %}
+                             <div class="row">
+                                 <div class="col-sm-10 col-sm-offset-1">
+                                     <label>Observaciones:</label>
+                                     <div class="info-input"><p>{{ marinaHumedaCotizacion.notascliente }}</p></div>
+                                 </div>
+                             </div>
+                         {% endif %}
+                     </div>
+                     <div role="tabpanel" class="tab-pane" id="totales">
+                         <div class="row">
+                             <div class="col-sm-9 col-sm-offset-1">
+                                 <span>Descuento del: {{ marinaHumedaCotizacion.descuento }} %</span>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-10 text-right">
+                                 <span>Tipo de cambio:</span>
+                                 <div id="tipocambio"
+                                      class="">{{ (marinaHumedaCotizacion.dolar/100)|number_format(2) }} MXN
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-9 col-sm-offset-1">
+                                 <small>Precios en MXN</small>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-9 col-sm-offset-1">
+                                 
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </section>
+ </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('#reenviar').on('click', function () {
+            var url = "{{ path('marina-humeda_reenviar',{'id':'idcotizacion'}) }}";
+            url = url.replace("idcotizacion", $(this).data('idcotizacion'));
+            $.ajax({
+                method: "POST",
+                url: url,
+                success: function () {
+                    $('#loading').hide();
+                    $('#estatusEnvio').modal('show');
+                    setTimeout(function () {
+                        $('#estatusEnvio').modal('hide');
+                    }, 3000);
+                }
+            });
+        });
+    </script>
+{% endblock %}
+{% block modals %}
+    <div id="estatusEnvio" class="modal fade ventanaborrar" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Mensaje</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Correo enviado con éxito</p>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
+{% endblock %}

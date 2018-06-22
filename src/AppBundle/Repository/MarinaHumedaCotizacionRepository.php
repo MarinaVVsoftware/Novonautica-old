@@ -39,31 +39,57 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
     public function getAllClientes()
     {
         $qb = $this->createQueryBuilder('mhce');
-
         return $qb
             ->select('cliente.nombre AS nombre')
             ->join('mhce.cliente', 'cliente')
             ->join('mhce.mhcservicios', 'servicios')
-            ->where($qb->expr()->neq('servicios.tipo','3'))
+            ->where($qb->expr()->eq('servicios.tipo','1'))
+            ->orWhere($qb->expr()->eq('servicios.tipo','2'))
             ->distinct()
             ->getQuery()
             ->getResult();
     }
-
+    public function getAllClientesCombustible()
+    {
+        $qb = $this->createQueryBuilder('mhc');
+        return $qb
+            ->select('cliente.nombre AS nombre')
+            ->join('mhc.cliente', 'cliente')
+            ->join('mhc.mhcservicios', 'servicios')
+            ->where($qb->expr()->eq('servicios.tipo','3'))
+            ->orWhere($qb->expr()->eq('servicios.tipo','4'))
+            ->orWhere($qb->expr()->eq('servicios.tipo','5'))
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
     public function getAllBarcos()
     {
         $qb = $this->createQueryBuilder('mhce');
-
         return $qb
             ->select('barco.nombre AS nombre')
             ->join('mhce.barco', 'barco')
             ->join('mhce.mhcservicios', 'servicios')
-            ->where($qb->expr()->neq('servicios.tipo','3'))
+            ->where($qb->expr()->eq('servicios.tipo','1'))
+            ->orWhere($qb->expr()->eq('servicios.tipo','2'))
             ->distinct()
             ->getQuery()
             ->getResult();
     }
-
+    public function getAllBarcosCombustible()
+    {
+        $qb = $this->createQueryBuilder('mhc');
+        return $qb
+            ->select('barco.nombre AS nombre')
+            ->join('mhc.barco', 'barco')
+            ->join('mhc.mhcservicios', 'servicios')
+            ->where($qb->expr()->eq('servicios.tipo','3'))
+            ->orWhere($qb->expr()->eq('servicios.tipo','4'))
+            ->orWhere($qb->expr()->eq('servicios.tipo','5'))
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
     public function getAllValidas()
     {
         $qb = $this->createQueryBuilder('mhce');
