@@ -37,12 +37,9 @@ class EventoController extends Controller
     public function newAction(Request $request)
     {
         $evento = new Evento();
-
         $this->denyAccessUnlessGranted('AGENDA_CREATE',$evento);
-
         $form = $this->createForm('AppBundle\Form\EventoType', $evento);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $evento->setUsuario($this->getUser());
@@ -52,7 +49,6 @@ class EventoController extends Controller
                 'id' => $evento->getId()
             ]);
         }
-
         return $this->render('evento/new.html.twig', [
             'evento' => $evento,
             'form' => $form->createView()
@@ -68,8 +64,11 @@ class EventoController extends Controller
     public function showAction(Evento $evento)
     {
         $editable = false;
-        if($this->getUser() === $evento->getUsuario()){
+        if($this->getUser() === $evento->getUsuario() || $this->getUser()->isAdmin()){
             $editable = true;
+        }
+        if(!$evento->getIsPublico() && ($this->getUser() !== $evento->getUsuario())){
+            throw new NotFoundHttpException();
         }
         return $this->render('evento/show.html.twig', [
             'evento' => $evento,
@@ -86,26 +85,18 @@ class EventoController extends Controller
     public function editAction(Request $request, Evento $evento)
     {
         $this->denyAccessUnlessGranted('AGENDA_EDIT',$evento);
-
-        if($this->getUser() !== $evento->getUsuario()){
-            throw new NotFoundHttpException();
-        }
-
         $deleteForm = $this->createDeleteForm($evento);
         $editForm = $this->createForm('AppBundle\Form\EventoType', $evento);
         $editForm->handleRequest($request);
-
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('evento_show', array('id' => $evento->getId()));
+            return $this->redirectToRoute('evento_show', ['id' => $evento->getId()]);
         }
-
-        return $this->render('evento/edit.html.twig', array(
+        return $this->render('evento/edit.html.twig', [
             'evento' => $evento,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -117,20 +108,13 @@ class EventoController extends Controller
     public function deleteAction(Request $request, Evento $evento)
     {
         $this->denyAccessUnlessGranted('AGENDA_DELETE',$evento);
-
-        if($this->getUser() !== $evento->getUsuario()){
-            throw new NotFoundHttpException();
-        }
-
         $form = $this->createDeleteForm($evento);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($evento);
             $em->flush();
         }
-
         return $this->redirectToRoute('evento_index');
     }
 

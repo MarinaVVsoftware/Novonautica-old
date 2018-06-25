@@ -72,10 +72,10 @@ class AgendaVoter extends Voter
                 return $this->canCreate($user);
                 break;
             case self::EDIT:
-                return $this->canEdit($user);
+                return $this->canEdit($user,$subject);
                 break;
             case self::DELETE:
-                return $this->canDelete($user);
+                return $this->canDelete($user, $subject);
                 break;
         }
         throw new \LogicException('Olvidaste validar la acción?');
@@ -87,16 +87,16 @@ class AgendaVoter extends Voter
         }
         return true;
     }
-    private function canEdit(Usuario $usuario)
+    private function canEdit(Usuario $usuario,$subject)
     {
-        if (!in_array(self::EDIT, $usuario->getRoles())) {
+        if (!in_array(self::EDIT, $usuario->getRoles()) || ($usuario !== $subject->getUsuario())) {
             return false;
         }
         return true;
     }
-    private function canDelete(Usuario $usuario)
+    private function canDelete(Usuario $usuario, $subject)
     {
-        if (!in_array(self::EDIT, $usuario->getRoles())) {
+        if (!in_array(self::DELETE, $usuario->getRoles()) || ($usuario !== $subject->getUsuario())) {
             return false;
         }
         return true;

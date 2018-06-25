@@ -574,7 +574,7 @@
                     <ul class="treeview-menu">
                         <li class="{{ path.check('evento_index') }}">
                             <a href="{{ path('evento_index') }}">
-                                <i class="fa fa-circle-o"></i> Listado
+                                <i class="fa fa-circle-o"></i> Calendario
                             </a>
                         </li>
                         {% if is_granted(expression('has_role("AGENDA_CREATE") or (user.isAdmin())')) %}
