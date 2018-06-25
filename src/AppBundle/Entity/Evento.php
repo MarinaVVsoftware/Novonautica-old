@@ -83,7 +83,44 @@ class Evento
      */
     private $descripcion;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fondocolor", type="string", length=7)
+     */
+    private $fondocolor;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="letracolor", type="string", length=7)
+     */
+    private $letracolor;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_publico", type="boolean")
+     */
+    private $isPublico;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecharegistro", type="datetime")
+     */
+    private $fecharegistro;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="idusuario", referencedColumnName="id")
+     */
+    private $usuario;
+
+    public function __construct()
+    {
+        $this->setFecharegistro(new \DateTime('now'));
+    }
     /**
      * Get id
      *
@@ -236,5 +273,126 @@ class Evento
     public function getDescripcion()
     {
         return $this->descripcion;
+    }
+
+
+    /**
+     * Set fondocolor.
+     *
+     * @param string $fondocolor
+     *
+     * @return Evento
+     */
+    public function setFondocolor($fondocolor)
+    {
+        $this->fondocolor = $fondocolor;
+
+        return $this;
+    }
+
+    /**
+     * Get fondocolor.
+     *
+     * @return string
+     */
+    public function getFondocolor()
+    {
+        return $this->fondocolor;
+    }
+
+    /**
+     * Set letracolor.
+     *
+     * @param string $letracolor
+     *
+     * @return Evento
+     */
+    public function setLetracolor($letracolor)
+    {
+        $this->letracolor = $letracolor;
+
+        return $this;
+    }
+
+    /**
+     * Get letracolor.
+     *
+     * @return string
+     */
+    public function getLetracolor()
+    {
+        return $this->letracolor;
+    }
+
+    /**
+     * Set isPublico.
+     *
+     * @param bool $isPublico
+     *
+     * @return Evento
+     */
+    public function setIsPublico($isPublico)
+    {
+        $this->isPublico = $isPublico;
+
+        return $this;
+    }
+
+    /**
+     * Get isPublico.
+     *
+     * @return bool
+     */
+    public function getIsPublico()
+    {
+        return $this->isPublico;
+    }
+
+    /**
+     * Set usuario.
+     *
+     * @param \AppBundle\Entity\Usuario|null $usuario
+     *
+     * @return Evento
+     */
+    public function setUsuario(\AppBundle\Entity\Usuario $usuario = null)
+    {
+        $this->usuario = $usuario;
+
+        return $this;
+    }
+
+    /**
+     * Get usuario.
+     *
+     * @return \AppBundle\Entity\Usuario|null
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * Set fecharegistro.
+     *
+     * @param \DateTime $fecharegistro
+     *
+     * @return Evento
+     */
+    public function setFecharegistro($fecharegistro)
+    {
+        $this->fecharegistro = $fecharegistro;
+
+        return $this;
+    }
+
+    /**
+     * Get fecharegistro.
+     *
+     * @return \DateTime
+     */
+    public function getFecharegistro()
+    {
+        return $this->fecharegistro;
     }
 }

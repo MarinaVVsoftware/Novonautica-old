@@ -108,6 +108,12 @@ class UsuarioType extends AbstractType
                         'Acceso' => 'ROLE_AJUSTES',
                         'Cuentas bancarias' => 'ROLE_AJUSTES_CUENTAS_BANCARIAS',
                     ],
+                    'Agenda' => [
+                        'Acceso' => 'ROLE_AGENDA',
+                        'Crear' => 'AGENDA_CREATE',
+                        'Modificar' => 'AGENDA_EDIT',
+                        'Eliminar' => 'AGENDA_DELETE'
+                    ]
                 ]
             ])
             ->add('isActive', ChoiceType::class, [

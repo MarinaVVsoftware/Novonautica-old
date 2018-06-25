@@ -564,6 +564,31 @@
             {% endif %}
             <!-- END RECURSOS HUMANOS -->
 
+            <!-- START AGENDA (EVENTO) -->
+            {% if is_granted('ROLE_AGENDA') %}
+                <li class="treeview {{ path.check('evento_index') }}">
+                    <a href="#">
+                        <i class="fa fa-calendar"></i> <span>Agenda</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ path.check('evento_index') }}">
+                            <a href="{{ path('evento_index') }}">
+                                <i class="fa fa-circle-o"></i> Calendario
+                            </a>
+                        </li>
+                        {% if is_granted(expression('has_role("AGENDA_CREATE") or (user.isAdmin())')) %}
+                            <li class="{{ path.check('evento_new') }}">
+                                <a href="{{ path('evento_new') }}">
+                                    <i class="fa fa-circle-o"></i> Nuevo
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </li>
+            {% endif %}
+            <!-- END AGENDA (EVENTO)-->
+
             <!-- START AJUSTES -->
             {% if is_granted('ROLE_AJUSTES') %}
                 <li class="treeview {{ path.check('ajustes_') }} {{ path.check('cuenta-bancaria_') }}">

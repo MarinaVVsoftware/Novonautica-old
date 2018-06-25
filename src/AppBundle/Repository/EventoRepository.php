@@ -10,4 +10,14 @@ namespace AppBundle\Repository;
  */
 class EventoRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function eventosVisibles($idusuario)
+    {
+        $qb = $this->createQueryBuilder('e');
+        return $qb->select('e')
+            ->where($qb->expr()->eq('e.usuario',':idusuario'))
+            ->orWhere($qb->expr()->eq('e.isPublico',true))
+            ->setParameter('idusuario',$idusuario)
+            ->getQuery()
+            ->getResult();
+    }
 }

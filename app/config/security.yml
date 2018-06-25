@@ -180,6 +180,8 @@ security:
         - { path: ^/ajustes/cuentas-bancarias/, roles: ROLE_AJUSTES_CUENTAS_BANCARIAS }
         - { path: ^/ajustes, roles: ROLE_AJUSTES }
 
+        - { path: ^/agenda, roles: ROLE_AGENDA }
+
         - { path: ^/perfil, roles: ROLE_USER }
         - { path: ^/.*, roles: ROLE_USER }
 
@@ -224,6 +226,8 @@ security:
         ROLE_WHOLE_AJUSTES:
             - ROLE_AJUSTES
             - ROLE_AJUSTES_CUENTAS_BANCARIAS
+        ROLE_WHOLE_AGENDA:
+            - ROLE_AGENDA
         ROLE_ADMIN:
             - ROLE_USER
             - ROLE_CLIENTE
@@ -237,3 +241,4 @@ security:
             - ROLE_WHOLE_CORREO
             - ROLE_RH
             - ROLE_WHOLE_AJUSTES
+            - ROLE_AGENDA
