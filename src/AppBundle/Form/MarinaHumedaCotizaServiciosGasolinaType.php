@@ -31,12 +31,46 @@ class MarinaHumedaCotizaServiciosGasolinaType extends AbstractType
         $builder
             //->add('servicio')
             ->add('cantidad',TextType::class,[
+                'label' => 'Litros',
                 'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
                 'required' => false
             ])
             ->add('precio', MoneyType::class,[
+                'label' => 'Precio por litro sin iva',
+                'attr' => ['class' => 'esdecimal','autocomplete' => 'off', 'readonly' => true],
+                'currency' => 'MXN',
+                'divisor' => 100,
+                'grouping' => true,
+                'empty_data' => 0,
+            ])
+            ->add('precioAux', MoneyType::class,[
+                'label' => 'Precio por litro',
                 'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
-                'currency' => 'USD',
+                'currency' => 'MXN',
+                'divisor' => 100,
+                'grouping' => true,
+                'empty_data' => 0,
+            ])
+            ->add('subtotal', MoneyType::class,[
+                'label' => 'Subtotal',
+                'attr' => ['class' => 'esdecimal','autocomplete' => 'off', 'readonly' => true],
+                'currency' => 'MXN',
+                'divisor' => 100,
+                'grouping' => true,
+                'empty_data' => 0,
+            ])
+            ->add('iva', MoneyType::class,[
+                'label' => 'I.V.A.',
+                'attr' => ['class' => 'esdecimal','autocomplete' => 'off', 'readonly' => true],
+                'currency' => 'MXN',
+                'divisor' => 100,
+                'grouping' => true,
+                'empty_data' => 0,
+            ])
+            ->add('total', MoneyType::class,[
+                'label' => 'Total',
+                'attr' => ['class' => 'esdecimal','autocomplete' => 'off', 'readonly' => true],
+                'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
                 'empty_data' => 0,

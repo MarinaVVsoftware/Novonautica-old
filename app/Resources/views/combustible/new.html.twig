@@ -80,7 +80,6 @@
                     </div>
                 </div>
                 <div class="panel-body panel-pestanias">
-                    {% form_theme form 'estructura/temaerror.html.twig' %}
                     {{ form_start(form) }}
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="primero active">
@@ -104,25 +103,19 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     {{ form_row(form.cliente) }}
-                                    <div id="info-cliente">
-
-                                    </div>
+                                    <div id="info-cliente"></div>
                                 </div>
                                 <div class="col-sm-9">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            {{ form_errors(form.barco) }}
                                             <div class="radio buscabarcomh">
-                                                {{ form_label(form.barco) }}
-                                                {{ form_widget(form.barco) }}
+                                                {{ form_row(form.barco) }}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-5">
-                                            <div id="info-barco">
-
-                                            </div>
+                                            <div id="info-barco"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -131,29 +124,26 @@
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <label>Litros:</label>
-                                    {{ form_widget(form.mhcservicios.children.0.cantidad) }}
+                                    {{ form_row(form.mhcservicios.children.0.cantidad) }}
                                 </div>
                                 <div class="col-sm-3">
-                                    <label>Precio por litro (mxn):</label>
-                                    {{ form_widget(form.mhcservicios.children.0.precio,{'value':0}) }}
+                                    {{ form_row(form.mhcservicios.children.0.precioAux) }}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <label>Dolar</label>
-                                    {{ form_widget(form.dolar,{'value':valdolar/100}) }}
+                                    {{ form_row(form.dolar) }}
                                 </div>
                                 <div class="col-sm-3">
                                     {{ form_row(form.mhcservicios.children.0.tipo) }}
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="totalmxn">
+                        <div role="tabpanel" class="tab-pane input-combustible" id="totalmxn">
                             <div class="row">
                                 <div class="col-sm-12 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="" class="valdolar">{{ (valdolar/100)|number_format(2) }} MXN</div>
+                                    <div class="valdolar">{{ (valdolar/100)|number_format(2) }} MXN</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -161,28 +151,27 @@
                                     <small>Precios en MXN</small>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <table id="mh_nuevacotizacion" class="table text-center">
+                                    <table class="table text-center">
                                         <thead>
                                         <tr>
                                             <th>Cantidad</th>
                                             <th>Servicio</th>
                                             <th>Prec. Unid.</th>
-                                            <th>Sub-Total</th>
+                                            <th>Subtotal</th>
                                             <th>IVA</th>
                                             <th>Total</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td id="g_cantidad" data-valor="0">0</td>
+                                            <td id="combustible_cantidad_mxn" data-valor="0">0</td>
                                             <td>Abastecimiento de combustible</td>
-                                            <td id="g_precio" data-valor="0">$ 0.00</td>
-                                            <td id="g_subtotal" data-valor="0">$ 0.00</td>
-                                            <td id="g_iva" data-valor="0">$ 0.00</td>
-                                            <td id="g_total" data-valor="0">$ 0.00</td>
+                                            <td>{{ form_widget(form.mhcservicios.children.0.precio) }}</td>
+                                            <td>{{ form_widget(form.mhcservicios.children.0.subtotal) }}</td>
+                                            <td>{{ form_widget(form.mhcservicios.children.0.iva) }}</td>
+                                            <td>{{ form_widget(form.mhcservicios.children.0.total) }}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -191,7 +180,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div id="valiva" class="" data-valor="{{ valiva }}">
+                                    <div id="valiva" data-valor="{{ valiva }}">
                                         <small>IVA: {{ valiva }} %</small>
                                     </div>
                                 </div>
@@ -202,12 +191,8 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
-                                    <p class="letra-azul">Sub-Total:</p>
-                                    <p>
-                                        $ <span id="gransubtot_g">00.00</span>
-                                        <span class="tipo-letra2">MXN</span>
-                                    </p>
+                                <div class="col-sm-4 col-sm-offset-8">
+                                    {{ form_row(form.subtotal) }}
                                 </div>
                             </div>
                             <div class="row">
@@ -216,12 +201,8 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
-                                    <p class="letra-azul">I.V.A:</p>
-                                    <p>
-                                        $ <span id="graniva_g">00.00</span>
-                                        <span class="tipo-letra2">MXN</span>
-                                    </p>
+                                <div class="col-sm-4 col-sm-offset-8">
+                                    {{ form_row(form.ivatotal) }}
                                 </div>
                             </div>
                             <div class="row">
@@ -230,12 +211,8 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
-                                    <p class="letra-azul">Total:</p>
-                                    <p>
-                                        $ <span id="grantot_g">00.00</span>
-                                        <span class="tipo-letra2">MXN</span>
-                                    </p>
+                                <div class="col-sm-4 col-sm-offset-8">
+                                    {{ form_row(form.total) }}
                                 </div>
                             </div>
                             <div class="row">
@@ -248,7 +225,7 @@
                             <div class="row">
                                 <div class="col-sm-12 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="" class="valdolar">{{ (valdolar/100)|number_format(2) }} MXN</div>
+                                    <div class="valdolar">{{ (valdolar/100)|number_format(2) }} MXN</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -265,19 +242,19 @@
                                             <th>Cantidad</th>
                                             <th>Servicio</th>
                                             <th>Prec. Unid.</th>
-                                            <th>Sub-Total</th>
+                                            <th>Subtotal</th>
                                             <th>IVA</th>
                                             <th>Total</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td id="g_cantidad_mxn" data-valor="0">0</td>
+                                            <td id="combustible_cantidad_usd" data-valor="0">0</td>
                                             <td>Abastecimiento de combustible</td>
-                                            <td id="g_precio_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="g_subtotal_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="g_iva_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="g_total_mxn" data-valor="0">$ 0.00</td>
+                                            <td id="combustible_precio_usd" data-valor="0">$ 0.00</td>
+                                            <td id="combustible_subtotal_usd">$ 0.00</td>
+                                            <td id="combustible_iva_usd">$ 0.00</td>
+                                            <td id="combustible_total_usd">$ 0.00</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -286,7 +263,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div id="" class="">
+                                    <div>
                                         <small>IVA: {{ valiva }} %</small>
                                     </div>
                                 </div>
@@ -297,10 +274,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
-                                    <p class="letra-azul">Sub-Total:</p>
+                                <div class="col-sm-4 col-sm-offset-8 tipo-letra1">
+                                    <label class="letra-azul">Subtotal:</label>
                                     <p>
-                                        $ <span id="gransubtot_g_mxn">00.00</span>
+                                        $ <span id="combustible_gran_subtotal_usd">0.00</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -311,10 +288,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
-                                    <p class="letra-azul">I.V.A:</p>
+                                <div class="col-sm-4 col-sm-offset-8 tipo-letra1">
+                                    <label class="letra-azul">I.V.A:</label>
                                     <p>
-                                        $ <span id="graniva_g_mxn">00.00</span>
+                                        $ <span id="combustible_gran_iva_usd">0.00</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -325,10 +302,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
-                                    <p class="letra-azul">Total:</p>
+                                <div class="col-sm-4 col-sm-offset-8 tipo-letra1">
+                                    <label class="letra-azul">Total:</label>
                                     <p>
-                                        $ <span id="grantot_g_mxn">00.00</span>
+                                        $ <span id="combustible_gran_total_usd">0.00</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -378,7 +355,6 @@
           $('#loading').show();
           $("#info-barco").empty();
           $("#info-cliente").empty();
-
           var url = "{{ path('ajax_busca_cliente_todo',{'id':'iddelcliente','_format':'json'}) }}";
           url = url.replace("iddelcliente", $(this).val());
           $.ajax({
@@ -387,38 +363,32 @@
             dataType: 'json',
             success: function (cliente) {
               var html = "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
-                  "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
-                  "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>";
+                         "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
+                         "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>";
               $("#info-cliente").append(html);
-
               $('#loading').hide();
             },
             error: function (jqXHR, exception) {
-              if (jqXHR.status === 405) {
-                console.error("METHOD NOT ALLOWED!");
-              }
-              $('#loading').hide();
+                    $('#loading').hide();
             }
           }).fail(function () {
             $('#loading').hide();
           });
         });
-
-        var x = 1;
-        $('.buscabarcomh').click(function () {
-          if (x == 2) {
-            if ($("input[type=radio]:checked").val() != null) {
-              $('#loading').show();
-              $("#info-barco").empty();
-              var idbarco = $("input[type=radio]:checked").val();
-              buscaDatosBarco(idbarco);
-              x = 1;
-            }
-          } else {
-            x++;
-          }
-        });
-
+          var x = 1;
+          $('.buscabarcomh').click(function () {
+              if (x === 2) {
+                  if ($("input[type=radio]:checked").val() != null) {
+                      $('#loading').show();
+                      $("#info-barco").empty();
+                      var idbarco = $("input[type=radio]:checked").val();
+                      buscaDatosBarco(idbarco);
+                      x = 1;
+                  }
+              } else {
+                  x++;
+              }
+          });
         function buscaDatosBarco(idbarco) {
           $.ajax({
             method: "GET",
@@ -427,19 +397,12 @@
             success: function (barco) {
               JSON.stringify(barco);
               var html = "<label>Modelo</label>" + "<div class='info-input'>" + barco.modelo + "</div>" +
-                  "<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>" +
-                  "<label>Manga</label>" + "<div class='info-input'>" + barco.manga + "</div>" +
-                  "<label>Nombre del capitán</label>" + "<div class='info-input'>" + barco.nombreCapitan + "</div>" +
-                  "<label>Teléfono del capitán</label>" + "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
-                  "<label>Correo del capitán</label>" + "<div class='info-input'>" + barco.correoCapitan + "</div>";
+                         "<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>" +
+                         "<label>Manga</label>" + "<div class='info-input'>" + barco.manga + "</div>" +
+                         "<label>Nombre del capitán</label>" + "<div class='info-input'>" + barco.nombreCapitan + "</div>" +
+                         "<label>Teléfono del capitán</label>" + "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
+                         "<label>Correo del capitán</label>" + "<div class='info-input'>" + barco.correoCapitan + "</div>";
               $("#info-barco").append(html);
-              $("#de_eslora").data('valor', barco.eslora);
-              $("#e_eslora").data('valor', barco.eslora);
-              $("#de_eslora").html(barco.eslora);
-              $("#e_eslora").html(barco.eslora);
-              $("#de_eslora_mxn").html(barco.eslora);
-              $("#e_eslora_mxn").html(barco.eslora);
-              recalculaSubtotalesYtotal();
 
               // Filtrado de opcions de slip por tamaño de eslora
               const slipOptions = [...document.querySelectorAll('#appbundle_marinahumedacotizacion_slip > option')]
@@ -448,9 +411,63 @@
                       : slip.style.display = 'block');
             },
             complete: () => { $("#loading").hide(); }
-          })
+          });
         }
-
       })(jQuery);
+
+      let cantidad_mxn = document.getElementById('combustible_cantidad_mxn');
+      let cantidad_usd = document.getElementById('combustible_cantidad_usd');
+      let precio_mxn = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio');
+      let precio_usd = document.getElementById('combustible_precio_usd');
+      let iva = Number(document.getElementById('valiva').dataset.valor);
+
+      $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').keyup(function (cantidad) {
+          cantidad_mxn.dataset.valor = cantidad.target.value;
+          cantidad_mxn.innerHTML = cantidad.target.value;
+          cantidad_usd.dataset.valor = cantidad.target.value;
+          cantidad_usd.innerHTML = cantidad.target.value;
+          combustibleCalculaTotales();
+          combustibleCalculaTotalesUSD();
+      });
+      $('#appbundle_marinahumedacotizacion_mhcservicios_0_precioAux').keyup(function (precio_iva_mxn) {
+          let dolar = Number(document.getElementById('appbundle_marinahumedacotizacion_dolar').value);
+          let precio_sin_iva_mxn = (precio_iva_mxn.target.value * 100) / (100 + iva);
+          let precio_sin_iva_usd = precio_sin_iva_mxn / dolar;
+          precio_mxn.value = precio_sin_iva_mxn.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          precio_usd.dataset.valor = precio_sin_iva_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          precio_usd.innerHTML = precio_sin_iva_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          combustibleCalculaTotales();
+          combustibleCalculaTotalesUSD();
+      });
+      $('#appbundle_marinahumedacotizacion_dolar').keyup(function (dolarval) {
+          let precio_usd_aux = precio_mxn.value / dolarval.target.value;
+          precio_usd.dataset.valor = precio_usd_aux.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          precio_usd.innerHTML = precio_usd_aux.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          combustibleCalculaTotalesUSD();
+      });
+
+      function combustibleCalculaTotales(){
+          let subtotal = cantidad_mxn.dataset.valor * precio_mxn.value;
+          let ivatot = (subtotal * iva) / 100;
+          let total = subtotal + ivatot;
+          document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_subtotal').value = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_iva').value = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_total').value = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('appbundle_marinahumedacotizacion_subtotal').value = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('appbundle_marinahumedacotizacion_ivatotal').value = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('appbundle_marinahumedacotizacion_total').value = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+      }
+
+      function combustibleCalculaTotalesUSD(){
+          let subtotal = cantidad_usd.dataset.valor * precio_usd.dataset.valor;
+          let ivatot = (subtotal * iva) / 100;
+          let total = subtotal + ivatot;
+          document.getElementById('combustible_subtotal_usd').innerHTML = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('combustible_iva_usd').innerHTML = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('combustible_total_usd').innerHTML = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('combustible_gran_subtotal_usd').innerHTML = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('combustible_gran_iva_usd').innerHTML = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('combustible_gran_total_usd').innerHTML = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+      }
     </script>
 {% endblock %}

@@ -120,9 +120,24 @@
                             {{ form_row(form.unidad) }}
                         </div>
                     </div>
+                    <div id="listado0"
+                         class="lista-elementos"
+                         data-prototype="{% filter escape %}
+                                            {{ include('astillero/servicio/coleccion-productos.twig', { 'form': form.gruposProductos.vars.prototype }) }}
+                                         {% endfilter %}">
+                        {% for gp in form.gruposProductos %}
+                        {% form_theme gp 'astillero/servicio/coleccion-productos.twig' %}
+                        <div class="row">
+                            {{ form_row(gp) }}
+                        </div>
+                        {% endfor %}
+                    </div>
                     <div class="row">
-                        {% form_theme form.productos 'astillero/servicio/coleccion-productos.twig' %}
-                        {{ form_row(form.productos) }}
+                        <div class="col-sm-12">
+                            <a href="#" id="" class="agrega-elemento letra-azul" data-cantidad="{{ form.gruposProductos|length }}" data-idlista="0">
+                                + Agregar Producto
+                            </a>
+                        </div>
                     </div>
                     <div class="row espacio-linea-arriba2">
                         <div class="col-sm-12">
@@ -133,8 +148,6 @@
                         </div>
                     </div>
                     {{ form_end(form) }}
-                </div>
-                <div class="panel-footer">
 
                 </div>
             </div>

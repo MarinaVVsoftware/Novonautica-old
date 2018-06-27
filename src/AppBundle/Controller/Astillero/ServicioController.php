@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller\Astillero;
 
+use AppBundle\Entity\Astillero\GrupoProducto;
+use AppBundle\Entity\Astillero\Producto;
 use AppBundle\Entity\Astillero\Servicio;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
@@ -58,28 +60,19 @@ class ServicioController extends Controller
         $servicio = new Servicio();
         $form = $this->createForm('AppBundle\Form\Astillero\ServicioType', $servicio);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $productos = [];
-            foreach ($servicio->getProductos() as $producto){
-                array_push($productos,$producto->getId());
-            }
-            $servicio->setProductos($productos);
-            //dump($servicio);
             $em = $this->getDoctrine()->getManager();
             $em->persist($servicio);
             $em->flush();
-
             return $this->redirectToRoute('astillero_servicio_index');
         }
-
         return $this->render('astillero/servicio/new.html.twig', array(
             'servicio' => $servicio,
             'form' => $form->createView(),
             'title' => 'Astillero Nuevo Servicio'
         ));
     }
+
     /**
      * @Route("/buscarservicio/{id}.{_format}", name="ajax_astillero_busca_servicio", defaults={"_format"="json"})
      *
@@ -96,6 +89,7 @@ class ServicioController extends Controller
         $serializer = new Serializer($normalizers, $encoders);
         return new Response($servicio = $serializer->serialize($servicio,$request->getRequestFormat()));
     }
+
     /**
      * Finds and displays a servicio entity.
      *
@@ -121,30 +115,26 @@ class ServicioController extends Controller
      */
     public function editAction(Request $request, Servicio $servicio)
     {
-        $productos = $servicio->getProductos();
-        $coleccionProductos = new ArrayCollection();
-        foreach ($productos as $producto){
-            $prod = $this->getDoctrine()->getManager()->getRepository('AppBundle:Astillero\Producto')->findOneBy(['id'=>$producto]);
-            $coleccionProductos->add($prod);
+        $em = $this->getDoctrine()->getManager();
+        $grupoProductoOriginal = new ArrayCollection();
+        foreach ($servicio->getGruposProductos() as $grupo){
+            $grupoProductoOriginal->add($grupo);
         }
-        $servicio->setProductos($coleccionProductos);
-
-
         $deleteForm = $this->createDeleteForm($servicio);
         $editForm = $this->createForm('AppBundle\Form\Astillero\ServicioType', $servicio);
         $editForm->handleRequest($request);
-
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $productos = [];
-            foreach ($servicio->getProductos() as $producto){
-                array_push($productos,$producto->getId());
+            foreach ($grupoProductoOriginal as $grupo){
+                if(false === $servicio->getGruposProductos()->contains($grupo)){
+                    $servicio->removeGruposProducto($grupo);
+                    $em->persist($grupo);
+                    $em->remove($grupo);
+                }
             }
-            $servicio->setProductos($productos);
-            $this->getDoctrine()->getManager()->flush();
-
+            $em->persist($servicio);
+            $em->flush();
             return $this->redirectToRoute('astillero_servicio_index');
         }
-
         return $this->render('astillero/servicio/edit.html.twig', array(
             'servicio' => $servicio,
             'edit_form' => $editForm->createView(),
