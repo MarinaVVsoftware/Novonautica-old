@@ -1,0 +1,18 @@
+{% block appbundle_tienda_inventario_registro_entrada_widget %}
+<tr class="servicio-agregado table-item">
+    <td valign="middle" class="text-center">
+    </td>
+    <td>
+        {{ form_widget(form.producto) }}
+        {{ form_errors(form.producto) }}
+    </td>
+    <td>
+        {{ form_widget(form.cantidad) }}
+        {{ form_errors(form.cantidad) }}
+    </td>
+    <td>
+        {{ form_widget(form.importe) }}
+        {{ form_errors(form.importe) }}
+    </td>
+</tr>
+{% endblock %}

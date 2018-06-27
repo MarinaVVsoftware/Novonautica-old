@@ -339,66 +339,68 @@
 
                         <!-- START REPORTE/MARINA -->
                         {% if is_granted('ROLE_REPORTE_MARINA') %}
-                        <li class="treeview {{ path.check('reporte_mar_') }}">
-                            <a href="#">
-                                <i class="fa fa-circle-o"></i> Marina
-                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="{{ path.check('reporte_mar_ocupacion') }}">
-                                    <a href="{{ path('reporte_mar_ocupacion') }}">
-                                        <i class="fa fa-minus"></i> Ocupación
-                                    </a>
-                                </li>
-                                {% if is_granted(expression('has_role("CLIENTE_EDIT") or (user.isAdmin())')) %}
-                                <li class="{{ path.check('reporte_mar_index') }}">
-                                    <a href="{{ path('reporte_mar_index') }}">
-                                        <i class="fa fa-minus"></i> Clientes
-                                    </a>
-                                </li>
-                                {% endif %}
-                                <li class="{{ path.check('reporte_mar_embarcaciones') }}">
-                                    <a href="{{ path('reporte_mar_embarcaciones') }}">
-                                        <i class="fa fa-minus"></i> Embarcaciones
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('reporte_mar_cotizaciones') }}">
-                                    <a href="{{ path('reporte_mar_cotizaciones') }}">
-                                        <i class="fa fa-minus"></i> Cotizaciones
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="treeview {{ path.check('reporte_mar_') }}">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i> Marina
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ path.check('reporte_mar_ocupacion') }}">
+                                        <a href="{{ path('reporte_mar_ocupacion') }}">
+                                            <i class="fa fa-minus"></i> Ocupación
+                                        </a>
+                                    </li>
+                                    {% if is_granted(expression('has_role("CLIENTE_EDIT") or (user.isAdmin())')) %}
+                                        <li class="{{ path.check('reporte_mar_index') }}">
+                                            <a href="{{ path('reporte_mar_index') }}">
+                                                <i class="fa fa-minus"></i> Clientes
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    <li class="{{ path.check('reporte_mar_embarcaciones') }}">
+                                        <a href="{{ path('reporte_mar_embarcaciones') }}">
+                                            <i class="fa fa-minus"></i> Embarcaciones
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('reporte_mar_cotizaciones') }}">
+                                        <a href="{{ path('reporte_mar_cotizaciones') }}">
+                                            <i class="fa fa-minus"></i> Cotizaciones
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         {% endif %}
                         <!-- END REPORTE/MARINA -->
 
                         <!-- START REPORTE/ASTILLERO -->
                         {% if is_granted('ROLE_REPORTE_ASTILLERO') %}
-                        <li class="treeview {{ path.check('reporte_ast_') }}">
-                            <a href="#">
-                                <i class="fa fa-circle-o"></i> Astillero
-                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                            </a>
-                            <ul class="treeview-menu">
-                                {% if is_granted(expression('has_role("CLIENTE_EDIT") or (user.isAdmin())')) %}
-                                <li class="{{ path.check('reporte_ast_client') }}">
-                                    <a href="{{ path('reporte_ast_client') }}">
-                                        <i class="fa fa-minus"></i> Clientes
-                                    </a>
-                                </li>
-                                {% endif %}
-                                <li class="{{ path.check('reporte_ast_index') }}">
-                                    <a href="{{ path('reporte_ast_index') }}">
-                                        <i class="fa fa-minus"></i> Embarcaciones
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('reporte_ast_contratista') }}">
-                                    <a href="{{ path('reporte_ast_contratista') }}">
-                                        <i class="fa fa-minus"></i> Contratistas
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="treeview {{ path.check('reporte_ast_') }}">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i> Astillero
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    {% if is_granted(expression('has_role("CLIENTE_EDIT") or (user.isAdmin())')) %}
+                                        <li class="{{ path.check('reporte_ast_client') }}">
+                                            <a href="{{ path('reporte_ast_client') }}">
+                                                <i class="fa fa-minus"></i> Clientes
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    <li class="{{ path.check('reporte_ast_index') }}">
+                                        <a href="{{ path('reporte_ast_index') }}">
+                                            <i class="fa fa-minus"></i> Embarcaciones
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('reporte_ast_contratista') }}">
+                                        <a href="{{ path('reporte_ast_contratista') }}">
+                                            <i class="fa fa-minus"></i> Contratistas
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         {% endif %}
                         <!-- END REPORTE/ASTILLERO -->
                     </ul>
@@ -472,6 +474,43 @@
                                 </a>
                             </li>
                         {% endif %}
+                        <li class="{{ path.check('tienda_inventario_index') }}">
+                            <a href="{{ path('tienda_inventario_index') }}">
+                                <i class="fa fa-circle-o"></i> Inventario
+                            </a>
+                        </li>
+
+                        <li class="treeview {{ path.check(
+                            [
+                                'tienda_inventario_registro_index_entrada',
+                                'tienda_inventario_registro_index_salida',
+                                'tienda_inventario_registro_new_entrada'
+                            ]
+                        ) }}">
+                            <a href="#">
+                                <i class="fa fa-circle-o"></i> Registros
+                                <span class="pull-right-container"><i
+                                            class="fa fa-angle-left pull-right"></i></span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li class="{{ path.check('tienda_inventario_registro_new_entrada') }}">
+                                    <a href="{{ path('tienda_inventario_registro_new_entrada') }}">
+                                        <i class="fa fa-minus"></i> Nueva entrada
+                                    </a>
+                                </li>
+                                <li class="{{ path.check('tienda_inventario_registro_index_entrada') }}">
+                                    <a href="{{ path('tienda_inventario_registro_index_entrada') }}">
+                                        <i class="fa fa-minus"></i> Entradas
+                                    </a>
+                                </li>
+                                <li class="{{ path.check('tienda_inventario_registro_index_salida') }}">
+                                    <a href="{{ path('tienda_inventario_registro_index_salida') }}">
+                                        <i class="fa fa-minus"></i> Salidas
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                     </ul>
                 </li>
             {% endif %}

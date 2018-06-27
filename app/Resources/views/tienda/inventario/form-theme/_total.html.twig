@@ -1,0 +1,17 @@
+{% block precio_widget %}
+    <div class="input-group">
+        <span class="input-group-addon"
+              style="border-radius: 0; background: transparent"
+        >{{ money_pattern|replace({'{{ widget }}':''}) }}</span>
+        <input type="text"
+                {{ block('widget_attributes') }}
+                {{ value is empty ?: 'value=' ~ value }}
+               style="border-radius: 0; background: transparent; font-size: 1.5em; text-align: right"
+               readonly
+        >
+    </div>
+{% endblock %}
+
+{% block _appbundle_tienda_inventario_registro_total_widget %}
+    {{ block('precio_widget') }}
+{% endblock %}

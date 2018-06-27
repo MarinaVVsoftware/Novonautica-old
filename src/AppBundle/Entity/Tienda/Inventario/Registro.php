@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\Tienda\Inventario;
 
+use AppBundle\Entity\Tienda\Inventario\Registro\Entrada;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Registro
 {
+    CONST TIPO_SALIDA = 0;
+    CONST TIPO_ENTRADA = 1;
+
     /**
      * @var int
      *
@@ -35,10 +40,42 @@ class Registro
      */
     private $referencia;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="total", type="bigint")
+     */
+    private $total;
 
     /**
-     * Get id.
+     * @var boolean
      *
+     * @ORM\Column(name="tipo", type="boolean")
+     */
+    private $tipo;
+
+    public static $tipoList = [
+        self::TIPO_SALIDA => 'Salida',
+        self::TIPO_ENTRADA => 'Entrada',
+    ];
+
+    /**
+     * @var Entrada[]
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="AppBundle\Entity\Tienda\Inventario\Registro\Entrada",
+     *     mappedBy="registro",
+     *     cascade={"persist"}
+     * )
+     */
+    private $entradas;
+
+    public function __construct()
+    {
+        $this->entradas = new ArrayCollection();
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -47,22 +84,14 @@ class Registro
     }
 
     /**
-     * Set fecha.
-     *
      * @param \DateTime $fecha
-     *
-     * @return Registro
      */
     public function setFecha($fecha)
     {
         $this->fecha = $fecha;
-
-        return $this;
     }
 
     /**
-     * Get fecha.
-     *
      * @return \DateTime
      */
     public function getFecha()
@@ -71,26 +100,80 @@ class Registro
     }
 
     /**
-     * Set referencia.
-     *
      * @param string|null $referencia
-     *
-     * @return Registro
      */
     public function setReferencia($referencia = null)
     {
         $this->referencia = $referencia;
-
-        return $this;
     }
 
     /**
-     * Get referencia.
-     *
      * @return string|null
      */
     public function getReferencia()
     {
         return $this->referencia;
+    }
+
+    /**
+     * @param int $total
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
+    }
+
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    /**
+     * @param bool $tipo
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+    }
+
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    public function getTipoNamed()
+    {
+        if (null === $this->tipo) {
+            return null;
+        }
+
+        return self::$tipoList[$this->tipo];
+    }
+
+    /**
+     * @param Entrada $entrada
+     */
+    public function addEntrada(Entrada $entrada)
+    {
+        $entrada->setRegistro($this);
+        $this->entradas[] = $entrada;
+    }
+
+    /**
+     * @param Entrada $entrada
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeEntrada(Entrada $entrada)
+    {
+        return $this->entradas->removeElement($entrada);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEntradas()
+    {
+        return $this->entradas;
     }
 }
