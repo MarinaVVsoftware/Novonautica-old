@@ -1,0 +1,258 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .table > tbody > tr > td > input[type="number"],
+        .table > tbody > tr > td > .input-group > .input-group-addon {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
+    </style>
+{% endblock %}
+
+{% form_theme form.conceptos '/tienda/venta/form-theme/_concepto.html.twig' %}
+{% form_theme form 'tienda/inventario/form-theme/_total.html.twig' %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Punto de venta</h3>
+                </div>
+                <div class="panel-body">
+                    {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th width="3%"></th>
+                                    <th width="35%">Producto</th>
+                                    <th>Cantidad</th>
+                                    <th width="10%">% Desc.</th>
+                                    <th>Precio</th>
+                                    <th>Subtotal</th>
+                                    <th>IVA</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody id="conceptos"
+                                       data-prototype="{{ form_widget(form.conceptos.vars.prototype)|e('html_attr') }}">
+                                {{ form_row(form.conceptos) }}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <a href="#" id="add" class="btn btn-contorno-azul">
+                                + Producto
+                            </a>
+                        </div>
+                        <div class="col-sm-4 col-sm-push-5 text-right">
+                            <h4 class="letra-azul">Descuento</h4>
+                            <hr>
+                            {{ form_row(form.descuento) }}
+                            <h4 class="letra-azul">Subtotal</h4>
+                            <hr>
+                            {{ form_row(form.iva) }}
+                            <h4 class="letra-azul">IVA</h4>
+                            <hr>
+                            {{ form_row(form.subtotal) }}
+                            <h4 class="letra-azul">Total</h4>
+                            <hr>
+                            {{ form_row(form.total) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-azul pull-right">
+                                Guardar
+                            </button>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      const Venta = (($) => {
+        const EntradasHolder = document.getElementById('conceptos');
+        const TotalRegistro = document.getElementById('appbundle_tienda_venta_total');
+        const IVA = .16;
+
+        let counter = EntradasHolder.childElementCount;
+
+        /**
+         * Crea una fila en la tabla de entradas con un boton que la remueve
+         */
+        function createRow() {
+          let prototipo = EntradasHolder.dataset.prototype.replace(/__name__/g, counter);
+
+          let tempTable = document.createElement('table');
+          tempTable.innerHTML = prototipo;
+
+          let row = tempTable.querySelector('tr');
+
+          addRowListeners(row);
+          addRowRemove(row);
+
+          EntradasHolder.appendChild(row);
+          counter++;
+
+          return row;
+        }
+
+        /**
+         * Agrega las funciones de busqueda por producto, calculo de cantidad por precio unitario del producto
+         */
+        function addRowListeners(row) {
+          const $Row = $(row);
+          const $ProductoSelect = addSelect2(row.cells[1].querySelector('select'));
+          const $QuantityInput = $Row.find('[type="number"]');
+          const $DiscountInput = $Row.find('.discount-input');
+          const $MoneyInputs = $Row.find('.money-input');
+          const PrecioInput = $MoneyInputs[0];
+          const SubtotalInput = $MoneyInputs[1];
+          const IvaInput = $MoneyInputs[2];
+          const TotalInput = $MoneyInputs[3];
+
+          $ProductoSelect.on('select2:select', function (e) {
+            const producto = e.params.data;
+            PrecioInput.value = transformToMoneyFormat(producto.price.public);
+            $QuantityInput.val(1).trigger('input');
+          });
+
+          $QuantityInput.on('input', calculateProductValue);
+          $DiscountInput.on('input', calculateProductValue);
+
+          $MoneyInputs.on('input', function () {
+            if (!EntradasHolder.childElementCount) return;
+
+            // TODO: Sumar cada columna para el los valores finalesg
+          });
+
+          function calculateProductValue(event) {
+            event.target.value = event.target.value.replace(/[^\d.]/g, '');
+
+            if (!event.target.value) return;
+
+            const Cantidad = Number($QuantityInput.val());
+            const Descuento = (Number($DiscountInput.val()) / 100);
+            const Precio = Number(PrecioInput.value);
+
+            let subtotal = (Cantidad * Precio);
+            let iva = (subtotal * IVA);
+
+            if (Descuento) {
+              subtotal = subtotal - (subtotal * Descuento);
+              iva = iva - (iva * Descuento);
+            }
+
+            SubtotalInput.value = transformToMoneyFormat(subtotal);
+            IvaInput.value = transformToMoneyFormat(iva);
+            TotalInput.value = transformToMoneyFormat(subtotal + iva);
+          }
+        }
+
+        /**
+         * Agrega un boton para remover su propia row
+         */
+        function addRowRemove(row) {
+          let celda = row.cells[0];
+          let removeButton = document.createElement('a');
+
+          removeButton.className = 'badge btn-xs btn-naranja';
+          removeButton.innerHTML = '<i class="fa fa-times"></i>';
+          removeButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            removeButton.parentNode.parentNode.remove(removeButton);
+            computeTotal();
+          });
+
+          celda.appendChild(removeButton);
+        }
+
+        /**
+         * Transforma un select en un tipo select2 que saca lo datos de productos.json
+         */
+        function addSelect2(select) {
+          let $select = $(select);
+
+          $select.select2({
+            ajax: {
+              url: 'productos.json',
+              dataType: 'json',
+              processResults(response) {
+                return {
+                  results: response.results.map(result => ({
+                    id: result.id,
+                    text: result.nombre,
+                    price: {
+                      public: (result.precio / 100),
+                      colaborator: (result.preciocolaborador / 100),
+                    },
+                    barcode: result.codigoBarras,
+                  }))
+                }
+              }
+            }
+          });
+
+          return $select;
+        }
+
+        /**
+         * Cicla a traves de todos los .total-input y los suma, ignorando comas y letras
+         */
+        function computeTotal() {
+          TotalRegistro.value = Array
+              .from(EntradasHolder.querySelectorAll('.total-input'))
+              .reduce((a, b) => a + Number(b.value.replace(/,/g, '')), 0)
+              .toFixed(2)
+              .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        }
+
+        /**
+         * Transforma un numero en decimales y reduce sus decimales a 2
+         */
+        function transformToMoneyFormat(numero) {
+          return numero
+              .toFixed(2)
+              .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        }
+
+        document
+            .getElementById('add')
+            .addEventListener('click', (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+
+              createRow();
+            });
+
+        EntradasHolder
+            .querySelectorAll('tr')
+            .forEach(function (row, index) {
+              addRowListeners(row);
+
+              if (index) {
+                addRowRemove(row.cells[0]);
+              }
+            });
+
+      })(jQuery);
+    </script>
+{% endblock %}

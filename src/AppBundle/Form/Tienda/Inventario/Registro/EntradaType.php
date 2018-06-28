@@ -4,7 +4,6 @@ namespace AppBundle\Form\Tienda\Inventario\Registro;
 
 use AppBundle\Entity\Tienda\Producto;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -33,15 +32,6 @@ class EntradaType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /*$builder->add(
-            'producto',
-            EntityType::class,
-            [
-                'class' => Producto::class,
-                'placeholder' => 'Seleccione un producto',
-            ]
-        );*/
-
         $builder->add(
             'cantidad',
             NumberType::class,
@@ -79,7 +69,6 @@ class EntradaType extends AbstractType
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($formModifier) {
-                $data = $event->getData();
                 $form = $event->getForm();
 
                 $formModifier($form);

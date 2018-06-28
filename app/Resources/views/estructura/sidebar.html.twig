@@ -451,10 +451,15 @@
             {% if is_granted('ROLE_TIENDA') %}
                 <li class="treeview {{ path.check('tienda_') }}">
                     <a href="#">
-                        <i class="fa fa-th"></i> <span>Tienda</span>
+                        <i class="fa fa-shopping-cart"></i> <span>V&V Store</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu">
+                        <li class="{{ path.check('tienda_venta') }}">
+                            <a href="{{ path('tienda_venta') }}">
+                                <i class="fa fa-circle-o"></i> POV
+                            </a>
+                        </li>
                         <li class="{{ path.check('tienda_solicitud_index') }}">
                             <a href="{{ path('tienda_solicitud_index') }}">
                                 <i class="fa fa-circle-o"></i> Solicitudes
