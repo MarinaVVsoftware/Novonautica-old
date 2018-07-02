@@ -21,6 +21,7 @@ class VentaType extends AbstractType
             'currency' => 'MXN',
             'divisor' => 100,
             'grouping' => true,
+            'data' => 0,
         ];
 
         $builder->add(

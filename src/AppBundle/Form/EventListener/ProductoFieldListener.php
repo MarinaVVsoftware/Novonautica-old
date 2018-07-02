@@ -9,6 +9,7 @@ namespace AppBundle\Form\EventListener;
 
 
 use AppBundle\Entity\Tienda\Producto;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
@@ -17,6 +18,16 @@ use Symfony\Component\Form\FormInterface;
 
 class ProductoFieldListener implements EventSubscriberInterface
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @return array The event names to listen to
      */
@@ -42,10 +53,11 @@ class ProductoFieldListener implements EventSubscriberInterface
 
     private function createProductoField(FormInterface $form, $productoId = null)
     {
+        $producto = !$productoId ? [] : [$this->entityManager->getRepository(Producto::class)->find($productoId)];
+
         $formOptions = [
             'class' => Producto::class,
-            'placeholder' => 'Seleccione un producto',
-            'choices' => [$productoId]
+            'choices' => $producto
         ];
 
         $form->add(

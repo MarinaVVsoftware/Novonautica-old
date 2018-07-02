@@ -9,6 +9,10 @@
             -moz-border-radius: 0;
             border-radius: 0;
         }
+
+        .help-block {
+            color: #dd4b39;
+        }
     </style>
 {% endblock %}
 
@@ -47,21 +51,23 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <a href="#" id="add" class="btn btn-contorno-azul">
                                 + Producto
                             </a>
                         </div>
-                        <div class="col-sm-4 col-sm-push-5 text-right">
+                        <div class="col-sm-4 text-right">
                             <h4 class="letra-azul">Descuento</h4>
                             <hr>
                             {{ form_row(form.descuento) }}
                             <h4 class="letra-azul">Subtotal</h4>
                             <hr>
-                            {{ form_row(form.iva) }}
+                            {{ form_row(form.subtotal) }}
+                        </div>
+                        <div class="col-sm-4 text-right">
                             <h4 class="letra-azul">IVA</h4>
                             <hr>
-                            {{ form_row(form.subtotal) }}
+                            {{ form_row(form.iva) }}
                             <h4 class="letra-azul">Total</h4>
                             <hr>
                             {{ form_row(form.total) }}
@@ -85,14 +91,18 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
       const Venta = (($) => {
+        const addButton = document.getElementById('add');
         const EntradasHolder = document.getElementById('conceptos');
-        const TotalRegistro = document.getElementById('appbundle_tienda_venta_total');
+        const DescuentoInput = document.getElementById('appbundle_tienda_venta_descuento');
+        const SubtotalInput = document.getElementById('appbundle_tienda_venta_subtotal');
+        const IvaInput = document.getElementById('appbundle_tienda_venta_iva');
+        const TotalInput = document.getElementById('appbundle_tienda_venta_total');
         const IVA = .16;
 
         let counter = EntradasHolder.childElementCount;
+        let searchString = '';
 
         /**
          * Crea una fila en la tabla de entradas con un boton que la remueve
@@ -118,8 +128,8 @@
          * Agrega las funciones de busqueda por producto, calculo de cantidad por precio unitario del producto
          */
         function addRowListeners(row) {
+          const $ProductSelect = addSelect2(row.cells[1].querySelector('select'));
           const $Row = $(row);
-          const $ProductoSelect = addSelect2(row.cells[1].querySelector('select'));
           const $QuantityInput = $Row.find('[type="number"]');
           const $DiscountInput = $Row.find('.discount-input');
           const $MoneyInputs = $Row.find('.money-input');
@@ -128,22 +138,17 @@
           const IvaInput = $MoneyInputs[2];
           const TotalInput = $MoneyInputs[3];
 
-          $ProductoSelect.on('select2:select', function (e) {
-            const producto = e.params.data;
-            PrecioInput.value = transformToMoneyFormat(producto.price.public);
-            $QuantityInput.val(1).trigger('input');
-          });
+          $ProductSelect
+              .on('select2:select', function (e) {
+                const producto = e.params.data;
+                PrecioInput.value = transformToMoneyFormat(producto.price.public.toFixed(2));
+                $QuantityInput.val(1).trigger('input');
+              });
 
-          $QuantityInput.on('input', calculateProductValue);
-          $DiscountInput.on('input', calculateProductValue);
+          $QuantityInput.on('input', computeRowValues);
+          $DiscountInput.on('input', computeRowValues);
 
-          $MoneyInputs.on('input', function () {
-            if (!EntradasHolder.childElementCount) return;
-
-            // TODO: Sumar cada columna para el los valores finalesg
-          });
-
-          function calculateProductValue(event) {
+          function computeRowValues(event) {
             event.target.value = event.target.value.replace(/[^\d.]/g, '');
 
             if (!event.target.value) return;
@@ -160,9 +165,45 @@
               iva = iva - (iva * Descuento);
             }
 
-            SubtotalInput.value = transformToMoneyFormat(subtotal);
-            IvaInput.value = transformToMoneyFormat(iva);
-            TotalInput.value = transformToMoneyFormat(subtotal + iva);
+            SubtotalInput.value = transformToMoneyFormat(subtotal.toFixed(2));
+            IvaInput.value = transformToMoneyFormat(iva.toFixed(2));
+            TotalInput.value = transformToMoneyFormat((subtotal + iva).toFixed(2));
+
+            computeTotalValues();
+          }
+        }
+
+        /**
+         * Cicla a traves de cada columna con un valor y la suma
+         */
+        function computeTotalValues() {
+          let totalValues = Array
+              .from(EntradasHolder.querySelectorAll('tbody tr'))
+              .reduce(function (a, b) {
+                let quantity = Number(getInput(b.cells[2]).value);
+                let price = Number(getInput(b.cells[4]).value);
+                let descuento = (quantity * price) * (Number(getInput(b.cells[3]).value) / 100);
+
+                return {
+                  descuento: a.descuento + descuento,
+                  subtotal: a.subtotal + Number(getInput(b.cells[5]).value.replace(/,/g, '')),
+                  iva: a.iva + Number(getInput(b.cells[6]).value.replace(/,/g, '')),
+                  total: a.total + Number(getInput(b.cells[7]).value.replace(/,/g, '')),
+                }
+              }, {
+                descuento: 0,
+                subtotal: 0,
+                iva: 0,
+                total: 0,
+              });
+
+          DescuentoInput.value = transformToMoneyFormat(totalValues.descuento.toFixed(2));
+          SubtotalInput.value = transformToMoneyFormat(totalValues.subtotal.toFixed(2));
+          IvaInput.value = transformToMoneyFormat(totalValues.iva.toFixed(2));
+          TotalInput.value = transformToMoneyFormat(totalValues.total.toFixed(2));
+
+          function getInput(cell) {
+            return cell.querySelector('input');
           }
         }
 
@@ -178,8 +219,9 @@
           removeButton.addEventListener('click', (event) => {
             event.preventDefault();
             event.stopPropagation();
+
             removeButton.parentNode.parentNode.remove(removeButton);
-            computeTotal();
+            computeTotalValues();
           });
 
           celda.appendChild(removeButton);
@@ -193,7 +235,7 @@
 
           $select.select2({
             ajax: {
-              url: 'productos.json',
+              url: 'productos',
               dataType: 'json',
               processResults(response) {
                 return {
@@ -214,28 +256,56 @@
           return $select;
         }
 
-        /**
-         * Cicla a traves de todos los .total-input y los suma, ignorando comas y letras
-         */
-        function computeTotal() {
-          TotalRegistro.value = Array
-              .from(EntradasHolder.querySelectorAll('.total-input'))
-              .reduce((a, b) => a + Number(b.value.replace(/,/g, '')), 0)
-              .toFixed(2)
-              .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        function setProductAutomatically(searchString) {
+          if (!searchString || searchString === 'Enter') return;
+
+          $.ajax(
+              'producto/' + searchString,
+              {
+                success(producto) {
+                  let existingOption = EntradasHolder.querySelector(`option[value="${producto.id}"]`);
+
+                  if (existingOption) {
+                    let quantityOption = existingOption.parentNode.parentNode.nextElementSibling.querySelector('input');
+                    quantityOption.value = Number(quantityOption.value) + 1;
+                    $(quantityOption).trigger('input');
+
+                    return;
+                  }
+
+                  let row = createRow();
+                  let $select = $(row.cells[1].querySelector('select'));
+                  let option = new Option(producto.nombre, producto.id, true, true);
+
+                  $select.append(option);
+                  $select.trigger({
+                    type: 'select2:select',
+                    params: {
+                      data: {
+                        id: producto.id,
+                        text: producto.nombre,
+                        price: {
+                          public: (producto.precio / 100),
+                          colaborator: (producto.preciocolaborador / 100),
+                        },
+                        barcode: producto.codigoBarras,
+                      }
+                    }
+                  });
+                }
+              }
+          );
         }
 
         /**
-         * Transforma un numero en decimales y reduce sus decimales a 2
+         * Da formato a un numero en decimales y reduce sus decimales a 2
          */
         function transformToMoneyFormat(numero) {
           return numero
-              .toFixed(2)
               .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
         }
 
-        document
-            .getElementById('add')
+        addButton
             .addEventListener('click', (event) => {
               event.preventDefault();
               event.stopPropagation();
@@ -245,13 +315,21 @@
 
         EntradasHolder
             .querySelectorAll('tr')
-            .forEach(function (row, index) {
+            .forEach(function (row) {
               addRowListeners(row);
-
-              if (index) {
-                addRowRemove(row.cells[0]);
-              }
+              addRowRemove(row);
             });
+
+        window.onkeypress = function (event) {
+          if (event.keyCode === 13 && searchString) {
+            setProductAutomatically(searchString);
+
+            searchString = '';
+            return;
+          }
+
+          searchString += event.key;
+        }
 
       })(jQuery);
     </script>

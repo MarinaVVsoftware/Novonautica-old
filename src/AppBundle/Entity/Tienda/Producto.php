@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Table(name="tienda_producto")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Tienda\ProductoRepository")
  */
-class Producto
+class Producto implements \JsonSerializable
 {
     /**
      * @var int
@@ -274,5 +274,23 @@ class Producto
     public function setCodigoBarras($codigoBarras)
     {
         $this->codigoBarras = $codigoBarras;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'nombre' => $this->nombre,
+            'precio' => $this->precio,
+            'precioColaborador' => $this->preciocolaborador,
+            'codigoBarras' => $this->codigoBarras,
+        ];
     }
 }

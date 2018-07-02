@@ -27,12 +27,16 @@ class Venta
     /**
      * @var int
      *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
+     *
      * @ORM\Column(name="iva", type="integer")
      */
     private $iva;
 
     /**
      * @var int
+     *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
      *
      * @ORM\Column(name="descuento", type="bigint")
      */
@@ -41,12 +45,16 @@ class Venta
     /**
      * @var int
      *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
+     *
      * @ORM\Column(name="subtotal", type="bigint")
      */
     private $subtotal;
 
     /**
      * @var int
+     *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
      *
      * @ORM\Column(name="total", type="bigint")
      */
@@ -61,6 +69,8 @@ class Venta
 
     /**
      * @var Concepto
+     *
+     * @Assert\Valid()
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Venta\Concepto", mappedBy="venta")
      */

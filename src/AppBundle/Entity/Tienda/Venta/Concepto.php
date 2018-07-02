@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Tienda\Venta;
 use AppBundle\Entity\Tienda\Producto;
 use AppBundle\Entity\Tienda\Venta;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Concepto
@@ -26,12 +27,16 @@ class Concepto
     /**
      * @var int
      *
+     * @Assert\NotNull()
+     *
      * @ORM\Column(name="cantidad", type="integer")
      */
     private $cantidad;
 
     /**
      * @var int
+     *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
      *
      * @ORM\Column(name="precio_unitario", type="bigint")
      */
@@ -40,12 +45,16 @@ class Concepto
     /**
      * @var int
      *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
+     *
      * @ORM\Column(name="iva", type="bigint")
      */
     private $iva;
 
     /**
      * @var int
+     *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
      *
      * @ORM\Column(name="descuento", type="bigint")
      */
@@ -54,12 +63,16 @@ class Concepto
     /**
      * @var int
      *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
+     *
      * @ORM\Column(name="subtotal", type="bigint")
      */
     private $subtotal;
 
     /**
      * @var int
+     *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
      *
      * @ORM\Column(name="total", type="bigint")
      */

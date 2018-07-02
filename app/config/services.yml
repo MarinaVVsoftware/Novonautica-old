@@ -64,9 +64,6 @@ services:
         tags:
             - { name: doctrine.event_subscriber }
 
-    AppBundle\Form\EventListener\ProductoFieldListener:
-        autowire: true
-
     AppBundle\DataTables\:
         resource: '../../src/AppBundle/DataTables'
         autowire: true

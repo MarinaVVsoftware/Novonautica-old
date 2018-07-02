@@ -11,7 +11,6 @@ namespace AppBundle\Controller\Tienda;
 use AppBundle\Entity\Tienda\Producto;
 use AppBundle\Entity\Tienda\Venta;
 use AppBundle\Form\Tienda\VentaType;
-use AppBundle\Repository\Tienda\ProductoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,9 +29,6 @@ class VentaController extends AbstractController
     public function indexAction(Request $request)
     {
         $venta = new Venta();
-        $concepto = new Venta\Concepto();
-
-        $venta->addConcepto($concepto);
 
         $form = $this->createForm(VentaType::class, $venta);
         $form->handleRequest($request);
@@ -55,7 +51,7 @@ class VentaController extends AbstractController
     }
 
     /**
-     * @Route("/productos.json")
+     * @Route("/productos")
      * @param Request $request
      *
      * @return JsonResponse
@@ -68,6 +64,18 @@ class VentaController extends AbstractController
 
         return $this->json(
             ['results' => $productos],
+            JsonResponse::HTTP_OK
+        )
+            ->setEncodingOptions(JSON_NUMERIC_CHECK);
+    }
+
+    /**
+     * @Route("/producto/{codigoBarras}")
+     */
+    public function getProductoAction(Request $request, Producto $producto)
+    {
+        return $this->json(
+            $producto,
             JsonResponse::HTTP_OK
         )
             ->setEncodingOptions(JSON_NUMERIC_CHECK);

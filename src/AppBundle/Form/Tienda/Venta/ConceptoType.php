@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Tienda\Venta;
 
 use AppBundle\Form\EventListener\ProductoFieldListener;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -12,6 +13,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConceptoType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -25,7 +36,7 @@ class ConceptoType extends AbstractType
             'attr' => ['class' => 'money-input']
         ];
 
-        $builder->addEventSubscriber(new ProductoFieldListener());
+        $builder->addEventSubscriber(new ProductoFieldListener($this->entityManager));
 
         $builder->add(
             'cantidad',
@@ -66,7 +77,8 @@ class ConceptoType extends AbstractType
 
         $builder->add(
             'total',
-            MoneyType::class
+            MoneyType::class,
+            $moneySetting
         );
     }
 
