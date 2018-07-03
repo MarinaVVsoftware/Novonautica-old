@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Tienda\Inventario\Registro;
 use AppBundle\Entity\Tienda\Inventario\Registro;
 use AppBundle\Entity\Tienda\Producto;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Entrada
@@ -26,6 +27,11 @@ class Entrada
     /**
      * @var int
      *
+     * @Assert\Range(
+     *     min="1",
+     *     minMessage="La cantidad minima es 1"
+     * )
+     *
      * @ORM\Column(name="cantidad", type="integer")
      */
     private $cantidad;
@@ -39,6 +45,8 @@ class Entrada
 
     /**
      * @var Producto
+     *
+     * @Assert\NotNull(message="Esta campo no puede estar vacio")
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Producto")
      */

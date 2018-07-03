@@ -3,11 +3,12 @@
 namespace AppBundle\Form\Tienda\Inventario\Registro;
 
 use AppBundle\Entity\Tienda\Producto;
+use AppBundle\Form\EventListener\ProductoFieldListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -34,7 +35,7 @@ class EntradaType extends AbstractType
     {
         $builder->add(
             'cantidad',
-            NumberType::class,
+            IntegerType::class,
             [
                 'data' => 0,
             ]
@@ -51,40 +52,7 @@ class EntradaType extends AbstractType
             ]
         );
 
-        $formModifier = function (FormInterface $form, $productoId = null) {
-            $productoRepository = $this->entityManager->getRepository(Producto::class);
-            $productos = null === $productoId ? [] : [$productoRepository->find($productoId)];
-
-            $form->add(
-                'producto',
-                EntityType::class,
-                [
-                    'class' => Producto::class,
-                    'placeholder' => 'Seleccione un producto',
-                    'choices' => $productos
-                ]
-            );
-        };
-
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($formModifier) {
-                $form = $event->getForm();
-
-                $formModifier($form);
-            }
-        );
-
-        $builder->addEventListener(
-            FormEvents::PRE_SUBMIT,
-            function (FormEvent $event) use ($formModifier) {
-                $data = $event->getData();
-
-                $productoId = array_key_exists('producto', $data) ? $data['producto'] : null;
-
-                $formModifier($event->getForm(), $productoId);
-            }
-        );
+        $builder->addEventSubscriber(new ProductoFieldListener($this->entityManager));
     }
 
     /**

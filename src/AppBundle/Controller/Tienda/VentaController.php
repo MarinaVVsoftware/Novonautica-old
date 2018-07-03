@@ -70,12 +70,11 @@ class VentaController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($venta);
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($venta);
-//            $em->flush();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($venta);
+            $em->flush();
 
-//            return $this->redirectToRoute('tienda_venta_new');
+            return $this->redirectToRoute('tienda_venta_new');
         }
 
         return $this->render(

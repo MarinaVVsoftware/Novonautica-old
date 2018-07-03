@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Tienda\Inventario;
 use AppBundle\Entity\Tienda\Inventario\Registro\Entrada;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Registro
@@ -61,6 +62,8 @@ class Registro
 
     /**
      * @var Entrada[]
+     *
+     * @Assert\Valid()
      *
      * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Tienda\Inventario\Registro\Entrada",
