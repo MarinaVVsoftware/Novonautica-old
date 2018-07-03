@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="tienda_venta")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Tienda\VentaRepository")
+ * @ORM\EntityListeners({"VentaListener"})
  */
 class Venta
 {
@@ -71,8 +72,12 @@ class Venta
      * @var Concepto
      *
      * @Assert\Valid()
+     * @Assert\Count(
+     *     min="1",
+     *     minMessage="Debes incluir al menos un producto para realizar una venta",
+     * )
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Venta\Concepto", mappedBy="venta")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Venta\Concepto", mappedBy="venta", cascade={"persist"})
      */
     private $conceptos;
 

@@ -28,6 +28,10 @@ class Concepto
      * @var int
      *
      * @Assert\NotNull()
+     * @Assert\Range(
+     *     min="0",
+     *     minMessage="La cantidad no puede ser menor a 0",
+     * )
      *
      * @ORM\Column(name="cantidad", type="integer")
      */
@@ -55,8 +59,14 @@ class Concepto
      * @var int
      *
      * @Assert\NotNull(message="Este campo no puede estar vacio")
+     * @Assert\Range(
+     *     min="0",
+     *     max="100",
+     *     minMessage="El porcentaje no puede ser menor a 0",
+     *     maxMessage="El porcentaje no puede ser mayor a 100"
+     * )
      *
-     * @ORM\Column(name="descuento", type="bigint")
+     * @ORM\Column(name="descuento", type="integer")
      */
     private $descuento;
 
@@ -87,6 +97,8 @@ class Concepto
 
     /**
      * @var Producto
+     *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Producto")
      */

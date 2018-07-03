@@ -59,6 +59,7 @@ class ConceptoType extends AbstractType
             PercentType::class,
             [
                 'data' => 0,
+                'type' => 'integer',
                 'attr' => ['class' => 'discount-input']
             ]
         );

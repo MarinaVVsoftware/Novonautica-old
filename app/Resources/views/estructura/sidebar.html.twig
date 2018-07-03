@@ -455,10 +455,24 @@
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{ path.check('tienda_venta') }}">
-                            <a href="{{ path('tienda_venta') }}">
-                                <i class="fa fa-circle-o"></i> POV
+                        <li class="treeview {{ path.check('tienda_venta_index') }}">
+                            <a href="#">
+                                <i class="fa fa-circle-o"></i> Punto de venta
+                                <span class="pull-right-container"><i
+                                            class="fa fa-angle-left pull-right"></i></span>
                             </a>
+                            <ul class="treeview-menu">
+                                <li class="{{ path.check('tienda_venta_new') }}">
+                                    <a href="{{ path('tienda_venta_new') }}">
+                                        <i class="fa fa-minus"></i> Nueva venta
+                                    </a>
+                                </li>
+                                <li class="{{ path.check('tienda_venta_index') }}">
+                                    <a href="{{ path('tienda_venta_index') }}">
+                                        <i class="fa fa-minus"></i> Listado de ventas
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="{{ path.check('tienda_solicitud_index') }}">
                             <a href="{{ path('tienda_solicitud_index') }}">
