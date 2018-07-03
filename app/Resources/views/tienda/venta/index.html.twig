@@ -1,0 +1,69 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    {{ parent() }}
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Listado de ventas</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-novo">
+                                <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>IVA</th>
+                                    <th>Descuento</th>
+                                    <th>Subtotal</th>
+                                    <th>Total</th>
+                                    <th width="10%" class="no-sort"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, datatableSettings) {
+        $('.table-novo').DataTable({
+          ...datatableSettings,
+          ajax: 'ventas.json',
+          order: [[0, 'desc']],
+          columns: [
+            {responsivePriority: 1},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 0},
+          ],
+          createdRow: function (row, venta) {
+            let productosButton = document.createElement('a');
+            productosButton.className = 'btn btn-xs btn-azul';
+            productosButton.innerHTML = 'Productos';
+            productosButton.href = `${venta[5]}`;
+
+            row.cells[5].innerHTML = '';
+            row.cells[5].appendChild(productosButton);
+          }
+        });
+      })(jQuery, datatablesSettings)
+    </script>
+{% endblock %}

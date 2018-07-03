@@ -1,0 +1,200 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .table > tbody > tr > td > .input-group > .input-group-addon {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
+    </style>
+{% endblock %}
+
+{% form_theme form.entradas 'tienda/inventario/form-theme/_entrada.html.twig' %}
+{% form_theme form 'tienda/inventario/form-theme/_total.html.twig' %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Registro de {{ tipo }}s</h3>
+                </div>
+                <div class="panel-body">
+                    {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{ form_row(form.fecha) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(form.referencia) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th width="5%"></th>
+                                    <th>Producto</th>
+                                    <th width="15%" valign="middle">Cantidad</th>
+                                    <th width="15%" valign="middle">Importe</th>
+                                </tr>
+                                </thead>
+                                <tbody id="entradas"
+                                       data-prototype="{{ form_widget(form.entradas.vars.prototype)|e('html_attr') }}">
+                                {{ form_row(form.entradas) }}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <a href="#" id="add" class="btn btn-contorno-azul">
+                                + Producto
+                            </a>
+                        </div>
+                        <div class="col-sm-4 col-sm-push-5 text-right">
+                            <h4 class="letra-azul">Total</h4>
+                            <hr>
+                            {{ form_row(form.total) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-azul pull-right">
+                                Guardar
+                            </button>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      const Registro = (($) => {
+        const EntradasHolder = document.getElementById('entradas');
+        const TotalRegistro = document.getElementById('appbundle_tienda_inventario_registro_total');
+
+        let counter = EntradasHolder.childElementCount;
+
+        /**
+         * Crea una fila en la tabla de entradas con un boton que la remueve
+         *
+         * @returns {HTMLTableRowElement}
+         */
+        function createEntrada() {
+          let prototipo = EntradasHolder.dataset.prototype.replace(/__name__/g, counter);
+
+          let tempTable = document.createElement('table');
+          tempTable.innerHTML = prototipo;
+
+          let row = tempTable.querySelector('tr');
+
+          addEntradaListeners(row);
+          addRemoveButton(row.cells[0]);
+
+          EntradasHolder.appendChild(row);
+          counter++;
+
+          return row;
+        }
+
+        /**
+         * Agrega las funciones de busqueda por producto, calculo de cantidad por precio unitario del producto
+         *
+         * @param row
+         */
+        function addEntradaListeners(row) {
+          let $productoSelect = addSelect2(row.cells[1].querySelector('select'));
+          let totalInput = row.cells[3].querySelector('input');
+
+          totalInput.classList.add('total-input');
+          totalInput.addEventListener('input', function () {
+            this.value = this.value.replace(/[^\d,.]/g, '');
+            computeTotal();
+          });
+        }
+
+        function addRemoveButton(celda) {
+          let removeButton = document.createElement('a');
+
+          removeButton.className = 'badge btn-xs btn-naranja';
+          removeButton.innerHTML = '<i class="fa fa-times"></i>';
+          removeButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            removeButton.parentNode.parentNode.remove(removeButton);
+            computeTotal();
+          });
+
+          celda.appendChild(removeButton);
+
+          return celda;
+        }
+
+        /**
+         * Transforma un select en un tipo select2 que saca lo datos de productos.json
+         *
+         * @param select
+         */
+        function addSelect2(select) {
+          let $select = $(select);
+
+          $select.select2({
+            ajax: {
+              url: '../productos.json',
+              dataType: 'json',
+              processResults(response) {
+                return {
+                  results: response.results.map(result => ({id: result.id, text: result.nombre}))
+                }
+              }
+            }
+          });
+
+          return $select;
+        }
+
+        /**
+         * Cicla a traves de todos los .total-input y los suma, ignorando comas y letras
+         */
+        function computeTotal() {
+          TotalRegistro.value = Array
+              .from(EntradasHolder.querySelectorAll('.total-input'))
+              .reduce((a, b) => a + Number(b.value.replace(/,/g, '')), 0)
+              .toFixed(2)
+              .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        }
+
+        document
+            .getElementById('add')
+            .addEventListener('click', (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+
+              createEntrada();
+            });
+
+        EntradasHolder
+            .querySelectorAll('tr')
+            .forEach(function (row, index) {
+              addEntradaListeners(row);
+
+              if (index) {
+                addRemoveButton(row.cells[0]);
+              }
+            });
+
+      })(jQuery);
+    </script>
+{% endblock %}

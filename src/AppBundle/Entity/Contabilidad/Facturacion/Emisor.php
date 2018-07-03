@@ -96,6 +96,7 @@ class Emisor
     /**
      * @var File
      *
+     * @Assert\NotNull(message="Por favor agregar una imagen")
      * @Assert\Image(
      *     mimeTypes={"image/*"},
      *     mimeTypesMessage="Solo se permiten imagenes",
@@ -117,6 +118,7 @@ class Emisor
     /**
      * @var File
      *
+     * @Assert\NotNull(message="Por favor agrega la llave con extension .cer")
      * @Assert\File()
      *
      * @Vich\UploadableField(mapping="facturacion_emisor_cer", fileNameProperty="cer")
@@ -133,6 +135,7 @@ class Emisor
     /**
      * @var File
      *
+     * @Assert\NotNull(message="Por favor agrega la llave con extension .key")
      * @Assert\File()
      *
      * @Vich\UploadableField(mapping="facturacion_emisor_key", fileNameProperty="key")
@@ -188,6 +191,7 @@ class Emisor
     public function __construct()
     {
         $this->estatus = true;
+        $this->updateAt = new \DateTime();
     }
 
     public function __toString()

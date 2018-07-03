@@ -10,4 +10,13 @@ namespace AppBundle\Repository\Tienda;
  */
 class ProductoRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findProductosLike($str)
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.nombre LIKE ?1')
+            ->setParameter(1, "%{$str}%")
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

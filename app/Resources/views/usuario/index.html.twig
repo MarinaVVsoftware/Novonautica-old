@@ -39,6 +39,13 @@
           ...settings,
           ajax: '{{ path('usuario_index_data') }}',
           order: [[4, 'desc']],
+          columns: [
+            {responsivePriority: 1},
+            {responsivePriority: 3},
+            {responsivePriority: 3},
+            {responsivePriority: 2},
+            {responsivePriority: 0},
+          ],
           createdRow: function (row, usuario) {
             let lastCell = row.cells[4];
             lastCell.innerHTML = `

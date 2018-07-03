@@ -43,6 +43,10 @@ services:
         tags:
             - { name: doctrine.orm.entity_listener }
 
+    AppBundle\Entity\Tienda\VentaListener:
+        tags:
+            - { name: doctrine.orm.entity_listener }
+
     AppBundle\Entity\Astillero\Contratista\Actividad\FotoListener:
         autowire: true
         tags:
