@@ -59,7 +59,7 @@ class UsuarioType extends AbstractType
                         'Servicios' => 'ROLE_ASTILLERO_SERVICIO',
                         'Proveedores' => 'ROLE_ASTILLERO_PROVEEDOR',
                         'Servicios básicos' => 'ROLE_ASTILLERO_SERVICIOBASICO',
-                        'Responsable' =>'ROLE_ASTILLERO_RESPONSABLE'
+                        'Responsable' => 'ROLE_ASTILLERO_RESPONSABLE',
                     ],
                     'Reporte' => [
                         'Acceso' => 'ROLE_REPORTE',
@@ -72,7 +72,7 @@ class UsuarioType extends AbstractType
 
                         'Actividad' => 'ROLE_ODT_ACTIVIDAD',
                         'Editar contratista' => 'ROLE_ODT_CONTRATISTA_EDIT',
-                        'Eliminar' => 'ROLE_ODT_DELETE'
+                        'Eliminar' => 'ROLE_ODT_DELETE',
                     ],
                     'Ocean Deal' => [
                         'Acceso' => 'ROLE_EMBARCACION',
@@ -82,10 +82,13 @@ class UsuarioType extends AbstractType
                         'Marcas' => 'ROLE_EMBARCACION_MARCA',
                         'Modelos' => 'ROLE_EMBARCACION_MODELO',
                     ],
-                    'Tienda' => [
+                    'V&V Store' => [
                         'Acceso' => 'ROLE_TIENDA',
                         'Crear' => 'TIENDA_CREATE',
-                        'Productos' => 'ROLE_TIENDA_PRODUCTO'
+                        'Productos' => 'ROLE_TIENDA_PRODUCTO',
+                        'Punto de venta' => 'ROLE_TIENDA_POV',
+                        'Inventario' => 'ROLE_TIENDA_INVENTARIO',
+                        'Registros' => 'ROLE_TIENDA_REGISTRO',
                     ],
                     'Contabilidad' => [
                         'Acceso' => 'ROLE_CONTABILIDAD',
@@ -96,7 +99,7 @@ class UsuarioType extends AbstractType
                     ],
                     'Correos' => [
                         'Acceso' => 'ROLE_HCORREO',
-                        'Notificaciones' => 'ROLE_HCORREO_NOTIFICACION'
+                        'Notificaciones' => 'ROLE_HCORREO_NOTIFICACION',
                     ],
                     'Recursos humanos' => [
                         'Acceso' => 'ROLE_RH',
@@ -118,7 +121,7 @@ class UsuarioType extends AbstractType
             ])
             ->add('isActive', ChoiceType::class, [
                 'label' => 'Estatus',
-                'choices' => ['Activo' => true, 'Inactivo' => false]
+                'choices' => ['Activo' => true, 'Inactivo' => false],
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -128,14 +131,14 @@ class UsuarioType extends AbstractType
             if ($usuario->getId()) {
                 $form->add('plainPassword', PasswordType::class, [
                     'label' => 'Contraseña',
-                    'required' => false
+                    'required' => false,
                 ]);
             } else {
                 $form->add('plainPassword', PasswordType::class, [
                     'label' => 'Contraseña',
                     'constraints' => [
-                        new NotBlank()
-                    ]
+                        new NotBlank(),
+                    ],
                 ]);
             }
         });
@@ -147,7 +150,7 @@ class UsuarioType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Usuario'
+            'data_class' => 'AppBundle\Entity\Usuario',
         ));
     }
 

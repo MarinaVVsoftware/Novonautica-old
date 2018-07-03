@@ -455,6 +455,7 @@
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu">
+                        {% if is_granted('ROLE_TIENDA_POV') %}
                         <li class="treeview {{ path.check('tienda_venta_index') }}">
                             <a href="#">
                                 <i class="fa fa-circle-o"></i> Punto de venta
@@ -474,15 +475,16 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="{{ path.check('tienda_solicitud_index') }}">
-                            <a href="{{ path('tienda_solicitud_index') }}">
-                                <i class="fa fa-circle-o"></i> Solicitudes
-                            </a>
-                        </li>
+                        {% endif %}
                         {% if is_granted(expression('has_role("TIENDA_CREATE") or (user.isAdmin())')) %}
                             <li class="{{ path.check('tienda_solicitud_new') }}">
                                 <a href="{{ path('tienda_solicitud_new') }}">
                                     <i class="fa fa-circle-o"></i> Nueva
+                                </a>
+                            </li>
+                            <li class="{{ path.check('tienda_solicitud_index') }}">
+                                <a href="{{ path('tienda_solicitud_index') }}">
+                                    <i class="fa fa-circle-o"></i> Solicitudes
                                 </a>
                             </li>
                         {% endif %}
@@ -493,12 +495,14 @@
                                 </a>
                             </li>
                         {% endif %}
+                        {% if is_granted('ROLE_TIENDA_INVENTARIO') %}
                         <li class="{{ path.check('tienda_inventario_index') }}">
                             <a href="{{ path('tienda_inventario_index') }}">
                                 <i class="fa fa-circle-o"></i> Inventario
                             </a>
                         </li>
-
+                        {% endif %}
+                        {% if is_granted('ROLE_TIENDA_REGISTRO') %}
                         <li class="treeview {{ path.check(
                             [
                                 'tienda_inventario_registro_index_entrada',
@@ -529,7 +533,7 @@
                                 </li>
                             </ul>
                         </li>
-
+                        {% endif %}
                     </ul>
                 </li>
             {% endif %}

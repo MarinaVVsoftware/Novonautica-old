@@ -167,6 +167,9 @@ security:
         - { path: ^/embarcacion, roles: ROLE_EMBARCACION }
 
         - { path: ^/tienda/producto/, roles: ROLE_TIENDA_PRODUCTO }
+        - { path: ^/tienda/venta/, roles: ROLE_TIENDA_POV }
+        - { path: ^/tienda/inventario/registro$, roles: ROLE_TIENDA_INVENTARIO }
+        - { path: ^/tienda/inventario/registro/*, roles: ROLE_TIENDA_REGISTRO }
         - { path: ^/tienda, roles: ROLE_TIENDA }
 
         - { path: ^/contabilidad/facturacion/emisor/, roles: ROLE_CONTABILIDAD_EMISOR }
@@ -217,6 +220,9 @@ security:
         ROLE_WHOLE_TIENDA:
             - ROLE_TIENDA
             - ROLE_TIENDA_PRODUCTO
+            - ROLE_TIENDA_POV
+            - ROLE_TIENDA_INVENTARIO
+            - ROLE_TIENDA_REGISTRO
         ROLE_WHOLE_CONTABILIDAD:
             - ROLE_CONTABILIDAD
             - ROLE_CONTABILIDAD_EMISOR
