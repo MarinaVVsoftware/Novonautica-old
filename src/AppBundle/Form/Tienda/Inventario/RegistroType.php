@@ -53,6 +53,7 @@ class RegistroType extends AbstractType
                 'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
+                'data' => 0,
                 'attr' => ['class' => 'total-type'],
             ]
         );
