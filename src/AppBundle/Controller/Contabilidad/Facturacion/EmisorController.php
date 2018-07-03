@@ -80,7 +80,6 @@ class EmisorController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $emisor->setEstatus(false);
-//            $em->remove($emisor); El emisor no debe ser eliminado
             $em->flush();
         }
 

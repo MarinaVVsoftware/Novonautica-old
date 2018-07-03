@@ -60,7 +60,7 @@
                                         <th>Nombre</th>
                                         <th>RFC</th>
                                         <th>Logo</th>
-                                        <th width="30%"></th>
+                                        <th width="10%"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -78,12 +78,14 @@
                                                         <a href="{{ path('contabilidad_facturacion_emisor', {'emisor': item.id}) }}"
                                                            class="btn btn-xs btn-azul">Editar</a>
                                                     </li>
+                                                    {#
                                                     <li>
                                                         {{ form_start(deleteForms[i]) }}
                                                         <input type="submit" class="btn btn-xs btn-naranja"
                                                                value="Eliminar">
                                                         {{ form_end(deleteForms[i]) }}
                                                     </li>
+                                                    #}
                                                 </ul>
                                             </td>
                                         </tr>
