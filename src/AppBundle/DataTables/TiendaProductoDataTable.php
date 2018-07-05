@@ -77,6 +77,7 @@ class TiendaProductoDataTable extends AbstractDataTableHandler
                 $producto->getNombre(),
                 "$".number_format($producto->getPrecio()/ 100, 2)." MXN",
                 "$".number_format($producto->getPreciocolaborador()/ 100, 2). " MXN",
+                $producto->getImagen(),
                 $producto->getId(),
             ];
         }

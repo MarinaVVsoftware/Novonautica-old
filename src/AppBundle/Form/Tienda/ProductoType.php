@@ -46,7 +46,8 @@ class ProductoType extends AbstractType
             ])
             ->add('imagenFile', VichImageType::class, [
                 'label' => 'Imagen',
-                'required' => false
+                'allow_delete' => false,
+                'required' => false,
             ])
             ->add('claveUnidad', TextType::class)
             ->add('claveProdServ', TextType::class, [

@@ -102,6 +102,7 @@
                                         <th>Nombre</th>
                                         <th>Precio Público</th>
                                         <th>Precio Colaborador</th>
+                                        <th>Imagen</th>
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
@@ -120,7 +121,7 @@
     <script type="text/javascript" src="{{ asset('js/jquery.autocomplete.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
-        (function ($) {
+        (function ($, dtSettings) {
             const conceptoSettings = {
                 dataType: 'json',
                 deferRequestBy: 150,
@@ -168,26 +169,32 @@
                     }
                 }
             });
-        })(jQuery);
-
-        (function ($, datatableSettings) {
 
             $('.table-novo').DataTable({
-                ...datatableSettings,
+                ...dtSettings,
                 ajax: '{{ path('tienda_producto_index_data') }}',
                 order: [[0, 'desc']],
                 createdRow: function (row, usuario) {
-                    let lastCell = row.cells[3];
-                    lastCell.innerHTML = `
-            <ul class="list-unstyled">
-            <li>
-            <a href="{{ app.request.requestUri ~ '?producto=${usuario[3]}' }}" class="btn btn-xs btn-block btn-azul">Editar</a>
-            </li>
-            <li>
-            <a href="{{ app.request.requestUri ~ 'eliminar/${usuario[3]}' }}" class="btn btn-xs btn-block btn-naranja">Eliminar</a>
-            </li>
-            </ul>
-            `
+                  let imgSource = usuario[3]
+                      ? `{{ asset('uploads/tienda/producto/imagenes') }}/${usuario[3]}`
+                      : "{{ asset('img/image-not-found.jpg') }}";
+
+                  row.cells[3].innerHTML = `
+                  <a href="${imgSource}" target="_blank">
+                   <img src="${imgSource}" width="50px">
+                  </a>
+                  `;
+
+                  row.cells[4].innerHTML = `
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="{{ app.request.requestUri ~ '?producto=${usuario[4]}' }}" class="btn btn-xs btn-block btn-azul">Editar</a>
+                        </li>
+                        <li>
+                            <a href="{{ app.request.requestUri ~ 'eliminar/${usuario[4]}' }}" class="btn btn-xs btn-block btn-naranja">Eliminar</a>
+                        </li>
+                    </ul>
+                    `
                 },
             });
         })(jQuery, datatablesSettings);
