@@ -76,6 +76,7 @@
                             {{ form_row(form.codigoBarras) }}
                             {{ form_row(form.claveProdServ) }}
                             {{ form_row(form.claveUnidad) }}
+                            {{ form_row(form.imagenFile) }}
                             {% if producto.id is not null %}
                                 <a href="{{ path('tienda_producto_index') }}"
                                    class="btn btn-naranja">Cancelar</a>

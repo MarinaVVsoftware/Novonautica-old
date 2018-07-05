@@ -113,3 +113,6 @@ vich_uploader:
         facturacion_emisor_logo:
             uri_prefix: /uploads/facturacion/emisor/logos
             upload_destination: '%kernel.root_dir%/../web/uploads/facturacion/emisor/logos'
+        tienda_producto_imagen:
+            uri_prefix: /uploads/tienda/producto/imagenes
+            upload_destination: '%kernel.root_dir%/../web/uploads/tienda/producto/imagenes'

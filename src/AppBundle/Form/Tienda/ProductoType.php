@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ProductoType extends AbstractType
 {
@@ -42,6 +43,10 @@ class ProductoType extends AbstractType
             ])
             ->add('codigoBarras', TextType::class, [
                 'label' => 'Código de Barras',
+            ])
+            ->add('imagenFile', VichImageType::class, [
+                'label' => 'Imagen',
+                'required' => false
             ])
             ->add('claveUnidad', TextType::class)
             ->add('claveProdServ', TextType::class, [

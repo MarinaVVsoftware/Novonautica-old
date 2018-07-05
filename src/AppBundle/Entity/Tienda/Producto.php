@@ -7,12 +7,17 @@ use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Entity\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 /**
  * Producto
  *
  * @ORM\Table(name="tienda_producto")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Tienda\ProductoRepository")
+ * @Vich\Uploadable
  */
 class Producto implements \JsonSerializable
 {
@@ -60,6 +65,32 @@ class Producto implements \JsonSerializable
     private $codigoBarras;
 
     /**
+     * @var File
+     *
+     * @Assert\Image
+     *
+     * @Vich\UploadableField(
+     *     mapping="tienda_producto_imagen",
+     *     fileNameProperty="imagen"
+     * )
+     */
+    private $imagenFile;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="imagen", type="string", nullable=true)
+     */
+    private $imagen;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_at", type="datetime")
+     */
+    private $updateAt;
+
+    /**
      * @var ClaveProdServ
      *
      * @Groups({"facturacion"})
@@ -82,13 +113,13 @@ class Producto implements \JsonSerializable
      */
     private $nombreproducto;
 
-
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->nombreproducto = new ArrayCollection();
+        $this->updateAt = new \DateTime();
     }
 
     public function __toString()
@@ -274,6 +305,30 @@ class Producto implements \JsonSerializable
     public function setCodigoBarras($codigoBarras)
     {
         $this->codigoBarras = $codigoBarras;
+    }
+
+    public function setImagenFile($image = null)
+    {
+        $this->imagenFile = $image;
+
+        if (null !== $image) {
+            $this->updateAt = new \DateTime();
+        }
+    }
+
+    public function getImagenFile()
+    {
+        return $this->imagenFile;
+    }
+
+    public function setImagen($imagen)
+    {
+        $this->imagen = $imagen;
+    }
+
+    public function getImagen()
+    {
+        return $this->imagen;
     }
 
     /**
