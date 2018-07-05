@@ -110,10 +110,21 @@
                         </div>
                         <div class="panel-footer">
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <a href="#" id="add" class="btn btn-contorno-azul pull-right">
+                                <div class="col-sm-3">
+                                    <a href="#" id="add" class="btn btn-block btn-contorno-azul pull-right">
                                         + Producto
                                     </a>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <label for="price-selector">Tipo de precio </label>
+                                            <select id="price-selector" class="form-control" style="margin-left: 1rem;">
+                                                <option value="0" selected>Público</option>
+                                                <option value="1">Colaborador</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -166,297 +177,339 @@
     <script src="{{ asset('js/perfect-scrollbar.min.js') }}"></script>
     <script type="text/javascript">
       (($) => {
-        const ventaForm = document.querySelector('form[name="appbundle_tienda_venta"]');
-        const SubmitButton = document.getElementById('submit-btn');
-        const AddButton = document.getElementById('add');
-        const EntradasHolder = document.getElementById('conceptos');
-        const DescuentoInput = document.getElementById('appbundle_tienda_venta_descuento');
-        const SubtotalInput = document.getElementById('appbundle_tienda_venta_subtotal');
-        const IvaInput = document.getElementById('appbundle_tienda_venta_iva');
-        const TotalInput = document.getElementById('appbundle_tienda_venta_total');
-        const ProductosPane = document.getElementById('products-pane');
-        const IVA = .16;
+            const ventaForm = document.querySelector('form[name="appbundle_tienda_venta"]');
+            const SubmitButton = document.getElementById('submit-btn');
+            const AddButton = document.getElementById('add');
+            const PriceSelect = document.getElementById('price-selector');
+            const EntradasHolder = document.getElementById('conceptos');
+            const DescuentoInput = document.getElementById('appbundle_tienda_venta_descuento');
+            const SubtotalInput = document.getElementById('appbundle_tienda_venta_subtotal');
+            const IvaInput = document.getElementById('appbundle_tienda_venta_iva');
+            const TotalInput = document.getElementById('appbundle_tienda_venta_total');
+            const ProductosPane = document.getElementById('products-pane');
+            const IVA = .16;
 
-        let counter = EntradasHolder.childElementCount;
-        let searchString = '';
+            let counter = EntradasHolder.childElementCount;
 
-        /**
-         * Crea una fila en la tabla de entradas con un boton que la remueve
-         */
-        function createRow() {
-          let prototipo = EntradasHolder.dataset.prototype.replace(/__name__/g, counter);
-
-          let tempTable = document.createElement('table');
-          tempTable.innerHTML = prototipo;
-
-          let row = tempTable.querySelector('tr');
-
-          addRowListeners(row);
-          addRowRemove(row);
-
-          EntradasHolder.appendChild(row);
-          counter++;
-
-          return row;
-        }
-
-        /**
-         * Agrega las funciones de busqueda por producto, calculo de cantidad por precio unitario del producto
-         */
-        function addRowListeners(row) {
-          const $ProductSelect = addSelect2(row.cells[1].querySelector('select'));
-          const $Row = $(row);
-          const $QuantityInput = $Row.find('[type="number"]');
-          const $DiscountInput = $Row.find('.discount-input');
-          const $MoneyInputs = $Row.find('.money-input');
-          const PrecioInput = $MoneyInputs[0];
-          const SubtotalInput = $MoneyInputs[1];
-          const IvaInput = $MoneyInputs[2];
-          const TotalInput = $MoneyInputs[3];
-
-          $ProductSelect
-              .on('select2:select', function (e) {
-                const producto = e.params.data;
-                PrecioInput.value = transformToMoneyFormat(producto.price.public.toFixed(2));
-                $QuantityInput.val(1).trigger('input');
-              });
-
-          $QuantityInput.on('input', computeRowValues);
-          $DiscountInput.on('input', computeRowValues);
-
-          function computeRowValues(event) {
-            event.target.value = event.target.value.replace(/[^\d.]/g, '');
-
-            if (!event.target.value) return;
-
-            searchString = '';
-
-            const Cantidad = Number($QuantityInput.val());
-            const Descuento = (Number($DiscountInput.val()) / 100);
-            const Precio = Number(PrecioInput.value);
-
-            let subtotal = (Cantidad * Precio);
-            let iva = (subtotal * IVA);
-
-            if (Descuento) {
-              subtotal = subtotal - (subtotal * Descuento);
-              iva = iva - (iva * Descuento);
+            /**
+             * Da formato a un numero en decimales y reduce sus decimales a 2
+             */
+            function transformToMoneyFormat(numero) {
+              return numero
+                  .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
             }
 
-            SubtotalInput.value = transformToMoneyFormat(subtotal.toFixed(2));
-            IvaInput.value = transformToMoneyFormat(iva.toFixed(2));
-            TotalInput.value = transformToMoneyFormat((subtotal + iva).toFixed(2));
+            /**
+             * Retorna el mapeo del producto recibido por json
+             */
+            function getProducto(producto) {
+              return {
+                id: producto.id,
+                text: producto.nombre,
+                price: {
+                  public: (producto.precio / 100),
+                  colaborator: (producto.precioColaborador / 100) || (producto.preciocolaborador / 100) || 999999
+                },
+                barcode: producto.codigoBarras,
+              }
+            };
 
-            computeTotalValues();
-          }
-        }
+            /**
+             * Transforma un select en un tipo select2 que saca lo datos de productos.json
+             */
+            function addSelect2(select) {
+              let $select = $(select);
 
-        /**
-         * Cicla a traves de cada columna con un valor y la suma
-         */
-        function computeTotalValues() {
-          let totalValues = Array
-              .from(EntradasHolder.querySelectorAll('tbody tr'))
-              .reduce(function (a, b) {
-                let quantity = Number(getInput(b.cells[2]).value);
-                let price = Number(getInput(b.cells[4]).value);
-                let descuento = (quantity * price) * (Number(getInput(b.cells[3]).value) / 100);
-
-                return {
-                  descuento: a.descuento + descuento,
-                  subtotal: a.subtotal + Number(getInput(b.cells[5]).value.replace(/,/g, '')),
-                  iva: a.iva + Number(getInput(b.cells[6]).value.replace(/,/g, '')),
-                  total: a.total + Number(getInput(b.cells[7]).value.replace(/,/g, '')),
+              $select.select2({
+                ajax: {
+                  url: 'productos',
+                  dataType: 'json',
+                  processResults(response) {
+                    return {
+                      results: response.results.map((result) => getProducto(result)),
+                    }
+                  }
                 }
-              }, {
-                descuento: 0,
-                subtotal: 0,
-                iva: 0,
-                total: 0,
               });
 
-          DescuentoInput.value = transformToMoneyFormat(totalValues.descuento.toFixed(2));
-          SubtotalInput.value = transformToMoneyFormat(totalValues.subtotal.toFixed(2));
-          IvaInput.value = transformToMoneyFormat(totalValues.iva.toFixed(2));
-          TotalInput.value = transformToMoneyFormat(totalValues.total.toFixed(2));
 
-          function getInput(cell) {
-            return cell.querySelector('input');
-          }
-        }
+              return $select;
+            }
 
-        /**
-         * Agrega un boton para remover su propia row
-         */
-        function addRowRemove(row) {
-          let celda = row.cells[0];
-          let removeButton = document.createElement('a');
+            /**
+             * Crea una fila en la tabla de entradas con un boton que la remueve
+             */
+            function createRow() {
+              let prototipo = EntradasHolder.dataset.prototype.replace(/__name__/g, counter);
 
-          removeButton.className = 'badge btn-xs btn-naranja';
-          removeButton.innerHTML = '<i class="fa fa-times"></i>';
-          removeButton.addEventListener('click', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
+              let tempTable = document.createElement('table');
+              tempTable.innerHTML = prototipo;
 
-            removeButton.parentNode.parentNode.remove(removeButton);
-            computeTotalValues();
-          });
+              let row = tempTable.querySelector('tr');
 
-          celda.appendChild(removeButton);
-        }
+              addRowListeners(row);
+              addRowRemove(row);
 
-        /**
-         * Transforma un select en un tipo select2 que saca lo datos de productos.json
-         */
-        function addSelect2(select) {
-          let $select = $(select);
+              EntradasHolder.appendChild(row);
+              counter++;
 
-          $select.select2({
-            ajax: {
-              url: 'productos',
-              dataType: 'json',
-              processResults(response) {
-                return {
-                  results: response.results.map(result => ({
-                    id: result.id,
-                    text: result.nombre,
-                    price: {
-                      public: (result.precio / 100),
-                      colaborator: (result.preciocolaborador / 100),
-                    },
-                    barcode: result.codigoBarras,
-                  }))
+              return row;
+            }
+
+            /**
+             * Agrega las funciones de busqueda por producto, calculo de cantidad por precio unitario del producto
+             */
+            function addRowListeners(row) {
+              const $ProductSelect = addSelect2(row.cells[1].querySelector('select'));
+              const $Row = $(row);
+              const $QuantityInput = $Row.find('[type="number"]');
+              const $DiscountInput = $Row.find('.discount-input');
+              const $MoneyInputs = $Row.find('.money-input');
+              const PrecioInput = $MoneyInputs[0];
+              const SubtotalInput = $MoneyInputs[1];
+              const IvaInput = $MoneyInputs[2];
+              const TotalInput = $MoneyInputs[3];
+
+              function computeRowValues(event) {
+                event.target.value = event.target.value.replace(/[^\d.]/g, '');
+
+                if (!event.target.value) return;
+
+                const Cantidad = Number($QuantityInput.val());
+                const Descuento = (Number($DiscountInput.val()) / 100);
+                const Precio = Number(PrecioInput.value.replace(/[^\d.]/g, ''));
+
+                let subtotal = (Cantidad * Precio);
+                let iva = (subtotal * IVA);
+
+                if (Descuento) {
+                  subtotal = subtotal - (subtotal * Descuento);
+                  iva = iva - (iva * Descuento);
                 }
+
+                SubtotalInput.value = transformToMoneyFormat(subtotal.toFixed(2));
+                IvaInput.value = transformToMoneyFormat(iva.toFixed(2));
+                TotalInput.value = transformToMoneyFormat((subtotal + iva).toFixed(2));
+
+                computeTotalValues();
+              }
+
+              $ProductSelect
+                  .on('select2:select', function (event) {
+                    const producto = event.params.data;
+                    const price = PriceSelect.value === '0' ? producto.price.public : producto.price.colaborator;
+
+                    PrecioInput.dataset.public = producto.price.public;
+                    PrecioInput.dataset.colaborator = producto.price.colaborator;
+                    PrecioInput.value = transformToMoneyFormat(price.toFixed(2));
+                    $QuantityInput.val(1).trigger('input');
+                  });
+
+              $QuantityInput.on('input', computeRowValues);
+              $DiscountInput.on('input', computeRowValues);
+            }
+
+            /**
+             * Cicla a traves de cada columna con un valor y la suma
+             */
+            function computeTotalValues() {
+              let totalValues = Array
+                  .from(EntradasHolder.querySelectorAll('tbody tr'))
+                  .reduce(function (a, b) {
+                    let quantity = Number(getInput(b.cells[2]).value);
+                    let price = Number(getInput(b.cells[4]).value.replace(/[^\d.]/g, ''));
+                    let descuento = (quantity * price) * (Number(getInput(b.cells[3]).value) / 100);
+
+                    return {
+                      descuento: a.descuento + descuento,
+                      subtotal: a.subtotal + Number(getInput(b.cells[5]).value.replace(/,/g, '')),
+                      iva: a.iva + Number(getInput(b.cells[6]).value.replace(/,/g, '')),
+                      total: a.total + Number(getInput(b.cells[7]).value.replace(/,/g, '')),
+                    }
+                  }, {
+                    descuento: 0,
+                    subtotal: 0,
+                    iva: 0,
+                    total: 0,
+                  });
+
+              DescuentoInput.value = transformToMoneyFormat(totalValues.descuento.toFixed(2));
+              SubtotalInput.value = transformToMoneyFormat(totalValues.subtotal.toFixed(2));
+              IvaInput.value = transformToMoneyFormat(totalValues.iva.toFixed(2));
+              TotalInput.value = transformToMoneyFormat(totalValues.total.toFixed(2));
+
+              function getInput(cell) {
+                return cell.querySelector('input');
               }
             }
-          });
 
-          return $select;
-        }
+            /**
+             * Agrega un boton para remover su propia row
+             */
+            function addRowRemove(row) {
+              let celda = row.cells[0];
+              let removeButton = document.createElement('a');
 
-        function setProductAutomatically(searchString) {
-          if (!searchString || searchString === 'Enter') return;
+              removeButton.className = 'badge btn-xs btn-naranja';
+              removeButton.innerHTML = '<i class="fa fa-times"></i>';
+              removeButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
 
-          $.ajax(
-              'producto/' + searchString,
-              {
-                success(producto) {
-                  let existingOption = EntradasHolder.querySelector(`option[value="${producto.id}"]`);
+                removeButton.parentNode.parentNode.remove(removeButton);
+                computeTotalValues();
+              });
 
-                  if (existingOption) {
-                    let quantityOption = existingOption.parentNode.parentNode.nextElementSibling.querySelector('input');
-                    quantityOption.value = Number(quantityOption.value) + 1;
-                    $(quantityOption).trigger('input');
+              celda.appendChild(removeButton);
+            }
 
+            /**
+             * Agrega una fila que fue escaneada por una pistola de barcodes
+             */
+            function addProductProgrammatically(event) {
+              $.ajax(
+                  'producto/' + event.detail,
+                  {
+                    success(producto) {
+                      let existingOption = EntradasHolder.querySelector(`option[value="${producto.id}"]`);
+
+                      if (existingOption) {
+                        let row = existingOption.parentNode.parentNode.parentNode;
+                        let quantityInput = row.cells[2].querySelector('input');
+                        let priceInput = row.cells[4].querySelector('input');
+                        let product = getProducto(producto);
+                        let price = PriceSelect.value === '0' ? product.price.public : product.price.colaborator;
+
+                        priceInput.value = transformToMoneyFormat(price.toFixed(2));
+                        quantityInput.value = Number(quantityInput.value) + 1;
+                        quantityInput.dispatchEvent(new Event('input'));
+                        return;
+                      }
+
+                      let row = createRow();
+                      let $select = $(row.cells[1].querySelector('select'));
+                      let option = new Option(producto.nombre, producto.id, true, true);
+
+                      $select.append(option);
+                      $select.trigger({
+                        type: 'select2:select',
+                        params: {
+                          data: getProducto(producto),
+                        }
+                      });
+                    },
+                    error(response) {
+                      if (response.status !== 404) return;
+
+                      const $ErrorContainer = $('#errors');
+                      const html = `
+                          <div class="alert alert-danger" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            El producto "${event.detail}" no existe en la base de datos
+                          </div>
+                      `;
+
+                      $ErrorContainer.append(html);
+
+                      if ($ErrorContainer.children().length > 2) {
+                        $ErrorContainer.children().first().remove();
+                      }
+                    },
+                  }
+              );
+            }
+
+            class BarcodeScanerEvent {
+              constructor(inputString = '', timeoutHandler = 0) {
+                document.addEventListener(
+                    'keyup',
+                    this._keyupHandler.bind(this)
+                );
+
+                this.inputString = inputString;
+                this.timeoutHandler = timeoutHandler;
+              }
+
+              _keyupHandler(event) {
+                if (this.timeoutHandler) {
+                  window.clearTimeout(this.timeoutHandler);
+                }
+
+                this.inputString += String.fromCharCode(event.which) === '(' ? '' : String.fromCharCode(event.which);
+
+                this.timeoutHandler = setTimeout(() => {
+                  if (this.inputString.length <= 4) {
+                    this.inputString = '';
                     return;
                   }
 
-                  let row = createRow();
-                  let $select = $(row.cells[1].querySelector('select'));
-                  let option = new Option(producto.nombre, producto.id, true, true);
+                  document.dispatchEvent(this._event());
+                  this.inputString = '';
+                }, 15);
+              }
 
-                  $select.append(option);
-                  $select.trigger({
-                    type: 'select2:select',
-                    params: {
-                      data: {
-                        id: producto.id,
-                        text: producto.nombre,
-                        price: {
-                          public: (producto.precio / 100),
-                          colaborator: (producto.preciocolaborador / 100),
-                        },
-                        barcode: producto.codigoBarras,
-                      }
-                    }
-                  });
-                },
-                error(response) {
-                  if (response.status !== 404) return;
+              _event() {
+                return new CustomEvent('scanedbarcode', {detail: this.inputString})
+              }
+            }
 
-                  const $ErrorContainer = $('#errors');
-                  const html = `
-                  <div class="alert alert-danger" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    El producto "${searchString}" no existe en la base de datos
-                  </div>
-                  `;
+            new BarcodeScanerEvent();
+            new PerfectScrollbar(ProductosPane);
 
-                  $ErrorContainer.append(html);
+            PriceSelect
+                .addEventListener('change', () => {
+                  PriceSelect.blur();
 
-                  if ($ErrorContainer.children().length > 2) {
-                    $ErrorContainer.children().first().remove();
+                  EntradasHolder
+                      .querySelectorAll('tbody tr')
+                      .forEach((row) => {
+                        let quantityInput = row.querySelector('td:nth-child(3) input');
+                        let priceInput = row.querySelector('td:nth-child(5) input');
+                        let price = PriceSelect.value === '0' ? priceInput.dataset.public : priceInput.dataset.colaborator;
+
+                        priceInput.value = transformToMoneyFormat(Number(price).toFixed(2));
+                        quantityInput.dispatchEvent(new Event('input'));
+                      });
+
+                });
+
+            AddButton
+                .addEventListener('click', (event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+
+                  createRow();
+                });
+
+            SubmitButton
+                .addEventListener('click', (event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+
+                  $('<input type="submit" class="hidden">')
+                      .appendTo(ventaForm)
+                      .click()
+                      .remove();
+
+                  if (ventaForm.checkValidity()) {
+                    ventaForm.submit();
                   }
+                });
 
-                  searchString = '';
-                }
-              }
-          );
-        }
+            EntradasHolder
+                .querySelectorAll('tr')
+                .forEach((row) => {
+                  addRowListeners(row);
+                  addRowRemove(row);
+                });
 
-        /**
-         * Da formato a un numero en decimales y reduce sus decimales a 2
-         */
-        function transformToMoneyFormat(numero) {
-          return numero
-              .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-        }
+            document
+                .addEventListener('scanedbarcode', addProductProgrammatically);
 
-        ventaForm
-            .addEventListener('submit', (event) => {
-              event.preventDefault();
-              event.stopPropagation();
-
-              return false;
-            });
-
-        SubmitButton
-            .addEventListener('click', (event) => {
-              event.preventDefault();
-              event.stopPropagation();
-
-              $('<input type="submit" class="hidden">')
-                  .appendTo(ventaForm)
-                  .click()
-                  .remove();
-
-              if (ventaForm.checkValidity()) {
-                ventaForm.submit();
-              }
-            });
-
-        AddButton
-            .addEventListener('click', (event) => {
-              event.preventDefault();
-              event.stopPropagation();
-
-              createRow();
-            });
-
-        EntradasHolder
-            .querySelectorAll('tr')
-            .forEach(function (row) {
-              addRowListeners(row);
-              addRowRemove(row);
-            });
-
-        window.onkeypress = function (event) {
-          let keyCode = event.keyCode || event.which || event.charCode || event.key || event.code;
-
-          if ((keyCode === 13 || keyCode === 'Enter') && event.path.length < 5 && searchString) {
-            setProductAutomatically(searchString.replace('/Enter/g', ''));
-
-            searchString = '';
-            return;
           }
 
-          searchString += event.key;
-        };
-
-        new PerfectScrollbar(ProductosPane);
-
-      })(jQuery);
+      )(jQuery);
     </script>
 {% endblock %}
