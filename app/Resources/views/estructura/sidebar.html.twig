@@ -194,14 +194,14 @@
                             </a>
                         </li>
                         {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_CREATE") or (user.isAdmin())')) %}
-                            <li class="{{ path.check('astillero_new') }}">
+                            <li class="{{ path.check('astillero_new') }} {{ path.check('astillero_recotizar') }}">
                                 <a href="{{ path('astillero_new') }}">
                                     <i class="fa fa-circle-o"></i> Nueva cotización
                                 </a>
                             </li>
                         {% endif %}
                         {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_CREATE") or (user.isAdmin())')) %}
-                            <li class="{{ path.check('astillero_borrador_new') }}">
+                            <li class="{{ path.check('astillero_borrador_index') }} {{ path.check('astillero_editar') }}">
                                 <a href="{{ path('astillero_borrador_index') }}">
                                     <i class="fa fa-circle-o"></i> Borradores
                                 </a>

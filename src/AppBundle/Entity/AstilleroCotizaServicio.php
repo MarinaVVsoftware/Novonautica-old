@@ -33,6 +33,33 @@ class AstilleroCotizaServicio
     private $cantidad;
 
     /**
+     * 0 = cantidad fija, 1 = promedio por pie
+     *
+     * @var int
+     *
+     * @ORM\Column(name="tipo_cantidad", type="smallint", nullable=true)
+     */
+    private $tipoCantidad;
+
+    /**
+     * En caso de tipoCantidad = 1 se usa promedio para indicar valor por pie de embarcación
+     *
+     * @var float
+     *
+     * @ORM\Column(name="promedio", type="float", nullable=true)
+     */
+    private $promedio;
+
+    /**
+     * En caso de ser producto se guarda el id del servicio con el que esta relacionado
+     *
+     * @var int
+     *
+     * @ORM\Column(name="grupo", type="integer", nullable=true)
+     */
+    private $grupo;
+
+    /**
      * @var int
      *
      * @Groups({"facturacion"})
@@ -394,5 +421,77 @@ class AstilleroCotizaServicio
     public function getDivisa()
     {
         return $this->divisa;
+    }
+
+    /**
+     * Set tipoCantidad.
+     *
+     * @param int|null $tipoCantidad
+     *
+     * @return AstilleroCotizaServicio
+     */
+    public function setTipoCantidad($tipoCantidad = null)
+    {
+        $this->tipoCantidad = $tipoCantidad;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoCantidad.
+     *
+     * @return int|null
+     */
+    public function getTipoCantidad()
+    {
+        return $this->tipoCantidad;
+    }
+
+    /**
+     * Set promedio.
+     *
+     * @param float|null $promedio
+     *
+     * @return AstilleroCotizaServicio
+     */
+    public function setPromedio($promedio = null)
+    {
+        $this->promedio = $promedio;
+
+        return $this;
+    }
+
+    /**
+     * Get promedio.
+     *
+     * @return float|null
+     */
+    public function getPromedio()
+    {
+        return $this->promedio;
+    }
+
+    /**
+     * Set grupo.
+     *
+     * @param int|null $grupo
+     *
+     * @return AstilleroCotizaServicio
+     */
+    public function setGrupo($grupo = null)
+    {
+        $this->grupo = $grupo;
+
+        return $this;
+    }
+
+    /**
+     * Get grupo.
+     *
+     * @return int|null
+     */
+    public function getGrupo()
+    {
+        return $this->grupo;
     }
 }

@@ -16,6 +16,7 @@ use AppBundle\Entity\Astillero\Servicio;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -59,6 +60,12 @@ class AstilleroCotizaServicioType extends AbstractType
                 'placeholder' => 'Seleccionar...',
                 'attr' => ['class' => 'select-busca-servicio'],
                 'required'=>false,
+            ])
+            ->add('tipoCantidad',HiddenType::class,[
+            ])
+            ->add('promedio',HiddenType::class,[
+            ])
+            ->add('grupo',HiddenType::class,[
             ])
         ;
     }

@@ -2,14 +2,13 @@
 
 namespace AppBundle\Controller\Astillero;
 
-use AppBundle\Entity\Astillero\GrupoProducto;
-use AppBundle\Entity\Astillero\Producto;
 use AppBundle\Entity\Astillero\Servicio;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
@@ -40,10 +39,6 @@ class ServicioController extends Controller
                 return $this->json($e->getMessage(), $e->getStatusCode());
             }
         }
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $servicios = $em->getRepository('AppBundle:Astillero\Servicio')->findAll();
-
         return $this->render('astillero/servicio/index.html.twig', array(
             'title' => 'Astillero Servicios'
         ));
@@ -84,7 +79,7 @@ class ServicioController extends Controller
         $normalizer->setCircularReferenceHandler(function ($object) {
             return $object->getId();
         });
-        $normalizer->setIgnoredAttributes(['ACotizacionesServicios']);
+        $normalizer->setIgnoredAttributes(['aCotizacionesServicios']);
         $normalizers = [$normalizer];
         $serializer = new Serializer($normalizers, $encoders);
         return new Response($servicio = $serializer->serialize($servicio,$request->getRequestFormat()));
@@ -98,13 +93,10 @@ class ServicioController extends Controller
      */
     public function showAction(Servicio $servicio)
     {
-        $deleteForm = $this->createDeleteForm($servicio);
-
-        return $this->render('astillero/servicio/show.html.twig', array(
+        return $this->render('astillero/servicio/show.html.twig', [
             'servicio' => $servicio,
-            'delete_form' => $deleteForm->createView(),
-            'title' => 'Astillero Detalle Servicios'
-        ));
+            'title' => 'Astillero Detalle Servicio'
+        ]);
     }
 
     /**

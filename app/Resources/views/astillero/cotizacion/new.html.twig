@@ -61,6 +61,9 @@
         .novo-checkbox-container .checkbox input[type="checkbox"]:checked + label:after {
             opacity: 1;
         }
+        #appbundle_astillerocotizacion_acservicios{
+            display: none;
+        }
     </style>
 {% endblock %}
 {% block contwrapper %}
@@ -79,11 +82,15 @@
                 <!-- /.box-header -->
                 <div class="box-body" style="">
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                             <div class="barco-nombre">
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-2">
+                            <div class="barco-eslora">
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
                             <div class="cliente-nombre">
                             </div>
                         </div>
@@ -112,15 +119,13 @@
                             <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
                         </li>
                         <li role="presentation">
-                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios
-                                Básicos</a>
+                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">
+                                Servicios Básicos
+                            </a>
                         </li>
                         <li role="presentation">
                             <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Totales</a>
                         </li>
-                        {#<li role="presentation">#}
-                            {#<a href="#totalusd" aria-controls="totalusd" role="tab" data-toggle="tab">Total (USD)</a>#}
-                        {#</li>#}
                         <li role="presentation">
                             <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
                         </li>
@@ -782,6 +787,7 @@
                                             <th class="col-sm-1">Sub-Total</th>
                                             <th class="col-sm-1">IVA</th>
                                             <th class="col-sm-1">Total</th>
+                                            <th class="col-sm-1">Promedio por pie</th>
                                             <th class="col-sm-1"></th>
                                         </tr>
                                         </thead>
@@ -872,10 +878,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12 text-center">
-                                    {#<button type="submit" class="btn btn-azul">#}
-                                        {#<i class="fa fa-floppy-o" aria-hidden="true"></i>#}
-                                        {#Guardar#}
-                                    {#</button>#}
                                     {{ form_widget(form.guardareditable) }}
                                     {{ form_widget(form.guardarfinalizar) }}
                                 </div>
@@ -975,6 +977,8 @@
                         {{ form_widget(form.acservicios.7.servicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
 
+
+
                     {{ form_end(form) }}
                 </div>
                 <div class="panel-footer">
@@ -1022,6 +1026,7 @@
                         $("#info-barco").append(htmlBarco);
                         $("#info-cliente").append(htmlCliente);
                         $('.barco-nombre').html("<label>Barco</label>" + "<div class='info-input'>" + barco.nombre + "</div>");
+                        $('.barco-eslora').html("<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>");
                         $('.cliente-nombre').html("<label>Cliente</label>" + "<div class='info-input'>" + barco.cliente.nombre + "</div>");
                         $("#grua_cantidad").data('valor', barco.eslora);
                         $("#grua_cantidad").html(barco.eslora);
@@ -1032,7 +1037,6 @@
                         calculaSubtotalesAstillero($('#fila_grua'));
                         calculaSubtotalesAstillero($('#cotizainspeccionar'));
                         calculaSubtotalesAstillero($('#fila_estadia'));
-
                         calculaProductosPorServicio();
                         $('#loading').hide();
                     }
