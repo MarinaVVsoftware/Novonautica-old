@@ -1,0 +1,255 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .table > tbody > tr > td > input,
+        .table > tbody > tr > td > .input-group > input,
+        .table > tbody > tr > td > .input-group > .input-group-addon {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+            background-color: #3e4766;
+            color: #fff;
+            border: none;
+        }
+
+        .panel-body {
+            background-color: #373c52;
+        }
+
+        .help-block {
+            color: #dd4b39;
+        }
+    </style>
+{% endblock %}
+
+{% form_theme form.entradas 'contabilidad/egreso/form-theme/_entrada.html.twig' %}
+{% form_theme form 'tienda/inventario/form-theme/_total.html.twig' %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div id="errors" class="col-md-12">
+                    {{ form_errors(form) }}
+                </div>
+            </div>
+            {{ form_start(form) }}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Registro de egresos</h4>
+                        </div>
+                        <div id="egresos-pane" class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    {{ form_row(form.fecha) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ form_row(form.empresa) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th width="4%" valign="middle" class="text-center">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            </th>
+                                            <th>Proveedor</th>
+                                            <th>Concepto</th>
+                                            <th width="20%">Importe</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="entradas"
+                                               data-prototype="{{ form_widget(form.entradas.vars.prototype)|e('html_attr') }}">
+                                        {% for entrada in form.entradas %}
+                                            <tr class="servicio-agregado table-item">
+                                                <td valign="middle" class="text-center">
+                                                </td>
+                                                <td>
+                                                    {{ form_widget(entrada.proveedor) }}
+                                                    {{ form_errors(entrada.proveedor) }}
+                                                </td>
+                                                <td>
+                                                    {{ form_widget(entrada.concepto) }}
+                                                    {{ form_errors(entrada.concepto) }}
+                                                </td>
+                                                <td>
+                                                    {{ form_widget(entrada.importe) }}
+                                                    {{ form_errors(entrada.importe) }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-8">
+                                    <h4 class="letra-azul">Total</h4>
+                                    <hr>
+                                    {{ form_row(form.total) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <a href="#" id="add" class="btn btn-block btn-contorno-azul pull-right">
+                                        + Entrada
+                                    </a>
+                                </div>
+                                <div class="col-sm-3 col-sm-offset-6">
+                                    <input type="submit" value="Guardar" class="btn btn-block btn-azul pull-right">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      const Table = (($) => {
+        const EmpresaSelector = document.getElementById('appbundle_contabilidad_egreso_empresa');
+        const TotalInput = document.getElementById('appbundle_contabilidad_egreso_total');
+
+        class Table {
+          constructor(element, prototypeHolder) {
+            this.agregar = typeof element === 'string'
+                ? document.querySelector(element)
+                : element;
+
+            this.prototypeHolder = typeof prototypeHolder === 'string'
+                ? document.querySelector(prototypeHolder)
+                : prototypeHolder;
+
+            Array
+                .from(this.prototypeHolder.querySelectorAll('tr'))
+                .forEach(row => this._addListeners(row));
+
+            this.contador = this.prototypeHolder.childElementCount;
+
+            this.agregar
+                .addEventListener(
+                    'click',
+                    this.addRow.bind(this)
+                );
+          }
+
+          // Public
+
+          addRow(event) {
+            if (event) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+
+            let element = this._getPrototypeElement();
+
+            this._addListeners(element);
+            this.prototypeHolder.appendChild(element);
+
+            return this.prototypeHolder.childElementCount;
+          }
+
+          removeRow(row) {
+            row = typeof row === 'number' ? this.prototypeHolder.children[(row - 1)] : row;
+
+            if (!row) throw new Error('No existe el elemento que quieres eliminar');
+
+            row.parentNode.removeChild(row);
+          }
+
+          // Private
+
+          _addListeners(row) {
+            let importe = row.cells[3].querySelector('input');
+            let $proveedor = $(row).find('td:nth-child(2) select');
+            let $concepto = $(row).find('td:nth-child(3) select');
+
+            this._appendRemoveButton(row);
+
+            $proveedor.select2();
+            $concepto.select2({
+              ajax: {
+                url: 'conceptos',
+                dataType: 'json',
+                data(params) {
+                  return {
+                    search: params.term,
+                    empresa: EmpresaSelector.value,
+                  }
+                },
+                processResults(response) {
+                  return {
+                    results: response.results.map((result) => ({
+                      id: result.id,
+                      text: result.descripcion
+                    })),
+                  }
+                }
+              }
+            });
+
+            importe.addEventListener(
+                'input',
+                (function (event) {
+                  if (!event.target.value) return;
+                  event.target.value = event.target.value.replace(/[^\d,.]/g, '');
+
+                  TotalInput.value = Array
+                      .from(this.prototypeHolder.querySelectorAll('tr > td:nth-child(4) input'))
+                      .reduce((a, b) => a + Number(b.value.replace(/[^\d.]/g, '')), 0)
+                      .toFixed(2)
+                      .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+
+                }).bind(this)
+            );
+          }
+
+          _appendRemoveButton(element) {
+            let celda = element.cells[0];
+            let removeButton = document.createElement('a');
+
+            removeButton.className = 'badge btn-xs btn-naranja';
+            removeButton.innerHTML = '<i class="fa fa-trash"></i>';
+            removeButton.addEventListener('click', (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+
+              this.removeRow(removeButton.parentNode.parentNode)
+            });
+
+            celda.appendChild(removeButton);
+          }
+
+          _getPrototypeElement() {
+            let prototipo = this.prototypeHolder
+                .dataset
+                .prototype
+                .replace(/__name__/g, this.contador);
+
+            let tempElement = document.createElement('table');
+            tempElement.innerHTML = prototipo;
+            let element = tempElement.querySelector('tr');
+
+            this.contador++;
+
+            return element;
+          }
+        }
+
+        return new Table('#add', '#entradas')
+      })(jQuery)
+    </script>
+{% endblock javascripts %}
