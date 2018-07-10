@@ -589,6 +589,16 @@
                                         <i class="fa fa-minus"></i> Listado de egresos
                                     </a>
                                 </li>
+                                <li class="{{ path.check('contabilidad_egreso_entrada_concepto_index') }}">
+                                    <a href="{{ path('contabilidad_egreso_entrada_concepto_index') }}">
+                                        <i class="fa fa-minus"></i> Conceptos
+                                    </a>
+                                </li>
+                                <li class="{{ path.check('contabilidad_egreso_entrada_proveedor_index') }}">
+                                    <a href="{{ path('contabilidad_egreso_entrada_proveedor_index') }}">
+                                        <i class="fa fa-minus"></i> Proveedores
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         {% endif %}
