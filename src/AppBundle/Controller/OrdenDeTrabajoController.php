@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Astillero\Contratista;
+use AppBundle\Entity\Astillero\Contratista\Actividad;
 use AppBundle\Entity\OrdenDeTrabajo;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,7 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -55,7 +58,7 @@ class OrdenDeTrabajoController extends Controller
      * @param Request $request
      * @param \Swift_Mailer $mailer
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function newAction(Request $request, \Swift_Mailer $mailer)
     {
@@ -168,7 +171,7 @@ class OrdenDeTrabajoController extends Controller
      * Finds and displays a ordenDeTrabajo entity.
      *
      * @Route("/{id}", name="ordendetrabajo_show")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      *
      * @param OrdenDeTrabajo $ordenDeTrabajo
      *
@@ -177,12 +180,10 @@ class OrdenDeTrabajoController extends Controller
     public function showAction(OrdenDeTrabajo $ordenDeTrabajo)
     {
         $this->denyAccessUnlessGranted('ROLE_ODT', $ordenDeTrabajo);
-        $deleteForm = $this->createDeleteForm($ordenDeTrabajo);
 
         return $this->render('ordendetrabajo/show.html.twig', [
             'title' => 'Detalle ODT',
             'ordenDeTrabajo' => $ordenDeTrabajo,
-            'delete_form' => $deleteForm->createView(),
         ]);
     }
 
@@ -195,7 +196,7 @@ class OrdenDeTrabajoController extends Controller
      * @param Request $request
      * @param OrdenDeTrabajo $ordenDeTrabajo
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, OrdenDeTrabajo $ordenDeTrabajo)
     {
@@ -289,8 +290,6 @@ class OrdenDeTrabajoController extends Controller
         ]);
     }
 
-
-
     /**
      * @Route("/{id}/actividad", name="ordendetrabajo_contratista_actividad")
      * @Method({"GET", "POST"})
@@ -298,7 +297,7 @@ class OrdenDeTrabajoController extends Controller
      * @param Request $request
      * @param Contratista $contratista
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function actividadAction(Request $request, Contratista $contratista)
     {
@@ -367,6 +366,70 @@ class OrdenDeTrabajoController extends Controller
     }
 
     /**
+     * @Route("/{id}/pausa-actividad/", name="ordendetrabajo_contratista_pausa-actividad")
+     * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @param Actividad $actividad
+     *
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function subActividadAction(Request $request, Actividad $actividad)
+    {
+        $subActividad = new Actividad();
+        $form = $this->createForm('AppBundle\Form\Astillero\Contratista\SubActividadType', $subActividad);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $subActividad->setContratista($actividad->getContratista());
+            $subActividad
+                ->setInicio(new \DateTime('now'))
+                ->setFin(new \DateTime('now'))
+                ->setFecha(new \DateTime('now'))
+                ->setUsuario($this->getUser())
+                ->setIsActividadPausa(true)
+            ;
+            $actividad->setIsPausado(true);
+            $em->persist($subActividad);
+            $em->persist($actividad);
+            $em->flush();
+            return $this->redirectToRoute('ordendetrabajo_show', ['id' => $actividad->getContratista()->getAstilleroODT()->getId()]);
+        }
+        return $this->render('ordendetrabajo/subactividad.html.twig',[
+            'title' => 'Sub actividad (pausar/reanudar)',
+            'actividad' => $actividad,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/pausar")
+     * @Method({"GET", "POST"})
+     *
+     * @param Actividad $actividad
+     *
+     * @return Response
+     */
+    public function pausaActividadAction(Actividad $actividad)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $fechaPausa = new \DateTime('now');
+        $fechaIni = $actividad->getInicio();
+        $fechaFin = $actividad->getFin();
+
+        if($actividad->getIsPausado()){ //si ya está pausado
+            $actividad->setIsPausado(false);
+        }else{ //si no está pausado
+            if($fechaPausa >= $fechaIni && $fechaPausa <= $fechaFin){ //verificar que este entre los rangos
+                $actividad->setIsPausado(true);
+            }
+        }
+        $em->persist($actividad);
+        $em->flush();
+        return new Response(var_export($actividad->getIsPausado(),1));
+    }
+
+    /**
      * Deletes a ordenDeTrabajo entity.
      *
      * @Route("/{id}", name="ordendetrabajo_delete")
@@ -375,7 +438,7 @@ class OrdenDeTrabajoController extends Controller
      * @param Request $request
      * @param OrdenDeTrabajo $ordenDeTrabajo
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteAction(Request $request, OrdenDeTrabajo $ordenDeTrabajo)
     {

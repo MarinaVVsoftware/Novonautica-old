@@ -63,6 +63,9 @@ a {
 .fondo-morado-2{
     background-color: #3e496f;
 }
+.fondo-gris{
+    background-color: #6e6d6e;
+}
 /*++ fin colores fondo +++*/
 
 /*++++ colores letra +++++*/
@@ -71,6 +74,9 @@ a {
 }
 .letra-blanca{
     color: #ffffff;
+}
+.letra-negra{
+    color: #000000;
 }
 /*++ fin colores letra ++++*/
 
