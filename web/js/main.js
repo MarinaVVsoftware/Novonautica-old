@@ -385,7 +385,7 @@ function calculaProductosPorServicio(){
     });
 }
 function astilleroBuscaProducto(idproducto,fila){
-    var url = `${location.protocol + '//' + location.host}/novonautica/web/app_dev.php/astillero/producto/buscarproducto/${idproducto}`;
+    var url = `${location.protocol + '//' + location.host}/astillero/producto/buscarproducto/${idproducto}`;
     $.ajax({
         method: "GET",
         url: url,
@@ -435,7 +435,7 @@ $('.add-servicio').click(function (e) {
     $(fila.children('.valorprecio')).data('valorreal',precioreal);
     $(fila.children('.valorprecio')).data('divisa',$(this).data('divisa'));
     calculaSubtotalesAstillero(fila);
-    let url = `${location.protocol + '//' + location.host}/novonautica/web/app_dev.php/astillero/servicio/buscarservicio/${idservicio}`;
+    let url = `${location.protocol + '//' + location.host}/astillero/servicio/buscarservicio/${idservicio}`;
     $.ajax({
         method: "GET",
         url: url,
