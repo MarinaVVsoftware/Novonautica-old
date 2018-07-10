@@ -96,6 +96,7 @@ class UsuarioType extends AbstractType
                         'Cancelar' => 'CONTABILIDAD_CANCEL',
                         'Emisores' => 'ROLE_CONTABILIDAD_EMISOR',
                         'Pagos ODT' => 'ROLE_ODT_PAGO',
+                        'Egresos' => 'ROLE_CONTABILIDAD_EGRESO'
                     ],
                     'Correos' => [
                         'Acceso' => 'ROLE_HCORREO',

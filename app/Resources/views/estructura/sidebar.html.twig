@@ -571,6 +571,27 @@
                                 <i class="fa fa-circle-o"></i> ODT
                             </a>
                         </li>
+                        {% if is_granted('ROLE_CONTABILIDAD_EGRESO') %}
+                        <li class="treeview {{ path.check('contabilidad_egreso_') }}">
+                            <a href="#">
+                                <i class="fa fa-circle-o"></i> Egresos
+                                <span class="pull-right-container"><i
+                                            class="fa fa-angle-left pull-right"></i></span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li class="{{ path.check('contabilidad_egreso_new') }}">
+                                    <a href="{{ path('contabilidad_egreso_new') }}">
+                                        <i class="fa fa-minus"></i> Nuevo egreso
+                                    </a>
+                                </li>
+                                <li class="{{ path.check('contabilidad_egreso_index') }}">
+                                    <a href="{{ path('contabilidad_egreso_index') }}">
+                                        <i class="fa fa-minus"></i> Listado de egresos
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
                     </ul>
                 </li>
             {% endif %}

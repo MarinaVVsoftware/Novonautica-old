@@ -173,6 +173,7 @@ security:
         - { path: ^/tienda, roles: ROLE_TIENDA }
 
         - { path: ^/contabilidad/facturacion/emisor/, roles: ROLE_CONTABILIDAD_EMISOR }
+        - { path: ^/contabilidad/egreso, roles: ROLE_CONTABILIDAD_EGRESO }
         - { path: ^/contabilidad, roles: ROLE_CONTABILIDAD }
 
         - { path: ^/historial-correo/notificacion, roles: ROLE_HCORREO_NOTIFICACION }
@@ -226,6 +227,7 @@ security:
         ROLE_WHOLE_CONTABILIDAD:
             - ROLE_CONTABILIDAD
             - ROLE_CONTABILIDAD_EMISOR
+            - ROLE_CONTABILIDAD_EGRESO
         ROLE_WHOLE_CORREO:
             - ROLE_HCORREO
             - ROLE_HCORREO_NOTIFICACION

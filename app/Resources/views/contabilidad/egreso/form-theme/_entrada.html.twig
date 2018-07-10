@@ -1,0 +1,18 @@
+{% block appbundle_contabilidad_egreso_entrada_widget %}
+    <tr class="servicio-agregado table-item">
+        <td valign="middle" class="text-center">
+        </td>
+        <td>
+            {{ form_widget(form.proveedor) }}
+            {{ form_errors(form.proveedor) }}
+        </td>
+        <td>
+            {{ form_widget(form.concepto) }}
+            {{ form_errors(form.concepto) }}
+        </td>
+        <td>
+            {{ form_widget(form.importe) }}
+            {{ form_errors(form.importe) }}
+        </td>
+    </tr>
+{% endblock %}

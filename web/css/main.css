@@ -575,6 +575,8 @@ form > .btn-borrar:hover, .btn-borrar:hover {
 .panel-body .dt-bootstrap select,
 .panel-body form textarea,
 .panel-body form .info-input,
+.content form input.form-control,
+.content form select.form-control,
 .info-input {
     background: #3e4766;
     border: none;
