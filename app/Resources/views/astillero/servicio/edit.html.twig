@@ -81,6 +81,9 @@
         .novo-checkbox-container .checkbox input[type="checkbox"]:checked + label:after {
             opacity: 1;
         }
+        .row>.form-group>.control-label{
+            display: none;
+        }
     </style>
 {% endblock %}
 {% block contwrapper %}
@@ -109,7 +112,6 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    {% form_theme edit_form 'estructura/temaerror.html.twig' %}
                     {{ form_start(edit_form) }}
                     <div class="row">
                         <div class="col-sm-12">
@@ -132,9 +134,24 @@
                             {{ form_row(edit_form.unidad) }}
                         </div>
                     </div>
+                    <div id="listado0"
+                         class="lista-elementos"
+                         data-prototype="{% filter escape %}
+                                            {{ include('astillero/servicio/coleccion-productos.twig', { 'form': edit_form.gruposProductos.vars.prototype }) }}
+                                         {% endfilter %}">
+                        {% for gp in edit_form.gruposProductos %}
+                            {% form_theme gp 'astillero/servicio/coleccion-productos.twig' %}
+                            <div class="row">
+                                {{ form_row(gp) }}
+                            </div>
+                        {% endfor %}
+                    </div>
                     <div class="row">
-                        {% form_theme edit_form.productos 'astillero/servicio/coleccion-productos.twig' %}
-                        {{ form_row(edit_form.productos) }}
+                        <div class="col-sm-12">
+                            <a href="#" id="" class="agrega-elemento letra-azul" data-cantidad="{{ edit_form.gruposProductos|length }}" data-idlista="0">
+                                + Agregar Producto
+                            </a>
+                        </div>
                     </div>
                     <div class="row espacio-linea-arriba2">
                         <div class="col-sm-12">

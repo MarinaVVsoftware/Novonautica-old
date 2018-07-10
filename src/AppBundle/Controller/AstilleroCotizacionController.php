@@ -572,7 +572,7 @@ class AstilleroCotizacionController extends Controller
             return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
         }
         return $this->render('astillero/cotizacion/edit.html.twig', [
-            'title' => 'Editar',
+            'title' => 'Borrador Astillero Cotización',
             'astilleroCotizacion' => $astilleroCotizacion,
             'form' => $form->createView(),
             'delete_form' => $deleteForm->createView()
@@ -819,7 +819,10 @@ class AstilleroCotizacionController extends Controller
                     ->setCantidad($servAst->getCantidad())
                     ->setSubtotal($servAst->getSubtotal())
                     ->setIva($servAst->getIva())
-                    ->setTotal($servAst->getTotal());
+                    ->setTotal($servAst->getTotal())
+                    ->setTipoCantidad($servAst->getTipoCantidad())
+                    ->setPromedio($servAst->getPromedio())
+                    ->setGrupo($servAst->getGrupo());
                 $astilleroCotizacion->addAcservicio($copiaServicio);
             }
         }

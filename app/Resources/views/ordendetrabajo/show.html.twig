@@ -34,10 +34,6 @@
                         <li role="presentation">
                             <a href="#contratistas" aria-controls="contratistas" role="tab" data-toggle="tab">Contratistas</a>
                         </li>
-                        <li role="presentation">
-                            <a href="#hojapagos" aria-controls="hojapagos" role="tab" data-toggle="tab">Hoja de
-                                pagos</a>
-                        </li>
                         <li class="flujograma" role="presentation">
                             <a href="#flujograma" aria-controls="flujograma" role="tab" data-toggle="tab">Flujograma</a>
                         </li>
@@ -210,168 +206,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="hojapagos">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <small class="pull-left">Precios en MXN</small>
-                                    <small class="pull-right">Tipo de cambio:
-                                        <span>{{ (ordenDeTrabajo.astilleroCotizacion.dolar/100)| number_format(2) }}</span>
-                                        MXN
-                                    </small>
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th>Descripción del trabajo</th>
-                                            <th>Contratista</th>
-                                            <th>Razón social</th>
-                                            <th>Precio contratista</th>
-                                            <th>IVA {{ ordenDeTrabajo.astilleroCotizacion.iva }}%</th>
-                                            <th>Total</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for contratista in ordenDeTrabajo.contratistas %}
-                                            <tr>
-                                                <td>{{ contratista.cotizacionInicial }}</td>
-                                                <td>{{ contratista.proveedor.nombre }}</td>
-                                                <td>{{ contratista.proveedor.razonsocial }}</td>
-                                                <td>${{ (contratista.precio/100)|number_format(2) }}</td>
-                                                <td>${{ (contratista.ivatot/100)|number_format(2) }}</td>
-                                                <td>${{ (contratista.total/100)|number_format(2) }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                        <tfoot>
-                                        <tr>
-                                            <td colspan="3" rowspan="2" class="text-right">Totales:</td>
-                                            <td>${{ (ordenDeTrabajo.precioTotal/100)|number_format(2) }}</td>
-                                            <td>${{ (ordenDeTrabajo.ivaTotal/100)|number_format(2) }}</td>
-                                            <td>${{ (ordenDeTrabajo.granTotal/100)|number_format(2) }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                ${{ ((ordenDeTrabajo.precioTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
-                                                USD
-                                            </td>
-                                            <td>
-                                                ${{ ((ordenDeTrabajo.ivaTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
-                                                USD
-                                            </td>
-                                            <td>
-                                                ${{ ((ordenDeTrabajo.granTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
-                                                USD
-                                            </td>
-                                        </tr>
-                                        </tfoot>
-                                    </table>
-                                    <small>Iva:
-                                        <span>{{ ordenDeTrabajo.astilleroCotizacion.iva | number_format(2) }}</span>%
-                                    </small>
-                                </div>
-                            </div>
-                            {% for contratista in ordenDeTrabajo.contratistas %}
-                                <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
-                                    <div class="col-sm-12">
-                                        <hr>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-5">
-                                        {% if is_granted(expression('has_role("ROLE_ODT_PAGO") or (user.isAdmin())')) %}
-                                        <div class="row espacio-linea-abajo2">
-                                            <div class="col-sm-12">
-                                                <a class="btn btn-verde loadpage"
-                                                   href="{{ path('ordendetrabajo_contratista_pago', { 'id': contratista.id }) }}">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                    Pagos
-                                                </a>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="letra-azul">Descripción del trabajo:</div>
-                                                <ul>{{ contratista.cotizacionInicial }}</ul>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="letra-azul">Contratista:</div>
-                                                <ul>{{ contratista.proveedor.nombre }}</ul>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="letra-azul">Razón Social:</div>
-                                                <ul>{{ contratista.proveedor.razonsocial }}</ul>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="letra-azul">Precio contratista:</div>
-                                                <ul>
-                                                    ${{ (contratista.precio/100)|number_format(2) }} MXN &nbsp;&nbsp;&nbsp;
-                                                    ${{ (contratista.precio/ordenDeTrabajo.astilleroCotizacion.dolar)|number_format(2) }}
-                                                    USD
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="letra-azul">IVA:</div>
-                                                <ul>
-                                                    ${{ (contratista.ivatot/100)|number_format(2) }} MXN &nbsp;&nbsp;&nbsp;
-                                                    ${{ (contratista.ivatot/ordenDeTrabajo.astilleroCotizacion.dolar)|number_format(2) }}
-                                                    USD
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="letra-azul">Total:</div>
-                                                <ul>
-                                                    ${{ (contratista.total/100)|number_format(2) }} MXN &nbsp;&nbsp;&nbsp;
-                                                    ${{ (contratista.total/ordenDeTrabajo.astilleroCotizacion.dolar)|number_format(2) }}
-                                                    USD
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-7">
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th>Pagos</th>
-                                                <th>Fecha</th>
-                                                <th>Forma de pago</th>
-                                                <th colspan="2">Saldo</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for pago in contratista.contratistapagos %}
-                                                <tr>
-                                                    <td>
-                                                        ${{ (pago.cantidad/100)|number_format(2) }} {{ pago.divisa }}</td>
-                                                    <td>
-                                                        {% if pago.fecha %}
-                                                            {{ pago.fecha|date('d-m-Y') }}
-                                                        {% endif %}
-                                                    </td>
-                                                    <td>{{ pago.forma }}</td>
-                                                    <td>${{ (pago.saldo/100)|number_format(2) }} MXN</td>
-                                                    <td>
-                                                        ${{ (pago.saldo/ordenDeTrabajo.astilleroCotizacion.dolar)|number_format(2) }}
-                                                        USD
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
                         <div role="tabpanel" class="tab-pane" id="flujograma">
                             <div class="row">
                                 <div class="col-sm-12 table-responsive">
@@ -393,6 +227,7 @@
                                     <table class="table">
                                         <thead>
                                         <tr>
+                                            <th></th>
                                             <th>Actividad</th>
                                             <th>Inicio</th>
                                             <th>Fin</th>
@@ -400,12 +235,13 @@
                                             <th>Responsable</th>
                                             <th>Ejecutor</th>
                                             <th>Porcentaje</th>
+                                            <th>Estatus</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         {% for contratista in ordenDeTrabajo.contratistas %}
                                             <tr class="fondo-morado-2">
-                                                <td colspan="7">
+                                                <td colspan="9">
                                                     {{ contratista.cotizacionInicial }}
                                                     {% if is_granted(expression('has_role("ROLE_ODT_ACTIVIDAD") or (user.isAdmin())')) %}
                                                     <a class="btn btn-azul pull-right loadpage"
@@ -417,7 +253,15 @@
                                                 </td>
                                             </tr>
                                             {% for actividad in contratista.contratistaactividades %}
-                                                <tr class="fondo-morado-claro">
+                                                {% if not actividad.isActividadPausa %}
+                                                <tr class="{% if actividad.isPausado %}fondo-gris{% else %}fondo-morado-claro{% endif %}">
+                                                    <td>
+                                                        {#<a class="btn btn-warning letra-negra"#}
+                                                           {#href="{{ path('ordendetrabajo_contratista_pausa-actividad', { 'id': actividad.id }) }}">#}
+                                                            {#<i class="fa fa-play" aria-hidden="true"></i>#}
+                                                            {#<i class="fa fa-pause" aria-hidden="true"></i>#}
+                                                        {#</a>#}
+                                                    </td>
                                                     <td>{{ actividad.nombre }}</td>
                                                     <td>{{ actividad.inicio|date('d/m/Y') }}</td>
                                                     <td>{{ actividad.fin|date('d/m/Y') }}</td>
@@ -425,7 +269,13 @@
                                                     <td>{{ actividad.responsable }}</td>
                                                     <td>{{ contratista.proveedor.nombre }}</td>
                                                     <td>{{ actividad.porcentaje|number_format(2) }}%</td>
+                                                    <td class="estatus">
+                                                        {% if actividad.isPausado %}
+                                                            Pausado
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
+                                                {% endif %}
                                             {% endfor %}
                                         {% endfor %}
                                         </tbody>
@@ -450,7 +300,6 @@
             </div>
         </section>
     </div>
-
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -567,6 +416,7 @@
                     '',
                     g));
                 {% for actividad in contratista.contratistaactividades %}
+            {% if not actividad.isActividadPausa %}
                     g.AddTaskItem(new JSGantt.TaskItem({{ x~y }},
                         '{{ actividad.nombre }}',
                         '{{ actividad.inicio|date('Y-m-d') }}',
@@ -578,6 +428,7 @@
                         0,{{ x }},
                         1, '', '', '{{ actividad.notas }}', g));
                     {% set y = y+1 %}
+            {% endif %}
                 {% endfor %}
                 {% set x = x+1 %}
                 {% set y = 1 %}
@@ -586,5 +437,27 @@
         } else {
             alert("Error, unable to create Gantt Chart");
         }
+
+        // $('.pausar-actividad').on('click',function () {
+        //     var filaApausar = $(this).parent().parent();
+        //     var idactividad = this.dataset.id;
+        //     var url = `${location.protocol + '//' + location.host}/novonautica/web/app_dev.php/astillero/odt/${idactividad}/pausar`;
+        //     $.ajax({
+        //         method: "GET",
+        //         url: url,
+        //         success: function(pausado) {
+        //             console.log(pausado);
+        //             if(pausado === 'true'){
+        //                 console.log('es verdad');
+        //                 filaApausar.removeClass('fondo-morado-claro').addClass('fondo-gris');
+        //                 filaApausar.children('.estatus').html('Pausado');
+        //             }else{
+        //                 console.log('es falso');
+        //                 filaApausar.removeClass('fondo-gris').addClass('fondo-morado-claro');
+        //                 filaApausar.children('.estatus').html('');
+        //             }
+        //         }
+        //     });
+        // });
     </script>
 {% endblock %}

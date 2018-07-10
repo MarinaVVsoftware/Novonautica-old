@@ -28,7 +28,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Cotización Marina Húmeda</h3>
+                            <h3 class="panel-title">{{ title }}</h3>
                             <span>
                                  {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
                                      {{ marinaHumedaCotizacion.folio }}
@@ -42,7 +42,7 @@
                                href="{% if marinaHumedaCotizacion.mhcservicios[0].tipo == 1 or marinaHumedaCotizacion.mhcservicios[0].tipo == 2 %}
                                                                                         {{ path('marina-humeda_estadia_index') }}
                                                                                     {% else %}
-                                                                                         {{ path('marina-humeda_gasolina_index') }}
+                                                                                         {{ path('combustible_index') }}
                                                                                      {% endif %}">Regresar</a>
                         </div>
                     </div>

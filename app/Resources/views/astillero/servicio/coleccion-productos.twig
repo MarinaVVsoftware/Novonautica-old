@@ -1,17 +1,19 @@
-{% block _appbundle_astillero_servicio_productos_widget %}
-    <div {{ block('widget_container_attributes') }}>
-        <div class="col-sm-12" style="margin-bottom: 2rem;">
-            <fieldset>
-                <legend>Productos</legend>
-                <div class="row novo-checkbox-container">
-                    {% for key,choice in form.vars.choices %}
-                        <div class="col-sm-4">
-                            {{ form_widget(form[key]) }}
-                            {{ form_label(form[key]) }}
-                        </div>
-                    {% endfor %}
-                </div>
-            </fieldset>
-        </div>
+{% block appbundle_astillero_grupo_producto_widget %}
+    <div class="col-sm-3">
+        {{ form_row(form.producto) }}
+    </div>
+    <div class="col-sm-3">
+        {{ form_row(form.tipoCantidad) }}
+    </div>
+    <div class="col-sm-2">
+        {{ form_row(form.cantidad) }}
+    </div>
+    <div class="col-sm-3">
+        {{ form_row(form.observaciones) }}
+    </div>
+    <div class="col-sm-1">
+        <a href="#" class="elimina-elemento btn-xs btn-naranja">
+            <i class="fa fa-times" aria-hidden="true"></i>
+        </a>
     </div>
 {% endblock %}

@@ -44,8 +44,9 @@ class MarinaHumedaCotizacionGasolinaType extends AbstractType
             ])
             ->add('dolar', MoneyType::class, [
                 'required'=>false,
+                'label' => 'Dolar',
                 'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
-                'currency' => 'USD',
+                'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
                 'empty_data' => 0,
@@ -89,7 +90,36 @@ class MarinaHumedaCotizacionGasolinaType extends AbstractType
                 'label' => '¿Notificar al cliente?',
                 'required' => false
             ])
-           ;
+            ->add('subtotal',MoneyType::class,[
+                'required'=>false,
+                'label' => 'Subtotal:',
+                'label_attr' => ['class' => 'letra-azul tipo-letra1'],
+                'attr' => ['class' => 'esdecimal tipo-letra1','autocomplete' => 'off','readonly' => true],
+                'currency' => 'MXN',
+                'divisor' => 100,
+                'grouping' => true,
+                'empty_data' => 0,
+            ])
+            ->add('ivatotal',MoneyType::class,[
+                'required'=>false,
+                'label' => 'I.V.A.:',
+                'label_attr' => ['class' => 'letra-azul tipo-letra1'],
+                'attr' => ['class' => 'esdecimal tipo-letra1','autocomplete' => 'off','readonly' => true],
+                'currency' => 'MXN',
+                'divisor' => 100,
+                'grouping' => true,
+                'empty_data' => 0,
+            ])
+            ->add('total',MoneyType::class,[
+                'required'=>false,
+                'label' => 'Total:',
+                'label_attr' => ['class' => 'letra-azul tipo-letra1'],
+                'attr' => ['class' => 'esdecimal tipo-letra1','autocomplete' => 'off','readonly' => true],
+                'currency' => 'MXN',
+                'divisor' => 100,
+                'grouping' => true,
+                'empty_data' => 0,
+            ]);
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();

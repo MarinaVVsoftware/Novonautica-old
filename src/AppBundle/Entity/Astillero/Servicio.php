@@ -70,11 +70,21 @@ class Servicio
     private $descripcion;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="productos", type="json")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Astillero\GrupoProducto",cascade={"persist"})
+     * @ORM\JoinTable(name="servicios_gruposproductos",
+     *      joinColumns={@ORM\JoinColumn(name="idservicio", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="idgrupoproducto", referencedColumnName="id", unique=true)}
+     *      )
      */
-    private $productos;
+    private $gruposProductos;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->gruposProductos = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     public function __toString()
     {
@@ -212,26 +222,38 @@ class Servicio
     }
 
     /**
-     * Set productos.
+     * Add gruposProducto.
      *
-     * @param array $productos
+     * @param \AppBundle\Entity\Astillero\GrupoProducto $gruposProducto
      *
      * @return Servicio
      */
-    public function setProductos($productos)
+    public function addGruposProducto(\AppBundle\Entity\Astillero\GrupoProducto $gruposProducto)
     {
-        $this->productos = $productos;
+        $this->gruposProductos[] = $gruposProducto;
 
         return $this;
     }
 
     /**
-     * Get productos.
+     * Remove gruposProducto.
      *
-     * @return array
+     * @param \AppBundle\Entity\Astillero\GrupoProducto $gruposProducto
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function getProductos()
+    public function removeGruposProducto(\AppBundle\Entity\Astillero\GrupoProducto $gruposProducto)
     {
-        return $this->productos;
+        return $this->gruposProductos->removeElement($gruposProducto);
+    }
+
+    /**
+     * Get gruposProductos.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGruposProductos()
+    {
+        return $this->gruposProductos;
     }
 }

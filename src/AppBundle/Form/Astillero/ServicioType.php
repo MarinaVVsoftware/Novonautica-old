@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,17 +39,25 @@ class ServicioType extends AbstractType
                 'attr' => ['rows'=>5],
                 'required' => false
             ])
-            ->add('productos',EntityType::class,[
-                'class' => 'AppBundle\Entity\Astillero\Producto' ,
-                'choice_label' => 'nombre',
-                'multiple' => true,
-                'expanded' => true,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('p')
-                        ->orderBy('p.nombre', 'ASC')
-                        ;
-                },
-                'label' => false
+//            ->add('productos',EntityType::class,[
+//                'class' => 'AppBundle\Entity\Astillero\Producto' ,
+//                'choice_label' => 'nombre',
+//                'multiple' => true,
+//                'expanded' => true,
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('p')
+//                        ->orderBy('p.nombre', 'ASC')
+//                        ;
+//                },
+//                'label' => false
+//            ])
+            ->add('gruposProductos',CollectionType::class,[
+                'entry_type' => GrupoProductoType::class,
+                'label' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'by_reference' => false
             ]);
     }
     

@@ -96,11 +96,26 @@ class Actividad
      */
     private $fotos;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_pausado", type="boolean")
+     */
+    private $isPausado;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_actividad_pausa", type="boolean")
+     */
+    private $isActividadPausa;
+
     public function __construct()
     {
         $this->porcentaje = 0;
         $this->fecha = new \DateTime('now');
         $this->fotos = new ArrayCollection();
+        $this->isPausado = false;
     }
 
     /**
@@ -366,5 +381,53 @@ class Actividad
     public function getFotos()
     {
         return $this->fotos;
+    }
+
+    /**
+     * Set isPausado.
+     *
+     * @param bool $isPausado
+     *
+     * @return Actividad
+     */
+    public function setIsPausado($isPausado)
+    {
+        $this->isPausado = $isPausado;
+
+        return $this;
+    }
+
+    /**
+     * Get isPausado.
+     *
+     * @return bool
+     */
+    public function getIsPausado()
+    {
+        return $this->isPausado;
+    }
+
+    /**
+     * Set isActividadPausa.
+     *
+     * @param bool $isActividadPausa
+     *
+     * @return Actividad
+     */
+    public function setIsActividadPausa($isActividadPausa)
+    {
+        $this->isActividadPausa = $isActividadPausa;
+
+        return $this;
+    }
+
+    /**
+     * Get isActividadPausa.
+     *
+     * @return bool
+     */
+    public function getIsActividadPausa()
+    {
+        return $this->isActividadPausa;
     }
 }

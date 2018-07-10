@@ -61,6 +61,9 @@
         .novo-checkbox-container .checkbox input[type="checkbox"]:checked + label:after {
             opacity: 1;
         }
+        #appbundle_astillerocotizacion_acservicios{
+            display: none;
+        }
     </style>
 {% endblock %}
 {% block contwrapper %}
@@ -79,11 +82,15 @@
                 <!-- /.box-header -->
                 <div class="box-body" style="">
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                             <div class="barco-nombre">
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-2">
+                            <div class="barco-eslora">
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
                             <div class="cliente-nombre">
                             </div>
                         </div>
@@ -112,15 +119,13 @@
                             <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
                         </li>
                         <li role="presentation">
-                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios
-                                Básicos</a>
+                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">
+                                Servicios Básicos
+                            </a>
                         </li>
                         <li role="presentation">
                             <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Totales</a>
                         </li>
-                        {#<li role="presentation">#}
-                            {#<a href="#totalusd" aria-controls="totalusd" role="tab" data-toggle="tab">Total (USD)</a>#}
-                        {#</li>#}
                         <li role="presentation">
                             <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
                         </li>
@@ -706,9 +711,7 @@
                                                    data-id="{{ serv.data.id }}"
                                                    data-nombre="{{ serv.data.nombre }}"
                                                    data-precio="{{ serv.data.precio }}"
-                                                   data-divisa="{{ serv.data.divisa }}"
-                                                   data-productos="{{ serv.data.productos|json_encode }}"
-                                                >
+                                                   data-divisa="{{ serv.data.divisa }}">
                                                     + {{ serv.data.nombre }}
                                                 </a>
                                             {% endfor %}
@@ -784,6 +787,7 @@
                                             <th class="col-sm-1">Sub-Total</th>
                                             <th class="col-sm-1">IVA</th>
                                             <th class="col-sm-1">Total</th>
+                                            <th class="col-sm-1">Promedio por pie</th>
                                             <th class="col-sm-1"></th>
                                         </tr>
                                         </thead>
@@ -874,10 +878,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12 text-center">
-                                    {#<button type="submit" class="btn btn-azul">#}
-                                        {#<i class="fa fa-floppy-o" aria-hidden="true"></i>#}
-                                        {#Guardar#}
-                                    {#</button>#}
                                     {{ form_widget(form.guardareditable) }}
                                     {{ form_widget(form.guardarfinalizar) }}
                                 </div>
@@ -976,7 +976,6 @@
                     {% if form.acservicios.7.servicio is defined %}
                         {{ form_widget(form.acservicios.7.servicio,{'attr':{'class':'hidden'}}) }}
                     {% endif %}
-
                     {{ form_end(form) }}
                 </div>
                 <div class="panel-footer">
@@ -993,7 +992,6 @@
                 $('#loading').show();
                 $("#info-barco").empty();
                 $("#info-cliente").empty();
-
                 var url = "{{ path('ajax_busca_barco_todo',{'id':'iddelbarco'}) }}";
                 url = url.replace("iddelbarco", $(this).val());
                 $.ajax({
@@ -1001,142 +999,52 @@
                     url: url,
                     dataType: 'json',
                     success: function (barco) {
-                        //JSON.stringify(barco);
-                        var html = "<label>Modelo</label>" + "<div class='info-input'>" + barco.modelo + "</div>" +
-                            "<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>" +
+                        var cliente = barco.cliente;
+                        var nueva_estadia_cantidad = $("#estadia_cantidad").data('dias') * barco.eslora;
+                        var htmlBarco = "<label>Modelo</label>" +
+                            "<div class='info-input'>" + barco.modelo + "</div>" +
+                            "<label>Eslora</label>" +
+                            "<div id='eslora' class='info-input' data-valor='"+barco.eslora+"'>" + barco.eslora + "</div>" +
                             "<label>Manga</label>" + "<div class='info-input'>" + barco.manga + "</div>" +
-                            "<label>Nombre del capitán</label>" + "<div class='info-input'>" + barco.nombreCapitan + "</div>" +
-                            "<label>Teléfono del capitán</label>" + "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
-                            "<label>Correo del capitán</label>" + "<div class='info-input'>" + barco.correoCapitan + "</div>";
-                        $("#info-barco").append(html);
+                            "<label>Nombre del capitán</label>" +
+                            "<div class='info-input'>" + barco.nombreCapitan + "</div>" +
+                            "<label>Teléfono del capitán</label>" +
+                            "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
+                            "<label>Correo del capitán</label>" +
+                            "<div class='info-input'>" + barco.correoCapitan + "</div>";
+                        var htmlCliente = "<label>Cliente</label>" +
+                            "<div class='info-input'>" + cliente.nombre + "</div>" +
+                            "<label>Correo electrónico</label>" +
+                            "<div class='info-input'>" + cliente.correo + "</div>" +
+                            "<label>Número de teléfono</label>" +
+                            "<div class='info-input'>" + cliente.telefono + "</div>" +
+                            "<label>Dirección</label>" +
+                            "<div class='info-input'>" + cliente.direccion + "</div>";
+                        $("#info-barco").append(htmlBarco);
+                        $("#info-cliente").append(htmlCliente);
                         $('.barco-nombre').html("<label>Barco</label>" + "<div class='info-input'>" + barco.nombre + "</div>");
+                        $('.barco-eslora').html("<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>");
                         $('.cliente-nombre').html("<label>Cliente</label>" + "<div class='info-input'>" + barco.cliente.nombre + "</div>");
                         $("#grua_cantidad").data('valor', barco.eslora);
                         $("#grua_cantidad").html(barco.eslora);
-                        calculaSubtotalesAstillero($('#fila_grua'));
-                        // $("#grua_cantidad_mxn").data('valor', barco.eslora);
-                        // $("#grua_cantidad_mxn").html(barco.eslora);
-                        // calculaSubtotalesAstillero($('#fila_grua_mxn'));
-
                         $("#inspeccionar_cantidad").data('valor', barco.eslora);
                         $("#inspeccionar_cantidad").html(barco.eslora);
-                        calculaSubtotalesAstillero($('#cotizainspeccionar'));
-                        // $("#inspeccionar_cantidad_mxn").data('valor', barco.eslora);
-                        // $("#inspeccionar_cantidad_mxn").html(barco.eslora);
-                        // calculaSubtotalesAstillero($('#cotizainspeccionar_mxn'));
-
-                        var nueva_estadia_cantidad =$("#estadia_cantidad").data('dias') * barco.eslora;
                         $("#estadia_cantidad").data('eslora', barco.eslora);
                         $("#estadia_cantidad").data('valor',nueva_estadia_cantidad);
-                        //$("#estadia_cantidad").html(nueva_estadia_cantidad+' (pie por día)');
-                        calculaSubtotalesAstillero($('#fila_estadia'));
-
-                        // $("#estadia_cantidad_mxn").data('eslora', barco.eslora);
-                        // $("#estadia_cantidad_mxn").data('valor',nueva_estadia_cantidad);
-                        // $("#estadia_cantidad_mxn").html(nueva_estadia_cantidad+' (pie por día)');
-                        // calculaSubtotalesAstillero($('#fila_estadia_mxn'));
-
-                        var cliente = barco.cliente;
-                        var html = "<label>Cliente</label>" + "<div class='info-input'>" + cliente.nombre + "</div>" +
-                            "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
-                            "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
-                            "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>";
-                        $("#info-cliente").append(html);
-                        $('#loading').hide();
-                    }
-                });
-            });
-
-            $('.selectclientebuscar').change(function (e) {
-                $('#loading').show();
-                $("#info-barco").empty();
-                $("#info-cliente").empty();
-
-                var url = "{{ path('ajax_busca_cliente_todo',{'id':'iddelcliente'}) }}";
-                url = url.replace("iddelcliente", $(this).val());
-                $.ajax({
-                    method: "GET",
-                    url: url,
-                    dataType: 'json',
-                    success: function (cliente) {
-                        JSON.stringify(cliente);
-                        var html = "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
-                            "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
-                            "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>" +
-                        $("#info-cliente").append(html);
-
-                        $('#loading').hide();
-                    },
-                    error: function (jqXHR, exception) {
-                        if (jqXHR.status === 405) {
-                            console.error("METHOD NOT ALLOWED!");
-                        }
-                        $('#loading').hide();
-                    }
-                }).fail(function () {
-                    $('#loading').hide();
-                });
-            });
-
-            var x = 1;
-            $('.buscabarcomh').click(function () {
-                if (x == 2) {
-                    if ($("input[type=radio]:checked").val() != null) {
-                        $('#loading').show();
-                        $("#info-barco").empty();
-                        var idbarco = $("input[type=radio]:checked").val();
-                        buscaDatosBarco(idbarco);
-                        x = 1;
-                    }
-                } else {
-                    x++;
-                }
-            });
-
-            function buscaDatosBarco(idbarco) {
-                $.ajax({
-                    method: "GET",
-                    url: `{{ app.request.baseUrl }}/ajax/buscabarcotodo/${idbarco}.json`,
-                    dataType: 'json',
-                    success: function (barco) {
-                        JSON.stringify(barco);
-                        var html = "<label>Modelo</label>" + "<div class='info-input'>" + barco.modelo + "</div>" +
-                            "<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>" +
-                            "<label>Manga</label>" + "<div class='info-input'>" + barco.manga + "</div>" +
-                            "<label>Nombre del capitán</label>" + "<div class='info-input'>" + barco.nombreCapitan + "</div>" +
-                            "<label>Teléfono del capitán</label>" + "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
-                            "<label>Correo del capitán</label>" + "<div class='info-input'>" + barco.correoCapitan + "</div>";
-                        $("#info-barco").append(html);
-                        $("#grua_cantidad").data('valor', barco.eslora);
-                        // $("#varada_cantidad").data('valor', barco.eslora);
-                        $("#grua_cantidad").html(barco.eslora);
-                        $("#varada_cantidad").html(barco.eslora);
                         calculaSubtotalesAstillero($('#fila_grua'));
-                        calculaSubtotalesAstillero($('#cotizavarada'));
-
-                        // $("#grua_cantidad_mxn").data('valor', barco.eslora);
-                        // // $("#varada_cantidad_mxn").data('valor', barco.eslora);
-                        // $("#grua_cantidad_mxn").html(barco.eslora);
-                        // $("#varada_cantidad_mxn").html(barco.eslora);
-                        // calculaSubtotalesAstillero($('#fila_grua_mxn'));
-                        // calculaSubtotalesAstillero($('#cotizavarada_mxn'));
-
-                        // Filtrado de opcions de slip por tamaño de eslora
-                        const slipOptions = [...document.querySelectorAll('#appbundle_marinahumedacotizacion_slip > option')]
-                    .filter((slip) => barco.eslora >= Number(slip.dataset.feet)
-                            ? slip.style.display = 'none'
-                            : slip.style.display = 'block');
-                    },
-                    complete: () => { $("#loading").hide(); }
+                        calculaSubtotalesAstillero($('#cotizainspeccionar'));
+                        calculaSubtotalesAstillero($('#fila_estadia'));
+                        calculaProductosPorServicio();
+                        $('#loading').hide();
+                    }
+                });
             });
-            }
         })(jQuery);
 
-
         $('#productos').change('.select-busca-producto',function (e) {
-            var idservicio = $('.select-busca-producto:focus option:selected' ).val();
+            var idproducto = $('.select-busca-producto:focus option:selected' ).val();
             var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-            astilleroBuscaProducto(idservicio,fila);
+            astilleroBuscaProducto(idproducto,fila);
         });
 
         $('.btnPrevious').click(function(){

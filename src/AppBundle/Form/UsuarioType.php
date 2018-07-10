@@ -48,6 +48,14 @@ class UsuarioType extends AbstractType
                         'Tarifas' => 'ROLE_MARINA_TARIFF',
                         'Servicios adicionales' => 'ROLE_MARINA_SERVICIOADICIONAL',
                     ],
+                    'Combustible' => [
+                        'Acceso' => 'ROLE_COMBUSTIBLE',
+                        'Crear' => 'COMBUSTIBLE_COTIZACION_CREATE',
+                        'Validar' => 'COMBUSTIBLE_COTIZACION_VALIDATE',
+                        'Recotizar' => 'COMBUSTIBLE_COTIZACION_REQUOTE',
+                        'Eliminar' => 'COMBUSTIBLE_COTIZACION_DELETE',
+                        'Pagos' => 'ROLE_COMBUSTIBLE_PAGO'
+                    ],
                     'Astillero' => [
                         'Acceso' => 'ROLE_ASTILLERO',
                         'Crear' => 'ASTILLERO_COTIZACION_CREATE',

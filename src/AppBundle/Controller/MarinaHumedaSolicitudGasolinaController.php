@@ -12,14 +12,14 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 /**
  * Marinahumedasolicitudgasolina controller.
  *
- * @Route("/marina/cotizacion")
+ * @Route("/combustible/app")
  */
 class MarinaHumedaSolicitudGasolinaController extends Controller
 {
     /**
      * Lists all marinaHumedaSolicitudGasolina entities.
      *
-     * @Route("/gasolina/app", name="marinahumedasolicitud_gasolina_index")
+     * @Route("/", name="marinahumedasolicitud_gasolina_index")
      * @Method("GET")
      */
     public function indexAction()
@@ -28,7 +28,7 @@ class MarinaHumedaSolicitudGasolinaController extends Controller
     }
 
     /**
-     * @Route("/gasolina/app/solicitudes", name="solicitud_index_data")
+     * @Route("/solicitudes", name="solicitud_index_data")
      *
      * @param Request $request
      * @param DataTablesInterface $dataTables
@@ -67,7 +67,7 @@ class MarinaHumedaSolicitudGasolinaController extends Controller
     /**
      * Displays a form to edit an existing marinaHumedaSolicitudGasolina entity.
      *
-     * @Route("/{id}/edit", name="marinahumedasolicitudgasolina_edit")
+     * @Route("/{id}/editar", name="marinahumedasolicitudgasolina_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, MarinaHumedaSolicitudGasolina $marinaHumedaSolicitudGasolina)

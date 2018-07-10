@@ -152,6 +152,8 @@ security:
         - { path: ^/marina/cotizacion/estadia/tarifas, roles: ROLE_MARINA_TARIFF }
         - { path: ^/marina, roles: ROLE_MARINA }
 
+        - { path: ^/combustible, roles: ROLE_COMBUSTIBLE }
+
         - { path: ^/astillero/producto, roles: ROLE_ASTILLERO_PRODUCTO }
         - { path: ^/astillero/servicio-basico/, roles: ROLE_ASTILLERO_SERVICIOBASICO }
         - { path: ^/astillero/servicio/, roles: ROLE_ASTILLERO_SERVICIO }
@@ -197,6 +199,9 @@ security:
             - ROLE_MARINA_SERVICIOADICIONAL
             - ROLE_MARINA_TARIFF
             - ROLE_MARINA_PAGO
+        ROLE_WHOLE_COMBUSTIBLE:
+            - ROLE_COMBUSTIBLE
+            - ROLE_COMBUSTIBLE_PAGO
         ROLE_WHOLE_ASTILLERO:
             - ROLE_ASTILLERO
             - ROLE_ASTILLERO_PRODUCTO
@@ -240,6 +245,7 @@ security:
             - ROLE_USER
             - ROLE_CLIENTE
             - ROLE_WHOLE_MARINA
+            - ROLE_WHOLE_COMBUSTIBLE
             - ROLE_WHOLE_ASTILLERO
             - ROLE_WHOLE_ODT
             - ROLE_WHOLE_REPORTE

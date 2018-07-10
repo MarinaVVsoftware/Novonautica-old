@@ -13,7 +13,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <table class="table">
                                 <thead>
                                 <tr>
@@ -28,7 +28,7 @@
                                         <td>{{ (valorSistemas.0.dolar/100)|number_format(2) }} MXN</td>
                                     </tr>
                                     <tr>
-                                        <td>Iva</td>
+                                        <td>IVA</td>
                                         <td>{{ valorSistemas.0.iva }} %</td>
                                     </tr>
                                     <tr>
@@ -36,23 +36,19 @@
                                         <td>{{ valorSistemas.0.folioMarina }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Días Habiles Pago Cotización Marina</td>
+                                        <td>Días Hábiles Pago Cotización Marina</td>
                                         <td>{{ valorSistemas.0.diasHabilesMarinaCotizacion }} días</td>
                                     </tr>
                                     <tr>
-                                        <td>Cotizaciones Astillero (no usado)</td>
-                                        <td>{{ valorSistemas.0.folioAstillero }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Días Habiles Cotización Astillero</td>
+                                        <td>Días Hábiles Cotización Astillero</td>
                                         <td>{{ valorSistemas.0.diasHabilesAstilleroCotizacion }} días</td>
                                     </tr>
                                     <tr>
-                                        <td>Mensaje Correo Marina Humeda</td>
+                                        <td>Mensaje Correo Marina Húmeda</td>
                                         <td>{{ valorSistemas.0.mensajeCorreoMarina|raw }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Mensaje Correo Gasolina Marina Humeda</td>
+                                        <td>Mensaje Correo Combustible</td>
                                         <td>{{ valorSistemas.0.mensajeCorreoMarinaGasolina|raw }}</td>
                                     </tr>
                                     <tr>

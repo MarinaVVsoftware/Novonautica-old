@@ -6,12 +6,10 @@ use AppBundle\Entity\Correo;
 use AppBundle\Entity\CotizacionNota;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
-use AppBundle\Entity\MarinaHumedaSolicitudGasolina;
 use AppBundle\Entity\MonederoMovimiento;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Form\CotizacionNotaType;
 use AppBundle\Form\Marina\CotizacionMoratoriaType;
-use AppBundle\Form\MarinaHumedaCotizacionGasolinaType;
 use AppBundle\Form\MarinaHumedaCotizacionType;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -64,31 +62,6 @@ class MarinaHumedaCotizacionController extends Controller
         }
 
         return $this->render('marinahumeda/cotizacion/estadia/index.html.twig', ['title' => 'Cotizaciones de Estadias']);
-    }
-
-    /**
-     * Enlista todas las cotizaciones gasolina
-     *
-     * @Route("/gasolina/", name="marina-humeda_gasolina_index")
-     * @Method("GET")
-     *
-     * @param Request $request
-     * @param DataTablesInterface $dataTables
-     *
-     * @return JsonResponse|Response
-     */
-    public function indexGasolinaAction(Request $request, DataTablesInterface $dataTables)
-    {
-        if ($request->isXmlHttpRequest()) {
-            try {
-                $results = $dataTables->handle($request, 'cotizacionGasolina');
-                return $this->json($results);
-            } catch (HttpException $e) {
-                return $this->json($e->getMessage(), $e->getStatusCode());
-            }
-        }
-
-        return $this->render('marinahumeda/cotizacion/gasolina/index.html.twig', ['title' => 'Cotizaciones de Gasolina']);
     }
 
     /**
@@ -237,121 +210,6 @@ class MarinaHumedaCotizacionController extends Controller
     }
 
     /**
-     * @Route("/gasolina/nuevo", name="marina-humeda_gasolina_new")
-     * @Method({"GET", "POST"})
-     *
-     * @param Request $request
-     * @param \Swift_Mailer $mailer
-     *
-     * @return RedirectResponse|Response
-     */
-    public function newGasolinaAction(Request $request, \Swift_Mailer $mailer)
-    {
-
-        $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
-
-        // Bloquear acceso si no puede crear cotizaciones
-        $this->denyAccessUnlessGranted('MARINA_COTIZACION_CREATE', $marinaHumedaCotizacion);
-
-        $marinaGasolina = new MarinaHumedaCotizaServicios();
-        $em = $this->getDoctrine()->getManager();
-        $qb = $em->createQueryBuilder();
-        $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
-        $sistema = $query->getArrayResult();
-
-        $marinaGasolina->setCantidad(0);
-        $dolarBase = $sistema[0]['dolar'];
-        $iva = $sistema[0]['iva'];
-        $mensaje = $sistema[0]['mensajeCorreoMarinaGasolina'];
-
-        $barcoid = $request->query->get('id');
-        if ($barcoid !== null) {
-            $solicitud = $em->getRepository('AppBundle:MarinaHumedaSolicitudGasolina')->find($barcoid);
-            $cliente = $solicitud->getCliente();
-            $barco = $solicitud->getIdbarco();
-            $cantidadgasolina = $solicitud->getCantidadCombustible();
-            $tipogasolina = $solicitud->getTipoCombustible();
-
-            $marinaGasolina
-                ->setTipo($tipogasolina)
-                ->setCantidad($cantidadgasolina);
-            $marinaHumedaCotizacion
-                ->setBarco($barco)
-                ->setCliente($cliente);
-        }
-        $marinaHumedaCotizacion
-            ->addMarinaHumedaCotizaServicios($marinaGasolina)
-            ->setMensaje($mensaje);
-        $form = $this->createForm(MarinaHumedaCotizacionGasolinaType::class, $marinaHumedaCotizacion);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $dolar = $marinaHumedaCotizacion->getDolar();
-            $cantidad = $marinaGasolina->getCantidad();
-            $precioUSD = (round(((($marinaGasolina->getPrecio() / $dolar) * 100) / ($iva + 100)), 2)) * 100;
-            $subtotalUSD = ($cantidad * $precioUSD);
-            $ivaUSD = ($subtotalUSD * ($iva / 100));
-            $totalUSD = ($subtotalUSD + $ivaUSD);
-
-            $foliobase = $sistema[0]['folioMarina'];
-            $folionuevo = $foliobase + 1;
-
-            if ($barcoid !== null) {
-                $solicitud = $em->getRepository('AppBundle:MarinaHumedaSolicitudGasolina')->find($barcoid);
-                $solicitud->setStatus(1);
-            }
-            $marinaGasolina
-                ->setEstatus(1)
-                ->setCantidad($cantidad)
-                ->setPrecio($precioUSD)// Precio sin iva
-                ->setSubtotal($subtotalUSD)// Total sin iva
-                ->setIva($ivaUSD)// El iva del total
-                ->setTotal($totalUSD); // Total con iva
-            ;
-            $marinaHumedaCotizacion
-                ->setIva($iva)
-                ->setSubtotal($subtotalUSD)
-                ->setIvatotal($ivaUSD)
-                ->setTotal($totalUSD)
-                ->setValidanovo(0)
-                ->setValidacliente(0)
-                ->setEstatus(1)
-                ->setFecharegistro(new \DateTime())
-                ->setFolio($folionuevo)
-                ->setFoliorecotiza(0);
-
-            $this->getDoctrine()
-                ->getRepository(ValorSistema::class)
-                ->find(1)
-                ->setFolioMarina($folionuevo);
-
-            $marinaHumedaCotizacion->setCreador($this->getUser());
-
-            $em->persist($marinaGasolina);
-            $em->persist($marinaHumedaCotizacion);
-            $em->flush();
-
-            // Buscar correos a notificar
-            $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
-                'evento' => Correo\Notificacion::EVENTO_CREAR,
-                'tipo' => Correo\Notificacion::TIPO_MARINA
-            ]);
-
-            $this->enviaCorreoNotificacion($mailer, $notificables, $marinaHumedaCotizacion);
-
-            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
-
-        }
-        return $this->render('marinahumeda/cotizacion/gasolina/new.html.twig', [
-            'title' => 'Nueva cotización',
-            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
-            'valdolar' => $dolarBase,
-            'valiva' => $iva,
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
      * Muestra una cotizacion en base a su id
      *
      * @Route("/{id}", name="marina-humeda_show")
@@ -411,55 +269,48 @@ class MarinaHumedaCotizacionController extends Controller
                 : $marinaHumedaCotizacion->getFolio();
 
             // Se envia un correo si se solicito notificar al cliente
-            if ($marinaHumedaCotizacion->getValidanovo() === 2 && $marinaHumedaCotizacion->isNotificarCliente()) {
+            if ($marinaHumedaCotizacion->getValidanovo() === 2) {
                 // Activa un token para que valide el cliente
                 $token = $marinaHumedaCotizacion->getFolio() . bin2hex(random_bytes(16));
                 $marinaHumedaCotizacion->setToken($token);
 
-                $attachment = new Swift_Attachment(
-                    $this->displayMarinaPDFAction($marinaHumedaCotizacion),
-                    'Cotizacion-' . $folio . '.pdf', 'application/pdf');
-
-                // Enviar correo de confirmacion
-                $message = (new \Swift_Message('¡Cotizacion de servicios!'))
-                    ->setFrom('noresponder@novonautica.com')
-                    ->setTo($marinaHumedaCotizacion->getCliente()->getCorreo())
-                    ->setBcc('admin@novonautica.com')
-                    ->setBody(
-                        $this->renderView(':mail:cotizacion.html.twig', ['cotizacion' => $marinaHumedaCotizacion]),
-                        'text/html'
-                    )
-                    ->attach($attachment);
-
-                if ($marinaHumedaCotizacion->getBarco()->getCorreoCapitan()) {
-                    $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoCapitan());
+                if($marinaHumedaCotizacion->isNotificarCliente()){
+                    $attachment = new Swift_Attachment(
+                        $this->displayMarinaPDFAction($marinaHumedaCotizacion),
+                        'Cotizacion-' . $folio . '.pdf', 'application/pdf');
+                    // Enviar correo de confirmacion
+                    $message = (new \Swift_Message('¡Cotizacion de servicios!'))
+                        ->setFrom('noresponder@novonautica.com')
+                        ->setTo($marinaHumedaCotizacion->getCliente()->getCorreo())
+                        ->setBcc('admin@novonautica.com')
+                        ->setBody(
+                            $this->renderView(':mail:cotizacion.html.twig', ['cotizacion' => $marinaHumedaCotizacion]),
+                            'text/html'
+                        )
+                        ->attach($attachment);
+                    if ($marinaHumedaCotizacion->getBarco()->getCorreoCapitan()) {
+                        $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoCapitan());
+                    }
+                    if ($marinaHumedaCotizacion->getBarco()->getCorreoResponsable()) {
+                        $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoResponsable());
+                    }
+                    $mailer->send($message);
+                    $tipoCorreo = $marinaHumedaCotizacion->getFoliorecotiza() === 0 ? 'Cotización servicio Marina Humeda' : 'Recotización servicio Marina Humeda';
+                    // Guardar correo en el log de correos
+                    $historialCorreo = new Correo();
+                    $historialCorreo
+                        ->setFecha(new \DateTime())
+                        ->setTipo($tipoCorreo)
+                        ->setDescripcion('Envio de cotización con folio: ' . $folio)
+                        ->setFolioCotizacion($folio)
+                        ->setMhcotizacion($marinaHumedaCotizacion);
+                    $em->persist($historialCorreo);
                 }
-
-                if ($marinaHumedaCotizacion->getBarco()->getCorreoResponsable()) {
-                    $message->addCc($marinaHumedaCotizacion->getBarco()->getCorreoResponsable());
-                }
-
-                $mailer->send($message);
-
-                $tipoCorreo = $marinaHumedaCotizacion->getFoliorecotiza() === 0 ? 'Cotización servicio Marina Humeda' : 'Recotización servicio Marina Humeda';
-
-                // Guardar correo en el log de correos
-                $historialCorreo = new Correo();
-                $historialCorreo
-                    ->setFecha(new \DateTime())
-                    ->setTipo($tipoCorreo)
-                    ->setDescripcion('Envio de cotización con folio: ' . $folio)
-                    ->setFolioCotizacion($folio)
-                    ->setMhcotizacion($marinaHumedaCotizacion);
-
-                $em->persist($historialCorreo);
-
                 // Buscar correos a notificar
                 $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                     'evento' => Correo\Notificacion::EVENTO_VALIDAR,
                     'tipo' => Correo\Notificacion::TIPO_MARINA
                 ]);
-
                 $this->enviaCorreoNotificacion($mailer, $notificables, $marinaHumedaCotizacion);
             }
 
@@ -1088,117 +939,6 @@ class MarinaHumedaCotizacionController extends Controller
     }
 
     /**
-     * Muestra una cotizacion para recotizar
-     *
-     * @Route("/gasolina/{id}/recotizar", name="marina-humeda_gasolina_recotizar")
-     * @Method({"GET", "POST"})
-     *
-     * @param Request $request
-     * @param MarinaHumedaCotizacion $marinaHumedaCotizacionAnterior
-     *
-     * @return RedirectResponse|Response
-     */
-    public function recotizaGasolinaAction(Request $request, MarinaHumedaCotizacion $marinaHumedaCotizacionAnterior)
-    {
-        $this->denyAccessUnlessGranted('MARINA_COTIZACION_REQUOTE', $marinaHumedaCotizacionAnterior);
-
-        if ($marinaHumedaCotizacionAnterior->getEstatus() == 0 ||
-            $marinaHumedaCotizacionAnterior->getValidacliente() == 2 ||
-            $marinaHumedaCotizacionAnterior->getValidanovo() == 0 ||
-            ($marinaHumedaCotizacionAnterior->getValidanovo() == 2 && $marinaHumedaCotizacionAnterior->getValidacliente() == 0)
-        ) {
-            throw new NotFoundHttpException();
-        }
-        $marinaHumedaCotizacion = new MarinaHumedaCotizacion();
-
-        $cliente = $marinaHumedaCotizacionAnterior->getCliente();
-        $barco = $marinaHumedaCotizacionAnterior->getBarco();
-        $dolar = $marinaHumedaCotizacionAnterior->getDolar();
-        $iva = $marinaHumedaCotizacionAnterior->getIva();
-        $marinaHumedaCotizacion
-            ->setCliente($cliente)
-            ->setBarco($barco)
-            ->setDescuento($marinaHumedaCotizacionAnterior->getDescuento())
-            ->setDolar($dolar)
-            ->setIva($marinaHumedaCotizacionAnterior->getIva())
-            ->setSubtotal($marinaHumedaCotizacionAnterior->getSubtotal())
-            ->setIvatotal($marinaHumedaCotizacionAnterior->getIvatotal())
-            ->setDescuentototal($marinaHumedaCotizacionAnterior->getDescuentototal())
-            ->setTotal($marinaHumedaCotizacionAnterior->getTotal())
-            ->setValidanovo(0)
-            ->setValidacliente(0)
-            ->setFolio($marinaHumedaCotizacionAnterior->getFolio())
-            ->setMensaje($marinaHumedaCotizacionAnterior->getMensaje());
-        $servicios = $marinaHumedaCotizacionAnterior->getMHCservicios();
-        $precioNoIncluyeIvaUSD = ($servicios[0]->getPrecio() * $dolar) / 100;
-        $ivaDelPrecioGardardoUSD = ($precioNoIncluyeIvaUSD * $iva) / 100;
-        $precioIncluyeIvaUSD = $precioNoIncluyeIvaUSD + $ivaDelPrecioGardardoUSD;
-        $marinaGasolina = new MarinaHumedaCotizaServicios();
-        $marinaGasolina
-            ->setTipo($servicios[0]->getTipo())
-            ->setCantidad($servicios[0]->getCantidad())
-            ->setPrecio($precioIncluyeIvaUSD)
-            ->setSubtotal($servicios[0]->getSubtotal())
-            ->setIva($servicios[0]->getIva())
-            ->setDescuento($servicios[0]->getDescuento())
-            ->setTotal($servicios[0]->getTotal())
-            ->setEstatus($servicios[0]->getEstatus());
-        $marinaHumedaCotizacion
-            ->addMarinaHumedaCotizaServicios($marinaGasolina);
-
-
-        $form = $this->createForm(MarinaHumedaCotizacionGasolinaType::class, $marinaHumedaCotizacion);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $foliorecotizado = $marinaHumedaCotizacionAnterior->getFoliorecotiza() + 1;
-            $descuento = $marinaHumedaCotizacion->getDescuento();
-            $dolar = $marinaHumedaCotizacion->getDolar();
-            $cantidad = $marinaGasolina->getCantidad();
-            $precioConIvaMXN = $marinaGasolina->getPrecio();
-            $precioConIvaUSD = $precioConIvaMXN / $dolar * 100;
-            $totalConIvaUSD = $cantidad * $precioConIvaUSD;
-            $ivaEquivalente = 100 + $iva; //116%
-            $totalSinIvaUSD = (100 * $totalConIvaUSD) / $ivaEquivalente; //subtotal
-            $ivaDelTotalUSD = $totalConIvaUSD - $totalSinIvaUSD;
-            $precioSinIvaUSD = $totalSinIvaUSD / $cantidad;
-            $fechaHoraActual = new \DateTime('now');
-            $marinaGasolina
-                ->setCantidad($cantidad)
-                ->setPrecio($precioSinIvaUSD)
-                ->setSubtotal($totalSinIvaUSD)
-                ->setIva($ivaDelTotalUSD)
-                ->setTotal($totalConIvaUSD);
-
-            $marinaHumedaCotizacion
-                ->setIva($iva)
-                ->setSubtotal($totalSinIvaUSD)
-                ->setIvatotal($ivaDelTotalUSD)
-                ->setTotal($totalConIvaUSD)
-                ->setValidanovo(0)
-                ->setValidacliente(0)
-                ->setEstatus(1)
-                ->setFecharegistro($fechaHoraActual)
-                ->setFoliorecotiza($foliorecotizado);
-            $marinaHumedaCotizacionAnterior
-                ->setEstatus(0);
-            $em->persist($marinaGasolina);
-            $em->persist($marinaHumedaCotizacion);
-            $em->persist($marinaHumedaCotizacionAnterior);
-            $em->flush();
-            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
-        }
-
-        return $this->render('marinahumeda/cotizacion/gasolina/recotizar.html.twig', [
-            'title' => 'Recotización',
-            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
-            'form' => $form->createView(),
-            'precioSinIvaUSD' => $precioNoIncluyeIvaUSD
-        ]);
-
-    }
-
-    /**
      * @Route("/{id}/reenviar", name="marina-humeda_reenviar")
      * @Method({"GET", "POST"})
      *
@@ -1262,7 +1002,6 @@ class MarinaHumedaCotizacionController extends Controller
 
     /**
      * @Route("/estadia/cliente.{_format}", defaults={"_format" = "json"})
-     * @Route("/gasolina/cliente.{_format}", defaults={"_format" = "json"})
      *
      * @param Request $request
      *
@@ -1271,13 +1010,11 @@ class MarinaHumedaCotizacionController extends Controller
     public function getClientesAction(Request $request)
     {
         $clientes = $this->getDoctrine()->getRepository('AppBundle:MarinaHumedaCotizacion')->getAllClientes();
-
         return new Response($this->serializeEntities($clientes, $request->getRequestFormat()));
     }
 
     /**
      * @Route("/estadia/barco.{_format}", defaults={"_format" = "json"})
-     * @Route("/gasolina/barco.{_format}", defaults={"_format" = "json"})
      *
      * @param Request $request
      *
@@ -1286,7 +1023,6 @@ class MarinaHumedaCotizacionController extends Controller
     public function getBarcosAction(Request $request)
     {
         $barcos = $this->getDoctrine()->getRepository('AppBundle:MarinaHumedaCotizacion')->getAllBarcos();
-
         return new Response($this->serializeEntities($barcos, $request->getRequestFormat()));
     }
 
@@ -1310,6 +1046,14 @@ class MarinaHumedaCotizacionController extends Controller
         $tipo = $marinaHumedaCotizacion->getMHCservicios()->first()->getTipo();
         if ($form->isSubmitted() && $form->isValid()) {
             if ($marinaHumedaCotizacion->getValidanovo() == 0) {
+                $folioRecotiza = $marinaHumedaCotizacion->getFoliorecotiza();
+                if($folioRecotiza > 0){
+                    $folioRecotizaPrincipal = $folioRecotiza-1;
+                    $this->getDoctrine()
+                        ->getRepository(MarinaHumedaCotizacion::class)
+                        ->findOneBy(['folio' => $marinaHumedaCotizacion->getFolio(),'foliorecotiza' => $folioRecotizaPrincipal])
+                        ->setEstatus(true);
+                }
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($marinaHumedaCotizacion);
                 $em->flush();
@@ -1320,7 +1064,7 @@ class MarinaHumedaCotizacionController extends Controller
             return $this->redirectToRoute('marina-humeda_estadia_index');
         } else {
             if ($tipo == 3 || $tipo == 4 || $tipo == 5) {
-                return $this->redirectToRoute('marina-humeda_gasolina_index');
+                return $this->redirectToRoute('combustible_index');
             } else {
                 return $this->redirectToRoute('inicio');
             }
@@ -1369,7 +1113,7 @@ class MarinaHumedaCotizacionController extends Controller
             $recipientes[$key] = $notificable->getCorreo();
         }
 
-        $message = (new \Swift_Message('¡Cotizacion de servicios Astillero!'));
+        $message = (new \Swift_Message('¡Cotizacion de Marina Humeda!'));
         $message->setFrom('noresponder@novonautica.com');
         $message->setTo($recipientes);
 

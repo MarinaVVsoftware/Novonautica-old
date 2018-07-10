@@ -74,6 +74,7 @@ class Producto
      */
     private $ACotizacionesServicios;
 
+
     public function __toString()
     {
         return $this->nombre;
@@ -249,4 +250,6 @@ class Producto
     {
         return $this->ACotizacionesServicios;
     }
+
+
 }
