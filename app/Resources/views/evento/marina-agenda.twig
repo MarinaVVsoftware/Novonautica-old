@@ -57,7 +57,9 @@
             title: "{{ evento.titulo }}",
             start: "{{ evento.fechainicio|date('Y-m-d') }} {{ evento.horainicio|date('H:i:s') }}",
             end: "{{ evento.fechafin|date('Y-m-d') }} {{ evento.horafin|date('H:i:s') }}",
-            url: "{{ path('evento_show', { 'id': evento.id }) }}"
+            url: "{{ path('evento_show', { 'id': evento.id }) }}",
+            color: "{{ evento.fondocolor }}",
+            textColor:"{{ evento.letracolor }}"
           },
             {% endfor %}
         ]
