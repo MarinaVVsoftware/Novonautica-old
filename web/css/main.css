@@ -91,7 +91,9 @@ a {
 .tipo-letra3 {
     font-size: 6rem;
 }
-
+.tipo-letra4{
+    font-size: 1.8rem;
+}
 /*+++ fin tamaño letra ++++*/
 
 /*++++ botones color ++++*/
@@ -125,7 +127,6 @@ a {
     color: #ffffff;
     background: #3e4766;
 }
-
 form > .btn-borrar, .btn-borrar {
     background: #8c0400;
     color: #fff;
@@ -175,6 +176,14 @@ form > .btn-borrar:hover, .btn-borrar:hover {
 .btn-gris:hover{
     background-color: #96979c;
     color: #000;
+}
+.btn-transparente-2{
+    border: none;
+    text-align: left;
+}
+.btn-transparente-2:hover{
+    background: #3e4766;
+    border-radius: 0;
 }
 /*++ fin botones color ++*/
 
@@ -1181,9 +1190,41 @@ input[type="file"] + label * {
 .panel-body .form-combustible .input-combustible .input-group-addon {
     background: #363c52;
 }
-
 .input-color{
     background: #474d6b;
     border-radius: 5px;
     border: none;
+}
+.thumbnail-novo{
+    background-color: #3e4766;
+    border: 1px solid #848484;
+}
+.thumbnail-novo .caption{
+    color: #ffffff;
+}
+.progress-bar-aqua, .progress-bar-info {
+    background-color: #0097f6;;
+}
+.progress{
+    background-color: #3e496f;
+    border: 1px solid;
+}
+.btn-pausa{
+    min-width: 100%;
+}
+.linea-pausa{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.galeria-actividades{
+    height: 400px;
+}
+.galeria-actividades .item{
+    background: #3e496f;
+}
+.galeria-actividades img{
+    width: 100%;
+}
+.galeria-actividades .carousel-inner{
+    max-height: 400px;
 }

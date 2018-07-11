@@ -12,13 +12,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <h3 class="panel-title">{{ title }}</h3>
-                            <span>
-                                 {% if ordenDeTrabajo.astilleroCotizacion.foliorecotiza == 0 %}
-                                     {{ ordenDeTrabajo.astilleroCotizacion.folio }}
-                                 {% else %}
-                                     {{ ordenDeTrabajo.astilleroCotizacion.folio }}-{{ ordenDeTrabajo.astilleroCotizacion.foliorecotiza }}
-                                 {% endif %}
-                            </span>
+                            <span>{{ folio }}</span>
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right"
@@ -34,7 +28,7 @@
                         <li role="presentation">
                             <a href="#contratistas" aria-controls="contratistas" role="tab" data-toggle="tab">Contratistas</a>
                         </li>
-                        <li class="flujograma" role="presentation">
+                        <li role="presentation" class="flujograma ">
                             <a href="#flujograma" aria-controls="flujograma" role="tab" data-toggle="tab">Flujograma</a>
                         </li>
                     </ul>
@@ -206,111 +200,260 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="flujograma">
+                        <div role="tabpanel" class="tab-pane " id="flujograma">
                             <div class="row">
                                 <div class="col-sm-12 table-responsive">
-                                    <div style="position:relative; " class="gantt" id="GanttChartDIV" ></div>
+                                    <div style="position:relative; " class="gantt" id="GanttChartDIV"></div>
                                 </div>
                             </div>
-                            <div class="row espacio-linea-arriba2">
+                            <div class="row espacio-linea-arriba2 espacio-linea-abajo2">
                                 <div class="col-sm-4">
-                                    <label>Fecha incio</label>
+                                    <label>Fecha incio en cotización</label>
                                     <div class="info-input">{{ ordenDeTrabajo.astilleroCotizacion.fechaLlegada|date('d/m/Y') }}</div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label>Fecha fin</label>
+                                    <label>Fecha fin en cotización</label>
                                     <div class="info-input">{{ ordenDeTrabajo.astilleroCotizacion.fechaSalida|date('d/m/Y') }}</div>
                                 </div>
                             </div>
-                            <div class="row espacio-linea-arriba2">
-                                <div class="col-sm-12">
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Actividad</th>
-                                            <th>Inicio</th>
-                                            <th>Fin</th>
-                                            <th>Detalles, avances, demoras y observaciones</th>
-                                            <th>Responsable</th>
-                                            <th>Ejecutor</th>
-                                            <th>Porcentaje</th>
-                                            <th>Estatus</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for contratista in ordenDeTrabajo.contratistas %}
-                                            <tr class="fondo-morado-2">
-                                                <td colspan="9">
-                                                    {{ contratista.cotizacionInicial }}
-                                                    {% if is_granted(expression('has_role("ROLE_ODT_ACTIVIDAD") or (user.isAdmin())')) %}
-                                                    <a class="btn btn-azul pull-right loadpage"
-                                                       href="{{ path('ordendetrabajo_contratista_actividad', { 'id': contratista.id }) }}">
-                                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                                        Agregar
-                                                    </a>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                            {% for actividad in contratista.contratistaactividades %}
-                                                {% if not actividad.isActividadPausa %}
-                                                <tr class="{% if actividad.isPausado %}fondo-gris{% else %}fondo-morado-claro{% endif %}">
-                                                    <td>
-                                                        {#<a class="btn btn-warning letra-negra"#}
-                                                           {#href="{{ path('ordendetrabajo_contratista_pausa-actividad', { 'id': actividad.id }) }}">#}
-                                                            {#<i class="fa fa-play" aria-hidden="true"></i>#}
-                                                            {#<i class="fa fa-pause" aria-hidden="true"></i>#}
-                                                        {#</a>#}
-                                                    </td>
-                                                    <td>{{ actividad.nombre }}</td>
-                                                    <td>{{ actividad.inicio|date('d/m/Y') }}</td>
-                                                    <td>{{ actividad.fin|date('d/m/Y') }}</td>
-                                                    <td>{{ actividad.notas }}</td>
-                                                    <td>{{ actividad.responsable }}</td>
-                                                    <td>{{ contratista.proveedor.nombre }}</td>
-                                                    <td>{{ actividad.porcentaje|number_format(2) }}%</td>
-                                                    <td class="estatus">
-                                                        {% if actividad.isPausado %}
-                                                            Pausado
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
-                                                {% endif %}
-                                            {% endfor %}
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                            {% for contratista in ordenDeTrabajo.contratistas if contratista.proveedor.proveedorcontratista %}
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <a data-toggle="collapse"
+                                               href="#actividades{{ contratista.id }}"
+                                               aria-expanded="false"
+                                               class="btn btn-transparente-2">
+                                                <h4 class="letra-azul">{{ contratista.cotizacionInicial }}</h4>
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            {% if is_granted(expression('has_role("ROLE_ODT_ACTIVIDAD") or (user.isAdmin())')) %}
+                                                <a class="btn btn-azul pull-right loadpage btn-xs"
+                                                   href="{{ path('ordendetrabajo_contratista_actividad', { 'id': contratista.id }) }}">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    Subactividades
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 espacio-linea-abajo2">
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    <div class="row collapse" id="actividades{{ contratista.id }}">
+                                        <div class="col-sm-12">
+                                            {% if contratista.contratistaactividades|length > 0 %}
+                                                {% for actividad in contratista.contratistaactividades %}
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <div class="thumbnail thumbnail-novo">
+                                                                <div class="row">
+                                                                    {% if actividad.fotos|length > 0 %}
+                                                                    <div class="col-md-6">
+                                                                        <div id="carousel{{ actividad.id }}"
+                                                                             class="carousel slide galeria-actividades"
+                                                                             data-ride="carousel">
+                                                                            <ol class="carousel-indicators">
+                                                                                {% for foto in actividad.fotos %}
+                                                                                    <li data-target="#carousel{{ actividad.id }}"
+                                                                                        data-slide-to="{{ (loop.index)-1 }}"
+                                                                                        class="{% if loop.first %}active{% endif %}">
+                                                                                    </li>
+                                                                                {% endfor %}
+                                                                            </ol>
+                                                                            <div class="carousel-inner" role="listbox">
+                                                                                {% for foto in actividad.fotos %}
+                                                                                    <div class="item {% if loop.first %}active{% endif %}">
+                                                                                        <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ '/novonautica/web/uploads/actividad_fotos/' ~ foto.basename }}"
+                                                                                             class="center-block">
+                                                                                    </div>
+                                                                                {% endfor %}
+                                                                            </div>
+                                                                            <a class="left carousel-control"
+                                                                               href="#carousel{{ actividad.id }}"
+                                                                               role="button"
+                                                                               data-slide="prev">
+                                                                        <span class="glyphicon glyphicon-chevron-left"
+                                                                              aria-hidden="true"></span>
+                                                                                <span class="sr-only">Previous</span>
+                                                                            </a>
+                                                                            <a class="right carousel-control"
+                                                                               href="#carousel{{ actividad.id }}"
+                                                                               role="button"
+                                                                               data-slide="next">
+                                                                        <span class="glyphicon glyphicon-chevron-right"
+                                                                              aria-hidden="true"></span>
+                                                                                <span class="sr-only">Next</span>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        {% else %}
+                                                                        <div class="col-md-12">
+                                                                            {% endif %}
 
+                                                                            <div class="caption">
+                                                                                {% if actividad.isPausado %}
+                                                                                    <div class="row fondo-amarillo">
+                                                                                        <div class="col-sm-12 text-center letra-negra tipo-letra4 linea-pausa">
+                                                                                            <strong>Actividad en
+                                                                                                pausa</strong>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                {% endif %}
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-12 text-right espacio-linea-arriba2">
+                                                                                        Del {{ actividad.inicio|date('d/m/Y') }}
+                                                                                        al {{ actividad.fin|date('d/m/Y') }}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-12">
+                                                                                        <span class=" tipo-letra4">{{ actividad.nombre }}</span>
+                                                                                        <p>{{ actividad.notas }}</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-12 text-left">
+                                                                                        {{ actividad.porcentaje|number_format(0) }}
+                                                                                        %
+                                                                                        Completado
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-10">
+                                                                                        <div class="progress">
+                                                                                            <div class="progress-bar progress-bar-info"
+                                                                                                 role="progressbar"
+                                                                                                 aria-valuenow="{{ actividad.porcentaje|number_format(2) }}"
+                                                                                                 aria-valuemin="0"
+                                                                                                 aria-valuemax="100"
+                                                                                                 style="width: {{ actividad.porcentaje|number_format(2) }}%">
+                                                                                <span class="sr-only">
+                                                                                    {{ actividad.porcentaje|number_format(2) }}
+                                                                                    % Completado
+                                                                                </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-sm-2">
+                                                                                        {% if actividad.isPausado %}
+                                                                                            <a class="btn btn-warning btn-pausa btn-xs letra-negra"
+                                                                                               data-href="{{ path('ordendetrabajo_contratista_reanuda-actividad', { 'id': actividad.id }) }}"
+                                                                                               data-toggle="modal" data-target="#quitar-pausa">
+                                                                                                <i class="fa fa-play"
+                                                                                                   aria-hidden="true"></i>
+                                                                                            </a>
+                                                                                        {% else %}
+                                                                                            {% if date() >= date(actividad.inicio) and date() <= date(actividad.fin) %}
+                                                                                                <a class="btn btn-warning btn-pausa btn-xs letra-negra"
+                                                                                                   href="{{ path('ordendetrabajo_contratista_pausa-actividad', { 'id': actividad.id }) }}">
+                                                                                                    <i class="fa fa-pause"
+                                                                                                       aria-hidden="true"></i>
+                                                                                                </a>
+                                                                                            {% endif %}
+                                                                                        {% endif %}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-12 espacio-linea-abajo2">
+                                                                                        <hr>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-6">
+                                                                                        Ejecutor: {{ contratista.proveedor.nombre }}
+                                                                                    </div>
+                                                                                    <div class="col-sm-6 text-right">
+                                                                                        Responsable: {{ actividad.responsable }}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        {% if actividad.pausas|length > 0 %}
+                                                            <div class="col-md-4">
+                                                                <div class="thumbnail thumbnail-novo">
+                                                                    <div class="caption">
+                                                                        <ul>
+                                                                            <h4>Pausa:</h4>
+                                                                            {% for pausa in actividad.pausas %}
+                                                                                <li>
+                                                                                    {% if pausa.inicio %}
+                                                                                        Del   {{ pausa.inicio|date('d/m/Y') }}
+                                                                                    {% endif %}
+                                                                                    {% if pausa.fin %}
+                                                                                        al {{ pausa.fin|date('d/m/Y') }}
+                                                                                    {% endif %}
+                                                                                    , {{ pausa.nota }}
+                                                                                </li>
+                                                                            {% endfor %}
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <div class="row">
+                                                    <div class="col-sm-12 text-center">
+                                                      Sin actividades
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                            {% endfor %}
                         </div>
                         {% if is_granted(expression('has_role("ROLE_ODT_CONTRATISTA_EDIT") or (user.isAdmin())')) %}
-                        <div class="row espacio-linea-arriba2">
-                            <div class="col-sm-12">
-                                <a class="btn btn-azul"
-                                   href="{{ path('ordendetrabajo_edit',{'id': ordenDeTrabajo.id}) }}">
-                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                    Editar contratistas
-                                </a>
+                            <div class="row espacio-linea-arriba2">
+                                <div class="col-sm-12">
+                                    <a class="btn btn-azul"
+                                       href="{{ path('ordendetrabajo_edit',{'id': ordenDeTrabajo.id}) }}">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        Editar contratistas
+                                    </a>
+                                </div>
                             </div>
-                        </div>
                         {% endif %}
                     </div>
                 </div>
             </div>
         </section>
     </div>
+    <div class="modal fade" id="quitar-pausa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content fondo-morado">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-center">¿Reanudar actividad?</h4>
+                </div>
+                {#<div class="modal-body">#}
+                    {#...#}
+                {#</div>#}
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-warning pull-left letra-negra accion-pausar">
+                        <i class="fa fa-play" aria-hidden="true"></i>
+                        Reanudar
+                    </a>
+                    <button type="button" class="btn btn-naranja pull-right" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js') }}"></script>
-    <script src="{{ asset('bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
-    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js') }}"></script>
-    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/1.9.4/scheduler.min.js') }}"></script>
-    <script src="{{ asset('bower_components/fullcalendar/dist/locale/es.js') }}"></script>
+    {#<script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js') }}"></script>#}
+    {#<script src="{{ asset('bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>#}
     <script src="{{ asset('js/jsgantt.js') }}"></script>
     <script type="text/javascript">
-        var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day' );
+        var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');
         g.addLang('espanol', {
             'january': 'Enero',
             'february': 'Febrero',
@@ -380,7 +523,7 @@
             'mths': 'Ms',
             'qtrs': 'Tris'
         });
-        if( g.getDivId() != null ) {
+        if (g.getDivId() != null) {
             g.setCaptionType('Complete');  // Set to Show Caption (None,Caption,Resource,Duration,Complete)
             g.setQuarterColWidth(36);
             g.setRowHeight(30);
@@ -388,8 +531,8 @@
             g.setWeekColWidth(60);
             g.setMonthColWidth(60);
             g.setDateTaskDisplayFormat('day dd month yyyy'); // Shown in tool tip box
-            g.setDayMajorDateDisplayFormat('mon yyyy - Week ww') // Set format to display dates in the "Major" header of the "Day" view
-            g.setWeekMinorDateDisplayFormat('dd mon') // Set format to display dates in the "Minor" header of the "Week" view
+            g.setDayMajorDateDisplayFormat('mon yyyy - Week ww'); // Set format to display dates in the "Major" header of the "Day" view
+            g.setWeekMinorDateDisplayFormat('dd mon'); // Set format to display dates in the "Minor" header of the "Week" view
             g.setShowTaskInfoLink(0); //Show link in tool tip (0/1)
             g.setShowEndWeekDate(0); // Show/Hide the date for the last day of the week in header for daily view (1/0)
             g.setUseSingleCell(10000); // Set the threshold at which we will only use one cell per table row (0 disables).  Helps with rendering performance for large charts.
@@ -403,8 +546,8 @@
             // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pMile, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
             {% set x = 1 %}
             {% set y = 1 %}
-            {% for contratista in ordenDeTrabajo.contratistas %}
-                g.AddTaskItem(new JSGantt.TaskItem({{ x }},
+            {% for contratista in ordenDeTrabajo.contratistas if contratista.proveedor.proveedorcontratista %}
+                    g.AddTaskItem(new JSGantt.TaskItem({{ x }},
                     '{{ contratista.cotizacionInicial }}',
                     '',
                     '',
@@ -412,52 +555,41 @@
                     'link',
                     0,
                     'Responsable',
-                    0,1,0,1,'','',
+                    0, 1, 0, 1, '', '',
                     '',
                     g));
-                {% for actividad in contratista.contratistaactividades %}
-            {% if not actividad.isActividadPausa %}
-                    g.AddTaskItem(new JSGantt.TaskItem({{ x~y }},
+                    {% for actividad in contratista.contratistaactividades %}
+                        g.AddTaskItem(new JSGantt.TaskItem({{ x~y }},
                         '{{ actividad.nombre }}',
                         '{{ actividad.inicio|date('Y-m-d') }}',
                         '{{ actividad.fin|date('Y-m-d') }}',
-                        'gtaskgreen',
+                        {% if actividad.isPausado %}
+                            'gtaskyellow',
+                        {% else %}
+                            'gtaskgreen',
+                        {% endif %}
                         '',
                         0,
                         '{{ actividad.responsable }}',{{ actividad.porcentaje }},
                         0,{{ x }},
                         1, '', '', '{{ actividad.notas }}', g));
-                    {% set y = y+1 %}
-            {% endif %}
-                {% endfor %}
-                {% set x = x+1 %}
-                {% set y = 1 %}
+                        {% set y = y+1 %}
+                    {% endfor %}
+                    {% set x = x+1 %}
+                    {% set y = 1 %}
             {% endfor %}
             g.Draw();
         } else {
             alert("Error, unable to create Gantt Chart");
         }
+        $('.accion-pausar').on('click',function () {
+           console.log($(this).data('href'));
+        });
+        $('#quitar-pausa').on('show.bs.modal', function (event) {
+            let boton = $(event.relatedTarget);
+            let url = boton.data('href');
+            $(this).find('.modal-footer a').attr('href',url);
 
-        // $('.pausar-actividad').on('click',function () {
-        //     var filaApausar = $(this).parent().parent();
-        //     var idactividad = this.dataset.id;
-        //     var url = `${location.protocol + '//' + location.host}/novonautica/web/app_dev.php/astillero/odt/${idactividad}/pausar`;
-        //     $.ajax({
-        //         method: "GET",
-        //         url: url,
-        //         success: function(pausado) {
-        //             console.log(pausado);
-        //             if(pausado === 'true'){
-        //                 console.log('es verdad');
-        //                 filaApausar.removeClass('fondo-morado-claro').addClass('fondo-gris');
-        //                 filaApausar.children('.estatus').html('Pausado');
-        //             }else{
-        //                 console.log('es falso');
-        //                 filaApausar.removeClass('fondo-gris').addClass('fondo-morado-claro');
-        //                 filaApausar.children('.estatus').html('');
-        //             }
-        //         }
-        //     });
-        // });
+        });
     </script>
 {% endblock %}
