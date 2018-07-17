@@ -1,0 +1,58 @@
+{% extends 'estructura/plantilla.twig' %}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    {% for message in app.flashes('notice') %}
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×
+                            </button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">{{ title }}</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('ordendetrabajo_show',{'id':actividad.contratista.astilleroODT.id}) }}">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Actividad</label>
+                            <div class="info-input">{{ actividad.nombre }}</div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Inicia</label>
+                            <div class="info-input">{{ actividad.inicio|date('Y-m-d') }}</div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Finaliza</label>
+                            <div class="info-input">{{ actividad.fin|date('Y-m-d') }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ form_start(form) }}
+                            {{ form_rest(form) }}
+                            <button type="submit" class="btn btn-azul">
+                                <i class="fa fa-pause-circle" aria-hidden="true"></i>
+                                Pausar
+                            </button>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

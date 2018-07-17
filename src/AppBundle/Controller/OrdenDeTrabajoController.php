@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Astillero\Contratista;
 use AppBundle\Entity\Astillero\Contratista\Actividad;
+use AppBundle\Entity\Astillero\Contratista\Actividad\Pausa;
 use AppBundle\Entity\OrdenDeTrabajo;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Translation\Interval;
 
 /**
  * Ordendetrabajo controller.
@@ -180,10 +182,13 @@ class OrdenDeTrabajoController extends Controller
     public function showAction(OrdenDeTrabajo $ordenDeTrabajo)
     {
         $this->denyAccessUnlessGranted('ROLE_ODT', $ordenDeTrabajo);
-
+        $folio = $ordenDeTrabajo->getAstilleroCotizacion()->getFoliorecotiza()
+            ? $ordenDeTrabajo->getAstilleroCotizacion()->getFolio() . '-' . $ordenDeTrabajo->getAstilleroCotizacion()->getFoliorecotiza()
+            : $ordenDeTrabajo->getAstilleroCotizacion()->getFolio();
         return $this->render('ordendetrabajo/show.html.twig', [
             'title' => 'Detalle ODT',
             'ordenDeTrabajo' => $ordenDeTrabajo,
+            'folio' => $folio
         ]);
     }
 
@@ -374,59 +379,59 @@ class OrdenDeTrabajoController extends Controller
      *
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function subActividadAction(Request $request, Actividad $actividad)
+    public function pausaActividadAction(Request $request, Actividad $actividad)
     {
-        $subActividad = new Actividad();
-        $form = $this->createForm('AppBundle\Form\Astillero\Contratista\SubActividadType', $subActividad);
+        $pausa = new Pausa();
+        $form = $this->createForm('AppBundle\Form\Astillero\Contratista\Actividad\PausaType', $pausa);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $subActividad->setContratista($actividad->getContratista());
-            $subActividad
-                ->setInicio(new \DateTime('now'))
-                ->setFin(new \DateTime('now'))
-                ->setFecha(new \DateTime('now'))
-                ->setUsuario($this->getUser())
-                ->setIsActividadPausa(true)
-            ;
-            $actividad->setIsPausado(true);
-            $em->persist($subActividad);
-            $em->persist($actividad);
-            $em->flush();
-            return $this->redirectToRoute('ordendetrabajo_show', ['id' => $actividad->getContratista()->getAstilleroODT()->getId()]);
+            $fechaPausa = new \DateTime('now');
+            if($fechaPausa->format('d-m-Y') >= $actividad->getInicio()->format('d-m-Y') && $fechaPausa->format('d-m-Y') <= $actividad->getFin()->format('d-m-Y')){
+                $em = $this->getDoctrine()->getManager();
+                $pausa
+                    ->setInicio($fechaPausa)
+                    ->setRegistro($fechaPausa)
+                    ->setCreador($this->getUser());
+                $actividad->addPausa($pausa);
+                $actividad->setIsPausado(true);
+                $em->persist($pausa);
+                $em->persist($actividad);
+                $em->flush();
+                return $this->redirectToRoute('ordendetrabajo_show', ['id' => $actividad->getContratista()->getAstilleroODT()->getId()]);
+            }else{
+                $this->addFlash('notice', 'Error! la actividad que ha intenta pausar no esta vigente');
+            }
         }
-        return $this->render('ordendetrabajo/subactividad.html.twig',[
-            'title' => 'Sub actividad (pausar/reanudar)',
+        return $this->render('ordendetrabajo/pausa.html.twig',[
+            'title' => 'Pausando actividad',
             'actividad' => $actividad,
             'form' => $form->createView()
         ]);
     }
 
     /**
-     * @Route("/{id}/pausar")
+     * @Route("/{id}/reanuda-actividad/", name="ordendetrabajo_contratista_reanuda-actividad")
      * @Method({"GET", "POST"})
      *
      * @param Actividad $actividad
      *
-     * @return Response
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      */
-    public function pausaActividadAction(Actividad $actividad)
+    public function reanudaActividadAction(Actividad $actividad)
     {
         $em = $this->getDoctrine()->getManager();
-        $fechaPausa = new \DateTime('now');
-        $fechaIni = $actividad->getInicio();
-        $fechaFin = $actividad->getFin();
-
-        if($actividad->getIsPausado()){ //si ya está pausado
-            $actividad->setIsPausado(false);
-        }else{ //si no está pausado
-            if($fechaPausa >= $fechaIni && $fechaPausa <= $fechaFin){ //verificar que este entre los rangos
-                $actividad->setIsPausado(true);
-            }
-        }
+        $pausaActual = $actividad->getPausas()->last();
+        $pausaActual->setFin(new \DateTime('now'));
+        $diasPausa = $pausaActual->getInicio()->diff($pausaActual->getFin())->format("%a");
+        $nuevoFinActividad = $actividad->getFin()->add(new \DateInterval('P'.$diasPausa.'D'));
+        $actividad
+            ->setIsPausado(false)
+            ->setFin(new \DateTime($nuevoFinActividad->format('Y-m-d')));
         $em->persist($actividad);
+        $em->persist($pausaActual);
         $em->flush();
-        return new Response(var_export($actividad->getIsPausado(),1));
+        return $this->redirectToRoute('ordendetrabajo_show', ['id' => $actividad->getContratista()->getAstilleroODT()->getId()]);
     }
 
     /**

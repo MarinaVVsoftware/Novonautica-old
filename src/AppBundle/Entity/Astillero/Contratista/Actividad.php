@@ -104,11 +104,13 @@ class Actividad
     private $isPausado;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_actividad_pausa", type="boolean")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Astillero\Contratista\Actividad\Pausa")
+     * @ORM\JoinTable(name="odt_actividades_pausas",
+     *      joinColumns={@ORM\JoinColumn(name="idactividad", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="idpausa", referencedColumnName="id", unique=true)}
+     *      )
      */
-    private $isActividadPausa;
+    private $pausas;
 
     public function __construct()
     {
@@ -116,6 +118,7 @@ class Actividad
         $this->fecha = new \DateTime('now');
         $this->fotos = new ArrayCollection();
         $this->isPausado = false;
+        $this->pausas = new ArrayCollection();
     }
 
     /**
@@ -408,26 +411,38 @@ class Actividad
     }
 
     /**
-     * Set isActividadPausa.
+     * Add pausa.
      *
-     * @param bool $isActividadPausa
+     * @param \AppBundle\Entity\Astillero\Contratista\Actividad\Pausa $pausa
      *
      * @return Actividad
      */
-    public function setIsActividadPausa($isActividadPausa)
+    public function addPausa(\AppBundle\Entity\Astillero\Contratista\Actividad\Pausa $pausa)
     {
-        $this->isActividadPausa = $isActividadPausa;
+        $this->pausas[] = $pausa;
 
         return $this;
     }
 
     /**
-     * Get isActividadPausa.
+     * Remove pausa.
      *
-     * @return bool
+     * @param \AppBundle\Entity\Astillero\Contratista\Actividad\Pausa $pausa
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function getIsActividadPausa()
+    public function removePausa(\AppBundle\Entity\Astillero\Contratista\Actividad\Pausa $pausa)
     {
-        return $this->isActividadPausa;
+        return $this->pausas->removeElement($pausa);
+    }
+
+    /**
+     * Get pausas.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPausas()
+    {
+        return $this->pausas;
     }
 }
