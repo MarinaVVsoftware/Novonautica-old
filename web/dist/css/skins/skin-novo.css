@@ -160,6 +160,7 @@
 .skin-novo .sidebar-menu .treeview.menu-open > .treeview-menu > li:last-child > a {
     box-shadow: inset 0 -1px 1px 0 rgba(0, 0, 0, .10), inset 0 -1px 1px 0 rgba(0, 0, 0, .08), inset 0 -1px 1px -2px rgba(0, 0, 0, .15);
 }
+
 .skin-novo .sidebar-menu .treeview.menu-open > .treeview-menu > li:nth-child(1) > a {
     box-shadow: inset 0 1px 1px 0 rgba(0, 0, 0, .14), inset 0 1px 1px 0 rgba(0, 0, 0, .12), inset 0 1px 1px -2px rgba(0, 0, 0, .2);
 }
@@ -215,8 +216,8 @@
 
 .skin-novo .content-wrapper {
     background: #5a626f;
-    height: 0;
-    overflow: auto;
+    /*height: 0;*/
+    /*overflow: auto;*/
 }
 
 .skin-novo .treeview-menu {
@@ -233,7 +234,7 @@
 }
 
 .skin-novo .main-header {
-    max-height: 140px;
+    /*max-height: 140px;*/
     background: #292e41;
 }
 
@@ -269,9 +270,12 @@
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     background-color: #1b1e28;
 }
-.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu>li:hover>a>span:not(.pull-right), .sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu>li:hover>.treeview-menu {
+
+/*.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right),
+.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
     width: 220px;
 }
-.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu>li:hover>a>.pull-right-container {
+
+.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu > li:hover > a > .pull-right-container {
     left: 220px !important;
-}
+}*/

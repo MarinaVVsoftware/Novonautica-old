@@ -4,7 +4,6 @@ body {
     color: #fff;
     font-family: 'Montserrat', sans-serif;
     font-size: 14px;
-    overflow-y: hidden;
 }
 
 hr {
@@ -314,10 +313,6 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     color: #ffffff;
     position: absolute;
     bottom: 50%;
-}
-
-.wrapper {
-    overflow-y: hidden;
 }
 
 .hoja-login {
@@ -705,11 +700,11 @@ body.wysihtml5-editor::-webkit-scrollbar-thumb {
     .fixed .content-wrapper,
     .fixed .right-side,
     .main-sidebar {
-        padding-top: 146px;
+        /*padding-top: 146px;*/
     }
 
     .panel-novo .nav-tabs > li {
-        margin-left: 0;
+        /*margin-left: 0;*/
     }
 
 
