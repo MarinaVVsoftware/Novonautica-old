@@ -1,8 +1,7 @@
 {% extends 'estructura/plantilla.twig' %}
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet"
-          href="{{ asset('css/jsgantt.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jsgantt.css') }}">
 {% endblock %}
 {% block contwrapper %}
     <div class="content-wrapper">
@@ -265,7 +264,7 @@
                                                                             <div class="carousel-inner" role="listbox">
                                                                                 {% for foto in actividad.fotos %}
                                                                                     <div class="item {% if loop.first %}active{% endif %}">
-                                                                                        <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ '/novonautica/web/uploads/actividad_fotos/' ~ foto.basename }}"
+                                                                                        <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ '/uploads/actividad_fotos/' ~ foto.basename }}"
                                                                                              class="center-block">
                                                                                     </div>
                                                                                 {% endfor %}
@@ -292,7 +291,6 @@
                                                                         {% else %}
                                                                         <div class="col-md-12">
                                                                             {% endif %}
-
                                                                             <div class="caption">
                                                                                 {% if actividad.isPausado %}
                                                                                     <div class="row fondo-amarillo">
@@ -317,8 +315,7 @@
                                                                                 <div class="row">
                                                                                     <div class="col-sm-12 text-left">
                                                                                         {{ actividad.porcentaje|number_format(0) }}
-                                                                                        %
-                                                                                        Completado
+                                                                                        % Completado
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row">
@@ -346,7 +343,8 @@
                                                                                                    aria-hidden="true"></i>
                                                                                             </a>
                                                                                         {% else %}
-                                                                                            {% if date() >= date(actividad.inicio) and date() <= date(actividad.fin) %}
+                                                                                            {% if 'now'|date('d-m-Y') >= actividad.inicio|date('d-m-Y') and 'now'|date('d-m-Y') <= actividad.fin|date('d-m-Y') %}
+                                                                                            {#{% if date() >= date(actividad.inicio) and date() <= date(actividad.fin) %}#}
                                                                                                 <a class="btn btn-warning btn-pausa btn-xs letra-negra"
                                                                                                    href="{{ path('ordendetrabajo_contratista_pausa-actividad', { 'id': actividad.id }) }}">
                                                                                                     <i class="fa fa-pause"
@@ -433,9 +431,6 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title text-center">¿Reanudar actividad?</h4>
                 </div>
-                {#<div class="modal-body">#}
-                    {#...#}
-                {#</div>#}
                 <div class="modal-footer">
                     <a type="button" class="btn btn-warning pull-left letra-negra accion-pausar">
                         <i class="fa fa-play" aria-hidden="true"></i>
@@ -449,8 +444,6 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {#<script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js') }}"></script>#}
-    {#<script src="{{ asset('bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>#}
     <script src="{{ asset('js/jsgantt.js') }}"></script>
     <script type="text/javascript">
         var g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');
@@ -543,37 +536,67 @@
             g.setShowStartDate(0);
             g.setShowEndDate(0);
             g.setShowTaskInfoNotes(0);
-            // Parameters                     (pID, pName,                  pStart,       pEnd,        pStyle,         pLink (unused)  pMile, pRes,       pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
+            // Parameters (pID, pName,pStart,pEnd,pStyle,pLink (unused)  pMile, pRes,pComp, pGroup, pParent, pOpen, pDepend, pCaption, pNotes, pGantt)
             {% set x = 1 %}
             {% set y = 1 %}
+            {% set z = 1 %}
             {% for contratista in ordenDeTrabajo.contratistas if contratista.proveedor.proveedorcontratista %}
-                    g.AddTaskItem(new JSGantt.TaskItem({{ x }},
-                    '{{ contratista.cotizacionInicial }}',
-                    '',
-                    '',
-                    'ggroupblack',
-                    'link',
-                    0,
-                    'Responsable',
-                    0, 1, 0, 1, '', '',
-                    '',
-                    g));
+                    var pID_1 = '{{ x }}';
+                    var pName_1 =  '{{ contratista.cotizacionInicial }}';
+                    var pStart_1 = '';
+                    var pEnd_1 = '';
+                    var pStyle_1 = 'ggroupblack';
+                    var pLink_1 = '';
+                    var pMile_1 = 0;
+                    var pRes_1 = 'Responsable';
+                    var pComp_1 = 0;
+                    var pGroup_1 = 1;
+                    var pParent_1 = 0;
+                    var pOpen_1 = 1;
+                    var pDepend_1 = '';
+                    var pCaption_1 = '';
+                    var pNotes_1 = '';
+                    g.AddTaskItem(new JSGantt.TaskItem(pID_1,pName_1,pStart_1,pEnd_1,pStyle_1,pLink_1,pMile_1,pRes_1,pComp_1,pGroup_1,pParent_1,pOpen_1,pDepend_1,pCaption_1,pNotes_1, g));
                     {% for actividad in contratista.contratistaactividades %}
-                        g.AddTaskItem(new JSGantt.TaskItem({{ x~y }},
-                        '{{ actividad.nombre }}',
-                        '{{ actividad.inicio|date('Y-m-d') }}',
-                        '{{ actividad.fin|date('Y-m-d') }}',
+                        var pID_2 = '{{ x~y }}';
+                        var pName_2 =  '{{ actividad.nombre }}';
+                        var pStart_2 = '{{ actividad.inicio|date('Y-m-d') }}';
+                        var pEnd_2 = '{{ actividad.fin|date('Y-m-d') }}';
+                        var pStyle_2 = 'gtaskgreen';
+                        var pLink_2 = '';
+                        var pMile_2 = 0;
+                        var pRes_2 = '{{ actividad.responsable }}';
+                        var pComp_2 = '{{ actividad.porcentaje }}';
+                        var pGroup_2 = 0;
+                        var pParent_2 = '{{ x }}';
+                        var pOpen_2 = 1;
+                        var pDepend_2 = '';
+                        var pCaption_2 = '';
+                        var pNotes_2 = '{{ actividad.notas }}';
                         {% if actividad.isPausado %}
-                            'gtaskyellow',
-                        {% else %}
-                            'gtaskgreen',
+                            pStyle_2 = 'gtaskyellow';
                         {% endif %}
-                        '',
-                        0,
-                        '{{ actividad.responsable }}',{{ actividad.porcentaje }},
-                        0,{{ x }},
-                        1, '', '', '{{ actividad.notas }}', g));
+                        g.AddTaskItem(new JSGantt.TaskItem(pID_2, pName_2, pStart_2, pEnd_2,pStyle_2, pLink_2, pMile_2, pRes_2, pComp_2, pGroup_2, pParent_2, pOpen_2, pDepend_2, pCaption_2, pNotes_2, g));
                         {% set y = y+1 %}
+                        {% for pausa in actividad.pausas %}
+                            var pID_3 = '{{ x~y~z }}';
+                            var pName_3 =  'Pausa de {{ actividad.nombre }}';
+                            var pStart_3 = '{{ pausa.inicio|date('Y-m-d') }}';
+                            var pEnd_3 = '{{ pausa.fin|date('Y-m-d') }}';
+                            var pStyle_3 = 'gtaskyellow';
+                            var pLink_3 = '';
+                            var pMile_3 = 0;
+                            var pRes_3 = '';
+                            var pComp_3 = 0;
+                            var pGroup_3 = 0;
+                            var pParent_3 = pID_2;
+                            var pOpen_3 = 1;
+                            var pDepend_3 = pID_2 + 'SS';
+                            var pCaption_3 = '';
+                            var pNotes_3 = '{{ pausa.nota }}';
+                            g.AddTaskItem(new JSGantt.TaskItem(pID_3, pName_3, pStart_3, pEnd_3, pStyle_3, pLink_3, pMile_3, pRes_3,pComp_3, pGroup_3,pParent_3, pOpen_3, pDepend_3, pCaption_3, pNotes_3, g));
+                            {% set z = z+1 %}
+                        {% endfor %}
                     {% endfor %}
                     {% set x = x+1 %}
                     {% set y = 1 %}
@@ -582,9 +605,6 @@
         } else {
             alert("Error, unable to create Gantt Chart");
         }
-        $('.accion-pausar').on('click',function () {
-           console.log($(this).data('href'));
-        });
         $('#quitar-pausa').on('show.bs.modal', function (event) {
             let boton = $(event.relatedTarget);
             let url = boton.data('href');

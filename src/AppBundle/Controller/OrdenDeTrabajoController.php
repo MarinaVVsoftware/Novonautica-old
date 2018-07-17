@@ -386,7 +386,7 @@ class OrdenDeTrabajoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $fechaPausa = new \DateTime('now');
-            if($fechaPausa >= $actividad->getInicio() && $fechaPausa <= $actividad->getFin()){
+            if($fechaPausa->format('d-m-Y') >= $actividad->getInicio()->format('d-m-Y') && $fechaPausa->format('d-m-Y') <= $actividad->getFin()->format('d-m-Y')){
                 $em = $this->getDoctrine()->getManager();
                 $pausa
                     ->setInicio($fechaPausa)

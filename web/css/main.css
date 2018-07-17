@@ -1228,3 +1228,9 @@ input[type="file"] + label * {
 .galeria-actividades .carousel-inner{
     max-height: 400px;
 }
+.gDepFS, .gDepSS, .gDepSF, .gDepFF {
+    border-color: #970000;
+}
+.gDepFSArw, .gDepSSArw {
+    border-left: 4px solid #970000;
+}
