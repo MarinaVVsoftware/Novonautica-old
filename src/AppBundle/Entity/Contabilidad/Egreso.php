@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Contabilidad;
 
 use AppBundle\Entity\Contabilidad\Egreso\Entrada;
+use AppBundle\Entity\Contabilidad\Egreso\Tipo;
 use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -47,6 +48,15 @@ class Egreso
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Emisor")
      */
     private $empresa;
+
+    /**
+     * @var Tipo
+     *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Egreso\Tipo")
+     */
+    private $tipo;
 
     /**
      * @var Entrada
@@ -137,6 +147,22 @@ class Egreso
     public function setEmpresa($empresa)
     {
         $this->empresa = $empresa;
+    }
+
+    /**
+     * @return Tipo
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * @param Tipo $tipo
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
     }
 
     /**
