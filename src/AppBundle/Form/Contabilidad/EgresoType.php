@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Contabilidad;
 
+use AppBundle\Entity\Contabilidad\Egreso\Tipo;
 use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use AppBundle\Form\Contabilidad\Egreso\EntradaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -27,7 +28,7 @@ class EgresoType extends AbstractType
                 'html5' => false,
                 'attr' => [
                     'class' => 'datepicker-solo input-calendario',
-                    'readonly' => true
+                    'readonly' => true,
                 ],
                 'format' => 'yyyy-MM-dd',
             ]
@@ -38,6 +39,16 @@ class EgresoType extends AbstractType
             EntityType::class,
             [
                 'class' => Emisor::class,
+                'required' => true,
+            ]
+        );
+
+        $builder->add(
+            'tipo',
+            EntityType::class,
+            [
+                'class' => Tipo::class,
+                'choice_label' => 'descripcion',
                 'required' => true,
             ]
         );

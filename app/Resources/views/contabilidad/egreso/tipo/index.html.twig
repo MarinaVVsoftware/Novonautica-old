@@ -1,0 +1,82 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                {{ tipo.id is null ? 'Nuevo tipo' : 'Editar tipo' }}
+                            </h3>
+                        </div>
+                        <div class="panel-body" style="min-height: initial">
+                            {{ form_start(form) }}
+                            {{ form_row(form.descripcion) }}
+
+                            {% if tipo.id is not null %}
+                                <a href="{{ path('contabilidad_egreso_tipo_index') }}"
+                                   class="btn btn-naranja">Cancelar</a>
+                            {% endif %}
+
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Listado de tipos</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive scroll-novo">
+                                <table class="table table-novo text-center">
+                                    <thead>
+                                    <tr>
+                                        <th>Descripción</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, dtSettings) {
+        $('.table-novo').DataTable({
+          ...dtSettings,
+          ajax: 'tipos.json',
+          order: [[1, 'desc']],
+          createdRow: function (row, tipo) {
+            row.cells[1].innerHTML = `
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="?t=${tipo[1]}" class="btn btn-xs btn-block btn-azul">Editar</a>
+                        </li>
+                    </ul>
+                    `
+          },
+        });
+      })(jQuery, datatablesSettings);
+    </script>
+{% endblock %}

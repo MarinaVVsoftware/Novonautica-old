@@ -50,6 +50,9 @@
                                 <div class="col-sm-4">
                                     {{ form_row(form.empresa) }}
                                 </div>
+                                <div class="col-sm-4">
+                                    {{ form_row(form.tipo) }}
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
@@ -59,8 +62,8 @@
                                             <th width="4%" valign="middle" class="text-center">
                                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                                             </th>
-                                            <th>Proveedor</th>
                                             <th>Concepto</th>
+                                            <th>Proveedor</th>
                                             <th width="20%">Importe</th>
                                         </tr>
                                         </thead>
@@ -71,12 +74,12 @@
                                                 <td valign="middle" class="text-center">
                                                 </td>
                                                 <td>
-                                                    {{ form_widget(entrada.proveedor) }}
-                                                    {{ form_errors(entrada.proveedor) }}
-                                                </td>
-                                                <td>
                                                     {{ form_widget(entrada.concepto) }}
                                                     {{ form_errors(entrada.concepto) }}
+                                                </td>
+                                                <td>
+                                                    {{ form_widget(entrada.proveedor) }}
+                                                    {{ form_errors(entrada.proveedor) }}
                                                 </td>
                                                 <td>
                                                     {{ form_widget(entrada.importe) }}
@@ -174,8 +177,8 @@
 
           _addListeners(row) {
             let importe = row.cells[3].querySelector('input');
-            let $proveedor = $(row).find('td:nth-child(2) select');
-            let $concepto = $(row).find('td:nth-child(3) select');
+            let $proveedor = $(row).find('td:nth-child(3) select');
+            let $concepto = $(row).find('td:nth-child(2) select');
 
             this._appendRemoveButton(row);
 
