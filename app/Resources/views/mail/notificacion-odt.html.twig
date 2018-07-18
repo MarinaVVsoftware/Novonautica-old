@@ -1,0 +1,14 @@
+{% extends ':mail:base.html.twig' %}
+{% block body %}
+    <h3>Notificacion de Orden de Trabajo</h3>
+    <p class="lead">Se le ha enviado este correo para notificarle el siguiente evento:</p>
+    <p>
+        <strong>Folio: </strong> {{ odt.astilleroCotizacion.foliorecotiza ? odt.astilleroCotizacion.folio ~ '-' ~ odt.astilleroCotizacion.foliorecotiza : odt.astilleroCotizacion.folio }}
+        <br>
+        <strong>Evento: </strong> Nuevo registro de una orden de trabajo
+        <br>
+        <strong>Creada el día: </strong> {{ odt.fecha|date('d/m/Y') }}
+        <br>
+    </p>
+    <br/>
+{% endblock body %}

@@ -4,17 +4,23 @@
     <link rel="stylesheet" href="{{ asset('css/jsgantt.css') }}">
 {% endblock %}
 {% block contwrapper %}
+    {% set ct = ordenDeTrabajo.astilleroCotizacion %}
+    {% set oc = ordenDeTrabajo.contratistas %}
+    {% set sumapagos = 0 %}
     <div class="content-wrapper">
         <section class="content">
             <div class="panel panel-novo">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <h3 class="panel-title">{{ title }}</h3>
                             <span>{{ folio }}</span>
                         </div>
-                        <div class="col-sm-6">
-                            <a class="btn btn-contorno-azul pull-right"
+                        <div class="col-sm-8 text-right">
+                            <a class="btn btn-contorno-azul" target="_blank" href="{{ path('astillero_show',{'id':ordenDeTrabajo.astilleroCotizacion.id}) }}">
+                                Ir a la cotización
+                            </a>
+                            <a class="btn btn-contorno-azul"
                                href="{{ path('ordendetrabajo_index') }}">Regresar</a>
                         </div>
                     </div>
@@ -26,6 +32,9 @@
                         </li>
                         <li role="presentation">
                             <a href="#contratistas" aria-controls="contratistas" role="tab" data-toggle="tab">Contratistas</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#utilidad" aria-controls="utilidad" role="tab" data-toggle="tab">Utilidades</a>
                         </li>
                         <li role="presentation" class="flujograma ">
                             <a href="#flujograma" aria-controls="flujograma" role="tab" data-toggle="tab">Flujograma</a>
@@ -137,6 +146,17 @@
                                     </small>
                                 </div>
                             </div>
+                            {% if is_granted(expression('has_role("ROLE_ODT_CONTRATISTA_EDIT") or (user.isAdmin())')) %}
+                                <div class="row espacio-linea-arriba2">
+                                    <div class="col-sm-12">
+                                        <a class="btn btn-azul"
+                                           href="{{ path('ordendetrabajo_edit',{'id': ordenDeTrabajo.id}) }}">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            Editar contratistas
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
                         <div role="tabpanel" class="tab-pane" id="contratistas">
                             <div class="row">
@@ -153,7 +173,7 @@
                                             <th>Contratista</th>
                                             <th>Razón social</th>
                                             <th>Precio contratista</th>
-                                            <th>% V&V</th>
+                                            <th colspan="2">% V&V</th>
                                             <th>Utilidad V&V</th>
                                             <th>Precio V&V</th>
                                         </tr>
@@ -166,6 +186,7 @@
                                                 <td>{{ contratista.proveedor.razonsocial }}</td>
                                                 <td>${{ (contratista.precio/100)|number_format(2) }}</td>
                                                 <td>{{ contratista.porcentajevv|number_format(2) }}%</td>
+                                                <td>{{ (100+contratista.porcentajevv)/100 }}</td>
                                                 <td>${{ (contratista.utilidadvv/100)|number_format(2) }}</td>
                                                 <td>${{ (contratista.preciovv/100)|number_format(2) }}</td>
                                             </tr>
@@ -176,6 +197,7 @@
                                             <td colspan="3" rowspan="2" class="text-right">Totales:</td>
                                             <td>${{ (ordenDeTrabajo.precioTotal/100)|number_format(2) }}</td>
                                             <td></td>
+                                            <td></td>
                                             <td>${{ (ordenDeTrabajo.utilidadvvTotal/100)|number_format(2) }}</td>
                                             <td>${{ (ordenDeTrabajo.preciovvTotal/100)|number_format(2) }}</td>
                                         </tr>
@@ -184,6 +206,7 @@
                                                 ${{ ((ordenDeTrabajo.precioTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
                                                 USD
                                             </td>
+                                            <td></td>
                                             <td></td>
                                             <td>
                                                 ${{ ((ordenDeTrabajo.utilidadvvTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
@@ -196,6 +219,262 @@
                                         </tr>
                                         </tfoot>
                                     </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a class="btn btn-azul" target="_blank"
+                                       href="{{ path('odt-contratista-pdf',{'id': ordenDeTrabajo.id}) }}">
+                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="utilidad">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3>Información Cotización Astillero</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <small class="pull-right">
+                                        Tipo de cambio: {{ (ct.dolar/100)| number_format(2) }} MXN
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label>Sub Total</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="info-input">
+                                        $ {{ (ct.subtotal/100)|number_format(2) }} <small>MXN</small>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="info-input">
+                                        $ {{ (ct.subtotal/ct.dolar)|number_format(2) }} <small>USD</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label>IVA</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="info-input">
+                                        $ {{ (ct.ivatotal/100)|number_format(2) }} <small>MXN</small>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="info-input">
+                                        $ {{ (ct.ivatotal/ct.dolar)|number_format(2) }} <small>USD</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label>Total</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="info-input">
+                                        $ {{ (ct.total/100)|number_format(2) }} <small>MXN</small>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="info-input">
+                                        $ {{ (ct.total/ct.dolar)|number_format(2) }} <small>USD</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 espacio-linea">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3>Resumen de anticipos</h3>
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Número</th>
+                                            <th>Fecha</th>
+                                            <th>Forma de pago</th>
+                                            <th>Importe</th>
+                                            <th>Notas</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for pago in ct.pagos %}
+                                            <tr>
+                                                <td>Anticipo {{ loop.index }}</td>
+                                                <td>{{ pago.fecharealpago|date('d/m/Y') }}</td>
+                                                <td>{{ pago.metodopago }}</td>
+                                                <td>$ {{ (pago.cantidad/100)|number_format(2) }} <small>MXN</small></td>
+                                                <td>
+                                                    {% if pago.divisa == 'USD' %}
+                                                        Pago realizado en dolares, ${{ (pago.cantidad/pago.dolar)|number_format(2) }} <small>USD</small>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3" class="text-right">Total anticipos</td>
+                                                <td>
+                                                    $ {{ (ct.pagado/100)|number_format(2) }}
+                                                    <small>MXN</small>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="info-input">
+                                        Saldo pendiente de ${{ ((ct.total - ct.pagado)/100)|number_format(2) }} <small>MXN</small>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="info-input">
+                                        Pagado {{ ((ct.pagado * 100) / ct.total)|number_format(2) }} % hasta el momento
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 espacio-linea">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3>Costos Contratistas</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Costos</label>
+                                    <div class="info-input">
+                                        ${{ (ordenDeTrabajo.precioTotal/100)|number_format(2) }} <small>MXN</small>
+                                    </div>
+                                    <label>IVA</label>
+                                    <div class="info-input">
+                                        ${{ (ordenDeTrabajo.ivaTotal/100)|number_format(2) }} <small>MXN</small>
+                                    </div>
+                                    <label>Total contratistas</label>
+                                    <div class="info-input">
+                                        ${{ (ordenDeTrabajo.granTotal/100)|number_format(2) }} <small>MXN</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 espacio-linea">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3>Pagos a contratistas</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Concepto</th>
+                                            <th>Fecha</th>
+                                            <th>Forma de pago</th>
+                                            <th>Importe</th>
+                                            <th>Notas</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for cont in oc %}
+                                            {% for pc in cont.contratistapagos %}
+                                                <tr>
+                                                    <td>{{ cont.cotizacionInicial }}</td>
+                                                    <td>{{ pc.fecha|date('d/m/Y') }}</td>
+                                                    <td>{{ pc.forma }}</td>
+                                                    {% if pc.divisa == 'USD' %}
+                                                        <td>${{ ((pc.cantidad * ct.dolar)/10000)|number_format(2) }}
+                                                            <small>MXN</small>
+                                                        </td>
+                                                        <td>Pago realizado en dolares,
+                                                            ${{ (pc.cantidad/100)|number_format(2) }}
+                                                            <small>USD</small>
+                                                        </td>
+                                                        {% set sumapagos = sumapagos + ((pc.cantidad * ct.dolar)/100) %}
+                                                    {% else %}
+                                                        <td>${{ (pc.cantidad/100)|number_format(2) }}
+                                                            <small>MXN</small>
+                                                        </td>
+                                                        <td></td>
+                                                        {% set sumapagos = sumapagos + pc.cantidad %}
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                        {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3" class="text-right">Total pagos</td>
+                                                <td>
+                                                    $ {{ (sumapagos/100)|number_format(2) }}
+                                                    <small>MXN</small>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 espacio-linea">
+                                    <hr>
+                                </div>
+                            </div>
+                            {% set diferenciaAnticipo = ct.pagado - sumapagos %}
+                            {% if diferenciaAnticipo <= 10000 %}
+                                <div class="row fondo-amarillo">
+                                    <div class="col-sm-12 letra-negra text-center">
+                                        <strong>
+                                            El saldo de anticipos está bajo. Solicitar otro anticipo para el
+                                            pago de contratistas y/o proveedores.
+                                        </strong>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Anticipos menos pagos a contratistas</label>
+                                    <div class="info-input">
+                                        ${{ ((diferenciaAnticipo)/100)|number_format(2) }} <small>MXN</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 espacio-linea">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Utilida</label>
+                                    <div class="info-input">
+                                        ${{ ((ct.total - ordenDeTrabajo.granTotal)/100)|number_format(2) }} <small>MXN</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -408,17 +687,7 @@
                                     </div>
                             {% endfor %}
                         </div>
-                        {% if is_granted(expression('has_role("ROLE_ODT_CONTRATISTA_EDIT") or (user.isAdmin())')) %}
-                            <div class="row espacio-linea-arriba2">
-                                <div class="col-sm-12">
-                                    <a class="btn btn-azul"
-                                       href="{{ path('ordendetrabajo_edit',{'id': ordenDeTrabajo.id}) }}">
-                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                        Editar contratistas
-                                    </a>
-                                </div>
-                            </div>
-                        {% endif %}
+
                     </div>
                 </div>
             </div>
