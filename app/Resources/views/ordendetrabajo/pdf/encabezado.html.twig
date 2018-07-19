@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" type="text/css" href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+<style type="text/css">
+    .fondo-bicolor-arriba {
+        background: url("{{ absolute_url(asset('img/imagen-03.jpg')) }}") no-repeat top right;
+        background-size: 100% 120%;
+    }
+</style>
+<body style="font-size: 10px;">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-3" style="margin-top: 5px">
+            <img src="{{ absolute_url(asset('img/cotizacion-03.png') ) }}" class="img-responsive imagenlogo">
+        </div>
+        <div class="col-xs-9 text-right fondo-bicolor-arriba" style="height: 90px; padding-top: 3px; color: #ffffff;">
+            <h4 style="margin: 0;">
+                <strong>Orden de Trabajo</strong>
+            </h4>
+            <p style="margin: 0;">
+                <strong>Folio:</strong>
+                {% if astillero.foliorecotiza == 0 %} {{ astillero.folio }} {% else %} {{ astillero.folio }}-{{ astillero.foliorecotiza }} {% endif %}
+                <br>
+                <strong>Fecha:</strong> {{ astillero.fecharegistro|date('d/m/Y') }}
+                <br>
+                <strong>Cambio:</strong> ${{ (astillero.dolar/100)|number_format(2) }} <small>MXN</small>
+                <br>
+                V&V Astillero, S.A de C.V
+                Tel. +52 (998) 234-01-00 ext. 104
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

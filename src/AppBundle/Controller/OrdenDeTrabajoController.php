@@ -8,15 +8,14 @@ use AppBundle\Entity\Astillero\Contratista\Actividad\Pausa;
 use AppBundle\Entity\OrdenDeTrabajo;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Translation\Interval;
+use AppBundle\Entity\Correo;
 
 /**
  * Ordendetrabajo controller.
@@ -72,9 +71,6 @@ class OrdenDeTrabajoController extends Controller
         $preciovvTotal = 0;
         $ivaTotal = 0;
         $granTotal = 0;
-        $saldoTotal = 0;
-        $pagosTotal = 0;
-
         $form = $this->createForm('AppBundle\Form\OrdenDeTrabajoType', $ordenDeTrabajo);
         $form->handleRequest($request);
 
@@ -130,7 +126,12 @@ class OrdenDeTrabajoController extends Controller
                 );
                 $mailer->send($message);
             }
-
+            // Buscar correos a notificar libremente
+            $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                'evento' => Correo\Notificacion::EVENTO_CREAR,
+                'tipo' => Correo\Notificacion::TIPO_ODT
+            ]);
+            $this->enviaCorreoNotificacion($mailer, $notificables, $ordenDeTrabajo);
             return $this->redirectToRoute('ordendetrabajo_index');
         }
 
@@ -435,6 +436,40 @@ class OrdenDeTrabajoController extends Controller
     }
 
     /**
+     * @Route("/{id}/pdf-contratista", name="odt-contratista-pdf")
+     * @Method("GET")
+     *
+     * @param OrdenDeTrabajo $odt
+     *
+     * @return PdfResponse
+     */
+    public function displayODTpdf(OrdenDeTrabajo $odt)
+    {
+        $html = $this->renderView('ordendetrabajo/pdf/contenido.html.twig', [
+            'odt' => $odt
+        ]);
+        $header = $this->renderView('ordendetrabajo/pdf/encabezado.html.twig', [
+            'astillero' => $odt->getAstilleroCotizacion()
+        ]);
+        $footer = $this->renderView('ordendetrabajo/pdf/pie.html.twig');
+        $hojapdf = $this->get('knp_snappy.pdf');
+        $options = [
+            'margin-top' => 19,
+            'margin-right' => 0,
+            'margin-left' => 0,
+            'header-html' => utf8_decode($header),
+            'footer-html' => utf8_decode($footer)
+        ];
+
+        return new PdfResponse(
+            $hojapdf->getOutputFromHtml($html, $options),
+            'Cotizacion-' . $odt->getAstilleroCotizacion()->getFolio() . '-' . $odt->getAstilleroCotizacion()->getFoliorecotiza() . '.pdf',
+            'application/pdf',
+            'inline'
+        );
+    }
+
+    /**
      * Deletes a ordenDeTrabajo entity.
      *
      * @Route("/{id}", name="ordendetrabajo_delete")
@@ -474,5 +509,33 @@ class OrdenDeTrabajoController extends Controller
             ->setAction($this->generateUrl('ordendetrabajo_delete', ['id' => $ordenDeTrabajo->getId()]))
             ->setMethod('DELETE')
             ->getForm();
+    }
+
+    /**
+     * @param Correo\Notificacion[] $notificables
+     * @param OrdenDeTrabajo $odt
+     * @param \Swift_Mailer $mailer
+     *
+     * @return void
+     */
+    private function enviaCorreoNotificacion($mailer, $notificables, $odt)
+    {
+        if (!count($notificables)) { return; }
+        $recipientes = [];
+        foreach ($notificables as $key => $notificable) {
+            $recipientes[$key] = $notificable->getCorreo();
+        }
+        $message = (new \Swift_Message('¡Orden de trabajo!'));
+        $message->setFrom('noresponder@novonautica.com');
+        $message->setTo($recipientes);
+        $message->setBody(
+            $this->renderView('mail/notificacion-odt.html.twig', [
+                'notificacion' => $notificables[0],
+                'odt' => $odt
+            ]),
+            'text/html'
+        );
+
+        $mailer->send($message);
     }
 }

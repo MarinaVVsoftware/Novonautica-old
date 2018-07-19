@@ -150,7 +150,7 @@
 
             <!-- START SERVICIOS MARINOS -->
             {% if is_granted('ROLE_COMBUSTIBLE') %}
-                <li class="treeview {{ path.check('combustible_index') }} {{ path.check('combustible_new') }} {{ path.check('combustible_show') }} {{ path.check('marinahumedasolicitud_gasolina_index') }}">
+                <li class="treeview {{ path.check('combustible_index') }} {{ path.check('combustible_new') }} {{ path.check('combustible_show') }} {{ path.check('marinahumedasolicitud_gasolina_index') }} {{ path.check('combustible_recotizar') }}">
                     <a href="#">
                         <i class="fa fa-tachometer"></i><span>Combustible</span>
                         <span class="pull-right-container">
@@ -164,7 +164,7 @@
                             </a>
                         </li>
                         {% if is_granted(expression('has_role("COMBUSTIBLE_COTIZACION_CREATE") or (user.isAdmin())')) %}
-                            <li class="{{ path.check('combustible_new') }}">
+                            <li class="{{ path.check('combustible_new') }} {{ path.check('combustible_recotizar') }}">
                                 <a href="{{ path('combustible_new') }}">
                                     <i class="fa fa-circle-o"></i> Nueva
                                 </a>
