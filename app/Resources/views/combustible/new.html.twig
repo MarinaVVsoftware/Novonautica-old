@@ -415,59 +415,50 @@
         }
       })(jQuery);
 
-      let cantidad_mxn = document.getElementById('combustible_cantidad_mxn');
-      let cantidad_usd = document.getElementById('combustible_cantidad_usd');
-      let precio_mxn = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio');
-      let precio_usd = document.getElementById('combustible_precio_usd');
+
+      let cantidad = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_cantidad');
+      let precio_iva_mxn = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precioAux');
+      let dolar_combustible = document.getElementById('appbundle_marinahumedacotizacion_dolar');
       let iva = Number(document.getElementById('valiva').dataset.valor);
 
-      $('#appbundle_marinahumedacotizacion_mhcservicios_0_cantidad').keyup(function (cantidad) {
-          cantidad_mxn.dataset.valor = cantidad.target.value;
-          cantidad_mxn.innerHTML = cantidad.target.value;
-          cantidad_usd.dataset.valor = cantidad.target.value;
-          cantidad_usd.innerHTML = cantidad.target.value;
+      cantidad.addEventListener('keyup',function (input) {
+          document.getElementById('combustible_cantidad_mxn').innerHTML = input.target.value;
+          document.getElementById('combustible_cantidad_usd').innerHTML = input.target.value;
           combustibleCalculaTotales();
-          combustibleCalculaTotalesUSD();
       });
-      $('#appbundle_marinahumedacotizacion_mhcservicios_0_precioAux').keyup(function (precio_iva_mxn) {
-          let dolar = Number(document.getElementById('appbundle_marinahumedacotizacion_dolar').value);
-          let precio_sin_iva_mxn = (precio_iva_mxn.target.value * 100) / (100 + iva);
-          let precio_sin_iva_usd = precio_sin_iva_mxn / dolar;
-          precio_mxn.value = precio_sin_iva_mxn; //.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          precio_usd.dataset.valor = precio_sin_iva_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          precio_usd.innerHTML = precio_sin_iva_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+      precio_iva_mxn.addEventListener('keyup',function (input) {
+          let precio_sin_iva_mxn = (Number(input.target.value) * 100) / (100 + iva);
+          document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio').value = precio_sin_iva_mxn.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
           combustibleCalculaTotales();
+      });
+      dolar_combustible.addEventListener('keyup',function (input) {
           combustibleCalculaTotalesUSD();
       });
-      $('#appbundle_marinahumedacotizacion_dolar').keyup(function (dolarval) {
-          let precio_usd_aux = precio_mxn.value / dolarval.target.value;
-          precio_usd.dataset.valor = precio_usd_aux.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          precio_usd.innerHTML = precio_usd_aux.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          combustibleCalculaTotalesUSD();
-      });
-
       function combustibleCalculaTotales(){
-          let subtotal = cantidad_mxn.dataset.valor * precio_mxn.value;
-          let ivatot = (subtotal * iva) / 100;
-          let total = subtotal + ivatot;
-          document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_subtotal').value = subtotal;//.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_iva').value = ivatot;//.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_total').value = total;//.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          document.getElementById('appbundle_marinahumedacotizacion_subtotal').value = subtotal;//.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          document.getElementById('appbundle_marinahumedacotizacion_ivatotal').value = ivatot;//.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          document.getElementById('appbundle_marinahumedacotizacion_total').value = total;//.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          let total = Number(cantidad.value) * Number(precio_iva_mxn.value);
+          let ivatot = (total * iva)/(100 + iva);
+          let subtotal = total - ivatot;
+          document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_subtotal').value = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_iva').value = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_total').value = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('appbundle_marinahumedacotizacion_subtotal').value = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('appbundle_marinahumedacotizacion_ivatotal').value = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('appbundle_marinahumedacotizacion_total').value = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          combustibleCalculaTotalesUSD();
       }
-
       function combustibleCalculaTotalesUSD(){
-          let subtotal = cantidad_usd.dataset.valor * precio_usd.dataset.valor;
-          let ivatot = (subtotal * iva) / 100;
-          let total = subtotal + ivatot;
-          document.getElementById('combustible_subtotal_usd').innerHTML = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          document.getElementById('combustible_iva_usd').innerHTML = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          document.getElementById('combustible_total_usd').innerHTML = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          document.getElementById('combustible_gran_subtotal_usd').innerHTML = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          document.getElementById('combustible_gran_iva_usd').innerHTML = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          document.getElementById('combustible_gran_total_usd').innerHTML = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          let dolar = Number(dolar_combustible.value);
+          let precio_sin_iva_usd = Number((document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio').value).replace(/,/g, '')) / dolar;
+          let subtotal_usd = Number((document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_subtotal').value).replace(/,/g, '')) / dolar;
+          let ivatot_usd = Number((document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_iva').value).replace(/,/g, '')) / dolar;
+          let total_usd = Number((document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_total').value).replace(/,/g, '')) / dolar;
+          document.getElementById('combustible_precio_usd').innerHTML = precio_sin_iva_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('combustible_subtotal_usd').innerHTML = subtotal_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('combustible_gran_subtotal_usd').innerHTML = subtotal_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('combustible_iva_usd').innerHTML = ivatot_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('combustible_gran_iva_usd').innerHTML = ivatot_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('combustible_total_usd').innerHTML = total_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          document.getElementById('combustible_gran_total_usd').innerHTML = total_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
       }
     </script>
 {% endblock %}

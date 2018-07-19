@@ -75,21 +75,21 @@ class CombustibleDataTable extends AbstractDataTableHandler
                 } else if ($column->data == 2) {
                     $q->andWhere('LOWER(barco.nombre) LIKE :barco')
                         ->setParameter('barco', "%{$value}%");
-                } else if ($column->data == 8) {
+                } else if ($column->data == 6) {
                     if ($value) {
                         $q->andWhere('mhce.validanovo = :validacion')
                             ->setParameter('validacion', $value);
                     } else {
                         $q->andWhere('mhce.validanovo = 0');
                     }
-                } else if ($column->data == 9) {
+                } else if ($column->data == 7) {
                     if ($value) {
                         $q->andWhere('mhce.validacliente = :aceptacion')
                             ->setParameter('aceptacion', $value);
                     } else {
                         $q->andWhere('mhce.validacliente = 0');
                     }
-                } else if ($column->data == 10) {
+                } else if ($column->data == 8) {
                     if ($value) {
                         $q->andWhere('mhce.estatuspago = :pago')->setParameter('pago', $value);
                     } else {
@@ -111,24 +111,18 @@ class CombustibleDataTable extends AbstractDataTableHandler
             } elseif ($order->column === 4) {
                 $q->addOrderBy('mhce.ivatotal', $order->dir);
             } elseif ($order->column === 5) {
-                $q->addOrderBy('mhce.descuentototal', $order->dir);
-            } elseif ($order->column === 6) {
-                $q->addOrderBy('mhce.moratoriaTotal', $order->dir);
-            } elseif ($order->column === 7) {
                 $q->addOrderBy('mhce.total', $order->dir);
-            } elseif ($order->column === 8) {
+            } elseif ($order->column === 6) {
                 $q->addOrderBy('mhce.validanovo', $order->dir);
-            } elseif ($order->column === 9) {
+            } elseif ($order->column === 7) {
                 $q->addOrderBy('mhce.validacliente', $order->dir);
-            } elseif ($order->column === 10) {
+            } elseif ($order->column === 8) {
                 $q->addOrderBy('mhce.estatuspago', $order->dir);
             }
         }
 
         $cotizaciones = $q->getQuery()->getResult();
-
         $results->recordsFiltered = count($cotizaciones);
-
         for ($i = 0; $i < $request->length || $request->length === -1; $i++) {
             $index = $i + $request->start;
 
@@ -138,7 +132,6 @@ class CombustibleDataTable extends AbstractDataTableHandler
 
             /** @var MarinaHumedaCotizacion $cotizacion */
             $cotizacion = $cotizaciones[$index];
-
             $results->data[] = [
                 !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza(),
                 $cotizacion->getCliente()->getNombre(),
@@ -146,8 +139,6 @@ class CombustibleDataTable extends AbstractDataTableHandler
 //                ($cotizacion->getDescuento() ?? 0 ) . '%',
                 '$' . number_format($cotizacion->getSubtotal() / 100, 2),
                 '$' . number_format($cotizacion->getIvatotal() / 100, 2),
-                '$' . number_format($cotizacion->getDescuentototal() / 100, 2),
-                '$' . number_format($cotizacion->getMoratoriaTotal() / 100, 2),
                 '$' . number_format($cotizacion->getTotal() / 100, 2),
                 $cotizacion->getValidanovo(),
                 $cotizacion->getValidacliente(),
@@ -155,7 +146,6 @@ class CombustibleDataTable extends AbstractDataTableHandler
                 ['id' => $cotizacion->getId(), 'estatus' => $cotizacion->getEstatus()]
             ];
         }
-
         return $results;
     }
 }
