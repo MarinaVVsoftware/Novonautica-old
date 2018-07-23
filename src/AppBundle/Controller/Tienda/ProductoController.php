@@ -23,6 +23,7 @@ class ProductoController extends Controller
      * @Route("/", name="tienda_producto_index")
      * @Method({"GET", "POST"})
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
@@ -57,24 +58,18 @@ class ProductoController extends Controller
      * @Route("/eliminar/{id}", name="tienda_producto_borrar")
      * @Method({"GET", "POST"})
      * @param Producto $producto
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function eliminarAction(Producto $producto)
     {
         $em = $this->getDoctrine()->getManager();
 
+        $producto->isActive() ? $producto->setIsActive(false) : $producto->setIsActive(true);
 
-        $encontrar = $em->getRepository('AppBundle:Tienda\Peticion')->findOneBy(array('producto' => $producto->getId()));
+        $em->flush();
 
-        if (empty($encontrar)) {
-            $em->remove($producto);
-            $em->flush();
-            $this->addFlash('notice', 'El producto ha sido eliminado');
-            return $this->redirectToRoute('tienda_producto_index');
-        } else {
-            $this->addFlash('notice', 'No puede eliminar este producto hasta que se elimine la solicitud que la contiene');
-            return $this->redirectToRoute('tienda_producto_index');
-        }
+        return $this->redirectToRoute('tienda_producto_index');
     }
 
     /**
@@ -89,6 +84,7 @@ class ProductoController extends Controller
     {
         try {
             $results = $dataTables->handle($request, 'tienda_producto');
+
             return $this->json($results);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());

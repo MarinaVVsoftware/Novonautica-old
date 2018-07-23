@@ -73,6 +73,7 @@
                             {{ form_row(form.nombre) }}
                             {{ form_row(form.precio) }}
                             {{ form_row(form.preciocolaborador) }}
+                            {{ form_row(form.categoria) }}
                             {{ form_row(form.codigoBarras) }}
                             {{ form_row(form.claveProdServ) }}
                             {{ form_row(form.claveUnidad) }}
@@ -174,9 +175,9 @@
                 ...dtSettings,
                 ajax: '{{ path('tienda_producto_index_data') }}',
                 order: [[0, 'desc']],
-                createdRow: function (row, usuario) {
-                  let imgSource = usuario[3]
-                      ? `{{ asset('uploads/tienda/producto/imagenes') }}/${usuario[3]}`
+                createdRow: function (row, producto) {
+                  let imgSource = producto[3]
+                      ? `{{ asset('uploads/tienda/producto/imagenes') }}/${producto[3]}`
                       : "{{ asset('img/image-not-found.jpg') }}";
 
                   row.cells[3].innerHTML = `
@@ -188,10 +189,16 @@
                   row.cells[4].innerHTML = `
                     <ul class="list-unstyled">
                         <li>
-                            <a href="{{ app.request.requestUri ~ '?producto=${usuario[4]}' }}" class="btn btn-xs btn-block btn-azul">Editar</a>
+                            <a href="{{ app.request.requestUri ~ '?producto=${producto[4].id}' }}" class="btn btn-xs btn-block btn-azul">
+                            Editar
+                            </a>
                         </li>
                         <li>
-                            <a href="{{ app.request.requestUri ~ 'eliminar/${usuario[4]}' }}" class="btn btn-xs btn-block btn-naranja">Eliminar</a>
+                            <a href="{{ app.request.requestUri ~ 'eliminar/${producto[4].id}' }}"
+                             class="btn btn-xs btn-block ${producto[4].estatus ? 'btn-danger' : 'btn-success'}"
+                             >
+                            ${producto[4].estatus ? 'Desactivar' : 'Activar'}
+                            </a>
                         </li>
                     </ul>
                     `

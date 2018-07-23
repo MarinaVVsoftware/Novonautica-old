@@ -39,27 +39,26 @@ class TiendaProductoDataTable extends AbstractDataTableHandler
         $query = $repository->createQueryBuilder('p')->select('COUNT(p.id)');
         $results->recordsTotal = $query->getQuery()->getSingleScalarResult();
 
-        $query = $repository->createQueryBuilder('p')
-        ;
+        $query = $repository->createQueryBuilder('p');
 
         if ($request->search->value) {
-            $query->where('(LOWER(p.nombre) LIKE :search OR ' .
-                'LOWER(p.preciocolaborador) LIKE :search OR ' .
+            $query->where('(LOWER(p.nombre) LIKE :search OR '.
+                'LOWER(p.preciocolaborador) LIKE :search OR '.
                 'LOWER(p.precio) LIKE :search)'
             );
             $query->setParameter('search', strtolower("%{$request->search->value}%"));
         }
 
         foreach ($request->order as $order) {
-                if ($order->column == 0) {
+            if ($order->column == 0) {
                 $query->addOrderBy('p.nombre', $order->dir);
             } elseif ($order->column == 1) {
                 $query->addOrderBy('p.precio', $order->dir);
             } elseif ($order->column == 2) {
                 $query->addOrderBy('p.preciocolaborador', $order->dir);
             } elseif ($order->column == 3) {
-                    $query->addOrderBy('p.id', $order->dir);
-                }
+                $query->addOrderBy('p.id', $order->dir);
+            }
         }
 
         $queryCount = clone $query;
@@ -75,10 +74,13 @@ class TiendaProductoDataTable extends AbstractDataTableHandler
         foreach ($productos as $producto) {
             $results->data[] = [
                 $producto->getNombre(),
-                "$".number_format($producto->getPrecio()/ 100, 2)." MXN",
-                "$".number_format($producto->getPreciocolaborador()/ 100, 2). " MXN",
+                "$".number_format($producto->getPrecio() / 100, 2)." MXN",
+                "$".number_format($producto->getPreciocolaborador() / 100, 2)." MXN",
                 $producto->getImagen(),
-                $producto->getId(),
+                [
+                    'id' => $producto->getId(),
+                    'estatus' => $producto->isActive(),
+                ],
             ];
         }
 

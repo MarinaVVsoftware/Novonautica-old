@@ -2,13 +2,17 @@
 
 namespace AppBundle\Form\Tienda;
 
+use AppBundle\Entity\Tienda\Producto\Categoria;
 use AppBundle\Form\DataTransformer\ClaveProdServTransformer;
 use AppBundle\Form\DataTransformer\ClaveUnidadTransformer;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ProductoType extends AbstractType
@@ -48,6 +52,15 @@ class ProductoType extends AbstractType
                 'label' => 'Imagen',
                 'allow_delete' => false,
                 'required' => false,
+            ])
+            ->add('categoria', EntityType::class, [
+                'class' => Categoria::class,
+                'choice_label' => 'nombre',
+                'attr' => ['class' => 'select-buscador'],
+                'constraints' => [
+                    new NotNull(['message' => 'Por favor seleccione una categoria.']),
+                    new NotBlank(['message' => 'Por favor seleccione una categoria.']),
+                ]
             ])
             ->add('claveUnidad', TextType::class)
             ->add('claveProdServ', TextType::class, [
