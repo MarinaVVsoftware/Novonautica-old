@@ -21,7 +21,7 @@ class ValorSistemaType extends AbstractType
             ->add('dolar',MoneyType::class,[
                 'required'=>false,
                 'attr' => ['class' => 'esdecimal'],
-                'currency' => 'USD',
+                'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
             ])
@@ -34,11 +34,6 @@ class ValorSistemaType extends AbstractType
                 'required' => false,
                 'label' => 'Folio Cotizaciones'
             ])
-            ->add('folioAstillero',TextType::class,[
-                'attr' => ['class' => 'esdecimal'],
-                'required' => false,
-                'label' => 'Astillero Cotización (no usado)'
-            ])
             ->add('diasHabilesMarinaCotizacion',TextType::class,[
                 'label' => 'Días hábiles pago de cotización marina húmeda',
                 'attr' => ['class' => 'esdecimal'],
@@ -50,17 +45,17 @@ class ValorSistemaType extends AbstractType
                 'required' => false,
             ])
             ->add('mensajeCorreoMarina',TextareaType::class,[
-                'attr' => ['rows' => 7, 'class' => 'editorwy'],
+                'attr' => ['rows' => 10, 'class' => 'editorwy'],
                 'required' => false,
                 'label' => 'Mensaje en correo de marina húmeda cotización'
             ])
             ->add('mensajeCorreoMarinaGasolina',TextareaType::class,[
-                'attr' => ['rows' => 7, 'class' => 'editorwy'],
+                'attr' => ['rows' => 10, 'class' => 'editorwy'],
                 'required' => false,
                 'label' => 'Mensaje en correo de gasolina de marina húmeda cotización'
             ])
             ->add('mensajeCorreoAstillero',TextareaType::class,[
-                'attr' => ['rows' => 7, 'class' => 'editorwy'],
+                'attr' => ['rows' => 10, 'class' => 'editorwy'],
                 'required' => false,
                 'label' => 'Mensaje en correo de astillero cotización'
             ])
@@ -68,6 +63,26 @@ class ValorSistemaType extends AbstractType
                 'attr' => ['class' => 'esdecimal'],
                 'label' => 'Porcentaje moratorio (marina húmeda)',
                 'required' => false
+            ])
+            ->add('direccion', TextType::class,[
+                'label' => 'Dirección',
+            ])
+            ->add('codigoPostal', TextType::class,[
+                'label' => 'Código Postal',
+                'required' => false
+            ])
+            ->add('telefono',TextType::class,[
+                'label' => 'Teléfono'
+            ])
+            ->add('terminosMarina',TextareaType::class,[
+                'attr' => ['rows' => 15, 'class' => 'editorwy'],
+                'required' => false,
+                'label' => 'Términos y condiciones Marina Humeda'
+            ])
+            ->add('terminosAstillero', TextareaType::class,[
+                'attr' => ['rows' => 15, 'class' => 'editorwy'],
+                'required' => false,
+                'label' => 'Términos y condiciones Astillero'
             ])
         ;
     }

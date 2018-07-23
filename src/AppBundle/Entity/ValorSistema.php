@@ -99,6 +99,41 @@ class ValorSistema
     private $porcentajeMoratorio;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="direccion", type="string", length=255)
+     */
+    private $direccion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigo_postal", type="string", length=6)
+     */
+    private $codigoPostal;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="telefono", type="string", length=50)
+     */
+    private $telefono;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="terminos_marina", type="text")
+     */
+    private $terminosMarina;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="terminos_astillero", type="text")
+     */
+    private $terminosAstillero;
+
+    /**
      * Generate a token
      *
      * @return string (100 characters)
@@ -294,5 +329,125 @@ class ValorSistema
     public function getPorcentajeMoratorio()
     {
         return $this->porcentajeMoratorio;
+    }
+
+    /**
+     * Set direccion.
+     *
+     * @param string $direccion
+     *
+     * @return ValorSistema
+     */
+    public function setDireccion($direccion)
+    {
+        $this->direccion = $direccion;
+
+        return $this;
+    }
+
+    /**
+     * Get direccion.
+     *
+     * @return string
+     */
+    public function getDireccion()
+    {
+        return $this->direccion;
+    }
+
+    /**
+     * Set codigoPostal.
+     *
+     * @param string $codigoPostal
+     *
+     * @return ValorSistema
+     */
+    public function setCodigoPostal($codigoPostal)
+    {
+        $this->codigoPostal = $codigoPostal;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoPostal.
+     *
+     * @return string
+     */
+    public function getCodigoPostal()
+    {
+        return $this->codigoPostal;
+    }
+
+    /**
+     * Set telefono.
+     *
+     * @param string $telefono
+     *
+     * @return ValorSistema
+     */
+    public function setTelefono($telefono)
+    {
+        $this->telefono = $telefono;
+
+        return $this;
+    }
+
+    /**
+     * Get telefono.
+     *
+     * @return string
+     */
+    public function getTelefono()
+    {
+        return $this->telefono;
+    }
+
+    /**
+     * Set terminosMarina.
+     *
+     * @param string $terminosMarina
+     *
+     * @return ValorSistema
+     */
+    public function setTerminosMarina($terminosMarina)
+    {
+        $this->terminosMarina = $terminosMarina;
+
+        return $this;
+    }
+
+    /**
+     * Get terminosMarina.
+     *
+     * @return string
+     */
+    public function getTerminosMarina()
+    {
+        return $this->terminosMarina;
+    }
+
+    /**
+     * Set terminosAstillero.
+     *
+     * @param string $terminosAstillero
+     *
+     * @return ValorSistema
+     */
+    public function setTerminosAstillero($terminosAstillero)
+    {
+        $this->terminosAstillero = $terminosAstillero;
+
+        return $this;
+    }
+
+    /**
+     * Get terminosAstillero.
+     *
+     * @return string
+     */
+    public function getTerminosAstillero()
+    {
+        return $this->terminosAstillero;
     }
 }

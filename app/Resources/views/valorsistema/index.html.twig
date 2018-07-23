@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block contwrapper %}
+    {% set valor = valorSistemas[0] %}
     <div class="content-wrapper">
         <section class="content">
             <div class="panel panel-novo">
@@ -25,39 +26,59 @@
                                 <tbody>
                                     <tr>
                                         <td>Dolar</td>
-                                        <td>{{ (valorSistemas.0.dolar/100)|number_format(2) }} MXN</td>
+                                        <td>{{ (valor.dolar/100)|number_format(2) }} MXN</td>
                                     </tr>
                                     <tr>
                                         <td>IVA</td>
-                                        <td>{{ valorSistemas.0.iva }} %</td>
+                                        <td>{{ valor.iva }} %</td>
                                     </tr>
                                     <tr>
                                         <td>Folio Cotizaciones</td>
-                                        <td>{{ valorSistemas.0.folioMarina }}</td>
+                                        <td>{{ valor.folioMarina }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dirección</td>
+                                        <td>{{ valor.direccion }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Código Postal</td>
+                                        <td>{{ valor.codigoPostal }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Télefono</td>
+                                        <td>{{ valor.telefono }}</td>
                                     </tr>
                                     <tr>
                                         <td>Días Hábiles Pago Cotización Marina</td>
-                                        <td>{{ valorSistemas.0.diasHabilesMarinaCotizacion }} días</td>
+                                        <td>{{ valor.diasHabilesMarinaCotizacion }} días</td>
                                     </tr>
                                     <tr>
                                         <td>Días Hábiles Cotización Astillero</td>
-                                        <td>{{ valorSistemas.0.diasHabilesAstilleroCotizacion }} días</td>
+                                        <td>{{ valor.diasHabilesAstilleroCotizacion }} días</td>
                                     </tr>
                                     <tr>
                                         <td>Mensaje Correo Marina Húmeda</td>
-                                        <td>{{ valorSistemas.0.mensajeCorreoMarina|raw }}</td>
+                                        <td>{{ valor.mensajeCorreoMarina|raw }}</td>
                                     </tr>
                                     <tr>
                                         <td>Mensaje Correo Combustible</td>
-                                        <td>{{ valorSistemas.0.mensajeCorreoMarinaGasolina|raw }}</td>
+                                        <td>{{ valor.mensajeCorreoMarinaGasolina|raw }}</td>
                                     </tr>
                                     <tr>
                                         <td>Mensaje Correo Astillero</td>
-                                        <td>{{ valorSistemas.0.mensajeCorreoAstillero|raw }}</td>
+                                        <td>{{ valor.mensajeCorreoAstillero|raw }}</td>
                                     </tr>
                                     <tr>
                                         <td>Porcentaje moratorio Marina Húmeda</td>
-                                        <td>{{ valorSistemas.0.porcentajeMoratorio }} %</td>
+                                        <td>{{ valor.porcentajeMoratorio }} %</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Términos y condiciones MarinaHumeda</td>
+                                        <td>{{ valor.terminosMarina|raw }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Términos y condiciones Astillero</td>
+                                        <td>{{ valor.terminosAstillero|raw }}</td>
                                     </tr>
                                 </tbody>
                             </table>

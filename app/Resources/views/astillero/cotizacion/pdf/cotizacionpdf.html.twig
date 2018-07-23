@@ -356,32 +356,32 @@
             </p>
         </div>
         <div class="col-xs-6">
+            {% if bancoPesos %}
             <p>
-                Razón social: V&V Astillero, S.A. De C.V.<br>
-                R.F.C.: VAS-1503206-W4<br>
-                Dirección: Calle Vialidad Paseo Mujeres Mz 1 Lt 1<br>
-                Zona Continental SM 3<br>
-                Ciudad: Isla Mujeres, Q. Roo, México C.P. 77400<br>
-                Banco: INBURSA<br>
-                Moneda: Pesos<br>
-                No. De Cuenta: 50029365981<br>
-                Sucursal: Cancún 076<br>
-                Clabe: 036691500293659811
+                DATOS BANCARIOS PESOS<br>
+                Razón social: {{ bancoPesos.razonSocial }}<br>
+                R.F.C.: {{ bancoPesos.rfc }}<br>
+                Banco: {{ bancoPesos.banco }}<br>
+                Moneda: {{ bancoPesos.moneda }}<br>
+                No. De Cuenta: {{ bancoPesos.numCuenta }}<br>
+                Sucursal: {{ bancoPesos.sucursal }}<br>
+                Clabe Interbancaria: {{ bancoPesos.clabe }}
             </p>
+            {% endif %}
         </div>
         <div class="col-xs-6">
+            {% if bancoDolares %}
             <p>
                 DATOS BANCARIOS DOLARES<br>
-                Codigo Swift: CHASUS33<br>
-                Ruta Banco Receptor (ABA): 021 000 021<br>
-                Beneficiario: V&V ASTILLERO SA DE CV<br>
-                Cuenta del beneficiario: 0366 91500314566346<br>
-                Banco Beneficiario: Banco Inbursa, S.A. México, D.F.<br>
-                Cuenta Banco: 400475464<br>
-                Nuestro Codigo Swift: INBUMXMM<br>
-                En caso de que lo JP MORGAN CHASE BANK requieran direccion: 271<br>
-                PARK AVENUE NEW YORK CITY NY 10017 UNITED ESTATES
+                Razón social: {{ bancoDolares.razonSocial }}<br>
+                R.F.C.: {{ bancoDolares.rfc }}<br>
+                Banco: {{ bancoDolares.banco }}<br>
+                Moneda: {{ bancoDolares.moneda }}<br>
+                No. De Cuenta: {{ bancoDolares.numCuenta }}<br>
+                Sucursal: {{ bancoDolares.sucursal }}<br>
+                Clabe Interbancaria: {{ bancoDolares.clabe }}
             </p>
+            {% endif %}
         </div>
     </div>
     <div class="row condiciones">
@@ -391,29 +391,7 @@
         </div>
         <div class="col-xs-12">
             <p>
-                Esta cotización es válida por 7 días solamente y no es un acuerdo vinculante de
-                tarífa, plan de pago o
-                ubicácion dentro del Astillero.
-                <br>
-                *Importante que todos los trabajadores externos cuenten con un seguro de
-                responsabilidad civil.
-                <br>
-                Anticipo del 70% para inicio de trabajo.
-                <br>
-            </p>
-
-            <p>FAVOR DE PRESENTAR COPIA DE LOS SIGUIENTES DOC:</p>
-            <ul>
-                <li>A) IMPORTACIÓN O EXP. DEL BARCO</li>
-                <li>B) SEGURO VIGENTE DEL BARCO</li>
-                <li>C) IFE DEL PROP. O CAPITÁN</li>
-                <li>D) CERTIFICADO DE MATRÍCULA /CERTIFICADO DE REGISTRO</li>
-            </ul>
-
-            <p>
-                IMPRESCINDIBLE PRESENTAR DICHA DOC. ANTES DE QUE EL BARCO SUBA<br>
-                NOTA IMPORTANTE: La salida está señalada para antes del medio día, de lo contrario se cotizará un día
-                más y correrá por cuenta del cliente.
+             {{ valor.terminosAstillero|raw }}
             </p>
         </div>
     </div>

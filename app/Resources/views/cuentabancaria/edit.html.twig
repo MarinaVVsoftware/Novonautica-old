@@ -22,21 +22,8 @@
             <div class="panel-body">
                 {{ form_start(edit_form) }}
                 <div class="row">
-                    <div class="col-sm-6">
-                        {{ form_errors(edit_form.banco) }}
-                        {{ form_errors(edit_form.clabe) }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        {{ form_label(edit_form.banco) }}
-                        {{ form_widget(edit_form.banco) }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        {{ form_label(edit_form.clabe) }}
-                        {{ form_widget(edit_form.clabe) }}
+                    <div class="col-sm-12">
+                        {{ form_widget(edit_form) }}
                     </div>
                 </div>
                 <div class="row espacio-linea-arriba2">
