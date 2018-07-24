@@ -1,9 +1,4 @@
 {% extends 'estructura/plantilla.twig' %}
-
-{% block title %}
-    Cuenta bancaria
-{% endblock %}
-
 {% block contwrapper %}
 <div class="content-wrapper">
     <section class="content">
@@ -11,7 +6,7 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h3 class="panel-title">Cuenta Bancaria</h3>
+                        <h3 class="panel-title">{{ title }}</h3>
                     </div>
                     <div class="col-sm-6">
                         <a class="btn btn-contorno-azul pull-right" href="{{ path('cuenta-bancaria_index') }}">Regresar</a>
