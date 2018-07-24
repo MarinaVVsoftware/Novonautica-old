@@ -72,7 +72,7 @@ $(document).ready(function () {
         "image": false,
         "color": false,
         "link": false,
-        "html": true,
+        "html": false
       }
     });
   }

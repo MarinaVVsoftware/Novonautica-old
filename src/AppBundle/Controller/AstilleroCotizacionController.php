@@ -362,20 +362,35 @@ class AstilleroCotizacionController extends Controller
      */
     public function displayMarinaPDF(AstilleroCotizacion $ac, $tipo)
     {
+        $em = $this->getDoctrine()->getManager();
+        $valor = $em->getRepository('AppBundle:ValorSistema')->find(1);
+        $bancoPesos = $em->getRepository('AppBundle:CuentaBancaria')->findOneBy(['empresa' => 2,'moneda' => 1]);
+        $bancoDolares = $em->getRepository('AppBundle:CuentaBancaria')->findOneBy(['empresa' => 2,'moneda' => 2]);
+
+
         if ($tipo == 1) { //pesos
             $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
-                'astilleroCotizacion' => $ac
+                'astilleroCotizacion' => $ac,
+                'valor' => $valor,
+                'bancoPesos' => $bancoPesos,
+                'bancoDolares' => $bancoDolares
             ]);
         } else { //dolares
             $html = $this->renderView('astillero/cotizacion/pdf/cotizacion-pesospdf.html.twig', [
-                'astilleroCotizacion' => $ac
+                'astilleroCotizacion' => $ac,
+                'valor' => $valor,
+                'bancoPesos' => $bancoPesos,
+                'bancoDolares' => $bancoDolares
             ]);
         }
 
         $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
-            'astilleroCotizacion' => $ac
+            'astilleroCotizacion' => $ac,
+            'valor' => $valor
         ]);
-        $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig');
+        $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig',[
+            'valor' => $valor
+        ]);
 
         $hojapdf = $this->get('knp_snappy.pdf');
 
@@ -775,19 +790,6 @@ class AstilleroCotizacionController extends Controller
         $astilleroElectricidad = $this->llenarServicio($astilleroElectricidad, $servicios[5]);
         $astilleroEstadia = new AstilleroCotizaServicio();
         $astilleroEstadia = $this->llenarServicio($astilleroEstadia, $servicios[1]);
-
-//        $astilleroEstadia
-//            ->setServicio(null)
-//            ->setProducto(null)
-//            ->setOtroservicio(null)
-//            ->setAstilleroserviciobasico($servicios[1]->getAstilleroserviciobasico())
-//            ->setCantidad($servicios[1]->getCantidad())
-//            ->setPrecio(($servicios[1]->getPrecio()/$dolar)*100)
-//            ->setIva(($servicios[1]->getIva()))
-//            ->setSubtotal(($servicios[1]->getSubtotal()))
-//            ->setTotal(($servicios[1]->getTotal()))
-//            ->setDivisa($servicios[1]->getDivisa())
-//            ->setEstatus($servicios[1]->getEstatus());
 
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
@@ -1266,32 +1268,6 @@ class AstilleroCotizacionController extends Controller
                         'granTotal'=>$sumas['granTotal']+=$total];
                 }
             }
-//            foreach ($astilleroCotizacion->getAcservicios() as $servAst) {
-//                if ($servAst->getAstilleroserviciobasico() == null) {
-//                    $cantidad = $servAst->getCantidad();
-//                    if($servAst->getOtroservicio() != null){
-//                        $precio = $servAst->getPrecio();
-//                        //$precio = ($precio/$valordolar)*100;
-//                    }elseif ($servAst->getProducto() != null){
-//                        $precio = $servAst->getProducto()->getPrecio();
-//                    }elseif ($servAst->getServicio()->getPrecio() != null){
-//                        $precio = $servAst->getServicio()->getPrecio();
-//                    }else{
-//                        $precio = 0;
-//                    }
-//                    $subTotal = $cantidad * $precio;
-//                    $ivaTot = ($subTotal * $iva) / 100;
-//                    $total = $subTotal + $ivaTot;
-//                    $servAst->setPrecio($precio);
-//                    $servAst->setSubtotal($subTotal);
-//                    $servAst->setIva($ivaTot);
-//                    $servAst->setTotal($total);
-//                    $servAst->setEstatus(true);
-//                    $sumas = ['granSubtotal'=>$sumas['granSubtotal']+=$subTotal,
-//                              'granIva'=>$sumas['granIva']+=$ivaTot,
-//                              'granTotal'=>$sumas['granTotal']+=$total];
-//                }
-//            }
 
             //------------------------------------------------
             $fechaHoraActual = new \DateTime('now');

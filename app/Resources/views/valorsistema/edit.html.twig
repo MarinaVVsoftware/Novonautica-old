@@ -24,58 +24,84 @@
                 {{ form_start(edit_form) }}
                 <div class="row">
                     <div class="col-sm-6">
-                        <div class="row">
-                            <div class="col-sm-9">
-                                {{ form_row(edit_form.dolar )}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-9">
-                                {{ form_row(edit_form.iva )}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-9">
-                                {{ form_row(edit_form.folioMarina )}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-9">
-                                {{ form_row(edit_form.diasHabilesMarinaCotizacion )}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-9">
-                                {{ form_row(edit_form.folioAstillero )}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-9">
-                                {{ form_row(edit_form.diasHabilesAstilleroCotizacion )}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-9">
-                                {{ form_row(edit_form.porcentajeMoratorio )}}
-                            </div>
-                        </div>
+                        {{ form_row(edit_form.dolar )}}
                     </div>
                     <div class="col-sm-6">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                {{ form_row(edit_form.mensajeCorreoMarina )}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                {{ form_row(edit_form.mensajeCorreoMarinaGasolina )}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                {{ form_row(edit_form.mensajeCorreoAstillero )}}
-                            </div>
-                        </div>
+                        {{ form_row(edit_form.iva )}}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(edit_form.folioMarina )}}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(edit_form.direccion)}}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(edit_form.codigoPostal)}}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(edit_form.telefono)}}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(edit_form.correo)}}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(edit_form.diasHabilesMarinaCotizacion )}}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(edit_form.diasHabilesAstilleroCotizacion )}}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(edit_form.porcentajeMoratorio )}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 espacio-linea">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        {{ form_row(edit_form.mensajeCorreoMarina )}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 espacio-linea">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        {{ form_row(edit_form.mensajeCorreoMarinaGasolina )}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 espacio-linea">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        {{ form_row(edit_form.mensajeCorreoAstillero )}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 espacio-linea">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        {{ form_row(edit_form.terminosMarina )}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 espacio-linea">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        {{ form_row(edit_form.terminosAstillero )}}
                     </div>
                 </div>
                 <div class="row espacio-linea-arriba2">
@@ -87,13 +113,6 @@
                     </div>
                 </div>
                 {{ form_end(edit_form) }}
-                {#<ul>#}
-                    {#<li>#}
-                        {#{{ form_start(delete_form) }}#}
-                        {#<input type="submit" value="Delete">#}
-                        {#{{ form_end(delete_form) }}#}
-                    {#</li>#}
-                {#</ul>#}
             </div>
             <div class="panel-footer">
                 <div class="row">

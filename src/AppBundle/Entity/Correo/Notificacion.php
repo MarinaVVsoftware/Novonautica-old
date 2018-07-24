@@ -101,7 +101,15 @@ class Notificacion
     public function getEvento()
     {
         if (null === $this->evento) { return null; }
+        return $this->evento;
+    }
 
+    /**
+     * @return int
+     */
+    public function getEventoNombre()
+    {
+        if (null === $this->evento) { return null; }
         return self::$eventoList[$this->evento];
     }
 
@@ -124,7 +132,15 @@ class Notificacion
     public function getTipo()
     {
         if (null === $this->tipo) { return null; }
+        return $this->tipo;
+    }
 
+    /**
+     * @return int
+     */
+    public function getTipoNombre()
+    {
+        if (null === $this->tipo) { return null; }
         return self::$tipoList[$this->tipo];
     }
 

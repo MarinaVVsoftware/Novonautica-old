@@ -12,22 +12,34 @@
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-sm-12">
                         <table class="table">
                             <thead>
                             <tr>
+                                <th>Empresa</th>
+                                <th>Moneda</th>
                                 <th>Banco</th>
+                                <th>Sucursal</th>
                                 <th>Clabe</th>
+                                <th>Num. Cuenta</th>
+                                <th>Razón Social</th>
+                                <th>R.F.C.</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for cuentaBancarium in cuentaBancarias %}
+                            {% for cuenta in cuentaBancarias %}
                                 <tr>
-                                    <td>{{ cuentaBancarium.banco }}</td>
-                                    <td>{{ cuentaBancarium.clabe }}</td>
+                                    <td>{{ cuenta.empresaNombre }}</td>
+                                    <td>{{ cuenta.monedaNombre }}</td>
+                                    <td>{{ cuenta.banco }}</td>
+                                    <td>{{ cuenta.sucursal }}</td>
+                                    <td>{{ cuenta.clabe }}</td>
+                                    <td>{{ cuenta.numCuenta }}</td>
+                                    <td>{{ cuenta.razonSocial }}</td>
+                                    <td>{{ cuenta.rfc }}</td>
                                     <td>
-                                        <a class="btn btn-azul" href="{{ path('cuenta-bancaria_edit', { 'id': cuentaBancarium.id }) }}">Editar</a>
+                                        <a class="btn btn-azul" href="{{ path('cuenta-bancaria_edit', { 'id': cuenta.id }) }}">Editar</a>
                                     </td>
                                 </tr>
                             {% endfor %}

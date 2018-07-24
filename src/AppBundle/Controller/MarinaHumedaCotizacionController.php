@@ -359,15 +359,19 @@ class MarinaHumedaCotizacionController extends Controller
      */
     public function displayMarinaPDFAction(MarinaHumedaCotizacion $mhc)
     {
+        $em = $this->getDoctrine()->getManager();
+        $valor = $em->getRepository('AppBundle:ValorSistema')->find(1);
         $html = $this->renderView('marinahumeda/cotizacion/pdf/cotizacionpdf.html.twig', [
             'title' => 'Cotizacion-' . $mhc->getFolio() . '.pdf',
-            'marinaHumedaCotizacion' => $mhc
+            'marinaHumedaCotizacion' => $mhc,
+            'valor' => $valor
         ]);
         $header = $this->renderView('marinahumeda/cotizacion/pdf/pdfencabezado.twig', [
             'marinaHumedaCotizacion' => $mhc
         ]);
         $footer = $this->renderView('marinahumeda/cotizacion/pdf/pdfpie.twig', [
-            'marinaHumedaCotizacion' => $mhc
+            'marinaHumedaCotizacion' => $mhc,
+            'valor' => $valor
         ]);
         $hojapdf = $this->get('knp_snappy.pdf');
         $options = [
