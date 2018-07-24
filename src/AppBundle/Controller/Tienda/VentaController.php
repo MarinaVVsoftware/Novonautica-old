@@ -8,7 +8,6 @@
 namespace AppBundle\Controller\Tienda;
 
 
-use AppBundle\Entity\Tienda\Inventario\Registro;
 use AppBundle\Entity\Tienda\Producto;
 use AppBundle\Entity\Tienda\Venta;
 use AppBundle\Form\Tienda\VentaType;
@@ -124,7 +123,7 @@ class VentaController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showIndex(Request $request, Venta $venta)
+    public function showAction(Request $request, Venta $venta)
     {
         return $this->render(
             'tienda/venta/show.html.twig',

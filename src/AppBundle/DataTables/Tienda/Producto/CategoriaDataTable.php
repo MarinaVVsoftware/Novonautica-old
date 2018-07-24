@@ -71,8 +71,10 @@ class CategoriaDataTable extends AbstractDataTableHandler
         foreach ($categorias as $categoria) {
             $results->data[] = [
                 $categoria->getNombre(),
-                $categoria->getIsActive() ? 'Activo' : 'Inactivo',
-                $categoria->getId(),
+                [
+                    'estatus' => $categoria->isActive(),
+                    'id' => $categoria->getId(),
+                ],
             ];
         }
 

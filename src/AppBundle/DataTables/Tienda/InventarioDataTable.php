@@ -39,20 +39,19 @@ class InventarioDataTable extends AbstractDataTableHandler
      */
     public function handle(DataTableQuery $request): DataTableResults
     {
-        $repository = $this->doctrine->getRepository(Producto::class);
+        $repository = $this->doctrine->getRepository(Entrada::class);
         $results = new DataTableResults();
 
-        $query = $repository->createQueryBuilder('p')->select('COUNT(p.id)');
-
+        $query = $repository->createQueryBuilder('e')->select('COUNT(e.id)');
         $results->recordsTotal = $query->getQuery()->getScalarResult();
 
-        $query = $repository->createQueryBuilder('p')
+        $query = $repository->createQueryBuilder('e')
             ->select(
-                'p.nombre',
+                'p.nombre AS producto',
                 'COALESCE(SUM(CASE WHEN r.tipo = 1 THEN e.cantidad ELSE -e.cantidad END), 0) AS quantity'
             )
-            ->leftJoin(Entrada::class, 'e', 'WITH', 'p.id = e.producto')
             ->leftJoin(Registro::class, 'r', 'WITH', 'r.id = e.registro')
+            ->leftJoin(Producto::class, 'p', 'WITH', 'p.id = e.producto')
             ->groupBy('p.id');
 
         if ($request->search->value) {
@@ -68,18 +67,19 @@ class InventarioDataTable extends AbstractDataTableHandler
             }
         }
 
-        $queryCount = clone $query;
-        $results->recordsFiltered = count($queryCount->getQuery()->getScalarResult());
-
-        $query->setMaxResults($request->length);
-        $query->setFirstResult($request->start);
+        if ($request->length > 0) {
+            $query->setMaxResults($request->length);
+            $query->setFirstResult($request->start);
+        }
 
         /** @var Producto[] $productos */
         $productos = $query->getQuery()->getResult();
 
+        $results->recordsFiltered = count($productos);
+
         foreach ($productos as $producto) {
             $results->data[] = [
-                $producto['nombre'],
+                $producto['producto'],
                 $producto['quantity'],
             ];
         }

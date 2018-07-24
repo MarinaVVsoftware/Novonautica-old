@@ -93,7 +93,7 @@ class Categoria
      *
      * @return bool
      */
-    public function getIsActive()
+    public function isActive()
     {
         return $this->isActive;
     }

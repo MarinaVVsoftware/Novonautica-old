@@ -34,7 +34,7 @@ class CategoriaController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $categoriaRepository = $em->getRepository(Categoria::class);
 
-        $categoria = $request->query->get('emisor') ?: null;
+        $categoria = $request->query->get('c') ?: null;
         $categoria = $categoria ? $categoriaRepository->find($categoria) : new Categoria();
 
         $form = $this->createForm(CategoriaType::class, $categoria);
@@ -70,5 +70,20 @@ class CategoriaController extends AbstractController
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
         }
+    }
+
+    /**
+     * @Route("/deactivate/{id}")
+     * @param Request $request
+     * @param Categoria $categoria
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deactivateAction(Request $request, Categoria $categoria)
+    {
+        $categoria->isActive() ? $categoria->setIsActive(false) : $categoria->setIsActive(true);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('tienda_producto_categoria_index');
     }
 }

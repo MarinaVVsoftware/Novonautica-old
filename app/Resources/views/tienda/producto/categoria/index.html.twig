@@ -3,6 +3,11 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        .list-unstyled li {
+            margin-bottom: .5rem;
+        }
+    </style>
 {% endblock %}
 
 {% block contwrapper %}
@@ -53,7 +58,6 @@
                                     <thead>
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Estatus</th>
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
@@ -73,11 +77,31 @@
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
       (function ($, dtSettings) {
+
         $('.table-novo').DataTable({
           ...dtSettings,
           ajax: 'categorias',
-          order: [[2, 'desc']],
+          order: [[0, 'asc']],
+          createdRow: function (row, categoria) {
+            row.cells[1].innerHTML = `
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="?c=${categoria[1].id}" class="btn btn-xs btn-block btn-azul">
+                            Editar
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ app.request.baseUrl ~ app.request.pathInfo }}deactivate/${categoria[1].id}"
+                             class="btn btn-xs btn-block ${categoria[1].estatus ? 'btn-danger' : 'btn-success'}"
+                             >
+                            ${categoria[1].estatus ? 'Desactivar' : 'Activar'}
+                            </a>
+                        </li>
+                    </ul>
+                    `
+          },
         });
+
       })(jQuery, datatablesSettings);
     </script>
 {% endblock %}

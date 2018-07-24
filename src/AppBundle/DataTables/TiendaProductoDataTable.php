@@ -39,10 +39,17 @@ class TiendaProductoDataTable extends AbstractDataTableHandler
         $query = $repository->createQueryBuilder('p')->select('COUNT(p.id)');
         $results->recordsTotal = $query->getQuery()->getSingleScalarResult();
 
-        $query = $repository->createQueryBuilder('p');
+
+        // Hasta ahora es mas rapido hidratar con un query a cada fila
+        // En vez de hidratar el query con un solo join
+        $query = $repository->createQueryBuilder('p')
+//            ->select('c')
+//            ->leftJoin('p.categoria', 'c')
+        ;
 
         if ($request->search->value) {
             $query->where('(LOWER(p.nombre) LIKE :search OR '.
+                'LOWER(c.nombre) LIKE :search OR '.
                 'LOWER(p.preciocolaborador) LIKE :search OR '.
                 'LOWER(p.precio) LIKE :search)'
             );
@@ -74,6 +81,7 @@ class TiendaProductoDataTable extends AbstractDataTableHandler
         foreach ($productos as $producto) {
             $results->data[] = [
                 $producto->getNombre(),
+                $producto->getCategoria()->getNombre(),
                 "$".number_format($producto->getPrecio() / 100, 2)." MXN",
                 "$".number_format($producto->getPreciocolaborador() / 100, 2)." MXN",
                 $producto->getImagen(),

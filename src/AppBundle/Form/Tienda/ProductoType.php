@@ -56,7 +56,6 @@ class ProductoType extends AbstractType
             ->add('categoria', EntityType::class, [
                 'class' => Categoria::class,
                 'choice_label' => 'nombre',
-                'attr' => ['class' => 'select-buscador'],
                 'constraints' => [
                     new NotNull(['message' => 'Por favor seleccione una categoria.']),
                     new NotBlank(['message' => 'Por favor seleccione una categoria.']),
