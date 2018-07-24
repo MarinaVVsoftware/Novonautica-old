@@ -39,8 +39,8 @@
                                     {% for i, notificado in notificados %}
                                         <tr>
                                             <td>{{ notificado.correo }}</td>
-                                            <td>{{ notificado.evento }}</td>
-                                            <td>{{ notificado.tipo }}</td>
+                                            <td>{{ notificado.eventoNombre }}</td>
+                                            <td>{{ notificado.tipoNombre }}</td>
                                             <td align="center">
                                                 <a href="{{ path('historial-correo_notificacion_index', {'n': notificado.id}) }}"
                                                    class="btn btn-block btn-xs btn-azul" style="margin-bottom: 1rem;">Editar</a>

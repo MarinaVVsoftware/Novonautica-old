@@ -33,17 +33,14 @@
                     <div class="row">
                         <div class="col-xs-6">
                             <p>
-                                Calle Vialidad Paseo Mujeres<br>
-                                Manzana 1, Supermanzana 3, L-1<br>
-                                Isla Mujeres. Quintana Roo.<br>
-
+                                {{ valor.direccion }}
                             </p>
                         </div>
                         <div class="col-xs-6">
                             <p>
-                                C.P. 77400<br>
-                                (998) 234 01 00<br>
-                                info@marinavv.com
+                                C.P. {{ valor.codigoPostal }}<br>
+                                {{ valor.telefono }}<br>
+                                {{ valor.correo }}
                             </p>
                         </div>
                     </div>

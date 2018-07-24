@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -74,15 +75,16 @@ class ValorSistemaType extends AbstractType
             ->add('telefono',TextType::class,[
                 'label' => 'Teléfono'
             ])
+            ->add('correo',EmailType::class)
             ->add('terminosMarina',TextareaType::class,[
                 'attr' => ['rows' => 15, 'class' => 'editorwy'],
                 'required' => false,
-                'label' => 'Términos y condiciones Marina Humeda'
+                'label' => 'Términos y condiciones marina húmeda'
             ])
             ->add('terminosAstillero', TextareaType::class,[
                 'attr' => ['rows' => 15, 'class' => 'editorwy'],
                 'required' => false,
-                'label' => 'Términos y condiciones Astillero'
+                'label' => 'Términos y condiciones astillero'
             ])
         ;
     }

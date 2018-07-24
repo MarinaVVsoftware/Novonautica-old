@@ -306,6 +306,16 @@ class CuentaBancaria
     {
         if (null === $this->empresa) { return null; }
 
+        return $this->empresa;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEmpresaNombre()
+    {
+        if (null === $this->empresa) { return null; }
+
         return self::$empresaLista[$this->empresa];
     }
 
@@ -326,6 +336,16 @@ class CuentaBancaria
      * @return int
      */
     public function getMoneda()
+    {
+        if (null === $this->moneda) { return null; }
+
+        return $this->moneda;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMonedaNombre()
     {
         if (null === $this->moneda) { return null; }
 

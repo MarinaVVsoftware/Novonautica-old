@@ -122,6 +122,13 @@ class ValorSistema
     /**
      * @var string
      *
+     * @ORM\Column(name="correo", type="string", length=100)
+     */
+    private $correo;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="terminos_marina", type="text")
      */
     private $terminosMarina;
@@ -449,5 +456,29 @@ class ValorSistema
     public function getTerminosAstillero()
     {
         return $this->terminosAstillero;
+    }
+
+    /**
+     * Set correo.
+     *
+     * @param string $correo
+     *
+     * @return ValorSistema
+     */
+    public function setCorreo($correo)
+    {
+        $this->correo = $correo;
+
+        return $this;
+    }
+
+    /**
+     * Get correo.
+     *
+     * @return string
+     */
+    public function getCorreo()
+    {
+        return $this->correo;
     }
 }
