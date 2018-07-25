@@ -1,9 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
-
-{% block title %}
-    Cuenta bancaria
-{% endblock %}
-
+{% import 'estructura/modalborrar.twig' as modal %}
 {% block contwrapper %}
 <div class="content-wrapper">
     <section class="content">
@@ -11,7 +7,7 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h3 class="panel-title">Cuenta Bancaria</h3>
+                        <h3 class="panel-title">{{ title }}</h3>
                     </div>
                     <div class="col-sm-6">
                         <a class="btn btn-contorno-azul pull-right" href="{{ path('cuenta-bancaria_index') }}">Regresar</a>
@@ -39,11 +35,7 @@
             <div class="panel-footer">
                 <div class="row ">
                     <div class="col-sm-12">
-                        <button type="button" class="btn btn-borrar pull-right" data-toggle="modal"
-                                data-target="#modalBorrar">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            Borrar
-                        </button>
+                        {{ delete_form is defined ? modal.deleteButton('Cuenta') : '' }}
                     </div>
                 </div>
             </div>
@@ -52,14 +44,5 @@
 </div>
 {% endblock %}
 {% block modals %}
-    {% embed 'estructura/modalborrar.twig' %}
-        {% block botonborra %}
-            {{ form_start(delete_form) }}
-            <button type="submit" class="btn btn-borrar">
-                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                Borrar
-            </button>
-            {{ form_end(delete_form) }}
-        {% endblock %}
-    {% endembed %}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}

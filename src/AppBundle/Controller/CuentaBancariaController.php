@@ -28,6 +28,7 @@ class CuentaBancariaController extends Controller
 
         return $this->render('cuentabancaria/index.html.twig', array(
             'cuentaBancarias' => $cuentaBancarias,
+            'title' => 'Cuentas bancarias'
         ));
     }
 
@@ -54,6 +55,7 @@ class CuentaBancariaController extends Controller
         return $this->render('cuentabancaria/new.html.twig', array(
             'cuentaBancarium' => $cuentaBancarium,
             'form' => $form->createView(),
+            'title' => 'Nueva cuenta bancaria'
         ));
     }
 
@@ -95,6 +97,7 @@ class CuentaBancariaController extends Controller
             'cuentaBancarium' => $cuentaBancarium,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'title' => 'Editar cuenta bancaria'
         ));
     }
 
