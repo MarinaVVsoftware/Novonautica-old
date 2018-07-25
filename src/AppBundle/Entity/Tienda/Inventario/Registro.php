@@ -38,7 +38,7 @@ class Registro
      * @var string|null
      *
      * @ORM\Column(name="referencia", type="string", length=50, nullable=true)
-     *w/
+     */
     private $referencia;
 
     /**

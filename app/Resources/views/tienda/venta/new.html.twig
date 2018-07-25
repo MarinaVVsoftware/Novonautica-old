@@ -334,7 +334,6 @@
              */
             function computeTotalValues() {
 
-              // TODO Buscar todos los inputs de descuento e ignorarlos si NO es ADMIN o agregarlos si es ADMIN
               let totalValues = Array
                   .from(EntradasHolder.querySelectorAll('tbody tr'))
                   .reduce(function (a, b) {

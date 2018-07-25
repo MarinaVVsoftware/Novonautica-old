@@ -55,13 +55,6 @@ class RegistroController extends AbstractController
         }
     }
 
-    public function inventarioToExcelAction()
-    {
-        $data = $this->getDoctrine()->getRepository(Registro::class)->getInventoryData();
-
-        return $this->json($data)->setEncodingOptions(JSON_NUMERIC_CHECK);
-    }
-
     /**
      * @Route("/entradas", name="tienda_inventario_registro_index_entrada")
      * @Route("/salidas", name="tienda_inventario_registro_index_salida")
