@@ -689,13 +689,13 @@
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{ path.check('ajustes_index') }}">
+                        <li class="{{ path.check('ajustes_') }}">
                             <a href="{{ path('ajustes_index') }}">
                                 <i class="fa fa-circle-o"></i> Valores
                             </a>
                         </li>
                         {% if is_granted('ROLE_AJUSTES_CUENTAS_BANCARIAS') %}
-                            <li class="{{ path.check('cuenta-bancaria_index') }}">
+                            <li class="{{ path.check('cuenta-bancaria_') }}">
                                 <a href="{{ path('cuenta-bancaria_index') }}">
                                     <i class="fa fa-circle-o"></i> Cuentas Bancarias
                                 </a>
