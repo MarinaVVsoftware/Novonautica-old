@@ -16,7 +16,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -71,12 +70,11 @@ class VentaController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($venta);
-//            $em->flush();
-//
-//            return $this->redirectToRoute('tienda_venta_new');
-            dump($venta);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($venta);
+            $em->flush();
+
+            return $this->redirectToRoute('tienda_venta_new');
         }
 
         return $this->render(
