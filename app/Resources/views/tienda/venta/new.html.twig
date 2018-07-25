@@ -32,6 +32,11 @@
             height: 500px;
             width: 100%;
         }
+
+        .discount-input[disabled],
+        .discount-input[disabled] + span {
+            background-color: #373c52 !important;
+        }
     </style>
 {% endblock %}
 
@@ -119,7 +124,8 @@
                                     <div class="form-inline">
                                         <div class="form-group">
                                             <label for="price-selector">Tipo de precio </label>
-                                            <select id="price-selector" class="form-control" style="width: inherit; margin-left: 1rem;">
+                                            <select id="price-selector" class="form-control"
+                                                    style="width: inherit; margin-left: 1rem;">
                                                 <option value="0" selected>Público</option>
                                                 <option value="1">Colaborador</option>
                                             </select>
@@ -211,8 +217,9 @@
                   colaborator: (producto.precioColaborador / 100) || (producto.preciocolaborador / 100) || 999999
                 },
                 barcode: producto.codigoBarras,
+                quantity: producto.quantity,
               }
-            };
+            }
 
             /**
              * Transforma un select en un tipo select2 que saca lo datos de productos.json
@@ -221,6 +228,7 @@
               let $select = $(select);
 
               $select.select2({
+                placeholder: 'Seleccione un producto',
                 ajax: {
                   url: 'productos',
                   dataType: 'json',
@@ -297,8 +305,20 @@
               $ProductSelect
                   .on('select2:select', function (event) {
                     const producto = event.params.data;
+
+                    if (producto.quantity <= 0) {
+                      throwAlert(`El producto "${producto.text}" no tiene más stock en el inventario`);
+
+                      $(this).val(null).trigger('change');
+                      $QuantityInput.val(0).trigger('input');
+                      PrecioInput.value = '0.00';
+
+                      return false;
+                    }
+
                     const price = PriceSelect.value === '0' ? producto.price.public : producto.price.colaborator;
 
+                    $QuantityInput.attr('max', producto.quantity);
                     PrecioInput.dataset.public = producto.price.public;
                     PrecioInput.dataset.colaborator = producto.price.colaborator;
                     PrecioInput.value = transformToMoneyFormat(price.toFixed(2));
@@ -313,6 +333,7 @@
              * Cicla a traves de cada columna con un valor y la suma
              */
             function computeTotalValues() {
+
               let totalValues = Array
                   .from(EntradasHolder.querySelectorAll('tbody tr'))
                   .reduce(function (a, b) {
@@ -363,6 +384,24 @@
               celda.appendChild(removeButton);
             }
 
+            function throwAlert(message) {
+              const $ErrorContainer = $('#errors');
+              const html = `
+                          <div class="alert alert-danger" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            ${message}
+                          </div>
+                      `;
+
+              $ErrorContainer.append(html);
+
+              if ($ErrorContainer.children().length > 2) {
+                $ErrorContainer.children().first().remove();
+              }
+            }
+
             /**
              * Agrega una fila que fue escaneada por una pistola de barcodes
              */
@@ -371,6 +410,11 @@
                   'producto/' + event.detail,
                   {
                     success(producto) {
+                      if (producto.quantity <= 0) {
+                        throwAlert(`El producto "${producto.nombre}" no más tiene stock en el inventario.`);
+                        return;
+                      }
+
                       let existingOption = EntradasHolder.querySelector(`option[value="${producto.id}"]`);
 
                       if (existingOption) {
@@ -400,22 +444,7 @@
                     },
                     error(response) {
                       if (response.status !== 404) return;
-
-                      const $ErrorContainer = $('#errors');
-                      const html = `
-                          <div class="alert alert-danger" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            El producto "${event.detail}" no existe en la base de datos
-                          </div>
-                      `;
-
-                      $ErrorContainer.append(html);
-
-                      if ($ErrorContainer.children().length > 2) {
-                        $ErrorContainer.children().first().remove();
-                      }
+                      throwAlert(`El producto "${event.detail}" no existe en la base de datos`);
                     },
                   }
               );

@@ -488,6 +488,11 @@
                                     <i class="fa fa-circle-o"></i> Productos
                                 </a>
                             </li>
+                            <li class="{{ path.check('tienda_producto_categoria_index') }}">
+                                <a href="{{ path('tienda_producto_categoria_index') }}">
+                                    <i class="fa fa-circle-o"></i> Categorias
+                                </a>
+                            </li>
                         {% endif %}
                         {% if is_granted('ROLE_TIENDA_INVENTARIO') %}
                         <li class="{{ path.check('tienda_inventario_index') }}">

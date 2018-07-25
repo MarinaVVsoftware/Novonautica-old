@@ -10,6 +10,7 @@ namespace AppBundle\Controller\Tienda\Inventario;
 
 use AppBundle\Entity\Tienda\Inventario\Registro;
 use AppBundle\Form\Tienda\Inventario\RegistroType;
+use AppBundle\Repository\Tienda\Inventario\AllInventoryData;
 use DataTables\DataTablesInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -47,6 +48,7 @@ class RegistroController extends AbstractController
     {
         try {
             $results = $dataTables->handle($request, 'inventario');
+
             return $this->json($results);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());

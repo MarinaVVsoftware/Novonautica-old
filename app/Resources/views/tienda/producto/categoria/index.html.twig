@@ -1,0 +1,107 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        .list-unstyled li {
+            margin-bottom: .5rem;
+        }
+    </style>
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    {% for message in app.flashes('notice') %}
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×
+                            </button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                {{ categoria.id is null ? 'Nueva categoria' : 'Editar categoria: ' ~ categoria.nombre }}
+                            </h3>
+                        </div>
+                        <div class="panel-body" style="min-height: initial">
+                            {{ form_start(form) }}
+                            {{ form_row(form.nombre) }}
+                            {% if categoria.id is not null %}
+                                <a href="{{ path('tienda_producto_categoria_index') }}"
+                                   class="btn btn-naranja">Cancelar</a>
+                            {% endif %}
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Listado de categorias</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive scroll-novo">
+                                <table class="table table-novo text-center">
+                                    <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/jquery.autocomplete.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, dtSettings) {
+
+        $('.table-novo').DataTable({
+          ...dtSettings,
+          ajax: 'categorias',
+          order: [[0, 'asc']],
+          createdRow: function (row, categoria) {
+            row.cells[1].innerHTML = `
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="?c=${categoria[1].id}" class="btn btn-xs btn-block btn-azul">
+                            Editar
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ app.request.baseUrl ~ app.request.pathInfo }}deactivate/${categoria[1].id}"
+                             class="btn btn-xs btn-block ${categoria[1].estatus ? 'btn-danger' : 'btn-success'}"
+                             >
+                            ${categoria[1].estatus ? 'Desactivar' : 'Activar'}
+                            </a>
+                        </li>
+                    </ul>
+                    `
+          },
+        });
+
+      })(jQuery, datatablesSettings);
+    </script>
+{% endblock %}

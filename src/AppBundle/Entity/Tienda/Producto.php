@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Tienda;
 
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
+use AppBundle\Entity\Tienda\Producto\Categoria;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -84,6 +85,13 @@ class Producto implements \JsonSerializable
     private $imagen;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $isActive;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="update_at", type="datetime")
@@ -109,6 +117,13 @@ class Producto implements \JsonSerializable
     private $claveUnidad;
 
     /**
+     * @var Categoria
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Producto\Categoria")
+     */
+    private $categoria;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Peticion", mappedBy="producto")
      */
     private $nombreproducto;
@@ -118,8 +133,9 @@ class Producto implements \JsonSerializable
      */
     public function __construct()
     {
-        $this->nombreproducto = new ArrayCollection();
+        $this->isActive = true;
         $this->updateAt = new \DateTime();
+        $this->nombreproducto = new ArrayCollection();
     }
 
     public function __toString()
@@ -186,88 +202,6 @@ class Producto implements \JsonSerializable
     }
 
     /**
-     * Set claveProdServ.
-     *
-     * @param ClaveProdServ|null $claveProdServ
-     *
-     * @return Producto
-     */
-    public function setClaveProdServ(ClaveProdServ $claveProdServ = null)
-    {
-        $this->claveProdServ = $claveProdServ;
-
-        return $this;
-    }
-
-    /**
-     * Get claveProdServ.
-     *
-     * @return ClaveProdServ|null
-     */
-    public function getClaveProdServ()
-    {
-        return $this->claveProdServ;
-    }
-
-    /**
-     * Set claveUnidad.
-     *
-     * @param ClaveUnidad|null $claveUnidad
-     *
-     * @return Producto
-     */
-    public function setClaveUnidad(ClaveUnidad $claveUnidad = null)
-    {
-        $this->claveUnidad = $claveUnidad;
-
-        return $this;
-    }
-
-    /**
-     * Get claveUnidad.
-     *
-     * @return ClaveUnidad|null
-     */
-    public function getClaveUnidad()
-    {
-        return $this->claveUnidad;
-    }
-
-    /**
-     * Get nombreproducto
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getNombreproducto()
-    {
-        return $this->nombreproducto;
-    }
-
-    /**
-     * Add nombreproducto
-     *
-     * @param Peticion $nombreproducto
-     *
-     * @return Producto
-     */
-    public function addNombreproducto(Peticion $nombreproducto)
-    {
-        $this->nombreproducto[] = $nombreproducto;
-
-        return $this;
-    }
-
-    /**
-     * Remove nombreproducto
-     *
-     * @param Peticion $nombreproducto
-     */
-    public function removeNombreproducto(Peticion $nombreproducto)
-    {
-        $this->nombreproducto->removeElement($nombreproducto);
-    }
-
-    /**
      * Set preciocolaborador
      *
      * @param integer $preciocolaborador
@@ -329,6 +263,120 @@ class Producto implements \JsonSerializable
     public function getImagen()
     {
         return $this->imagen;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param bool $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+    }
+
+    /**
+     * Set claveProdServ.
+     *
+     * @param ClaveProdServ|null $claveProdServ
+     *
+     * @return Producto
+     */
+    public function setClaveProdServ(ClaveProdServ $claveProdServ = null)
+    {
+        $this->claveProdServ = $claveProdServ;
+
+        return $this;
+    }
+
+    /**
+     * Get claveProdServ.
+     *
+     * @return ClaveProdServ|null
+     */
+    public function getClaveProdServ()
+    {
+        return $this->claveProdServ;
+    }
+
+    /**
+     * Set claveUnidad.
+     *
+     * @param ClaveUnidad|null $claveUnidad
+     *
+     * @return Producto
+     */
+    public function setClaveUnidad(ClaveUnidad $claveUnidad = null)
+    {
+        $this->claveUnidad = $claveUnidad;
+
+        return $this;
+    }
+
+    /**
+     * Get claveUnidad.
+     *
+     * @return ClaveUnidad|null
+     */
+    public function getClaveUnidad()
+    {
+        return $this->claveUnidad;
+    }
+
+    /**
+     * @return Categoria
+     */
+    public function getCategoria()
+    {
+        return $this->categoria;
+    }
+
+    /**
+     * @param Categoria $categoria
+     */
+    public function setCategoria(Categoria $categoria = null)
+    {
+        $this->categoria = $categoria;
+    }
+
+    /**
+     * Get nombreproducto
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNombreproducto()
+    {
+        return $this->nombreproducto;
+    }
+
+    /**
+     * Add nombreproducto
+     *
+     * @param Peticion $nombreproducto
+     *
+     * @return Producto
+     */
+    public function addNombreproducto(Peticion $nombreproducto)
+    {
+        $this->nombreproducto[] = $nombreproducto;
+
+        return $this;
+    }
+
+    /**
+     * Remove nombreproducto
+     *
+     * @param Peticion $nombreproducto
+     */
+    public function removeNombreproducto(Peticion $nombreproducto)
+    {
+        $this->nombreproducto->removeElement($nombreproducto);
     }
 
     /**

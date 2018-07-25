@@ -270,6 +270,10 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
             $roles[] = 'ROLE_USER';
         }
 
+        if ($this->isAdmin && !in_array('ROLE_ADMIN', $roles)) {
+            $roles[] = 'ROLE_ADMIN';
+        }
+
         return $roles;
     }
 

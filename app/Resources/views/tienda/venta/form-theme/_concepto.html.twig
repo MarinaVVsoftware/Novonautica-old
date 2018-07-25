@@ -1,34 +1,34 @@
 {% block appbundle_tienda_venta_concepto_widget %}
-<tr class="servicio-agregado table-item">
-    <td valign="middle" class="text-center">
-    </td>
-    <td>
-        {{ form_widget(form.producto) }}
-        {{ form_errors(form.producto) }}
-    </td>
-    <td>
-        {{ form_widget(form.cantidad) }}
-        {{ form_errors(form.cantidad) }}
-    </td>
-    <td>
-        {{ form_widget(form.descuento) }}
-        {{ form_errors(form.descuento) }}
-    </td>
-    <td>
-        {{ form_widget(form.precioUnitario, {'attr': {'readonly': 'readonly'}}) }}
-        {{ form_errors(form.precioUnitario) }}
-    </td>
-    <td>
-        {{ form_widget(form.subtotal, {'attr': {'readonly': 'readonly'}}) }}
-        {{ form_errors(form.subtotal) }}
-    </td>
-    <td>
-        {{ form_widget(form.iva, {'attr': {'readonly': 'readonly'}}) }}
-        {{ form_errors(form.iva) }}
-    </td>
-    <td>
-        {{ form_widget(form.total, {'attr': {'readonly': 'readonly'}}) }}
-        {{ form_errors(form.total) }}
-    </td>
-</tr>
+    <tr class="servicio-agregado table-item">
+        <td valign="middle" class="text-center">
+        </td>
+        <td>
+            {{ form_widget(form.producto) }}
+            {{ form_errors(form.producto) }}
+        </td>
+        <td>
+            {{ form_widget(form.cantidad) }}
+            {{ form_errors(form.cantidad) }}
+        </td>
+        <td>
+            {{ form_widget(form.descuento) }}
+            {{ form_errors(form.descuento) }}
+        </td>
+        <td>
+            {{ form_widget(form.precioUnitario, {'attr': {'readonly': 'readonly'}}) }}
+            {{ form_errors(form.precioUnitario) }}
+        </td>
+        <td>
+            {{ form_widget(form.subtotal, {'attr': {'readonly': 'readonly'}}) }}
+            {{ form_errors(form.subtotal) }}
+        </td>
+        <td>
+            {{ form_widget(form.iva, {'attr': {'readonly': 'readonly'}}) }}
+            {{ form_errors(form.iva) }}
+        </td>
+        <td>
+            {{ form_widget(form.total, {'attr': {'readonly': 'readonly'}}) }}
+            {{ form_errors(form.total) }}
+        </td>
+    </tr>
 {% endblock %}

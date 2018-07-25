@@ -8,7 +8,6 @@
 namespace AppBundle\Controller\Tienda;
 
 
-use AppBundle\Entity\Tienda\Inventario\Registro;
 use AppBundle\Entity\Tienda\Producto;
 use AppBundle\Entity\Tienda\Venta;
 use AppBundle\Form\Tienda\VentaType;
@@ -50,6 +49,7 @@ class VentaController extends AbstractController
     {
         try {
             $results = $dataTables->handle($request, 'venta');
+
             return $this->json($results);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
@@ -108,13 +108,21 @@ class VentaController extends AbstractController
     /**
      * @Route("/producto/{codigoBarras}")
      */
-    public function getProductoAction(Request $request, Producto $producto)
+    public function getProductoAction(Request $request, $codigoBarras)
     {
+        $producto = $this->getDoctrine()
+            ->getRepository(Producto::class)
+            ->getProductoByBarcode($codigoBarras);
+
+        if (null === $producto) {
+            return $this->json('Not found', JsonResponse::HTTP_NOT_FOUND);
+        }
+
         return $this->json(
             $producto,
             JsonResponse::HTTP_OK
-        )
-            ->setEncodingOptions(JSON_NUMERIC_CHECK);
+        );
+
     }
 
     /**
@@ -124,13 +132,13 @@ class VentaController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showIndex(Request $request, Venta $venta)
+    public function showAction(Request $request, Venta $venta)
     {
         return $this->render(
             'tienda/venta/show.html.twig',
             [
                 'title' => 'Detalle de venta',
-                'venta' => $venta
+                'venta' => $venta,
             ]
         );
     }

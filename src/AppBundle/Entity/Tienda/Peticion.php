@@ -23,19 +23,6 @@ class Peticion
     private $id;
 
     /**
-     * @Groups({"facturacion"})
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Producto", inversedBy="nombreproducto")
-     */
-    private $producto;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Solicitud", inversedBy="producto")
-     * @ORM\JoinColumn(name="solicitud_id", referencedColumnName="id",onDelete="CASCADE")
-     */
-    private $solicitud;
-
-    /**
      * @var integer
      *
      * @Groups({"facturacion"})
@@ -46,9 +33,22 @@ class Peticion
 
     /**
      * @var integer
+     *
      * @ORM\Column(name="cantidad_entregado", type="integer", length=255)
      */
     private $cantidad_entregado;
+
+    /**
+     * @Groups({"facturacion"})
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Producto", inversedBy="nombreproducto")
+     */
+    private $producto;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Solicitud", inversedBy="producto")
+     */
+    private $solicitud;
 
     /**
      * Get id

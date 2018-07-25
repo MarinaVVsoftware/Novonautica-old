@@ -6,12 +6,14 @@ use AppBundle\Entity\Tienda\Producto;
 use AppBundle\Entity\Tienda\Venta;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as NovoAssert;
 
 /**
  * Concepto
  *
  * @ORM\Table(name="tienda_venta_concepto")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Tienda\Venta\ConceptoRepository")
+ * @NovoAssert\ProductHaveStock
  */
 class Concepto
 {
@@ -27,11 +29,12 @@ class Concepto
     /**
      * @var int
      *
-     * @Assert\NotNull()
+     * @Assert\NotNull
      * @Assert\Range(
      *     min="0",
      *     minMessage="La cantidad no puede ser menor a 0",
      * )
+     *
      *
      * @ORM\Column(name="cantidad", type="integer")
      */
@@ -58,7 +61,6 @@ class Concepto
     /**
      * @var int
      *
-     * @Assert\NotNull(message="Este campo no puede estar vacio")
      * @Assert\Range(
      *     min="0",
      *     max="100",
@@ -103,6 +105,11 @@ class Concepto
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Producto")
      */
     private $producto;
+
+    public function __construct()
+    {
+        $this->descuento = 0;
+    }
 
     /**
      * @return int
