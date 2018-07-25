@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -49,6 +50,7 @@ class VentaController extends AbstractController
     {
         try {
             $results = $dataTables->handle($request, 'venta');
+
             return $this->json($results);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
@@ -69,11 +71,12 @@ class VentaController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($venta);
-            $em->flush();
-
-            return $this->redirectToRoute('tienda_venta_new');
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($venta);
+//            $em->flush();
+//
+//            return $this->redirectToRoute('tienda_venta_new');
+            dump($venta);
         }
 
         return $this->render(
@@ -107,13 +110,21 @@ class VentaController extends AbstractController
     /**
      * @Route("/producto/{codigoBarras}")
      */
-    public function getProductoAction(Request $request, Producto $producto)
+    public function getProductoAction(Request $request, $codigoBarras)
     {
+        $producto = $this->getDoctrine()
+            ->getRepository(Producto::class)
+            ->getProductoByBarcode($codigoBarras);
+
+        if (null === $producto) {
+            return $this->json('Not found', JsonResponse::HTTP_NOT_FOUND);
+        }
+
         return $this->json(
             $producto,
             JsonResponse::HTTP_OK
-        )
-            ->setEncodingOptions(JSON_NUMERIC_CHECK);
+        );
+
     }
 
     /**
@@ -129,7 +140,7 @@ class VentaController extends AbstractController
             'tienda/venta/show.html.twig',
             [
                 'title' => 'Detalle de venta',
-                'venta' => $venta
+                'venta' => $venta,
             ]
         );
     }

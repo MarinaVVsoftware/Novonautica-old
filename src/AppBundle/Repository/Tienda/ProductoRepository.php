@@ -2,6 +2,10 @@
 
 namespace AppBundle\Repository\Tienda;
 
+use AppBundle\Entity\Tienda\Inventario\Registro;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+
 /**
  * ProductoRepository
  *
@@ -12,11 +16,43 @@ class ProductoRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findProductosLike($str)
     {
-        return $this->createQueryBuilder('p')
-            ->where('p.nombre LIKE ?1')
+        return $this->quantityQuery()
+            ->andWhere('p.nombre LIKE ?1')
             ->setParameter(1, "%{$str}%")
             ->setMaxResults(10)
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
+    }
+
+    public function getProductoByBarcode($barcode)
+    {
+        try {
+            return $this->quantityQuery()
+                ->andWhere('p.codigoBarras = ?1')
+                ->setParameter(1, $barcode)
+                ->getQuery()
+                ->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
+    }
+
+    private function quantityQuery()
+    {
+        return $query = $this->createQueryBuilder('p')
+            ->select(
+                'p.id',
+                'p.nombre',
+                'p.precio',
+                'p.preciocolaborador',
+                'p.codigoBarras',
+                'COALESCE(SUM(CASE WHEN r.tipo = 1 THEN e.cantidad ELSE -e.cantidad END), 0) AS quantity'
+            )
+            ->leftJoin(Registro\Entrada::class, 'e', 'WITH', 'p.id = e.producto')
+            ->leftJoin(Registro::class, 'r', 'WITH', 'r.id = e.registro')
+            ->where('p.isActive = 1')
+            ->groupBy('p.id');
     }
 }

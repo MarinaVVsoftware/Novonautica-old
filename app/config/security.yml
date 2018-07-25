@@ -227,6 +227,7 @@ security:
             - ROLE_TIENDA
             - ROLE_TIENDA_PRODUCTO
             - ROLE_TIENDA_POV
+            - ROLE_ADMIN_POV
             - ROLE_TIENDA_INVENTARIO
             - ROLE_TIENDA_REGISTRO
         ROLE_WHOLE_CONTABILIDAD:

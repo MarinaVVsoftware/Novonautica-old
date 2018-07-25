@@ -94,6 +94,7 @@ class UsuarioType extends AbstractType
                         'Acceso' => 'ROLE_TIENDA',
                         'Crear' => 'TIENDA_CREATE',
                         'Productos' => 'ROLE_TIENDA_PRODUCTO',
+                        'Gerente de punto de venta' => 'ROLE_ADMIN_POV',
                         'Punto de venta' => 'ROLE_TIENDA_POV',
                         'Inventario' => 'ROLE_TIENDA_INVENTARIO',
                         'Registros' => 'ROLE_TIENDA_REGISTRO',

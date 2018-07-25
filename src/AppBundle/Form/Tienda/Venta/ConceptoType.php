@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\PercentType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class ConceptoType extends AbstractType
 {
@@ -18,9 +19,17 @@ class ConceptoType extends AbstractType
      */
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+    /**
+     * @var Security
+     */
+    private $security;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        Security $security
+    ) {
         $this->entityManager = $entityManager;
+        $this->security = $security;
     }
 
     /**
@@ -33,8 +42,14 @@ class ConceptoType extends AbstractType
             'divisor' => 100,
             'grouping' => true,
             'data' => 0,
-            'attr' => ['class' => 'money-input']
+            'attr' => ['class' => 'money-input'],
         ];
+
+        $discountAttributes = ['class' => 'discount-input'];
+
+        if (!$this->security->isGranted('ROLE_ADMIN_POV')) {
+            $discountAttributes['disabled'] = 'disabled';
+        }
 
         $builder->addEventSubscriber(new ProductoFieldListener($this->entityManager));
 
@@ -53,14 +68,14 @@ class ConceptoType extends AbstractType
             $moneySetting
         );
 
-
         $builder->add(
             'descuento',
             PercentType::class,
             [
                 'data' => 0,
                 'type' => 'integer',
-                'attr' => ['class' => 'discount-input']
+                'required' => false,
+                'attr' => $discountAttributes,
             ]
         );
 
