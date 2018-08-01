@@ -767,6 +767,7 @@ class MarinaHumedaCotizacionController extends Controller
         }
         return $this->render('marinahumeda/cotizacion/estadia/recotizar.html.twig', [
             'title' => 'Renovación',
+            'idanterior' => $marinaHumedaCotizacionAnterior->getId(),
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'form' => $form->createView(),
         ]);
@@ -942,6 +943,7 @@ class MarinaHumedaCotizacionController extends Controller
         }
         return $this->render('marinahumeda/cotizacion/estadia/recotizar.html.twig', [
             'title' => 'Recotización',
+            'idanterior' => $marinaHumedaCotizacionAnterior->getId(),
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'form' => $form->createView(),
         ]);

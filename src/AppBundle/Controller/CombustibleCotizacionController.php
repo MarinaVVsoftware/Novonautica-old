@@ -609,6 +609,7 @@ class CombustibleCotizacionController extends Controller
         }
         return $this->render('combustible/recotizar.html.twig', [
             'title' => 'Recotización',
+            'idanterior' => $marinaHumedaCotizacionAnterior->getId(),
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'form' => $form->createView(),
             'folioAnt' => $folioAnt

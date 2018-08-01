@@ -11,7 +11,7 @@
         <ul class="sidebar-menu tree" data-widget="tree">
             <!-- START CLIENTES -->
             {% if is_granted('ROLE_CLIENTE') %}
-                <li class="treeview {{ path.check('cliente') }}">
+                <li class="treeview {{ path.check('cliente') }} {{ path.check('barco') }}">
                     <a href="#">
                         <i class="fa fa-users"></i> <span>Clientes</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
@@ -84,7 +84,7 @@
                         <!-- END MARINA/SLIPS -->
 
                         <!-- START MARINA/COTIZACIONES -->
-                        <li class="treeview {{ path.check('_estadia_') }} {{ path.check('tarifas_') }}">
+                        <li class="treeview {{ path.check('_estadia_') }} {{ path.check('tarifas_') }} {{ path.check('marina-humeda_') }} {{ path.check('marina_cotizacion') }}">
                             <a href="#">
                                 <i class="fa fa-circle-o"></i> Cotizaciónes Estadía
                                 <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
@@ -104,7 +104,7 @@
                                     </li>
                                 {% endif %}
                                 {% if is_granted(expression('has_role("ROLE_MARINA_TARIFF") or (user.isAdmin())')) %}
-                                    <li class="{{ path.check('marinahumeda-tarifas_index') }}">
+                                    <li class="{{ path.check('marinahumeda-tarifas_') }}">
                                         <a href="{{ path('marinahumeda-tarifas_index') }}">
                                             <i class="fa fa-circle-o"></i> Tarifas
                                         </a>
@@ -117,7 +117,7 @@
 
                         <!-- START MARINA/COTIZACION/SERVICIOS ADICIONALES -->
                         {% if is_granted('ROLE_MARINA_SERVICIOADICIONAL') %}
-                            <li class="treeview {{ path.check('cotizacion-adicional_') }}">
+                            <li class="treeview {{ path.check('cotizacion-adicional_') }} {{ path.check('marina-humeda-servicio_') }}">
                                 <a href="#">
                                     <i class="fa fa-circle-o"></i> Servicios adicionales
                                     <span class="pull-right-container"><i
@@ -134,7 +134,7 @@
                                             <i class="fa fa-minus"></i> Nueva
                                         </a>
                                     </li>
-                                    <li class="{{ path.check('marina-humeda-servicio_index') }}">
+                                    <li class="{{ path.check('marina-humeda-servicio_') }}">
                                         <a href="{{ path('marina-humeda-servicio_index') }}">
                                             <i class="fa fa-minus"></i> Catalogo
                                         </a>
@@ -150,7 +150,7 @@
 
             <!-- START SERVICIOS MARINOS -->
             {% if is_granted('ROLE_COMBUSTIBLE') %}
-                <li class="treeview {{ path.check('combustible_index') }} {{ path.check('combustible_new') }} {{ path.check('combustible_show') }} {{ path.check('marinahumedasolicitud_gasolina_index') }} {{ path.check('combustible_recotizar') }}">
+                <li class="treeview {{ path.check('combustible_') }} {{ path.check('marinahumedasolicitud_gasolina_index') }}">
                     <a href="#">
                         <i class="fa fa-tachometer"></i><span>Combustible</span>
                         <span class="pull-right-container">
@@ -208,7 +208,7 @@
                             </li>
                         {% endif %}
                         {% if is_granted('ROLE_ASTILLERO_SERVICIOBASICO') %}
-                            <li class="{{ path.check('astillero_servicio-basico_index') }}">
+                            <li class="{{ path.check('astillero_servicio-basico_index') }} {{ path.check('astillero_servicio-basico_edit') }}">
                                 <a href="{{ path('astillero_servicio-basico_index') }}">
                                     <i class="fa fa-circle-o"></i> Servicios básicos
                                 </a>
@@ -308,7 +308,7 @@
                                             <i class="fa fa-minus"></i> Nuevo
                                         </a>
                                     </li>
-                                    <li class="{{ path.check('astillero_proveedor_trabajo_index') }}">
+                                    <li class="{{ path.check('astillero_proveedor_trabajo_') }}">
                                         <a href="{{ path('astillero_proveedor_trabajo_index') }}">
                                             <i class="fa fa-minus"></i> Catálogo oficios
                                         </a>
@@ -540,7 +540,7 @@
 
             <!-- START CONTABILIDAD -->
             {% if is_granted('ROLE_CONTABILIDAD') %}
-                <li class="treeview {{ path.check('contabilidad_') }}">
+                <li class="treeview {{ path.check('contabilidad_') }} {{ path.check('ordendetrabajo_contratista_pago') }}">
                     <a href="#">
                         <i class="fa fa-archive"></i> <span>Contabilidad</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
@@ -565,7 +565,7 @@
                                 </a>
                             </li>
                         {% endif %}
-                        <li class="{{ path.check('contabilidad_odt_index') }}">
+                        <li class="{{ path.check('contabilidad_odt_index') }} {{ path.check('ordendetrabajo_contratista_pago') }}">
                             <a href="{{ path('contabilidad_odt_index') }}">
                                 <i class="fa fa-circle-o"></i> ODT
                             </a>
@@ -663,7 +663,7 @@
 
             <!-- START AGENDA (EVENTO) -->
             {% if is_granted('ROLE_AGENDA') %}
-                <li class="treeview {{ path.check('evento_index') }}">
+                <li class="treeview {{ path.check('evento_') }}">
                     <a href="#">
                         <i class="fa fa-calendar"></i> <span>Agenda</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>

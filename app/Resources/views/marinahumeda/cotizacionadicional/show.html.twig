@@ -43,12 +43,6 @@
                                     <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.telefono }}</div>
                                     <label>Dirección</label>
                                     <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.direccion }}</div>
-                                    {#<label>R.F.C.</label>#}
-                                    {#<div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.rfc }}</div>#}
-                                    {#<label>Razón social</label>#}
-                                    {#<div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.razonsocial }}</div>#}
-                                    {#<label>Dirección fiscal</label>#}
-                                    {#<div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.direccionfiscal }}</div>#}
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -78,13 +72,6 @@
                             <div class="col-sm-5">
                                 <p><label>Datos de facturación</label></p>
                                 {%  for razon in marinaHumedaCotizacionAdicional.cliente.razonesSociales %}
-                                    <label>Razon Social</label>
-                                    <div class='info-input'>{{ razon.razonSocial }}</div>
-                                    <label></label>
-                                    <div class='info-input'></div>
-                                    <label></label>
-                                    <div class='info-input'></div>
-
                                     <table class="table table-novo">
                                         <tbody>
                                         <tr>

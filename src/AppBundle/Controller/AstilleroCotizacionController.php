@@ -952,6 +952,7 @@ class AstilleroCotizacionController extends Controller
 
         return $this->render('astillero/cotizacion/recotizar.html.twig', [
             'title' => 'Recotización',
+            'idanterior' => $astilleroCotizacionAnterior->getId(),
             'astilleroCotizacion' => $astilleroCotizacion,
             'form' => $form->createView()
         ]);
@@ -1305,6 +1306,7 @@ class AstilleroCotizacionController extends Controller
         }
         return $this->render('astillero/cotizacion/adicionales.html.twig', [
             'title' => 'Astillero Adicionales',
+            'idanterior' => $astilleroCotizacionAnterior->getId(),
             'astilleroCotizacion' => $astilleroCotizacion,
             'form' => $form->createView()
         ]);

@@ -29,14 +29,6 @@
                         <li role="presentation">
                             <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a>
                         </li>
-                        {#
-                        <li role="presentation">
-                            <a href="#totalusd" aria-controls="total" role="tab" data-toggle="tab">Total (USD)</a>
-                        </li>
-                        <li role="presentation">
-                            <a href="#totalmxn" aria-controls="total" role="tab" data-toggle="tab">Total (MXN)</a>
-                        </li>
-                        #}
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="generales">
@@ -51,12 +43,6 @@
                                         <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.telefono }}</div>
                                         <label>Dirección</label>
                                         <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.direccion }}</div>
-                                        <label>R.F.C.</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.rfc }}</div>
-                                        <label>Razón social</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.razonsocial }}</div>
-                                        <label>Dirección fiscal</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacionAdicional.cliente.direccionfiscal }}</div>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
@@ -82,6 +68,39 @@
                                         <label>Correo del capitán</label>
                                         <div class='info-input'>{{ marinaHumedaCotizacionAdicional.barco.correoCapitan }}</div>
                                     </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <p><label>Datos de facturación</label></p>
+                                    {%  for razon in marinaHumedaCotizacionAdicional.cliente.razonesSociales %}
+                                        <table class="table table-novo">
+                                            <tbody>
+                                            <tr>
+                                                <th>Razon Social</th>
+                                                <td>{{ razon.razonSocial }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>RFC</th>
+                                                <td>{{ razon.rfc }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Dirección</th>
+                                                <td>{{ razon.direccion }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Correos de facturación</th>
+                                                <td>{{ razon.correos|join(', ') }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <table class="table table-novo">
+                                            <tbody>
+                                            <tr>
+                                                <td>No se registaron datos de facturación</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
