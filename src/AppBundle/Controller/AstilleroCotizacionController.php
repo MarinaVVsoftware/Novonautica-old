@@ -288,7 +288,6 @@ class AstilleroCotizacionController extends Controller
                     'tipo' => Correo\Notificacion::TIPO_ASTILLERO
                 ]);
                 $this->enviaCorreoNotificacion($mailer, $notificables, $astilleroCotizacion);
-
             }
             return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
         }

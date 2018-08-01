@@ -269,7 +269,10 @@ class MarinaHumedaCotizacionController extends Controller
                 : $marinaHumedaCotizacion->getFolio();
 
             // Se envia un correo si se solicito notificar al cliente
-            if ($marinaHumedaCotizacion->getValidanovo() === 2) {
+            if (
+                $marinaHumedaCotizacion->getValidanovo() === 2 &&
+                $marinaHumedaCotizacion->getValidacliente() !== 2
+            ) {
                 // Activa un token para que valide el cliente
                 $token = $marinaHumedaCotizacion->getFolio() . bin2hex(random_bytes(16));
                 $marinaHumedaCotizacion->setToken($token);
@@ -306,11 +309,13 @@ class MarinaHumedaCotizacionController extends Controller
                         ->setMhcotizacion($marinaHumedaCotizacion);
                     $em->persist($historialCorreo);
                 }
+
                 // Buscar correos a notificar
                 $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                     'evento' => Correo\Notificacion::EVENTO_VALIDAR,
                     'tipo' => Correo\Notificacion::TIPO_MARINA
                 ]);
+
                 $this->enviaCorreoNotificacion($mailer, $notificables, $marinaHumedaCotizacion);
             }
 
