@@ -39,6 +39,7 @@ monolog:
 
 swiftmailer:
 #    delivery_addresses: ['me@example.com']
+#    port: '%mailer_port%'
     disable_delivery: true
 
 knp_snappy:

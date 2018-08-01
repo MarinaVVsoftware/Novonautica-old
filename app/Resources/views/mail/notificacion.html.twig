@@ -1,15 +1,15 @@
 {% extends ':mail:base.html.twig' %}
 
-{% if notificacion.evento == 'Nueva' %}
+{% if notificacion.evento == 1 %}
     {% set evento = 'Se ha generado una nueva cotización' %}
-{% elseif notificacion.evento == 'Validar' %}
+{% elseif notificacion.evento == 2 %}
     {% set evento = 'La cotización se ha validado' %}
-{% elseif notificacion.evento == 'Aceptar' %}
+{% elseif notificacion.evento == 3 %}
     {% set evento = 'El cliente ha revisado la cotizacón' %}
 {% endif %}
 
 {% block body %}
-    {% if notificacion.tipo == 'Marina' %}
+    {% if notificacion.tipo == 1 %}
         <h3>Notificacion de Marina</h3>
     {% else %}
         <h3>Notificacion de Astillero</h3>
