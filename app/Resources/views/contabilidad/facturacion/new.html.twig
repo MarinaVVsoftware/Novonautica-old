@@ -127,9 +127,17 @@
                 <div class="col-md-12">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
-                            <h3 class="panel-title">
-                                Nueva factura
-                            </h3>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3 class="panel-title pull-left">
+                                        Nueva factura
+                                    </h3>
+                                    <a class="btn btn-contorno-azul pull-right"
+                                       href="{{ path('contabilidad_facturacion_index') }}">
+                                        Regresar
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div class="panel-body panel-pestanias">
                             {{ form_start(form) }}

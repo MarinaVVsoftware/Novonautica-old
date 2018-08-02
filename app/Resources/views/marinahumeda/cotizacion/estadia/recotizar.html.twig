@@ -72,11 +72,12 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Recotización</h3>
+                            <h3 class="panel-title">{{ title }}</h3>
                             <span>{{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}</span>
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_estadia_index') }}">Regresar</a>
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('marina-humeda_show',{'id':idanterior}) }}">Regresar</a>
                         </div>
                     </div>
                 </div>
@@ -468,17 +469,19 @@
                         </div>
                         <div role="tabpanel" class="tab-pane" id="correo">
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-12">
                                     {{ form_row(form.mensaje) }}
                                     <div class="novo-checkbox-container">
                                         {{ form_row(form.notificarCliente) }}
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <button type="submit" class="btn btn-azul">
-                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                        Guardar
-                                    </button>
+                                <div class="row">
+                                    <div class="col-sm-12 text-right">
+                                        <button type="submit" class="btn btn-azul">
+                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                            Guardar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

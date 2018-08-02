@@ -95,6 +95,7 @@ class UsuarioController extends Controller
         }
 
         return $this->render('usuario/new.html.twig', [
+            'title' => 'Nuevo usuario',
             'usuario' => $usuario,
             'form' => $form->createView(),
         ]);
@@ -125,6 +126,7 @@ class UsuarioController extends Controller
         }
 
         return $this->render('usuario/new.html.twig', [
+            'title' => 'Editar usuario',
             'usuario' => $usuario,
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

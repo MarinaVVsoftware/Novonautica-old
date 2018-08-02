@@ -17,11 +17,7 @@
                     </div>
                     <div class="col-sm-6">
                         <a class="btn btn-contorno-azul pull-right"
-                           href="{% if (marinaHumedaCotizacion.mhcservicios.0.tipo == 1 or marinaHumedaCotizacion.mhcservicios.0.tipo == 2) %}
-                                                                                        {{ path('marina-humeda_estadia_index') }}
-                                                                                    {% else %}
-                                                                                        {{ path('combustible_index') }}
-                                                                                     {% endif %}">Regresar</a>
+                           href="{{ path('marina-humeda_show',{'id':marinaHumedaCotizacion.id}) }}">Regresar</a>
                     </div>
                 </div>
 

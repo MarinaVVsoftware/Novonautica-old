@@ -16,6 +16,9 @@
                         <div class="panel-heading">
                             <h3 class="panel-title">
                                 {{ embarcacion.nombre is empty ? 'Embarcaciones' : embarcacion.nombre }}
+                                <a class="btn btn-contorno-azul pull-right" href="{{ path('embarcacion_index') }}">
+                                    Regresar
+                                </a>
                             </h3>
                         </div>
                         <div class="panel-body panel-pestanias">

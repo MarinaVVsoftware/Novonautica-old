@@ -10,10 +10,8 @@
             <div class="panel panel-novo">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-sm-6">
-                            <h3 class="panel-title">Editar Tarifa</h3>
-                        </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
+                            <h3 class="panel-title pull-left">{{ title }}</h3>
                             <a class="btn btn-contorno-azul pull-right" href="{{ path('marinahumeda-tarifas_index') }}">Regresar</a>
                         </div>
                     </div>
@@ -33,14 +31,6 @@
                     </div>
 
                     {{ form_end(edit_form) }}
-                    <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-12">
-                            <a href="{{ path('marinahumeda-tarifas_index') }}" class="btn btn-naranja pull-right">
-                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                Cancelar
-                            </a>
-                        </div>
-                    </div>
                     <div class="row  espacio-linea-arriba2">
                         <div class="col-sm-12 text-right">
                             {{ delete_form is defined ? modal.deleteButton() : '' }}
