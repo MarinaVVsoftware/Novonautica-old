@@ -120,20 +120,6 @@ class MarinaHumedaCotizacionGasolinaType extends AbstractType
                 'empty_data' => 0,
             ]);
 
-//        $formModifier = function (FormInterface $form, Cliente $cliente = null) {
-//            $barcos = null === $cliente ? array() : $cliente->getBarcos();
-//
-//            $form->add('barco', EntityType::class, array(
-//                'class' => 'AppBundle:Barco',
-//                'placeholder' => '',
-//                'attr' => ['class' => 'busquedabarco'],
-//                'choices' => $barcos,
-//                'expanded' => true,
-//                'multiple' => false
-//            ));
-//
-//        };
-
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $cotizacion = $event->getData();
             $form = $event->getForm();
@@ -144,12 +130,10 @@ class MarinaHumedaCotizacionGasolinaType extends AbstractType
                     ->remove('validacliente')
                     ->remove('notasnovo')
                     ->remove('notascliente');
-//                $formModifier($event->getForm(), $cotizacion->getCliente());
             } else { //editando cotización, solo para validaciones
                 $form
                     ->remove('notificarCliente')
-                    ->remove('cliente')
-//                    ->remove('barco')
+                    ->remove('barco')
                     ->remove('fechaLlegada')
                     ->remove('fechaSalida')
                     ->remove('descuento')
@@ -161,19 +145,6 @@ class MarinaHumedaCotizacionGasolinaType extends AbstractType
                     ->remove('slip');
             }
         });
-
-//        $builder->get('cliente')->addEventListener(
-//            FormEvents::POST_SUBMIT,
-//            function (FormEvent $event) use ($formModifier) {
-//                // It's important here to fetch $event->getForm()->getData(), as
-//                // $event->getData() will get you the client data (that is, the ID)
-//                $cliente = $event->getForm()->getData();
-//
-//                // since we've added the listener to the child, we'll have to pass on
-//                // the parent to the callback functions!
-//                $formModifier($event->getForm()->getParent(), $cliente);
-//            }
-//        );
     }
 
     /**
@@ -193,6 +164,4 @@ class MarinaHumedaCotizacionGasolinaType extends AbstractType
     {
         return 'appbundle_marinahumedacotizacion';
     }
-
-
 }
