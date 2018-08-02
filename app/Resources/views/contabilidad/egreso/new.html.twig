@@ -42,6 +42,10 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 {{ egreso.id is not defined ? 'Registro de egresos' : 'Editar egreso' }}
+                                <a class="btn btn-contorno-azul pull-right"
+                                   href="{{ path('contabilidad_egreso_index') }}">
+                                    Regresar
+                                </a>
                             </h4>
                         </div>
                         <div id="egresos-pane" class="panel-body">
