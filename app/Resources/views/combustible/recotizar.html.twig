@@ -102,7 +102,7 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="generales">
                             <div class="row">
-                                <div class="col-sm-3">
+                                <div class="col-sm-6">
                                     <div id="info-barco">
                                         <label>Barco</label>
                                         <div class='info-input'>{{ marinaHumedaCotizacion.barco }}</div>
@@ -120,7 +120,7 @@
                                         <div class='info-input'>{{ marinaHumedaCotizacion.barco.correoCapitan }}</div>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-6">
                                     <div id="info-cliente">
                                         <label>Cliente</label>
                                         <div class='info-input'>{{ marinaHumedaCotizacion.cliente }}</div>
@@ -361,7 +361,6 @@
                             </div>
                         </div>
                     </div>
-                    {{ form_widget(form.cliente,{'attr':{'class':'hidden'}}) }}
                     {{ form_widget(form.barco,{'attr':{'class':'hidden'}}) }}
                     {{ form_end(form) }}
                 </div>

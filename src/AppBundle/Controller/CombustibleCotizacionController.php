@@ -122,6 +122,7 @@ class CombustibleCotizacionController extends Controller
             $folionuevo = $foliobase + 1;
             $combustible->setEstatus(1);
             $marinaHumedaCotizacion
+                ->setCliente($marinaHumedaCotizacion->getBarco()->getCliente())
                 ->setIva($iva)
                 ->setValidanovo(0)
                 ->setValidacliente(0)
