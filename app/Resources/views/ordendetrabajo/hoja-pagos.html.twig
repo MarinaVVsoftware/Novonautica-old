@@ -294,7 +294,7 @@
                                                             {{ pago.fecha|date('d-m-Y') }}
                                                         {% endif %}
                                                     </td>
-                                                    <td>{{ pago.forma }}</td>
+                                                    <td>{{ pago.formaNombre }}</td>
                                                     <td>${{ (pago.saldo/100)|number_format(2) }} MXN</td>
                                                     <td>
                                                         ${{ (pago.saldo/ordenDeTrabajo.astilleroCotizacion.dolar)|number_format(2) }}

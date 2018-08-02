@@ -22,6 +22,7 @@ class PagoType extends AbstractType
                     'Efectivo' => 'Efectivo',
                     'Transferencia' => 'Transferencia',
                     'Tarjeta de crédito' => 'Tarjeta de crédito',
+                    'Tarjeta de débito' => 'Tarjeta de débito',
                     'Monedero' => 'Monedero',
                 ],
                 'placeholder' => 'Seleccionar...',
