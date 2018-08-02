@@ -327,24 +327,46 @@
                     <th>Total general</th>
                     <td class="borde-bajo-doble">$ {{ (astilleroCotizacion.total/100)|number_format(2) }}</td>
                 </tr>
-                {#TODO: Calcular anticipos y pagos etc.#}
-                {#<tr>
-                    <th>Anticipo 1</th>
-                    <td class="borde-bajo-doble">$ -</td>
-                </tr>
-                <tr>
-                    <th>Anticipo 2</th>
-                    <td class="borde-bajo-doble">$ -</td>
-
-                </tr>
-                <tr>
-                    <th>Saldo pendiente</th>
-                    <td class="borde-bajo-doble">$ -</td>
-                </tr>#}
                 </tbody>
             </table>
         </div>
     </div>
+    {% if astilleroCotizacion.pagos|length > 0 %}
+        <div class="row">
+            <div class="col-xs-12 nopadding">
+                <h5 class="text-center">Resumen de anticipos</h5>
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Número</th>
+                        <th>Fecha</th>
+                        <th>Forma de pago</th>
+                        <th>Importe</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for pago in astilleroCotizacion.pagos %}
+                        <tr>
+                            <td>Anticipo {{ loop.index }}</td>
+                            <td>{{ pago.fechaRealPago|date('d-m-Y') }}</td>
+                            <td>{{ pago.metodopago }}</td>
+                            <td>$ {{ (pago.cantidad/100)|number_format(2) }}
+                                <small>MXN</small>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr class="grey-background">
+                            <th colspan="2" style="background-color: #fff; border: 0; border-bottom: 0 !important;"></th>
+                            <th class="text-right">Total anticipos</th>
+                            <th>$ {{ (astilleroCotizacion.pagado/100)|number_format(2) }} <small>MXN</small></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    {% endif %}
 </div>
 
 <div class="container-fluid" style="padding-top: 2rem">

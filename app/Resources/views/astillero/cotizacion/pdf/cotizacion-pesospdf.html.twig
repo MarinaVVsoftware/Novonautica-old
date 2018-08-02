@@ -334,6 +334,31 @@
             </table>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-condensed table-bordered">
+                <thead>
+                <tr>
+                    <td>Número</td>
+                    <td>Fecha</td>
+                    <td>Forma de pago</td>
+                    <td>Importe</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for pago in astilleroCotizacion.pagos %}
+                <tr>
+                    <td></td>
+                    <td>{{ pago.fechaRealPago|date('d-m-Y') }}</td>
+                    <td>{{ pago.metodopago }}</td>
+                    <td>{{ pago.cantidad }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <div class="container-fluid" style="padding-top: 2rem">
