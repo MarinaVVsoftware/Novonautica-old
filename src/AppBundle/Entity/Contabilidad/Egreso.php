@@ -41,6 +41,13 @@ class Egreso
     private $total;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="comentario_editar", type="string", nullable=true)
+     */
+    private $comentarioEditar;
+
+    /**
      * @var Emisor
      *
      * @Assert\NotNull(message="Este campo no puede estar vacio")
@@ -74,6 +81,13 @@ class Egreso
      * )
      */
     private $entradas;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_at", type="datetime", nullable=true)
+     */
+    private $updateAt;
 
     /**
      * Constructor
@@ -131,6 +145,22 @@ class Egreso
     public function getTotal()
     {
         return $this->total;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComentarioEditar()
+    {
+        return $this->comentarioEditar;
+    }
+
+    /**
+     * @param string $comentarioEditar
+     */
+    public function setComentarioEditar($comentarioEditar)
+    {
+        $this->comentarioEditar = $comentarioEditar;
     }
 
     /**
@@ -200,5 +230,21 @@ class Egreso
     public function getEntradas()
     {
         return $this->entradas;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdateAt()
+    {
+        return $this->updateAt;
+    }
+
+    /**
+     * @param \DateTime $updateAt
+     */
+    public function setUpdateAt($updateAt)
+    {
+        $this->updateAt = $updateAt;
     }
 }

@@ -105,6 +105,13 @@
                                     {{ form_row(form.total) }}
                                 </div>
                             </div>
+                            {% if form.comentarioEditar is defined %}
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        {{ form_row(form.comentarioEditar) }}
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="panel-footer">
                             <div class="row">

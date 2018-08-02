@@ -118,6 +118,7 @@ class EgresoController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $egreso->setUpdateAt(new \DateTime());
 
             foreach ($clonedEntries as $clonedEntry) {
                 if (!$egreso->getEntradas()->contains($clonedEntry)) {

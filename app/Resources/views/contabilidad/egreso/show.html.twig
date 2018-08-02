@@ -38,8 +38,8 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th>Proveedor</th>
                                     <th>Concepto</th>
+                                    <th>Proveedor</th>
                                     <th>Comentarios</th>
                                     <th width="20%">Importe</th>
                                 </tr>
@@ -47,8 +47,8 @@
                                 <tbody>
                                 {% for entrada in egreso.entradas %}
                                     <tr>
-                                        <td>{{ entrada.proveedor.nombre }}</td>
                                         <td>{{ entrada.concepto.descripcion }}</td>
+                                        <td>{{ entrada.proveedor.nombre }}</td>
                                         <td>{{ entrada.comentario }}</td>
                                         <td>MX$ {{ (entrada.importe / 100)|number_format(2) }}</td>
                                     </tr>
@@ -64,6 +64,16 @@
                             <h4>MX$ {{ (egreso.total / 100)|number_format(2) }}</h4>
                         </div>
                     </div>
+                    {% if egreso.comentarioEditar is not null %}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h4>Editado el: {{ egreso.updateAt.format('d/m/Y') }}</h4>
+                            <p>
+                                {{ egreso.comentarioEditar }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
                 <div class="panel-footer">
                     <div class="row">
