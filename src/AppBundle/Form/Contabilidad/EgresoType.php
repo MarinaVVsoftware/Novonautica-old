@@ -5,16 +5,35 @@ namespace AppBundle\Form\Contabilidad;
 use AppBundle\Entity\Contabilidad\Egreso\Tipo;
 use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use AppBundle\Form\Contabilidad\Egreso\EntradaType;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class EgresoType extends AbstractType
 {
+    /**
+     * @var Security
+     */
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -39,6 +58,20 @@ class EgresoType extends AbstractType
             EntityType::class,
             [
                 'class' => Emisor::class,
+                'query_builder' => function (EntityRepository $er) {
+                    $query = $er->createQueryBuilder('e');
+                    $views = [];
+
+                    foreach ($this->security->getUser()->getRoles() as $role) {
+                        if (strpos($role, 'VIEW_EGRESO') === 0) {
+                            $views[] = explode('_', $role)[3];
+                        }
+                    }
+
+                    return $query->where(
+                            $query->expr()->in('e.id', $views)
+                        );
+                },
                 'required' => true,
             ]
         );
@@ -78,6 +111,32 @@ class EgresoType extends AbstractType
                 'attr' => ['class' => 'money-input'],
             ]
         );
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $form = $event->getForm();
+                $egreso = $event->getData();
+
+                if ($egreso->getId()) {
+                    $form->add(
+                        'comentarioEditar',
+                        TextType::class,
+                        [
+                            'label' => 'Motivo de edición: ',
+                            'required' => true,
+                            'constraints' => [
+                                new NotBlank(),
+                                new Length([
+                                    'min' => 5,
+                                    'minMessage' => 'El comentario del motivo debe ser mayor a {{ limit }} caracteres',
+                                ]),
+                            ],
+                        ]
+                    );
+                }
+            });
+
     }
 
     /**

@@ -26,6 +26,9 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
+                        <div class="col-md-8">
+                            <h4>Empresa: {{ egreso.empresa.nombre }}</h4>
+                        </div>
                         <div class="col-md-4">
                             <h4>Fecha: {{ egreso.fecha|date('d/m/Y') }}</h4>
                         </div>
@@ -35,16 +38,18 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th>Proveedor</th>
                                     <th>Concepto</th>
+                                    <th>Proveedor</th>
+                                    <th>Comentarios</th>
                                     <th width="20%">Importe</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for entrada in egreso.entradas %}
                                     <tr>
-                                        <td>{{ entrada.proveedor.nombre }}</td>
                                         <td>{{ entrada.concepto.descripcion }}</td>
+                                        <td>{{ entrada.proveedor.nombre }}</td>
+                                        <td>{{ entrada.comentario }}</td>
                                         <td>MX$ {{ (entrada.importe / 100)|number_format(2) }}</td>
                                     </tr>
                                 {% endfor %}
@@ -57,6 +62,26 @@
                             <h4 class="letra-azul">Total</h4>
                             <hr>
                             <h4>MX$ {{ (egreso.total / 100)|number_format(2) }}</h4>
+                        </div>
+                    </div>
+                    {% if egreso.comentarioEditar is not null %}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h4>Editado el: {{ egreso.updateAt.format('d/m/Y') }}</h4>
+                            <p>
+                                {{ egreso.comentarioEditar }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {% if is_granted(expression('has_role("EGRESO_EDIT") or (user.isAdmin())')) %}
+                            <a href="{{ path('contabilidad_egreso_edit', { 'id': egreso.id }) }}"
+                               class="btn btn-azul pull-right">Editar</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,10 @@
 
 namespace AppBundle\Repository\Contabilidad;
 
+
+use AppBundle\Entity\Contabilidad\Egreso;
+use Doctrine\ORM\NonUniqueResultException;
+
 /**
  * EgresoRepository
  *
@@ -10,4 +14,43 @@ namespace AppBundle\Repository\Contabilidad;
  */
 class EgresoRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $id
+     *
+     * @return Egreso|null
+     */
+    public function get($id)
+    {
+        try {
+            $egreso = $this->getEntityManager()
+                ->createQuery(
+                    'SELECT egress, entries '.
+                    'FROM AppBundle:Contabilidad\Egreso egress '.
+                    'LEFT JOIN egress.entradas entries '.
+                    'WHERE egress.id = ?1'
+                )
+                ->setParameter(1, $id)
+                ->getOneOrNullResult();
+
+            $this->getEntityManager()
+                ->createQuery(
+                    'SELECT PARTIAL entries.{id}, proveedor '.
+                    'FROM AppBundle:Contabilidad\Egreso\Entrada entries '.
+                    'LEFT JOIN entries.proveedor proveedor'
+                )
+                ->getResult();
+
+            $this->getEntityManager()
+                ->createQuery(
+                    'SELECT PARTIAL entries.{id}, concepto '.
+                    'FROM AppBundle:Contabilidad\Egreso\Entrada entries '.
+                    'LEFT JOIN entries.concepto concepto'
+                )
+                ->getResult();
+
+            return $egreso;
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
+    }
 }

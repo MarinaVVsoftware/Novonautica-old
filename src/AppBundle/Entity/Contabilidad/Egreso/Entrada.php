@@ -33,6 +33,12 @@ class Entrada
     private $importe;
 
     /**
+     * @var string
+     * @ORM\Column(name="comentario", type="string", nullable=true)
+     */
+    private $comentario;
+
+    /**
      * @var Egreso
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Egreso", inversedBy="entradas")
@@ -89,6 +95,22 @@ class Entrada
     public function getImporte()
     {
         return $this->importe;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param string $comentario
+     */
+    public function setComentario($comentario)
+    {
+        $this->comentario = $comentario;
     }
 
     /**

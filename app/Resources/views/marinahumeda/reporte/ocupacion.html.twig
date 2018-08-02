@@ -206,7 +206,6 @@
             .on('apply.daterangepicker', function (e, picker) {
               searchData.start = picker.startDate.format('YYYY-MM-DD');
               searchData.end = picker.endDate.format('YYYY-MM-DD');
-
               $reporteTable.api().ajax.reload();
             });
 

@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -45,6 +46,14 @@ class EntradaType extends AbstractType
         );
 
         $builder->add(
+            'comentario',
+            TextType::class,
+            [
+                'required' => false
+            ]
+        );
+
+        $builder->add(
             'proveedor',
             EntityType::class,
             [
@@ -57,8 +66,10 @@ class EntradaType extends AbstractType
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {
                 $form = $event->getForm();
+                $entrada = $event->getData();
 
-                $this->createConceptoField($form);
+                $this->createConceptoField($form, $entrada ? $entrada->getConcepto()->getId() : null);
+                $this->createProveedorField($form, $entrada ? $entrada->getProveedor()->getId() : null);
             }
         );
 
@@ -68,8 +79,10 @@ class EntradaType extends AbstractType
                 $data = $event->getData();
                 $form = $event->getForm();
 
-                $productoId = array_key_exists('concepto', $data) ? $data['concepto'] : null;
-                $this->createConceptoField($form, $productoId);
+                $conceptoId = array_key_exists('concepto', $data) ? $data['concepto'] : null;
+                $proveedorId = array_key_exists('proveedor', $data) ? $data['proveedor'] : null;
+                $this->createConceptoField($form, $conceptoId);
+                $this->createProveedorField($form, $proveedorId);
             }
         );
     }
@@ -111,16 +124,17 @@ class EntradaType extends AbstractType
 
     private function createProveedorField(FormInterface $form, $proveedorId = null)
     {
-        $proveedor = !$proveedorId
+        $proveedores = !$proveedorId
             ? []
-            : [$this->entityManager->getRepository(Entrada::class)->find($proveedorId)];
+            : [$this->entityManager->getRepository(Proveedor::class)->find($proveedorId)];
 
         $form->add(
             'proveedor',
             EntityType::class,
             [
-                'class' => Concepto::class,
-                'choices' => $proveedor,
+                'class' => Proveedor::class,
+                'choices' => $proveedores,
+                'choice_label' => 'nombre'
             ]
         );
     }

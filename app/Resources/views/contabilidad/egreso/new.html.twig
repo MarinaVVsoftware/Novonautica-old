@@ -40,7 +40,13 @@
                 <div class="col-sm-12">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
-                            <h4 class="panel-title">Registro de egresos</h4>
+                            <h4 class="panel-title">
+                                {{ egreso.id is not defined ? 'Registro de egresos' : 'Editar egreso' }}
+                                <a class="btn btn-contorno-azul pull-right"
+                                   href="{{ path('contabilidad_egreso_index') }}">
+                                    Regresar
+                                </a>
+                            </h4>
                         </div>
                         <div id="egresos-pane" class="panel-body">
                             <div class="row">
@@ -64,6 +70,7 @@
                                             </th>
                                             <th>Concepto</th>
                                             <th>Proveedor</th>
+                                            <th>Comentario</th>
                                             <th width="20%">Importe</th>
                                         </tr>
                                         </thead>
@@ -82,6 +89,10 @@
                                                     {{ form_errors(entrada.proveedor) }}
                                                 </td>
                                                 <td>
+                                                    {{ form_widget(entrada.comentario) }}
+                                                    {{ form_errors(entrada.comentario) }}
+                                                </td>
+                                                <td>
                                                     {{ form_widget(entrada.importe) }}
                                                     {{ form_errors(entrada.importe) }}
                                                 </td>
@@ -98,6 +109,13 @@
                                     {{ form_row(form.total) }}
                                 </div>
                             </div>
+                            {% if form.comentarioEditar is defined %}
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        {{ form_row(form.comentarioEditar) }}
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="panel-footer">
                             <div class="row">
@@ -176,16 +194,30 @@
           // Private
 
           _addListeners(row) {
-            let importe = row.cells[3].querySelector('input');
+            let importe = row.cells[4].querySelector('input');
             let $proveedor = $(row).find('td:nth-child(3) select');
             let $concepto = $(row).find('td:nth-child(2) select');
 
             this._appendRemoveButton(row);
 
-            $proveedor.select2();
+            $proveedor.select2({
+              ajax: {
+                url: '{{ path('contabilidad_egreso_proveedores') }}',
+                dataType: 'json',
+                processResults(response) {
+                  return {
+                    results: response.results.map((result) => ({
+                      id: result.id,
+                      text: result.nombre
+                    })),
+                  }
+                }
+              }
+            });
+
             $concepto.select2({
               ajax: {
-                url: 'conceptos',
+                url: '{{ path('contabilidad_egreso_conceptos') }}',
                 dataType: 'json',
                 data(params) {
                   return {
@@ -211,7 +243,7 @@
                   event.target.value = event.target.value.replace(/[^\d,.]/g, '');
 
                   TotalInput.value = Array
-                      .from(this.prototypeHolder.querySelectorAll('tr > td:nth-child(4) input'))
+                      .from(this.prototypeHolder.querySelectorAll('.money-input'))
                       .reduce((a, b) => a + Number(b.value.replace(/[^\d.]/g, '')), 0)
                       .toFixed(2)
                       .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');

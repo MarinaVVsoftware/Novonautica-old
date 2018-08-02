@@ -24,4 +24,14 @@ class EmisorRepository extends \Doctrine\ORM\EntityRepository
 
         return $paginator;
     }
+
+    public function getEmisorRoles()
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT em.id, em.alias '.
+                'FROM AppBundle:Contabilidad\Facturacion\Emisor em'
+            )
+            ->getArrayResult();
+    }
 }

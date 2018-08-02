@@ -17,20 +17,28 @@
                             </h3>
                         </div>
                         <div class="panel-body" style="min-height: initial">
-                            {{ form_start(form) }}
-                            {{ form_row(form.nombre) }}
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {{ form_start(form) }}
 
-                            {% if proveedor.id is not null %}
-                                <a href="{{ path('contabilidad_egreso_entrada_proveedor_index') }}"
-                                   class="btn btn-naranja">Cancelar</a>
-                            {% endif %}
+                                    {{ form_row(form.nombre) }}
+                                    {{ form_row(form.rfc) }}
+                                    {{ form_row(form.direccion) }}
+                                    {{ form_row(form.telefono) }}
 
-                            <button type="submit" class="btn btn-azul pull-right">
-                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                Guardar
-                            </button>
+                                    {% if proveedor.id is not null %}
+                                        <a href="{{ path('contabilidad_egreso_entrada_proveedor_index') }}"
+                                           class="btn btn-naranja">Cancelar</a>
+                                    {% endif %}
 
-                            {{ form_end(form) }}
+                                    <button type="submit" class="btn btn-azul pull-right">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        Guardar
+                                    </button>
+
+                                    {{ form_end(form) }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -45,6 +53,7 @@
                                     <thead>
                                     <tr>
                                         <th>Nombre</th>
+                                        <th>Telefono</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -54,7 +63,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+    </section>
     </div>
 {% endblock %}
 
@@ -66,12 +75,12 @@
         $('.table-novo').DataTable({
           ...dtSettings,
           ajax: 'proveedores.json',
-          order: [[1, 'desc']],
+          order: [[2, 'desc']],
           createdRow: function (row, proveedor) {
-            row.cells[1].innerHTML = `
+            row.cells[2].innerHTML = `
                     <ul class="list-unstyled">
                         <li>
-                            <a href="?p=${proveedor[1]}" class="btn btn-xs btn-block btn-azul">Editar</a>
+                            <a href="?p=${proveedor[2]}" class="btn btn-xs btn-block btn-azul">Editar</a>
                         </li>
                     </ul>
                     `
