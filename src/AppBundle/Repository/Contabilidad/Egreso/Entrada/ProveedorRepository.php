@@ -10,4 +10,17 @@ namespace AppBundle\Repository\Contabilidad\Egreso\Entrada;
  */
 class ProveedorRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    public function getProveedorLike($stringValue)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT p.id, p.nombre '.
+                'FROM AppBundle:Contabilidad\Egreso\Entrada\Proveedor p '.
+                'WHERE p.nombre LIKE ?1'
+            )
+            ->setParameter(1, "%{$stringValue}%")
+            ->setMaxResults(5)
+            ->getArrayResult();
+    }
 }

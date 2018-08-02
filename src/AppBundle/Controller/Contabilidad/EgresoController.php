@@ -10,11 +10,15 @@ namespace AppBundle\Controller\Contabilidad;
 
 use AppBundle\Entity\Contabilidad\Egreso;
 use AppBundle\Form\Contabilidad\EgresoType;
+use AppBundle\Repository\Contabilidad\Egreso\getEgresos;
+use AppBundle\Repository\Contabilidad\EgresoRepository;
 use DataTables\DataTablesInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -82,14 +86,63 @@ class EgresoController extends AbstractController
         return $this->render(
             'contabilidad/egreso/new.html.twig',
             [
-                'title' => 'Punto de venta',
+                'title' => 'Nuevo egreso',
                 'form' => $form->createView(),
             ]
         );
     }
 
     /**
-     * @Route("/conceptos")
+     * @Route("/edit/{id}", name="contabilidad_egreso_edit")
+     * @param Request $request
+     * @param int $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction(Request $request, $id)
+    {
+        $egresoRepository = $this->getDoctrine()->getRepository(Egreso::class);
+        $egreso = $egresoRepository->get($id);
+
+        $this->denyAccessUnlessGranted('edit', $egreso);
+
+        if (null === $egreso) {
+            throw new NotFoundHttpException();
+        }
+
+        $clonedEntries = clone $egreso->getEntradas();
+        $clonedEntries = $clonedEntries->toArray();
+
+        $form = $this->createForm(EgresoType::class, $egreso);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            foreach ($clonedEntries as $clonedEntry) {
+                if (!$egreso->getEntradas()->contains($clonedEntry)) {
+                    $em->remove($clonedEntry);
+                }
+            }
+
+            $em->persist($egreso);
+            $em->flush();
+
+            return $this->redirectToRoute('contabilidad_egreso_show', ['id' => $egreso->getId()]);
+        }
+
+        return $this->render(
+            'contabilidad/egreso/new.html.twig',
+            [
+                'title' => 'Editar Egreso',
+                'form' => $form->createView(),
+                'egreso' => $egreso
+            ]
+        );
+    }
+
+    /**
+     * @Route("/conceptos", name="contabilidad_egreso_conceptos")
      * @param Request $request
      *
      * @return JsonResponse
@@ -109,14 +162,41 @@ class EgresoController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="contabilidad_egreso_Show")
+     * @Route("/proveedores", name="contabilidad_egreso_proveedores")
      * @param Request $request
-     * @param Egreso $egreso
+     *
+     * @return JsonResponse
+     */
+    public function getProveedorAction(Request $request)
+    {
+        $q = $request->query->get('q');
+        $conceptoRepository = $this->getDoctrine()->getRepository(Egreso\Entrada\Proveedor::class);
+
+        return $this
+            ->json(
+                ['results' => $conceptoRepository->getProveedorLike($q)],
+                JsonResponse::HTTP_OK
+            )
+            ->setEncodingOptions(JSON_NUMERIC_CHECK);
+    }
+
+    /**
+     * @Route("/{id}", name="contabilidad_egreso_show")
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction(Request $request, Egreso $egreso)
+    public function showAction($id)
     {
+        $egresoRepository = $this->getDoctrine()->getRepository(Egreso::class);
+        $egreso = $egresoRepository->get($id);
+
+        $this->denyAccessUnlessGranted('view', $egreso);
+
+        if (null === $egreso) {
+            throw new NotFoundHttpException();
+        }
+
         return $this->render(
             'contabilidad/egreso/show.html.twig',
             [
