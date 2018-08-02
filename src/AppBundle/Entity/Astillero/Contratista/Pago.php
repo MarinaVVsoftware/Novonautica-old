@@ -13,6 +13,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Pago
 {
+    const PAGO_EFECTIVO = 1;
+    const PAGO_TRANSFERENCIA = 2;
+    const PAGO_TARJETA_CREDITO = 3;
+    const PAGO_TARJETA_DEBITO = 4;
+
     /**
      * @var int
      *
@@ -50,9 +55,9 @@ class Pago
     private $fecha;
 
     /**
-     * @var string|null
+     * @var int
      *
-     * @ORM\Column(name="forma", type="string", length=50, nullable=true)
+     * @ORM\Column(name="forma", type="smallint")
      */
     private $forma;
 
@@ -68,6 +73,13 @@ class Pago
      * @ORM\JoinColumn(name="idcontratista", referencedColumnName="id",onDelete="CASCADE")
      */
     private $contratista;
+
+    private static $formaList = [
+        Pago::PAGO_EFECTIVO => 'Efectivo',
+        Pago::PAGO_TRANSFERENCIA => 'Transferencia',
+        Pago::PAGO_TARJETA_CREDITO => 'Tarjeta de crédito',
+        Pago::PAGO_TARJETA_DEBITO => 'Tarjeta de débito'
+     ];
 
     /**
      * Get id.
@@ -151,27 +163,35 @@ class Pago
     }
 
     /**
-     * Set forma.
-     *
-     * @param string|null $forma
-     *
-     * @return Pago
+     * @param int $forma
      */
-    public function setForma($forma = null)
+    public function setForma($forma)
     {
         $this->forma = $forma;
-
-        return $this;
     }
 
     /**
      * Get forma.
      *
-     * @return string|null
+     * @return int
      */
     public function getForma()
     {
+        if (null === $this->forma){ return null; }
         return $this->forma;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFormaNombre()
+    {
+        if (null === $this->forma) { return null; }
+        return self::$formaList[$this->forma];
+    }
+
+    public static function getFormaList(){
+        return self::$formaList;
     }
 
     /**

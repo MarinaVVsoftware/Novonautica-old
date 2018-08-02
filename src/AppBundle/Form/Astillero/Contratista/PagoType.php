@@ -9,6 +9,7 @@
 namespace AppBundle\Form\Astillero\Contratista;
 
 
+use AppBundle\Entity\Astillero\Contratista\Pago;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -44,8 +45,9 @@ class PagoType extends AbstractType
                 'format' => 'yyyy-MM-dd',
                 'empty_data' => new \DateTime()
             ])
-            ->add('forma', TextType::class, [
+            ->add('forma', ChoiceType::class, [
                 'label' => 'Forma de pago',
+                'choices' => array_flip(Pago::getFormaList())
             ]);
     }
 
