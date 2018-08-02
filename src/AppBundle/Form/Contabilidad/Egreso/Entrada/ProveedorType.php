@@ -14,6 +14,9 @@ class ProveedorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('nombre');
+        $builder->add('rfc');
+        $builder->add('direccion');
+        $builder->add('telefono');
     }
 
     /**

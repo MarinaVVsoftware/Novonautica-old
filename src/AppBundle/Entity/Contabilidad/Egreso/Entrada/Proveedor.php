@@ -29,6 +29,27 @@ class Proveedor
     private $nombre;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="rfc", type="string", length=30)
+     */
+    private $rfc;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="direccion", type="string", length=100)
+     */
+    private $direccion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="telefono", type="string", length=20)
+     */
+    private $telefono;
+
+    /**
      * Get id.
      *
      * @return int
@@ -60,5 +81,53 @@ class Proveedor
     public function getNombre()
     {
         return $this->nombre;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRfc()
+    {
+        return $this->rfc;
+    }
+
+    /**
+     * @param string $rfc
+     */
+    public function setRfc($rfc)
+    {
+        $this->rfc = $rfc;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDireccion()
+    {
+        return $this->direccion;
+    }
+
+    /**
+     * @param string $direccion
+     */
+    public function setDireccion($direccion)
+    {
+        $this->direccion = $direccion;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTelefono()
+    {
+        return $this->telefono;
+    }
+
+    /**
+     * @param string $telefono
+     */
+    public function setTelefono($telefono)
+    {
+        $this->telefono = $telefono;
     }
 }

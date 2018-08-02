@@ -53,7 +53,9 @@ class ProveedorDataTable extends AbstractDataTableHandler
         foreach ($request->order as $order) {
             if ($order->column == 0) {
                 $query->addOrderBy('p.nombre', $order->dir);
-            } elseif ($order->column == 1) {
+            } elseif ($order->column == 2) {
+                $query->addOrderBy('p.telefono', $order->dir);
+            } elseif ($order->column == 3) {
                 $query->addOrderBy('p.id', $order->dir);
             }
         }
@@ -71,6 +73,7 @@ class ProveedorDataTable extends AbstractDataTableHandler
         foreach ($proveedores as $proveedor) {
             $results->data[] = [
                 $proveedor->getNombre(),
+                $proveedor->getTelefono(),
                 $proveedor->getId(),
             ];
         }
