@@ -350,9 +350,7 @@
                             <td>Anticipo {{ loop.index }}</td>
                             <td>{{ pago.fechaRealPago|date('d-m-Y') }}</td>
                             <td>{{ pago.metodopago }}</td>
-                            <td>$ {{ (pago.cantidad/100)|number_format(2) }}
-                                <small>MXN</small>
-                            </td>
+                            <td>$ {{ (pago.cantidad/100)|number_format(2) }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -360,7 +358,7 @@
                         <tr class="grey-background">
                             <th colspan="2" style="background-color: #fff; border: 0; border-bottom: 0 !important;"></th>
                             <th class="text-right">Total anticipos</th>
-                            <th>$ {{ (astilleroCotizacion.pagado/100)|number_format(2) }} <small>MXN</small></th>
+                            <th>$ {{ (astilleroCotizacion.pagado/100)|number_format(2) }}</th>
                         </tr>
                     </tfoot>
                 </table>
