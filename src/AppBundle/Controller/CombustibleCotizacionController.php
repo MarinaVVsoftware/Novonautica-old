@@ -147,7 +147,7 @@ class CombustibleCotizacionController extends Controller
             // Buscar correos a notificar
             $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                 'evento' => Correo\Notificacion::EVENTO_CREAR,
-                'tipo' => Correo\Notificacion::TIPO_MARINA
+                'tipo' => Correo\Notificacion::TIPO_COMBUSTIBLE
             ]);
             $this->enviaCorreoNotificacion($mailer, $notificables, $marinaHumedaCotizacion);
             return $this->redirectToRoute('combustible_show', ['id' => $marinaHumedaCotizacion->getId()]);
@@ -290,7 +290,7 @@ class CombustibleCotizacionController extends Controller
                 // Buscar correos a notificar
                 $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                     'evento' => Correo\Notificacion::EVENTO_VALIDAR,
-                    'tipo' => Correo\Notificacion::TIPO_MARINA
+                    'tipo' => Correo\Notificacion::TIPO_COMBUSTIBLE
                 ]);
                 $this->enviaCorreoNotificacion($mailer, $notificables, $marinaHumedaCotizacion);
             }
@@ -302,7 +302,7 @@ class CombustibleCotizacionController extends Controller
                 // Buscar correos a notificar
                 $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                     'evento' => Correo\Notificacion::EVENTO_ACEPTAR,
-                    'tipo' => Correo\Notificacion::TIPO_MARINA
+                    'tipo' => Correo\Notificacion::TIPO_COMBUSTIBLE
                 ]);
 
                 $this->enviaCorreoNotificacion($mailer, $notificables, $marinaHumedaCotizacion);

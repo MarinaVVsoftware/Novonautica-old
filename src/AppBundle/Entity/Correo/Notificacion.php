@@ -18,6 +18,7 @@ class Notificacion
     const TIPO_MARINA = 1;
     const TIPO_ASTILLERO = 2;
     const TIPO_ODT = 3;
+    const TIPO_COMBUSTIBLE = 4;
 
     /**
      * @var int
@@ -58,7 +59,8 @@ class Notificacion
     private static $tipoList = [
       Notificacion::TIPO_MARINA => 'Marina',
       Notificacion::TIPO_ASTILLERO => 'Astillero',
-      Notificacion::TIPO_ODT => 'ODT'
+      Notificacion::TIPO_ODT => 'ODT',
+      Notificacion::TIPO_COMBUSTIBLE => 'Combustible'
     ];
 
     /**

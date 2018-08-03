@@ -10,9 +10,13 @@
 
 {% block body %}
     {% if notificacion.tipo == 1 %}
-        <h3>Notificacion de Marina</h3>
+        <h3>Notificación de Marina</h3>
+    {% elseif notificacion.tipo == 2 %}
+        <h3>Notificación de Astillero</h3>
+    {% elseif notificacion.tipo == 3 %}
+        <h3>Notificación de ODT</h3>
     {% else %}
-        <h3>Notificacion de Astillero</h3>
+        <h3>Notificación de Servícios Marinos</h3>
     {% endif %}
 
     <p class="lead">Se le ha enviado este correo para notificarle el siguiente evento:</p>
