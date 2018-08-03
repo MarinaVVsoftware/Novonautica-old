@@ -33,7 +33,12 @@ class ValorSistemaType extends AbstractType
             ->add('folioMarina',TextType::class,[
                 'attr' => ['class' => 'esdecimal'],
                 'required' => false,
-                'label' => 'Folio Cotizaciones'
+                'label' => 'Folio marina y astillero'
+            ])
+            ->add('folioCombustible',TextType::class,[
+                'attr' => ['class' => 'esdecimal'],
+                'required' => false,
+                'label' => 'Folio combustible'
             ])
             ->add('diasHabilesMarinaCotizacion',TextType::class,[
                 'label' => 'Días hábiles pago de cotización marina húmeda',
