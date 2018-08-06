@@ -54,6 +54,13 @@ class ValorSistema
     private $folioAstillero;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="folio_combustible", type="bigint")
+     */
+    private $folioCombustible;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="mensaje_correo_marina", type="text")
@@ -480,5 +487,29 @@ class ValorSistema
     public function getCorreo()
     {
         return $this->correo;
+    }
+
+    /**
+     * Set folioCombustible.
+     *
+     * @param int $folioCombustible
+     *
+     * @return ValorSistema
+     */
+    public function setFolioCombustible($folioCombustible)
+    {
+        $this->folioCombustible = $folioCombustible;
+
+        return $this;
+    }
+
+    /**
+     * Get folioCombustible.
+     *
+     * @return int
+     */
+    public function getFolioCombustible()
+    {
+        return $this->folioCombustible;
     }
 }
