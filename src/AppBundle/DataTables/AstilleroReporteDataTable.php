@@ -100,8 +100,10 @@ class AstilleroReporteDataTable extends AbstractDataTableHandler
         $queryCount->select('COUNT(ac.id)');
         $results->recordsFiltered = $queryCount->getQuery()->getSingleScalarResult();
 
-        $query->setMaxResults($request->length);
-        $query->setFirstResult($request->start);
+        if ($request->length >= 0) {
+            $query->setMaxResults($request->length);
+            $query->setFirstResult($request->start);
+        }
 
         $reportes = $query->getQuery()->getResult();
 
