@@ -62,11 +62,12 @@ class AstilleroReporteDataTable extends AbstractDataTableHandler
             ->select('CASE WHEN  ac.foliorecotiza = 0 THEN ac.folio ' .
                 'ELSE CONCAT(ac.folio, \'-\', ac.foliorecotiza) END AS folio')
             ->addSelect('c.id AS id_cliente', 'ac.id AS id_cotizacion')
-            ->addSelect('c.nombre', 'ac.fechaLlegada', 'ac.fechaSalida', 'ac.total')
+            ->addSelect('c.nombre', 'ac.fechaLlegada', 'ac.fechaSalida', 'ac.total', 'b.nombre AS barco')
             ->addSelect("({$adeudoSubquery->getDQL()}) AS pagado")
             ->addSelect('COALESCE(p.fecharealpago, \'No se han realizado pagos\') AS lastPago')
             ->leftJoin('ac.cliente', 'c')
             ->leftJoin('ac.pagos', 'p')
+            ->leftJoin('ac.barco', 'b')
             ->where("p.fecharealpago = ({$fechaSubquery->getDQL()}) " .
                 "AND ac.estatuspago = 1 OR ac.estatuspago IS NULL AND ac.validacliente = 2");
 
@@ -75,20 +76,34 @@ class AstilleroReporteDataTable extends AbstractDataTableHandler
             $query->setParameter('search', strtolower("%{$request->search->value}%"));
         }
 
-        foreach ($request->order as $order) {
-            if ($order->column == 0) {
-                $query->addOrderBy('ac.folio', $order->dir);
-            } elseif ($order->column == 1) {
-                $query->addOrderBy('c.nombre', $order->dir);
-            }
+        if ($request->customData) {
+            $query->andWhere('ac.fechaLlegada BETWEEN :start AND :end');
+            $query->setParameter('start', $request->customData['dates']['start']);
+            $query->setParameter('end', $request->customData['dates']['end']);
+        }
+
+        if ($request->columns[1]->search->value) {
+            $query->andWhere('(LOWER(c.id) = :id)');
+            $query->setParameter('id', $request->columns[1]->search->value);
+        }
+
+        if ($request->columns[2]->search->value) {
+            $query->andWhere('(LOWER(b.id) = :id)');
+            $query->setParameter('id', $request->columns[2]->search->value);
+        }
+
+        if ($request->order[0]->column == 0) {
+            $query->addOrderBy('ac.folio', $request->order[0]->dir);
         }
 
         $queryCount = clone $query;
         $queryCount->select('COUNT(ac.id)');
         $results->recordsFiltered = $queryCount->getQuery()->getSingleScalarResult();
 
-        $query->setMaxResults($request->length);
-        $query->setFirstResult($request->start);
+        if ($request->length >= 0) {
+            $query->setMaxResults($request->length);
+            $query->setFirstResult($request->start);
+        }
 
         $reportes = $query->getQuery()->getResult();
 
@@ -96,6 +111,7 @@ class AstilleroReporteDataTable extends AbstractDataTableHandler
             $results->data[] = [
                 $reporte['folio'],
                 $reporte['nombre'],
+                $reporte['barco'],
                 $reporte['fechaLlegada']->format('Y-m-d H:i:s'),
                 $reporte['fechaSalida']->format('Y-m-d H:i:s'),
                 $reporte['lastPago'],

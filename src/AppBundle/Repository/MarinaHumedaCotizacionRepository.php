@@ -182,4 +182,36 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getScalarResult();
     }
+
+    public function getClientesMorososLike($query)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT DISTINCT cliente.id, cliente.nombre AS text '.
+                'FROM AppBundle:MarinaHumedaCotizacion cotizacion '.
+                'LEFT JOIN cotizacion.cliente cliente '.
+                'WHERE (LOWER(cliente.nombre) LIKE ?1 AND cotizacion.validacliente = 2) '.
+                'AND (cotizacion.estatuspago IS NULL OR cotizacion.estatuspago = 1) '.
+                'ORDER BY cliente.nombre ASC '
+            )
+            ->setParameter(1, strtolower("%{$query}%"))
+            ->setMaxResults(5)
+            ->getArrayResult();
+    }
+
+    public function getEmbarcacionesdeMorososLike($query)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT DISTINCT barco.id, barco.nombre AS text '.
+                'FROM AppBundle:MarinaHumedaCotizacion cotizacion '.
+                'LEFT JOIN cotizacion.barco barco '.
+                'WHERE (LOWER(barco.nombre) LIKE ?1 AND cotizacion.validacliente = 2) '.
+                'AND (cotizacion.estatuspago IS NULL OR cotizacion.estatuspago = 1) '.
+                'ORDER BY barco.nombre ASC '
+            )
+            ->setParameter(1, strtolower("%{$query}%"))
+            ->setMaxResults(5)
+            ->getArrayResult();
+    }
 }
