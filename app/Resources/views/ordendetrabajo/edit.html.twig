@@ -210,10 +210,6 @@
                 })
             });
             $(document).on('change','.buscaproveedor',function (e){
-                {#var url = "{{ path('astillero_proveedor_ajax',{'id':'iddelproveedor','_format':'json'}) }}";#}
-                {#var url = "{{ path('astillero_proveedor_ajax') }}";#}
-                {#console.log(url);#}
-                // url = url.replace("iddelproveedor", $(this).val());
                 var idproveedor = $(this);
                 $.ajax({
                     method: "GET",
@@ -237,11 +233,12 @@
                         elemento.children('.preciocontratista').val(precioContratista.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                         elemento.children('.utilidadvv').val(utilidadVv.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                         $(idproveedor).parent().parent().parent().parent().children('div').children('div').children('div').children('.porcentajevv').val(porcentajeVV);
-                        console.log(ivaContratista);
-                        console.log(totalContratista);
                     }
                 });
             });
         })(jQuery);
+        $('.lista-trabajadores').each(function () {
+            console.log(this);
+        });
     </script>
 {% endblock %}

@@ -125,6 +125,7 @@
                         if(cotizacion[0].acservicios[i].estatus){
                             var elemento = '';
                             var tipoelemento = '';
+                            var idproveedor = '';
                             if(cotizacion[0].acservicios[i].servicio){
                                 elemento = cotizacion[0].acservicios[i].servicio.nombre;
                                 tipoelemento = 1;
@@ -132,6 +133,8 @@
                             if(cotizacion[0].acservicios[i].producto){
                                 elemento = cotizacion[0].acservicios[i].producto.nombre;
                                 tipoelemento = 2;
+                                idproveedor = cotizacion[0].acservicios[i].producto.proveedor.id;
+                                console.log(cotizacion[0].acservicios[i].producto.proveedor.id);
                             }
                             if(cotizacion[0].acservicios[i].astilleroserviciobasico){
                                 elemento = cotizacion[0].acservicios[i].astilleroserviciobasico.nombre;
@@ -148,7 +151,7 @@
                                 '<td>$ '+(cotizacion[0].acservicios[i].iva/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
                                 '<td>$ '+(cotizacion[0].acservicios[i].total/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td></tr>');
                             if(!cotizacion[0].acservicios[i].astilleroserviciobasico){
-                                coleccionContratistaODT(e,'.add-another-proveedor',elemento,cotizacion[0].acservicios[i].subtotal,tipoelemento);
+                                coleccionContratistaODT(e,'.add-another-proveedor',elemento,cotizacion[0].acservicios[i].subtotal,tipoelemento,idproveedor);
                             }
                         }
                     }

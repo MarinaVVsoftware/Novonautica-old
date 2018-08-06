@@ -498,7 +498,7 @@ $('.lista-pagos').on('click', '.remove-pago', function (e) {
 
 //---------- colection al agregar contratista a ODT -----------------
 jQuery('.add-another-proveedor').click(function (e) {
-    coleccionContratistaODT(e, this,'',0,1);
+    coleccionContratistaODT(e, this,'',0,1,0);
 });
 $('.lista-proveedores').on('click', '.remove-proveedor', function (e) {
     e.preventDefault();
@@ -507,7 +507,7 @@ $('.lista-proveedores').on('click', '.remove-proveedor', function (e) {
 
     return false;
 });
-function coleccionContratistaODT(e,objeto,descripcion,total,tipoelemento){
+function coleccionContratistaODT(e,objeto,descripcion,total,tipoelemento,idproveedor){
     e.preventDefault();
     // var elementoMotor = document.getElementsByClassName(this);
     var totProveedor = $(objeto).data('cantidad');
@@ -536,7 +536,9 @@ function coleccionContratistaODT(e,objeto,descripcion,total,tipoelemento){
     $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_proveedor option').each(function () {
         // 1 = servicio, 2 = producto
         if(tipoelemento === 2){
-            if($(this).data('trabajador') === 1){
+            // data-id es el id del proveedor del select, la variable idproveedor viene desde el producto, deben
+            // coincidir para que este producto sea de este proveedor
+            if($(this).data('trabajador') === 1 || $(this).data('id') !== idproveedor){
                 $(this).hide();
             }else{
                 $(this).show();

@@ -35,11 +35,8 @@ class Producto
     private $identificador;
 
     /**
-     * @var
-     *
-     * @Assert\NotBlank(message="Proveedor no puede quedar vacío")
-     *
-     * @ORM\Column(name="proveedor", type="string", length=50)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Astillero\Proveedor", inversedBy="productos")
+     * @ORM\JoinColumn(name="idproveedor", referencedColumnName="id")
      */
     private $proveedor;
 
@@ -119,30 +116,6 @@ class Producto
     public function getIdentificador()
     {
         return $this->identificador;
-    }
-
-    /**
-     * Set proveedor.
-     *
-     * @param string $proveedor
-     *
-     * @return Producto
-     */
-    public function setProveedor($proveedor)
-    {
-        $this->proveedor = $proveedor;
-
-        return $this;
-    }
-
-    /**
-     * Get proveedor.
-     *
-     * @return string
-     */
-    public function getProveedor()
-    {
-        return $this->proveedor;
     }
 
     /**
@@ -252,4 +225,28 @@ class Producto
     }
 
 
+
+    /**
+     * Set proveedor.
+     *
+     * @param \AppBundle\Entity\Astillero\Proveedor|null $proveedor
+     *
+     * @return Producto
+     */
+    public function setProveedor(\AppBundle\Entity\Astillero\Proveedor $proveedor = null)
+    {
+        $this->proveedor = $proveedor;
+
+        return $this;
+    }
+
+    /**
+     * Get proveedor.
+     *
+     * @return \AppBundle\Entity\Astillero\Proveedor|null
+     */
+    public function getProveedor()
+    {
+        return $this->proveedor;
+    }
 }

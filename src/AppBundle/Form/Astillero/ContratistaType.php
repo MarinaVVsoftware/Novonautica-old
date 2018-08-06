@@ -67,7 +67,9 @@ class ContratistaType extends AbstractType
                         ->orderBy('t.nombre', 'ASC');
                 },
                 'choice_attr' => function(Proveedor $proveedor, $key, $index) {
-                    return ['data-trabajador' => $proveedor->getProveedorcontratista()];
+                    return ['data-trabajador' => $proveedor->getProveedorcontratista(),
+                            'data-id' => $proveedor->getId()
+                    ];
                 },
 
             ])
