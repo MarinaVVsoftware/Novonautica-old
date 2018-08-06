@@ -79,11 +79,11 @@ class OrdenDeTrabajoDataTable extends AbstractDataTableHandler
                 $odt->getAstilleroCotizacion()->getCliente()->getNombre(),
                 $odt->getAstilleroCotizacion()->getFechaLlegada() ? $odt->getAstilleroCotizacion()->getFechaLlegada()->format('d/m/Y'):'',
                 $odt->getAstilleroCotizacion()->getFechaSalida() ? $odt->getAstilleroCotizacion()->getFechaSalida()->format('d/m/Y'):'',
-                '$' . number_format(($odt->getPrecioTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',
-                '$' . number_format(($odt->getUtilidadvvTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',
-                '$' . number_format(($odt->getPreciovvTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',
-                '$' . number_format(($odt->getIvaTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',
-                '$' . number_format(($odt->getGranTotal()*$odt->getAstilleroCotizacion()->getDolar()) / 10000, 2).' MXN',
+                '$' . number_format($odt->getPrecioTotal() / 100, 2).' MXN',
+                '$' . number_format($odt->getUtilidadvvTotal() / 100, 2).' MXN',
+                '$' . number_format($odt->getPreciovvTotal() / 100, 2).' MXN',
+                '$' . number_format($odt->getIvaTotal() / 100, 2).' MXN',
+                '$' . number_format($odt->getGranTotal() / 100, 2).' MXN',
                 $odt->getId()
             ];
         }
