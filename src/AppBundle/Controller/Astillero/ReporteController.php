@@ -9,6 +9,7 @@
 namespace AppBundle\Controller\Astillero;
 
 
+use AppBundle\Entity\AstilleroCotizacion;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -216,5 +217,29 @@ class ReporteController extends AbstractController
 
         return $this->json($incomeReport)
             ->setEncodingOptions(JSON_NUMERIC_CHECK);
+    }
+
+    /**
+     * @Route("/cliente/cliente")
+     */
+    public function clientesMorososAction(Request $request)
+    {
+        $query = $request->query->get('q');
+        $marinaRepository = $this->getDoctrine()->getRepository(AstilleroCotizacion::class);
+        $clientes = $marinaRepository->getClientesMorososLike($query);
+
+        return $this->json($clientes);
+    }
+
+    /**
+     * @Route("/cliente/embarcacion")
+     */
+    public function barcosDeMorososAction(Request $request)
+    {
+        $query = $request->query->get('q');
+        $marinaRepository = $this->getDoctrine()->getRepository(AstilleroCotizacion::class);
+        $clientes = $marinaRepository->getEmbarcacionesdeMorososLike($query);
+
+        return $this->json($clientes);
     }
 }
