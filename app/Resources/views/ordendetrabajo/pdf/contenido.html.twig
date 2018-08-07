@@ -10,53 +10,65 @@
             background-color: #458fce;
             color: #fff;
         }
+        .nopadding {
+            padding: 0;
+        }
+        .informacion p {
+            margin: 0 !important;
+        }
     </style>
 </head>
 <body>
 <div class="container-fluid">
+    <div class="row informacion" style="background-color: #EAEAEA; padding-top: .5rem; padding-bottom: 1rem;">
+        <div class="col-xs-4">
+            <h4>Información</h4>
+            <p><strong>Embarcación: </strong> {{ odt.astilleroCotizacion.barco.nombre }}</p>
+            <p><strong>Modelo: </strong> {{ odt.astilleroCotizacion.barco.modelo }}</p>
+            <p><strong>Eslora: </strong> {{ odt.astilleroCotizacion.barco.eslora }}</p>
+            <p><strong>Manga: </strong> {{ odt.astilleroCotizacion.barco.manga }}</p>
+            <p><strong>Fecha de inicio: </strong>{{ odt.astilleroCotizacion.fechaLlegada|date('d-m-Y') }}</p>
+            <p><strong>Fecha de finalización: </strong>{{ odt.astilleroCotizacion.fechaSalida|date('d-m-Y') }}</p>
+        </div>
+            {% if odt.astilleroCotizacion.barco.nombreCapitan is not empty %}
+                <div class="col-xs-4">
+                    <h4>&nbsp;</h4>
+                    <p><strong>Capitán: </strong> {{ odt.astilleroCotizacion.barco.nombreCapitan }}</p>
+                    <p><strong>Telefono del capitán: </strong> {{ odt.astilleroCotizacion.barco.telefonoCapitan }}</p>
+                    <p><strong>Correo del capitán: </strong> {{ odt.astilleroCotizacion.barco.correoCapitan }}</p>
+                </div>
+            {% endif %}
+            {% if odt.astilleroCotizacion.barco.nombreResponsable is not empty %}
+                <div class="col-xs-4">
+                    <h4>&nbsp;</h4>
+                    <p><strong>Encargado: </strong> {{ odt.astilleroCotizacion.barco.nombreResponsable }}</p>
+                    <p><strong>Telefono del encargado: </strong> {{ odt.astilleroCotizacion.barco.telefonoResponsable }}</p>
+                    <p><strong>Correo del encargado: </strong> {{ odt.astilleroCotizacion.barco.correoResponsable }}</p>
+                </div>
+            {% endif %}
+
+    </div>
     <div class="row">
-        <div class="col-sm-12 text-center">
-            <small class="pull-left">Precios en MXN</small>
+        <div class="col-xs-12 text-center nopadding">
             <table class="table">
                 <thead>
                 <tr class="text-center">
-                    <th>Descripción del trabajo / Material</th>
                     <th>Proveedor / Contratista</th>
                     <th>Razón social</th>
-                    <th>Precio contratista</th>
-                    <th>% V&V</th>
-                    <th>Utilidad V&V</th>
-                    <th>Precio V&V</th>
+                    <th>Descripción del trabajo / Material</th>
+                    <th>Cantidad</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for contratista in odt.contratistas %}
                 <tr class="text-left">
-                    <td>{{ contratista.cotizacionInicial }}</td>
                     <td>{{ contratista.proveedor.nombre }}</td>
                     <td>{{ contratista.proveedor.razonsocial }}</td>
-                    <td>${{ (contratista.precio/100)|number_format(2) }}</td>
-                    <td>{{ contratista.porcentajevv|number_format(2) }}%</td>
-                    <td>${{ (contratista.utilidadvv/100)|number_format(2) }}</td>
-                    <td>${{ (contratista.preciovv/100)|number_format(2) }}</td>
+                    <td>{{ contratista.cotizacionInicial }}</td>
+                    <td>{{ contratista.cantidad }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
-                <tfoot>
-                <tr>
-                    <td colspan="3" rowspan="2" class="text-right">Totales:</td>
-                    <td>${{ (odt.precioTotal/100)|number_format(2) }}</td>
-                    <td></td>
-                    <td>${{ (odt.utilidadvvTotal/100)|number_format(2) }}</td>
-                    <td>${{ (odt.preciovvTotal/100)|number_format(2) }}</td>
-                </tr>
-                <tr>
-                    <td>${{ ((odt.precioTotal/odt.astilleroCotizacion.dolar))|number_format(2) }}<small>USD</small></td>
-                    <td></td>
-                    <td>${{ ((odt.utilidadvvTotal/odt.astilleroCotizacion.dolar))|number_format(2) }}<small>USD</small></td>
-                    <td>${{ ((odt.preciovvTotal/odt.astilleroCotizacion.dolar))|number_format(2) }}<small>USD</small></td>
-                </tr>
-                </tfoot>
             </table>
         </div>
     </div>

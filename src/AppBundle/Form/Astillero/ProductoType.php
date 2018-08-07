@@ -2,6 +2,8 @@
 
 namespace AppBundle\Form\Astillero;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -17,7 +19,14 @@ class ProductoType extends AbstractType
     {
         $builder
             ->add('identificador')
-            ->add('proveedor')
+            ->add('proveedor',EntityType::class,[
+                'class' => 'AppBundle\Entity\Astillero\Proveedor',
+                'placeholder' => 'Seleccionar...',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('p')
+                        ->where('p.proveedorcontratista = 0');
+                },
+            ])
             ->add('nombre')
             ->add('precio',MoneyType::class,[
                 'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],

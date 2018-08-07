@@ -161,7 +161,6 @@
                         <div role="tabpanel" class="tab-pane" id="contratistas">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <small class="pull-left">Precios en MXN</small>
                                     <small class="pull-right">Tipo de cambio:
                                         <span>{{ (ordenDeTrabajo.astilleroCotizacion.dolar/100)| number_format(2) }}</span>
                                         MXN
@@ -170,6 +169,7 @@
                                         <thead>
                                         <tr>
                                             <th>Descripción del trabajo</th>
+                                            <th>Cantidad</th>
                                             <th>Contratista</th>
                                             <th>Razón social</th>
                                             <th>Precio contratista</th>
@@ -182,39 +182,55 @@
                                         {% for contratista in ordenDeTrabajo.contratistas %}
                                             <tr>
                                                 <td>{{ contratista.cotizacionInicial }}</td>
+                                                <td>{{ contratista.cantidad }}</td>
                                                 <td>{{ contratista.proveedor.nombre }}</td>
                                                 <td>{{ contratista.proveedor.razonsocial }}</td>
-                                                <td>${{ (contratista.precio/100)|number_format(2) }}</td>
+                                                <td>
+                                                    ${{ (contratista.precio/100)|number_format(2) }} <small>MXN</small>
+                                                </td>
                                                 <td>{{ contratista.porcentajevv|number_format(2) }}%</td>
                                                 <td>{{ (100+contratista.porcentajevv)/100 }}</td>
-                                                <td>${{ (contratista.utilidadvv/100)|number_format(2) }}</td>
-                                                <td>${{ (contratista.preciovv/100)|number_format(2) }}</td>
+                                                <td>
+                                                    ${{ (contratista.utilidadvv/100)|number_format(2) }} <small>MXN</small>
+                                                </td>
+                                                <td>
+                                                    ${{ (contratista.preciovv/100)|number_format(2) }} <small>MXN</small>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>
                                         <tfoot>
                                         <tr>
-                                            <td colspan="3" rowspan="2" class="text-right">Totales:</td>
-                                            <td>${{ (ordenDeTrabajo.precioTotal/100)|number_format(2) }}</td>
+                                            <td colspan="4" rowspan="2" class="text-right">Totales:</td>
+                                            <td>
+                                                ${{ (ordenDeTrabajo.precioTotal/100)|number_format(2) }}
+                                                <small>MXN</small>
+                                            </td>
                                             <td></td>
                                             <td></td>
-                                            <td>${{ (ordenDeTrabajo.utilidadvvTotal/100)|number_format(2) }}</td>
-                                            <td>${{ (ordenDeTrabajo.preciovvTotal/100)|number_format(2) }}</td>
+                                            <td>
+                                                ${{ (ordenDeTrabajo.utilidadvvTotal/100)|number_format(2) }}
+                                                <small>MXN</small>
+                                            </td>
+                                            <td>
+                                                ${{ (ordenDeTrabajo.preciovvTotal/100)|number_format(2) }}
+                                                <small>MXN</small>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 ${{ ((ordenDeTrabajo.precioTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
-                                                USD
+                                                <small>USD</small>
                                             </td>
                                             <td></td>
                                             <td></td>
                                             <td>
                                                 ${{ ((ordenDeTrabajo.utilidadvvTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
-                                                USD
+                                                <small>USD</small>
                                             </td>
                                             <td>
                                                 ${{ ((ordenDeTrabajo.preciovvTotal/ordenDeTrabajo.astilleroCotizacion.dolar))|number_format(2) }}
-                                                USD
+                                                <small>USD</small>
                                             </td>
                                         </tr>
                                         </tfoot>

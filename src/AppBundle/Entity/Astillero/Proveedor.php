@@ -143,6 +143,10 @@ class Proveedor implements UserInterface, \Serializable
      */
     private $Trabajos;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Astillero\Producto", mappedBy="proveedor")
+     */
+    private $productos;
 
     /**
      * Constructor
@@ -581,5 +585,65 @@ class Proveedor implements UserInterface, \Serializable
             $this->nombre,
             $this->password,
             ) = unserialize($serialized, ['allowed_classes' => false]);
+    }
+
+    /**
+     * Set isActive.
+     *
+     * @param bool $isActive
+     *
+     * @return Proveedor
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive.
+     *
+     * @return bool
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Add producto.
+     *
+     * @param \AppBundle\Entity\Astillero\Producto $producto
+     *
+     * @return Proveedor
+     */
+    public function addProducto(\AppBundle\Entity\Astillero\Producto $producto)
+    {
+        $this->productos[] = $producto;
+
+        return $this;
+    }
+
+    /**
+     * Remove producto.
+     *
+     * @param \AppBundle\Entity\Astillero\Producto $producto
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeProducto(\AppBundle\Entity\Astillero\Producto $producto)
+    {
+        return $this->productos->removeElement($producto);
+    }
+
+    /**
+     * Get productos.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProductos()
+    {
+        return $this->productos;
     }
 }

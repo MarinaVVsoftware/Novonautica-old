@@ -32,6 +32,9 @@ class ContratistaType extends AbstractType
             ->add('cotizacionInicial',TextType::class,[
                 'label' => 'Descripción'
             ])
+            ->add('cantidad', TextType::class,[
+                'attr' => ['readonly' => true]
+            ])
             ->add('precio',MoneyType::class,[
                 'label' => 'Precio Trabajador (MXN)',
                 'currency' => 'MXN',
@@ -67,7 +70,9 @@ class ContratistaType extends AbstractType
                         ->orderBy('t.nombre', 'ASC');
                 },
                 'choice_attr' => function(Proveedor $proveedor, $key, $index) {
-                    return ['data-trabajador' => $proveedor->getProveedorcontratista()];
+                    return ['data-trabajador' => $proveedor->getProveedorcontratista(),
+                            'data-id' => $proveedor->getId()
+                    ];
                 },
 
             ])

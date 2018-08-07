@@ -498,45 +498,33 @@ $('.lista-pagos').on('click', '.remove-pago', function (e) {
 
 //---------- colection al agregar contratista a ODT -----------------
 jQuery('.add-another-proveedor').click(function (e) {
-    coleccionContratistaODT(e, this,'',0,1);
+    coleccionContratistaODT(e, this,'',0,0,1,0);
 });
 $('.lista-proveedores').on('click', '.remove-proveedor', function (e) {
     e.preventDefault();
-    //console.log('quitar motor');
     $(this).parent().parent().remove();
-
     return false;
 });
-function coleccionContratistaODT(e,objeto,descripcion,total,tipoelemento){
+function coleccionContratistaODT(e,objeto,descripcion,cantidad,total,tipoelemento,idproveedor){
     e.preventDefault();
-    // var elementoMotor = document.getElementsByClassName(this);
     var totProveedor = $(objeto).data('cantidad');
     var lista = $(objeto).data('idlista');
     var proveedorListPrimero = jQuery('#proveedor-fields-list' + lista);
-    //var motorListOtros = jQuery('.lista-motores'+lista);
-    // grab the prototype template
     var newWidget = $(proveedorListPrimero).data('prototype');
-    // replace the "__name__" used in the id and name of the prototype
-    // with a number that's unique to your emails
-    // end name attribute looks like name="contact[emails][2]"
     newWidget = newWidget.replace(/__name__/g, totProveedor);
     totProveedor++;
     $(objeto).data('cantidad', totProveedor);
-    // create a new list element and add it to the list
     var newLi = jQuery('<div class="row"></div>').html(newWidget);
     newLi.appendTo(proveedorListPrimero);
-    // newLi.find('.input-daterange').datepicker({
-    //     format: 'yyyy-mm-dd',
-    //     language: "es",
-    //     orientation: "bottom auto",
-    //     autoclose: true
-    // });
     $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_cotizacionInicial').val(descripcion);
+    $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_cantidad').val(cantidad);
     $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_preciovv').val((total/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_proveedor option').each(function () {
         // 1 = servicio, 2 = producto
         if(tipoelemento === 2){
-            if($(this).data('trabajador') === 1){
+            // data-id es el id del proveedor del select, la variable idproveedor viene desde el producto, deben
+            // coincidir para que este producto sea de este proveedor
+            if($(this).data('trabajador') === 1 || $(this).data('id') !== idproveedor){
                 $(this).hide();
             }else{
                 $(this).show();
@@ -551,8 +539,6 @@ function coleccionContratistaODT(e,objeto,descripcion,total,tipoelemento){
           }
         }
     });
-    // also add a remove button, just for this example
-    //newLi.append('<a href="#" class="remove-motor btn btn-borrar">Quitar Motor</a>');
     newLi.before(newLi);
 }
 //---------- colection al agregar bancos a un proveedor -----------------
