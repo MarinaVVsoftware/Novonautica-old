@@ -75,14 +75,9 @@ class MarinaHumedaCotizaServiciosGasolinaType extends AbstractType
                 'grouping' => true,
                 'empty_data' => 0,
             ])
-            ->add('tipo',ChoiceType::class,[
-                'label' => 'Tipo',
-                'choices' =>[
-                    'Magna'=>'3',
-                    'Premium'=>'4',
-                    'Diesel'=>'5',
-                ]
-
+            ->add('combustible',EntityType::class,[
+                'class' => 'AppBundle\Entity\Combustible\Catalogo',
+                'placeholder' => 'Seleccionar...'
             ])
            ;
     }
