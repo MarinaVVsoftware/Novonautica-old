@@ -32,6 +32,9 @@ class ContratistaType extends AbstractType
             ->add('cotizacionInicial',TextType::class,[
                 'label' => 'Descripción'
             ])
+            ->add('cantidad', TextType::class,[
+                'attr' => ['readonly' => true]
+            ])
             ->add('precio',MoneyType::class,[
                 'label' => 'Precio Trabajador (MXN)',
                 'currency' => 'MXN',

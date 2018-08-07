@@ -126,6 +126,7 @@
                             var elemento = '';
                             var tipoelemento = '';
                             var idproveedor = '';
+                            var cantidad = cotizacion[0].acservicios[i].cantidad;
                             if(cotizacion[0].acservicios[i].servicio){
                                 elemento = cotizacion[0].acservicios[i].servicio.nombre;
                                 tipoelemento = 1;
@@ -134,7 +135,6 @@
                                 elemento = cotizacion[0].acservicios[i].producto.nombre;
                                 tipoelemento = 2;
                                 idproveedor = cotizacion[0].acservicios[i].producto.proveedor.id;
-                                console.log(cotizacion[0].acservicios[i].producto.proveedor.id);
                             }
                             if(cotizacion[0].acservicios[i].astilleroserviciobasico){
                                 elemento = cotizacion[0].acservicios[i].astilleroserviciobasico.nombre;
@@ -144,14 +144,14 @@
                                 elemento = cotizacion[0].acservicios[i].otroservicio;
                                 tipoelemento = 1;
                             }
-                            $('#servicios-cotizacion').append('<tr><td>'+cotizacion[0].acservicios[i].cantidad+'</td>' +
+                            $('#servicios-cotizacion').append('<tr><td>'+cantidad+'</td>' +
                                 '<td>'+elemento+'</td>' +
                                 '<td>$ '+(cotizacion[0].acservicios[i].precio/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
                                 '<td>$ '+(cotizacion[0].acservicios[i].subtotal/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
                                 '<td>$ '+(cotizacion[0].acservicios[i].iva/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
                                 '<td>$ '+(cotizacion[0].acservicios[i].total/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td></tr>');
                             if(!cotizacion[0].acservicios[i].astilleroserviciobasico){
-                                coleccionContratistaODT(e,'.add-another-proveedor',elemento,cotizacion[0].acservicios[i].subtotal,tipoelemento,idproveedor);
+                                coleccionContratistaODT(e,'.add-another-proveedor',elemento,cantidad,cotizacion[0].acservicios[i].subtotal,tipoelemento,idproveedor);
                             }
                         }
                     }
@@ -172,10 +172,6 @@
             });
         });
     $(document).on('change','.buscaproveedor',function (e){
-        {#var url = "{{ path('astillero_proveedor_ajax',{'id':'iddelproveedor','_format':'json'}) }}";#}
-        {#var url = "{{ path('astillero_proveedor_ajax') }}";#}
-        {#console.log(url);#}
-        // url = url.replace("iddelproveedor", $(this).val());
         var idproveedor = $(this);
         $.ajax({
             method: "GET",
@@ -187,15 +183,13 @@
                 'idproveedor':idproveedor.val()
             },
             success: function (proveedor) {
-                var dolar = $('#precio-dolar').data('valor');
-                var iva = $('#porcentaje-iva').data('valor');
+
                 var elemento = $(idproveedor).parent().parent().parent().parent().children('div').children('div').children('div').children('div');
                 var porcentajeVV =  (proveedor.porcentaje + 100)/100;
                 var precioVV = elemento.children('.preciovv').val();
                 var precioContratista = (precioVV.replace(',',''))/porcentajeVV;
                 var utilidadVv = (precioVV.replace(',','')*proveedor.porcentaje)/(proveedor.porcentaje + 100);
-                var ivaContratista = (precioContratista * iva)/100;
-                var totalContratista = precioContratista + ivaContratista;
+
                 elemento.children('.preciocontratista').val(precioContratista.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                 elemento.children('.utilidadvv').val(utilidadVv.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
                 $(idproveedor).parent().parent().parent().parent().children('div').children('div').children('div').children('.porcentajevv').val(porcentajeVV);

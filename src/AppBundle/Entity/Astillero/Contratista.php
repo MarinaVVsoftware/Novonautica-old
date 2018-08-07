@@ -33,6 +33,13 @@ class Contratista
     private $cotizacionInicial;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="cantidad", type="float")
+     */
+    private $cantidad;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="precio", type="bigint")
@@ -388,5 +395,29 @@ class Contratista
     public function getContratistaactividades()
     {
         return $this->contratistaactividades;
+    }
+
+    /**
+     * Set cantidad.
+     *
+     * @param float $cantidad
+     *
+     * @return Contratista
+     */
+    public function setCantidad($cantidad)
+    {
+        $this->cantidad = $cantidad;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidad.
+     *
+     * @return float
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
     }
 }
