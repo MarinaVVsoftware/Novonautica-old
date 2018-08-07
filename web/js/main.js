@@ -522,9 +522,10 @@ function coleccionContratistaODT(e,objeto,descripcion,cantidad,total,tipoelement
     $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_proveedor option').each(function () {
         // 1 = servicio, 2 = producto
         if(tipoelemento === 2){
-            // data-id es el id del proveedor del select, la variable idproveedor viene desde el producto, deben
-            // coincidir para que este producto sea de este proveedor
-            if($(this).data('trabajador') === 1 || $(this).data('id') !== idproveedor){
+            // data-id es el id del proveedor del select, la variable idproveedor viene desde el producto,
+            // deben coincidir para que este producto sea de este proveedor, en caso de no tener proveedor se
+            // mostrara el listado proveedores para elegir uno
+            if($(this).data('trabajador') === 1 || ($(this).data('id') !== idproveedor && idproveedor )){
                 $(this).hide();
             }else{
                 $(this).show();

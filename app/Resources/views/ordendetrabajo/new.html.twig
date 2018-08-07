@@ -134,7 +134,9 @@
                             if(cotizacion[0].acservicios[i].producto){
                                 elemento = cotizacion[0].acservicios[i].producto.nombre;
                                 tipoelemento = 2;
-                                idproveedor = cotizacion[0].acservicios[i].producto.proveedor.id;
+                                if(cotizacion[0].acservicios[i].producto.proveedor){
+                                    idproveedor = cotizacion[0].acservicios[i].producto.proveedor.id;
+                                }
                             }
                             if(cotizacion[0].acservicios[i].astilleroserviciobasico){
                                 elemento = cotizacion[0].acservicios[i].astilleroserviciobasico.nombre;
