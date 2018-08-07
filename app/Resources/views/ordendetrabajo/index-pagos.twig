@@ -42,24 +42,37 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
-        (function ($, settings) {
-            $('.table-novo').DataTable({
-                    ...settings,
-                ajax: '{{ path('contabilidad_odt_index') }}',
-                order: [[0, 'desc']],
-                createdRow: function (row, data) {
-                let actionsCell = row.cells[10];
-                actionsCell.innerHTML = `
+      (function ($, settings) {
+        $('.table-novo').DataTable({
+          ...settings,
+          ajax: '{{ path('contabilidad_odt_index') }}',
+          order: [[0, 'desc']],
+          columns: [
+            {responsivePriority: 0},
+            {responsivePriority: 0},
+            {responsivePriority: 0},
+            {responsivePriority: 9},
+            {responsivePriority: 9},
+            {responsivePriority: 9},
+            {responsivePriority: 9},
+            {responsivePriority: 9},
+            {responsivePriority: 9},
+            {responsivePriority: 9},
+            {responsivePriority: 0},
+          ],
+          createdRow: function (row, data) {
+            let actionsCell = row.cells[10];
+            actionsCell.innerHTML = `
             <ul class="unstyled-list list-inline">
                 <li>
-                <a href="${data[10]}">
-                   <i class="fa fa-pencil" aria-hidden="true"></i>
+                <a href="${data[10]}" class="btn btn-xs btn-block btn-azul">
+                   Editar
                 </a>
                 </li>
             </ul>
             `
-            },
+          },
         });
-        })(jQuery, datatablesSettings);
+      })(jQuery, datatablesSettings);
     </script>
 {% endblock %}
