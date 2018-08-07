@@ -15,6 +15,7 @@ use AppBundle\Extra\NumberToLetter;
 use AppBundle\Serializer\CotizacionNameConverter;
 use AppBundle\Serializer\NotNullObjectNormalizer;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\PersistentCollection;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Swift_Attachment;
@@ -24,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
@@ -126,7 +128,7 @@ class FacturacionController extends Controller
 
     private $moneda = [
         'USD' => 'Dolar Americano',
-        'MXN' => 'Peso Mexicano'
+        'MXN' => 'Peso Mexicano',
     ];
 
     /**
@@ -136,6 +138,7 @@ class FacturacionController extends Controller
      * @Method("GET")
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
      */
     public function indexAction(Request $request)
@@ -144,11 +147,13 @@ class FacturacionController extends Controller
             try {
                 $datatables = $this->get('datatables');
                 $results = $datatables->handle($request, 'facturas');
+
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getCode());
             }
         }
+
         return $this->render('contabilidad/facturacion/index.html.twig', ['title' => 'Listado de facturas']);
     }
 
@@ -216,33 +221,58 @@ class FacturacionController extends Controller
 
             $attachment = new Swift_Attachment(
                 $this->getFacturaPDF($factura),
-                'factura_' . $factura->getFolioCotizacion() . '.pdf',
+                'factura_'.$factura->getFolioCotizacion().'.pdf',
                 'application/pdf'
             );
 
             $em->persist($factura);
             $em->flush();
 
-            $message = (new \Swift_Message('Factura de su pago realizado en ' . $factura->getFecha()->format('d/m/Y')))
+            $message = (new \Swift_Message('Factura de su pago realizado en '.$factura->getFecha()->format('d/m/Y')))
                 ->setFrom('noresponder@novonautica.com')
                 ->setTo(explode(',', $factura->getEmail()))
                 ->setBcc(explode(',', $factura->getEmisor()->getEmails()))
                 ->setBody(
                     $this->renderView('contabilidad/facturacion/email/factura-template.html.twig', [
-                        'cuerpo' => $factura->getCuerpoCorreo()
+                        'cuerpo' => $factura->getCuerpoCorreo(),
                     ]),
                     'text/html'
                 )
                 ->attach($attachment);
 
             $mailer->send($message);
+
             return $this->redirectToRoute('contabilidad_facturacion_index');
         }
 
         return $this->render('contabilidad/facturacion/new.html.twig', [
             'facturacion' => $factura,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/{id}")
+     * @param int $id
+     *
+     * @return Response
+     */
+    public function showAction($id)
+    {
+        $facturacionRepository = $this->getDoctrine()->getRepository(Facturacion::class);
+
+        try {
+            $factura = $facturacionRepository->getFactura($id);
+        } catch (NonUniqueResultException $e) {
+            throw new NotFoundHttpException($e->getMessage());
+        }
+
+        return $this->render(
+            'contabilidad/facturacion/show.html.twig',
+            [
+                'factura' => $factura
+            ]
+        );
     }
 
     /**
@@ -258,11 +288,11 @@ class FacturacionController extends Controller
     {
         $attachment = new Swift_Attachment(
             $this->getFacturaPDF($factura),
-            'factura_' . $factura->getFolioCotizacion() . '.pdf',
+            'factura_'.$factura->getFolioCotizacion().'.pdf',
             'application/pdf'
         );
 
-        $message = (new \Swift_Message('Factura de su pago realizado en ' . $factura->getFecha()->format('d/m/Y')))
+        $message = (new \Swift_Message('Factura de su pago realizado en '.$factura->getFecha()->format('d/m/Y')))
             ->setFrom('noresponder@novonautica.com')
             ->setTo(explode(',', $factura->getEmail()))
             ->setBcc(explode(',', $factura->getEmisor()->getEmails()))
@@ -290,7 +320,7 @@ class FacturacionController extends Controller
         $folio = $factura->getFolioCotizacion() ?? $factura->getFolioFiscal();
         $numToLetters = new NumberToLetter();
         $html = $this->renderView(':contabilidad/facturacion/pdf:factura.html.twig', [
-            'title' => 'factura_' . $folio . '.pdf',
+            'title' => 'factura_'.$folio.'.pdf',
             'factura' => $factura,
             'regimenFiscal' => $this->regimenFiscal[$factura->getEmisor()->getRegimenFiscal()],
             'tipoComprobante' => $this->tipoComprobante[$factura->getTipoComprobante()],
@@ -298,12 +328,12 @@ class FacturacionController extends Controller
             'usoCFDI' => $this->cfdi[$factura->getUsoCFDI()],
             'formaPago' => $this->formaPago[$factura->getFormaPago()],
             'metodoPago' => $this->metodoPago[$factura->getMetodoPago()],
-            'moneda' => $this->moneda[$factura->getMoneda()]
+            'moneda' => $this->moneda[$factura->getMoneda()],
         ]);
 
         return new PdfResponse(
             $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-            'factura_' . $folio . '.pdf', 'application/pdf', 'inline'
+            'factura_'.$folio.'.pdf', 'application/pdf', 'inline'
         );
     }
 
@@ -312,6 +342,7 @@ class FacturacionController extends Controller
      * @Method({"GET"})
      *
      * @param Facturacion $factura
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function cancelAction(Facturacion $factura)
@@ -358,9 +389,9 @@ class FacturacionController extends Controller
                 'correos',
                 'cliente' => [
                     'nombre',
-                    'telefono'
-                ]
-            ]
+                    'telefono',
+                ],
+            ],
         ]);
 
         return new Response($serializedClients);
@@ -370,6 +401,7 @@ class FacturacionController extends Controller
      * @Route("/factura-global.{_format}", defaults={"_format" = "json"})
      *
      * @param Request $request
+     *
      * @return string
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
@@ -391,10 +423,12 @@ class FacturacionController extends Controller
             'tipo' => function ($tipo) {
                 if ($tipo === 1) {
                     return 'Días de estancia';
-                } else if ($tipo === 2) {
-                    return 'Conexión a electricidad';
                 } else {
-                    return 'Abastecimiento de combustible';
+                    if ($tipo === 2) {
+                        return 'Conexión a electricidad';
+                    } else {
+                        return 'Abastecimiento de combustible';
+                    }
                 }
             },
             'astilleroserviciobasico' => $returnNombres,
@@ -404,6 +438,7 @@ class FacturacionController extends Controller
 
         $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
         $response = $serializer->serialize($pagos, $request->getRequestFormat(), ['groups' => ['facturacion']]);
+
         return new Response($response);
     }
 
@@ -411,6 +446,7 @@ class FacturacionController extends Controller
      * @Route("/cotizaciones.{_format}", defaults={"_format" = "json"})
      *
      * @param Request $request
+     *
      * @return string
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
@@ -456,6 +492,7 @@ class FacturacionController extends Controller
 
         $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
         $response = $serializer->serialize($cotizaciones, $request->getRequestFormat(), ['groups' => ['facturacion']]);
+
         return new Response($response);
     }
 
@@ -475,6 +512,7 @@ class FacturacionController extends Controller
 
         $normalizer = new ObjectNormalizer();
         $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+
         return new Response($serializer->serialize($cus, $request->getRequestFormat()));
     }
 
@@ -482,6 +520,7 @@ class FacturacionController extends Controller
      * @Route("/claveprodserv.{_format}", defaults={"_format" = "json"})
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function getAllClaveProdServ(Request $request)
@@ -493,6 +532,7 @@ class FacturacionController extends Controller
 
         $normalizer = new ObjectNormalizer();
         $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
+
         return new Response($serializer->serialize($cps, $request->getRequestFormat()));
     }
 }
