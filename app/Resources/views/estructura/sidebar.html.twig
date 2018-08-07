@@ -546,25 +546,34 @@
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{ path.check('contabilidad_facturacion_index') }}">
+                        <li class="treeview {{ path.check('contabilidad_facturacion_') }}">
                             <a href="{{ path('contabilidad_facturacion_index') }}">
-                                <i class="fa fa-circle-o"></i> Facturas
+                                <i class="fa fa-circle-o"></i> Facturación
+                                <span class="pull-right-container"><i
+                                            class="fa fa-angle-left pull-right"></i></span>
                             </a>
+                            <ul class="treeview-menu">
+                                <li class="{{ path.check('contabilidad_facturacion_index') }}">
+                                    <a href="{{ path('contabilidad_facturacion_index') }}">
+                                        <i class="fa fa-circle-o"></i> Listado
+                                    </a>
+                                </li>
+                                {% if is_granted(expression('has_role("CONTABILIDAD_CREATE") or (user.isAdmin())')) %}
+                                    <li class="{{ path.check('contabilidad_facturacion_new') }}">
+                                        <a href="{{ path('contabilidad_facturacion_new') }}">
+                                            <i class="fa fa-circle-o"></i> Nueva
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if is_granted('ROLE_CONTABILIDAD_EMISOR') %}
+                                    <li class="{{ path.check('contabilidad_facturacion_emisor') }}">
+                                        <a href="{{ path('contabilidad_facturacion_emisor') }}">
+                                            <i class="fa fa-circle-o"></i> Emisores
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
                         </li>
-                        {% if is_granted(expression('has_role("CONTABILIDAD_CREATE") or (user.isAdmin())')) %}
-                            <li class="{{ path.check('contabilidad_facturacion_new') }}">
-                                <a href="{{ path('contabilidad_facturacion_new') }}">
-                                    <i class="fa fa-circle-o"></i> Nueva
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if is_granted('ROLE_CONTABILIDAD_EMISOR') %}
-                            <li class="{{ path.check('contabilidad_facturacion_emisor') }}">
-                                <a href="{{ path('contabilidad_facturacion_emisor') }}">
-                                    <i class="fa fa-circle-o"></i> Emisores
-                                </a>
-                            </li>
-                        {% endif %}
                         <li class="{{ path.check('contabilidad_odt_index') }} {{ path.check('ordendetrabajo_contratista_pago') }}">
                             <a href="{{ path('contabilidad_odt_index') }}">
                                 <i class="fa fa-circle-o"></i> ODT

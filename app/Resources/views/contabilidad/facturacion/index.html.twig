@@ -103,6 +103,10 @@
             `;
 
             let actionsInner = `
+            <a href="${url}${data[7]['id']}"
+             class="btn btn-xs btn-contorno-azul"
+             style="margin: 5px;">Detalle</a>
+            <br>
             <a href="${url}${data[7]['id']}/reenviar"
              class="btn btn-xs btn-azul"
              style="margin: 5px;">Reenviar</a>
@@ -121,7 +125,7 @@
               `;
             } else {
               actionsInner += `
-                <span class="label fondo-morado">Cancelada</span>
+                <span class="label label-danger">Cancelada</span>
               `;
             }
 

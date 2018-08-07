@@ -1,60 +1,167 @@
-{% extends 'base.html.twig' %}
+{% extends 'estructura/plantilla.twig' %}
 
-{% block body %}
-    <h1>Facturacion</h1>
-
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ facturacion.id }}</td>
-            </tr>
-            <tr>
-                <th>Rfc</th>
-                <td>{{ facturacion.rfc }}</td>
-            </tr>
-            <tr>
-                <th>Cliente</th>
-                <td>{{ facturacion.cliente }}</td>
-            </tr>
-            <tr>
-                <th>Empresa</th>
-                <td>{{ facturacion.empresa }}</td>
-            </tr>
-            <tr>
-                <th>Direccionfiscal</th>
-                <td>{{ facturacion.direccionFiscal }}</td>
-            </tr>
-            <tr>
-                <th>Codigopostal</th>
-                <td>{{ facturacion.codigoPostal }}</td>
-            </tr>
-            <tr>
-                <th>Numerotelefonico</th>
-                <td>{{ facturacion.numeroTelefonico }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ facturacion.email }}</td>
-            </tr>
-            <tr>
-                <th>Tipocambio</th>
-                <td>{{ facturacion.tipoCambio }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('contabilidad_facturacion_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('contabilidad_facturacion_edit', { 'id': facturacion.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h3 class="panel-title">
+                                        Emisor: {{ factura.emisor.alias }}
+                                        {% if factura.estatus == 0 %}
+                                            <span class="label label-danger">CANCELADA</span>
+                                        {% endif %}
+                                    </h3>
+                                </div>
+                                <div class="col-sm-6">
+                                    <a class="btn btn-contorno-azul pull-right" href="{{ path('contabilidad_facturacion_index') }}">Regresar</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body no-padding" style="min-height: initial">
+                            <table class="table table-novo table-condensed table-bordered" style="margin-bottom: 0">
+                                <tbody>
+                                <tr>
+                                    <td colspan="7">EMISOR DEL COMPROBANTE FISCAL</td>
+                                    <td colspan="3" class="text-center">
+                                        FOLIO NOVONAUTICA
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="3" colspan="7">
+                                        <strong>{{ factura.emisor.nombre }}</strong>
+                                        <br>
+                                        RFC: {{ factura.emisor.rfc }}
+                                        <br>
+                                        Régimen fiscal: {{ factura.emisor.regimenFiscal }}
+                                        <br>
+                                        {{ factura.emisor.direccion }}
+                                        <br>
+                                        Tipo comprobante: {{ factura.tipoComprobante }}
+                                        <br>
+                                        Versión CFDI: 3.3
+                                    </td>
+                                    <td colspan="3" class="text-center">{{ factura.folio }}</td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td colspan="3">
+                                        LUGAR Y FECHA
+                                    </td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td colspan="3">
+                                        {{ factura.emisor.codigoPostal }}, {{ factura.fechaTimbrado|date('d-m-Y') }}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Cliente: {{ factura.cliente }}
+                            </h3>
+                        </div>
+                        <div class="panel-body no-padding" style="min-height: initial">
+                            <table class="table table-novo table-condensed table-bordered" style="margin-bottom: 0">
+                                <tbody>
+                                <tr>
+                                    <td colspan="7">RECEPTOR DEL COMPROBANTE FISCAL</td>
+                                    <td colspan="3" class="text-center">
+                                        FOLIO FISCAL
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="3" colspan="7">
+                                        <strong>{{ factura.razonSocial }}</strong>
+                                        <br>
+                                        RFC: {{ factura.rfc }}
+                                        <br>
+                                        {{ factura.direccionFiscal }}
+                                    </td>
+                                    <td colspan="3" class="text-center">{{ factura.folioFiscal }}</td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td colspan="3">
+                                        SERIE CERTIFICADO CSD
+                                    </td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td colspan="3">
+                                        {{ factura.serieCertificadoCSD }}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Conceptos</h3>
+                        </div>
+                        <div class="panel-body no-padding" style="min-height: initial;">
+                            <table class="table table-condensed table-bordered" style="margin-bottom: 0">
+                                <thead>
+                                <tr class="text-center">
+                                    <th>CANTIDAD</th>
+                                    <th>CLAVE UNIDAD</th>
+                                    <th>CLAVE PRODUCTO</th>
+                                    <th>DESCRIPCIÓN</th>
+                                    <th>PRECIO</th>
+                                    <th>IMPUESTOS</th>
+                                    <th>IMPORTE</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for concepto in factura.conceptos %}
+                                    <tr class="text-center">
+                                        <td>{{ concepto.cantidad }}</td>
+                                        <td>{{ concepto.claveUnidad.claveUnidad ~ ' / ' ~ concepto.claveUnidad }}</td>
+                                        <td>{{ concepto.claveProdServ.claveProdServ ~ ' / ' ~ concepto.claveProdServ.descripcion }}</td>
+                                        <td>{{ concepto.descripcion }}</td>
+                                        <td>${{ (concepto.valorunitario / 100)|number_format(2) }}</td>
+                                        <td>IVA ${{ (concepto.iva / 100)|number_format(2) }}</td>
+                                        <td>${{ (concepto.subtotal / 100)|number_format(2) }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                <tbody>
+                                <tr>
+                                    <td rowspan="3" colspan="4">
+                                        Moneda: {{ factura.moneda }}
+                                        <br>
+                                        Forma de pago: {{ factura.formaPago }}
+                                        <br>
+                                        Método de pago: {{ factura.metodoPago }}
+                                    </td>
+                                    <td colspan="2">SUBTOTAL</td>
+                                    <td colspan="2">
+                                        $ {{ (factura.subtotal / 100)|number_format(2) }} {{ factura.moneda }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">IVA(16%)</td>
+                                    <td colspan="2">
+                                        $ {{ (factura.iva / 100)|number_format(2) }} {{ factura.moneda }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">TOTAL</td>
+                                    <td colspan="2">
+                                        $ {{ (factura.total / 100)|number_format(2) }} {{ factura.moneda }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 {% endblock %}

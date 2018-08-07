@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository\Contabilidad;
 
+use AppBundle\Entity\Contabilidad\Facturacion;
+
 /**
  * FacturacionRepository
  *
@@ -17,8 +19,7 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         $astilleroCotizaciones = $this->getAstilleroCotizacionesByFolio($folios[0], $folios[1] ?? null);
         $tiendaSolicitudes = $this->getTiendaSolicitudes($folios[0]);
 
-//        return array_merge($marinaCotizaciones, $astilleroCotizaciones, $tiendaSolicitudes);
-        return$marinaCotizaciones + $astilleroCotizaciones + $tiendaSolicitudes;
+        return $marinaCotizaciones + $astilleroCotizaciones + $tiendaSolicitudes;
     }
 
     public function getFacturaGlobal()
@@ -223,5 +224,41 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter('folio', "%{$folio}%");
 
         return $query->getQuery()->getResult();
+    }
+
+    /**
+     * @param $id
+     *
+     * @return Facturacion
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getFactura($id)
+    {
+        $manager = $this->getEntityManager();
+        $factura = $manager
+            ->createQuery(
+                'SELECT factura, emisor, conceptos '.
+                'FROM AppBundle:Contabilidad\Facturacion factura '.
+                'LEFT JOIN factura.emisor emisor '.
+                'LEFT JOIN factura.conceptos conceptos '.
+                'WHERE factura.id = ?1'
+            )
+            ->setParameter(1, $id)
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+
+        $manager->createQuery(
+            'SELECT PARTIAL conceptos.{id}, claveUnidad '.
+            'FROM AppBundle:Contabilidad\Facturacion\Concepto conceptos '.
+            'LEFT JOIN conceptos.claveUnidad claveUnidad'
+        );
+
+        $manager->createQuery(
+            'SELECT PARTIAL conceptos.{id}, CPS '.
+            'FROM AppBundle:Contabilidad\Facturacion\Concepto conceptos '.
+            'LEFT JOIN conceptos.claveProdServ CPS'
+        );
+
+        return $factura;
     }
 }
