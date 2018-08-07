@@ -445,6 +445,10 @@ form > .btn-borrar:hover, .btn-borrar:hover {
     border: 2px solid #1c1f29 !important;
 }
 
+.dataTable.table-novo {
+    width: 100% !important;
+}
+
 .dataTables_processing {
     background-color: #4a97f6;
 }
