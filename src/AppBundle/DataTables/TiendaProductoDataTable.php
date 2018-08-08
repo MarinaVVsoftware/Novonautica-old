@@ -43,9 +43,8 @@ class TiendaProductoDataTable extends AbstractDataTableHandler
         // Hasta ahora es mas rapido hidratar con un query a cada fila
         // En vez de hidratar el query con un solo join
         $query = $repository->createQueryBuilder('p')
-//            ->select('c')
-//            ->leftJoin('p.categoria', 'c')
-        ;
+            ->select('p', 'c')
+            ->leftJoin('p.categoria', 'c');
 
         if ($request->search->value) {
             $query->where('(LOWER(p.nombre) LIKE :search OR '.
