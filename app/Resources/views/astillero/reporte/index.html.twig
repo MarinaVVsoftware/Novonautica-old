@@ -48,31 +48,31 @@
                             </div>
                         </form>
                     </div>
-                    <div class="chart-container">
-                        <div class="line-chart">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <h4>
-                                        Embarcaciones subidas fecha
-                                    </h4>
-                                </div>
-                                <div class="col-sm-6 text-right">
-                                    <a href="boats-history.csv" class="btn btn-verde">XLS</a>
-                                </div>
+                    <div class="chart-container" style="height: 1000px">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4>
+                                    Embarcaciones subidas fecha
+                                </h4>
                             </div>
+                            <div class="col-sm-6 text-right">
+                                <a href="boats-history.csv" class="btn btn-verde">XLS</a>
+                            </div>
+                        </div>
+                        <div class="line-chart" style="height: 400px">
                             <canvas id="history"></canvas>
                         </div>
-                        <div class="bar-chart">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <h4>
-                                        Ingresos por fecha
-                                    </h4>
-                                </div>
-                                <div class="col-sm-6 text-right">
-                                    <a href="income-report.csv" class="btn btn-verde">XLS</a>
-                                </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4>
+                                    Ingresos por fecha
+                                </h4>
                             </div>
+                            <div class="col-sm-6 text-right">
+                                <a href="income-report.csv" class="btn btn-verde">XLS</a>
+                            </div>
+                        </div>
+                        <div class="bar-chart" style="height: 400px">
                             <canvas id="income"></canvas>
                         </div>
                     </div>
@@ -115,7 +115,7 @@
           type: 'line',
           options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             legend: {
               display: false
             },
@@ -135,7 +135,7 @@
           type: 'bar',
           options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             tooltips: {
               mode: 'index',
               intersect: false,

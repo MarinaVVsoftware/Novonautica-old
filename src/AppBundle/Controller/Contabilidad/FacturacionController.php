@@ -252,30 +252,6 @@ class FacturacionController extends Controller
     }
 
     /**
-     * @Route("/{id}")
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function showAction($id)
-    {
-        $facturacionRepository = $this->getDoctrine()->getRepository(Facturacion::class);
-
-        try {
-            $factura = $facturacionRepository->getFactura($id);
-        } catch (NonUniqueResultException $e) {
-            throw new NotFoundHttpException($e->getMessage());
-        }
-
-        return $this->render(
-            'contabilidad/facturacion/show.html.twig',
-            [
-                'factura' => $factura
-            ]
-        );
-    }
-
-    /**
      * @Route("/{id}/reenviar", name="contabilidad_facturacion_reenvio")
      * @Method("GET")
      *
@@ -534,5 +510,29 @@ class FacturacionController extends Controller
         $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
 
         return new Response($serializer->serialize($cps, $request->getRequestFormat()));
+    }
+
+    /**
+     * @Route("/{id}")
+     * @param int $id
+     *
+     * @return Response
+     */
+    public function showAction($id)
+    {
+        $facturacionRepository = $this->getDoctrine()->getRepository(Facturacion::class);
+
+        try {
+            $factura = $facturacionRepository->getFactura($id);
+        } catch (NonUniqueResultException $e) {
+            throw new NotFoundHttpException($e->getMessage());
+        }
+
+        return $this->render(
+            'contabilidad/facturacion/show.html.twig',
+            [
+                'factura' => $factura
+            ]
+        );
     }
 }
