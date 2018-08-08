@@ -66,6 +66,20 @@ class Producto implements \JsonSerializable
     private $codigoBarras;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="iesps", type="integer")
+     */
+    private $IESPS;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="iva", type="integer")
+     */
+    private $IVA;
+
+    /**
      * @var File
      *
      * @Assert\Image
@@ -239,6 +253,38 @@ class Producto implements \JsonSerializable
     public function setCodigoBarras($codigoBarras)
     {
         $this->codigoBarras = $codigoBarras;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIESPS()
+    {
+        return $this->IESPS;
+    }
+
+    /**
+     * @param int $IESPS
+     */
+    public function setIESPS($IESPS)
+    {
+        $this->IESPS = $IESPS;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIVA()
+    {
+        return $this->IVA;
+    }
+
+    /**
+     * @param int $IVA
+     */
+    public function setIVA($IVA)
+    {
+        $this->IVA = $IVA;
     }
 
     public function setImagenFile($image = null)
