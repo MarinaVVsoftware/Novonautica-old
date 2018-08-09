@@ -36,15 +36,15 @@
                         <div class="col-sm-6">
                             <h3 class="panel-title">Registrar Pago</h3>
                             <span>
-                            {% if marinaHumedaCotizacion.foliorecotiza == 0 %}
-                                {{ marinaHumedaCotizacion.folio }}
+                            {% if combustible.foliorecotiza == 0 %}
+                                {{ combustible.folio }}
                             {% else %}
-                                {{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}
+                                {{ combustible.folio }}-{{ combustible.foliorecotiza }}
                             {% endif %}
                         </span>
                         </div>
                         <div class="col-sm-6">
-                            <a href="{{ path('combustible_show',{'id':marinaHumedaCotizacion.id}) }}"
+                            <a href="{{ path('combustible_show',{'id':combustible.id}) }}"
                                class="btn btn-contorno-azul pull-right">
                                 Regresar
                             </a>
@@ -56,27 +56,21 @@
                     <div class="row">
                         <div class="col-sm-3">
                             <label>Cliente</label>
-                            <div class='info-input'>{{ marinaHumedaCotizacion.cliente }}</div>
+                            <div class='info-input'>{{ combustible.cliente }}</div>
                             <label>Barco</label>
-                            <div class='info-input'>{{ marinaHumedaCotizacion.barco }}</div>
+                            <div class='info-input'>{{ combustible.barco }}</div>
                             <label>Total Cotización (MXN)</label>
-                            <div class='info-input'>$ {{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</div>
+                            <div class='info-input'>$ {{ (combustible.total/100)|number_format(2) }}</div>
                             <label>Pagado hasta el momento (MXN)</label>
-                            <div class='info-input'>$ {{ (marinaHumedaCotizacion.pagado/100)|number_format(2) }}</div>
+                            <div class='info-input'>$ {{ (combustible.pagado/100)|number_format(2) }}</div>
                             <label>Faltante (MXN)</label>
                             <div class='info-input'>
-                                $ {{ ((marinaHumedaCotizacion.total-marinaHumedaCotizacion.pagado)/100)|number_format(2) }}</div>
+                                $ {{ ((combustible.total-combustible.pagado)/100)|number_format(2) }}</div>
                         </div>
 
                         {% form_theme form 'estructura/temaerror.html.twig' %}
                         {{ form_start(form) }}
                         <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
-                                    <label>Monedero actual</label>
-                                    <div class='info-input'>$ {{ (marinaHumedaCotizacion.cliente.monederomarinahumeda/100)|number_format(2) }} USD</div>
-                                </div>
-                            </div>
                             <p style="margin-bottom: 5px">Listado de pagos</p>
                             <div class="row">
                                 <div class="col-sm-12">
@@ -100,7 +94,7 @@
                                      {% endfilter %}
                                      ">
                                         {% for i, pagoField in form.pagos %}
-                                            {% set factura = marinaHumedaCotizacion.pagos[i].factura %}
+                                            {% set factura = combustible.pagos[i].factura %}
                                             {% form_theme pagoField 'marinahumeda/cotizacion/pago/coleccion-pago.twig' %}
                                             <tr class="pago-agregado">
                                                 <td>{{ form_widget(pagoField.metodopago) }}</td>
@@ -109,7 +103,7 @@
                                                 <td>{{ form_widget(pagoField.fecharealpago) }} </td>
                                                 <td>{{ form_widget(pagoField.dolar) }}</td>
                                                 <td style="vertical-align: middle">
-                                                    {% if marinaHumedaCotizacion.pagos[i].factura %}
+                                                    {% if combustible.pagos[i].factura %}
                                                         <a href="{{ path('contabilidad_factura_pdf', { 'id': factura.id }) }}"
                                                            target="_blank"
                                                            class="remove-motor btn btn-xs btn-azul"

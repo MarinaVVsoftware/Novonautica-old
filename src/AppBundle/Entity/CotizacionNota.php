@@ -41,6 +41,11 @@ class CotizacionNota
     private $mhcotizacion;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Combustible", inversedBy="cotizacionnotas")
+     */
+    private $combustible;
+
+    /**
      * Get id.
      *
      * @return int
@@ -120,5 +125,29 @@ class CotizacionNota
     public function getMhcotizacion()
     {
         return $this->mhcotizacion;
+    }
+
+    /**
+     * Set combustible.
+     *
+     * @param \AppBundle\Entity\Combustible|null $combustible
+     *
+     * @return CotizacionNota
+     */
+    public function setCombustible(\AppBundle\Entity\Combustible $combustible = null)
+    {
+        $this->combustible = $combustible;
+
+        return $this;
+    }
+
+    /**
+     * Get combustible.
+     *
+     * @return \AppBundle\Entity\Combustible|null
+     */
+    public function getCombustible()
+    {
+        return $this->combustible;
     }
 }

@@ -9,7 +9,7 @@
 namespace AppBundle\DataTables;
 
 
-use AppBundle\Entity\MarinaHumedaCotizacion;
+use AppBundle\Entity\Combustible;
 use DataTables\AbstractDataTableHandler;
 use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
@@ -17,7 +17,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 class CombustibleDataTable extends AbstractDataTableHandler
 {
-    const ID = 'cotizacionCombustible';
+    const ID = 'combustible';
     private $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)
@@ -37,30 +37,30 @@ class CombustibleDataTable extends AbstractDataTableHandler
     public function handle(DataTableQuery $request): DataTableResults
     {
 
-        $mhcRepo = $this->doctrine->getRepository('AppBundle:MarinaHumedaCotizacion');
+        $mhcRepo = $this->doctrine->getRepository('AppBundle:Combustible');
         $results = new DataTableResults();
 
-        $qb = $mhcRepo->createQueryBuilder('mhce');
-        $results->recordsTotal = $qb->select('COUNT(mhce.id)')
-            ->leftJoin('mhce.mhcservicios', 'servicios')
-            ->where($qb->expr()->eq('servicios.tipo',3))
-            ->orWhere($qb->expr()->eq('servicios.tipo',4))
-            ->orWhere($qb->expr()->eq('servicios.tipo',5))
+        $qb = $mhcRepo->createQueryBuilder('c');
+        $results->recordsTotal = $qb->select('COUNT(c.id)')
             ->getQuery()
             ->getSingleScalarResult();
 
         $q = $qb
-            ->select('mhce', 'barco', 'cliente', 'slip', 'movimiento')
-            ->leftJoin('mhce.barco', 'barco')
-            ->leftJoin('mhce.cliente', 'cliente')
-            ->leftJoin('mhce.slipmovimiento', 'movimiento')
-            ->leftJoin('mhce.slip', 'slip')
-        ;
+            ->select('c','barco','cliente')
+            ->leftJoin('c.barco','barco')
+            ->leftJoin('c.cliente','cliente');
 
         if ($request->search->value) {
-            $q->andWhere('(LOWER(mhce.folio) LIKE :search OR ' .
+            $q->andWhere('(LOWER(c.folioCompleto) LIKE :search OR ' .
+                'LOWER(barco.nombre) LIKE :search OR ' .
                 'LOWER(cliente.nombre) LIKE :search OR ' .
-                'LOWER(barco.nombre) LIKE :search)'
+                'LOWER(c.cuotaIesps) LIKE :search OR ' .
+                'LOWER(c.cantidad) LIKE :search OR ' .
+                'LOWER(c.precioVenta) LIKE :search OR ' .
+                'LOWER(c.subtotal) LIKE :search OR ' .
+                'LOWER(c.ivaTotal) LIKE :search OR ' .
+                'LOWER(c.total) LIKE :search OR ' .
+                'LOWER(c.fecha) LIKE :search)'
             )
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
         }
@@ -75,25 +75,25 @@ class CombustibleDataTable extends AbstractDataTableHandler
                 } else if ($column->data == 2) {
                     $q->andWhere('LOWER(barco.nombre) LIKE :barco')
                         ->setParameter('barco', "%{$value}%");
-                } else if ($column->data == 6) {
-                    if ($value) {
-                        $q->andWhere('mhce.validanovo = :validacion')
-                            ->setParameter('validacion', $value);
-                    } else {
-                        $q->andWhere('mhce.validanovo = 0');
-                    }
                 } else if ($column->data == 7) {
                     if ($value) {
-                        $q->andWhere('mhce.validacliente = :aceptacion')
-                            ->setParameter('aceptacion', $value);
+                        $q->andWhere('c.validanovo = :validacion')
+                            ->setParameter('validacion', $value);
                     } else {
-                        $q->andWhere('mhce.validacliente = 0');
+                        $q->andWhere('c.validanovo = 0');
                     }
                 } else if ($column->data == 8) {
                     if ($value) {
-                        $q->andWhere('mhce.estatuspago = :pago')->setParameter('pago', $value);
+                        $q->andWhere('c.validacliente = :aceptacion')
+                            ->setParameter('aceptacion', $value);
                     } else {
-                        $q->andWhere('mhce.estatuspago IS NULL');
+                        $q->andWhere('c.validacliente = 0');
+                    }
+                } else if ($column->data == 9) {
+                    if ($value) {
+                        $q->andWhere('c.estatuspago = :pago')->setParameter('pago', $value);
+                    } else {
+                        $q->andWhere('c.estatuspago IS NULL');
                     }
                 }
             }
@@ -101,28 +101,30 @@ class CombustibleDataTable extends AbstractDataTableHandler
 
         foreach ($request->order as $order) {
             if ($order->column === 0) {
-                $q->addOrderBy('mhce.folio', $order->dir);
+                $q->addOrderBy('c.folio', $order->dir);
             } elseif ($order->column === 1) {
                 $q->addOrderBy('cliente.nombre', $order->dir);
             } elseif ($order->column === 2) {
                 $q->addOrderBy('barco.nombre', $order->dir);
             } elseif ($order->column === 3) {
-                $q->addOrderBy('mhce.subtotal', $order->dir);
+                $q->addOrderBy('c.cantidad', $order->dir);
             } elseif ($order->column === 4) {
-                $q->addOrderBy('mhce.ivatotal', $order->dir);
+                $q->addOrderBy('c.subtotal', $order->dir);
             } elseif ($order->column === 5) {
-                $q->addOrderBy('mhce.total', $order->dir);
+                $q->addOrderBy('c.ivatotal', $order->dir);
             } elseif ($order->column === 6) {
-                $q->addOrderBy('mhce.validanovo', $order->dir);
+                $q->addOrderBy('c.total', $order->dir);
             } elseif ($order->column === 7) {
-                $q->addOrderBy('mhce.validacliente', $order->dir);
+                $q->addOrderBy('c.validanovo', $order->dir);
             } elseif ($order->column === 8) {
-                $q->addOrderBy('mhce.estatuspago', $order->dir);
+                $q->addOrderBy('c.validacliente', $order->dir);
+            } elseif ($order->column === 9) {
+                $q->addOrderBy('c.estatuspago', $order->dir);
             }
         }
 
-        $cotizaciones = $q->getQuery()->getResult();
-        $results->recordsFiltered = count($cotizaciones);
+        $combustibles = $q->getQuery()->getResult();
+        $results->recordsFiltered = count($combustibles);
         for ($i = 0; $i < $request->length || $request->length === -1; $i++) {
             $index = $i + $request->start;
 
@@ -130,20 +132,20 @@ class CombustibleDataTable extends AbstractDataTableHandler
                 break;
             }
 
-            /** @var MarinaHumedaCotizacion $cotizacion */
-            $cotizacion = $cotizaciones[$index];
+            /** @var Combustible $combustible */
+            $combustible = $combustibles[$index];
             $results->data[] = [
-                !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza(),
-                $cotizacion->getCliente()->getNombre(),
-                $cotizacion->getBarco()->getNombre(),
-//                ($cotizacion->getDescuento() ?? 0 ) . '%',
-                '$' . number_format($cotizacion->getSubtotal() / 100, 2),
-                '$' . number_format($cotizacion->getIvatotal() / 100, 2),
-                '$' . number_format($cotizacion->getTotal() / 100, 2),
-                $cotizacion->getValidanovo(),
-                $cotizacion->getValidacliente(),
-                $cotizacion->getEstatuspago(),
-                ['id' => $cotizacion->getId(), 'estatus' => $cotizacion->getEstatus()]
+                $combustible->getFolioCompleto(),
+                $combustible->getCliente()->getNombre(),
+                $combustible->getBarco()->getNombre(),
+                $combustible->getCantidad(),
+                '$' . number_format($combustible->getSubtotal() / 100, 2),
+                '$' . number_format($combustible->getIvatotal() / 100, 2),
+                '$' . number_format($combustible->getTotal() / 100, 2),
+                $combustible->getValidanovo(),
+                $combustible->getValidacliente(),
+                $combustible->getEstatuspago(),
+                ['id' => $combustible->getId(), 'estatus' => $combustible->getEstatus()]
             ];
         }
         return $results;

@@ -19,7 +19,7 @@ class MarinaHumedaSolicitudGasolinaController extends Controller
     /**
      * Lists all marinaHumedaSolicitudGasolina entities.
      *
-     * @Route("/", name="marinahumedasolicitud_gasolina_index")
+     * @Route("/", name="combustible_app_index")
      * @Method("GET")
      */
     public function indexAction()

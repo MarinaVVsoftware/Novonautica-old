@@ -67,7 +67,12 @@ class DefaultController extends Controller
                 ->findOneBy([
                     'token' => $token,
                     'validacliente' => 0
-                ]);
+                ])
+                ?: $em->getRepository('AppBundle:Combustible')
+                    ->findOneBy([
+                        'token' => $token,
+                        'validacliente' => 0
+                    ]);
 
         if (null === $cotizacion || $cotizacion->getCliente() !== $this->getUser()) {
             throw new NotFoundHttpException('No se encontro la cotización');

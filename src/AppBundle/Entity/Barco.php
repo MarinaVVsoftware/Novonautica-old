@@ -187,6 +187,11 @@ class Barco
      */
     private $gasolinabarco;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Combustible", mappedBy="barco")
+     */
+    private $combustibles;
+
     public function __construct()
     {
         $this->motores = new ArrayCollection();
@@ -194,6 +199,7 @@ class Barco
         $this->mhcotizacionesadicionales = new ArrayCollection();
         $this->astillerocotizaciones = new ArrayCollection();
         $this->embarcacion = new ArrayCollection();
+        $this->combustibles = new ArrayCollection();
     }
 
     public function __toString()
@@ -755,5 +761,41 @@ class Barco
     public function getGasolinabarco()
     {
         return $this->gasolinabarco;
+    }
+
+    /**
+     * Add combustible.
+     *
+     * @param \AppBundle\Entity\Combustible $combustible
+     *
+     * @return Barco
+     */
+    public function addCombustible(\AppBundle\Entity\Combustible $combustible)
+    {
+        $this->combustibles[] = $combustible;
+
+        return $this;
+    }
+
+    /**
+     * Remove combustible.
+     *
+     * @param \AppBundle\Entity\Combustible $combustible
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeCombustible(\AppBundle\Entity\Combustible $combustible)
+    {
+        return $this->combustibles->removeElement($combustible);
+    }
+
+    /**
+     * Get combustibles.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCombustibles()
+    {
+        return $this->combustibles;
     }
 }

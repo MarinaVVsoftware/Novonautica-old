@@ -40,20 +40,17 @@
                          <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
                      </li>
                      <li role="presentation">
-                         <a href="#totales" aria-controls="totales" role="tab" data-toggle="tab">Totales (MXN)</a>
-                     </li>
-                     <li role="presentation">
-                         <a href="#totalesusd" aria-controls="totalesmxn" role="tab" data-toggle="tab">Totales (USD)</a>
+                         <a href="#totales" aria-controls="totales" role="tab" data-toggle="tab">Totales</a>
                      </li>
                      <li role="presentation">
                          <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
                      </li>
-                     {% if marinaHumedaCotizacion.validacliente == 2 and is_granted(expression('has_role("ROLE_COMBUSTIBLE_PAGO") or (user.isAdmin())')) %}
+                     {% if combustible.validacliente == 2 and is_granted(expression('has_role("ROLE_COMBUSTIBLE_PAGO") or (user.isAdmin())')) %}
                          <li role="presentation">
                              <a href="#pagos" aria-controls="pagos" role="tab" data-toggle="tab">Pagos</a>
                          </li>
                      {% endif %}
-                     {% if  marinaHumedaCotizacion.cotizacionnotas[0] is defined %}
+                     {% if  combustible.cotizacionnotas[0] is defined %}
                          <li role="presentation">
                              <a href="#notas" aria-controls="notas" role="tab" data-toggle="tab">Notas</a>
                          </li>
@@ -80,41 +77,19 @@
                                      </tr>
                                      <tr>
                                          <th>Cliente</th>
-                                         <td>{{ marinaHumedaCotizacion.cliente }}</td>
+                                         <td>{{ combustible.cliente }}</td>
                                      </tr>
                                      <tr>
                                          <th>Correo</th>
-                                         <td>{{ marinaHumedaCotizacion.cliente.correo }}</td>
+                                         <td>{{ combustible.cliente.correo }}</td>
                                      </tr>
                                      <tr>
                                          <th>Barco</th>
-                                         <td>{{ marinaHumedaCotizacion.barco }}</td>
+                                         <td>{{ combustible.barco }}</td>
                                      </tr>
                                      <tr>
                                          <th>Eslora</th>
-                                         <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                                     </tr>
-                                     {% if marinaHumedaCotizacion.fechaLlegada %}
-                                         <tr>
-                                             <th>Fecha llegada</th>
-                                             <td>{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}</td>
-                                         </tr>
-                                     {% endif %}
-                                     {% if marinaHumedaCotizacion.fechaSalida %}
-                                         <tr>
-                                             <th>Fecha salida</th>
-                                             <td>{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}</td>
-                                         </tr>
-                                     {% endif %}
-                                     {% if marinaHumedaCotizacion.slip %}
-                                         <tr>
-                                             <th>Slip</th>
-                                             <td>{{ marinaHumedaCotizacion.slip }}</td>
-                                         </tr>
-                                     {% endif %}
-                                     <tr>
-                                         <th>Descuento %</th>
-                                         <td>{{ marinaHumedaCotizacion.descuento }}%</td>
+                                         <td>{{ combustible.barco.eslora }}</td>
                                      </tr>
                                      <tr>
                                          <th>Estatus validación</th>
@@ -124,7 +99,7 @@
                                          <th>Estatus aceptación</th>
                                          <td>{{ aceptacion }}</td>
                                      </tr>
-                                     {% if marinaHumedaCotizacion.validacliente == 2 %}
+                                     {% if combustible.validacliente == 2 %}
                                          <tr>
                                              <th>Estatus Pago</th>
                                              <td>{{ pago }}</td>
@@ -134,19 +109,19 @@
                                  </table>
                              </div>
                          </div>
-                         {% if marinaHumedaCotizacion.validanovo == 1 %}
+                         {% if combustible.validanovo == 1 %}
                              <div class="row">
                                  <div class="col-sm-10 col-sm-offset-1">
                                      <label>Observaciones:</label>
-                                     <div class="info-input"><p>{{ marinaHumedaCotizacion.notasnovo }}</p></div>
+                                     <div class="info-input"><p>{{ combustible.notasnovo }}</p></div>
                                  </div>
                              </div>
                          {% endif %}
-                         {% if marinaHumedaCotizacion.validacliente == 1 %}
+                         {% if combustible.validacliente == 1 %}
                              <div class="row">
                                  <div class="col-sm-10 col-sm-offset-1">
                                      <label>Observaciones:</label>
-                                     <div class="info-input"><p>{{ marinaHumedaCotizacion.notascliente }}</p></div>
+                                     <div class="info-input"><p>{{ combustible.notascliente }}</p></div>
                                  </div>
                              </div>
                          {% endif %}
@@ -155,210 +130,264 @@
                          <div class="row">
                              <div class="col-sm-12 text-right">
                                  <span>Tipo de cambio:</span>
-                                 <div class="">{{ (marinaHumedaCotizacion.dolar/100)|number_format(2) }} MXN</div>
-                             </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-sm-12">
-                                 <small>Precios en MXN</small>
-                             </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-sm-12">
-                                 <table class="table text-center">
-                                     <thead>
-                                     <tr>
-                                         <th>Cantidad</th>
-                                         <th>Eslora</th>
-                                         <th>Servicio</th>
-                                         <th>Prec. Unid.</th>
-                                         <th>Sub-Total</th>
-                                         <th>IVA</th>
-                                         <th>Total</th>
-                                     </tr>
-                                     </thead>
-                                     <tbody>
-                                     {% for mhservicio in marinaHumedaCotizacion.mhcservicios %}
-                                         {% if mhservicio.estatus %}
-                                             <tr>
-                                                 <td>{{ mhservicio.cantidad }}</td>
-                                                 <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                                                 <td>
-                                                     {% if mhservicio.tipo == 3 %}
-                                                         Abastecimiento de Gasolina Magna
-                                                     {% elseif mhservicio.tipo == 4 %}
-                                                         Abastecimiento de Gasolina Premium
-                                                     {% elseif mhservicio.tipo == 5 %}
-                                                         Abastecimiento de Diesel
-                                                     {% endif %}
-                                                 </td>
-                                                 <td>$ {{ (mhservicio.precio/100)|number_format(2) }}</td>
-                                                 <td>$ {{ (mhservicio.subtotal/100)|number_format(2) }}</td>
-                                                 <td>$ {{ (mhservicio.iva/100)|number_format(2) }}</td>
-                                                 <td>$ {{ (mhservicio.total/100)|number_format(2) }}</td>
-                                             </tr>
-                                         {% endif %}
-                                     {% endfor %}
-                                     </tbody>
-                                 </table>
-                             </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-sm-12">
                                  <div>
-                                     <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
+                                     $ <span id="valdolar">{{ (combustible.dolar/100)|number_format(2) }}</span> <small>MXN</small>
                                  </div>
                              </div>
                          </div>
                          <div class="row">
-                             <div class="col-sm-4 col-sm-offset-8">
-                                 <hr>
-                             </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-sm-12 text-right tipo-letra1">
-                                 <p class="letra-azul">Sub-Total:</p>
-                                 <p> $
-                                     <span>{{ (marinaHumedaCotizacion.subtotal/100)|number_format(2) }}</span>
-                                     <span class="tipo-letra2">MXN</span>
-                                 </p>
-                             </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-sm-4 col-sm-offset-8">
-                                 <hr>
-                             </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-sm-12 text-right tipo-letra1">
-                                 <p class="letra-azul">I.V.A:</p>
-                                 <p> $
-                                     <span>{{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }}</span>
-                                     <span class="tipo-letra2">MXN</span>
-                                 </p>
-                             </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-sm-4 col-sm-offset-8">
-                                 <hr>
-                             </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-sm-12 text-right tipo-letra1">
-                                 <p class="letra-azul">Total:</p>
-                                 <p> $
-                                     <span>{{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</span>
-                                     <span class="tipo-letra2">MXN</span>
-                                 </p>
-                             </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-sm-4 col-sm-offset-8">
-                                 <hr>
-                             </div>
-                         </div>
-                     </div>
-                     <div role="tabpanel" class="tab-pane" id="totalesusd">
-                         <div class="row">
-                             <div class="col-sm-12 text-right">
-                                 <span>Tipo de cambio:</span>
-                                 <div class="">{{ (marinaHumedaCotizacion.dolar/100)|number_format(2) }} MXN</div>
-                             </div>
-                         </div>
-                         <div class="row">
                              <div class="col-sm-12">
-                                 <small>Precios en MXN</small>
+                                 <h2 id="combustible_titulo_mxn" class="text-center">
+                                     Abastecimiento de combustible {{ combustible.tipo }}
+                                 </h2>
                              </div>
                          </div>
                          <div class="row">
-                             <div class="col-sm-12">
-                                 <table class="table text-center">
-                                     <thead>
-                                     <tr>
-                                         <th>Cantidad</th>
-                                         <th>Eslora</th>
-                                         <th>Servicio</th>
-                                         <th>Prec. Unid.</th>
-                                         <th>Sub-Total</th>
-                                         <th>IVA</th>
-                                         <th>Total</th>
-                                     </tr>
-                                     </thead>
-                                     <tbody>
-                                     {% for mhservicio in marinaHumedaCotizacion.mhcservicios %}
-                                         {% if mhservicio.estatus %}
-                                             <tr>
-                                                 <td>{{ mhservicio.cantidad }}</td>
-                                                 <td>{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                                                 <td>
-                                                     {% if mhservicio.tipo == 3 %}
-                                                         Abastecimiento de Gasolina Magna
-                                                     {% elseif mhservicio.tipo == 4 %}
-                                                         Abastecimiento de Gasolina Premium
-                                                     {% elseif mhservicio.tipo == 5 %}
-                                                         Abastecimiento de Diesel
-                                                     {% endif %}
-                                                 </td>
-                                                 <td>$ {{ (mhservicio.precio/marinaHumedaCotizacion.dolar)|number_format(2) }}</td>
-                                                 <td>$ {{ (mhservicio.subtotal/marinaHumedaCotizacion.dolar)|number_format(2) }}</td>
-                                                 <td>$ {{ (mhservicio.iva/marinaHumedaCotizacion.dolar)|number_format(2) }}</td>
-                                                 <td>$ {{ (mhservicio.total/marinaHumedaCotizacion.dolar)|number_format(2) }}</td>
-                                             </tr>
-                                         {% endif %}
-                                     {% endfor %}
-                                     </tbody>
-                                 </table>
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">Precio venta:</label>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.precioVenta/100)|number_format(2) }} <small>MXN</small>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.precioVenta/combustible.dolar)|number_format(2) }} <small>USD</small>
                              </div>
                          </div>
                          <div class="row">
-                             <div class="col-sm-12">
-                                 <div><small>IVA: {{ marinaHumedaCotizacion.iva }} %</small></div>
+                             <div class="col-sm-3">
+                                 <hr>
                              </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-sm-4 col-sm-offset-8">
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
                                  <hr>
                              </div>
                          </div>
                          <div class="row">
-                             <div class="col-sm-12 text-right tipo-letra1">
-                                 <p class="letra-azul">Sub-Total:</p>
-                                 <p> $
-                                     <span>{{ (marinaHumedaCotizacion.subtotal/marinaHumedaCotizacion.dolar)|number_format(2) }}</span>
-                                     <span class="tipo-letra2">USD</span>
-                                 </p>
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">Cuota IESPS:</label>
+                             </div>
+                             <div class="col-sm-4">
+                                  {{ combustible.cuotaIesps }}
                              </div>
                          </div>
                          <div class="row">
-                             <div class="col-sm-4 col-sm-offset-8">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
                                  <hr>
                              </div>
                          </div>
                          <div class="row">
-                             <div class="col-sm-12 text-right tipo-letra1">
-                                 <p class="letra-azul">I.V.A:</p>
-                                 <p> $
-                                     <span>{{ (marinaHumedaCotizacion.ivatotal/marinaHumedaCotizacion.dolar)|number_format(2) }}</span>
-                                     <span class="tipo-letra2">USD</span>
-                                 </p>
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">Precio sin IESPS:</label>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.precioSinIesps/100)|number_format(2) }} <small>MXN</small>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.precioSinIesps/combustible.dolar)|number_format(2) }} <small>USD</small>
                              </div>
                          </div>
                          <div class="row">
-                             <div class="col-sm-4 col-sm-offset-8">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
                                  <hr>
                              </div>
                          </div>
                          <div class="row">
-                             <div class="col-sm-12 text-right tipo-letra1">
-                                 <p class="letra-azul">Total:</p>
-                                 <p> $
-                                     <span>{{ (marinaHumedaCotizacion.total/marinaHumedaCotizacion.dolar)|number_format(2) }}</span>
-                                     <span class="tipo-letra2">USD</span>
-                                 </p>
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">Precio sin IVA/IESPS:</label>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.precioSinIvaIesps/100)|number_format(2) }} <small>MXN</small>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.precioSinIvaIesps/combustible.dolar)|number_format(2) }} <small>USD</small>
                              </div>
                          </div>
                          <div class="row">
-                             <div class="col-sm-4 col-sm-offset-8">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">Litros vendidos:</label>
+                             </div>
+                             <div class="col-sm-8">
+                                 <span class="pl-1">{{ combustible.cantidad }}</span>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-8">
+                                 <hr>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">IESPS:</label>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.iespsTotal/100)|number_format(2) }} <small>MXN</small>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.iespsTotal/combustible.dolar)|number_format(2) }} <small>USD</small>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">Total sin IESPS:</label>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.totalSinIesps/100)|number_format(2) }} <small>MXN</small>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.totalSinIesps/combustible.dolar)|number_format(2) }} <small>USD</small>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">Tasa IVA:</label>
+                             </div>
+                             <div class="col-sm-8">
+                                 <span class="pl-1">{{ (combustible.iva + 100)/100 }}</span>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-8">
+                                 <hr>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">Total sin IVA/IESPS:</label>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.totalSinIvaIesps/100)|number_format(2) }} <small>MXN</small>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.totalSinIvaIesps/combustible.dolar)|number_format(2) }} <small>USD</small>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">Subtotal:</label>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.subtotal/100)|number_format(2) }} <small>MXN</small>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.subtotal/combustible.dolar)|number_format(2) }} <small>USD</small>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">IVA:</label>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.ivaTotal/100)|number_format(2) }} <small>MXN</small>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.ivaTotal/combustible.dolar)|number_format(2) }} <small>USD</small>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">Total:</label>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.total/100)|number_format(2) }} <small>MXN</small>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.total/combustible.dolar)|number_format(2) }} <small>USD</small>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
                                  <hr>
                              </div>
                          </div>
@@ -367,17 +396,17 @@
                          <div class="row">
                              <div class="col-sm-12">
                                  <label>Mensaje en el correo:</label>
-                                 <div class="info-input">{{ marinaHumedaCotizacion.mensaje|raw }}</div>
+                                 <div class="info-input">{{ combustible.mensaje|raw }}</div>
                              </div>
                          </div>
                      </div>
-                     {% if marinaHumedaCotizacion.validacliente == 2 and is_granted(expression('has_role("ROLE_COMBUSTIBLE_PAGO") or (user.isAdmin())')) %}
+                     {% if combustible.validacliente == 2 and is_granted(expression('has_role("ROLE_COMBUSTIBLE_PAGO") or (user.isAdmin())')) %}
                          <div role="tabpanel" class="tab-pane" id="pagos">
                              <div class="row">
                                  <div class="col-sm-3">
                                      <label>Total a pagar</label>
                                      <div class="info-input">
-                                         $ {{ (marinaHumedaCotizacion.total/100)|number_format(2) }} MXN
+                                         $ {{ (combustible.total/100)|number_format(2) }} MXN
                                      </div>
                                  </div>
                              </div>
@@ -401,7 +430,7 @@
                                          </thead>
                                          <tbody>
                                          {% set totUsd = 0 %}
-                                         {% for pago in marinaHumedaCotizacion.pagos %}
+                                         {% for pago in combustible.pagos %}
                                              {% set factura = pago.factura %}
                                              <tr>
                                                  <td>{{ pago.metodopago }}</td>
@@ -438,7 +467,7 @@
                                  <div class="col-sm-3">
                                      <label>Pagado hasta el momento</label>
                                      <div class="info-input">
-                                         $ {{ (marinaHumedaCotizacion.pagado/100)|number_format(2) }} MXN
+                                         $ {{ (combustible.pagado/100)|number_format(2) }} MXN
                                      </div>
                                  </div>
                                  <div class="col-sm-3">
@@ -452,19 +481,19 @@
                                  <div class="col-sm-3">
                                      <label>Saldo faltante</label>
                                      <div class="info-input">
-                                         $ {{ ((marinaHumedaCotizacion.total-marinaHumedaCotizacion.pagado)/100)|number_format(2) }}
+                                         $ {{ ((combustible.total-combustible.pagado)/100)|number_format(2) }}
                                          MXN
                                      </div>
                                  </div>
                              </div>
                          </div>
                      {% endif %}
-                     {% if marinaHumedaCotizacion.cotizacionnotas[0] is defined %}
+                     {% if combustible.cotizacionnotas[0] is defined %}
                          <div role="tabpanel" class="tab-pane" id="notas">
                              <div class="row">
                                  <div class="col-sm-12">
                                      <ul class="timeline sin-linea">
-                                         {% for nota in marinaHumedaCotizacion.cotizacionnotas %}
+                                         {% for nota in combustible.cotizacionnotas %}
                                              <li>
                                                  <div class="timeline-item">
                                                      <span class="time">{{ nota.fechahoraregistro|date('d M. Y H:s') }}</span>
@@ -481,7 +510,7 @@
 
                          <ul class="timeline">
                              <li class="time-label">
-                                 <span class="bg-blue">{{ marinaHumedaCotizacion.fecharegistro|date('d M. Y') }}</span>
+                                 <span class="bg-blue">{{ combustible.fecha|date('d M. Y') }}</span>
                              </li>
                              <li>
                                  <i class="fa fa-file"></i>
@@ -489,13 +518,13 @@
                                      <h3 class="timeline-header">Se creo la cotizacion Folio: #{{ folio }}</h3>
                                  </div>
                              </li>
-                             {% if marinaHumedaCotizacion.validanovo != 0 %}
-                                 {% if marinaHumedaCotizacion.validanovo == 2 %}
+                             {% if combustible.validanovo != 0 %}
+                                 {% if combustible.validanovo == 2 %}
                                      <li>
                                          <i class="fa fa-check-circle bg-green"></i>
                                          <div class="timeline-item">
                                             <span class="time">
-                                                {{ marinaHumedaCotizacion.registroValidaNovo ? marinaHumedaCotizacion.registroValidaNovo|date('d M. Y H:s') : '' }}
+                                                {{ combustible.registroValidaNovo ? combustible.registroValidaNovo|date('d M. Y H:s') : '' }}
                                             </span>
                                              <h3 class="timeline-header">Aceptada por novonautica</h3>
                                          </div>
@@ -505,25 +534,25 @@
                                          <i class="fa fa-times bg-red"></i>
                                          <div class="timeline-item">
                                             <span class="time">
-                                                {{ marinaHumedaCotizacion.registroValidaNovo ? marinaHumedaCotizacion.registroValidaNovo|date('d M. Y H:s') : '' }}
+                                                {{ combustible.registroValidaNovo ? combustible.registroValidaNovo|date('d M. Y H:s') : '' }}
                                             </span>
                                              <h3 class="timeline-header">Rechazada por novonautica</h3>
-                                             {% if marinaHumedaCotizacion.notasnovo %}
+                                             {% if combustible.notasnovo %}
                                                  <div class="timeline-body">
-                                                     {{ marinaHumedaCotizacion.notasnovo }}
+                                                     {{ combustible.notasnovo }}
                                                  </div>
                                              {% endif %}
                                          </div>
                                      </li>
                                  {% endif %}
                              {% endif %}
-                             {% if marinaHumedaCotizacion.validacliente != 0 %}
-                                 {% if marinaHumedaCotizacion.validacliente == 2 %}
+                             {% if combustible.validacliente != 0 %}
+                                 {% if combustible.validacliente == 2 %}
                                      <li>
                                          <i class="fa fa-check-square bg-green"></i>
                                          <div class="timeline-item">
                                                 <span class="time">
-                                                    {{ marinaHumedaCotizacion.registroValidaCliente ? marinaHumedaCotizacion.registroValidaCliente|date('d M. Y H:s') : '' }}
+                                                    {{ combustible.registroValidaCliente ? combustible.registroValidaCliente|date('d M. Y H:s') : '' }}
                                                 </span>
                                              <h3 class="timeline-header">Aceptada por el cliente</h3>
                                          </div>
@@ -533,35 +562,35 @@
                                          <i class="fa fa-times bg-red"></i>
                                          <div class="timeline-item">
                                                 <span class="time">
-                                                    {{ marinaHumedaCotizacion.registroValidaCliente ? marinaHumedaCotizacion.registroValidaCliente|date('d M. Y H:s') : '' }}
+                                                    {{ combustible.registroValidaCliente ? combustible.registroValidaCliente|date('d M. Y H:s') : '' }}
                                                 </span>
                                              <h3 class="timeline-header">Rechazada por el cliente</h3>
-                                             {% if marinaHumedaCotizacion.notascliente %}
+                                             {% if combustible.notascliente %}
                                                  <div class="timeline-body">
-                                                     {{ marinaHumedaCotizacion.notascliente }}
+                                                     {{ combustible.notascliente }}
                                                  </div>
                                              {% endif %}
                                          </div>
                                      </li>
                                  {% endif %}
                              {% endif %}
-                             {% if marinaHumedaCotizacion.estatuspago != 0 %}
-                                 {% set total = marinaHumedaCotizacion.total %}
+                             {% if combustible.estatuspago != 0 %}
+                                 {% set total = combustible.total %}
                                  {% set pagado = 0 %}
                                  <li>
                                      <i class="fa fa-usd bg-yellow"></i>
                                      <div class="timeline-item">
                                             <span class="time">
-                                                {{ marinaHumedaCotizacion.fecharegistro ? marinaHumedaCotizacion.fecharegistro|date('d M. Y H:s') : '' }}
+                                                {{ combustible.fecha ? combustible.fecha|date('d M. Y H:s') : '' }}
                                             </span>
                                          <h3 class="timeline-header">Nuevo saldo pendiente</h3>
                                          <div class="timeline-body">
-                                             $ {{ (marinaHumedaCotizacion.total / 100)|number_format(2) }}
+                                             $ {{ (combustible.total / 100)|number_format(2) }}
                                              MXN
                                          </div>
                                      </div>
                                  </li>
-                                 {% for pago in marinaHumedaCotizacion.pagos %}
+                                 {% for pago in combustible.pagos %}
                                      {% set pagado = pagado + pago.cantidad %}
                                      <li>
                                          <i class="fa fa-envelope bg-green"></i>
@@ -587,7 +616,7 @@
                                          </li>
                                      {% endif %}
                                  {% endfor %}
-                                 {% if marinaHumedaCotizacion.estatuspago == 2 %}
+                                 {% if combustible.estatuspago == 2 %}
                                      <li>
                                          <i class="fa fa-dollar bg-green"></i>
                                          <div class="timeline-item">
@@ -597,7 +626,7 @@
 
                                      <li class="time-label">
                                             <span class="bg-blue">
-                                                {{ marinaHumedaCotizacion.registroPagoCompletado ? marinaHumedaCotizacion.registroPagoCompletado|date('d M. Y') : '' }}
+                                                {{ combustible.registroPagoCompletado ? combustible.registroPagoCompletado|date('d M. Y') : '' }}
                                             </span>
                                      </li>
                                  {% endif %}
@@ -608,66 +637,66 @@
                  <div class="row">
                      <div class="col-sm-12">
                          <a target="_blank" class="btn btn-morado-claro pull-right"
-                            href="{{ path('combustible-pdf',{'id': marinaHumedaCotizacion.id }) }}">
+                            href="{{ path('combustible_pdf',{'id': combustible.id }) }}">
                              <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                              Ver
                          </a>
                      </div>
                  </div>
-                 {% if marinaHumedaCotizacion.validanovo == 0 and is_granted(expression('has_role("COMBUSTIBLE_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
+                 {% if combustible.validanovo == 0 and is_granted(expression('has_role("COMBUSTIBLE_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
                      <div class="row espacio-linea-arriba2">
                          <div class="col-sm-12">
                              <a class="btn btn-azul pull-right"
-                                href="{{ path('combustible_validar', { 'id': marinaHumedaCotizacion.id }) }}">
+                                href="{{ path('combustible_validar', { 'id': combustible.id }) }}">
                                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                  Validar
                              </a>
                          </div>
                      </div>
                  {% endif %}
-                 {% if marinaHumedaCotizacion.validanovo == 2 and marinaHumedaCotizacion.validacliente == 0 and is_granted(expression('has_role("COMBUSTIBLE_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
+                 {% if combustible.validanovo == 2 and combustible.validacliente == 0 and is_granted(expression('has_role("COMBUSTIBLE_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
                      <div class="row espacio-linea-arriba2">
                          <div class="col-sm-12">
                              <a class="btn btn-azul pull-right"
-                                href="{{ path('combustible_validar', { 'id': marinaHumedaCotizacion.id }) }}">
+                                href="{{ path('combustible_validar', { 'id': combustible.id }) }}">
                                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                  Aceptar Cliente
                              </a>
                          </div>
                      </div>
                  {% endif %}
-                 {% if (marinaHumedaCotizacion.validanovo == 1 or
-                     marinaHumedaCotizacion.validacliente == 1) and
-                     marinaHumedaCotizacion.estatus == 1 and
+                 {% if (combustible.validanovo == 1 or
+                     combustible.validacliente == 1) and
+                     combustible.estatus == 1 and
                      is_granted(expression('has_role("COMBUSTIBLE_COTIZACION_REQUOTE") or (user.isAdmin())')) %}
                      <div class="row espacio-linea-arriba2">
                          <div class="col-sm-12">
                              <a class="btn btn-naranja pull-right"
-                                href="{{ path('combustible_recotizar', { 'id': marinaHumedaCotizacion.id }) }}">
+                                href="{{ path('combustible_recotizar', { 'id': combustible.id }) }}">
                                  <i class="fa fa-pencil-square" aria-hidden="true"></i>
                                  Recotizar
                              </a>
                          </div>
                      </div>
                  {% endif %}
-                 {% if marinaHumedaCotizacion.validacliente == 2 and
-                     marinaHumedaCotizacion.estatuspago != 2 and
+                 {% if combustible.validacliente == 2 and
+                     combustible.estatuspago != 2 and
                      is_granted('ROLE_COMBUSTIBLE_PAGO') %}
                      <div class="row espacio-linea-arriba2">
                          <div class="col-sm-12">
                              <a class="btn btn-verde pull-right"
-                                href="{{ path('combustible_pago_edit',{'id': marinaHumedaCotizacion.id}) }}">
+                                href="{{ path('combustible_pago_edit',{'id': combustible.id}) }}">
                                  <i class="fa fa-plus-square-o" aria-hidden="true"></i>
                                  Pagos
                              </a>
                          </div>
                      </div>
                  {% endif %}
-                 {% if marinaHumedaCotizacion.validanovo == 2 %}
+                 {% if combustible.validanovo == 2 %}
                      <div class="row espacio-linea-arriba2">
                          <div class="col-sm-12">
                              <button class="btn btn-naranja pull-right loadpage" id="reenviar"
-                                     data-idcotizacion="{{ marinaHumedaCotizacion.id }}">
+                                     data-idcotizacion="{{ combustible.id }}">
                                  <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
                                  Reenviar
                              </button>
@@ -677,13 +706,13 @@
                  <div class="row espacio-linea-arriba2">
                      <div class="col-sm-12">
                          <a class="btn btn-contorno-azul pull-right"
-                            href="{{ path('combustible_nota',{'id': marinaHumedaCotizacion.id}) }}">
+                            href="{{ path('combustible_nota',{'id': combustible.id}) }}">
                              <i class="fa fa-plus" aria-hidden="true"></i>
                              Nota
                          </a>
                      </div>
                  </div>
-                 {% if marinaHumedaCotizacion.validanovo == 0 and
+                 {% if combustible.validanovo == 0 and
                      is_granted(expression('has_role("COMBUSTIBLE_COTIZACION_DELETE") or (user.isAdmin())')) %}
                      <div class="row espacio-linea-arriba2">
                          <div class="col-sm-12">

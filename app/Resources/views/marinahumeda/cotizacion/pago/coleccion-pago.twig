@@ -1,5 +1,5 @@
 {% block form_widget %}
-    {% set cotizacion = marinaHumedaCotizacion is defined ? marinaHumedaCotizacion : astilleroCotizacion %}
+    {% set cotizacion = marinaHumedaCotizacion is defined ? marinaHumedaCotizacion : astilleroCotizacion is defined ? astilleroCotizacion : combustible %}
 
     {% spaceless %}
         <td>

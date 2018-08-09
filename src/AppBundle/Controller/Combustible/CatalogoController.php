@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Catalogo controller.
  *
- * @Route("combustible/catalogo")
+ * @Route("/combustible/catalogo")
  */
 class CatalogoController extends Controller
 {

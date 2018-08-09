@@ -73,10 +73,10 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <h3 class="panel-title">{{ title }}</h3>
-                            <span>Recotizado de {{ folioAnt }}</span>
+                            De la cotización {{ folioAnt }}
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-contorno-azul pull-right" href="{{ path('combustible_show',{'id':idanterior}) }}">Regresar</a>
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('combustible_index') }}">Regresar</a>
                         </div>
                     </div>
                 </div>
@@ -90,10 +90,7 @@
                             <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a>
                         </li>
                         <li role="presentation">
-                            <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
-                        </li>
-                        <li role="presentation">
-                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Total (USD)</a>
+                            <a href="#totalmxn" aria-controls="total" role="tab" data-toggle="tab">Totales</a>
                         </li>
                         <li role="presentation">
                             <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
@@ -105,239 +102,299 @@
                                 <div class="col-sm-6">
                                     <div id="info-barco">
                                         <label>Barco</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco }}</div>
+                                        <div class='info-input'>{{ combustible.barco }}</div>
                                         <label>Modelo</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.modelo }}</div>
+                                        <div class='info-input'>{{ combustible.barco.modelo }}</div>
                                         <label>Eslora</label>
-                                        <div id='barcopies' class='info-input' data-valor="{{ marinaHumedaCotizacion.barco.eslora }}">{{ marinaHumedaCotizacion.barco.eslora }}</div>
+                                        <div class='info-input'>{{ combustible.barco.eslora }}</div>
                                         <label>Manga</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.manga }}</div>
+                                        <div class='info-input'>{{ combustible.barco.manga }}</div>
                                         <label>Nombre del capitán</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.nombreCapitan }}</div>
+                                        <div class='info-input'>{{ combustible.barco.nombreCapitan }}</div>
                                         <label>Teléfono del capitán</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.telefonoCapitan }}</div>
+                                        <div class='info-input'>{{ combustible.barco.telefonoCapitan }}</div>
                                         <label>Correo del capitán</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacion.barco.correoCapitan }}</div>
+                                        <div class='info-input'>{{ combustible.barco.correoCapitan }}</div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div id="info-cliente">
                                         <label>Cliente</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente }}</div>
+                                        <div class='info-input'>{{ combustible.cliente }}</div>
                                         <label>Correo electrónico</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.correo }}</div>
-                                        <label>Número de teléfono</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.telefono }}</div>
+                                        <div class='info-input'>{{ combustible.cliente.correo }}</div>
+                                        <label>Teléfono</label>
+                                        <div class='info-input'>{{ combustible.cliente.telefono }}</div>
                                         <label>Dirección</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacion.cliente.direccion }}</div>
+                                        <div class='info-input'>{{ combustible.cliente.direccion }}</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
-                                <div class="col-sm-3">
-                                    {{ form_row(form.mhcservicios.children.0.cantidad) }}
+                                <div class="col-sm-5">
+                                    {{ form_row(form.cantidad) }}
                                 </div>
-                                <div class="col-sm-3">
-                                    {{ form_row(form.mhcservicios.children.0.precioAux) }}
+                                <div class="col-sm-5">
+                                    {{ form_row(form.tipo) }}
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-3">
+                                <div class="col-sm-5">
+                                    {{ form_row(form.precioVenta) }}
+                                </div>
+                                <div class="col-sm-5">
                                     {{ form_row(form.dolar) }}
                                 </div>
-                                <div class="col-sm-3">
-                                    {{ form_row(form.mhcservicios.children.0.tipo) }}
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    {{ form_row(form.iva) }}
+                                </div>
+                                <div class="col-sm-5">
+                                    {{ form_row(form.cuotaIesps) }}
                                 </div>
                             </div>
+
                         </div>
                         <div role="tabpanel" class="tab-pane input-combustible" id="totalmxn">
                             <div class="row">
                                 <div class="col-sm-12 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div class="valdolar">{{ (marinaHumedaCotizacion.dolar/100)|number_format(2) }} MXN</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <small>Precios en MXN</small>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <table class="table text-center">
-                                        <thead>
-                                        <tr>
-                                            <th>Cantidad</th>
-                                            <th>Servicio</th>
-                                            <th>Prec. Unid.</th>
-                                            <th>Subtotal</th>
-                                            <th>IVA</th>
-                                            <th>Total</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td id="combustible_cantidad_mxn" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}">
-                                                {{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}
-                                            </td>
-                                            <td>Abastecimiento de combustible</td>
-                                            <td>{{ form_widget(form.mhcservicios.children.0.precio) }}</td>
-                                            <td>{{ form_widget(form.mhcservicios.children.0.subtotal) }}</td>
-                                            <td>{{ form_widget(form.mhcservicios.children.0.iva) }}</td>
-                                            <td>{{ form_widget(form.mhcservicios.children.0.total) }}</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div id="valiva" class="" data-valor="{{ marinaHumedaCotizacion.iva }}">
-                                        <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
-                                    <hr>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
-                                    {{ form_row(form.subtotal) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
-                                    <hr>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
-                                    {{ form_row(form.ivatotal) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
-                                    <hr>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
-                                    {{ form_row(form.total) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
-                                    <hr>
-                                </div>
-                            </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="total">
-                            <div class="row">
-                                <div class="col-sm-12 text-right">
-                                    <span>Tipo de cambio:</span>
-                                    <div class="valdolar">{{ (marinaHumedaCotizacion.dolar/100)|number_format(2)}}
-                                        MXN
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <small>Precios en USD</small>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <table id="" class="table text-center">
-                                        <thead>
-                                        <tr>
-                                            <th>Cantidad</th>
-                                            <th>Servicio</th>
-                                            <th>Prec. Unid.</th>
-                                            <th>Sub-Total</th>
-                                            <th>IVA</th>
-                                            <th>Total</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td id="combustible_cantidad_usd" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}">
-                                                {{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}
-                                            </td>
-                                            <td>Abastecimiento de combustible</td>
-                                            <td id="combustible_precio_usd" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.0.precio/marinaHumedaCotizacion.dolar)|number_format(2) }}">
-                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.precio/marinaHumedaCotizacion.dolar)|number_format(2) }}
-                                            </td>
-                                            <td id="combustible_subtotal_usd">
-                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.subtotal/marinaHumedaCotizacion.dolar)|number_format(2) }}
-                                            </td>
-                                            <td id="combustible_iva_usd">
-                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.iva/marinaHumedaCotizacion.dolar)|number_format(2) }}
-                                            </td>
-                                            <td id="combustible_total_usd">
-                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.total/marinaHumedaCotizacion.dolar)|number_format(2) }}
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
                                     <div>
-                                        <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
+                                        $ <span id="valdolar">{{ (combustible.dolar/100)|number_format(2) }}</span> <small>MXN</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
+                                <div class="col-sm-12">
+                                    <h2 id="combustible_titulo_mxn" class="text-center">
+                                        Abastecimiento de combustible
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_label(form.precioSinIesps) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.precioSinIesps) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    $ <span id="combustible_precioSinIespsUsd">
+                                        {{ (combustible.precioSinIesps/combustible.dolar)|number_format(2) }}
+                                    </span> <small>USD</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8 tipo-letra1">
-                                    <label class="letra-azul">Subtotal:</label>
-                                    <p>
-                                        $ <span id="combustible_gran_subtotal_usd">{{ (marinaHumedaCotizacion.subtotal/marinaHumedaCotizacion.dolar)|number_format(2) }}</span>
-                                        <span class="tipo-letra2">USD</span>
-                                    </p>
+                                <div class="col-sm-3">
+                                    {{ form_label(form.precioSinIvaIesps) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.precioSinIvaIesps) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    $ <span id="combustible_precioSinIvaIespsUsd">
+                                        {{ (combustible.precioSinIvaIesps/combustible.dolar)|number_format(2) }}
+                                    </span> <small>USD</small>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
+                                <div class="col-sm-3">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8 tipo-letra1">
-                                    <label class="letra-azul">I.V.A:</label>
-                                    <p>
-                                        $ <span id="combustible_gran_iva_usd">{{ (marinaHumedaCotizacion.ivatotal/marinaHumedaCotizacion.dolar)|number_format(2) }}</span>
-                                        <span class="tipo-letra2">USD</span>
-                                    </p>
+                                <div class="col-sm-3">
+                                    <label class="letra-azul tipo-letra2">Litros vendidos:</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span id="combustible_cantidad_mxn" class="pl-1">{{ combustible.cantidad }}</span>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
+                                <div class="col-sm-3">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-8">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8 tipo-letra1">
-                                    <label class="letra-azul">Total:</label>
-                                    <p>
-                                        $ <span id="combustible_gran_total_usd">{{ (marinaHumedaCotizacion.total/marinaHumedaCotizacion.dolar)|number_format(2) }}</span>
-                                        <span class="tipo-letra2">USD</span>
-                                    </p>
+                                <div class="col-sm-3">
+                                    {{ form_label(form.iespsTotal) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.iespsTotal) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    $ <span id="combustible_iespsTotalUsd">
+                                        {{ (combustible.iespsTotal/combustible.dolar)|number_format(2) }}
+                                    </span> <small>USD</small>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
+                                <div class="col-sm-3">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_label(form.totalSinIesps) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.totalSinIesps) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    $ <span id="combustible_totalSinIespsUsd">
+                                        {{ (combustible.totalSinIesps/combustible.dolar)|number_format(2) }}
+                                    </span> <small>USD</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label class="letra-azul tipo-letra2">Tasa IVA:</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span id="tasa_iva_mxn" class="pl-1">{{ (combustible.iva + 100)/100 }}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-8">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_label(form.totalSinIvaIesps) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.totalSinIvaIesps) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    $ <span id="combustible_totalSinIvaIespsUsd">
+                                        {{ (combustible.totalSinIvaIesps/combustible.dolar)|number_format(2) }}
+                                    </span> <small>USD</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_label(form.subtotal) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.subtotal) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    $ <span id="combustible_subtotalUsd">
+                                        {{ (combustible.subtotal/combustible.dolar)|number_format(2) }}
+                                    </span> <small>USD</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_label(form.ivaTotal) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.ivaTotal) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    $ <span id="combustible_ivaTotalUsd">
+                                        {{ (combustible.ivaTotal/combustible.dolar)|number_format(2) }}
+                                    </span> <small>USD</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_label(form.total) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.total) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    $ <span id="combustible_totalUsd">
+                                        {{ (combustible.total/combustible.dolar)|number_format(2) }}
+                                    </span> <small>USD</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
                                     <hr>
                                 </div>
                             </div>
@@ -346,24 +403,27 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     {{ form_row(form.mensaje) }}
+                                </div>
+                                <div class="col-sm-12">
                                     <div class="novo-checkbox-container">
                                         {{ form_row(form.notificarCliente) }}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row espacio-linea-arriba2">
-                            <div class="col-sm-12">
-                                <button type="submit" class="btn btn-azul pull-right">
-                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                    Guardar
-                                </button>
-                            </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
                         </div>
                     </div>
-                    {{ form_widget(form.barco,{'attr':{'class':'hidden'}}) }}
-                    {{ form_end(form) }}
                 </div>
+                {{ form_end(form) }}
             </div>
         </section>
     </div>
@@ -372,49 +432,82 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        let cantidad = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_cantidad');
-        let precio_iva_mxn = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precioAux');
-        let dolar_combustible = document.getElementById('appbundle_marinahumedacotizacion_dolar');
-        let iva = Number(document.getElementById('valiva').dataset.valor);
+        let cantidad = document.getElementById('appbundle_combustible_cantidad');
+        let precio_venta = document.getElementById('appbundle_combustible_precioVenta');
+        let cuotaIesps = document.getElementById('appbundle_combustible_cuotaIesps');
+        let dolar_combustible = document.getElementById('appbundle_combustible_dolar');
+        let iva = document.getElementById('appbundle_combustible_iva');
 
-        cantidad.addEventListener('keyup',function (input) {
-            document.getElementById('combustible_cantidad_mxn').innerHTML = input.target.value;
-            document.getElementById('combustible_cantidad_usd').innerHTML = input.target.value;
-            combustibleCalculaTotales();
+        $('.selecttipocombustible').change(function (e) {
+            $('#loading').show();
+            var urlTipo = "{{ path('json_tipo_combustible',{'id':'idtipo'}) }}";
+            urlTipo = urlTipo.replace('idtipo', $(this).val());
+            $.ajax({
+                method: "GET",
+                url: urlTipo,
+                dataType: 'json',
+                success: function (tipo) {
+                    document.getElementById('combustible_titulo_mxn').innerHTML ='Abastecimiento de combustible ' + tipo.nombre;
+                    precio_venta.value = (tipo.precio/100);
+                    cuotaIesps.value = tipo.cuotaIesps;
+                    combustibleCalculaTotales();
+                    $('#loading').hide();
+                }
+            });
         });
-        precio_iva_mxn.addEventListener('keyup',function (input) {
-            let precio_sin_iva_mxn = (Number(input.target.value) * 100) / (100 + iva);
-            document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio').value = precio_sin_iva_mxn.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            combustibleCalculaTotales();
+        document.querySelectorAll('.calcular-costos').forEach(function(elem) {
+            elem.addEventListener('keyup', function (input) {
+                combustibleCalculaTotales();
+            });
         });
-        dolar_combustible.addEventListener('keyup',function (input) {
+        dolar_combustible.addEventListener('keyup', function (input) {
+            console.log(input);
+            document.getElementById('valdolar').innerHTML = Number(input.target.value).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
             combustibleCalculaTotalesUSD();
         });
+
         function combustibleCalculaTotales(){
-            let total = Number(cantidad.value) * Number(precio_iva_mxn.value);
-            let ivatot = (total * iva)/(100 + iva);
-            let subtotal = total - ivatot;
-            document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_subtotal').value = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_iva').value = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_total').value = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('appbundle_marinahumedacotizacion_subtotal').value = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('appbundle_marinahumedacotizacion_ivatotal').value = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('appbundle_marinahumedacotizacion_total').value = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            let tasa_iva = (100 +  Number(iva.value))/100;
+            let precio_sin_iesps = Number(precio_venta.value) - Number(cuotaIesps.value);
+            let precio_sin_iva_iesps = precio_sin_iesps / tasa_iva;
+            let total = Number(cantidad.value) * Number(precio_venta.value);
+            let iespstot = Number(cantidad.value) * Number(cuotaIesps.value);
+            let total_sin_iesps = total - iespstot;
+            let total_sin_iva_iesps = total_sin_iesps / tasa_iva;
+            let subtotal = total_sin_iva_iesps + iespstot;
+            let ivatot = total_sin_iva_iesps * (Number(iva.value)/100);
+
+            document.getElementById('appbundle_combustible_precioSinIesps').value = precio_sin_iesps.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('appbundle_combustible_precioSinIvaIesps').value = precio_sin_iva_iesps.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('combustible_cantidad_mxn').innerHTML = cantidad.value;
+            document.getElementById('appbundle_combustible_iespsTotal').value = iespstot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('appbundle_combustible_totalSinIesps').value = total_sin_iesps.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('tasa_iva_mxn').innerHTML = tasa_iva.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('appbundle_combustible_totalSinIvaIesps').value = total_sin_iva_iesps.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('appbundle_combustible_subtotal').value = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('appbundle_combustible_ivaTotal').value = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('appbundle_combustible_total').value = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
             combustibleCalculaTotalesUSD();
         }
         function combustibleCalculaTotalesUSD(){
             let dolar = Number(dolar_combustible.value);
-            let precio_sin_iva_usd = Number((document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio').value).replace(/,/g, '')) / dolar;
-            let subtotal_usd = Number((document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_subtotal').value).replace(/,/g, '')) / dolar;
-            let ivatot_usd = Number((document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_iva').value).replace(/,/g, '')) / dolar;
-            let total_usd = Number((document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_total').value).replace(/,/g, '')) / dolar;
-            document.getElementById('combustible_precio_usd').innerHTML = precio_sin_iva_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('combustible_subtotal_usd').innerHTML = subtotal_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('combustible_gran_subtotal_usd').innerHTML = subtotal_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('combustible_iva_usd').innerHTML = ivatot_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('combustible_gran_iva_usd').innerHTML = ivatot_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('combustible_total_usd').innerHTML = total_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('combustible_gran_total_usd').innerHTML = total_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            let precio_sin_iesps_usd = Number((document.getElementById('appbundle_combustible_precioSinIesps').value).replace(/,/g, '')) / dolar;
+            let precio_sin_iva_iesps_usd = Number((document.getElementById('appbundle_combustible_precioSinIvaIesps').value).replace(/,/g, '')) / dolar;
+            let iesps_total_usd = Number((document.getElementById('appbundle_combustible_iespsTotal').value).replace(/,/g, '')) / dolar;
+            let total_sin_iesps_usd = Number((document.getElementById('appbundle_combustible_totalSinIesps').value).replace(/,/g, '')) / dolar;
+            let total_sin_iva_iesps_usd = Number((document.getElementById('appbundle_combustible_totalSinIvaIesps').value).replace(/,/g, '')) / dolar;
+            let subtotal_usd = Number((document.getElementById('appbundle_combustible_subtotal').value).replace(/,/g, '')) / dolar;
+            let iva_total_usd = Number((document.getElementById('appbundle_combustible_ivaTotal').value).replace(/,/g, '')) / dolar;
+            let total_usd = Number((document.getElementById('appbundle_combustible_total').value).replace(/,/g, '')) / dolar;
+
+            document.getElementById('combustible_precioSinIespsUsd').innerHTML = precio_sin_iesps_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('combustible_precioSinIvaIespsUsd').innerHTML = precio_sin_iva_iesps_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('combustible_iespsTotalUsd').innerHTML = iesps_total_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('combustible_totalSinIespsUsd').innerHTML = total_sin_iesps_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('combustible_totalSinIvaIespsUsd').innerHTML = total_sin_iva_iesps_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('combustible_subtotalUsd').innerHTML = subtotal_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('combustible_ivaTotalUsd').innerHTML = iva_total_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            document.getElementById('combustible_totalUsd').innerHTML = total_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
         }
     </script>
 {% endblock %}

@@ -62,6 +62,12 @@ class Correo
     private $acotizacion;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Combustible")
+     * @ORM\JoinColumn(name="idcombustible", referencedColumnName="id")
+     */
+    private $combustible;
+
+    /**
      * Get id
      *
      * @return int
@@ -213,5 +219,29 @@ class Correo
     public function getAcotizacion()
     {
         return $this->acotizacion;
+    }
+
+    /**
+     * Set combustible.
+     *
+     * @param \AppBundle\Entity\Combustible|null $combustible
+     *
+     * @return Correo
+     */
+    public function setCombustible(\AppBundle\Entity\Combustible $combustible = null)
+    {
+        $this->combustible = $combustible;
+
+        return $this;
+    }
+
+    /**
+     * Get combustible.
+     *
+     * @return \AppBundle\Entity\Combustible|null
+     */
+    public function getCombustible()
+    {
+        return $this->combustible;
     }
 }
