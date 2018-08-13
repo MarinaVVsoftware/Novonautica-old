@@ -41,6 +41,7 @@ class RegistroType extends AbstractType
                 'entry_type' => EntradaType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,
+                'allow_delete' => true,
                 'by_reference' => false,
             ]
         );
@@ -53,7 +54,7 @@ class RegistroType extends AbstractType
                 'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
-                'data' => 0,
+                'empty_data' => 0,
                 'attr' => ['class' => 'total-type'],
             ]
         );

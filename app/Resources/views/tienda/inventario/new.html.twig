@@ -24,7 +24,13 @@
         <section class="content">
             <div class="panel panel-novo">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Registro de {{ tipo }}s</h3>
+                    <h3 class="panel-title">
+                        {% if form.entradas|length == 0 %}
+                            Registro de {{ tipo }}s
+                        {% else %}
+                            Edición de entrada
+                        {% endif %}
+                    </h3>
                 </div>
                 <div class="panel-body">
                     {{ form_start(form) }}
@@ -49,7 +55,24 @@
                                 </thead>
                                 <tbody id="entradas"
                                        data-prototype="{{ form_widget(form.entradas.vars.prototype)|e('html_attr') }}">
-                                {{ form_row(form.entradas) }}
+                                {% for entrada in form.entradas %}
+                                    <tr class="servicio-agregado table-item">
+                                        <td valign="middle" class="text-center">
+                                        </td>
+                                        <td>
+                                            {{ form_widget(entrada.producto) }}
+                                            {{ form_errors(entrada.producto) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(entrada.cantidad) }}
+                                            {{ form_errors(entrada.cantidad) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(entrada.importe) }}
+                                            {{ form_errors(entrada.importe) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         </div>
@@ -157,7 +180,7 @@
 
           $select.select2({
             ajax: {
-              url: '../productos.json',
+              url: '{{ path('tienda_inventario_registro_productos') }}',
               dataType: 'json',
               processResults(response) {
                 return {
@@ -195,9 +218,7 @@
             .forEach(function (row, index) {
               addEntradaListeners(row);
 
-              if (index) {
                 addRemoveButton(row.cells[0]);
-              }
             });
 
       })(jQuery);
