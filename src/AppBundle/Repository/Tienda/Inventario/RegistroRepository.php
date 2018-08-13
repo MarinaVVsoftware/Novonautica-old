@@ -2,6 +2,9 @@
 
 namespace AppBundle\Repository\Tienda\Inventario;
 
+use AppBundle\Entity\Tienda\Inventario\Registro;
+use Doctrine\ORM\NonUniqueResultException;
+
 /**
  * RegistroRepository
  *
@@ -10,4 +13,46 @@ namespace AppBundle\Repository\Tienda\Inventario;
  */
 class RegistroRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    /**
+     * @param $id
+     *
+     * @return Registro
+     */
+    public function get($id)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT registro, entradas, producto '.
+                'FROM AppBundle:Tienda\Inventario\Registro registro '.
+                'LEFT JOIN registro.entradas entradas '.
+                'LEFT JOIN entradas.producto producto '.
+                'WHERE registro.id = ?1'
+            );
+
+        /*
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT registro, entradas '.
+                'FROM AppBundle:Tienda\Inventario\Registro registro '.
+                'LEFT JOIN registro.entradas entradas '.
+                'WHERE registro.id = ?1'
+            );
+
+        $query->getEntityManager()
+            ->createQuery(
+                'SELECT PARTIAL entradas.{id}, producto '.
+                'FROM AppBundle:Tienda\Inventario\Registro\Entrada entradas '.
+                'LEFT JOIN entradas.producto producto'
+            );
+        */
+
+        try {
+            return $query
+                ->setParameter(1, $id)
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
+    }
 }

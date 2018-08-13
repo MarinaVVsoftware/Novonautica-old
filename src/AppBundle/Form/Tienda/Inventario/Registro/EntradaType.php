@@ -10,9 +10,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EntradaType extends AbstractType
@@ -37,7 +34,7 @@ class EntradaType extends AbstractType
             'cantidad',
             IntegerType::class,
             [
-                'data' => 0,
+                'empty_data' => 0,
             ]
         );
 
@@ -48,7 +45,15 @@ class EntradaType extends AbstractType
                 'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
-                'data' => 0,
+                'empty_data' => 0,
+            ]
+        );
+
+        $builder->add(
+            'producto',
+            EntityType::class,
+            [
+                'class' => Producto::class,
             ]
         );
 
@@ -72,6 +77,4 @@ class EntradaType extends AbstractType
     {
         return 'appbundle_tienda_inventario_registro_entrada';
     }
-
-
 }
