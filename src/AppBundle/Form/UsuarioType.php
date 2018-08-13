@@ -108,6 +108,7 @@ class UsuarioType extends AbstractType
                     'Punto de venta' => 'ROLE_TIENDA_POV',
                     'Inventario' => 'ROLE_TIENDA_INVENTARIO',
                     'Registros' => 'ROLE_TIENDA_REGISTRO',
+                    'Editar Registro' => 'TIENDA_REGISTRO_EDIT',
                 ],
                 'Contabilidad' => $this->getContabilidadRoles(),
                 'Correos' => [

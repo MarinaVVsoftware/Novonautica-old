@@ -41,7 +41,12 @@ class ProductoFieldListener implements EventSubscriberInterface
 
     public function onPreSetData(FormEvent $event)
     {
-        $this->createProductoField($event->getForm());
+        $form = $event->getForm();
+        $entrada = $event->getData();
+
+        $producto = $entrada ? $entrada->getProducto() : null;
+
+        $this->createProductoField($form, $producto ? $producto->getId() : null);
     }
 
     public function onPreSubmit(FormEvent $event)
@@ -55,15 +60,13 @@ class ProductoFieldListener implements EventSubscriberInterface
     {
         $producto = !$productoId ? [] : [$this->entityManager->getRepository(Producto::class)->find($productoId)];
 
-        $formOptions = [
-            'class' => Producto::class,
-            'choices' => $producto
-        ];
-
         $form->add(
             'producto',
             EntityType::class,
-            $formOptions
+            [
+                'class' => Producto::class,
+                'choices' => $producto
+            ]
         );
     }
 }
