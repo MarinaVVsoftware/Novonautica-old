@@ -61,6 +61,9 @@
         .novo-checkbox-container .checkbox input[type="checkbox"]:checked + label:after {
             opacity: 1;
         }
+        #appbundle_astillerocotizacion_acservicios{
+            display: none;
+        }
     </style>
 {% endblock %}
 {% block contwrapper %}
@@ -187,7 +190,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-3">
-
+                                    {{ form_row(form.descuento) }}
                                 </div>
                             </div>
                             <div class="row espacio-linea">

@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -37,6 +38,14 @@ class AstilleroCotizacionType extends AbstractType
                 'divisor' => 100,
                 'grouping' => true,
                 'empty_data' => 0,
+            ])
+            ->add('descuento', NumberType::class, [
+                'empty_data' => 0,
+                'attr' => ['class' => 'esdecimal limite100',
+                    'autocomplete' => 'off',
+                    'max' => 100,
+                    'min' => 0],
+                'label' => 'Descuento %'
             ])
             ->add('mensaje', TextareaType::class, [
                 'label' => 'Mensaje en el correo:',

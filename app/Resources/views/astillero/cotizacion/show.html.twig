@@ -226,8 +226,7 @@
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
                                 <div class="col-sm-12 text-right">
-                                    <span>Tipo de cambio:</span>
-                                    <div id="tipocambio" class="">{{ (astilleroCotizacion.dolar/100)|number_format(2)}} <small>MXN</small></div>
+                                    <span>Tipo de cambio:</span> {{ (astilleroCotizacion.dolar/100)|number_format(2)}} <small>MXN</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -237,6 +236,13 @@
                                     </div>
                                 </div>
                             </div>
+                            {% if astilleroCotizacion.descuento %}
+                            <div class="row">
+                                <div class="col-sm-12 text-right">
+                                    Descuento: {{ astilleroCotizacion.descuento }} %
+                                </div>
+                            </div>
+                            {% endif %}
                             <div class="row">
                                 <div class="col-sm-2">
                                     <button class="btn btn-sm btn-azul" type="button" data-toggle="collapse"
@@ -487,6 +493,31 @@
                                     <hr>
                                 </div>
                             </div>
+                            {% if astilleroCotizacion.descuento %}
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Descuento:</p>
+                                    <p>
+                                        $
+                                        <span>{{ (astilleroCotizacion.descuentototal/100)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                                <div class="col-sm-4 text-right tipo-letra1">
+                                    <p class="letra-azul">Descuento:</p>
+                                    <p>
+                                        $
+                                        <span>{{ (astilleroCotizacion.descuentototal/astilleroCotizacion.dolar)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">USD</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-6">
+                                    <hr>
+                                </div>
+                            </div>
+                            {% endif %}
                             <div class="row">
                                 <div class="col-sm-4 col-sm-offset-4 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>

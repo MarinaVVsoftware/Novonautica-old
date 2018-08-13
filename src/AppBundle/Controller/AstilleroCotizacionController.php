@@ -238,19 +238,20 @@ class AstilleroCotizacionController extends Controller
                               'granTotal'=>$sumas['granTotal']+=$total];
                 }
             }
+            $granDescuento = ($sumas['granSubtotal'] * $astilleroCotizacion->getDescuento())/100;
+            $granIva = (($sumas['granSubtotal'] - $granDescuento) * $iva) / 100;
+            $granTotal = $sumas['granSubtotal'] - $granDescuento + $granIva;
             //------------------------------------------------
             $fechaHoraActual = new \DateTime('now');
             $astilleroCotizacion
                 ->setDolar($astilleroCotizacion->getDolar())
                 ->setIva($iva)
                 ->setSubtotal($sumas['granSubtotal'])
-                ->setIvatotal($sumas['granIva'])
-                ->setTotal($sumas['granTotal'])
+                ->setDescuentototal($granDescuento)
+                ->setIvatotal($granIva)
+                ->setTotal($granTotal)
                 ->setFecharegistro($fechaHoraActual)
                 ->setEstatus(true);
-//            $astilleroCotizacion->setValidanovo(0);
-//            $astilleroCotizacion->setValidacliente(0);
-//            $astilleroCotizacion->setFoliorecotiza(0);
 
             // Asignacion de cotizacion al cliente y viceversa
             $cliente = $astilleroCotizacion->getBarco()->getCliente();
@@ -527,7 +528,9 @@ class AstilleroCotizacionController extends Controller
                         'granTotal'=>$sumas['granTotal']+=$total];
                 }
             }
-
+            $granDescuento = ($sumas['granSubtotal'] * $astilleroCotizacion->getDescuento())/100;
+            $granIva = (($sumas['granSubtotal'] - $granDescuento) * $iva) / 100;
+            $granTotal = $sumas['granSubtotal'] - $granDescuento + $granIva;
             //------------------------------------------------
 
             $fechaHoraActual = new \DateTime('now');
@@ -535,8 +538,9 @@ class AstilleroCotizacionController extends Controller
                 ->setDolar($astilleroCotizacion->getDolar())
                 ->setIva($iva)
                 ->setSubtotal($sumas['granSubtotal'])
-                ->setIvatotal($sumas['granIva'])
-                ->setTotal($sumas['granTotal'])
+                ->setDescuentototal($granDescuento)
+                ->setIvatotal($granIva)
+                ->setTotal($granTotal)
                 ->setFecharegistro($fechaHoraActual)
                 ->setEstatus(true);
 
@@ -762,7 +766,9 @@ class AstilleroCotizacionController extends Controller
             ->setCliente($cliente)
             ->setTotal($astilleroCotizacionAnterior->getTotal())
             ->setIva($astilleroCotizacionAnterior->getIva())
+            ->setDescuento($astilleroCotizacionAnterior->getDescuento())
             ->setSubtotal($astilleroCotizacionAnterior->getSubtotal())
+            ->setDescuentototal($astilleroCotizacionAnterior->getDescuentototal())
             ->setIvatotal($astilleroCotizacionAnterior->getIvatotal())
             ->setFolio($astilleroCotizacionAnterior->getFolio());
         $astilleroCotizacion
@@ -918,18 +924,20 @@ class AstilleroCotizacionController extends Controller
 
                 }
             }
+            $granDescuento = ($sumas['granSubtotal'] * $astilleroCotizacion->getDescuento())/100;
+            $granIva = (($sumas['granSubtotal'] - $granDescuento) * $iva) / 100;
+            $granTotal = $sumas['granSubtotal'] - $granDescuento + $granIva;
             //------------------------------------------------
             $fechaHoraActual = new \DateTime('now');
 
             $astilleroCotizacion
                 ->setDolar($astilleroCotizacion->getDolar())
                 ->setSubtotal($sumas['granSubtotal'])
-                ->setIvatotal($sumas['granIva'])
-                ->setTotal($sumas['granTotal'])
+                ->setDescuentototal($granDescuento)
+                ->setIvatotal($granIva)
+                ->setTotal($granTotal)
                 ->setFecharegistro($fechaHoraActual)
                 ->setEstatus(true);
-//            $astilleroCotizacion->setValidanovo(0);
-//            $astilleroCotizacion->setValidacliente(0);
             $astilleroCotizacionAnterior->setEstatus(false);
             $foliorecotizado = $astilleroCotizacionAnterior->getFoliorecotiza() + 1;
             $astilleroCotizacion->setFoliorecotiza($foliorecotizado);
@@ -1268,7 +1276,9 @@ class AstilleroCotizacionController extends Controller
                         'granTotal'=>$sumas['granTotal']+=$total];
                 }
             }
-
+            $granDescuento = ($sumas['granSubtotal'] * $astilleroCotizacion->getDescuento())/100;
+            $granIva = (($sumas['granSubtotal'] - $granDescuento) * $iva) / 100;
+            $granTotal = $sumas['granSubtotal'] - $granDescuento + $granIva;
             //------------------------------------------------
             $fechaHoraActual = new \DateTime('now');
             $foliobase = $sistema->getFolioMarina();
@@ -1278,8 +1288,9 @@ class AstilleroCotizacionController extends Controller
                 ->setDolar($valordolar)
                 ->setIva($iva)
                 ->setSubtotal($sumas['granSubtotal'])
-                ->setIvatotal($sumas['granIva'])
-                ->setTotal($sumas['granTotal'])
+                ->setDescuentototal($granDescuento)
+                ->setIvatotal($granIva)
+                ->setTotal($granTotal)
                 ->setFecharegistro($fechaHoraActual)
                 ->setBorrador(false)
                 ->setEstatus(true);
