@@ -13,19 +13,20 @@
         <link rel="stylesheet" href="{{ asset('dist/css/skins/skin-novo.css') }}">
         <link rel="stylesheet" href="{{ asset('bower_components/font-awesome/css/font-awesome.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.css') }}">
-        <link rel="stylesheet" href="{{ asset('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
+        <link rel="stylesheet"
+              href="{{ asset('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
         <link rel="stylesheet" href="{{ asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.css') }}">
     {% endblock %}
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 </head>
-<body class="hold-transition skin-novo sidebar-mini {{ app.session.get('isExpanded') == 'true' ? '' : 'sidebar-collapse'}}">
+<body class="hold-transition skin-novo sidebar-mini {{ app.session.get('isExpanded') == 'true' ? '' : 'sidebar-collapse' }}">
 
 <div id="loading">
     <i id="loading-image" class="fa fa-refresh fa-spin fa-4x fa-fw"></i>
 </div>
 
-<div class="wrapper" style="overflow-y: hidden;">
-    {% include 'estructura/encabezado.twig' %}
+<div class="wrapper">
+    {% include ':estructura:encabezado.html.twig' %}
     {% include 'estructura/sidebar.html.twig' %}
     {% block contwrapper %}{% endblock %}
     {% block modals %}{% endblock %}
@@ -42,13 +43,60 @@
     <script src="{{ asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
     <script type="text/javascript">
-      (function ($) {
+      (($) => {
         $(document).on('expanded.pushMenu collapsed.pushMenu', function (e) {
           $.ajax('{{ app.request.baseUrl }}/usuario/', {
             type: 'POST',
             data: {isExpanded: e.type === 'expanded'}
           })
-        })
+        });
+
+        {% if is_granted('ROLE_ADMIN') %}
+        const pincodeButton = document.getElementById('pincode-generator');
+
+        pincodeButton.addEventListener('click', function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          this.children[1].innerText = 'Generando...';
+          this.classList.add('disabled');
+
+          $.ajax('{{ path('generate-pincode') }}')
+              .done(function ({data: {pincode}}) {
+
+                airModal(pincode).modal();
+                pincodeButton.children[1].innerText = 'Generar PINCODE';
+                pincodeButton.classList.remove('disabled');
+              });
+        });
+
+        function airModal(pincode) {
+          return $(`
+              <div class="modal ventanaborrar"
+               id="pincode-modal"
+                tabindex="-1"
+                 data-keyboard="false"
+                  data-backdrop="static"
+                  >
+                <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Pincode generado</h4>
+                        </div>
+                        <div class="modal-body text-center">
+                          <h3>${pincode.pin}</h3>
+                          <p>Los pincodes expiran en 5 minutos</p>
+                          <button type="button" class="btn btn-azul" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+              </div>
+              </div>
+          `).modal();
+        }
+
+        {% endif %}
+
       })(jQuery);
     </script>
 {% endblock %}

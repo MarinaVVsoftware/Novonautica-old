@@ -450,25 +450,25 @@
                     </a>
                     <ul class="treeview-menu">
                         {% if is_granted('ROLE_TIENDA_POV') %}
-                        <li class="treeview {{ path.check('tienda_venta_') }}">
-                            <a href="#">
-                                <i class="fa fa-circle-o"></i> Punto de venta
-                                <span class="pull-right-container"><i
-                                            class="fa fa-angle-left pull-right"></i></span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="{{ path.check('tienda_venta_new') }}">
-                                    <a href="{{ path('tienda_venta_new') }}">
-                                        <i class="fa fa-minus"></i> Nueva venta
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('tienda_venta_index') }}">
-                                    <a href="{{ path('tienda_venta_index') }}">
-                                        <i class="fa fa-minus"></i> Listado de ventas
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="treeview {{ path.check('tienda_venta_') }}">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i> Punto de venta
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ path.check('tienda_venta_new') }}">
+                                        <a href="{{ path('tienda_venta_new') }}">
+                                            <i class="fa fa-minus"></i> Nueva venta
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('tienda_venta_index') }}">
+                                        <a href="{{ path('tienda_venta_index') }}">
+                                            <i class="fa fa-minus"></i> Listado de ventas
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         {% endif %}
                         {% if is_granted(expression('has_role("TIENDA_CREATE") or (user.isAdmin())')) %}
                             <li class="{{ path.check('tienda_solicitud_new') }}">
@@ -495,43 +495,43 @@
                             </li>
                         {% endif %}
                         {% if is_granted('ROLE_TIENDA_INVENTARIO') %}
-                        <li class="{{ path.check('tienda_inventario_index') }}">
-                            <a href="{{ path('tienda_inventario_index') }}">
-                                <i class="fa fa-circle-o"></i> Inventario
-                            </a>
-                        </li>
+                            <li class="{{ path.check('tienda_inventario_index') }}">
+                                <a href="{{ path('tienda_inventario_index') }}">
+                                    <i class="fa fa-circle-o"></i> Inventario
+                                </a>
+                            </li>
                         {% endif %}
                         {% if is_granted('ROLE_TIENDA_REGISTRO') %}
-                        <li class="treeview {{ path.check(
-                            [
-                                'tienda_inventario_registro_index_entrada',
-                                'tienda_inventario_registro_index_salida',
-                                'tienda_inventario_registro_new_entrada'
-                            ]
-                        ) }}">
-                            <a href="#">
-                                <i class="fa fa-circle-o"></i> Registros
-                                <span class="pull-right-container"><i
-                                            class="fa fa-angle-left pull-right"></i></span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="{{ path.check('tienda_inventario_registro_new_entrada') }}">
-                                    <a href="{{ path('tienda_inventario_registro_new_entrada') }}">
-                                        <i class="fa fa-minus"></i> Nueva entrada
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('tienda_inventario_registro_index_entrada') }}">
-                                    <a href="{{ path('tienda_inventario_registro_index_entrada') }}">
-                                        <i class="fa fa-minus"></i> Entradas
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('tienda_inventario_registro_index_salida') }}">
-                                    <a href="{{ path('tienda_inventario_registro_index_salida') }}">
-                                        <i class="fa fa-minus"></i> Salidas
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="treeview {{ path.check(
+                                [
+                                    'tienda_inventario_registro_index_entrada',
+                                    'tienda_inventario_registro_index_salida',
+                                    'tienda_inventario_registro_new_entrada'
+                                ]
+                            ) }}">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i> Registros
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ path.check('tienda_inventario_registro_new_entrada') }}">
+                                        <a href="{{ path('tienda_inventario_registro_new_entrada') }}">
+                                            <i class="fa fa-minus"></i> Nueva entrada
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('tienda_inventario_registro_index_entrada') }}">
+                                        <a href="{{ path('tienda_inventario_registro_index_entrada') }}">
+                                            <i class="fa fa-minus"></i> Entradas
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('tienda_inventario_registro_index_salida') }}">
+                                        <a href="{{ path('tienda_inventario_registro_index_salida') }}">
+                                            <i class="fa fa-minus"></i> Salidas
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         {% endif %}
                     </ul>
                 </li>
@@ -580,40 +580,40 @@
                             </a>
                         </li>
                         {% if is_granted('ROLE_CONTABILIDAD_EGRESO') %}
-                        <li class="treeview {{ path.check('contabilidad_egreso_') }}">
-                            <a href="#">
-                                <i class="fa fa-circle-o"></i> Egresos
-                                <span class="pull-right-container"><i
-                                            class="fa fa-angle-left pull-right"></i></span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="{{ path.check('contabilidad_egreso_new') }}">
-                                    <a href="{{ path('contabilidad_egreso_new') }}">
-                                        <i class="fa fa-minus"></i> Nuevo egreso
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('contabilidad_egreso_index') }}">
-                                    <a href="{{ path('contabilidad_egreso_index') }}">
-                                        <i class="fa fa-minus"></i> Listado de egresos
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('contabilidad_egreso_entrada_concepto_index') }}">
-                                    <a href="{{ path('contabilidad_egreso_entrada_concepto_index') }}">
-                                        <i class="fa fa-minus"></i> Conceptos
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('contabilidad_egreso_entrada_proveedor_index') }}">
-                                    <a href="{{ path('contabilidad_egreso_entrada_proveedor_index') }}">
-                                        <i class="fa fa-minus"></i> Proveedores
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('contabilidad_egreso_tipo_index') }}">
-                                    <a href="{{ path('contabilidad_egreso_tipo_index') }}">
-                                        <i class="fa fa-minus"></i> Tipos de egreso
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="treeview {{ path.check('contabilidad_egreso_') }}">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i> Egresos
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ path.check('contabilidad_egreso_new') }}">
+                                        <a href="{{ path('contabilidad_egreso_new') }}">
+                                            <i class="fa fa-minus"></i> Nuevo egreso
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('contabilidad_egreso_index') }}">
+                                        <a href="{{ path('contabilidad_egreso_index') }}">
+                                            <i class="fa fa-minus"></i> Listado de egresos
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('contabilidad_egreso_entrada_concepto_index') }}">
+                                        <a href="{{ path('contabilidad_egreso_entrada_concepto_index') }}">
+                                            <i class="fa fa-minus"></i> Conceptos
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('contabilidad_egreso_entrada_proveedor_index') }}">
+                                        <a href="{{ path('contabilidad_egreso_entrada_proveedor_index') }}">
+                                            <i class="fa fa-minus"></i> Proveedores
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('contabilidad_egreso_tipo_index') }}">
+                                        <a href="{{ path('contabilidad_egreso_tipo_index') }}">
+                                            <i class="fa fa-minus"></i> Tipos de egreso
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         {% endif %}
                     </ul>
                 </li>
@@ -719,6 +719,14 @@
                 </li>
             {% endif %}
             <!-- END AJUSTES -->
+            {% if is_granted('ROLE_ADMIN') %}
+            <li class="admin-buttons">
+                <a href="#" id="pincode-generator" class="btn" style="text-align: inherit">
+                    <i class="fa fa-id-badge" aria-hidden="true"></i>
+                    <span>Generar PINCODE</span>
+                </a>
+            </li>
+            {% endif %}
         </ul>
     </section>
 

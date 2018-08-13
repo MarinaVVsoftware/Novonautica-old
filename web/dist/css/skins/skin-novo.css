@@ -98,7 +98,10 @@
     box-shadow: none;
 }
 
-.skin-novo .wrapper,
+.skin-novo .wrapper {
+    background-color: #5a626f;
+}
+
 .skin-novo .main-sidebar,
 .skin-novo .left-side {
     background-color: #363c52;
