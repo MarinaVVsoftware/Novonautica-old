@@ -200,7 +200,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-3">
-
+                                    {{ form_row(form.descuento) }}
                                 </div>
                             </div>
                             <div class="row espacio-linea">
@@ -810,6 +810,20 @@
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
                                         $ <span id="gransubtot">00.00</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-8">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
+                                    <p class="letra-azul">Descuento:</p>
+                                    <p>
+                                        $ <span id="grandescuento">00.00</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>

@@ -1052,7 +1052,9 @@ $('#appbundle_astillerocotizacion_diasEstadia').keyup(function () {
     $("#estadia_cantidad").html(dias + ' (pie por día)');
     calculaSubtotalesAstillero($('#fila_estadia'));
 });
-
+$('#appbundle_astillerocotizacion_descuento').keyup(function (){
+    calculaTotalesAstillero();
+});
 //-- uso de grua (sacar varada y botadura)
 $('#appbundle_astillerocotizacion_acservicios_0_estatus').on('click', function () {
     astilleroOcultaMuestraFila(this,$('#fila_grua'),$('#fila_grua_mxn'));
@@ -1268,12 +1270,15 @@ function calculaSubtotalesAstillero(fila) {
 }
 
 function calculaTotalesAstillero() {
+    var iva = Number($('#valorsistemaiva').data('valor'));
     var granSubtotalAd = 0;
     var granIvaAd = 0;
     var granTotalAd = 0;
     var valorSubtotal = 0;
     var valorIva = 0;
     var valorTotal = 0;
+    var descuentoPorcentaje = Number($('#appbundle_astillerocotizacion_descuento').val());
+    var granDescuentoAd = 0;
     $("table tbody tr").each(function () {
         if (!$(this).hasClass('hidden')) {
             valorSubtotal = $(this).children('.valorsubtotal').data('valor');
@@ -1293,7 +1298,11 @@ function calculaTotalesAstillero() {
             granTotalAd += valorTotal;
         }
     });
+    granDescuentoAd = (granSubtotalAd * descuentoPorcentaje)/100;
+    granIvaAd = ((granSubtotalAd - granDescuentoAd) * iva)/100;
+    granTotalAd = granSubtotalAd - granDescuentoAd + granIvaAd;
     $('#gransubtot').html((granSubtotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    $('#grandescuento').html((granDescuentoAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     $('#graniva').html((granIvaAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     $('#grantot').html((granTotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 }

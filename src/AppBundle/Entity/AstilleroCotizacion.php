@@ -88,6 +88,13 @@ class AstilleroCotizacion
     private $subtotal;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="descuentototal", type="bigint", nullable=true)
+     */
+    private $descuentototal;
+
+    /**
      * @var float
      *
      * @Groups({"facturacion"})
@@ -331,6 +338,7 @@ class AstilleroCotizacion
         $this->validanovo = 0;
         $this->validacliente = 0;
         $this->foliorecotiza = 0;
+        $this->descuento = 0;
     }
 
     public function __toString()
@@ -964,10 +972,12 @@ class AstilleroCotizacion
 
     /**
      * @param float $descuento
+     * @return AstilleroCotizacion
      */
     public function setDescuento($descuento)
     {
         $this->descuento = $descuento;
+        return $this;
     }
 
     /**
@@ -1160,5 +1170,29 @@ class AstilleroCotizacion
     public function getBorrador()
     {
         return $this->borrador;
+    }
+
+    /**
+     * Set descuentototal.
+     *
+     * @param int|null $descuentototal
+     *
+     * @return AstilleroCotizacion
+     */
+    public function setDescuentototal($descuentototal = null)
+    {
+        $this->descuentototal = $descuentototal;
+
+        return $this;
+    }
+
+    /**
+     * Get descuentototal.
+     *
+     * @return int|null
+     */
+    public function getDescuentototal()
+    {
+        return $this->descuentototal;
     }
 }

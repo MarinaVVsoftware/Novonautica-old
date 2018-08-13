@@ -218,7 +218,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-3">
-
+                                    {{ form_row(form.descuento) }}
                                 </div>
                             </div>
                             {% if astilleroCotizacion.acservicios[8] is defined and astilleroCotizacion.acservicios[8].astilleroServicioBasico %}
@@ -1196,6 +1196,24 @@
                                     <hr>
                                 </div>
                             </div>
+                            {% if astilleroCotizacion.descuento %}
+                                <div class="row">
+                                    <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
+                                        <p class="letra-azul">Descuento:</p>
+                                        <p>
+                                            $ <span id="grandescuento">
+                                                {{ (astilleroCotizacion.descuentototal/100)|number_format(2) }}
+                                            </span>
+                                            <span class="tipo-letra2">MXN</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4 col-sm-offset-8">
+                                        <hr>
+                                    </div>
+                                </div>
+                            {% endif %}
                             <div class="row">
                                 <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>

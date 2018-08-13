@@ -28,6 +28,7 @@
                                 <th class="with-choices">Barco</th>
                                 <th>Fecha Inicio</th>
                                 <th>Fecha Fin</th>
+                                <th>Descuento</th>
                                 <th>Subtotal</th>
                                 <th>Iva</th>
                                 <th>Total</th>
@@ -71,19 +72,20 @@
             {responsivePriority: 3},
             {responsivePriority: 3},
             {responsivePriority: 3},
+            {responsivePriority: 3},
             {responsivePriority: 1},
             {responsivePriority: 1},
             {responsivePriority: 1},
             {responsivePriority: 0},
           ],
           createdRow: function (row, data) {
-            for (let i of [8, 9, 10]) {
+            for (let i of [9, 10, 11]) {
               if (!data[i]) row.children[i].innerHTML = pendiente;
               if (data[i] === 1) row.children[i].innerHTML = rechazado;
               if (data[i] === 2) row.children[i].innerHTML = aceptado;
             }
 
-            row.lastElementChild.innerHTML = writeLastChild(data[8], data[9], data[10], data[11]);
+            row.lastElementChild.innerHTML = writeLastChild(data[9], data[10], data[11], data[12]);
           }
         });
 
@@ -128,16 +130,16 @@
           });
 
         function writeLastChild(validacion, aceptacion, pago, item) {
+            console.log(item.borrador);
+
           const btnClass = 'btn btn-xs btn-block btn-';
           return `
           <td>
             <ul class="list-unstyled">
               <li><a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}' }}">Detalle</a></li>
               {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
-                    {% if '${item.borrador}' == false %}
-                        ${validacion === 0 ? `<li><a class="${btnClass}azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
-                        ${(validacion === 2 && aceptacion === 0) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/validar' }}">Aceptar</a></li>` : ''}
-                    {% endif %}
+                   ${item.borrador === false && validacion === 0 ? `<li><a class="${btnClass}azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
+                   ${(item.borrador === false && validacion === 2 && aceptacion === 0) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/validar' }}">Aceptar</a></li>` : ''}
               {% endif %}
               {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_REQUOTE") or (user.isAdmin())')) %}
               ${(validacion === 1 || aceptacion === 1) && item.estatus ? `<li><a class="${btnClass}naranja" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/recotizar' }}">Recotizar</a></li>` : ''}
