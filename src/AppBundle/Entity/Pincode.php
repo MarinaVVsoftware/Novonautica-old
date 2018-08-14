@@ -38,7 +38,7 @@ class Pincode implements \JsonSerializable
     public function __construct($pinCode)
     {
         $this->pin = $pinCode;
-        $this->expiration = new \DateTime('+5 minutes');
+        $this->expiration = new \DateTime('+24 hours');
     }
 
     /**

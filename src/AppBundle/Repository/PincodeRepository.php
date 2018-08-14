@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use Doctrine\ORM\NonUniqueResultException;
+
 /**
  * PincodeRepository
  *
@@ -10,4 +12,23 @@ namespace AppBundle\Repository;
  */
 class PincodeRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getOneValid($pincode)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT pincode '.
+                'FROM AppBundle:Pincode pincode '.
+                'WHERE pincode.pin = :pincode '.
+                'AND pincode.expiration > CURRENT_TIMESTAMP()'
+            )
+            ->setParameter('pincode', $pincode);
+
+        try {
+            return $query
+                ->setMaxResults(1)
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
+    }
 }

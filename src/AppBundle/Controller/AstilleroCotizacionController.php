@@ -6,6 +6,7 @@ use AppBundle\Entity\AstilleroCotizacion;
 use AppBundle\Entity\AstilleroCotizaServicio;
 use AppBundle\Entity\AstilleroServicioBasico;
 use AppBundle\Entity\Correo;
+use AppBundle\Entity\Pincode;
 use AppBundle\Form\AstilleroCotizacionType;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -100,10 +101,12 @@ class AstilleroCotizacionController extends Controller
     {
         $astilleroCotizacion = new AstilleroCotizacion();
         $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_CREATE', $astilleroCotizacion);
+
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $queryBasico = $qb->select('sb')->from(astilleroServicioBasico::class, 'sb')->getQuery();
         $preciosBasicos = $queryBasico->getArrayResult();
+
         $sistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
         $dolar = $sistema->getDolar();
         $iva = $sistema->getIva();
@@ -116,36 +119,45 @@ class AstilleroCotizacionController extends Controller
         $astilleroElectricidad = new AstilleroCotizaServicio();
         $astilleroLimpieza = new AstilleroCotizaServicio();
         $astilleroInspeccionar = new AstilleroCotizaServicio();
+
         $astilleroGrua
             ->setPrecio($preciosBasicos[0]['precio'])
             ->setDivisa('MXN');
+
         $astilleroEstadia
             ->setCantidad(7)
             ->setPrecio($preciosBasicos[1]['precio'])
             ->setDivisa('USD');
+
         $astilleroInspeccionar
             ->setPrecio($preciosBasicos[7]['precio'])
             ->setDivisa('MXN');
+
         $cantidad = 1;
         $precio = $preciosBasicos[2]['precio'];
         $divisa = 'MXN';
         $astilleroRampa = $this->calculaServicio($astilleroRampa, $cantidad, $precio, $iva,$divisa);
+
         $cantidad = 1;
         $precio = $preciosBasicos[3]['precio'];
         $divisa = 'MXN';
         $astilleroKarcher = $this->calculaServicio($astilleroKarcher, $cantidad, $precio, $iva,$divisa);
+
         $cantidad = 1;
         $precio = $preciosBasicos[4]['precio'];
         $divisa = 'MXN';
         $astilleroExplanada = $this->calculaServicio($astilleroExplanada,$cantidad,$precio,$iva,$divisa);
+
         $cantidad = 1;
         $precio = $preciosBasicos[5]['precio'];
         $divisa = 'MXN';
         $astilleroElectricidad = $this->calculaServicio($astilleroElectricidad,$cantidad,$precio,$iva,$divisa);
+
         $cantidad = 1;
         $precio = $preciosBasicos[6]['precio'];
         $divisa = 'MXN';
         $astilleroLimpieza = $this->calculaServicio($astilleroLimpieza, $cantidad, $precio, $iva,$divisa);
+
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
             ->addAcservicio($astilleroEstadia)
@@ -155,15 +167,20 @@ class AstilleroCotizacionController extends Controller
             ->addAcservicio($astilleroElectricidad)
             ->addAcservicio($astilleroLimpieza)
             ->addAcservicio($astilleroInspeccionar);
+
         $mensaje = $sistema->getMensajeCorreoAstillero();
+
         $astilleroCotizacion->setDolar($dolar)->setMensaje($mensaje);
+
         $form = $this->createForm('AppBundle\Form\AstilleroCotizacionType', $astilleroCotizacion);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $valordolar = $astilleroCotizacion->getDolar();
             $eslora = $astilleroCotizacion->getBarco()->getEslora();
             $cantidadDias = $astilleroCotizacion->getDiasEstadia();
             $sumas = ['granSubtotal'=>0,'granIva'=>0,'granTotal'=>0];
+
             // Uso de grua
             $servicio = $this->getDoctrine()->getRepository(AstilleroServicioBasico::class)->find(1);
             $cantidad = $eslora;
@@ -204,6 +221,7 @@ class AstilleroCotizacionController extends Controller
             $cantidad = $eslora;
             $precio = $astilleroInspeccionar->getPrecio();
             $sumas = $this->guardarServicioBasico($astilleroInspeccionar,$servicio,$cantidad,$precio,$iva,$sumas,$valordolar);
+
             foreach ($astilleroCotizacion->getAcservicios() as $servAst) {
                 if ($servAst->getAstilleroserviciobasico() == null) {
                     $cantidad = $servAst->getCantidad();
@@ -238,10 +256,14 @@ class AstilleroCotizacionController extends Controller
                               'granTotal'=>$sumas['granTotal']+=$total];
                 }
             }
+
+
             $granDescuento = ($sumas['granSubtotal'] * $astilleroCotizacion->getDescuento())/100;
             $granIva = (($sumas['granSubtotal'] - $granDescuento) * $iva) / 100;
             $granTotal = $sumas['granSubtotal'] - $granDescuento + $granIva;
+
             //------------------------------------------------
+
             $fechaHoraActual = new \DateTime('now');
             $astilleroCotizacion
                 ->setDolar($astilleroCotizacion->getDolar())
@@ -260,7 +282,8 @@ class AstilleroCotizacionController extends Controller
 
             $guardarEditable = $form->get('guardareditable')->isClicked();
             $guardarFinalizar = $form->get('guardarfinalizar')->isClicked();
-            if($guardarEditable){
+
+            if ($guardarEditable) {
                 $astilleroCotizacion->setBorrador(true);
                 $astilleroCotizacion->setFolio(0);
 
@@ -276,20 +299,26 @@ class AstilleroCotizacionController extends Controller
 
                 // Asignarle a la cotizacion, quien la creo (El usuario actualmente logueado)
                 $astilleroCotizacion->setCreador($this->getUser());
-
             }
 
             $em->persist($astilleroCotizacion);
             $em->flush();
 
-            if($guardarFinalizar){
+            if ($guardarFinalizar) {
+                $pincode = $em->getRepository(Pincode::class)
+                    ->findOneBy(['pin' => $form->get('pincode')->getViewData()]);
+
+                $em->remove($pincode);
+
                 // Buscar correos a notificar
                 $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                     'evento' => Correo\Notificacion::EVENTO_CREAR,
                     'tipo' => Correo\Notificacion::TIPO_ASTILLERO
                 ]);
+
                 $this->enviaCorreoNotificacion($mailer, $notificables, $astilleroCotizacion);
             }
+
             return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
         }
 
@@ -447,6 +476,7 @@ class AstilleroCotizacionController extends Controller
         $deleteForm = $this->createDeleteForm($astilleroCotizacion);
         $form = $this->createForm(AstilleroCotizacionType::class, $astilleroCotizacion);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $valordolar = $astilleroCotizacion->getDolar();
             $iva = $astilleroCotizacion->getIva();
@@ -575,10 +605,14 @@ class AstilleroCotizacionController extends Controller
             }
 
             $em->persist($astilleroCotizacion);
-
             $em->flush();
 
             if($guardarFinalizar){
+                $pincode = $em->getRepository(Pincode::class)
+                    ->findOneBy(['pin' => $form->get('pincode')->getViewData()]);
+
+                $em->remove($pincode);
+
                 // Buscar correos a notificar
                 $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                     'evento' => Correo\Notificacion::EVENTO_CREAR,

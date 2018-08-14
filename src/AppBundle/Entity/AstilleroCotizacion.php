@@ -51,6 +51,8 @@ class AstilleroCotizacion
     /**
      * @var int
      *
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(name="diasEstadia", type="integer", nullable=true)
      */
     private $diasEstadia;
