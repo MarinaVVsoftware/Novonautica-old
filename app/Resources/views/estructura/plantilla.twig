@@ -45,7 +45,7 @@
     <script type="text/javascript">
       (($) => {
         $(document).on('expanded.pushMenu collapsed.pushMenu', function (e) {
-          $.ajax('{{ app.request.baseUrl }}/usuario/', {
+          $.ajax('{{ path('sidebar_expantion') }}', {
             type: 'POST',
             data: {isExpanded: e.type === 'expanded'}
           })

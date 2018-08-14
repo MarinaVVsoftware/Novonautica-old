@@ -360,7 +360,7 @@ class AstilleroCotizacionController extends Controller
      *
      * @return PdfResponse
      */
-    public function displayMarinaPDF(AstilleroCotizacion $ac, $tipo)
+    public function displayMarinaPDFAction(AstilleroCotizacion $ac, $tipo)
     {
         $em = $this->getDoctrine()->getManager();
         $valor = $em->getRepository('AppBundle:ValorSistema')->find(1);
