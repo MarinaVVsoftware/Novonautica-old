@@ -63,11 +63,11 @@ class AstilleroCotizacion
     private $descuento;
 
     /**
-     * @var float
+     * @var integer
      *
      * @Groups({"facturacion", "AstilleroReporte"})
      *
-     * @ORM\Column(name="dolar", type="float", nullable=true)
+     * @ORM\Column(name="dolar", type="bigint", nullable=true)
      */
     private $dolar;
 
@@ -79,11 +79,11 @@ class AstilleroCotizacion
     private $iva;
 
     /**
-     * @var float
+     * @var integer
      *
      * @Groups({"facturacion"})
      *
-     * @ORM\Column(name="subtotal", type="float", nullable=true)
+     * @ORM\Column(name="subtotal", type="bigint", nullable=true)
      */
     private $subtotal;
 
@@ -95,20 +95,20 @@ class AstilleroCotizacion
     private $descuentototal;
 
     /**
-     * @var float
+     * @var integer
      *
      * @Groups({"facturacion"})
      *
-     * @ORM\Column(name="ivatotal", type="float", nullable=true)
+     * @ORM\Column(name="ivatotal", type="bigint", nullable=true)
      */
     private $ivatotal;
 
     /**
-     * @var float
+     * @var integer
      *
      * @Groups({"facturacion"})
      *
-     * @ORM\Column(name="total", type="float", nullable=true)
+     * @ORM\Column(name="total", type="bigint", nullable=true)
      */
     private $total;
 
@@ -437,7 +437,7 @@ class AstilleroCotizacion
     /**
      * Set dolar
      *
-     * @param float $dolar
+     * @param int $dolar
      *
      * @return AstilleroCotizacion
      */
@@ -451,7 +451,7 @@ class AstilleroCotizacion
     /**
      * Get dolar
      *
-     * @return float
+     * @return int
      */
     public function getDolar()
     {
@@ -485,7 +485,7 @@ class AstilleroCotizacion
     /**
      * Set subtotal
      *
-     * @param float $subtotal
+     * @param int $subtotal
      *
      * @return AstilleroCotizacion
      */
@@ -499,7 +499,7 @@ class AstilleroCotizacion
     /**
      * Get subtotal
      *
-     * @return float
+     * @return int
      */
     public function getSubtotal()
     {
@@ -509,7 +509,7 @@ class AstilleroCotizacion
     /**
      * Set ivatotal
      *
-     * @param float $ivatotal
+     * @param int $ivatotal
      *
      * @return AstilleroCotizacion
      */
@@ -523,7 +523,7 @@ class AstilleroCotizacion
     /**
      * Get ivatotal
      *
-     * @return float
+     * @return int
      */
     public function getIvatotal()
     {
@@ -533,7 +533,7 @@ class AstilleroCotizacion
     /**
      * Set total
      *
-     * @param float $total
+     * @param int $total
      *
      * @return AstilleroCotizacion
      */
@@ -547,7 +547,7 @@ class AstilleroCotizacion
     /**
      * Get total
      *
-     * @return float
+     * @return int
      */
     public function getTotal()
     {
