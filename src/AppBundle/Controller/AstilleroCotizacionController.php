@@ -983,6 +983,11 @@ class AstilleroCotizacionController extends Controller
                 $astilleroCotizacion->setBorrador(false);
                 // Asignarle la recotizacion a quien la creo
                 $astilleroCotizacion->setCreador($this->getUser());
+                // Remover el pincode usado para descuento
+                $pincode = $em->getRepository(Pincode::class)
+                    ->getOneValid($form->get('pincode')->getViewData());
+
+                $em->remove($pincode);
             }
 
             $em->persist($astilleroCotizacionAnterior);
@@ -1343,6 +1348,12 @@ class AstilleroCotizacionController extends Controller
 
             // Asignarle a la cotizacion, quien la creo (El usuario actualmente logueado)
             $astilleroCotizacion->setCreador($this->getUser());
+
+            // Remover el pincode si existe un descuento
+            $pincode = $em->getRepository(Pincode::class)
+                ->getOneValid($form->get('pincode')->getViewData());
+
+            $em->remove($pincode);
 
             $em->persist($astilleroCotizacion);
             $em->flush();
