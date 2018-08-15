@@ -984,13 +984,12 @@ class AstilleroCotizacionController extends Controller
                 // Asignarle la recotizacion a quien la creo
                 $astilleroCotizacion->setCreador($this->getUser());
             }
-            /*
+
             $em->persist($astilleroCotizacionAnterior);
             $em->persist($astilleroCotizacion);
             $em->flush();
 
             return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
-            */
         }
 
         return $this->render('astillero/cotizacion/recotizar.html.twig', [
