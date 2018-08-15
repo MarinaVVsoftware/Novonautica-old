@@ -179,7 +179,9 @@
                                     {{ form_row(form.diasEstadia) }}
                                     {{ form_row(form.dolar) }}
                                     {{ form_row(form.descuento) }}
-                                    {{ form_row(form.pincode) }}
+                                    <div id="pincode-container" class="hidden">
+                                        {{ form_row(form.pincode) }}
+                                    </div>
                                 </div>
                             </div>
                             <div class="row espacio-linea">
@@ -1717,6 +1719,21 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
+
+      const discountInput = document.getElementById('appbundle_astillerocotizacion_descuento');
+      const pincodeContainer = document.getElementById('pincode-container');
+      const thereIsDiscount = function () {
+        if (Number(discountInput.value) > 0) {
+          pincodeContainer.classList.remove('hidden');
+        } else {
+          pincodeContainer.classList.add('hidden');
+        }
+      };
+
+      thereIsDiscount();
+
+      discountInput.addEventListener('input', thereIsDiscount);
+
       $('#productos').change('.select-busca-producto', function (e) {
         //console.log('seleccionando un servicio '+ $('.select-busca-producto:focus option:selected' ).val());
         var idservicio = $('.select-busca-producto:focus option:selected').val();
