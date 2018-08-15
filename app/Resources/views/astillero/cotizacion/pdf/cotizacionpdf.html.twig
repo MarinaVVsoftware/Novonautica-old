@@ -318,6 +318,13 @@
                     <td class="borde-bajo-doble">
                         $ {{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</td>
                 </tr>
+                {% if astilleroCotizacion.descuento %}
+                <tr>
+                    <th>Descuento {{ astilleroCotizacion.descuento }}%</th>
+                    <td class="borde-bajo-doble">
+                        $ {{ (astilleroCotizacion.descuentototal/100)|number_format(2) }}</td>
+                </tr>
+                {% endif %}
                 <tr>
                     <th>IVA {{ astilleroCotizacion.iva }}%</th>
                     <td class="borde-bajo-doble">

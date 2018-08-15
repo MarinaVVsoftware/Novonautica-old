@@ -54,7 +54,8 @@ class ProductHaveStockValidator extends ConstraintValidator
             'WHERE IDENTITY(e.producto) = ?1 '.
             'ORDER BY quantity';
 
-        $stockQuantity = (int) $this->entityManager->createQuery($query)
+        $stockQuantity = (int) $this->entityManager
+            ->createQuery($query)
             ->setParameter(1, $concepto->getProducto()->getId())
             ->getSingleScalarResult();
 

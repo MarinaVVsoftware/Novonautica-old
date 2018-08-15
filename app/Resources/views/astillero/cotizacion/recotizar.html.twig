@@ -202,23 +202,12 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            {{ form_label(form.diasEstadia) }}
-                                            {{ form_widget(form.diasEstadia) }}
-                                        </div>
+                                    {{ form_row(form.diasEstadia) }}
+                                    {{ form_row(form.dolar) }}
+                                    {{ form_row(form.descuento) }}
+                                    <div id="pincode-container" class="hidden">
+                                        {{ form_row(form.pincode) }}
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            {{ form_label(form.dolar) }}
-                                            {{ form_widget(form.dolar) }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-3">
-
                                 </div>
                             </div>
                             {% if astilleroCotizacion.acservicios[8] is defined and astilleroCotizacion.acservicios[8].astilleroServicioBasico %}
@@ -1196,6 +1185,24 @@
                                     <hr>
                                 </div>
                             </div>
+                            {% if astilleroCotizacion.descuento %}
+                                <div class="row">
+                                    <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
+                                        <p class="letra-azul">Descuento:</p>
+                                        <p>
+                                            $ <span id="grandescuento">
+                                                {{ (astilleroCotizacion.descuentototal/100)|number_format(2) }}
+                                            </span>
+                                            <span class="tipo-letra2">MXN</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4 col-sm-offset-8">
+                                        <hr>
+                                    </div>
+                                </div>
+                            {% endif %}
                             <div class="row">
                                 <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
@@ -1379,6 +1386,20 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
+      const discountInput = document.getElementById('appbundle_astillerocotizacion_descuento');
+      const pincodeContainer = document.getElementById('pincode-container');
+      const thereIsDiscount = function () {
+        if (Number(discountInput.value) > 0) {
+          pincodeContainer.classList.remove('hidden');
+        } else {
+          pincodeContainer.classList.add('hidden');
+        }
+      };
+
+      thereIsDiscount();
+
+      discountInput.addEventListener('input', thereIsDiscount);
+
         $('#productos').change('.select-busca-producto',function (e) {
             var idservicio = $('.select-busca-producto:focus option:selected' ).val();
             var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();

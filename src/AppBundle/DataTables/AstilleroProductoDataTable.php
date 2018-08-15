@@ -37,13 +37,16 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
         $qb = $astilleroProductoRepo->createQueryBuilder('ap');
         $results->recordsTotal = $qb->select('COUNT(ap.id)')->getQuery()->getSingleScalarResult();
 
-        $q = $qb->select('ap');
+        $q = $qb->select('ap')
+            ->leftJoin('ap.proveedor', 'p');
 
         if ($request->search->value) {
-            $q->where('(LOWER(ap.nombre) LIKE :search OR ' .
-                'ap.identificador LIKE :search OR ap.precio LIKE :search OR ap.unidad LIKE :search OR ap.proveedor LIKE :search)'
-            )
-                ->setParameter('search', strtolower("%{$request->search->value}%"));
+            $q->where('(LOWER(ap.identificador) LIKE :search OR '.
+                'LOWER(ap.nombre) LIKE :search OR '.
+                'LOWER(ap.unidad) LIKE :search OR '.
+                'LOWER(p.nombre) LIKE :search)'
+            );
+            $q->setParameter('search', strtolower("%{$request->search->value}%"));
         }
 
         foreach ($request->order as $order) {
@@ -78,9 +81,9 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
                 $producto->getIdentificador(),
                 $producto->getProveedor() ? $producto->getProveedor()->getNombre() : '',
                 $producto->getNombre(),
-                '$' . number_format($producto->getPrecio() / 100, 2).' MXN',
+                '$'.number_format($producto->getPrecio() / 100, 2).' MXN',
                 $producto->getUnidad(),
-                $producto->getId()
+                $producto->getId(),
             ];
         }
 

@@ -62,7 +62,8 @@
         .novo-checkbox-container .checkbox input[type="checkbox"]:checked + label:after {
             opacity: 1;
         }
-        #appbundle_astillerocotizacion_acservicios{
+
+        #appbundle_astillerocotizacion_acservicios {
             display: none;
         }
     </style>
@@ -75,7 +76,8 @@
                     <h3 class="box-title letra-blanca">Barco / Cliente</h3>
 
                     <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i>
                         </button>
                     </div>
                     <!-- /.box-tools -->
@@ -85,17 +87,20 @@
                     <div class="row">
                         <div class="col-sm-5">
                             <div class="barco-nombre">
-                                <label>Barco</label><div class='info-input'>{{ astilleroCotizacion.barco }} </div>
+                                <label>Barco</label>
+                                <div class='info-input'>{{ astilleroCotizacion.barco }} </div>
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="barco-eslora">
-                                <label>Eslora</label><div class='info-input'>{{ astilleroCotizacion.barco.eslora }} </div>
+                                <label>Eslora</label>
+                                <div class='info-input'>{{ astilleroCotizacion.barco.eslora }} </div>
                             </div>
                         </div>
                         <div class="col-sm-5">
                             <div class="cliente-nombre">
-                                <label>Cliente</label><div class='info-input'>{{ astilleroCotizacion.barco.cliente }}</div>
+                                <label>Cliente</label>
+                                <div class='info-input'>{{ astilleroCotizacion.barco.cliente }}</div>
                             </div>
                         </div>
                     </div>
@@ -154,7 +159,8 @@
                                         <label>Modelo</label>
                                         <div class='info-input'>{{ astilleroCotizacion.barco.modelo }}</div>
                                         <label>Eslora</label>
-                                        <div id='eslora' class='info-input' data-valor="{{ astilleroCotizacion.barco.eslora }}">{{ astilleroCotizacion.barco.eslora }}</div>
+                                        <div id='eslora' class='info-input'
+                                             data-valor="{{ astilleroCotizacion.barco.eslora }}">{{ astilleroCotizacion.barco.eslora }}</div>
                                         <label>Manga</label>
                                         <div class='info-input'>{{ astilleroCotizacion.barco.manga }}</div>
                                         <label>Nombre del capitán</label>
@@ -180,7 +186,7 @@
                             </div>
                             <div class="row espacio-linea-arriba2">
                                 <div class="col-sm-12 text-right">
-                                    <a class="btn btn-morado-claro btnNext" >
+                                    <a class="btn btn-morado-claro btnNext">
                                         Siguiente
                                         <i class="fa fa-arrow-right" aria-hidden="true"></i>
                                     </a>
@@ -208,23 +214,12 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            {{ form_label(form.diasEstadia) }}
-                                            {{ form_widget(form.diasEstadia) }}
-                                        </div>
+                                    {{ form_row(form.diasEstadia) }}
+                                    {{ form_row(form.dolar) }}
+                                    {{ form_row(form.descuento) }}
+                                    <div id="pincode-container" class="hidden">
+                                        {{ form_row(form.pincode) }}
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            {{ form_label(form.dolar) }}
-                                            {{ form_widget(form.dolar) }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-3">
-
                                 </div>
                             </div>
                             {% if astilleroCotizacion.acservicios[8] is defined and astilleroCotizacion.acservicios[8].astilleroServicioBasico %}
@@ -419,7 +414,8 @@
                                              {% endif %}
                                          </span>
                                     </div>
-                                </div> <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-3">
                                     <label>Cantidad</label>
                                     {% if form.acservicios.6.cantidad is defined %}
                                         {{ form_widget(form.acservicios.6.cantidad) }}
@@ -535,10 +531,10 @@
                             </div>
                             <div class="row espacio-linea-arriba2">
                                 <div class="col-sm-12 text-right">
-                                    <a class="btn btn-morado-claro btnPrevious" >
+                                    <a class="btn btn-morado-claro btnPrevious">
                                         <i class="fa fa-arrow-left" aria-hidden="true"></i> Anterior
                                     </a>
-                                    <a class="btn btn-morado-claro btnNext" >
+                                    <a class="btn btn-morado-claro btnNext">
                                         Siguiente <i class="fa fa-arrow-right" aria-hidden="true"></i>
                                     </a>
                                 </div>
@@ -548,8 +544,9 @@
                             <div class="row">
                                 <div class="col-sm-12 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="valdolar" class="" ><span class="dolarval">
-                                            {{ (astilleroCotizacion.dolar/100)|number_format(2) }}</span> <small>MXN</small>
+                                    <div id="valdolar" class=""><span class="dolarval">
+                                            {{ (astilleroCotizacion.dolar/100)|number_format(2) }}</span>
+                                        <small>MXN</small>
                                     </div>
                                 </div>
                             </div>
@@ -588,12 +585,15 @@
                                         </thead>
                                         <tbody>
                                         {% if astilleroCotizacion.acservicios[8] is defined and astilleroCotizacion.acservicios[8].astilleroServicioBasico %}
-                                            <tr id="fila_dia_adicional" class="{% if astilleroCotizacion.acservicios.8.estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="fila_estadia_mxn">
+                                            <tr id="fila_dia_adicional"
+                                                class="{% if astilleroCotizacion.acservicios.8.estatus == 0 %}hidden{% endif %} servicio-agregado"
+                                                data-id="fila_estadia_mxn">
                                                 <td id="dia_adicional_cantidad" class="valorcantidad"
                                                     data-valor="{{ astilleroCotizacion.acservicios.8.cantidad }}"
                                                     data-dias="{{ astilleroCotizacion.acservicios.8.cantidad/astilleroCotizacion.barco.eslora }}"
                                                     data-eslora="{{ astilleroCotizacion.barco.eslora }}">
-                                                    {{ astilleroCotizacion.acservicios.8.cantidad / astilleroCotizacion.barco.eslora }} (pie por día)
+                                                    {{ astilleroCotizacion.acservicios.8.cantidad / astilleroCotizacion.barco.eslora }}
+                                                    (pie por día)
                                                 </td>
                                                 <td>Días adicionales</td>
                                                 <td id="dia_adicional_precio" class="valorprecio"
@@ -601,15 +601,18 @@
                                                     $ {{ ((astilleroCotizacion.acservicios.8.precio)/100)|number_format(2) }}
                                                     <small>{{ astilleroCotizacion.acservicios[8].divisa }}</small>
                                                 </td>
-                                                <td id="dia_adicional_subtotal" class="valorsubtotal" data-valor="{{ (astilleroCotizacion.acservicios.8.subtotal /100) }}">
+                                                <td id="dia_adicional_subtotal" class="valorsubtotal"
+                                                    data-valor="{{ (astilleroCotizacion.acservicios.8.subtotal /100) }}">
                                                     $ {{ (astilleroCotizacion.acservicios.8.subtotal/100)|number_format(2) }}
                                                     <small>MXN</small>
                                                 </td>
-                                                <td id="dia_adicional_iva" class="valoriva" data-valor="{{ (astilleroCotizacion.acservicios.8.iva /100) }}">
+                                                <td id="dia_adicional_iva" class="valoriva"
+                                                    data-valor="{{ (astilleroCotizacion.acservicios.8.iva /100) }}">
                                                     $ {{ (astilleroCotizacion.acservicios.8.iva /100)|number_format(2) }}
                                                     <small>MXN</small>
                                                 </td>
-                                                <td id="dia_adicional_total" class="valortotal" data-valor="{{ (astilleroCotizacion.acservicios.8.total /100) }}">
+                                                <td id="dia_adicional_total" class="valortotal"
+                                                    data-valor="{{ (astilleroCotizacion.acservicios.8.total /100) }}">
                                                     $ {{ (astilleroCotizacion.acservicios.8.total / 100)|number_format(2) }}
                                                     <small>MXN</small>
                                                 </td>
@@ -617,76 +620,99 @@
                                             </tr>
                                         {% endif %}
 
-                                        <tr id="fila_grua" class="{% if astilleroCotizacion.acservicios[0].estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="fila_grua_mxn">
-                                            <td id="grua_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[0].cantidad }}">
+                                        <tr id="fila_grua"
+                                            class="{% if astilleroCotizacion.acservicios[0].estatus == 0 %}hidden{% endif %} servicio-agregado"
+                                            data-id="fila_grua_mxn">
+                                            <td id="grua_cantidad" class="valorcantidad"
+                                                data-valor="{{ astilleroCotizacion.acservicios[0].cantidad }}">
                                                 {{ astilleroCotizacion.acservicios[0].cantidad }}
                                             </td>
                                             <td>Sacar varada y boradura</td>
-                                            <td id="grua_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[0].precio/100 }}">
+                                            <td id="grua_precio" class="valorprecio"
+                                                data-valor="{{ astilleroCotizacion.acservicios[0].precio/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios[0].precio/100)|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[0].divisa }}</small>
                                             </td>
-                                            <td id="grua_subtotal" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[0].subtotal/100 }}">
+                                            <td id="grua_subtotal" class="valorsubtotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios[0].subtotal/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.0.subtotal/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="grua_iva" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios.0.iva/100 }}">
+                                            <td id="grua_iva" class="valoriva"
+                                                data-valor="{{ astilleroCotizacion.acservicios.0.iva/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.0.iva/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="grua_total" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios.0.total/100 }}">
+                                            <td id="grua_total" class="valortotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios.0.total/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.0.total/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
                                             <td></td>
                                         </tr>
-                                        <tr id="cotizakarcher" class="{% if astilleroCotizacion.acservicios[3].estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="cotizakarcher_mxn">
-                                            <td class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[3].cantidad }}">
+                                        <tr id="cotizakarcher"
+                                            class="{% if astilleroCotizacion.acservicios[3].estatus == 0 %}hidden{% endif %} servicio-agregado"
+                                            data-id="cotizakarcher_mxn">
+                                            <td class="valorcantidad"
+                                                data-valor="{{ astilleroCotizacion.acservicios[3].cantidad }}">
                                                 {{ astilleroCotizacion.acservicios[3].cantidad }}
                                             </td>
                                             <td>Uso de karcher</td>
-                                            <td id="karcher_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[3].precio/100 }}">
+                                            <td id="karcher_precio" class="valorprecio"
+                                                data-valor="{{ astilleroCotizacion.acservicios[3].precio/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios[3].precio/100)|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[3].divisa }}</small>
                                             </td>
-                                            <td id="karcher_subtotal" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[3].subtotal/100 }}">
+                                            <td id="karcher_subtotal" class="valorsubtotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios[3].subtotal/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios[3].subtotal/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="karcher_iva" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[3].iva/100 }}">
+                                            <td id="karcher_iva" class="valoriva"
+                                                data-valor="{{ astilleroCotizacion.acservicios[3].iva/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios[3].iva/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="karcher_total" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[3].total/100 }}">
+                                            <td id="karcher_total" class="valortotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios[3].total/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios[3].total/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
                                             <td></td>
                                         </tr>
-                                        <tr id="cotizaelectricidad" class="{% if astilleroCotizacion.acservicios.5.estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="cotizaelectricidad_mxn">
-                                            <td id="electricidad_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios.5.cantidad }}">
+                                        <tr id="cotizaelectricidad"
+                                            class="{% if astilleroCotizacion.acservicios.5.estatus == 0 %}hidden{% endif %} servicio-agregado"
+                                            data-id="cotizaelectricidad_mxn">
+                                            <td id="electricidad_cantidad" class="valorcantidad"
+                                                data-valor="{{ astilleroCotizacion.acservicios.5.cantidad }}">
                                                 {{ astilleroCotizacion.acservicios.5.cantidad }}
                                             </td>
                                             <td>Conexión a electricidad</td>
-                                            <td id="electricidad_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios.5.precio/100 }}">
+                                            <td id="electricidad_precio" class="valorprecio"
+                                                data-valor="{{ astilleroCotizacion.acservicios.5.precio/100 }}">
                                                 ${{ (astilleroCotizacion.acservicios[5].precio/100)|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[5].divisa }}</small>
                                             </td>
-                                            <td id="electricidad_subtotal" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios.5.subtotal/100 }}">
+                                            <td id="electricidad_subtotal" class="valorsubtotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios.5.subtotal/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.5.subtotal/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="electricidad_iva" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios.5.iva/100 }}">
+                                            <td id="electricidad_iva" class="valoriva"
+                                                data-valor="{{ astilleroCotizacion.acservicios.5.iva/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.5.iva/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="electricidad_total" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios.5.total/100 }}">
+                                            <td id="electricidad_total" class="valortotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios.5.total/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.5.total/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
                                             <td></td>
                                         </tr>
-                                        <tr id="fila_estadia" class="{% if astilleroCotizacion.acservicios.1.estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="fila_estadia_mxn">
+                                        <tr id="fila_estadia"
+                                            class="{% if astilleroCotizacion.acservicios.1.estatus == 0 %}hidden{% endif %} servicio-agregado"
+                                            data-id="fila_estadia_mxn">
                                             <td id="estadia_cantidad" class="valorcantidad"
                                                 data-valor="{{ astilleroCotizacion.acservicios.1.cantidad }}"
                                                 data-dias="{{ astilleroCotizacion.diasEstadia }}"
@@ -699,107 +725,138 @@
                                                 $ {{ ((astilleroCotizacion.acservicios.1.precio)/100)|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[1].divisa }}</small>
                                             </td>
-                                            <td id="estadia_subtotal" class="valorsubtotal" data-valor="{{ (astilleroCotizacion.acservicios.1.subtotal /100) }}">
+                                            <td id="estadia_subtotal" class="valorsubtotal"
+                                                data-valor="{{ (astilleroCotizacion.acservicios.1.subtotal /100) }}">
                                                 $ {{ (astilleroCotizacion.acservicios.1.subtotal/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="estadia_iva" class="valoriva" data-valor="{{ (astilleroCotizacion.acservicios.1.iva /100) }}">
+                                            <td id="estadia_iva" class="valoriva"
+                                                data-valor="{{ (astilleroCotizacion.acservicios.1.iva /100) }}">
                                                 $ {{ (astilleroCotizacion.acservicios.1.iva /100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="estadia_total" class="valortotal" data-valor="{{ (astilleroCotizacion.acservicios.1.total /100) }}">
+                                            <td id="estadia_total" class="valortotal"
+                                                data-valor="{{ (astilleroCotizacion.acservicios.1.total /100) }}">
                                                 $ {{ (astilleroCotizacion.acservicios.1.total / 100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
                                             <td></td>
                                         </tr>
-                                        <tr id="cotizalimpieza" class="{% if astilleroCotizacion.acservicios.6.estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="cotizalimpieza_mxn">
-                                            <td id="limpieza_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[6].cantidad }}">
+                                        <tr id="cotizalimpieza"
+                                            class="{% if astilleroCotizacion.acservicios.6.estatus == 0 %}hidden{% endif %} servicio-agregado"
+                                            data-id="cotizalimpieza_mxn">
+                                            <td id="limpieza_cantidad" class="valorcantidad"
+                                                data-valor="{{ astilleroCotizacion.acservicios[6].cantidad }}">
                                                 {{ astilleroCotizacion.acservicios[6].cantidad }}
                                             </td>
                                             <td>Limpieza de locación</td>
-                                            <td id="limpieza_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[6].precio/100 }}">
+                                            <td id="limpieza_precio" class="valorprecio"
+                                                data-valor="{{ astilleroCotizacion.acservicios[6].precio/100 }}">
                                                 ${{ (astilleroCotizacion.acservicios[6].precio/100)|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[6].divisa }}</small>
                                             </td>
-                                            <td id="limpieza_subtotal" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[6].subtotal/100 }}">
+                                            <td id="limpieza_subtotal" class="valorsubtotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios[6].subtotal/100 }}">
                                                 ${{ (astilleroCotizacion.acservicios[6].subtotal/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="limpieza_iva" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[6].iva/100 }}">
+                                            <td id="limpieza_iva" class="valoriva"
+                                                data-valor="{{ astilleroCotizacion.acservicios[6].iva/100 }}">
                                                 ${{ (astilleroCotizacion.acservicios[6].iva/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="limpieza_total" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[6].total/100 }}">
+                                            <td id="limpieza_total" class="valortotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios[6].total/100 }}">
                                                 ${{ (astilleroCotizacion.acservicios[6].total/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
                                             <td></td>
                                         </tr>
-                                        <tr id="cotizarampa" class="{% if astilleroCotizacion.acservicios.2.estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="cotizarampa_mxn">
-                                            <td class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios.2.cantidad }}">
+                                        <tr id="cotizarampa"
+                                            class="{% if astilleroCotizacion.acservicios.2.estatus == 0 %}hidden{% endif %} servicio-agregado"
+                                            data-id="cotizarampa_mxn">
+                                            <td class="valorcantidad"
+                                                data-valor="{{ astilleroCotizacion.acservicios.2.cantidad }}">
                                                 {{ astilleroCotizacion.acservicios.2.cantidad }}
                                             </td>
                                             <td>Uso de rampa</td>
-                                            <td id="rampa_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios.2.precio/100 }}">
+                                            <td id="rampa_precio" class="valorprecio"
+                                                data-valor="{{ astilleroCotizacion.acservicios.2.precio/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.2.precio/100)|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[2].divisa }}</small>
                                             </td>
-                                            <td id="rampa_subtotal" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios.2.subtotal/100 }}">
+                                            <td id="rampa_subtotal" class="valorsubtotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios.2.subtotal/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.2.subtotal/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="rampa_iva" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios.2.iva/100 }}">
+                                            <td id="rampa_iva" class="valoriva"
+                                                data-valor="{{ astilleroCotizacion.acservicios.2.iva/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.2.iva/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="rampa_total" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios.2.total/100 }}">
+                                            <td id="rampa_total" class="valortotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios.2.total/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.2.total/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
                                             <td></td>
                                         </tr>
-                                        <tr id="cotizaexplanada" class="{% if astilleroCotizacion.acservicios.4.estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="cotizaexplanada_mxn">
-                                            <td id="explanada_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios.4.cantidad }}">
+                                        <tr id="cotizaexplanada"
+                                            class="{% if astilleroCotizacion.acservicios.4.estatus == 0 %}hidden{% endif %} servicio-agregado"
+                                            data-id="cotizaexplanada_mxn">
+                                            <td id="explanada_cantidad" class="valorcantidad"
+                                                data-valor="{{ astilleroCotizacion.acservicios.4.cantidad }}">
                                                 {{ astilleroCotizacion.acservicios.4.cantidad }}
                                             </td>
                                             <td>Uso de explanada</td>
-                                            <td id="explanada_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios.4.precio/100 }}">
+                                            <td id="explanada_precio" class="valorprecio"
+                                                data-valor="{{ astilleroCotizacion.acservicios.4.precio/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.4.precio/100)|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[4].divisa }}</small>
                                             </td>
-                                            <td id="explanada_subtotal" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios.4.subtotal/100 }}">
+                                            <td id="explanada_subtotal" class="valorsubtotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios.4.subtotal/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.4.subtotal/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="explanada_iva" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios.4.iva/100 }}">
+                                            <td id="explanada_iva" class="valoriva"
+                                                data-valor="{{ astilleroCotizacion.acservicios.4.iva/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.4.iva/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="explanada_total" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios.4.total/100 }}">
+                                            <td id="explanada_total" class="valortotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios.4.total/100 }}">
                                                 $ {{ (astilleroCotizacion.acservicios.4.total/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
                                             <td></td>
                                         </tr>
-                                        <tr id="cotizainspeccionar" class="{% if astilleroCotizacion.acservicios.7.estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="cotizainspeccionar_mxn">
-                                            <td id="inspeccionar_cantidad" class="valorcantidad" data-valor="{{ astilleroCotizacion.acservicios[7].cantidad }}">
+                                        <tr id="cotizainspeccionar"
+                                            class="{% if astilleroCotizacion.acservicios.7.estatus == 0 %}hidden{% endif %} servicio-agregado"
+                                            data-id="cotizainspeccionar_mxn">
+                                            <td id="inspeccionar_cantidad" class="valorcantidad"
+                                                data-valor="{{ astilleroCotizacion.acservicios[7].cantidad }}">
                                                 {{ astilleroCotizacion.acservicios[7].cantidad }}
                                             </td>
                                             <td>Sacar para inspeccionar</td>
-                                            <td id="inspeccionar_precio" class="valorprecio" data-valor="{{ astilleroCotizacion.acservicios[7].precio/100 }}">
+                                            <td id="inspeccionar_precio" class="valorprecio"
+                                                data-valor="{{ astilleroCotizacion.acservicios[7].precio/100 }}">
                                                 ${{ (astilleroCotizacion.acservicios[7].precio/100)|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[7].divisa }}</small>
                                             </td>
-                                            <td id="inspeccionar_subtotal" class="valorsubtotal" data-valor="{{ astilleroCotizacion.acservicios[7].subtotal/100 }}">
+                                            <td id="inspeccionar_subtotal" class="valorsubtotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios[7].subtotal/100 }}">
                                                 ${{ (astilleroCotizacion.acservicios[7].subtotal/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="inspeccionar_iva" class="valoriva" data-valor="{{ astilleroCotizacion.acservicios[7].iva/100 }}">
+                                            <td id="inspeccionar_iva" class="valoriva"
+                                                data-valor="{{ astilleroCotizacion.acservicios[7].iva/100 }}">
                                                 ${{ (astilleroCotizacion.acservicios[7].iva/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
-                                            <td id="inspeccionar_total" class="valortotal" data-valor="{{ astilleroCotizacion.acservicios[7].total/100 }}">
+                                            <td id="inspeccionar_total" class="valortotal"
+                                                data-valor="{{ astilleroCotizacion.acservicios[7].total/100 }}">
                                                 ${{ (astilleroCotizacion.acservicios[7].total/100)|number_format(2) }}
                                                 <small>MXN</small>
                                             </td>
@@ -849,7 +906,8 @@
                                             {% if servicioagregado.vars.value.estatus %}
                                                 {% if servicioagregado.vars.value.servicio %}
                                                     <tr class="servicio-agregado" data-id="0">
-                                                        <td class="valorcantidad" data-valor="{{ servicioagregado.vars.value.cantidad }}">
+                                                        <td class="valorcantidad"
+                                                            data-valor="{{ servicioagregado.vars.value.cantidad }}">
                                                             {{ form_widget(servicioagregado.cantidad) }}
                                                         </td>
                                                         <td class="td-libre">{{ servicioagregado.vars.value.servicio }}</td>
@@ -862,7 +920,7 @@
                                                             {% else %}
                                                                 {{ ((servicioagregado.vars.value.precio)/100) }}
                                                             {% endif %}"
-                                                            data-valorreal ="{{ servicioagregado.vars.value.precio/100 }}"
+                                                            data-valorreal="{{ servicioagregado.vars.value.precio/100 }}"
                                                             data-divisa="{{ servicioagregado.vars.value.divisa }}">
                                                             $ {{ ((servicioagregado.vars.value.precio/100)|number_format(2)) }}
                                                             <small>{{ servicioagregado.vars.value.divisa }}</small>
@@ -870,15 +928,18 @@
                                                                 {{ form_widget(servicioagregado.precio,{'attr':{'class':'hidden'}}) }}
                                                             </div>
                                                         </td>
-                                                        <td  class="valorsubtotal" data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">
+                                                        <td class="valorsubtotal"
+                                                            data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">
                                                             $ {{ (servicioagregado.vars.value.subtotal/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
-                                                        <td class="valoriva" data-valor="{{ servicioagregado.vars.value.iva/100 }}">
+                                                        <td class="valoriva"
+                                                            data-valor="{{ servicioagregado.vars.value.iva/100 }}">
                                                             $ {{ (servicioagregado.vars.value.iva/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
-                                                        <td class="valortotal" data-valor="{{ servicioagregado.vars.value.total/100 }}">
+                                                        <td class="valortotal"
+                                                            data-valor="{{ servicioagregado.vars.value.total/100 }}">
                                                             $ {{ (servicioagregado.vars.value.total/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
@@ -960,7 +1021,8 @@
                                             {% if servicioagregado.vars.value.estatus %}
                                                 {% if servicioagregado.vars.value.otroservicio %}
                                                     <tr class="servicio-agregado" data-id="0">
-                                                        <td class="valorcantidad" data-valor="{{ servicioagregado.vars.value.cantidad }}">
+                                                        <td class="valorcantidad"
+                                                            data-valor="{{ servicioagregado.vars.value.cantidad }}">
                                                             {{ form_widget(servicioagregado.cantidad) }}
                                                         </td>
                                                         <td class="td-producto hide">{{ form_widget(servicioagregado.producto) }}</td>
@@ -970,15 +1032,18 @@
                                                             data-valor="{{ servicioagregado.vars.value.precio/100 }}">
                                                             {{ form_widget(servicioagregado.precio) }}
                                                         </td>
-                                                        <td class="valorsubtotal" data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">
+                                                        <td class="valorsubtotal"
+                                                            data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">
                                                             $ {{ (servicioagregado.vars.value.subtotal/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
-                                                        <td  class="valoriva" data-valor="{{ servicioagregado.vars.value.iva/100 }}">
+                                                        <td class="valoriva"
+                                                            data-valor="{{ servicioagregado.vars.value.iva/100 }}">
                                                             $ {{ (servicioagregado.vars.value.iva/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
-                                                        <td class="valortotal" data-valor="{{ servicioagregado.vars.value.total/100 }}">
+                                                        <td class="valortotal"
+                                                            data-valor="{{ servicioagregado.vars.value.total/100 }}">
                                                             $ {{ (servicioagregado.vars.value.total/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
@@ -1065,15 +1130,18 @@
                                                                 {{ form_widget(servicioagregado.precio,{'attr':{'class':'hidden'}}) }}
                                                             </div>
                                                         </td>
-                                                        <td class="valorsubtotal" data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">
+                                                        <td class="valorsubtotal"
+                                                            data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">
                                                             $ {{ (servicioagregado.vars.value.subtotal/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
-                                                        <td class="valoriva" data-valor="{{ servicioagregado.vars.value.iva/100 }}">
+                                                        <td class="valoriva"
+                                                            data-valor="{{ servicioagregado.vars.value.iva/100 }}">
                                                             $ {{ (servicioagregado.vars.value.iva/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
-                                                        <td class="valortotal" data-valor="{{ servicioagregado.vars.value.total/100 }}">
+                                                        <td class="valortotal"
+                                                            data-valor="{{ servicioagregado.vars.value.total/100 }}">
                                                             $ {{ (servicioagregado.vars.value.total/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
@@ -1086,7 +1154,7 @@
                                                         <td class="valorpromedio">
                                                             {{ form_widget(servicioagregado.promedio) }}
                                                             {% if servicioagregado.vars.value.tipoCantidad %}
-                                                            {{ servicioagregado.vars.value.promedio|number_format(2) }}
+                                                                {{ servicioagregado.vars.value.promedio|number_format(2) }}
                                                             {% endif %}
                                                         </td>
                                                         <td class="valorgrupo hide">
@@ -1117,7 +1185,23 @@
                                 <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
-                                        $ <span id="gransubtot">{{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</span>
+                                        $
+                                        <span id="gransubtot">{{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</span>
+                                        <span class="tipo-letra2">MXN</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-8">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
+                                    <p class="letra-azul">Descuento:</p>
+                                    <p>
+                                        $
+                                        <span id="grandescuento">{{ (astilleroCotizacion.descuentototal/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -1131,7 +1215,8 @@
                                 <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
-                                        $ <span id="graniva">{{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</span>
+                                        $
+                                        <span id="graniva">{{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -1145,7 +1230,8 @@
                                 <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
-                                        $ <span id="grantot">{{ (astilleroCotizacion.total/100)|number_format(2) }}</span>
+                                        $
+                                        <span id="grantot">{{ (astilleroCotizacion.total/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -1157,10 +1243,10 @@
                             </div>
                             <div class="row espacio-linea-arriba2">
                                 <div class="col-sm-12 text-right">
-                                    <a class="btn btn-morado-claro btnPrevious" >
+                                    <a class="btn btn-morado-claro btnPrevious">
                                         <i class="fa fa-arrow-left" aria-hidden="true"></i> Anterior
                                     </a>
-                                    <a class="btn btn-morado-claro btnNext" >
+                                    <a class="btn btn-morado-claro btnNext">
                                         Siguiente <i class="fa fa-arrow-right" aria-hidden="true"></i>
                                     </a>
                                 </div>
@@ -1197,7 +1283,7 @@
                             </div>
                             <div class="row espacio-linea-arriba2">
                                 <div class="col-sm-12 text-right">
-                                    <a class="btn btn-morado-claro btnPrevious" >
+                                    <a class="btn btn-morado-claro btnPrevious">
                                         <i class="fa fa-arrow-left" aria-hidden="true"></i> Anterior
                                     </a>
                                 </div>
@@ -1310,69 +1396,90 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        (function ($) {
-            $('.selectbarcobuscar').change(function (e) {
-                $('#loading').show();
-                $("#info-barco").empty();
-                $("#info-cliente").empty();
-                var url = "{{ path('ajax_busca_barco_todo',{'id':'iddelbarco'}) }}";
-                url = url.replace("iddelbarco", $(this).val());
-                $.ajax({
-                    method: "GET",
-                    url: url,
-                    dataType: 'json',
-                    success: function (barco) {
-                        var cliente = barco.cliente;
-                        var nueva_estadia_cantidad = $("#estadia_cantidad").data('dias') * barco.eslora;
-                        var htmlBarco = "<label>Modelo</label>" +
-                            "<div class='info-input'>" + barco.modelo + "</div>" +
-                            "<label>Eslora</label>" +
-                            "<div id='eslora' class='info-input' data-valor='"+barco.eslora+"'>" + barco.eslora + "</div>" +
-                            "<label>Manga</label>" + "<div class='info-input'>" + barco.manga + "</div>" +
-                            "<label>Nombre del capitán</label>" +
-                            "<div class='info-input'>" + barco.nombreCapitan + "</div>" +
-                            "<label>Teléfono del capitán</label>" +
-                            "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
-                            "<label>Correo del capitán</label>" +
-                            "<div class='info-input'>" + barco.correoCapitan + "</div>";
-                        var htmlCliente = "<label>Cliente</label>" +
-                            "<div class='info-input'>" + cliente.nombre + "</div>" +
-                            "<label>Correo electrónico</label>" +
-                            "<div class='info-input'>" + cliente.correo + "</div>" +
-                            "<label>Número de teléfono</label>" +
-                            "<div class='info-input'>" + cliente.telefono + "</div>" +
-                            "<label>Dirección</label>" +
-                            "<div class='info-input'>" + cliente.direccion + "</div>";
-                        $("#info-barco").append(htmlBarco);
-                        $("#info-cliente").append(htmlCliente);
-                        $('.barco-nombre').html("<label>Barco</label>" + "<div class='info-input'>" + barco.nombre + "</div>");
-                        $('.barco-eslora').html("<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>");
-                        $('.cliente-nombre').html("<label>Cliente</label>" + "<div class='info-input'>" + barco.cliente.nombre + "</div>");
-                        $("#grua_cantidad").data('valor', barco.eslora);
-                        $("#grua_cantidad").html(barco.eslora);
-                        $("#inspeccionar_cantidad").data('valor', barco.eslora);
-                        $("#inspeccionar_cantidad").html(barco.eslora);
-                        $("#estadia_cantidad").data('eslora', barco.eslora);
-                        $("#estadia_cantidad").data('valor',nueva_estadia_cantidad);
-                        calculaSubtotalesAstillero($('#fila_grua'));
-                        calculaSubtotalesAstillero($('#cotizainspeccionar'));
-                        calculaSubtotalesAstillero($('#fila_estadia'));
-                        calculaProductosPorServicio();
-                        $('#loading').hide();
-                    }
-                });
-            });
-        })(jQuery);
-        $('#productos').change('.select-busca-producto',function (e) {
-            var idservicio = $('.select-busca-producto:focus option:selected' ).val();
-            var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-            astilleroBuscaProducto(idservicio,fila);
-        });
-        $('.btnNext').click(function(){
-            $('.nav-tabs > .active').next('li').find('a').trigger('click');
-        });
-        $('.btnPrevious').click(function(){
-            $('.nav-tabs > .active').prev('li').find('a').trigger('click');
-        });
+      (function ($) {
+        const $selectBarcoBuscar = $('.selectbarcobuscar');
+        const discountInput = document.getElementById('appbundle_astillerocotizacion_descuento');
+        const pincodeContainer = document.getElementById('pincode-container');
+        const thereIsDiscount = function () {
+          if (Number(discountInput.value) > 0) {
+            pincodeContainer.classList.remove('hidden');
+          } else {
+            pincodeContainer.classList.add('hidden');
+          }
+        };
+
+        generateClientData();
+        thereIsDiscount();
+        discountInput.addEventListener('input', thereIsDiscount);
+
+        $selectBarcoBuscar.change(generateClientData);
+
+        function generateClientData() {
+          $('#loading').show();
+          $("#info-barco").empty();
+          $("#info-cliente").empty();
+          var url = "{{ path('ajax_busca_barco_todo',{'id':'iddelbarco'}) }}";
+          url = url.replace("iddelbarco", $selectBarcoBuscar.val());
+          $.ajax({
+            method: "GET",
+            url: url,
+            dataType: 'json',
+            success: function (barco) {
+              var cliente = barco.cliente;
+              var nueva_estadia_cantidad = $("#estadia_cantidad").data('dias') * barco.eslora;
+              var htmlBarco = "<label>Modelo</label>" +
+                  "<div class='info-input'>" + barco.modelo + "</div>" +
+                  "<label>Eslora</label>" +
+                  "<div id='eslora' class='info-input' data-valor='" + barco.eslora + "'>" + barco.eslora + "</div>" +
+                  "<label>Manga</label>" + "<div class='info-input'>" + barco.manga + "</div>" +
+                  "<label>Nombre del capitán</label>" +
+                  "<div class='info-input'>" + barco.nombreCapitan + "</div>" +
+                  "<label>Teléfono del capitán</label>" +
+                  "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
+                  "<label>Correo del capitán</label>" +
+                  "<div class='info-input'>" + barco.correoCapitan + "</div>";
+              var htmlCliente = "<label>Cliente</label>" +
+                  "<div class='info-input'>" + cliente.nombre + "</div>" +
+                  "<label>Correo electrónico</label>" +
+                  "<div class='info-input'>" + cliente.correo + "</div>" +
+                  "<label>Número de teléfono</label>" +
+                  "<div class='info-input'>" + cliente.telefono + "</div>" +
+                  "<label>Dirección</label>" +
+                  "<div class='info-input'>" + cliente.direccion + "</div>";
+              $("#info-barco").append(htmlBarco);
+              $("#info-cliente").append(htmlCliente);
+              $('.barco-nombre').html("<label>Barco</label>" + "<div class='info-input'>" + barco.nombre + "</div>");
+              $('.barco-eslora').html("<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>");
+              $('.cliente-nombre').html("<label>Cliente</label>" + "<div class='info-input'>" + barco.cliente.nombre + "</div>");
+              $("#grua_cantidad").data('valor', barco.eslora);
+              $("#grua_cantidad").html(barco.eslora);
+              $("#inspeccionar_cantidad").data('valor', barco.eslora);
+              $("#inspeccionar_cantidad").html(barco.eslora);
+              $("#estadia_cantidad").data('eslora', barco.eslora);
+              $("#estadia_cantidad").data('valor', nueva_estadia_cantidad);
+              calculaSubtotalesAstillero($('#fila_grua'));
+              calculaSubtotalesAstillero($('#cotizainspeccionar'));
+              calculaSubtotalesAstillero($('#fila_estadia'));
+              calculaProductosPorServicio();
+              $('#loading').hide();
+            }
+          });
+        }
+
+      })(jQuery);
+
+      $('#productos').change('.select-busca-producto', function (e) {
+        var idservicio = $('.select-busca-producto:focus option:selected').val();
+        var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
+        astilleroBuscaProducto(idservicio, fila);
+      });
+
+      $('.btnNext').click(function () {
+        $('.nav-tabs > .active').next('li').find('a').trigger('click');
+      });
+
+      $('.btnPrevious').click(function () {
+        $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+      });
     </script>
 {% endblock %}

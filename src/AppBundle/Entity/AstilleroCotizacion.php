@@ -51,6 +51,8 @@ class AstilleroCotizacion
     /**
      * @var int
      *
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(name="diasEstadia", type="integer", nullable=true)
      */
     private $diasEstadia;
@@ -63,11 +65,11 @@ class AstilleroCotizacion
     private $descuento;
 
     /**
-     * @var float
+     * @var integer
      *
      * @Groups({"facturacion", "AstilleroReporte"})
      *
-     * @ORM\Column(name="dolar", type="float", nullable=true)
+     * @ORM\Column(name="dolar", type="bigint", nullable=true)
      */
     private $dolar;
 
@@ -79,29 +81,36 @@ class AstilleroCotizacion
     private $iva;
 
     /**
-     * @var float
+     * @var integer
      *
      * @Groups({"facturacion"})
      *
-     * @ORM\Column(name="subtotal", type="float", nullable=true)
+     * @ORM\Column(name="subtotal", type="bigint", nullable=true)
      */
     private $subtotal;
 
     /**
-     * @var float
+     * @var integer
+     *
+     * @ORM\Column(name="descuentototal", type="bigint", nullable=true)
+     */
+    private $descuentototal;
+
+    /**
+     * @var integer
      *
      * @Groups({"facturacion"})
      *
-     * @ORM\Column(name="ivatotal", type="float", nullable=true)
+     * @ORM\Column(name="ivatotal", type="bigint", nullable=true)
      */
     private $ivatotal;
 
     /**
-     * @var float
+     * @var integer
      *
      * @Groups({"facturacion"})
      *
-     * @ORM\Column(name="total", type="float", nullable=true)
+     * @ORM\Column(name="total", type="bigint", nullable=true)
      */
     private $total;
 
@@ -331,6 +340,7 @@ class AstilleroCotizacion
         $this->validanovo = 0;
         $this->validacliente = 0;
         $this->foliorecotiza = 0;
+        $this->descuento = 0;
     }
 
     public function __toString()
@@ -429,7 +439,7 @@ class AstilleroCotizacion
     /**
      * Set dolar
      *
-     * @param float $dolar
+     * @param int $dolar
      *
      * @return AstilleroCotizacion
      */
@@ -443,7 +453,7 @@ class AstilleroCotizacion
     /**
      * Get dolar
      *
-     * @return float
+     * @return int
      */
     public function getDolar()
     {
@@ -477,7 +487,7 @@ class AstilleroCotizacion
     /**
      * Set subtotal
      *
-     * @param float $subtotal
+     * @param int $subtotal
      *
      * @return AstilleroCotizacion
      */
@@ -491,7 +501,7 @@ class AstilleroCotizacion
     /**
      * Get subtotal
      *
-     * @return float
+     * @return int
      */
     public function getSubtotal()
     {
@@ -501,7 +511,7 @@ class AstilleroCotizacion
     /**
      * Set ivatotal
      *
-     * @param float $ivatotal
+     * @param int $ivatotal
      *
      * @return AstilleroCotizacion
      */
@@ -515,7 +525,7 @@ class AstilleroCotizacion
     /**
      * Get ivatotal
      *
-     * @return float
+     * @return int
      */
     public function getIvatotal()
     {
@@ -525,7 +535,7 @@ class AstilleroCotizacion
     /**
      * Set total
      *
-     * @param float $total
+     * @param int $total
      *
      * @return AstilleroCotizacion
      */
@@ -539,7 +549,7 @@ class AstilleroCotizacion
     /**
      * Get total
      *
-     * @return float
+     * @return int
      */
     public function getTotal()
     {
@@ -964,10 +974,12 @@ class AstilleroCotizacion
 
     /**
      * @param float $descuento
+     * @return AstilleroCotizacion
      */
     public function setDescuento($descuento)
     {
         $this->descuento = $descuento;
+        return $this;
     }
 
     /**
@@ -1160,5 +1172,29 @@ class AstilleroCotizacion
     public function getBorrador()
     {
         return $this->borrador;
+    }
+
+    /**
+     * Set descuentototal.
+     *
+     * @param int|null $descuentototal
+     *
+     * @return AstilleroCotizacion
+     */
+    public function setDescuentototal($descuentototal = null)
+    {
+        $this->descuentototal = $descuentototal;
+
+        return $this;
+    }
+
+    /**
+     * Get descuentototal.
+     *
+     * @return int|null
+     */
+    public function getDescuentototal()
+    {
+        return $this->descuentototal;
     }
 }

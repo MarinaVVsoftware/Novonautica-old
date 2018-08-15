@@ -10,12 +10,30 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DefaultController extends Controller
 {
+    /**
+     * @Route("/", name="sidebar_expantion")
+     * @Method("POST")
+     *
+     * @param Request $request
+     * @param SessionInterface $session
+     *
+     * @return JsonResponse
+     */
+    public function setSidebarAction(Request $request, SessionInterface $session)
+    {
+        $session->set('isExpanded', $request->request->get('isExpanded'));
+
+        return $this->json(null, Response::HTTP_NO_CONTENT);
+    }
+
     /**
      * @Route("clients/", name="clients_index")
      */

@@ -145,6 +145,7 @@ class AstilleroBorradorDataTable extends AbstractDataTableHandler
                 $cotizacion->getBarco()->getNombre(),
                 $cotizacion->getFechaLlegada()->format('d/m/Y') ?? '',
                 $cotizacion->getFechaSalida()->format('d/m/Y') ?? '',
+                '$' . number_format($cotizacion->getDescuentototal()/100, 2),
                 '$' . number_format($cotizacion->getSubtotal()/100, 2),
                 '$' . number_format($cotizacion->getIvatotal()/100, 2),
                 '$' . number_format($cotizacion->getTotal()/100, 2),
