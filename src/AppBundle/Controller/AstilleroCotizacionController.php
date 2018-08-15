@@ -306,7 +306,7 @@ class AstilleroCotizacionController extends Controller
 
             if ($guardarFinalizar) {
                 $pincode = $em->getRepository(Pincode::class)
-                    ->findOneBy(['pin' => $form->get('pincode')->getViewData()]);
+                    ->getOneValid($form->get('pincode')->getViewData());
 
                 $em->remove($pincode);
 
@@ -609,8 +609,7 @@ class AstilleroCotizacionController extends Controller
 
             if($guardarFinalizar){
                 $pincode = $em->getRepository(Pincode::class)
-                    ->findOneBy(['pin' => $form->get('pincode')->getViewData()]);
-
+                    ->getOneValid($form->get('pincode')->getViewData());
                 $em->remove($pincode);
 
                 // Buscar correos a notificar
@@ -985,11 +984,13 @@ class AstilleroCotizacionController extends Controller
                 // Asignarle la recotizacion a quien la creo
                 $astilleroCotizacion->setCreador($this->getUser());
             }
+            /*
             $em->persist($astilleroCotizacionAnterior);
             $em->persist($astilleroCotizacion);
             $em->flush();
 
             return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
+            */
         }
 
         return $this->render('astillero/cotizacion/recotizar.html.twig', [

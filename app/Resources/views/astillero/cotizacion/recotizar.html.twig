@@ -202,23 +202,10 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            {{ form_label(form.diasEstadia) }}
-                                            {{ form_widget(form.diasEstadia) }}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            {{ form_label(form.dolar) }}
-                                            {{ form_widget(form.dolar) }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-3">
+                                    {{ form_row(form.diasEstadia) }}
+                                    {{ form_row(form.dolar) }}
                                     {{ form_row(form.descuento) }}
+                                    {{ form_row(form.pincode) }}
                                 </div>
                             </div>
                             {% if astilleroCotizacion.acservicios[8] is defined and astilleroCotizacion.acservicios[8].astilleroServicioBasico %}

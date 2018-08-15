@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -175,6 +176,7 @@ class AstilleroCotizacionType extends AbstractType
 
     public function validatePincode($firma, ExecutionContextInterface $context)
     {
+        /** @var Form $form */
         $form = $context->getRoot();
         $cotizacion = $form->getData();
 
@@ -182,7 +184,10 @@ class AstilleroCotizacionType extends AbstractType
             return;
         }
 
-        if ($cotizacion->getDescuento() > 0) {
+        if (
+            'guardarfinalizar' === $form->getClickedButton()->getName()
+            && $cotizacion->getDescuento() > 0
+        ) {
             $pincodeRepository = $this->entityManager->getRepository(Pincode::class);
             $pincode = $pincodeRepository->getOneValid($firma);
 
