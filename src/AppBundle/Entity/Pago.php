@@ -109,6 +109,11 @@ class Pago
     private $acotizacion;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Combustible", inversedBy="pagos")
+     */
+    private $combustible;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Solicitud", inversedBy="pagos")
      */
     private $tiendasolicitud;
@@ -448,5 +453,29 @@ class Pago
     public function getTiendasolicitud()
     {
         return $this->tiendasolicitud;
+    }
+
+    /**
+     * Set combustible.
+     *
+     * @param \AppBundle\Entity\Combustible|null $combustible
+     *
+     * @return Pago
+     */
+    public function setCombustible(\AppBundle\Entity\Combustible $combustible = null)
+    {
+        $this->combustible = $combustible;
+
+        return $this;
+    }
+
+    /**
+     * Get combustible.
+     *
+     * @return \AppBundle\Entity\Combustible|null
+     */
+    public function getCombustible()
+    {
+        return $this->combustible;
     }
 }

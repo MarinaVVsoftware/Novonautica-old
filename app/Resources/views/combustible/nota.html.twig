@@ -10,7 +10,7 @@
                             <span>{{ folio }}</span>
                         </div>
                         <div class="col-sm-6">
-                            <a href="{{ path('combustible_show',{'id':marinaHumedaCotizacion.id}) }}"
+                            <a href="{{ path('combustible_show',{'id':combustible.id}) }}"
                                class="btn btn-contorno-azul pull-right">
                                 Regresar
                             </a>
@@ -23,9 +23,9 @@
                     <div class="row">
                         <div class="col-sm-3">
                             <label>Cliente</label>
-                            <div class='info-input'>{{ marinaHumedaCotizacion.cliente }}</div>
+                            <div class='info-input'>{{ combustible.cliente }}</div>
                             <label>Barco</label>
-                            <div class='info-input'>{{ marinaHumedaCotizacion.barco }}</div>
+                            <div class='info-input'>{{ combustible.barco }}</div>
                         </div>
                     </div>
 

@@ -9,7 +9,7 @@
 namespace AppBundle\Security;
 
 
-use AppBundle\Entity\MarinaHumedaCotizacion;
+use AppBundle\Entity\Combustible;
 use AppBundle\Entity\Usuario;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -43,7 +43,7 @@ class CombustibleVoter extends Voter
         if (!in_array($attribute, [self::CREATE, self::VALIDATE, self::REQUOTE, self::DELETE])) {
             return false;
         }
-        if (!$subject instanceof MarinaHumedaCotizacion) {
+        if (!$subject instanceof Combustible) {
             return false;
         }
         return true;
@@ -71,8 +71,8 @@ class CombustibleVoter extends Voter
             return true;
         }
 
-        /** @var MarinaHumedaCotizacion $cotizacionMarina */
-        $cotizacionMarina = $subject;
+        /** @var Combustible $combustible */
+        $combustible = $subject;
 
         switch ($attribute) {
             case self::CREATE:

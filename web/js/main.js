@@ -127,14 +127,12 @@ $(document).ready(function () {
     $("#appbundle_astillerocotizacion_validacliente_1").click(function () {
         $('#notarechazado').show();
     });
-
-    // $(".limite100").keypress(function () {
-    //     if(parseFloat($(this).val())<=100){
-    //         return true;
-    //     }else{
-    //         return false;
-    //     }
-    // });
+    $('.opcionrechazar').click(function () {
+        $('#notarechazado').show();
+    });
+    $('.opcionaceptar').click(function () {
+        $('#notarechazado').hide();
+    });
     $('.limite100').on('input', function () {
         var value = $(this).val();
             if ((value !== '') && (value.indexOf('.') === -1)) {

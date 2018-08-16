@@ -20,6 +20,7 @@
                             <th>Folio</th>
                             <th class="with-choices">Cliente</th>
                             <th class="with-choices">Barco</th>
+                            <th>Litros</th>
                             <th>Subtotal</th>
                             <th>Iva Total</th>
                             <th>Total</th>
@@ -57,19 +58,20 @@
             {responsivePriority: 2},
             {responsivePriority: 2},
             {responsivePriority: 2},
+            {responsivePriority: 2},
             {responsivePriority: 1},
             {responsivePriority: 1},
             {responsivePriority: 1},
             {responsivePriority: 1},
           ],
           rowCallback: function (row, data) {
-            for (let i of [6, 7, 8]) {
+            for (let i of [7, 8, 9]) {
               if (!data[i]) row.children[i].innerHTML = pendiente;
               if (data[i] === 1) row.children[i].innerHTML = rechazado;
               if (data[i] === 2) row.children[i].innerHTML = aceptado;
             }
 
-            row.lastElementChild.innerHTML = writeLastChild(data[6], data[7], data[8], data[9]);
+            row.lastElementChild.innerHTML = writeLastChild(data[7], data[8], data[9], data[10]);
           }
         });
 

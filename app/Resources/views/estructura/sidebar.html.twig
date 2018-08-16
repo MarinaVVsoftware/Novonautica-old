@@ -150,7 +150,7 @@
 
             <!-- START SERVICIOS MARINOS -->
             {% if is_granted('ROLE_COMBUSTIBLE') %}
-                <li class="treeview {{ path.check('combustible_') }} {{ path.check('marinahumedasolicitud_gasolina_index') }}">
+                <li class="treeview {{ path.check('combustible_') }}">
                     <a href="#">
                         <i class="fa fa-tachometer"></i><span>Combustible</span>
                         <span class="pull-right-container">
@@ -170,11 +170,18 @@
                                 </a>
                             </li>
                         {% endif %}
-                        <li class="{{ path.check('marinahumedasolicitud_gasolina_index') }}">
-                            <a href="{{ path('marinahumedasolicitud_gasolina_index') }}">
+                        <li class="{{ path.check('combustible_app_index') }}">
+                            <a href="{{ path('combustible_app_index') }}">
                                 <i class="fa fa-circle-o"></i> Solicitudes App Móvil
                             </a>
                         </li>
+                        {% if is_granted('ROLE_COMBUSTIBLE_CATALOGO') %}
+                            <li class="{{ path.check('combustible_catalogo_') }}">
+                                <a href="{{ path('combustible_catalogo_index') }}">
+                                    <i class="fa fa-circle-o"></i> Catálogo
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </li>
             {% endif %}

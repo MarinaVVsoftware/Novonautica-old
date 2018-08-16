@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cotización PDF</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"
+    >
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            color: #666666;
+            width: 100% !important;
+            height: 100%;
+            font-size: 12px;
+        }
+
+        table thead tr th {
+            border: none;
+        }
+
+        table tbody tr {
+            border: 1px solid #d4d4d4;
+        }
+
+        .letra-blanca {
+            color: #ffffff;
+        }
+
+        .fondo-gris {
+            background: #d4d4d4;
+        }
+
+        .fondo-azul {
+            background: #458fce
+        }
+
+        .pad-izq-0 {
+            padding-left: 0px;
+        }
+
+        .pad-der-0 {
+            padding-right: 0px;
+        }
+
+        .pad-arriba-2 {
+            padding-top: 15px;
+        }
+
+        /*
+            Hace que cada container fluid sea una pagina
+         */
+        .container-fluid {
+            page-break-after: always;
+        }
+
+        .condiciones li,
+        .condiciones p {
+            font-size: 8px;
+        }
+        .combustible_info > thead > tr > th{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <h5><strong>Información del Cliente</strong></h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <p>
+                <strong>Nombre: </strong>{{ combustible.cliente }}
+                <br>
+                <strong>Embarcación: </strong>{{ combustible.barco }}
+                <br>
+                <strong>Eslora: </strong>{{ combustible.barco.eslora }} fts
+            </p>
+        </div>
+    </div>
+    <div class="row fondo-azul letra-blanca">
+        <div class="col-xs-6">
+            <span>Precios en MXN</span>
+        </div>
+        <div class="col-xs-6 text-right">
+            Precio por litro: $ {{ (combustible.precioVenta/100)|number_format(2) }} <small>MXN</small>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 pad-izq-0 pad-der-0">
+            <table class="table table-condensed combustible_info text-center">
+                <thead class="fondo-azul letra-blanca">
+                <tr>
+                    <th>Servicio</th>
+                    <th>Litros</th>
+                    <th>Sub-Total</th>
+                    <th>IVA</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Abastecimiento de combustible {{ combustible.tipo }}</td>
+                    <td>{{ combustible.cantidad }}</td>
+                    <td>$ {{ (combustible.subtotal/100)|number_format(2) }}</td>
+                    <td>$ {{ (combustible.ivaTotal/100)|number_format(2) }}</td>
+                    <td>$ {{ (combustible.total/100)|number_format(2) }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row pad-arriba-2 fondo-azul letra-blanca">
+        <div class="col-xs-6">
+            <span>Precios en USD</span>
+        </div>
+        <div class="col-xs-6 text-right">
+            Precio por litro: $ {{ (combustible.precioVenta/combustible.dolar)|number_format(2) }} <small>USD</small>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 pad-izq-0 pad-der-0">
+            <table class="table text-center combustible_info">
+                <thead class="fondo-azul letra-blanca">
+                <tr>
+                    <th>Servicio</th>
+                    <th>Litros</th>
+                    <th>Sub-Total</th>
+                    <th>IVA</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Abastecimiento de combustible {{ combustible.tipo }}</td>
+                    <td>{{ combustible.cantidad }}</td>
+                    <td>$ {{ (combustible.subtotal/combustible.dolar)|number_format(2) }}</td>
+                    <td>$ {{ (combustible.ivaTotal/combustible.dolar)|number_format(2) }}</td>
+                    <td>$ {{ (combustible.total/combustible.dolar)|number_format(2) }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

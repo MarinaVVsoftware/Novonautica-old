@@ -109,6 +109,12 @@ class MarinaHumedaCotizaServicios
      */
     private $marinahumedaservicio;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Combustible\Catalogo")
+//     * @ORM\JoinColumn(name="idcombustible", referencedColumnName="id")
+//     */
+//    private $combustible;
+
     /**
      * Get id
      *
@@ -406,4 +412,28 @@ class MarinaHumedaCotizaServicios
     {
         return $this->marinahumedaservicio;
     }
+
+//    /**
+//     * Set combustible.
+//     *
+//     * @param \AppBundle\Entity\Combustible\Catalogo|null $combustible
+//     *
+//     * @return MarinaHumedaCotizaServicios
+//     */
+//    public function setCombustible(\AppBundle\Entity\Combustible\Catalogo $combustible = null)
+//    {
+//        $this->combustible = $combustible;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get combustible.
+//     *
+//     * @return \AppBundle\Entity\Combustible\Catalogo|null
+//     */
+//    public function getCombustible()
+//    {
+//        return $this->combustible;
+//    }
 }

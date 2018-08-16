@@ -184,6 +184,12 @@ class Cliente implements UserInterface, \Serializable
      */
     private $notificaciones;
 
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Combustible", mappedBy="cliente")
+     */
+    private $combustibles;
+
     public function __construct() {
         $this->barcos = new ArrayCollection();
         $this->monederomovimientos = new ArrayCollection();
@@ -194,6 +200,7 @@ class Cliente implements UserInterface, \Serializable
         $this->appgasolinasolicitudes = new ArrayCollection();
         $this->reportes = new ArrayCollection();
         $this->notificaciones = new ArrayCollection();
+        $this->combustibles = new ArrayCollection();
         $this->idioma = 1;
     }
 
@@ -857,5 +864,41 @@ class Cliente implements UserInterface, \Serializable
     public function getNotificaciones()
     {
         return $this->notificaciones;
+    }
+
+    /**
+     * Add combustible.
+     *
+     * @param \AppBundle\Entity\Combustible $combustible
+     *
+     * @return Cliente
+     */
+    public function addCombustible(\AppBundle\Entity\Combustible $combustible)
+    {
+        $this->combustibles[] = $combustible;
+
+        return $this;
+    }
+
+    /**
+     * Remove combustible.
+     *
+     * @param \AppBundle\Entity\Combustible $combustible
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeCombustible(\AppBundle\Entity\Combustible $combustible)
+    {
+        return $this->combustibles->removeElement($combustible);
+    }
+
+    /**
+     * Get combustibles.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCombustibles()
+    {
+        return $this->combustibles;
     }
 }
