@@ -46,6 +46,7 @@ class ClienteController extends Controller
      *
      * @param Request $request
      * @param DataTablesInterface $dataTables
+     *
      * @return JsonResponse
      */
     public function getClientesDataAction(Request $request, DataTablesInterface $dataTables)
@@ -53,6 +54,7 @@ class ClienteController extends Controller
         if ($request->isXmlHttpRequest()) {
             try {
                 $results = $dataTables->handle($request, 'cliente');
+
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getCode());
@@ -121,7 +123,7 @@ class ClienteController extends Controller
                 ->setBody(
                     $this->renderView(':cliente:correo.alta.twig', [
                         'correo' => $cliente->getCorreo(),
-                        'password' => $randomString
+                        'password' => $randomString,
                     ]),
                     'text/html'
                 );
@@ -163,22 +165,28 @@ class ClienteController extends Controller
     }
 
     /**
-     * @Route("/{id}/reportes", name="cliente_show_data")
+     * @Route("/reportes/abonos", name="cliente_show_data_abonos")
+     * @Route("/reportes/adeudos", name="cliente_show_data_adeudos")
      *
      * @param Request $request
      * @param DataTablesInterface $dataTables
      *
      * @return JsonResponse
      */
-    public function getShowDataAction(Request $request, DataTablesInterface $dataTables)
+    public function getShowAbonoDataAction(Request $request, DataTablesInterface $dataTables)
     {
+        $uri = explode('/', $request->getRequestUri());
+        $uri = $uri[count($uri) - 1];
+
         try {
-            $results = $dataTables->handle($request, 'clienteReporte');
+            $results = $dataTables->handle($request, 'clienteReporte'.$uri);
+
             return $this->json($results);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
         }
     }
+
 
     /**
      * Displays a form to edit an existing cliente entity.
@@ -204,7 +212,7 @@ class ClienteController extends Controller
             $barco = $em->getRepository(Barco::class)->find($barco->getId());
             $cliente = $barco->getCliente();
             if (!$barco) {
-                throw $this->createNotFoundException('No hay barcos encontrados para el id ' . $barco->getId());
+                throw $this->createNotFoundException('No hay barcos encontrados para el id '.$barco->getId());
             }
             $originalMotores = new ArrayCollection();
 

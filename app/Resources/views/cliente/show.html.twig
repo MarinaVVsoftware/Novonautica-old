@@ -238,12 +238,26 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <table id="table-cuentas" class="table-novo table" style="width: 100%;">
+                                    <h3>Abonos</h3>
+                                    <table id="cuentas-abonos" class="table-novo table" style="width: 100%;">
                                         <thead>
                                         <tr>
                                             <th>Fecha de movimiento</th>
-                                            <th>Adeudo</th>
-                                            <th>Abono</th>
+                                            <th>Cantidad</th>
+                                            <th class="no-sort">Concepto</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3>Adeudos</h3>
+                                    <table id="cuentas-adeudos" class="table-novo table" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <th>Fecha de movimiento</th>
+                                            <th>Cantidad</th>
                                             <th class="no-sort">Concepto</th>
                                         </tr>
                                         </thead>
@@ -266,10 +280,10 @@
     <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
     <script type="text/javascript">
       (function ($, settings) {
-        $('#table-cuentas').DataTable({
+        $('#cuentas-abonos').DataTable({
           ...settings,
           ajax: {
-            url: '{{ path('cliente_show_data', { id: cliente.id }) }}',
+            url: '{{ path('cliente_show_data_abonos') }}',
             data: {
               cliente: '{{ cliente.id }}'
             },
@@ -287,14 +301,14 @@
 
         if (location.hash) {
           const tab = document.querySelector(`a[href="${location.hash}"]`).parentNode;
-
           const pane = document.getElementById(`${location.hash.replace('#', '')}`);
+
           [
             ...document.querySelectorAll('li[role="presentation"].active'),
             ...document.querySelectorAll('.tab-pane.active')
           ].forEach(item => item.classList.remove('active'));
-          tab.classList.add('active');
 
+          tab.classList.add('active');
           tab.dataset.expanded = true;
           pane.classList.add('active');
           location.hash = '';
