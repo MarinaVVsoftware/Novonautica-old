@@ -45,6 +45,12 @@ class GrupoProducto
     private $observaciones;
 
     /**
+     * @var Servicio
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Astillero\Servicio", mappedBy="gruposProductos")
+     */
+    private $servicio;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Astillero\Producto")
      * @ORM\JoinColumn(name="idproducto", referencedColumnName="id")
      */
@@ -159,5 +165,21 @@ class GrupoProducto
     public function getTipoCantidad()
     {
         return $this->tipoCantidad;
+    }
+
+    /**
+     * @return Servicio
+     */
+    public function getServicio()
+    {
+        return $this->servicio;
+    }
+
+    /**
+     * @param Servicio $servicio
+     */
+    public function setServicio($servicio)
+    {
+        $this->servicio = $servicio;
     }
 }

@@ -326,29 +326,37 @@ function astilleroAgregaProducto(grupoProducto,idservicio){
     var totServicios = $('#serviciosextra').data('cantidad');
     var servicioListPrimero = jQuery('#productos');
     var newWidget = $('#serviciosextra').data('prototype');
+
     newWidget = newWidget.replace(/__name__/g, totServicios);
     newWidget = newWidget.replace('td-otroservicio', 'hide');
     newWidget = newWidget.replace('td-servicio', 'hide');
     newWidget = newWidget.replace('td-libre', 'hide');
     newWidget = newWidget.replace('input-group', 'hide');
+
     totServicios++;
+
     $('#serviciosextra').data('cantidad', totServicios);
+
     var newLi = jQuery('<tr class="servicio-agregado" data-id="' + (totServicios - 1) + '"></tr>').html(newWidget);
+
     newLi.appendTo(servicioListPrimero);
     newLi.before(newLi);
+
     var fila = $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_producto').parent().parent();
+
     fila.children('.valorpromedio').removeClass('hide'); //hacer visible columna de valor promedio solo para productos en caso de que pertenezcan a un servicio
 
-    if(grupoProducto === 0){
+    if (grupoProducto === 0) {
         $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').val(1);
         $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').parent().data('valor', 1);
         $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_producto').val('');
-    }else{
+    } else {
         var productosCantidad = 0;
         var eslora = typeof($('#eslora').data('valor')) === 'undefined' ? 0 : $('#eslora').data('valor');
-        if(grupoProducto.tipoCantidad){
+
+        if (grupoProducto.tipoCantidad) {
             productosCantidad = Math.round(eslora * grupoProducto.cantidad);
-        }else{
+        } else {
             productosCantidad = grupoProducto.cantidad;
         }
         //fila.data('servicio-pertenece',idservicio);
@@ -433,17 +441,18 @@ $('.add-servicio').click(function (e) {
     $(fila.children('.valorprecio')).data('valorreal',precioreal);
     $(fila.children('.valorprecio')).data('divisa',$(this).data('divisa'));
     calculaSubtotalesAstillero(fila);
-    let url = `${location.protocol + '//' + location.host}/astillero/servicio/buscarservicio/${idservicio}`;
+
+    // let url = `${location.protocol + '//' + location.host}/astillero/servicio/buscarservicio/${idservicio}`;
+
     $.ajax({
         method: "GET",
-        url: url,
+        url: location.pathname + '../../../servicio/buscarservicio/' + idservicio,
         dataType: 'json',
-        success: function(datos) {
-            $.each(datos.gruposProductos, function (i, grupoProducto) {
-                astilleroAgregaProducto(grupoProducto,idservicio);
-            });
+        success: function({gruposProductos}) {
+            gruposProductos.forEach(grupo => astilleroAgregaProducto(grupo, idservicio))
         }
     });
+
 });
 
 

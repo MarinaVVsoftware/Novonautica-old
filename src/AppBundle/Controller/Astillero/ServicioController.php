@@ -2,12 +2,15 @@
 
 namespace AppBundle\Controller\Astillero;
 
+use AppBundle\Entity\Astillero\GrupoProducto;
 use AppBundle\Entity\Astillero\Servicio;
+use AppBundle\Repository\Astillero\GrupoProductoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -72,17 +75,15 @@ class ServicioController extends Controller
      * @Route("/buscarservicio/{id}.{_format}", name="ajax_astillero_busca_servicio", defaults={"_format"="json"})
      *
      */
-    public function buscarAction(Request $request, Servicio $servicio){
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizer = new ObjectNormalizer();
-        $normalizer->setCircularReferenceLimit(1);
-        $normalizer->setCircularReferenceHandler(function ($object) {
-            return $object->getId();
-        });
-        $normalizer->setIgnoredAttributes(['aCotizacionesServicios']);
-        $normalizers = [$normalizer];
-        $serializer = new Serializer($normalizers, $encoders);
-        return new Response($servicio = $serializer->serialize($servicio,$request->getRequestFormat()));
+    public function buscarAction(Request $request, $id)
+    {
+        $grupoProductoRepository = $this->getDoctrine()->getRepository(GrupoProducto::class);
+        return new JsonResponse(
+          [
+              'gruposProductos' => $grupoProductoRepository->getGrupoFromServicio($id)
+          ],
+          JsonResponse::HTTP_OK
+        );
     }
 
     /**

@@ -70,11 +70,20 @@ class Servicio
     private $descripcion;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Astillero\GrupoProducto",cascade={"persist"})
-     * @ORM\JoinTable(name="servicios_gruposproductos",
-     *      joinColumns={@ORM\JoinColumn(name="idservicio", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="idgrupoproducto", referencedColumnName="id", unique=true)}
-     *      )
+     * @ORM\ManyToMany(
+     *     targetEntity="AppBundle\Entity\Astillero\GrupoProducto",
+     *     inversedBy="servicio",
+     *     cascade={"persist"}
+     *     )
+     * @ORM\JoinTable(
+     *     name="servicios_gruposproductos",
+     *     joinColumns={
+     *      @ORM\JoinColumn(name="idservicio", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *      @ORM\JoinColumn(name="idgrupoproducto", referencedColumnName="id", unique=true)
+     *     }
+     *     )
      */
     private $gruposProductos;
 
