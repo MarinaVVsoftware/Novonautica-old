@@ -31,6 +31,7 @@ class CatalogoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $catalogo = $em->getRepository('AppBundle:Combustible\Catalogo')->findAll();
+        $this->denyAccessUnlessGranted('ROLE_COMBUSTIBLE_CATALOGO', $catalogo);
         return $this->render('combustible/catalogo/index.html.twig', [
             'catalogo' => $catalogo,
             'title' => 'Catálogo Combustibles'
@@ -47,6 +48,7 @@ class CatalogoController extends Controller
     public function newAction(Request $request)
     {
         $catalogo = new Catalogo();
+        $this->denyAccessUnlessGranted('ROLE_COMBUSTIBLE_CATALOGO', $catalogo);
         $form = $this->createForm('AppBundle\Form\Combustible\CatalogoType',$catalogo);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
@@ -70,6 +72,7 @@ class CatalogoController extends Controller
      */
     public function editAction(Request $request, Catalogo $catalogo)
     {
+        $this->denyAccessUnlessGranted('ROLE_COMBUSTIBLE_CATALOGO', $catalogo);
         $deleteForm = $this->createDeleteForm($catalogo);
         $editForm = $this->createForm('AppBundle\Form\Combustible\CatalogoType', $catalogo);
         $editForm->handleRequest($request);
@@ -93,6 +96,7 @@ class CatalogoController extends Controller
      */
     public function deleteAction(Request $request, Catalogo $catalogo)
     {
+        $this->denyAccessUnlessGranted('ROLE_COMBUSTIBLE_CATALOGO', $catalogo);
         $form = $this->createDeleteForm($catalogo);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

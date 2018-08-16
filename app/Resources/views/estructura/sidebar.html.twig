@@ -175,11 +175,13 @@
                                 <i class="fa fa-circle-o"></i> Solicitudes App Móvil
                             </a>
                         </li>
-                        <li class="{{ path.check('combustible_catalogo_') }}">
-                            <a href="{{ path('combustible_catalogo_index') }}">
-                                <i class="fa fa-circle-o"></i> Catálogo
-                            </a>
-                        </li>
+                        {% if is_granted('ROLE_COMBUSTIBLE_CATALOGO') %}
+                            <li class="{{ path.check('combustible_catalogo_') }}">
+                                <a href="{{ path('combustible_catalogo_index') }}">
+                                    <i class="fa fa-circle-o"></i> Catálogo
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </li>
             {% endif %}

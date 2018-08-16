@@ -152,6 +152,7 @@ security:
         - { path: ^/marina/cotizacion/estadia/tarifas, roles: ROLE_MARINA_TARIFF }
         - { path: ^/marina, roles: ROLE_MARINA }
 
+        - { path: ^/combustible/catalogo, roles: ROLE_COMBUSTIBLE_CATALOGO }
         - { path: ^/combustible, roles: ROLE_COMBUSTIBLE }
 
         - { path: ^/astillero/producto, roles: ROLE_ASTILLERO_PRODUCTO }
@@ -202,6 +203,7 @@ security:
         ROLE_WHOLE_COMBUSTIBLE:
             - ROLE_COMBUSTIBLE
             - ROLE_COMBUSTIBLE_PAGO
+            - ROLE_COMBUSTIBLE_CATALOGO
         ROLE_WHOLE_ASTILLERO:
             - ROLE_ASTILLERO
             - ROLE_ASTILLERO_PRODUCTO

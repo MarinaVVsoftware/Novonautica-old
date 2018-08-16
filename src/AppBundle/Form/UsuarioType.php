@@ -66,6 +66,7 @@ class UsuarioType extends AbstractType
                     'Recotizar' => 'COMBUSTIBLE_COTIZACION_REQUOTE',
                     'Eliminar' => 'COMBUSTIBLE_COTIZACION_DELETE',
                     'Pagos' => 'ROLE_COMBUSTIBLE_PAGO',
+                    'Catálogo' => 'ROLE_COMBUSTIBLE_CATALOGO'
                 ],
                 'Astillero' => [
                     'Acceso' => 'ROLE_ASTILLERO',
