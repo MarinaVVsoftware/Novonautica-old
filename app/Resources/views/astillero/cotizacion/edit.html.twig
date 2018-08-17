@@ -1481,5 +1481,8 @@
       $('.btnPrevious').click(function () {
         $('.nav-tabs > .active').prev('li').find('a').trigger('click');
       });
+      recalculaPreciosProductos();
+      recalculaPreciosOtros();
+      recalculaPreciosServicios();
     </script>
 {% endblock %}

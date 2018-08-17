@@ -1232,7 +1232,9 @@ class AstilleroCotizacionController extends Controller
             ->addAcservicio($astilleroDiasAdicionales);
         $form = $this->createForm('AppBundle\Form\AstilleroCotizacionType', $astilleroCotizacion);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+
             $valordolar = $astilleroCotizacion->getDolar();
             $eslora = $astilleroCotizacion->getBarco()->getEslora();
             $sumas = ['granSubtotal'=>0,'granIva'=>0,'granTotal'=>0];
@@ -1348,12 +1350,12 @@ class AstilleroCotizacionController extends Controller
 
             // Asignarle a la cotizacion, quien la creo (El usuario actualmente logueado)
             $astilleroCotizacion->setCreador($this->getUser());
-
             // Remover el pincode si existe un descuento
             $pincode = $em->getRepository(Pincode::class)
                 ->getOneValid($form->get('pincode')->getViewData());
-
-            $em->remove($pincode);
+            if($pincode){
+                $em->remove($pincode);
+            }
 
             $em->persist($astilleroCotizacion);
             $em->flush();

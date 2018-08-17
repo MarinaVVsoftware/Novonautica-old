@@ -9,6 +9,7 @@ use Proxies\__CG__\AppBundle\Entity\Astillero\Servicio;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,24 +85,13 @@ class ProductoController extends Controller
     /**
      * @Route("/buscarproducto/{id}.{_format}", name="ajax_astillero_busca_producto", defaults={"_format"="json"})
      *
-     * @param Request $request
-     * @param Producto $producto
-     *
-     * @return Response
      */
-    public function buscarAction(Request $request, Producto $producto){
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizer = new ObjectNormalizer();
-        $normalizer->setCircularReferenceLimit(1);
-
-        $normalizer->setCircularReferenceHandler(function ($object) {
-            return $object->getId();
-        });
-
-        $normalizer->setIgnoredAttributes(['ACotizacionesServicios']);
-        $normalizers = [$normalizer];
-        $serializer = new Serializer($normalizers, $encoders);
-        return new Response($producto = $serializer->serialize($producto,$request->getRequestFormat()));
+    public function buscarAction(Request $request, $id){
+        $productoRepository = $this->getDoctrine()->getRepository(Producto::class);
+        return new JsonResponse(
+            $productoRepository->obtenerProducto($id),
+            JsonResponse::HTTP_OK
+        );
     }
 
     /**

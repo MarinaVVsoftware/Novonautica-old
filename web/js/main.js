@@ -403,12 +403,27 @@ function astilleroBuscaProducto(idproducto,fila){
         }
     });
 }
-
+function recalculaPreciosOtros(){
+    let otros = document.getElementById('otros').querySelectorAll('tr');
+    otros.forEach(fila => { calculaSubtotalesAdicionales($(fila)) });
+}
+function recalculaPreciosProductos(){
+    let productos = document.getElementById('productos').querySelectorAll('tr');
+    productos.forEach(fila =>{astilleroBuscaProducto(fila.querySelector('.select-busca-producto').value,$(fila))});
+}
+function recalculaPreciosServicios(){
+    let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
+    let botonera = document.getElementById('botonera-servicios');
+    servicios.forEach(fila => {
+        agregaPrecioServiciosExtra($(fila),fila.querySelector('.select-busca-servicio').value,$(botonera.querySelector("[data-id='"+fila.querySelector('.select-busca-servicio').value+"']")))
+        //console.log(botonera.querySelector("[data-id='"+fila.querySelector('.select-busca-servicio').value+"']"))
+    });
+    // calculaSubtotalesAstillero($(fila))
+    //agregaPrecioServiciosExtra(fila,idservicio,elemento)
+}
 //---- aparecer form collection con select de servicios ----
 $('.add-servicio').click(function (e) {
     e.preventDefault();
-    var dolar = $('#appbundle_astillerocotizacion_dolar').val();
-    var precio = 0;
     var totServicios = $('#serviciosextra').data('cantidad');
     var servicioListPrimero = jQuery('#serviciosextra');
     var newWidget = $('#serviciosextra').data('prototype');
@@ -428,13 +443,15 @@ $('.add-servicio').click(function (e) {
     var fila = $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_servicio').parent().parent();
     var idservicio = $(this).data('id');
     //fila.data('idservicio',idservicio);
+    var dolar = $('#appbundle_astillerocotizacion_dolar').val();
+    var precio = 0;
     $(fila).children('.valorgrupo').children('input').val(idservicio);
     $(fila.children('.td-libre')).html($(this).data('nombre'));
     $(fila.children('.valorprecio')).html('$'+($(this).data('precio')/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' '+$(this).data('divisa'));
     if($(this).data('divisa')==='USD'){
-      precio = (($(this).data('precio') * dolar)/100).toFixed(2);
+        precio = (($(this).data('precio') * dolar)/100).toFixed(2);
     }else{
-      precio = ($(this).data('precio')/100).toFixed(2);
+        precio = ($(this).data('precio')/100).toFixed(2);
     }
     var precioreal = ($(this).data('precio')/100).toFixed(2);
     $(fila.children('.valorprecio')).data('valor',precio);
@@ -454,7 +471,23 @@ $('.add-servicio').click(function (e) {
     });
 
 });
-
+function agregaPrecioServiciosExtra(fila,idservicio,boton){
+    var dolar = $('#appbundle_astillerocotizacion_dolar').val();
+    var precio = 0;
+    $(fila).children('.valorgrupo').children('input').val(idservicio);
+    $(fila.children('.td-libre')).html(boton.data('nombre'));
+    $(fila.children('.valorprecio')).html('$'+(boton.data('precio')/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' '+boton.data('divisa'));
+    if(boton.data('divisa')==='USD'){
+        precio = ((boton.data('precio') * dolar)/100).toFixed(2);
+    }else{
+        precio = (boton.data('precio')/100).toFixed(2);
+    }
+    var precioreal = (boton.data('precio')/100).toFixed(2);
+    $(fila.children('.valorprecio')).data('valor',precio);
+    $(fila.children('.valorprecio')).data('valorreal',precioreal);
+    $(fila.children('.valorprecio')).data('divisa',boton.data('divisa'));
+    calculaSubtotalesAstillero(fila);
+}
 
 //collectio al agregar servicios adicionales marina humeda
 jQuery('.add-another-servicio-adicional').click(function (e) {
