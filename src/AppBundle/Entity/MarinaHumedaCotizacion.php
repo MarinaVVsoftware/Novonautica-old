@@ -366,6 +366,11 @@ class MarinaHumedaCotizacion
         $this->id = null;
     }
 
+    public function getFolioString()
+    {
+        return !$this->foliorecotiza ? $this->folio : $this->folio . '-' . $this->foliorecotiza;
+    }
+
     /**
      * Get id
      *

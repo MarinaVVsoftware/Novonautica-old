@@ -9,7 +9,9 @@
 namespace AppBundle\DataTables;
 
 
-use AppBundle\Entity\Cliente\Reporte;
+use AppBundle\Entity\AstilleroCotizacion;
+use AppBundle\Entity\Cliente;
+use AppBundle\Entity\MarinaHumedaCotizacion;
 use DataTables\AbstractDataTableHandler;
 use DataTables\DataTableException;
 use DataTables\DataTableQuery;
@@ -18,7 +20,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 class ClienteReporteDataTable extends AbstractDataTableHandler
 {
-    const ID = 'clienteReporte';
+    const ID = 'clienteReporteAdeudos';
     private $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)
@@ -38,54 +40,77 @@ class ClienteReporteDataTable extends AbstractDataTableHandler
      */
     public function handle(DataTableQuery $request): DataTableResults
     {
-        $repository = $this->doctrine->getRepository('AppBundle:Cliente\Reporte');
         $results = new DataTableResults();
+        $repository = $this->doctrine->getRepository(Cliente::class);
 
-        $clienteId = $request->customData['cliente'];
+        $cliente = $request->customData['cliente'];
 
-        $query = $repository->createQueryBuilder('r')->select('COUNT(r.id)')
-            ->leftJoin('r.cliente', 'cliente')
-            ->where("cliente.id = ${clienteId}");
+        $results->recordsTotal = $repository->getCotizacionesCount($cliente);
 
-        $results->recordsTotal = $query->getQuery()->getSingleScalarResult();
+        $marinaRepository = $this->doctrine->getRepository(MarinaHumedaCotizacion::class);
+        $astilleroRepository = $this->doctrine->getRepository(AstilleroCotizacion::class);
 
-        $query = $repository->createQueryBuilder('r')
-            ->leftJoin('r.cliente', 'cliente')
-            ->andWhere("cliente.id = ${clienteId}");
+        $marinaQuery = $marinaRepository->createQueryBuilder('cotizacion');
+        $astilleroQuery = $astilleroRepository->createQueryBuilder('cotizacion');
 
+        $cotizacionesMarina = $marinaQuery
+            ->andWhere('IDENTITY(cotizacion.cliente) = ?1 AND cotizacion.validacliente = 2')
+            ->setParameter(1, $cliente);
+
+        $cotizacionesAstillero = $astilleroQuery
+            ->andWhere('IDENTITY(cotizacion.cliente) = ?1 AND cotizacion.validacliente = 2')
+            ->setParameter(1, $cliente);
+
+        /*
         if ($request->search->value) {
-            $query->where('(LOWER(r.createdAt) LIKE :search OR ' .
-                'LOWER(r.concepto) LIKE :search)'
+            $query->where(
+                '(LOWER(u.nombre) LIKE :search OR ' .
+                'LOWER(u.nombreUsuario) LIKE :search OR ' .
+                'LOWER(u.correo) LIKE :search)'
             );
             $query->setParameter('search', strtolower("%{$request->search->value}%"));
         }
+        */
 
+        /*
         foreach ($request->order as $order) {
             if ($order->column == 0) {
-                $query->addOrderBy('r.createdAt', $order->dir);
+                $query->addOrderBy('u.nombre', $order->dir);
             } elseif ($order->column == 1) {
-                $query->addOrderBy('r.adeudo', $order->dir);
+                $query->addOrderBy('u.nombreUsuario', $order->dir);
             } elseif ($order->column == 2) {
-                $query->addOrderBy('r.abono', $order->dir);
+                $query->addOrderBy('u.correo', $order->dir);
+            } elseif ($order->column == 3) {
+                $query->addOrderBy('u.isActive', $order->dir);
+            } elseif ($order->column == 4) {
+                $query->addOrderBy('u.id', $order->dir);
             }
         }
+        */
 
-        $queryCount = clone $query;
-        $queryCount->select('COUNT(r.id)');
-        $results->recordsFiltered = $queryCount->getQuery()->getSingleScalarResult();
-
+        /*
         $query->setMaxResults($request->length);
         $query->setFirstResult($request->start);
+        */
 
-        /** @var Reporte[] $reportes */
-        $reportes = $query->getQuery()->getResult();
+        /** @var AstilleroCotizacion[]|MarinaHumedaCotizacion[] $cotizaciones */
+        $cotizaciones = $cotizacionesMarina->getQuery()->getResult();
 
-        foreach ($reportes as $reporte) {
+        $cotizaciones = array_merge(
+            $cotizaciones,
+            $cotizacionesAstillero->getQuery()->getResult()
+        );
+
+        dump($cotizaciones);
+
+        $results->recordsFiltered = count($cotizaciones);
+
+        foreach ($cotizaciones as $cotizacion) {
             $results->data[] = [
-                $reporte->getCreatedAt()->format('Y-m-d H:i:s'),
-                '$' . number_format(($reporte->getAdeudo() / 100), 2),
-                '$' . number_format(($reporte->getAbono() / 100), 2),
-                $reporte->getConcepto()
+                $cotizacion->getFecharegistro()->format('d-m-Y'),
+                $cotizacion->getFolioString(),
+                '$ ' . number_format(($cotizacion->getTotal() / 100), 2),
+                $cotizacion->getId(),
             ];
         }
 

@@ -242,9 +242,10 @@
                                     <table id="cuentas-abonos" class="table-novo table" style="width: 100%;">
                                         <thead>
                                         <tr>
-                                            <th>Fecha de movimiento</th>
+                                            <th>Fecha de registro</th>
+                                            <th class="no-sort">Folio de cotización</th>
                                             <th>Cantidad</th>
-                                            <th class="no-sort">Concepto</th>
+                                            <th></th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -283,19 +284,13 @@
         $('#cuentas-abonos').DataTable({
           ...settings,
           ajax: {
-            url: '{{ path('cliente_show_data_abonos') }}',
+            url: '{{ path('cliente_show_data_adeudos') }}',
             data: {
               cliente: '{{ cliente.id }}'
             },
           },
           order: [[0, 'desc']],
-          createdRow: function (row, cliente) {
-            let dateCell = row.cells[0];
-
-            let lastPayment = moment(cliente[0], 'YYYY-MM-DD HH:mm:ss', true);
-            if(lastPayment.isValid()) {
-              dateCell.innerHTML = lastPayment.fromNow();
-            }
+          createdRow: function (row, cotizacion) {
           }
         });
 

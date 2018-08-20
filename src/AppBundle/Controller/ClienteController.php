@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Barco;
 use AppBundle\Entity\Cliente;
+use AppBundle\Repository\ClienteRepository;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -15,10 +16,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * Cliente controller.
@@ -165,7 +162,6 @@ class ClienteController extends Controller
     }
 
     /**
-     * @Route("/reportes/abonos", name="cliente_show_data_abonos")
      * @Route("/reportes/adeudos", name="cliente_show_data_adeudos")
      *
      * @param Request $request
@@ -173,18 +169,19 @@ class ClienteController extends Controller
      *
      * @return JsonResponse
      */
-    public function getShowAbonoDataAction(Request $request, DataTablesInterface $dataTables)
+    public function getShowDataAction(Request $request, DataTablesInterface $dataTables)
     {
-        $uri = explode('/', $request->getRequestUri());
-        $uri = $uri[count($uri) - 1];
-
+        $clienteRepository = $this->getDoctrine()->getRepository(Cliente::class);
+        return new JsonResponse($clienteRepository->getCotizaciones(1, '', 10, 0));
+        /*
         try {
-            $results = $dataTables->handle($request, 'clienteReporte'.$uri);
+            $results = $dataTables->handle($request, 'clienteReporteAdeudos');
 
             return $this->json($results);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
         }
+        */
     }
 
 
