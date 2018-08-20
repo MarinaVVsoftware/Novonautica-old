@@ -63,14 +63,18 @@ class EgresoType extends AbstractType
                     $views = [];
 
                     foreach ($this->security->getUser()->getRoles() as $role) {
+                        if (strpos($role, 'ROLE_ADMIN') === 0) {
+                            return $query;
+                        }
+
                         if (strpos($role, 'VIEW_EGRESO') === 0) {
                             $views[] = explode('_', $role)[3];
                         }
                     }
 
                     return $query->where(
-                            $query->expr()->in('e.id', $views)
-                        );
+                        $query->expr()->in('e.id', $views)
+                    );
                 },
                 'required' => true,
             ]

@@ -442,11 +442,11 @@ $('.add-servicio').click(function (e) {
     $(fila.children('.valorprecio')).data('divisa',$(this).data('divisa'));
     calculaSubtotalesAstillero(fila);
 
-    // let url = `${location.protocol + '//' + location.host}/astillero/servicio/buscarservicio/${idservicio}`;
+    let url = `${location.protocol + '//' + location.host}/astillero/servicio/buscarservicio/${idservicio}`;
 
     $.ajax({
         method: "GET",
-        url: location.pathname + '../../../servicio/buscarservicio/' + idservicio,
+        url,
         dataType: 'json',
         success: function({gruposProductos}) {
             gruposProductos.forEach(grupo => astilleroAgregaProducto(grupo, idservicio))
