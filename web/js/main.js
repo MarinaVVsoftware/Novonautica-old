@@ -310,6 +310,10 @@ $('.lista-servicios').on('click', '.remove-servicio', function (e) {
               $(filaproducto).remove();
           }
       });
+      let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
+      servicios.forEach(fila =>{
+          if(fila.querySelector('.valorgrupo input').value === idservicio){ fila.remove(); }
+      });
   }
   $(this).parent().parent().remove();
   calculaTotalesAstillero();
@@ -469,7 +473,6 @@ $('.add-servicio').click(function (e) {
             gruposProductos.forEach(grupo => astilleroAgregaProducto(grupo, idservicio))
         }
     });
-
 });
 function agregaPrecioServiciosExtra(fila,idservicio,boton){
     var dolar = $('#appbundle_astillerocotizacion_dolar').val();
@@ -1234,8 +1237,7 @@ $('#appbundle_astillerocotizacion_acservicios_7_precio').keyup(function () {
     calculaSubtotalesAstillero(fila);
 });
 //-- dias adicionales
-$('#appbundle_astillerocotizacion_acservicios_8_cantidad').keyup(function () {
-    var dias_adicionales = $(this).val();
+function astilleroDiasAdicionalesCantidad(dias_adicionales){
     var nuevo_dias_adicionales_cantidad = dias_adicionales * $("#dia_adicional_cantidad").data('eslora');
     $("#dia_adicional_cantidad").data('dias', dias_adicionales);
     $("#dia_adicional_cantidad").data('valor', nuevo_dias_adicionales_cantidad);
@@ -1244,6 +1246,9 @@ $('#appbundle_astillerocotizacion_acservicios_8_cantidad').keyup(function () {
     $("#electricidad_cantidad").data('valor', dias_adicionales);
     $("#electricidad_cantidad").html(dias_adicionales);
     calculaSubtotalesAstillero($("#cotizaelectricidad"));
+}
+$('#appbundle_astillerocotizacion_acservicios_8_cantidad').keyup(function () {
+    astilleroDiasAdicionalesCantidad($(this).val());
 });
 $('#appbundle_astillerocotizacion_acservicios_8_precio').keyup(function () {
     var dias_adicionales_precio = $(this).val();
