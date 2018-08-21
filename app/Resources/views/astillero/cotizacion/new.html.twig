@@ -751,6 +751,66 @@
                                                data-prototype="{% filter escape %}
                                                                     {{ include('astillero/cotizacion/coleccion-servicio.twig', { 'form': form.acservicios.vars.prototype }) }}
                                                                 {% endfilter %}">
+                                        {% for servicioagregado in form.acservicios %}
+                                            {% if servicioagregado.vars.value.servicio %}
+                                                <tr class="servicio-agregado" data-id="0">
+                                                    <td class="valorcantidad"
+                                                        data-valor="{{ servicioagregado.vars.value.cantidad }}">
+                                                        {{ form_widget(servicioagregado.cantidad) }}
+                                                    </td>
+                                                    <td class="td-libre">{{ servicioagregado.vars.value.servicio }}</td>
+                                                    <td class="td-producto hide">{{ form_widget(servicioagregado.producto) }}</td>
+                                                    <td class="td-servicio hide">{{ form_widget(servicioagregado.servicio) }}</td>
+                                                    <td class="td-otroservicio hide">{{ form_widget(servicioagregado.otroservicio) }}</td>
+                                                    <td class="valorprecio"
+                                                        data-valor="{% if servicioagregado.vars.value.divisa == 'USD' %}
+                                                                {{ ((servicioagregado.vars.value.precio*astilleroCotizacion.dolar)/10000) }}
+                                                            {% else %}
+                                                                {{ ((servicioagregado.vars.value.precio)/100) }}
+                                                            {% endif %}"
+                                                        data-valorreal="{{ servicioagregado.vars.value.precio/100 }}"
+                                                        data-divisa="{{ servicioagregado.vars.value.divisa }}">
+                                                        $ {{ ((servicioagregado.vars.value.precio/100)|number_format(2)) }}
+                                                        <small>{{ servicioagregado.vars.value.divisa }}</small>
+                                                        <div class="hide">
+                                                            {{ form_widget(servicioagregado.precio,{'attr':{'class':'hidden'}}) }}
+                                                        </div>
+                                                    </td>
+                                                    <td class="valorsubtotal"
+                                                        data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">
+                                                        $ {{ (servicioagregado.vars.value.subtotal/100)|number_format(2) }}
+                                                        <small>MXN</small>
+                                                    </td>
+                                                    <td class="valoriva"
+                                                        data-valor="{{ servicioagregado.vars.value.iva/100 }}">
+                                                        $ {{ (servicioagregado.vars.value.iva/100)|number_format(2) }}
+                                                        <small>MXN</small>
+                                                    </td>
+                                                    <td class="valortotal"
+                                                        data-valor="{{ servicioagregado.vars.value.total/100 }}">
+                                                        $ {{ (servicioagregado.vars.value.total/100)|number_format(2) }}
+                                                        <small>MXN</small>
+                                                    </td>
+                                                    <td class="hide">
+                                                        {{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" class="remove-servicio btn-xs btn-naranja">
+                                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="valortipo hide">
+                                                        {{ form_widget(servicioagregado.tipoCantidad) }}
+                                                    </td>
+                                                    <td class="valorpromedio hide">
+                                                        {{ form_widget(servicioagregado.promedio) }}
+                                                    </td>
+                                                    <td class="valorgrupo hide">
+                                                        {{ form_widget(servicioagregado.grupo) }}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                     <button class="btn btn-contorno-azul" type="button" data-toggle="collapse"
@@ -804,7 +864,55 @@
                                         </tr>
                                         </thead>
                                         <tbody id="otros" class="lista-servicios">
-
+                                        {% for servicioagregado in form.acservicios %}
+                                            {% if servicioagregado.vars.value.otroservicio %}
+                                                <tr class="servicio-agregado" data-id="0">
+                                                    <td class="valorcantidad"
+                                                        data-valor="{{ servicioagregado.vars.value.cantidad }}">
+                                                        {{ form_widget(servicioagregado.cantidad) }}
+                                                    </td>
+                                                    <td class="td-producto hide">{{ form_widget(servicioagregado.producto) }}</td>
+                                                    <td class="td-servicio hide">{{ form_widget(servicioagregado.servicio) }}</td>
+                                                    <td class="td-otroservicio">{{ form_widget(servicioagregado.otroservicio) }}</td>
+                                                    <td class="valorprecio"
+                                                        data-valor="{{ servicioagregado.vars.value.precio/100 }}">
+                                                        {{ form_widget(servicioagregado.precio) }}
+                                                    </td>
+                                                    <td class="valorsubtotal"
+                                                        data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">
+                                                        $ {{ (servicioagregado.vars.value.subtotal/100)|number_format(2) }}
+                                                        <small>MXN</small>
+                                                    </td>
+                                                    <td class="valoriva"
+                                                        data-valor="{{ servicioagregado.vars.value.iva/100 }}">
+                                                        $ {{ (servicioagregado.vars.value.iva/100)|number_format(2) }}
+                                                        <small>MXN</small>
+                                                    </td>
+                                                    <td class="valortotal"
+                                                        data-valor="{{ servicioagregado.vars.value.total/100 }}">
+                                                        $ {{ (servicioagregado.vars.value.total/100)|number_format(2) }}
+                                                        <small>MXN</small>
+                                                    </td>
+                                                    <td class="hide">
+                                                        {{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" class="remove-servicio btn-xs btn-naranja">
+                                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="valortipo hide">
+                                                        {{ form_widget(servicioagregado.tipoCantidad) }}
+                                                    </td>
+                                                    <td class="valorpromedio hide">
+                                                        {{ form_widget(servicioagregado.promedio) }}
+                                                    </td>
+                                                    <td class="valorgrupo hide">
+                                                        {{ form_widget(servicioagregado.grupo) }}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                     <a href="#" id="" class="add-another-servicio btn btn-contorno-azul">
@@ -845,7 +953,64 @@
                                         </tr>
                                         </thead>
                                         <tbody id="productos" class="lista-servicios">
-
+                                        {% for servicioagregado in form.acservicios %}
+                                            {% if servicioagregado.vars.value.producto %}
+                                                <tr class="servicio-agregado" data-id="0">
+                                                    <td class="valorcantidad"
+                                                        data-valor="{{ servicioagregado.vars.value.cantidad }}"
+                                                        data-tipo=""
+                                                        data-promedio="">
+                                                        {{ form_widget(servicioagregado.cantidad) }}
+                                                    </td>
+                                                    <td class="td-producto">{{ form_widget(servicioagregado.producto) }}</td>
+                                                    <td class="td-servicio hide">{{ form_widget(servicioagregado.servicio) }}</td>
+                                                    <td class="td-otroservicio hide">{{ form_widget(servicioagregado.otroservicio) }}</td>
+                                                    <td class="valorprecio"
+                                                        data-valor="{{ servicioagregado.vars.value.precio/100 }}">
+                                                        $ {{ ((servicioagregado.vars.value.precio/100)|number_format(2)) }}
+                                                        <small>{{ servicioagregado.vars.value.divisa }}</small>
+                                                        <div class="hide">
+                                                            {{ form_widget(servicioagregado.precio,{'attr':{'class':'hidden'}}) }}
+                                                        </div>
+                                                    </td>
+                                                    <td class="valorsubtotal"
+                                                        data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">
+                                                        $ {{ (servicioagregado.vars.value.subtotal/100)|number_format(2) }}
+                                                        <small>MXN</small>
+                                                    </td>
+                                                    <td class="valoriva"
+                                                        data-valor="{{ servicioagregado.vars.value.iva/100 }}">
+                                                        $ {{ (servicioagregado.vars.value.iva/100)|number_format(2) }}
+                                                        <small>MXN</small>
+                                                    </td>
+                                                    <td class="valortotal"
+                                                        data-valor="{{ servicioagregado.vars.value.total/100 }}">
+                                                        $ {{ (servicioagregado.vars.value.total/100)|number_format(2) }}
+                                                        <small>MXN</small>
+                                                    </td>
+                                                    <td class="hide">
+                                                        {{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}
+                                                    </td>
+                                                    <td class="valortipo hide">
+                                                        {{ form_widget(servicioagregado.tipoCantidad) }}
+                                                    </td>
+                                                    <td class="valorpromedio">
+                                                        {{ form_widget(servicioagregado.promedio) }}
+                                                        {% if servicioagregado.vars.value.tipoCantidad %}
+                                                            {{ servicioagregado.vars.value.promedio|number_format(2) }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="valorgrupo hide">
+                                                        {{ form_widget(servicioagregado.grupo) }}
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" class="remove-servicio btn-xs btn-naranja">
+                                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                     <a href="#" class="add-producto btn btn-contorno-azul">
@@ -1142,5 +1307,9 @@
       $('.btnNext').click(function () {
         $('.nav-tabs > .active').next('li').find('a').trigger('click');
       });
+
+      recalculaPreciosProductos();
+      recalculaPreciosOtros();
+      recalculaPreciosServicios();
     </script>
 {% endblock %}

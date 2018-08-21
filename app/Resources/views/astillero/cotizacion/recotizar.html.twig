@@ -236,7 +236,7 @@
                                 <div class="col-sm-3">
                                     <label>Días</label>
                                     {% if form.acservicios[8].cantidad is defined %}
-                                        {{ form_widget(form.acservicios[8].cantidad,{'attr':{'value':astilleroCotizacion.acservicios[8].cantidad/astilleroCotizacion.barco.eslora}}) }}
+                                        {{ form_widget(form.acservicios[8].cantidad) }}
                                     {% endif %}
                                 </div>
                                 <div class="col-sm-3">
@@ -571,10 +571,10 @@
                                         {% if astilleroCotizacion.acservicios[8] is defined and astilleroCotizacion.acservicios[8].astilleroServicioBasico %}
                                         <tr id="fila_dia_adicional" class="{% if astilleroCotizacion.acservicios.8.estatus == 0 %}hidden{% endif %} servicio-agregado" data-id="fila_estadia_mxn">
                                             <td id="dia_adicional_cantidad" class="valorcantidad"
-                                                data-valor="{{ astilleroCotizacion.acservicios[8].cantidad }}"
-                                                data-dias="{{ astilleroCotizacion.acservicios[8].cantidad/astilleroCotizacion.barco.eslora }}"
+                                                data-valor="{{ astilleroCotizacion.acservicios[8].cantidad * astilleroCotizacion.barco.eslora }}"
+                                                data-dias="{{ astilleroCotizacion.acservicios[8].cantidad }}"
                                                 data-eslora="{{ astilleroCotizacion.barco.eslora }}">
-                                                {{ astilleroCotizacion.acservicios[8].cantidad / astilleroCotizacion.barco.eslora }} (pie por día)
+                                                {{ astilleroCotizacion.acservicios[8].cantidad }} (pie por día)
                                             </td>
                                             <td>Días adicionales</td>
                                             <td id="dia_adicional_precio" class="valorprecio"
@@ -908,7 +908,6 @@
                                                                     {{ include('astillero/cotizacion/coleccion-servicio.twig', { 'form': form.acservicios.vars.prototype }) }}
                                                                 {% endfilter %}">
                                         {% for servicioagregado in form.acservicios %}
-                                            {% if servicioagregado.vars.value.estatus %}
                                                 {% if servicioagregado.vars.value.servicio %}
                                                     <tr class="servicio-agregado" data-id="0">
                                                         <td class="valorcantidad" data-valor="{{ servicioagregado.vars.value.cantidad }}">
@@ -963,7 +962,6 @@
                                                         </td>
                                                     </tr>
                                                 {% endif %}
-                                            {% endif %}
                                         {% endfor %}
                                         </tbody>
                                     </table>
@@ -1019,7 +1017,6 @@
                                         </thead>
                                         <tbody id="otros" class="lista-servicios">
                                         {% for servicioagregado in form.acservicios %}
-                                            {% if servicioagregado.vars.value.estatus %}
                                                 {% if servicioagregado.vars.value.otroservicio %}
                                                     <tr class="servicio-agregado" data-id="0">
                                                         <td class="valorcantidad" data-valor="{{ servicioagregado.vars.value.cantidad }}">
@@ -1063,7 +1060,6 @@
                                                         </td>
                                                     </tr>
                                                 {% endif %}
-                                            {% endif %}
                                         {% endfor %}
                                         </tbody>
                                     </table>
@@ -1100,12 +1096,12 @@
                                             <th class="col-sm-1">Sub-Total</th>
                                             <th class="col-sm-1">IVA</th>
                                             <th class="col-sm-1">Total</th>
+                                            <th class="col-sm-1">Promedio por pie</th>
                                             <th class="col-sm-1"></th>
                                         </tr>
                                         </thead>
                                         <tbody id="productos" class="lista-servicios">
                                         {% for servicioagregado in form.acservicios %}
-                                            {% if servicioagregado.vars.value.estatus %}
                                                 {% if servicioagregado.vars.value.producto %}
                                                     <tr class="servicio-agregado" data-id="0">
                                                         <td class="valorcantidad"
@@ -1157,7 +1153,6 @@
                                                         </td>
                                                     </tr>
                                                 {% endif %}
-                                            {% endif %}
                                         {% endfor %}
                                         </tbody>
                                     </table>
@@ -1261,21 +1256,14 @@
                                 </div>
                             </div>
                             <div class="row">
-                                {% if astilleroCotizacion.acservicios[8] is defined and astilleroCotizacion.acservicios[8].astilleroServicioBasico %}
-                                    <div class="col-sm-12">
-                                        <button type="submit" class="btn btn-azul">
-                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                            Guardar
-                                        </button>
-                                    </div>
-                                    {{ form_widget(form.guardareditable,{'attr':{'class':'hidden'}}) }}
-                                    {{ form_widget(form.guardarfinalizar,{'attr':{'class':'hidden'}}) }}
-                                {% else %}
-                                    <div class="col-sm-12 text-center">
+                                <div class="col-sm-12 text-center">
+                                    {% if astilleroCotizacion.acservicios[8] is defined and astilleroCotizacion.acservicios[8].astilleroServicioBasico %}
+                                        {{ form_widget(form.guardareditable,{'attr':{'class':'hidden'}}) }}
+                                    {% else %}
                                         {{ form_widget(form.guardareditable) }}
-                                        {{ form_widget(form.guardarfinalizar) }}
-                                    </div>
-                                {% endif %}
+                                    {% endif %}
+                                    {{ form_widget(form.guardarfinalizar) }}
+                                </div>
                             </div>
                             <div class="row espacio-linea-arriba2">
                                 <div class="col-sm-12 text-right">
@@ -1412,5 +1400,9 @@
         $('.btnPrevious').click(function(){
             $('.nav-tabs > .active').prev('li').find('a').trigger('click');
         });
+      astilleroDiasAdicionalesCantidad($('#appbundle_astillerocotizacion_acservicios_8_cantidad').val());
+      recalculaPreciosProductos();
+      recalculaPreciosOtros();
+      recalculaPreciosServicios();
     </script>
 {% endblock %}

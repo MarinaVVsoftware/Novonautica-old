@@ -31,7 +31,9 @@ class AstilleroCotizaServicioType extends AbstractType
     {
         $builder
             //->add('servicio')
-            ->add('cantidad')
+            ->add('cantidad', null,[
+                'attr' => ['class' => 'cantidad-elemento']
+            ])
             ->add('otroservicio')
             ->add('precio', MoneyType::class, [
                 'required'=>false,

@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository\Astillero;
+use Doctrine\ORM\Internal\Hydration\ArrayHydrator;
 
 /**
  * ProductoRepository
@@ -10,4 +11,15 @@ namespace AppBundle\Repository\Astillero;
  */
 class ProductoRepository extends \Doctrine\ORM\EntityRepository
 {
+    function obtenerProducto($idproducto)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT p.id,p.nombre,p.precio,p.unidad,p.identificador ' .
+                'FROM AppBundle:Astillero\Producto p '.
+                'WHERE p.id = :id'
+            )
+            ->setParameter('id',$idproducto);
+        return $query->getArrayResult()[0];
+    }
 }
