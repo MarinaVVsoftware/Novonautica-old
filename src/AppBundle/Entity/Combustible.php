@@ -320,8 +320,19 @@ class Combustible
         $this->setToken(null);
     }
 
-    public function getFolioCompleto(){
+    public function getFolioCompleto()
+    {
         return $this->getFoliorecotiza() === 0 ? $this->getFolio() : $this->getFolio().'-'.$this->getFoliorecotiza();
+    }
+
+    public function getFolioString()
+    {
+        return $this->getFolioCompleto();
+    }
+
+    public function getKind()
+    {
+        return 'Combustible';
     }
 
     /**
@@ -1148,6 +1159,7 @@ class Combustible
     {
         $cotizacionnota->setCombustible($this);
         $this->cotizacionnotas[] = $cotizacionnota;
+
         return $this;
     }
 

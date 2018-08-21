@@ -9,14 +9,13 @@
 namespace AppBundle\DataTables;
 
 
-use AppBundle\Entity\AstilleroCotizacion;
 use AppBundle\Entity\Cliente;
-use AppBundle\Entity\MarinaHumedaCotizacion;
 use DataTables\AbstractDataTableHandler;
 use DataTables\DataTableException;
 use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Driver\PDOConnection;
 
 class ClienteReporteDataTable extends AbstractDataTableHandler
 {
@@ -36,7 +35,6 @@ class ClienteReporteDataTable extends AbstractDataTableHandler
      * @throws DataTableException
      *
      * @return DataTableResults
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function handle(DataTableQuery $request): DataTableResults
     {
@@ -44,73 +42,109 @@ class ClienteReporteDataTable extends AbstractDataTableHandler
         $repository = $this->doctrine->getRepository(Cliente::class);
 
         $cliente = $request->customData['cliente'];
-
         $results->recordsTotal = $repository->getCotizacionesCount($cliente);
 
-        $marinaRepository = $this->doctrine->getRepository(MarinaHumedaCotizacion::class);
-        $astilleroRepository = $this->doctrine->getRepository(AstilleroCotizacion::class);
+        $queryContent =
+            'SELECT cotizacion.id,
+                     \'Marina\'               AS tipo,
+                     DATE_FORMAT(cotizacion.fecharegistro, \'%d-%m-%Y\') AS fecha,
+                     cotizacion.folio,
+                     cotizacion.foliorecotiza,
+                     (cotizacion.total  * (cotizacion.dolar / 100)) AS total,
+                     cotizacion.idcliente     AS cliente,
+                     cotizacion.validacliente AS validacion
+              FROM marina_humeda_cotizacion cotizacion
+              UNION
+              SELECT cotizacion.id,
+              \'Astillero\' AS tipo,
+                     DATE_FORMAT(cotizacion.fecharegistro, \'%d-%m-%Y\') AS fecha,
+                     cotizacion.folio,
+                     cotizacion.foliorecotiza,
+                     cotizacion.total AS total,
+                     cotizacion.cliente_id    AS cliente,
+                     cotizacion.validacliente AS validacion
+              FROM astillero_cotizacion cotizacion
+              UNION
+              SELECT cotizacion.id,
+                     \'Combustible\'          AS tipo,
+                     DATE_FORMAT(cotizacion.fecha, \'%d-%m-%Y\') AS fecha,
+                     cotizacion.folio,
+                     cotizacion.foliorecotiza,
+                     cotizacion.total AS total,
+                     cotizacion.idcliente     AS cliente,
+                     cotizacion.validacliente AS validacion
+              FROM combustible cotizacion) AS cotizaciones
+              WHERE cotizaciones.cliente = :cliente
+              AND cotizaciones.validacion = 2 ';
 
-        $marinaQuery = $marinaRepository->createQueryBuilder('cotizacion');
-        $astilleroQuery = $astilleroRepository->createQueryBuilder('cotizacion');
-
-        $cotizacionesMarina = $marinaQuery
-            ->andWhere('IDENTITY(cotizacion.cliente) = ?1 AND cotizacion.validacliente = 2')
-            ->setParameter(1, $cliente);
-
-        $cotizacionesAstillero = $astilleroQuery
-            ->andWhere('IDENTITY(cotizacion.cliente) = ?1 AND cotizacion.validacliente = 2')
-            ->setParameter(1, $cliente);
-
-        /*
         if ($request->search->value) {
-            $query->where(
-                '(LOWER(u.nombre) LIKE :search OR ' .
-                'LOWER(u.nombreUsuario) LIKE :search OR ' .
-                'LOWER(u.correo) LIKE :search)'
-            );
-            $query->setParameter('search', strtolower("%{$request->search->value}%"));
+            $queryContent .= 'AND (LOWER(cotizaciones.tipo) LIKE :search OR '.
+                'LOWER(cotizaciones.folio) LIKE :search) ';
         }
-        */
 
-        /*
         foreach ($request->order as $order) {
             if ($order->column == 0) {
-                $query->addOrderBy('u.nombre', $order->dir);
+                $queryContent .= "ORDER BY cotizaciones.fecha {$order->dir} ";
             } elseif ($order->column == 1) {
-                $query->addOrderBy('u.nombreUsuario', $order->dir);
+                $queryContent .= "ORDER BY cotizaciones.folio {$order->dir} ";
             } elseif ($order->column == 2) {
-                $query->addOrderBy('u.correo', $order->dir);
+                $queryContent .= "ORDER BY cotizaciones.total {$order->dir} ";
             } elseif ($order->column == 3) {
-                $query->addOrderBy('u.isActive', $order->dir);
-            } elseif ($order->column == 4) {
-                $query->addOrderBy('u.id', $order->dir);
+                $queryContent .= "ORDER BY cotizaciones.id {$order->dir} ";
             }
         }
-        */
 
-        /*
-        $query->setMaxResults($request->length);
-        $query->setFirstResult($request->start);
-        */
+        /** @var PDOConnection $connection */
+        $connection = $this->doctrine->getConnection();
 
-        /** @var AstilleroCotizacion[]|MarinaHumedaCotizacion[] $cotizaciones */
-        $cotizaciones = $cotizacionesMarina->getQuery()->getResult();
+        $queryCount = 'SELECT COUNT(cotizaciones.id) AS c, SUM(cotizaciones.total) AS t FROM ('.$queryContent;
+        $statement = $connection->prepare($queryCount);
+        $statement->bindValue('cliente', $cliente, \PDO::PARAM_INT);
 
-        $cotizaciones = array_merge(
-            $cotizaciones,
-            $cotizacionesAstillero->getQuery()->getResult()
-        );
+        if ($request->search->value) {
+            $statement->bindValue('search', strtolower("%{$request->search->value}%"));
+        }
 
-        dump($cotizaciones);
+        $statement->execute();
+        $dataCount = $statement->fetch();
 
-        $results->recordsFiltered = count($cotizaciones);
+        $results->recordsFiltered = $dataCount['c'];
+
+        $query = 'SELECT * FROM ('.$queryContent;
+
+        if ($request->length > 0) {
+            $query .= ' LIMIT :limit, :offset';
+        }
+
+        $statement = $connection->prepare($query);
+        $statement->bindParam('cliente', $cliente, \PDO::PARAM_INT);
+
+        if ($request->search->value) {
+            $statement->bindValue('search', strtolower("%{$request->search->value}%"));
+        }
+
+        if ($request->length > 0) {
+            $statement->bindValue('limit', $request->start, \PDO::PARAM_INT);
+            $statement->bindValue('offset', $request->length, \PDO::PARAM_INT);
+        }
+
+        $statement->execute();
+
+        $cotizaciones = $statement->fetchAll();
 
         foreach ($cotizaciones as $cotizacion) {
+            $folio = $cotizacion['foliorecotiza']
+                ? $cotizacion['folio'].'-'.$cotizacion['foliorecotiza']
+                : $cotizacion['folio'];
+
             $results->data[] = [
-                $cotizacion->getFecharegistro()->format('d-m-Y'),
-                $cotizacion->getFolioString(),
-                '$ ' . number_format(($cotizacion->getTotal() / 100), 2),
-                $cotizacion->getId(),
+                $cotizacion['fecha'],
+                "Cotizacion {$cotizacion['tipo']} #{$folio}",
+                'MX $'.number_format(($cotizacion['total'] / 100), 2),
+                [
+                    'id' => $cotizacion['id'],
+                    'adeudo' => number_format(($dataCount['t'] / 100), 2),
+                ],
             ];
         }
 

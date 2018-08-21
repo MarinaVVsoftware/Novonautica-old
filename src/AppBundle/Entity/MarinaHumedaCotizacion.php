@@ -371,6 +371,12 @@ class MarinaHumedaCotizacion
         return !$this->foliorecotiza ? $this->folio : $this->folio . '-' . $this->foliorecotiza;
     }
 
+    public function getKind()
+    {
+        return 'Marina';
+    }
+
+
     /**
      * Get id
      *

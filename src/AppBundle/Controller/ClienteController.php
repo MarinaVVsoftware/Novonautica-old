@@ -169,11 +169,8 @@ class ClienteController extends Controller
      *
      * @return JsonResponse
      */
-    public function getShowDataAction(Request $request, DataTablesInterface $dataTables)
+    public function getShowDataAdeudosTableAction(Request $request, DataTablesInterface $dataTables)
     {
-        $clienteRepository = $this->getDoctrine()->getRepository(Cliente::class);
-        return new JsonResponse($clienteRepository->getCotizaciones(1, '', 10, 0));
-        /*
         try {
             $results = $dataTables->handle($request, 'clienteReporteAdeudos');
 
@@ -181,7 +178,25 @@ class ClienteController extends Controller
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
         }
-        */
+    }
+
+    /**
+     * @Route("/reportes/abonos", name="cliente_show_data_abonos")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return JsonResponse
+     */
+    public function getShowDataAbonosTableAction(Request $request, DataTablesInterface $dataTables)
+    {
+        try {
+            $results = $dataTables->handle($request, 'clienteReporteAbonos');
+
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
+        }
     }
 
 

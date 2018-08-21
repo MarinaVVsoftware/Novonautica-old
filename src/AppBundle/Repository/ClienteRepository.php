@@ -2,11 +2,7 @@
 
 namespace AppBundle\Repository;
 
-use AppBundle\Entity\AstilleroCotizacion;
-use AppBundle\Entity\Cotizacion;
-use AppBundle\Entity\MarinaHumedaCotizacion;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 /**
  * ClienteRepository
@@ -61,13 +57,11 @@ class ClienteRepository extends \Doctrine\ORM\EntityRepository
                 ->createQuery(
                     'SELECT COUNT(cotizacion.id) '.
                     'FROM AppBundle:MarinaHumedaCotizacion cotizacion '.
-                    'WHERE IDENTITY(cotizacion.cliente) = ?1'
+                    'WHERE IDENTITY(cotizacion.cliente) = ?1 AND cotizacion.validacliente = 2'
                 )
                 ->setParameter(1, $cliente)
                 ->getSingleScalarResult();
-
         } catch (NonUniqueResultException $e) {
-            $total += 0;
         }
 
         try {
@@ -75,41 +69,25 @@ class ClienteRepository extends \Doctrine\ORM\EntityRepository
                 ->createQuery(
                     'SELECT COUNT(cotizacion.id) '.
                     'FROM AppBundle:AstilleroCotizacion cotizacion '.
-                    'WHERE IDENTITY(cotizacion.cliente) = ?1'
+                    'WHERE IDENTITY(cotizacion.cliente) = ?1 AND cotizacion.validacliente = 2'
                 )
                 ->setParameter(1, $cliente)
                 ->getSingleScalarResult();
-
         } catch (NonUniqueResultException $e) {
-            $total += 0;
+        }
+
+        try {
+            $total += $this->getEntityManager()
+                ->createQuery(
+                    'SELECT COUNT(cotizacion.id) '.
+                    'FROM AppBundle:Combustible cotizacion '.
+                    'WHERE IDENTITY(cotizacion.cliente) = ?1 AND cotizacion.validacliente = 2'
+                )
+                ->setParameter(1, $cliente)
+                ->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
         }
 
         return $total;
-    }
-
-    public function getCotizaciones($cliente, $search, $limit, $offset)
-    {
-        $query = $this->createQueryBuilder('cliente')
-            ->select('cliente', 'marinaCotizaciones', 'astilleroCotizaciones')
-            ->leftJoin(
-                'cliente.mhcotizaciones',
-                'marinaCotizaciones',
-                'WITH',
-                'marinaCotizaciones.cliente = cliente AND marinaCotizaciones.validacliente = 2'
-            )
-            ->leftJoin(
-                'cliente.astilleroCotizaciones',
-                'astilleroCotizaciones',
-                'WITH',
-                'astilleroCotizaciones.cliente = cliente AND astilleroCotizaciones.validacliente = 2'
-            )
-            ->andWhere(
-                'cliente.id = :cliente'
-            )
-            ->setParameter('cliente', $cliente);
-
-        return $query
-            ->getQuery()
-            ->getArrayResult();
     }
 }

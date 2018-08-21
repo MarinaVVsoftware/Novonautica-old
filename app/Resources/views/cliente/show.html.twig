@@ -214,13 +214,13 @@
                         <div role="tabpanel" class="tab-pane" id="cuentas">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <form class="row"  style="margin-bottom: 1rem; padding: 1rem 0">
+                                    <form class="row" style="margin-bottom: 1rem; padding: 1rem 0">
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <label for="adeudo">Adeudo total</label>
                                                 <div class="input-group">
-                                                    <span class="input-group-addon">US$</span>
-                                                    <input type="text" class="form-control" id="adeudo" value="{{ (adeudo / 100)|number_format(2) }}">
+                                                    <span class="input-group-addon">MX $</span>
+                                                    <input type="text" class="form-control" id="adeudo" value="0">
                                                 </div>
                                             </div>
                                         </div>
@@ -228,8 +228,8 @@
                                             <div class="form-group">
                                                 <label for="adeudo">Abono total</label>
                                                 <div class="input-group">
-                                                    <span class="input-group-addon">US$</span>
-                                                    <input type="text" class="form-control" id="adeudo" value="{{ (abono / 100)|number_format(2) }}">
+                                                    <span class="input-group-addon">MX $</span>
+                                                    <input type="text" class="form-control" id="abono" value="0">
                                                 </div>
                                             </div>
                                         </div>
@@ -238,14 +238,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h3>Abonos</h3>
-                                    <table id="cuentas-abonos" class="table-novo table" style="width: 100%;">
+                                    <h3>Adeudos</h3>
+                                    <table id="cuentas-adeudos" class="table-novo table" style="width: 100%;">
                                         <thead>
                                         <tr>
                                             <th>Fecha de registro</th>
-                                            <th class="no-sort">Folio de cotización</th>
+                                            <th class="no-sort">Cotización</th>
                                             <th>Cantidad</th>
-                                            <th></th>
+                                            <th width="10%"></th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -253,13 +253,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h3>Adeudos</h3>
-                                    <table id="cuentas-adeudos" class="table-novo table" style="width: 100%;">
+                                    <h3>Abonos</h3>
+                                    <table id="cuentas-abonos" class="table-novo table" style="width: 100%;">
                                         <thead>
                                         <tr>
                                             <th>Fecha de movimiento</th>
                                             <th>Cantidad</th>
-                                            <th class="no-sort">Concepto</th>
+                                            <th class="no-sort">Cotización</th>
+                                            <th width="10%"></th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -281,7 +282,9 @@
     <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
     <script type="text/javascript">
       (function ($, settings) {
-        $('#cuentas-abonos').DataTable({
+        const adeudoInput = document.getElementById('adeudo');
+
+        $('#cuentas-adeudos').DataTable({
           ...settings,
           ajax: {
             url: '{{ path('cliente_show_data_adeudos') }}',
@@ -290,7 +293,23 @@
             },
           },
           order: [[0, 'desc']],
-          createdRow: function (row, cotizacion) {
+          createdRow(row, data) {
+            row.cells[3].innerHTML = `<a href="#" class="btn btn-xs btn-block btn-azul">Ver cotización</a>`;
+            adeudoInput.value = data[3].adeudo;
+          }
+        });
+
+        $('#cuentas-abonos').DataTable({
+          ...settings,
+          ajax: {
+            url: '{{ path('cliente_show_data_abonos') }}',
+            data: {
+              cliente: '{{ cliente.id }}'
+            },
+          },
+          order: [[0, 'desc']],
+          createdRow(row, data) {
+            console.log(data);
           }
         });
 
