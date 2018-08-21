@@ -8,11 +8,13 @@
 namespace AppBundle\DataTables\Cliente;
 
 
+use AppBundle\Entity\Cliente;
 use DataTables\AbstractDataTableHandler;
 use DataTables\DataTableException;
 use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Driver\PDOConnection;
 
 class CuentaAdeudosDataTable extends AbstractDataTableHandler
 {
@@ -39,12 +41,15 @@ class CuentaAdeudosDataTable extends AbstractDataTableHandler
         $repository = $this->doctrine->getRepository(Cliente::class);
 
         $cliente = $request->customData['cliente'];
+        $startDate = $request->customData['dates']['start'];
+        $endDate = $request->customData['dates']['end'];
+
         $results->recordsTotal = $repository->getCotizacionesCount($cliente);
 
         $queryContent =
             'SELECT cotizacion.id,
                      \'Marina\'               AS tipo,
-                     DATE_FORMAT(cotizacion.fecharegistro, \'%d-%m-%Y\') AS fecha,
+                     cotizacion.fecharegistro AS fecha,
                      cotizacion.folio,
                      cotizacion.foliorecotiza,
                      (cotizacion.total  * (cotizacion.dolar / 100)) AS total,
@@ -54,7 +59,7 @@ class CuentaAdeudosDataTable extends AbstractDataTableHandler
               UNION
               SELECT cotizacion.id,
               \'Astillero\' AS tipo,
-                     DATE_FORMAT(cotizacion.fecharegistro, \'%d-%m-%Y\') AS fecha,
+                     cotizacion.fecharegistro AS fecha,
                      cotizacion.folio,
                      cotizacion.foliorecotiza,
                      cotizacion.total AS total,
@@ -64,7 +69,7 @@ class CuentaAdeudosDataTable extends AbstractDataTableHandler
               UNION
               SELECT cotizacion.id,
                      \'Combustible\'          AS tipo,
-                     DATE_FORMAT(cotizacion.fecha, \'%d-%m-%Y\') AS fecha,
+                     cotizacion.fecha AS fecha,
                      cotizacion.folio,
                      cotizacion.foliorecotiza,
                      cotizacion.total AS total,
@@ -77,6 +82,10 @@ class CuentaAdeudosDataTable extends AbstractDataTableHandler
         if ($request->search->value) {
             $queryContent .= 'AND (LOWER(cotizaciones.tipo) LIKE :search OR '.
                 'LOWER(cotizaciones.folio) LIKE :search) ';
+        }
+
+        if ($startDate && $endDate) {
+            $queryContent .= 'AND cotizaciones.fecha BETWEEN :start AND :end ';
         }
 
         foreach ($request->order as $order) {
@@ -102,6 +111,11 @@ class CuentaAdeudosDataTable extends AbstractDataTableHandler
             $statement->bindValue('search', strtolower("%{$request->search->value}%"));
         }
 
+        if ($startDate && $endDate) {
+            $statement->bindParam('start', $startDate);
+            $statement->bindParam('end', $endDate);
+        }
+
         $statement->execute();
         $dataCount = $statement->fetch();
 
@@ -120,6 +134,11 @@ class CuentaAdeudosDataTable extends AbstractDataTableHandler
             $statement->bindValue('search', strtolower("%{$request->search->value}%"));
         }
 
+        if ($startDate && $endDate) {
+            $statement->bindParam('start', $startDate);
+            $statement->bindParam('end', $endDate);
+        }
+
         if ($request->length > 0) {
             $statement->bindValue('limit', $request->start, \PDO::PARAM_INT);
             $statement->bindValue('offset', $request->length, \PDO::PARAM_INT);
@@ -136,7 +155,10 @@ class CuentaAdeudosDataTable extends AbstractDataTableHandler
 
             $results->data[] = [
                 $cotizacion['fecha'],
-                "Cotizacion {$cotizacion['tipo']} #{$folio}",
+                [
+                    'kind' => $cotizacion['tipo'],
+                    'folio' => $folio,
+                ],
                 'MX $'.number_format(($cotizacion['total'] / 100), 2),
                 [
                     'id' => $cotizacion['id'],

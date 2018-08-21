@@ -52,9 +52,9 @@ services:
         tags:
             - { name: doctrine.orm.entity_listener }
 
-    AppBundle\EventListener\ReportePagoListener:
-        tags:
-            - { name: doctrine.event_subscriber }
+#    AppBundle\EventListener\ReportePagoListener:
+#        tags:
+#            - { name: doctrine.event_subscriber }
 
     AppBundle\EventListener\ReporteAstilleroListener:
         tags:

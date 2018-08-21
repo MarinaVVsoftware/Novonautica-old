@@ -19,7 +19,6 @@ use Doctrine\DBAL\Driver\PDOConnection;
 
 class ClienteReporteDataTable extends AbstractDataTableHandler
 {
-    const ID = 'clienteReporteAdeudos';
     private $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)
