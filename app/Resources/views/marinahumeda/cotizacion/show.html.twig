@@ -121,13 +121,19 @@
                                         {% if marinaHumedaCotizacion.fechaLlegada %}
                                             <tr>
                                                 <th>Fecha llegada</th>
-                                                <td>{{ marinaHumedaCotizacion.fechaLlegada|date('d-m-Y') }}</td>
+                                                <td>{{ marinaHumedaCotizacion.fechaLlegada|date('d/m/Y') }}</td>
                                             </tr>
                                         {% endif %}
                                         {% if marinaHumedaCotizacion.fechaSalida %}
                                             <tr>
                                                 <th>Fecha salida</th>
-                                                <td>{{ marinaHumedaCotizacion.fechaSalida|date('d-m-Y') }}</td>
+                                                <td>{{ marinaHumedaCotizacion.fechaSalida|date('d/m/Y') }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if marinaHumedaCotizacion.fecharegistro %}
+                                            <tr>
+                                                <th>Fecha cotización</th>
+                                                <td>{{ marinaHumedaCotizacion.fecharegistro|date('d/m/Y H:i:s') }}</td>
                                             </tr>
                                         {% endif %}
                                         {% if marinaHumedaCotizacion.slip %}
@@ -185,7 +191,14 @@
                                                 </td>
                                             </tr>
                                         {% endif %}
-
+                                        {% if marinaHumedaCotizacion.limiteValidaCliente %}
+                                            <tr>
+                                                <th>Límite aceptación cliente</th>
+                                                <td>
+                                                    {{ marinaHumedaCotizacion.limiteValidaCliente|date('d/m/Y') }}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
                                         </tbody>
                                     </table>
                                 </div>

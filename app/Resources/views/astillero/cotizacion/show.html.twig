@@ -93,15 +93,15 @@
                                         </tr>
                                         <tr>
                                             <th>Fecha inicio</th>
-                                            <td>{% if astilleroCotizacion.fechaLlegada %}{{ astilleroCotizacion.fechaLlegada|date('Y-m-d') }}{% endif %}</td>
+                                            <td>{% if astilleroCotizacion.fechaLlegada %}{{ astilleroCotizacion.fechaLlegada|date('d/m/Y') }}{% endif %}</td>
                                         </tr>
                                         <tr>
                                             <th>Fecha fin</th>
-                                            <td>{% if astilleroCotizacion.fechaSalida %}{{ astilleroCotizacion.fechaSalida|date('Y-m-d') }}{% endif %}</td>
+                                            <td>{% if astilleroCotizacion.fechaSalida %}{{ astilleroCotizacion.fechaSalida|date('d/m/Y') }}{% endif %}</td>
                                         </tr>
                                         <tr>
                                             <th>Fecha cotización</th>
-                                            <td>{% if astilleroCotizacion.fecharegistro %}{{ astilleroCotizacion.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                            <td>{% if astilleroCotizacion.fecharegistro %}{{ astilleroCotizacion.fecharegistro|date('d/m/Y H:i:s') }}{% endif %}</td>
                                         </tr>
                                         <tr>
                                             <th>Creó la cotización</th>
@@ -147,6 +147,14 @@
                                                 </td>
                                             </tr>
                                         {% endif %}
+                                        <tr>
+                                            <th>Límite aceptación cliente</th>
+                                            <td>
+                                                {% if astilleroCotizacion.limiteValidaCliente %}
+                                                {{ astilleroCotizacion.limiteValidaCliente|date('d/m/Y') }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>

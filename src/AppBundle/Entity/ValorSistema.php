@@ -96,6 +96,13 @@ class ValorSistema
     private $diasHabilesAstilleroCotizacion;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="dias_habiles_combustible", type="integer")
+     */
+    private $diasHabilesCombustible;
+
+    /**
      * @var float
      * @Assert\NotBlank(
      *     message="El porcentaje moratorio no puede quedar vacío"
@@ -511,5 +518,29 @@ class ValorSistema
     public function getFolioCombustible()
     {
         return $this->folioCombustible;
+    }
+
+    /**
+     * Set diasHabilesCombustible.
+     *
+     * @param int $diasHabilesCombustible
+     *
+     * @return ValorSistema
+     */
+    public function setDiasHabilesCombustible($diasHabilesCombustible)
+    {
+        $this->diasHabilesCombustible = $diasHabilesCombustible;
+
+        return $this;
+    }
+
+    /**
+     * Get diasHabilesCombustible.
+     *
+     * @return int
+     */
+    public function getDiasHabilesCombustible()
+    {
+        return $this->diasHabilesCombustible;
     }
 }

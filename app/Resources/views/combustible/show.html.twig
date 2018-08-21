@@ -105,6 +105,22 @@
                                              <td>{{ pago }}</td>
                                          </tr>
                                      {% endif %}
+                                     <tr>
+                                         <th>Fecha cotización</th>
+                                         <td>
+                                             {% if combustible.fecha %}
+                                                 {{ combustible.fecha|date('d/m/Y H:i:s') }}
+                                             {% endif %}
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <th>Límite aceptación cliente</th>
+                                         <td>
+                                             {% if combustible.limiteValidaCliente %}
+                                                 {{ combustible.limiteValidaCliente|date('d/m/Y') }}
+                                             {% endif %}
+                                         </td>
+                                     </tr>
                                      </tbody>
                                  </table>
                              </div>
