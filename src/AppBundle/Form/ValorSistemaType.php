@@ -41,12 +41,17 @@ class ValorSistemaType extends AbstractType
                 'label' => 'Folio combustible'
             ])
             ->add('diasHabilesMarinaCotizacion',TextType::class,[
-                'label' => 'Días hábiles pago de cotización marina húmeda',
+                'label' => 'Días hábiles cotización marina húmeda',
                 'attr' => ['class' => 'esdecimal'],
                 'required' => false,
             ])
             ->add('diasHabilesAstilleroCotizacion',TextType::class,[
                 'label' => 'Días hábiles cotización astillero',
+                'attr' => ['class' => 'esdecimal'],
+                'required' => false,
+            ])
+            ->add('diasHabilesCombustible',TextType::class,[
+                'label' => 'Días hábiles cotización combustible',
                 'attr' => ['class' => 'esdecimal'],
                 'required' => false,
             ])

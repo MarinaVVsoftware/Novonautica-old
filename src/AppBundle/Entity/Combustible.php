@@ -194,6 +194,13 @@ class Combustible
     private $validacliente;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="limite_valida_cliente", type="datetime", nullable=true)
+     */
+    private $limiteValidaCliente;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="notasnovo", type="text", nullable=true)
@@ -1260,5 +1267,29 @@ class Combustible
     public function getRegistroPagoCompletado()
     {
         return $this->registroPagoCompletado;
+    }
+
+    /**
+     * Set limiteValidaCliente.
+     *
+     * @param \DateTime|null $limiteValidaCliente
+     *
+     * @return Combustible
+     */
+    public function setLimiteValidaCliente($limiteValidaCliente = null)
+    {
+        $this->limiteValidaCliente = $limiteValidaCliente;
+
+        return $this;
+    }
+
+    /**
+     * Get limiteValidaCliente.
+     *
+     * @return \DateTime|null
+     */
+    public function getLimiteValidaCliente()
+    {
+        return $this->limiteValidaCliente;
     }
 }

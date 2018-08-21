@@ -317,11 +317,20 @@ class MarinaHumedaCotizacionController extends Controller
                 ]);
 
                 $this->enviaCorreoNotificacion($mailer, $notificables, $marinaHumedaCotizacion);
+
+                // Guardar la fecha en la que se valido la cotización por novonautica y agrega fecha límite para
+                // aceptación por el cliente
+                $sistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
+                $diasMarina = $sistema->getDiasHabilesMarinaCotizacion();
+                $marinaHumedaCotizacion
+                    ->setRegistroValidaNovo(new \DateTimeImmutable())
+                    ->setLimiteValidaCliente((new \DateTime('now'))->modify('+ '.$diasMarina.' day'));
             }
 
             if ($marinaHumedaCotizacion->getValidacliente() === 2) {
                 // Guardar la fecha en la que se valido la cotizacion por el cliente
-                $marinaHumedaCotizacion->setRegistroValidaCliente(new \DateTimeImmutable());
+                $marinaHumedaCotizacion
+                    ->setRegistroValidaCliente(new \DateTimeImmutable());
 
                 // Quien valido por el cliente
                 $marinaHumedaCotizacion->setQuienAcepto($this->getUser()->getNombre());

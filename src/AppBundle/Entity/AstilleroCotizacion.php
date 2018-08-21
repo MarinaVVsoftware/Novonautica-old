@@ -199,6 +199,13 @@ class AstilleroCotizacion
     private $validacliente;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="limite_valida_cliente", type="datetime", nullable=true)
+     */
+    private $limiteValidaCliente;
+
+    /**
      * Se refiere a un cliente que haya aceptado la cotizacion o a un usuario de novonautica
      *
      * @var string
@@ -1196,5 +1203,29 @@ class AstilleroCotizacion
     public function getDescuentototal()
     {
         return $this->descuentototal;
+    }
+
+    /**
+     * Set limiteValidaCliente.
+     *
+     * @param \DateTime|null $limiteValidaCliente
+     *
+     * @return AstilleroCotizacion
+     */
+    public function setLimiteValidaCliente($limiteValidaCliente = null)
+    {
+        $this->limiteValidaCliente = $limiteValidaCliente;
+
+        return $this;
+    }
+
+    /**
+     * Get limiteValidaCliente.
+     *
+     * @return \DateTime|null
+     */
+    public function getLimiteValidaCliente()
+    {
+        return $this->limiteValidaCliente;
     }
 }

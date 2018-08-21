@@ -323,6 +323,14 @@ class CombustibleController extends Controller
                     'tipo' => Correo\Notificacion::TIPO_COMBUSTIBLE
                 ]);
                 $this->enviaCorreoNotificacion($mailer, $notificables, $combustible);
+
+                // Guardar la fecha en la que se valido la cotizacion novonautica y agrega fecha límite para
+                // aceptación por el cliente
+                $sistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
+                $diasCombustible = $sistema->getDiasHabilesCombustible();
+                $combustible
+                    ->setRegistroValidaNovo(new \DateTimeImmutable())
+                    ->setLimiteValidaCliente((new \DateTime('now'))->modify('+ '.$diasCombustible.' day'));
             }
             if ($combustible->getValidacliente() === 2) {
                 // Guardar la fecha en la que se valido la cotizacion por el cliente

@@ -153,6 +153,13 @@ class MarinaHumedaCotizacion
     private $validacliente;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="limite_valida_cliente", type="datetime", nullable=true)
+     */
+    private $limiteValidaCliente;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="quien_acepto", type="string", length=100, nullable=true)
@@ -1324,5 +1331,29 @@ class MarinaHumedaCotizacion
     public function getMoratoriaTotal()
     {
         return $this->moratoriaTotal;
+    }
+
+    /**
+     * Set limiteValidaCliente.
+     *
+     * @param \DateTime|null $limiteValidaCliente
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setLimiteValidaCliente($limiteValidaCliente = null)
+    {
+        $this->limiteValidaCliente = $limiteValidaCliente;
+
+        return $this;
+    }
+
+    /**
+     * Get limiteValidaCliente.
+     *
+     * @return \DateTime|null
+     */
+    public function getLimiteValidaCliente()
+    {
+        return $this->limiteValidaCliente;
     }
 }

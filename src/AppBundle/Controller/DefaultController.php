@@ -77,10 +77,12 @@ class DefaultController extends Controller
         if (null === $cotizacion || $cotizacion->getCliente() !== $this->getUser()) {
             throw new NotFoundHttpException('No se encontro la cotización');
         }
-
+        if((new \DateTime('now'))->setTime(0,0,0,0) > $cotizacion->getLimiteValidaCliente()->setTime(0,0,0,0)){
+            throw new NotFoundHttpException('Cotización caducada');
+        }
         $form = $this->createFormBuilder([])
             ->add('action', ChoiceType::class, [
-                'label' => 'Seleccione una opcion para continuar',
+                'label' => 'Seleccione una opción para continuar:',
                 'expanded' => true,
                 'data' => true,
                 'choices' => [

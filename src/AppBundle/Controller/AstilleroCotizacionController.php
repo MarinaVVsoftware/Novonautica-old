@@ -307,9 +307,9 @@ class AstilleroCotizacionController extends Controller
             if ($guardarFinalizar) {
                 $pincode = $em->getRepository(Pincode::class)
                     ->getOneValid($form->get('pincode')->getViewData());
-
-                $em->remove($pincode);
-
+                if($pincode){
+                    $em->remove($pincode);
+                }
                 // Buscar correos a notificar
                 $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                     'evento' => Correo\Notificacion::EVENTO_CREAR,
@@ -662,6 +662,7 @@ class AstilleroCotizacionController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
             $em = $this->getDoctrine()->getManager();
 
             $astilleroCotizacion->setNombrevalidanovo($this->getUser()->getNombre());
@@ -677,11 +678,11 @@ class AstilleroCotizacionController extends Controller
                     ? $astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza()
                     : $astilleroCotizacion->getFolio();
 
-                $attachment = new Swift_Attachment($this->displayMarinaPDF($astilleroCotizacion, 1),
+                $attachment = new Swift_Attachment($this->displayMarinaPDFAction($astilleroCotizacion, 1),
                     'cotizacionUSD_' . $folio . '.pdf',
                     'application/pdf'
                 );
-                $attachmentMXN = new Swift_Attachment($this->displayMarinaPDF($astilleroCotizacion, 2),
+                $attachmentMXN = new Swift_Attachment($this->displayMarinaPDFAction($astilleroCotizacion, 2),
                     'cotizacionMXN_' . $folio . '.pdf',
                     'application/pdf'
                 );
@@ -726,8 +727,13 @@ class AstilleroCotizacionController extends Controller
 
                 $em->persist($historialCorreo);
 
-                // Guardar la fecha en la que se valido la cotizacion por novonautica
-                $astilleroCotizacion->setRegistroValidaNovo(new \DateTimeImmutable());
+                // Guardar la fecha en la que se valido la cotización por novonautica y agregar fecha límite para
+                // aceptación por el cliente
+                $sistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
+                $diasAstillero = $sistema->getDiasHabilesAstilleroCotizacion();
+                $astilleroCotizacion
+                    ->setRegistroValidaNovo(new \DateTimeImmutable())
+                    ->setLimiteValidaCliente((new \DateTime('now'))->modify('+ '.$diasAstillero.' day'));
 
                 // Buscar correos a notificar
                 $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
@@ -1097,11 +1103,11 @@ class AstilleroCotizacionController extends Controller
             ? $astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza()
             : $astilleroCotizacion->getFolio();
 
-        $attachment = new Swift_Attachment($this->displayMarinaPDF($astilleroCotizacion, 1),
+        $attachment = new Swift_Attachment($this->displayMarinaPDFAction($astilleroCotizacion, 1),
             'cotizacionUSD_' . $folio . '.pdf',
             'application/pdf'
         );
-        $attachmentMXN = new Swift_Attachment($this->displayMarinaPDF($astilleroCotizacion, 2),
+        $attachmentMXN = new Swift_Attachment($this->displayMarinaPDFAction($astilleroCotizacion, 2),
             'cotizacionMXN_' . $folio . '.pdf',
             'application/pdf'
         );
