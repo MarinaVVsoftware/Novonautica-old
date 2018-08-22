@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use Doctrine\ORM\NonUniqueResultException;
+
 /**
  * ClienteRepository
  *
@@ -44,5 +46,48 @@ class ClienteRepository extends \Doctrine\ORM\EntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function getCotizacionesCount($cliente)
+    {
+        $total = 0;
+
+        try {
+            $total += $this->getEntityManager()
+                ->createQuery(
+                    'SELECT COUNT(cotizacion.id) '.
+                    'FROM AppBundle:MarinaHumedaCotizacion cotizacion '.
+                    'WHERE IDENTITY(cotizacion.cliente) = ?1 AND cotizacion.validacliente = 2'
+                )
+                ->setParameter(1, $cliente)
+                ->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+        }
+
+        try {
+            $total += $this->getEntityManager()
+                ->createQuery(
+                    'SELECT COUNT(cotizacion.id) '.
+                    'FROM AppBundle:AstilleroCotizacion cotizacion '.
+                    'WHERE IDENTITY(cotizacion.cliente) = ?1 AND cotizacion.validacliente = 2'
+                )
+                ->setParameter(1, $cliente)
+                ->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+        }
+
+        try {
+            $total += $this->getEntityManager()
+                ->createQuery(
+                    'SELECT COUNT(cotizacion.id) '.
+                    'FROM AppBundle:Combustible cotizacion '.
+                    'WHERE IDENTITY(cotizacion.cliente) = ?1 AND cotizacion.validacliente = 2'
+                )
+                ->setParameter(1, $cliente)
+                ->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+        }
+
+        return $total;
     }
 }

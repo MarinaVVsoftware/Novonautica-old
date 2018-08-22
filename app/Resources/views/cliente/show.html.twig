@@ -1,7 +1,26 @@
 {% extends 'estructura/plantilla.twig' %}
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        :root .btn {
+            min-width: initial;
+            text-align: center;
+        }
+
+        .daterangepicker {
+            color: initial;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+            background-color: #292f41;
+            border-color: #2a3041;
+        }
+
+        .ranges li {
+            background-color: hsl(225, 23%, 21%);
+            border: 1px solid #292f41;
+        }
+    </style>
 {% endblock %}
 
 {% block contwrapper %}
@@ -214,37 +233,47 @@
                         <div role="tabpanel" class="tab-pane" id="cuentas">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <form class="row"  style="margin-bottom: 1rem; padding: 1rem 0">
+                                    <form class="row" style="margin-bottom: 1rem; padding: 1rem 0">
                                         <div class="col-sm-4">
-                                            <div class="form-group">
-                                                <label for="adeudo">Adeudo total</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">US$</span>
-                                                    <input type="text" class="form-control" id="adeudo" value="{{ (adeudo / 100)|number_format(2) }}">
-                                                </div>
-                                            </div>
+                                            <h4>
+                                                <strong>Adeudo total: </strong>
+                                                <span id="adeudo"></span>
+                                            </h4>
                                         </div>
                                         <div class="col-sm-4">
-                                            <div class="form-group">
-                                                <label for="adeudo">Abono total</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">US$</span>
-                                                    <input type="text" class="form-control" id="adeudo" value="{{ (abono / 100)|number_format(2) }}">
-                                                </div>
-                                            </div>
+                                            <h4>
+                                                <strong>Abono total: </strong>
+                                                <span id="abono"></span>
+                                            </h4>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <table id="table-cuentas" class="table-novo table" style="width: 100%;">
+                                    <h3>Adeudos</h3>
+                                    <table id="cuentas-adeudos" class="table-novo table" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <th>Fecha de registro</th>
+                                            <th class="no-sort">Cotización</th>
+                                            <th>Cantidad</th>
+                                            <th width="10%"></th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3>Abonos</h3>
+                                    <table id="cuentas-abonos" class="table-novo table" style="width: 100%;">
                                         <thead>
                                         <tr>
                                             <th>Fecha de movimiento</th>
-                                            <th>Adeudo</th>
-                                            <th>Abono</th>
-                                            <th class="no-sort">Concepto</th>
+                                            <th>Cantidad</th>
+                                            <th class="no-sort">Cotización</th>
+                                            <th width="10%"></th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -262,39 +291,181 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/daterangepicker.js') }}"></script>
     <script type="text/javascript">
       (function ($, settings) {
-        $('#table-cuentas').DataTable({
+        moment.locale('es');
+
+        const adeudoInput = document.getElementById('adeudo');
+        const abonoInput = document.getElementById('abono');
+        const lengthMenu = [
+          [10, 25, 50, -1],
+          ['10 filas', '25 filas', '50 filas', 'Mostrar todo']
+        ];
+        const buttons = {
+          buttons: [
+            {
+              extend: 'excel',
+              text: 'XLS',
+              className: 'btn btn-verde btn-sm',
+            }
+          ]
+        };
+        const autoApply = true;
+        const ranges = {
+          'Este mes': [moment().startOf('month'), moment().endOf('month')],
+          'Mes pasado': [
+            moment().subtract(1, 'month').startOf('month'),
+            moment().subtract(1, 'month').endOf('month')
+          ]
+        };
+        const locale = {
+          applyLabel: 'Aplicar',
+          cancelLabel: 'Cancelar',
+          fromLabel: 'Desde',
+          toLabel: 'Hasta',
+          customRangeLabel: 'Definido por usuario',
+        };
+
+        let adeudoSearchDates = {
+          start: moment().startOf('month'),
+          end: moment().endOf('month'),
+        };
+
+        let abonoSearchDates = {
+          start: moment().startOf('month'),
+          end: moment().endOf('month'),
+        };
+
+        const $adeudosTable = $('#cuentas-adeudos').DataTable({
+              ...settings,
+              ajax: {
+                url: '{{ path('cliente_show_data_adeudos') }}',
+                data(d) {
+                  d.cliente = '{{ cliente.id }}';
+                  d.dates = {
+                    start: adeudoSearchDates.start.format('YYYY-MM-DD'),
+                    end: adeudoSearchDates.end.format('YYYY-MM-DD'),
+                  };
+                },
+              },
+              lengthMenu,
+              buttons,
+              dom:
+                  "<'row'<'col-sm-3'l><'col-sm-3'<'#datesAdeudos'>><'col-sm-3'B><'col-sm-3'f>>" +
+                  "<'row'<'col-sm-12'tr>>" +
+                  "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+              order: [[0, 'desc']],
+              createdRow(row, data) {
+                let showUrl = '{{ app.request.baseUrl }}';
+
+                switch (data[1].kind) {
+                  case 'Marina':
+                    showUrl += '/marina/cotizacion/' + data[3].id;
+                    break;
+                  case 'Astillero':
+                    showUrl += '/astillero/' + data[3].id;
+                    break;
+                  case 'Combustible':
+                    showUrl += '/combustible/' + data[3].id;
+                    break;
+                }
+
+                row.cells[1].innerHTML = `${data[1].kind} #${data[1].folio}`;
+                row.cells[3].innerHTML = `<a href="${showUrl}" class="btn btn-xs btn-block btn-azul">Ver cotización</a>`;
+              }
+            }).on('xhr', function (event, {json}) {
+              adeudoInput.innerHTML = 'MX $' + (!json.data.length ? '0.00' : json.data[0][3].adeudo);
+            })
+        ;
+
+        const $abonosTable = $('#cuentas-abonos').DataTable({
           ...settings,
           ajax: {
-            url: '{{ path('cliente_show_data', { id: cliente.id }) }}',
-            data: {
-              cliente: '{{ cliente.id }}'
+            url: '{{ path('cliente_show_data_abonos') }}',
+            data(d) {
+              d.cliente = '{{ cliente.id }}';
+              d.dates = {
+                start: abonoSearchDates.start.format('YYYY-MM-DD'),
+                end: abonoSearchDates.end.format('YYYY-MM-DD'),
+              };
             },
           },
+          lengthMenu,
+          buttons,
+          dom:
+              "<'row'<'col-sm-3'l><'col-sm-3'<'#datesAbonos'>><'col-sm-3'B><'col-sm-3'f>>" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
           order: [[0, 'desc']],
-          createdRow: function (row, cliente) {
-            let dateCell = row.cells[0];
+          createdRow(row, data) {
+            let pagoUrl = '{{ app.request.baseUrl }}/pago/' + data[3].id + '/' + data[3].kind + '/pago-recibo';
 
-            let lastPayment = moment(cliente[0], 'YYYY-MM-DD HH:mm:ss', true);
-            if(lastPayment.isValid()) {
-              dateCell.innerHTML = lastPayment.fromNow();
-            }
+            row.cells[3].innerHTML =
+                `<a href="${pagoUrl}" target="_blank" class="btn btn-xs btn-block btn-azul">
+                    Recibo de pago
+                </a>`;
           }
+        }).on('xhr', function (event, {json}) {
+          abonoInput.innerHTML = 'MX $' + (!json.data.length ? '0.00' : json.data[0][3].total);
         });
+
+        $('#datesAdeudos, #datesAbonos')
+            .html(`
+              <div class="dataTables_filter">
+                <label for="date-range">Fecha
+                <input type="text" class="form-control" id="date-range" readonly>
+                </label>
+              </div>
+            `);
+
+        $('#datesAdeudos')
+            .find('#date-range')
+            .daterangepicker({
+              startDate: adeudoSearchDates.start,
+              endDate: adeudoSearchDates.end,
+              autoApply,
+              ranges,
+              locale
+            })
+            .on('apply.daterangepicker', function (e, picker) {
+              adeudoSearchDates.start = picker.startDate;
+              adeudoSearchDates.end = picker.endDate;
+              $adeudosTable.ajax.reload();
+            });
+
+        $('#datesAbonos')
+            .find('#date-range')
+            .daterangepicker({
+              startDate: abonoSearchDates.start,
+              endDate: abonoSearchDates.end,
+              autoApply,
+              ranges,
+              locale
+            })
+            .on('apply.daterangepicker', function (e, picker) {
+              abonoSearchDates.start = picker.startDate;
+              abonoSearchDates.end = picker.endDate;
+              $abonosTable.ajax.reload();
+            });
 
         if (location.hash) {
           const tab = document.querySelector(`a[href="${location.hash}"]`).parentNode;
-
           const pane = document.getElementById(`${location.hash.replace('#', '')}`);
+
           [
             ...document.querySelectorAll('li[role="presentation"].active'),
             ...document.querySelectorAll('.tab-pane.active')
           ].forEach(item => item.classList.remove('active'));
-          tab.classList.add('active');
 
+          tab.classList.add('active');
           tab.dataset.expanded = true;
           pane.classList.add('active');
           location.hash = '';

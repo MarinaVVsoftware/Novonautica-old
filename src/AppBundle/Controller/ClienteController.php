@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Barco;
 use AppBundle\Entity\Cliente;
+use AppBundle\Repository\ClienteRepository;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -15,10 +16,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * Cliente controller.
@@ -46,6 +43,7 @@ class ClienteController extends Controller
      *
      * @param Request $request
      * @param DataTablesInterface $dataTables
+     *
      * @return JsonResponse
      */
     public function getClientesDataAction(Request $request, DataTablesInterface $dataTables)
@@ -53,6 +51,7 @@ class ClienteController extends Controller
         if ($request->isXmlHttpRequest()) {
             try {
                 $results = $dataTables->handle($request, 'cliente');
+
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getCode());
@@ -121,7 +120,7 @@ class ClienteController extends Controller
                 ->setBody(
                     $this->renderView(':cliente:correo.alta.twig', [
                         'correo' => $cliente->getCorreo(),
-                        'password' => $randomString
+                        'password' => $randomString,
                     ]),
                     'text/html'
                 );
@@ -150,35 +149,50 @@ class ClienteController extends Controller
      */
     public function showAction(Cliente $cliente)
     {
-        $repository = $this->getDoctrine()->getRepository('AppBundle:Cliente');
-        $totalAdeudo = $repository->getTotalAdeudo($cliente);
-        $totalAbono = $repository->getTotalAbono($cliente);
-
         return $this->render('cliente/show.html.twig', [
             'title' => "Cliente: {$cliente->getNombre()}",
             'cliente' => $cliente,
-            'adeudo' => $totalAdeudo,
-            'abono' => $totalAbono,
         ]);
     }
 
     /**
-     * @Route("/{id}/reportes", name="cliente_show_data")
+     * @Route("/reportes/adeudos", name="cliente_show_data_adeudos")
      *
      * @param Request $request
      * @param DataTablesInterface $dataTables
      *
      * @return JsonResponse
      */
-    public function getShowDataAction(Request $request, DataTablesInterface $dataTables)
+    public function getShowDataAdeudosTableAction(Request $request, DataTablesInterface $dataTables)
     {
         try {
-            $results = $dataTables->handle($request, 'clienteReporte');
+            $results = $dataTables->handle($request, 'clienteReporteAdeudos');
+
             return $this->json($results);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
         }
     }
+
+    /**
+     * @Route("/reportes/abonos", name="cliente_show_data_abonos")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return JsonResponse
+     */
+    public function getShowDataAbonosTableAction(Request $request, DataTablesInterface $dataTables)
+    {
+        try {
+            $results = $dataTables->handle($request, 'clienteReporteAbonos');
+
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
+        }
+    }
+
 
     /**
      * Displays a form to edit an existing cliente entity.
@@ -204,7 +218,7 @@ class ClienteController extends Controller
             $barco = $em->getRepository(Barco::class)->find($barco->getId());
             $cliente = $barco->getCliente();
             if (!$barco) {
-                throw $this->createNotFoundException('No hay barcos encontrados para el id ' . $barco->getId());
+                throw $this->createNotFoundException('No hay barcos encontrados para el id '.$barco->getId());
             }
             $originalMotores = new ArrayCollection();
 

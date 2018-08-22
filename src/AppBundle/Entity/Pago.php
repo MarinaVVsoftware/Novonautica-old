@@ -148,6 +148,23 @@ class Pago
         return $this->metodopago;
     }
 
+    public function getUniqueCotizacion()
+    {
+        if ($this->acotizacion) {
+            return $this->acotizacion;
+        }
+
+        if ($this->mhcotizacion) {
+            return $this->mhcotizacion;
+        }
+
+        if ($this->combustible) {
+            return $this->combustible;
+        }
+
+        return null;
+    }
+
     /**
      * Get id
      *

@@ -39,6 +39,13 @@ class Reporte
     /**
      * @var string
      *
+     * @ORM\Column(name="divisa", type="string", length=5)
+     */
+    private $divisa;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="concepto", type="string", length=50)
      */
     private $concepto;

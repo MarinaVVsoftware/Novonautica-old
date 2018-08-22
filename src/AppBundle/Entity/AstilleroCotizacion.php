@@ -361,6 +361,11 @@ class AstilleroCotizacion
         return !$this->foliorecotiza ? $this->folio : $this->folio . '-' . $this->foliorecotiza;
     }
 
+    public function getKind()
+    {
+        return 'Astillero';
+    }
+
     /**
      * Get id
      *
