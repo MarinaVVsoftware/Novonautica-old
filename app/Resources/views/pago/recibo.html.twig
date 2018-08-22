@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Recibo de pago</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"
+    >
+    <link rel="stylesheet"
+          type="text/css"
+          href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('css/AdminLTE.min.css') }}"
+    >
+    <style>
+        h6 {
+            margin-bottom: 0;
+        }
+
+        th {
+            font-size: 12px;
+        }
+
+        .border-1 {
+            border: 1px solid black;
+        }
+
+        .table-bordered > thead > tr > th,
+        .table-bordered > thead > tr > td {
+            border-bottom-width: 1px;
+        }
+
+        .table-bordered > thead > tr > th,
+        .table-bordered > tbody > tr > th,
+        .table-bordered > tfoot > tr > th,
+        .table-bordered > thead > tr > td,
+        .table-bordered > tbody > tr > td,
+        .table-bordered > tfoot > tr > td {
+            border-color: #000;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div id="header" class="row">
+        <div class="col-xs-12 text-center">
+            <h3>{{ emisor.nombre }}</h3>
+            <h4>{{ emisor.direccion }}, C.P. {{ emisor.codigoPostal }}, RFC: {{ emisor.rfc }}</h4>
+            <h4 class="bg-blue pad">Comprobante Fiscal de Recepción de pagos</h4>
+        </div>
+        <hr>
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-6">
+                    <p>
+                        <strong>Folio fiscal: </strong>
+                        <br>
+                        <strong>No. de serie del CSD del SAT: </strong>
+                        <br>
+                        <strong>No. de serie del CSD del Emisor: </strong>
+                        <br>
+                        <strong>CFDI Relacionado: </strong>
+                    </p>
+                </div>
+                <div class="col-xs-6">
+                    <p>
+                        <strong>Serie y folio interno: </strong> {{ pago.id }}
+                        <br>
+                        <strong>Fecha y hora de emisión: </strong> {{ pago.fecharealpago|date('d/m/Y') }}
+                        <br>
+                        <strong>Lugar de emisión: </strong> {{ emisor.direccion }}, {{ emisor.codigoPostal }}
+                        <br>
+                        <strong>Régimen fiscal: </strong> {{ emisor.regimenFiscal }}
+                    </p>
+                </div>
+                <div class="col-xs-12">
+                    <p class="border-1 pad">
+                        <strong>Nombre: </strong>{{ cotizacion.cliente.nombre }}
+                        <br>
+                        <strong>RFC: </strong>
+                        <br>
+                        <strong>Dirección </strong>{{ cotizacion.cliente.direccion }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="body" class="row">
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="border-1 pad">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p>
+                                    <strong>RFC banco ordenante: </strong>
+                                    <br>
+                                    <strong>Nombre del banco extranjero: </strong>{{ pago.banco }}
+                                    <br>
+                                    <strong>Número de cuenta ordenante: </strong>{{ pago.combustible }}
+                                    <br>
+                                    <strong>RFC banco beneficiario: </strong>
+                                    <br>
+                                    <strong>Cuenta beneficiario: </strong>
+                                    <br>
+                                    <strong>Fecha y hora de recepción: </strong>
+                                </p>
+                            </div>
+                            <div class="col-xs-6">
+                                <p>
+                                    <strong>Forma de pago: </strong>{{ pago.metodopago }}
+                                    <br>
+                                    <strong>Moneda: </strong>MXN
+                                    <br>
+                                    <strong>Tipo de cambio: </strong>{{ (pago.dolar / 100)|number_format(2) }}
+                                    <br>
+                                    <strong>Monto: </strong>{{ cantidad|number_format(2) }}
+                                    <br>
+                                    <strong>Numero de operación: </strong> {{ pago.id }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-bordered table-condensed table-striped">
+                <thead>
+                <tr>
+                    <th>UUID</th>
+                    <th>Serie y folio</th>
+                    <th>Moneda</th>
+                    <th>Tipo de cambio</th>
+                    <th>Método de pago</th>
+                    <th>Parcialidad</th>
+                    <th>Saldo anterior</th>
+                    <th>Importe pagado</th>
+                    <th>Saldo insoluto</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>MXN</td>
+                    <td>{{ (pago.dolar / 100)|number_format(2) }}</td>
+                    <td>{{ pago.metodopago }}</td>
+                    <td>1</td>
+                    <td>{{ cantidad|number_format(2) }}</td>
+                    <td>{{ cantidad|number_format(2) }}</td>
+                    <td>0.00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="footer" class="row">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-xs-9">
+                    <div class="pad">
+                        <p>Sello digital del contribuyente del emisor: </p>
+                        <p>Sello digital del SAT: </p>
+                        <p>Cadena original del complemento de certificación digital del SAT:</p>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                </div>
+            </div>
+            <p>
+                <strong>"Este documento es una representación impresa de un CFDI"</strong>
+            </p>
+        </div>
+    </div>
+    <div>
+    </div>
+</div>
+</body>
+</html>

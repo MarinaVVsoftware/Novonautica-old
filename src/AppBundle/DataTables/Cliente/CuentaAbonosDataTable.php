@@ -121,6 +121,7 @@ class CuentaAbonosDataTable extends AbstractDataTableHandler
                 [
                     'id' => $pago->getId(),
                     'total' => number_format($queryCount[2], 2),
+                    'kind' => strtolower($cotizacion->getKind()),
                 ],
             ];
         }

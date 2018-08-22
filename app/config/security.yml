@@ -189,6 +189,8 @@ security:
 
         - { path: ^/agenda, roles: ROLE_AGENDA }
 
+        - { path: ^/pago, roles: ROLE_ADMIN }
+
         - { path: ^/perfil, roles: ROLE_USER }
         - { path: ^/.*, roles: ROLE_USER }
 

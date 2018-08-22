@@ -149,15 +149,9 @@ class ClienteController extends Controller
      */
     public function showAction(Cliente $cliente)
     {
-        $repository = $this->getDoctrine()->getRepository('AppBundle:Cliente');
-        $totalAdeudo = $repository->getTotalAdeudo($cliente);
-        $totalAbono = $repository->getTotalAbono($cliente);
-
         return $this->render('cliente/show.html.twig', [
             'title' => "Cliente: {$cliente->getNombre()}",
             'cliente' => $cliente,
-            'adeudo' => $totalAdeudo,
-            'abono' => $totalAbono,
         ]);
     }
 

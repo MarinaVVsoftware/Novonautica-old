@@ -345,46 +345,46 @@
         };
 
         const $adeudosTable = $('#cuentas-adeudos').DataTable({
-          ...settings,
-          ajax: {
-            url: '{{ path('cliente_show_data_adeudos') }}',
-            data(d) {
-              d.cliente = '{{ cliente.id }}';
-              d.dates = {
-                start: adeudoSearchDates.start.format('YYYY-MM-DD'),
-                end: adeudoSearchDates.end.format('YYYY-MM-DD'),
-              };
-            },
-          },
-          lengthMenu,
-          buttons,
-          dom:
-              "<'row'<'col-sm-3'l><'col-sm-3'<'#datesAdeudos'>><'col-sm-3'B><'col-sm-3'f>>" +
-              "<'row'<'col-sm-12'tr>>" +
-              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-          order: [[0, 'desc']],
-          createdRow(row, data) {
-            let showUrl = '{{ app.request.baseUrl }}';
+              ...settings,
+              ajax: {
+                url: '{{ path('cliente_show_data_adeudos') }}',
+                data(d) {
+                  d.cliente = '{{ cliente.id }}';
+                  d.dates = {
+                    start: adeudoSearchDates.start.format('YYYY-MM-DD'),
+                    end: adeudoSearchDates.end.format('YYYY-MM-DD'),
+                  };
+                },
+              },
+              lengthMenu,
+              buttons,
+              dom:
+                  "<'row'<'col-sm-3'l><'col-sm-3'<'#datesAdeudos'>><'col-sm-3'B><'col-sm-3'f>>" +
+                  "<'row'<'col-sm-12'tr>>" +
+                  "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+              order: [[0, 'desc']],
+              createdRow(row, data) {
+                let showUrl = '{{ app.request.baseUrl }}';
 
-            switch (data[1].kind) {
-              case 'Marina':
-                showUrl += '/marina/cotizacion/' + data[3].id;
-                break;
-              case 'Astillero':
-                showUrl += '/astillero/' + data[3].id;
-                break;
-              case 'Combustible':
-                showUrl += '/combustible/' + data[3].id;
-                break;
-            }
+                switch (data[1].kind) {
+                  case 'Marina':
+                    showUrl += '/marina/cotizacion/' + data[3].id;
+                    break;
+                  case 'Astillero':
+                    showUrl += '/astillero/' + data[3].id;
+                    break;
+                  case 'Combustible':
+                    showUrl += '/combustible/' + data[3].id;
+                    break;
+                }
 
-            row.cells[1].innerHTML = `${data[1].kind} #${data[1].folio}`;
-            row.cells[3].innerHTML = `
-            <a href="${showUrl}" class="btn btn-xs btn-block btn-azul">Ver cotización</a>
-            `;
-            adeudoInput.innerHTML = 'MX $' + data[3].adeudo;
-          }
-        });
+                row.cells[1].innerHTML = `${data[1].kind} #${data[1].folio}`;
+                row.cells[3].innerHTML = `<a href="${showUrl}" class="btn btn-xs btn-block btn-azul">Ver cotización</a>`;
+              }
+            }).on('xhr', function (event, {json}) {
+              adeudoInput.innerHTML = 'MX $' + (!json.data.length ? '0.00' : json.data[0][3].adeudo);
+            })
+        ;
 
         const $abonosTable = $('#cuentas-abonos').DataTable({
           ...settings,
@@ -406,9 +406,15 @@
               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
           order: [[0, 'desc']],
           createdRow(row, data) {
-            row.cells[3].innerHTML = `<a href="${data[3].id}" class="btn btn-xs btn-block btn-azul">Recibo de pago</a>`;
-            abonoInput.innerHTML = 'MX $' + data[3].total;
+            let pagoUrl = '{{ app.request.baseUrl }}/pago/' + data[3].id + '/' + data[3].kind + '/pago-recibo';
+
+            row.cells[3].innerHTML =
+                `<a href="${pagoUrl}" target="_blank" class="btn btn-xs btn-block btn-azul">
+                    Recibo de pago
+                </a>`;
           }
+        }).on('xhr', function (event, {json}) {
+          abonoInput.innerHTML = 'MX $' + (!json.data.length ? '0.00' : json.data[0][3].total);
         });
 
         $('#datesAdeudos, #datesAbonos')
@@ -433,7 +439,6 @@
               adeudoSearchDates.start = picker.startDate;
               adeudoSearchDates.end = picker.endDate;
               $adeudosTable.ajax.reload();
-              console.log(adeudoSearchDates);
             });
 
         $('#datesAbonos')

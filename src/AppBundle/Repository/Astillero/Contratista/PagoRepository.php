@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository\Astillero\Contratista;
 
+use Doctrine\ORM\NonUniqueResultException;
+
 /**
  * PagoRepository
  *
