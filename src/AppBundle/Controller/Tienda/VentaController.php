@@ -12,6 +12,8 @@ use AppBundle\Entity\Tienda\Producto;
 use AppBundle\Entity\Tienda\Venta;
 use AppBundle\Form\Tienda\VentaType;
 use DataTables\DataTablesInterface;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -140,6 +142,34 @@ class VentaController extends AbstractController
                 'title' => 'Detalle de venta',
                 'venta' => $venta,
             ]
+        );
+    }
+
+    /**
+     * @Route("/{id}/pdf", name="tienda_venta_ticker-pdf")
+     * @param Venta $venta
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function ticketPDFAction(Venta $venta, Pdf $pdf)
+    {
+        $conceptos = $this->getDoctrine()
+            ->getRepository(Venta\Concepto::class)
+            ->getAllByVenta($venta->getId());
+
+        $ventaHTML = $this->renderView(
+            'tienda/venta/ticket-pdf.html.twig',
+            [
+                'venta' => $venta,
+                'conceptos' => $conceptos,
+            ]
+        );
+
+        return new PdfResponse(
+            $pdf->getOutputFromHtml($ventaHTML),
+            'nombre-de-archivo.pdf',
+            'application/pdf',
+            'inline'
         );
     }
 }

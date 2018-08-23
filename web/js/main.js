@@ -1383,7 +1383,6 @@ const datatablesSettings = {
     infoEmpty: 'No hay registros disponibles',
     infoFiltered: '(filtados de _MAX_ total de registros)',
     processing: 'Procesando...',
-    thousands: 'Millones',
     loadingRecords: 'Cargando registros...',
     search: 'Buscar',
     paginate: {
