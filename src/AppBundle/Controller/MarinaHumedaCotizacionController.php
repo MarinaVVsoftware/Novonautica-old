@@ -101,6 +101,7 @@ class MarinaHumedaCotizacionController extends Controller
 
         $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $granSubtotal = 0;
             $granIva = 0;
@@ -809,6 +810,9 @@ class MarinaHumedaCotizacionController extends Controller
         $foliorecotizado = $marinaHumedaCotizacionAnterior->getFoliorecotiza() + 1;
         $cliente = $marinaHumedaCotizacionAnterior->getCliente();
         $barco = $marinaHumedaCotizacionAnterior->getBarco();
+
+        // Asignarle a esta cotizacion, su creador
+        $marinaHumedaCotizacion->setCreador($this->getUser());
 
         $marinaHumedaCotizacion
             ->setCliente($cliente)

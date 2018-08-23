@@ -21,6 +21,7 @@
         "eschmar/css-inliner-bundle": "^0.1.0",
         "incenteev/composer-parameter-handler": "^2.0",
         "knplabs/knp-snappy-bundle": "^1.5",
+        "league/csv": "^9.1",
         "oneup/uploader-bundle": "^1.9",
         "roave/security-advisories": "dev-master",
         "sensio/distribution-bundle": "^5.0.19",
