@@ -447,7 +447,9 @@ form > .btn-borrar:hover, .btn-borrar:hover {
 .table > thead > tr > th {
     border: 2px solid #1c1f29 !important;
 }
-
+#servicioAdicional tbody tr{
+    background: #3e4766;
+}
 .dataTable.table-novo {
     width: 100% !important;
 }

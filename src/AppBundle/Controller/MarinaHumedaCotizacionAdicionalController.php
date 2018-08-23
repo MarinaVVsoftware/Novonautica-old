@@ -61,59 +61,23 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
     {
         $marinaHumedaCotizacionAdicional = new MarinaHumedaCotizacionAdicional();
         $em = $this->getDoctrine()->getManager();
-        $qb = $em->createQueryBuilder();
-        $query = $qb->select('v')->from(valorSistema::class, 'v')->getQuery();
-        $sistema =$query->getArrayResult();
-
-        $dolarBase = $sistema[0]['dolar'];
-        $iva = $sistema[0]['iva'];
-
-
+        $sistema = $em->getRepository('AppBundle:ValorSistema')->findOneBy(['id'=>1]);
+        $dolarBase = $sistema->getDolar();
+        $iva = $sistema->getIva();
+        $marinaHumedaCotizacionAdicional
+            ->setDolar($dolarBase)
+            ->setIva($iva);
         $form = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionAdicionalType', $marinaHumedaCotizacionAdicional);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $granSubtotal = 0;
-            $granIvatotal = 0;
-            $granTotal = 0;
-
-            foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $servicio){
-                $cantidad = $servicio->getCantidad();
-                $precio = $servicio->getMarinahumedaservicio()->getPrecio();
-                $subtotal = $cantidad * $precio;
-                $ivatotal = ($subtotal * $iva)/100;
-                $total = $subtotal + $ivatotal;
-
-                $servicio
-                    ->setPrecio($precio)
-                    ->setSubtotal($subtotal)
-                    ->setIva($ivatotal)
-                    ->setTotal($total)
-                    ->setEstatus(true);
-
-                $granSubtotal+=$subtotal;
-                $granIvatotal+=$ivatotal;
-                $granTotal+=$total;
-            }
-
-            $marinaHumedaCotizacionAdicional
-                ->setIva($iva)
-                ->setSubtotal($granSubtotal)
-                ->setIvatotal($granIvatotal)
-                ->setTotal($granTotal);
-
+            foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $servicio){ $servicio->setEstatus(true); }
             $em->persist($marinaHumedaCotizacionAdicional);
             $em->flush();
-
             return $this->redirectToRoute('marina-humeda-cotizacion-adicional_show', ['id' => $marinaHumedaCotizacionAdicional->getId()]);
         }
-
         return $this->render('marinahumeda/cotizacionadicional/new.html.twig', [
             'title' => 'Nuevo Servicio',
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
-            'valdolar' => $dolarBase,
-            'valiva' => $iva,
             'form' => $form->createView(),
         ]);
     }
@@ -213,17 +177,16 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
             'valiva' => $iva
         ]);
     }
+
     /**
-     * @Route("/buscarservicio/{id}.{_format}", name="ajax_busca_producto", defaults={"_format"="JSON"})
-     *
+     * @Route("/buscarservicio/{id}", name="mhca_buscaservicio")
+     * @param $id
+     * @return JsonResponse
      */
-    public function buscarAction(Request $request,MarinaHumedaServicio $marinaHumedaServicio){
-
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-
-        $serializer = new Serializer($normalizers, $encoders);
-        return new Response($marinaHumedaServicio = $serializer->serialize($marinaHumedaServicio,$request->getRequestFormat()));
+    public function buscarAction($id)
+    {
+        $servicioRepository = $this->getDoctrine()->getRepository(MarinaHumedaServicio::class);
+        return new JsonResponse($servicioRepository->getServicioCatalogo($id),JsonResponse::HTTP_OK);
     }
 
     /**
