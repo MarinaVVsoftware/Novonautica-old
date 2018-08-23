@@ -67,6 +67,12 @@ class InventarioDataTable extends AbstractDataTableHandler
             }
         }
 
+        $queryCount = $repository->createQueryBuilder('e')
+            ->select('COUNT(p.id)')
+            ->leftJoin(Producto::class, 'p', 'WITH', 'p.id = e.producto');
+        $queryCount->select('COUNT(p.id)');
+        $results->recordsFiltered = $queryCount->getQuery()->getSingleScalarResult();
+
         if ($request->length > 0) {
             $query->setMaxResults($request->length);
             $query->setFirstResult($request->start);
@@ -74,8 +80,6 @@ class InventarioDataTable extends AbstractDataTableHandler
 
         /** @var Producto[] $productos */
         $productos = $query->getQuery()->getResult();
-
-        $results->recordsFiltered = count($productos);
 
         foreach ($productos as $producto) {
             $results->data[] = [
