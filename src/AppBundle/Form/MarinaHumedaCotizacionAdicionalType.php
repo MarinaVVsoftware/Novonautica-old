@@ -42,7 +42,7 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
                 'label' => 'IVA %'
             ])
             ->add('subtotal', MoneyType::class,[
-                'currency' => 'MXN',
+                'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
                 'label' => 'Sub-Total',
@@ -50,7 +50,7 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
                 'attr' => ['readonly' => true]
             ])
             ->add('ivatotal', MoneyType::class,[
-                'currency' => 'MXN',
+                'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
                 'label' => 'IVA',
@@ -58,7 +58,7 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
                 'attr' => ['readonly' => true]
             ])
             ->add('total', MoneyType::class,[
-                'currency' => 'MXN',
+                'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
                 'label_attr' => ['class' => 'letra-azul tipo-letra1'],

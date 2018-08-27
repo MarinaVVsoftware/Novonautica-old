@@ -35,27 +35,32 @@ class MarinaHumedaCotizaServiciosAdicionalesType extends AbstractType
             ])
             ->add('precio',MoneyType::class,[
                 'attr' => ['class' => 'esdecimal', 'autocomplete'=>'off', 'readonly' => true],
-                'currency' => 'MXN',
+                'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
             ])
             ->add('subtotal', MoneyType::class,[
                 'attr' => ['class' => 'esdecimal', 'autocomplete'=>'off', 'readonly' => true],
-                'currency' => 'MXN',
+                'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
             ])
             ->add('iva', MoneyType::class,[
                 'attr' => ['class' => 'esdecimal', 'autocomplete'=>'off', 'readonly' => true],
-                'currency' => 'MXN',
+                'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
             ])
             ->add('total', MoneyType::class,[
                 'attr' => ['class' => 'esdecimal', 'autocomplete'=>'off', 'readonly' => true],
-                'currency' => 'MXN',
+                'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
+            ])
+            ->add('estatus',null,[
+                'attr' => ['class' => 'hide'],
+                'label_attr' => ['class' => 'hide'],
+                'data' => true,
             ]);
     }
 

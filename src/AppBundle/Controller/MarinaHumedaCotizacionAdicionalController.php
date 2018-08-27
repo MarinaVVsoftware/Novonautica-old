@@ -70,7 +70,6 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
         $form = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionAdicionalType', $marinaHumedaCotizacionAdicional);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $servicio){ $servicio->setEstatus(true); }
             $em->persist($marinaHumedaCotizacionAdicional);
             $em->flush();
             return $this->redirectToRoute('marina-humeda-cotizacion-adicional_show', ['id' => $marinaHumedaCotizacionAdicional->getId()]);
@@ -94,12 +93,9 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
      */
     public function showAction(MarinaHumedaCotizacionAdicional $marinaHumedaCotizacionAdicional)
     {
-        $deleteForm = $this->createDeleteForm($marinaHumedaCotizacionAdicional);
-
         return $this->render('marinahumeda/cotizacionadicional/show.html.twig', [
             'title' => 'Servicio adicional',
-            'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
-            'delete_form' => $deleteForm->createView(),
+            'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional
         ]);
     }
 
@@ -116,53 +112,21 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
      */
     public function editAction(Request $request, MarinaHumedaCotizacionAdicional $marinaHumedaCotizacionAdicional)
     {
-        $iva = $marinaHumedaCotizacionAdicional->getIva();
         $originalServicios = new ArrayCollection();
-
         foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $serv){
             $originalServicios->add($serv);
         }
         $deleteForm = $this->createDeleteForm($marinaHumedaCotizacionAdicional);
         $editForm = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionAdicionalType', $marinaHumedaCotizacionAdicional);
         $editForm->handleRequest($request);
-
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-
             foreach ($originalServicios as $serv){
                 if (false === $marinaHumedaCotizacionAdicional->getMhcservicios()->contains($serv)) {
-                    //$serv->getMhcservicios()->removeMhcservicio($serv);
                     $em->persist($serv);
                     $em->remove($serv);
                 }
             }
-            ;
-            $granSubtotal = 0;
-            $granIvatotal = 0;
-            $granTotal = 0;
-            foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $servicio){
-                $cantidad = $servicio->getCantidad();
-                $precio = $servicio->getMarinahumedaservicio()->getPrecio();
-                $subtotal = $cantidad * $precio;
-                $ivatotal = ($subtotal * $iva)/100;
-                $total = $subtotal + $ivatotal;
-
-                $servicio
-                    ->setPrecio($precio)
-                    ->setSubtotal($subtotal)
-                    ->setIva($ivatotal)
-                    ->setTotal($total)
-                    ->setEstatus(true);
-
-                $granSubtotal+=$subtotal;
-                $granIvatotal+=$ivatotal;
-                $granTotal+=$total;
-            }
-            $marinaHumedaCotizacionAdicional
-                ->setIva($iva)
-                ->setSubtotal($granSubtotal)
-                ->setIvatotal($granIvatotal)
-                ->setTotal($granTotal);
             $em->persist($marinaHumedaCotizacionAdicional);
             $em->flush();
 
@@ -173,8 +137,7 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
             'title' => 'Editar servicio adicional',
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            'valiva' => $iva
+            'delete_form' => $deleteForm->createView()
         ]);
     }
 
