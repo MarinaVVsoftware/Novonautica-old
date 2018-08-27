@@ -49,9 +49,9 @@ class MarinaHumedaMonederoController extends Controller
                 return $this->json($e->getMessage(), $e->getStatusCode());
             }
         }
-
         return $this->render('marinahumeda/monedero/index.html.twig', [
-            'title' => 'Monedero',
+            'title' => 'Monederos Marina Húmeda',
+            'index' => 'mh_monedero_index'
         ]);
     }
 
@@ -77,7 +77,12 @@ class MarinaHumedaMonederoController extends Controller
         }
         return $this->render('marinahumeda/monedero/show.html.twig', [
             'cliente' => $cliente,
-            'title' => 'Movimientos Monedero Cliente'
+            'title' => 'Movimientos Monedero Marina Húmeda',
+            'index' => 'mh_monedero_index',
+            'operacion' => 'mh_monedero_operacion',
+            'show' => 'mh_monedero_ver',
+            'montoActual' => $cliente->getMonederomarinahumeda(),
+            'divisa' => 'USD',
         ]);
     }
 
@@ -124,14 +129,14 @@ class MarinaHumedaMonederoController extends Controller
         $monederoMovimiento = new MonederoMovimiento();
 
         $monederoMovimiento->setCliente($cliente);
-
+        $montoActual = $cliente->getMonederomarinahumeda();
         $form = $this->createForm('AppBundle\Form\MonederoType', $monederoMovimiento);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $montoTotal = 0;
-            $montoActual = $cliente->getMonederomarinahumeda();
+
             $montoProcesar = $monederoMovimiento->getMonto();
             $operacion = $monederoMovimiento->getOperacion();
 
@@ -147,7 +152,8 @@ class MarinaHumedaMonederoController extends Controller
             //-------------------------------------------------
             if($montoTotal<0){
                 //error se restara mas de lo que se tiene $this->addFlash(
-                $this->addFlash('notice', 'Error! la cantidad que se resta es mayor que el monto que se tiene');
+                $this->addFlash('notice',
+                    'Error! la cantidad que se intenta restar es mayor que el monto actual del monedero.');
             }else{
                 $fechaHoraActual = new \DateTime('now');
                 $monederoMovimiento
@@ -168,8 +174,11 @@ class MarinaHumedaMonederoController extends Controller
         }
         return $this->render('marinahumeda/monedero/operacion.html.twig', array(
             'monederoMovimiento' => $monederoMovimiento,
+            'title' => 'Movimiento Monedero Marina Húmeda',
             'form' => $form->createView(),
-            'monederoMenuMh' => 1,
+            'montoActual' => $montoActual,
+            'divisa' => 'USD',
+            'show' => 'mh_monedero_ver'
         ));
     }
 

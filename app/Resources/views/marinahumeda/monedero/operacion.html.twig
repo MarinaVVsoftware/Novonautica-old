@@ -12,11 +12,11 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Movimiento Monedero Cliente</h3>
+                            <h3 class="panel-title">{{ title }}</h3>
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right"
-                               href="{{ path('mh_monedero_index') }}">
+                               href="{{ path(show,{ 'id': monederoMovimiento.cliente.id }) }}">
                                 Regresar
                             </a>
                         </div>
@@ -40,15 +40,20 @@
                         <div class="col-sm-6">
                             <label>Cliente</label>
                             <div class='info-input'> {{ monederoMovimiento.cliente }}</div>
+                            {{ form_row(form.operacion) }}
+                            {{ form_row(form.descripcion) }}
+                        </div>
+                        <div class="col-sm-6">
                             <label>Monto actual</label>
-                            <div class='info-input'> $ {{ (monederoMovimiento.cliente.monederomarinahumeda/100)|number_format(2) }} USD</div>
-                            {{ form_widget(form) }}
+                            <div class='info-input'> $ {{ (montoActual/100)|number_format(2) }} {{ divisa }}</div>
+                            <label>Monto a procesar {{ divisa }}</label>
+                            {{ form_widget(form.monto) }}
                         </div>
                     </div>
 
                     <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-6">
-                            <button type="submit" class="btn btn-azul pull-right">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-azul pull-left">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 Guardar
                             </button>

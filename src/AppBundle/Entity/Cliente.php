@@ -111,6 +111,13 @@ class Cliente implements UserInterface, \Serializable
     private $monederomarinahumeda;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="monedero_astillero", type="bigint", nullable=true)
+     */
+    private $monederoAstillero;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="password", type="text")
@@ -900,5 +907,29 @@ class Cliente implements UserInterface, \Serializable
     public function getCombustibles()
     {
         return $this->combustibles;
+    }
+
+    /**
+     * Set monederoAstillero.
+     *
+     * @param int|null $monederoAstillero
+     *
+     * @return Cliente
+     */
+    public function setMonederoAstillero($monederoAstillero = null)
+    {
+        $this->monederoAstillero = $monederoAstillero;
+
+        return $this;
+    }
+
+    /**
+     * Get monederoAstillero.
+     *
+     * @return int|null
+     */
+    public function getMonederoAstillero()
+    {
+        return $this->monederoAstillero;
     }
 }
