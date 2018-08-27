@@ -979,52 +979,37 @@ function calculaTotales() {
 
 //---- para marina humeda servicio adicional -----------
 $('#servicioAdicional').on('keyup', 'input', function () {
-  //var cantidadAd = $(this).val();
-  $(this).parent().data('valor', $(this).val());
-
   var fila = $(this).parent().parent();
-
   calculaSubtotalesAdicionales(fila);
-  //console.log('escribe cantidad ' +fila.children('.valorcantidad').data('valor'));
-
 });
-
+$('#appbundle_marinahumedacotizacionadicional_iva').on('keyup', function () {
+    document.querySelectorAll('.servicio-agregado').forEach(fila =>{calculaSubtotalesAdicionales($(fila))});
+});
 function calculaSubtotalesAdicionales(fila) {
-  var iva = $('#valorsistemaiva').data('valor');
-  var cantidadAd = fila.children('.valorcantidad').data('valor');
-  var precioAd = fila.children('.valorprecio').data('valor');
+  var iva = document.getElementById('appbundle_marinahumedacotizacionadicional_iva').value;
+  var cantidadAd = fila.children('.valorcantidad').children('input').val();
+  var precioAd = fila.children('.valorprecio').children('.input-group').children('input').val();
   var subtotalAd = cantidadAd * precioAd;
-  var ivaAd = (subtotalAd * iva) / 100
+  var ivaAd = (subtotalAd * iva) / 100;
   var totalAd = subtotalAd + ivaAd;
-
-  fila.children('.valorsubtotal').html('$ ' + (subtotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-  fila.children('.valorsubtotal').data('valor', subtotalAd);
-
-  fila.children('.valoriva').html('$ ' + (ivaAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-  fila.children('.valoriva').data('valor', ivaAd);
-
-  fila.children('.valortotal').html('$ ' + (totalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-  fila.children('.valortotal').data('valor', totalAd);
+  fila.children('.valorsubtotal').children('.input-group').children('input').val((subtotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+  fila.children('.valoriva').children('.input-group').children('input').val((ivaAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+  fila.children('.valortotal').children('.input-group').children('input').val((totalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
   calculaTotalesAdicionales();
 }
-
 function calculaTotalesAdicionales() {
   var granSubtotalAd = 0;
-  var granIvaAd = 0;
-  var granTotalAd = 0;
-
-  $("#servicioAdicional tbody tr").each(function () {
-    granSubtotalAd += $(this).children('.valorsubtotal').data('valor');
-    granIvaAd += $(this).children('.valoriva').data('valor');
-    granTotalAd += $(this).children('.valortotal').data('valor');
+  let granIvaAd = 0;
+  let granTotalAd = 0;
+  document.querySelectorAll('.servicio-agregado').forEach(fila => {
+    granSubtotalAd += Number((fila.children[4].children[0].children[1].value).split(',').join(''));
+    granIvaAd += Number((fila.children[5].children[0].children[1].value).split(',').join(''));
+    granTotalAd += Number((fila.children[6].children[0].children[1].value).split(',').join(''));
   });
-
-  $('#gransubtot').html((granSubtotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-  $('#graniva').html((granIvaAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-  $('#grantot').html((granTotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-
+  $('#appbundle_marinahumedacotizacionadicional_subtotal').val(granSubtotalAd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+  $('#appbundle_marinahumedacotizacionadicional_ivatotal').val(granIvaAd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+  $('#appbundle_marinahumedacotizacionadicional_total').val(granTotalAd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 }
-
 //---- fin marina humeda servicio adicional -----------
 
 
@@ -1260,7 +1245,7 @@ $('#appbundle_astillerocotizacion_acservicios_8_precio').keyup(function () {
 });
 
 
-$('table').on('keyup', 'input', function () {
+$('.tabla-astillero').on('keyup', 'input', function () {
     var clasecelda = $(this).parent().attr('class');
     if(clasecelda === 'input-group'){
         $(this).parent().parent().data('valor', $(this).val());

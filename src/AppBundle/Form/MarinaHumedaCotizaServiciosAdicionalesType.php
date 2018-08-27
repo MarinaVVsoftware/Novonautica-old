@@ -10,6 +10,7 @@ namespace AppBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -31,9 +32,36 @@ class MarinaHumedaCotizaServiciosAdicionalesType extends AbstractType
                 'placeholder' => 'Seleccionar...',
                 'attr' => ['class' => 'select-busca-producto'],
                 'required'=>false,
-
             ])
-        ;
+            ->add('precio',MoneyType::class,[
+                'attr' => ['class' => 'esdecimal', 'autocomplete'=>'off', 'readonly' => true],
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
+            ])
+            ->add('subtotal', MoneyType::class,[
+                'attr' => ['class' => 'esdecimal', 'autocomplete'=>'off', 'readonly' => true],
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
+            ])
+            ->add('iva', MoneyType::class,[
+                'attr' => ['class' => 'esdecimal', 'autocomplete'=>'off', 'readonly' => true],
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
+            ])
+            ->add('total', MoneyType::class,[
+                'attr' => ['class' => 'esdecimal', 'autocomplete'=>'off', 'readonly' => true],
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
+            ])
+            ->add('estatus',null,[
+                'attr' => ['class' => 'hide'],
+                'label_attr' => ['class' => 'hide'],
+                'data' => true,
+            ]);
     }
 
     /**

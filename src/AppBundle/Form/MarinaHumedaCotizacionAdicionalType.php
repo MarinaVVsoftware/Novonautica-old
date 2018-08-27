@@ -33,9 +33,36 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
             ->add('dolar',MoneyType::class,[
                 'required'=>false,
                 'attr' => ['class' => 'esdecimal', 'autocomplete'=>'off'],
+                'currency' => 'MXN',
+                'divisor' => 100,
+                'grouping' => true,
+            ])
+            ->add('iva',TextType::class,[
+                'attr' => ['class' => 'esdecimal', 'autocomplete' => 'off'],
+                'label' => 'IVA %'
+            ])
+            ->add('subtotal', MoneyType::class,[
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
+                'label' => 'Sub-Total',
+                'label_attr' => ['class' => 'letra-azul tipo-letra1'],
+                'attr' => ['readonly' => true]
+            ])
+            ->add('ivatotal', MoneyType::class,[
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
+                'label' => 'IVA',
+                'label_attr' => ['class' => 'letra-azul tipo-letra1'],
+                'attr' => ['readonly' => true]
+            ])
+            ->add('total', MoneyType::class,[
+                'currency' => 'USD',
+                'divisor' => 100,
+                'grouping' => true,
+                'label_attr' => ['class' => 'letra-azul tipo-letra1'],
+                'attr' => ['readonly' => true]
             ])
             ->add('mhcservicios',CollectionType::class,[
                 'entry_type' => MarinaHumedaCotizaServiciosAdicionalesType::class,
@@ -44,8 +71,7 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
                 'allow_delete' => true,
                 'prototype' => true,
                 'by_reference' => false
-            ])
-        ;
+            ]);
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();
