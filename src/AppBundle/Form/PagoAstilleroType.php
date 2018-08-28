@@ -24,9 +24,11 @@ class PagoAstilleroType extends AbstractType
     {
         $builder
             ->add('metodopago',ChoiceType::class,[
-                'choices'  => ['Efectivo' => 'Efectivo',
+                'choices'  => [
+                    'Efectivo' => 'Efectivo',
                     'Transferencia' => 'Transferencia',
                     'Tarjeta de crédito' => 'Tarjeta de crédito',
+                    'Monedero' => 'Monedero'
                 ],
                 'placeholder' => 'Seleccionar...',
                 'label' => 'Método de pago',
