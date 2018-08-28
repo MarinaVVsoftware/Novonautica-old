@@ -155,6 +155,7 @@ security:
         - { path: ^/combustible/catalogo, roles: ROLE_COMBUSTIBLE_CATALOGO }
         - { path: ^/combustible, roles: ROLE_COMBUSTIBLE }
 
+        - { path: ^/astillero/monedero, roles: ROLE_ASTILLERO_MONEDERO }
         - { path: ^/astillero/producto, roles: ROLE_ASTILLERO_PRODUCTO }
         - { path: ^/astillero/servicio-basico/, roles: ROLE_ASTILLERO_SERVICIOBASICO }
         - { path: ^/astillero/servicio/, roles: ROLE_ASTILLERO_SERVICIO }
@@ -208,6 +209,7 @@ security:
             - ROLE_COMBUSTIBLE_CATALOGO
         ROLE_WHOLE_ASTILLERO:
             - ROLE_ASTILLERO
+            - ROLE_ASTILLERO_MONEDERO
             - ROLE_ASTILLERO_PRODUCTO
             - ROLE_ASTILLERO_SERVICIO
             - ROLE_ASTILLERO_PAGO

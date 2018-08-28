@@ -2,24 +2,23 @@
 /**
  * Created by PhpStorm.
  * User: Luiz
- * Date: 15/03/2018
- * Time: 11:14 AM
+ * Date: 27/08/2018
+ * Time: 05:58 PM
  */
 
 namespace AppBundle\DataTables;
 
-use AppBundle\Entity\Cliente;
+
 use AppBundle\Entity\MonederoMovimiento;
 use DataTables\AbstractDataTableHandler;
-//use DataTables\DataTableException;
+use DataTables\DataTableException;
 use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-
-class MHCMonederoMovimientoDataTable extends AbstractDataTableHandler
+class AMonederoMovimientoDataTable extends AbstractDataTableHandler
 {
-    CONST ID = 'MHCMonederoMovimiento';
+    CONST ID = 'AMonederoMovimiento';
     private $doctrine;
 
     public function __construct(ManagerRegistry $registry)
@@ -28,14 +27,11 @@ class MHCMonederoMovimientoDataTable extends AbstractDataTableHandler
     }
 
     /**
+     * Handles specified DataTable request.
      * {@inheritdoc}
-     *
-     *
      */
     public function handle(DataTableQuery $request): DataTableResults
     {
-
-//        $cliente = $this->doctrine->getRepository('AppBundle:Cliente')->createQueryBuilder('c')->getQuery()->getSingleScalarResult();
         $monederoMovimientoRepo = $this->doctrine->getRepository('AppBundle:MonederoMovimiento');
         $results = new DataTableResults();
 
@@ -43,13 +39,12 @@ class MHCMonederoMovimientoDataTable extends AbstractDataTableHandler
         $results->recordsTotal = $qb
             ->select('COUNT(mm.id)')
             ->where('mm.cliente = '.$request->customData['idcliente'])
-            ->andWhere('mm.tipo = 1')
+            ->andWhere('mm.tipo = 2')
             ->getQuery()->getSingleScalarResult();
-        $q = $qb
-            ->select('mm','cliente')
+        $q = $qb->select('mm','cliente')
             ->join('mm.cliente', 'cliente')
             ->where('cliente.id = '.$request->customData['idcliente'])
-            ->andWhere('mm.tipo = 1');
+            ->andWhere('mm.tipo = 2');
 
         if ($request->search->value) {
             $q->where('(LOWER(mm.descripcion) LIKE :search OR ' . 'mm.fecha LIKE :search OR mm.monto LIKE :search OR mm.resultante LIKE :search)'
@@ -90,13 +85,12 @@ class MHCMonederoMovimientoDataTable extends AbstractDataTableHandler
             $results->data[] = [
                 $monederoMovimiento->getId(),
                 $monederoMovimiento->getFecha() ? $monederoMovimiento->getFecha()->format('d/m/Y h:i a') : '',
-                '$'.number_format($monederoMovimiento->getMonto()/100,2).' USD',
+                '$'.number_format($monederoMovimiento->getMonto()/100,2).' MXN',
                 $monederoMovimiento->getOperacion() == 1 ? 'SUMA': 'RESTA',
-                '$'.number_format($monederoMovimiento->getResultante()/100,2).' USD',
+                '$'.number_format($monederoMovimiento->getResultante()/100,2).' MXN',
                 $monederoMovimiento->getDescripcion()
             ];
         }
-
         return $results;
     }
 }

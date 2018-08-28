@@ -6,6 +6,7 @@ use AppBundle\Entity\AstilleroCotizacion;
 use AppBundle\Entity\AstilleroCotizaServicio;
 use AppBundle\Entity\AstilleroServicioBasico;
 use AppBundle\Entity\Correo;
+use AppBundle\Entity\MonederoMovimiento;
 use AppBundle\Entity\Pincode;
 use AppBundle\Form\AstilleroCotizacionType;
 use DataTables\DataTablesInterface;
@@ -1029,6 +1030,7 @@ class AstilleroCotizacionController extends Controller
     public function editPagoAction(Request $request, AstilleroCotizacion $astilleroCotizacion)
     {
         $totPagado = 0;
+        $totPagadoMonedero = 0;
         $listaPagos = new ArrayCollection();
         foreach ($astilleroCotizacion->getPagos() as $pago) {
             if ($pago->getDivisa() == 'USD') {
@@ -1037,14 +1039,29 @@ class AstilleroCotizacionController extends Controller
             }
             $listaPagos->add($pago);
         }
+        $folioCotizacion = $astilleroCotizacion->getFoliorecotiza()?$astilleroCotizacion->getFolio() . '-' . $astilleroCotizacion->getFoliorecotiza():$astilleroCotizacion->getFolio();
         $form = $this->createForm('AppBundle\Form\AstilleroRegistraPagoType', $astilleroCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $total = $astilleroCotizacion->getTotal(); //en pesos
+            $monedero = $astilleroCotizacion->getCliente()->getMonederoAstillero();
             $em = $this->getDoctrine()->getManager();
-
+            $monederoDevuelto = 0;
             foreach ($listaPagos as $pago) {
                 if (false === $astilleroCotizacion->getPagos()->contains($pago)) {
+                    if($pago->getMetodopago() === 'Monedero'){
+                        $monederoDevuelto+= $pago->getCantidad();
+                        $monederoMovimiento = new MonederoMovimiento();
+                        $monederoMovimiento
+                            ->setCliente($astilleroCotizacion->getCliente())
+                            ->setFecha(new \DateTime('now'))
+                            ->setMonto($pago->getCantidad())
+                            ->setOperacion(1)
+                            ->setResultante($astilleroCotizacion->getCliente()->getMonederoAstillero() + $monederoDevuelto)
+                            ->setTipo(2)
+                            ->setDescripcion('Devolución de pago de cotización. Folio: '.$folioCotizacion);
+                        $em->persist($monederoMovimiento);
+                    }
                     $pago->getAcotizacion()->removePago($pago);
                     $em->persist($pago);
                     $em->remove($pago);
@@ -1058,31 +1075,48 @@ class AstilleroCotizacionController extends Controller
                     $unpago = $pago->getCantidad();
                 }
                 $totPagado += $unpago; //guardando en pesos
-            }
-            if ($total < $totPagado) {
-                $this->addFlash(
-                    'notice',
-                    'Error! Se ha intentado pagar más del total'
-                );
-            } else {
-                $faltante = $total - $totPagado;
-                if($faltante < 1 && $faltante > -1){
-                    $astilleroCotizacion->setEstatuspago(2);
-                } else {
-                    $astilleroCotizacion->setEstatuspago(1);
+                if ($pago->getMetodopago() == 'Monedero' && $pago->getId() == null) { //Si es un nuevo pago de monedero
+                    $totPagadoMonedero += $unpago;
+                    $monederotot = $monedero - $totPagadoMonedero;
+                    $monederoMovimiento = new MonederoMovimiento();
+                    $monederoMovimiento
+                        ->setCliente($astilleroCotizacion->getCliente())
+                        ->setFecha(new \DateTime('now'))
+                        ->setMonto($unpago)
+                        ->setOperacion(2)
+                        ->setResultante($monederotot)
+                        ->setTipo(2)
+                        ->setDescripcion('Pago de servicios de astillero. Folio cotización: ' . $folioCotizacion);
+                    $em->persist($monederoMovimiento);
                 }
-                $astilleroCotizacion
-                    ->setPagado($totPagado);
-                $em->persist($astilleroCotizacion);
-                $em->flush();
-                return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
             }
-
+            if (($total+1) < $totPagado) {
+                $this->addFlash('notice', 'Error! Se ha intentado pagar más del total.');
+            } else {
+                if ($monedero < $totPagadoMonedero) {
+                    $this->addFlash('notice', 'Error! Fondos insuficientes en el monedero.');
+                }else {
+                    $faltante = $total - $totPagado;
+                    if($faltante < 1 && $faltante > -1){
+                        $astilleroCotizacion->setRegistroPagoCompletado(new \DateTimeImmutable());
+                        $astilleroCotizacion->setEstatuspago(2);
+                    } else {
+                        $astilleroCotizacion->setEstatuspago(1);
+                    }
+                    $monederoRestante = $monedero - $totPagadoMonedero;
+                    $astilleroCotizacion->setPagado($totPagado);
+                    $astilleroCotizacion->getCliente()->setMonederoAstillero($monederoRestante + $monederoDevuelto);
+                    $em->persist($astilleroCotizacion);
+                    $em->flush();
+                    return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
+                }
+            }
         }
         return $this->render('astillero/cotizacion/pago/edit.html.twig', array(
             'title' => 'Registrar pagos',
             'astilleroCotizacion' => $astilleroCotizacion,
             'form' => $form->createView(),
+            'folio' => $folioCotizacion
         ));
     }
 

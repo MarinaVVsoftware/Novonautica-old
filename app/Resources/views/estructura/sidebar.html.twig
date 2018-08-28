@@ -51,7 +51,7 @@
                     <ul class="treeview-menu">
                         <!-- START MARINA/MONEDERO -->
                         {% if is_granted('ROLE_MARINA_MONEDERO') %}
-                            <li class="{{ path.check('mh_monedero_index') }}">
+                            <li class="{{ path.check('mh_monedero_') }}">
                                 <a href="{{ path('mh_monedero_index') }}">
                                     <i class="fa fa-circle-o"></i> Monedero
                                 </a>
@@ -324,6 +324,13 @@
                             </li>
                         {% endif %}
                         <!-- END ASTILLERO/PROVEEDORES -->
+                        {% if is_granted('ROLE_ASTILLERO_MONEDERO') %}
+                            <li class="{{ path.check('a_monedero_') }}">
+                                <a href="{{ path('a_monedero_index') }}">
+                                    <i class="fa fa-circle-o"></i> Monedero
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </li>
             {% endif %}

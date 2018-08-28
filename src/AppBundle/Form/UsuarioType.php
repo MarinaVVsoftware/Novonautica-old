@@ -75,6 +75,7 @@ class UsuarioType extends AbstractType
                     'Validar' => 'ASTILLERO_COTIZACION_VALIDATE',
                     'Recotizar' => 'ASTILLERO_COTIZACION_REQUOTE',
                     'Pagos' => 'ROLE_ASTILLERO_PAGO',
+                    'Monedero' => 'ROLE_ASTILLERO_MONEDERO',
                     'Productos' => 'ROLE_ASTILLERO_PRODUCTO',
                     'Servicios' => 'ROLE_ASTILLERO_SERVICIO',
                     'Proveedores' => 'ROLE_ASTILLERO_PROVEEDOR',

@@ -31,10 +31,11 @@ class MonederoType extends AbstractType
                 'choices' =>[
                     'Sumar' => 1,
                     'Restar' => 2
-                ]
+                ],
+                'label' => 'Operación'
             ])
             ->add('monto', MoneyType::class, [
-                'label' => 'Monto a procesar (USD)',
+                'label' => 'Monto a procesar',
                 'required' => false,
                 'currency' => 'USD',
                 'divisor' => 100,
@@ -45,8 +46,7 @@ class MonederoType extends AbstractType
                 'label' => 'Descripción',
                 'required' => false,
                 'attr' => ['rows' => 5]
-            ])
-        ;
+            ]);
     }
     /**
      * {@inheritdoc}
