@@ -55,13 +55,10 @@
             {responsivePriority: 0},
           ],
           createdRow: function (row, venta) {
-            let productosButton = document.createElement('a');
-            productosButton.className = 'btn btn-xs btn-azul';
-            productosButton.innerHTML = 'Productos';
-            productosButton.href = `${venta[5]}`;
-
-            row.cells[5].innerHTML = '';
-            row.cells[5].appendChild(productosButton);
+            row.cells[5].innerHTML = `
+                <a href="${venta[5]}" class="btn btn-xs btn-azul btn-block">Productos</a>
+                <a href="${venta[5]}/pdf" target="_blank" class="btn btn-xs btn-primary btn-block">Ticket</a>
+             `;
           }
         });
       })(jQuery, datatablesSettings)

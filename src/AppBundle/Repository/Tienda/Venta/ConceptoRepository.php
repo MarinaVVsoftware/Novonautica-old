@@ -10,4 +10,16 @@ namespace AppBundle\Repository\Tienda\Venta;
  */
 class ConceptoRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getAllByVenta($ventaId)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT concepto, producto '.
+                'FROM AppBundle:Tienda\Venta\Concepto concepto '.
+                'LEFT JOIN concepto.producto producto '.
+                'WHERE IDENTITY(concepto.venta) = ?1'
+            )
+            ->setParameter(1, $ventaId)
+            ->getResult();
+    }
 }

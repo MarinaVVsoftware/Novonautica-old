@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" type="text/css"
+      href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+<link rel="stylesheet" type="text/css"
+      href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('css/AdminLTE.min.css') }}">
+<style>
+    .pad-up-bot {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row pad-up-bot">
+        <div class="col-xs-3">
+            <img src="{{ absolute_url(asset('img/vnv-logo.jpg') ) }}" class="img-responsive">
+        </div>
+        <div class="col-xs-9">
+            <h5 class="pull-right">
+                MARINA V&V
+                <br>
+                RFC: SMR-070129-3C4
+                <br>
+                VIALIDAD PASEO MUJERES
+                <br>
+                MZ.1 LT. 1 SM. 3 C.P. 77400
+                <br>
+                ISLA MUJERES, Q. ROO
+                <br>
+                TEL. (998) 234 01 00
+            </h5>
+        </div>
+    </div>
+    <div class="row" style="background-color: #EAEAEA; padding-top: .5rem; padding-bottom: 1rem;">
+        <div class="col-xs-12">
+            <p>
+                <strong>Fecha:</strong> {{ venta.createdAt|date('d/m/Y H:s') }}
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 no-padding">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    {% if conceptos is not empty and conceptos[0].descuento > 0 %}
+                    <th>Descuento</th>
+                    {% endif %}
+                    <th>Precio por unidad</th>
+                    <th>Subtotal</th>
+                    <th>IVA</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for concepto in conceptos %}
+                    <tr>
+                        <th>{{ concepto.producto.nombre }}</th>
+                        <th>{{ concepto.cantidad }}</th>
+                        {% if conceptos is not empty %}
+                            <th>{{ concepto.descuento }} %</th>
+                        {% endif %}
+                        <th>{{ concepto.precioUnitario }}</th>
+                        <th>{{ concepto.subtotal }}</th>
+                        <th>{{ concepto.iva }}</th>
+                        <th>{{ concepto.total }}</th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th colspan="5"></th>
+                    <th class="text-right"  style="background-color: #EAEAEA;">Descuento: </th>
+                    <th class="text-right">MXN$ {{ (venta.descuento / 100)|number_format(2) }}</th>
+                </tr>
+                <tr>
+                    <th colspan="5"></th>
+                    <th class="text-right"  style="background-color: #EAEAEA;">Subtotal: </th>
+                    <th class="text-right">MXN$ {{ (venta.subtotal / 100)|number_format(2) }}</th>
+                </tr>
+                <tr>
+                    <th colspan="5"></th>
+                    <th class="text-right"  style="background-color: #EAEAEA;">IVA: </th>
+                    <th class="text-right">MXN$ {{ (venta.iva / 100)|number_format(2) }}</th>
+                </tr>
+                <tr>
+                    <th colspan="5">
+                        <small>"ESTE NO ES UN DOCUMENTO FISCAL"</small>
+                    </th>
+                    <th class="text-right"  style="background-color: #EAEAEA;">Total: </th>
+                    <th class="text-right">MXN$ {{ (venta.total / 100)|number_format(2) }}</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
