@@ -1,59 +1,63 @@
 {% extends 'estructura/plantilla.twig' %}
-
-{% block title %}
-    Novonautiva | Servicios Adicionales
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
 {% endblock %}
-
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
             <div class="panel panel-novo">
 
                 <div class="panel-heading">
-                    <h3 class="panel-title">Servicios Adicionales</h3>
+                    <h3 class="panel-title">{{ title }}</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="table-responsive scroll-novo">
-                        <table class="table text-center">
-                            <thead>
-                            <tr>
-                                <th>Num.</th>
-                                <th>Cliente</th>
-                                <th>Barco</th>
-                                <th>Dolar</th>
-                                <th>Iva</th>
-                                <th>Subtotal</th>
-                                <th>Iva total</th>
-                                <th>Total</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% set i=0 %}
-                            {% for marinaHumedaCotizacionAdicional in marinaHumedaCotizacionAdicionals|reverse %}
-                                {% set i=i+1 %}
-                                <tr>
-                                    <td>{{ i }}</td>
-                                    <td>{{ marinaHumedaCotizacionAdicional.cliente }}</td>
-                                    <td>{{ marinaHumedaCotizacionAdicional.barco }}</td>
-                                    <td>${{ (marinaHumedaCotizacionAdicional.dolar/100)|number_format(2) }}</td>
-                                    <td>{{ marinaHumedaCotizacionAdicional.iva }}%</td>
-                                    <td>${{ (marinaHumedaCotizacionAdicional.subtotal/100)|number_format(2) }}</td>
-                                    <td>${{ (marinaHumedaCotizacionAdicional.ivatotal/100)|number_format(2) }}</td>
-                                    <td>${{ (marinaHumedaCotizacionAdicional.total/100)|number_format(2) }}</td>
-                                    <td>
-                                        <a class="btn btn-morado-claro"
-                                           href="{{ path('marina-humeda-cotizacion-adicional_show', { 'id': marinaHumedaCotizacionAdicional.id }) }}">Detalle</a>
-                                        <a class="btn btn-azul"
-                                           href="{{ path('marina-humeda-cotizacion-adicional_edit', { 'id': marinaHumedaCotizacionAdicional.id }) }}">Editar</a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    <table class="table table-novo" width="100%" style="width: 100%">
+                        <thead>
+                        <tr>
+                            <th>Num.</th>
+                            <th class="with-choices">Cliente</th>
+                            <th class="with-choices">Barco</th>
+                            <th>Sub-Total</th>
+                            <th>IVA</th>
+                            <th>Total</th>
+                            <th>Fecha</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+        (function ($, settings) {
+            $('.table-novo').DataTable({
+                    ...settings,
+                ajax: '{{ path('marina-humeda-cotizacion-adicional_index') }}',
+                order: [[0, 'desc']],
+                createdRow: function (row, data) {
+                let actionsCell = row.cells[7];
+                actionsCell.innerHTML = `
+            <ul class="unstyled-list list-inline" style="margin: 0">
+                <li>
+                <a href="${data[7]}" class="btn btn-xs btn-morado-claro">
+                Detalle
+                </a>
+                </li>
+                <li>
+                <a href="${data[7]}/editar" class="btn btn-xs btn-azul">
+                Editar
+                </a>
+                </li>
+            </ul>
+            `
+            },
+        });
+        })(jQuery, datatablesSettings);
+    </script>
 {% endblock %}

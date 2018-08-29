@@ -7,6 +7,7 @@ use AppBundle\Entity\MarinaHumedaCotizacionAdicional;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Entity\MarinaHumedaServicio;
 use AppBundle\Entity\ValorSistema;
+use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -15,10 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Marinahumedacotizacionadicional controller.
@@ -28,20 +26,28 @@ use Symfony\Component\Serializer\Serializer;
 class MarinaHumedaCotizacionAdicionalController extends Controller
 {
     /**
-     * Muestra todos los servicios adicinales de marina humeda
+     * Muestra todos los servicios adicionales de marina humeda
      *
      * @Route("/", name="marina-humeda-cotizacion-adicional_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return JsonResponse|Response
      */
-    public function indexAction()
+    public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $marinaHumedaCotizacionAdicionals = $em->getRepository('AppBundle:MarinaHumedaCotizacionAdicional')->findAll();
-
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $results = $dataTables->handle($request, 'cotizacionMarinaAdicional');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getCode());
+            }
+        }
         return $this->render('marinahumeda/cotizacionadicional/index.html.twig', [
             'title' => 'Servicios adicionales',
-            'marinaHumedaCotizacionAdicionals' => $marinaHumedaCotizacionAdicionals,
         ]);
     }
 
@@ -70,6 +76,7 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
         $form = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionAdicionalType', $marinaHumedaCotizacionAdicional);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $marinaHumedaCotizacionAdicional->setFecharegistro(new \DateTime('now'));
             $em->persist($marinaHumedaCotizacionAdicional);
             $em->flush();
             return $this->redirectToRoute('marina-humeda-cotizacion-adicional_show', ['id' => $marinaHumedaCotizacionAdicional->getId()]);
@@ -79,6 +86,26 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/cliente.json")
+     * @return Response
+     */
+    public function buscarClienteAction()
+    {
+        $clientes = $this->getDoctrine()->getRepository('AppBundle:MarinaHumedaCotizacionAdicional')->getAllClientes();
+        return new JsonResponse($clientes, JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @Route("/barco.json")
+     * @return Response
+     */
+    public function buscarBarcoAction()
+    {
+        $barco = $this->getDoctrine()->getRepository('AppBundle:MarinaHumedaCotizacionAdicional')->getAllBarcos();
+        return new JsonResponse($barco, JsonResponse::HTTP_OK);
     }
 
     /**
@@ -151,6 +178,8 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
         $servicioRepository = $this->getDoctrine()->getRepository(MarinaHumedaServicio::class);
         return new JsonResponse($servicioRepository->getServicioCatalogo($id),JsonResponse::HTTP_OK);
     }
+
+
 
     /**
      * Elimina un servicio adicional

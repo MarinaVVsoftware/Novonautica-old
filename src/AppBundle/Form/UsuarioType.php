@@ -44,6 +44,7 @@ class UsuarioType extends AbstractType
                     'Crear' => 'CLIENTE_CREATE',
                     'Modificar' => 'CLIENTE_EDIT',
                     'Eliminar' => 'CLIENTE_DELETE',
+                    'Ver contacto' => 'ROLE_CLIENTE_VER_CONTACTO'
                 ],
                 'Marina' => [
                     'Acceso' => 'ROLE_MARINA',

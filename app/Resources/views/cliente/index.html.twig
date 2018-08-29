@@ -17,8 +17,10 @@
                         <thead>
                         <tr>
                             <th>Nombre</th>
-                            <th>Correo</th>
-                            <th class="no-sort">Teléfono</th>
+                            {% if is_granted('ROLE_CLIENTE_VER_CONTACTO') %}
+                                <th>Correo</th>
+                                <th class="no-sort">Teléfono</th>
+                            {% endif %}
                             <th>Barcos</th>
                             <th class="no-sort"></th>
                         </tr>
@@ -33,6 +35,13 @@
 {% endblock %}
 
 {% block javascripts %}
+    {% if is_granted('ROLE_CLIENTE_VER_CONTACTO') %}
+        {% set filas = 4 %}
+        {% set fila_final = 3 %}
+    {% else %}
+        {% set filas = 2 %}
+        {% set fila_final = 1 %}
+    {% endif %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
@@ -40,9 +49,9 @@
         $('.table-novo').DataTable({
           ...settings,
           ajax: '{{ path('cliente_index_data') }}',
-          order: [[4, 'desc']],
+          order: [[{{ filas }}, 'desc']],
           createdRow: function (tr, data) {
-            let barcosTd = tr.cells[3];
+            let barcosTd = tr.cells[{{ fila_final }}];
             let lastTd = tr.querySelector('td:last-child');
             let entryPath = `{{ app.request.requestUri }}${data[4]}`;
             let barcosList = data[3].map(barco => `<li><a href="${entryPath}#${barco[0]}">${barco[1]}</a></li>`).join('');
