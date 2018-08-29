@@ -88,6 +88,26 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
     }
 
     /**
+     * @Route("/cliente.json")
+     * @return Response
+     */
+    public function buscarClienteAction()
+    {
+        $clientes = $this->getDoctrine()->getRepository('AppBundle:MarinaHumedaCotizacionAdicional')->getAllClientes();
+        return new JsonResponse($clientes, JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @Route("/barco.json")
+     * @return Response
+     */
+    public function buscarBarcoAction()
+    {
+        $barco = $this->getDoctrine()->getRepository('AppBundle:MarinaHumedaCotizacionAdicional')->getAllBarcos();
+        return new JsonResponse($barco, JsonResponse::HTTP_OK);
+    }
+
+    /**
      * Muestra un servicio adicional en especificio
      *
      * @Route("/{id}", name="marina-humeda-cotizacion-adicional_show")
@@ -157,6 +177,8 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
         $servicioRepository = $this->getDoctrine()->getRepository(MarinaHumedaServicio::class);
         return new JsonResponse($servicioRepository->getServicioCatalogo($id),JsonResponse::HTTP_OK);
     }
+
+
 
     /**
      * Elimina un servicio adicional

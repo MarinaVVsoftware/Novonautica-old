@@ -10,4 +10,26 @@ namespace AppBundle\Repository;
  */
 class MarinaHumedaCotizacionAdicionalRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getAllClientes()
+    {
+        $qb = $this->createQueryBuilder('mca');
+
+        return $qb
+            ->select('cliente.nombre AS nombre')
+            ->leftJoin('mca.cliente', 'cliente')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+    public function getAllBarcos()
+    {
+        $qb = $this->createQueryBuilder('mca');
+
+        return $qb
+            ->select('barco.nombre AS nombre')
+            ->leftJoin('mca.barco', 'barco')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
 }

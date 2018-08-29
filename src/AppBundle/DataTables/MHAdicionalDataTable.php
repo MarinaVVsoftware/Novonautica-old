@@ -61,13 +61,13 @@ class MHAdicionalDataTable extends AbstractDataTableHandler
         foreach ($request->columns as $column) {
             if($column->search->value){
                 $value = $column->search->value === 'null' ? null : strtolower($column->search->value);
-                if ($column->data == 1) {
+                if ($column->data == 0) {
                     $q->andWhere('LOWER(mca.id) LIKE :id')
                         ->setParameter('cliente', "%{$value}%");
-                } else if ($column->data == 2) {
+                } else if ($column->data == 1) {
                     $q->andWhere('LOWER(cliente.nombre) LIKE :cliente')
                         ->setParameter('cliente', "%{$value}%");
-                } else if ($column->data == 3) {
+                } else if ($column->data == 2) {
                     $q->andWhere('LOWER(barco.nombre) LIKE :barco')
                         ->setParameter('barco', "%{$value}%");
                 }

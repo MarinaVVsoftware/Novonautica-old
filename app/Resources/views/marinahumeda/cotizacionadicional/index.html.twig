@@ -16,8 +16,8 @@
                         <thead>
                         <tr>
                             <th>Num.</th>
-                            <th>Cliente</th>
-                            <th>Embarcación</th>
+                            <th class="with-choices">Cliente</th>
+                            <th class="with-choices">Barco</th>
                             <th>Sub-Total</th>
                             <th>IVA</th>
                             <th>Total</th>
@@ -38,7 +38,7 @@
             $('.table-novo').DataTable({
                     ...settings,
                 ajax: '{{ path('marina-humeda-cotizacion-adicional_index') }}',
-                order: [[1, 'desc']],
+                order: [[0, 'desc']],
                 createdRow: function (row, data) {
                 let actionsCell = row.cells[6];
                 actionsCell.innerHTML = `
