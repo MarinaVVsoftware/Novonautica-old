@@ -65,18 +65,20 @@
                                             <th>Nombre</th>
                                             <td>{{ cliente.nombre }}</td>
                                         </tr>
-                                        <tr>
-                                            <th>Correo</th>
-                                            <td>{{ cliente.correo }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Teléfono</th>
-                                            <td>{{ cliente.telefono }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Celular</th>
-                                            <td>{{ cliente.celular }}</td>
-                                        </tr>
+                                        {% if is_granted('ROLE_CLIENTE_VER_CONTACTO') %}
+                                            <tr>
+                                                <th>Correo</th>
+                                                <td>{{ cliente.correo }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Teléfono</th>
+                                                <td>{{ cliente.telefono }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Celular</th>
+                                                <td>{{ cliente.celular }}</td>
+                                            </tr>
+                                        {% endif %}
                                         <tr>
                                             <th>Dirección</th>
                                             <td>{{ cliente.direccion }}</td>

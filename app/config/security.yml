@@ -251,6 +251,7 @@ security:
         ROLE_ADMIN:
             - ROLE_USER
             - ROLE_CLIENTE
+            - ROLE_CLIENTE_VER_CONTACTO
             - ROLE_WHOLE_MARINA
             - ROLE_WHOLE_COMBUSTIBLE
             - ROLE_WHOLE_ASTILLERO
