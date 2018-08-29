@@ -86,6 +86,8 @@ class MHAdicionalDataTable extends AbstractDataTableHandler
                 $q->addOrderBy('mca.ivatotal', $order->dir);
             } elseif ($order->column === 5) {
                 $q->addOrderBy('mca.total', $order->dir);
+            } elseif ($order->column === 6) {
+                $q->addOrderBy('mca.fecharegistro', $order->dir);
             }
         }
         $adicionales = $q->getQuery()->getResult();
@@ -103,6 +105,7 @@ class MHAdicionalDataTable extends AbstractDataTableHandler
                 '$ '.number_format($adicional->getSubtotal()/100,2).' USD',
                 '$ '.number_format($adicional->getIvatotal()/100,2).' USD',
                 '$ '.number_format($adicional->getTotal()/100,2).' USD',
+                $adicional->getFecharegistro()?$adicional->getFecharegistro()->format('d/m/Y'):'',
                 $adicional->getId()
             ];
         }

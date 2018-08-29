@@ -76,6 +76,7 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
         $form = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionAdicionalType', $marinaHumedaCotizacionAdicional);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $marinaHumedaCotizacionAdicional->setFecharegistro(new \DateTime('now'));
             $em->persist($marinaHumedaCotizacionAdicional);
             $em->flush();
             return $this->redirectToRoute('marina-humeda-cotizacion-adicional_show', ['id' => $marinaHumedaCotizacionAdicional->getId()]);

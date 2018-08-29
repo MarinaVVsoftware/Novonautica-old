@@ -21,6 +21,7 @@
                             <th>Sub-Total</th>
                             <th>IVA</th>
                             <th>Total</th>
+                            <th>Fecha</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -40,16 +41,16 @@
                 ajax: '{{ path('marina-humeda-cotizacion-adicional_index') }}',
                 order: [[0, 'desc']],
                 createdRow: function (row, data) {
-                let actionsCell = row.cells[6];
+                let actionsCell = row.cells[7];
                 actionsCell.innerHTML = `
             <ul class="unstyled-list list-inline" style="margin: 0">
                 <li>
-                <a href="${data[6]}" class="btn btn-xs btn-morado-claro">
+                <a href="${data[7]}" class="btn btn-xs btn-morado-claro">
                 Detalle
                 </a>
                 </li>
                 <li>
-                <a href="${data[6]}/editar" class="btn btn-xs btn-azul">
+                <a href="${data[7]}/editar" class="btn btn-xs btn-azul">
                 Editar
                 </a>
                 </li>
