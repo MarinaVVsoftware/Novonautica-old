@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -241,5 +242,118 @@ class ReporteController extends AbstractController
         $clientes = $marinaRepository->getEmbarcacionesdeMorososLike($query);
 
         return $this->json($clientes);
+    }
+
+    /**
+     * @Route("/ingresos", name="reporte_ast_ingresos")
+     * @Method("GET")
+     */
+    public function ingresosAstilleroAction(){
+        $em = $this->getDoctrine()->getManager();
+        $astillero = $em->getRepository('AppBundle:AstilleroCotizacion')->obtenIngresosTodos();
+        return $this->render('astillero/reporte/ingreso.html.twig', [
+            'title' => 'Ingresos Astillero',
+            'cotizacion' => $astillero,
+        ]);
+    }
+
+//    /**
+//     * @Route("/reporte-ingresos", name="reporte_ast_ingresos_data")
+//     * @Method("GET")
+//     */
+//    public function reporteIngresosAction(){
+//        $em = $this->getDoctrine()->getManager();
+//        $astillero = $em->getRepository('AppBundle:AstilleroCotizacion')->obtenIngresosTodos();
+//        $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
+//        $csvData = $serializer->encode($astillero, 'csv');
+//        $response = new Response(
+//            $csvData,
+//            Response::HTTP_OK,
+//            ['Content-type' => 'text/csv']
+//        );
+//        $response->headers->set('Content-Disposition', 'attachment; filename="AstilleroIngresos.csv"');
+//        return $response;
+//    }
+
+    /**
+     * @Route("/reporte-ingresos", name="reporte_ast_ingresos_data")
+     * @Method("GET")
+     */
+    public function generateCsvAction()
+    {
+        $response = new StreamedResponse();
+        $response->setCallback(function() {
+            $handle = fopen('php://output', 'w+');
+
+            // Add the header of the CSV file
+            $auxTitulos = [
+                'Año',
+                'Mes',
+                'Día',
+                'Folio',
+                'Embarcación',
+                'Varada y botadura',
+                'Estadía',
+                'Rampa',
+                'Karcher',
+                'Uso de explanada',
+                'Electricidad',
+                'Limpieza de locación',
+                'Sacar para Inspeccionar',
+                'Días adicionales',
+                'Ingreso Servicios básicos',
+                'Ingreso Servicios',
+                'Ingreso Otros',
+                'Materiales',
+                'Servicios',
+                'Sub-Total',
+                'IVA',
+                'Total'
+            ];
+            $titulos = [];
+            foreach ($auxTitulos as $auxTitulo){
+                array_push($titulos,mb_convert_encoding($auxTitulo,'UTF-16LE','UTF-8' ));
+            }
+            fputcsv($handle, $titulos);
+            // Query data from database
+            $em = $this->getDoctrine()->getManager();
+            $astillero = $em->getRepository('AppBundle:AstilleroCotizacion')->obtenIngresosTodos();
+            // Add the data queried from database
+            foreach ($astillero as $dato){
+                fputcsv(
+                    $handle, // The file pointer
+                    [
+                        $dato['anio'],
+                        $dato['mes'],
+                        $dato['dia'],
+                        $dato['folio'],
+                        $dato['embarcacion'],
+                        $dato['varada'],
+                        $dato['estadia'],
+                        $dato['rampa'],
+                        $dato['karcher'],
+                        $dato['explanada'],
+                        $dato['electricidad'],
+                        $dato['limpieza'],
+                        $dato['inspeccionar'],
+                        $dato['diasAdicionales'],
+                        $dato['subTotalServiciosBasicos'],
+                        $dato['subTotalServicios'],
+                        $dato['subTotalOtros'],
+                        $dato['subTotalProductos'],
+                        $dato['nomServicios'],
+                        $dato['subtotal'],
+                        $dato['iva'],
+                        $dato['total']
+                    ]
+                );
+            }
+            fclose($handle);
+        });
+        $response->setStatusCode(200);
+        $response->setCharset('UTF-8');
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="AstilleroIngresos.csv"');
+        return $response;
     }
 }

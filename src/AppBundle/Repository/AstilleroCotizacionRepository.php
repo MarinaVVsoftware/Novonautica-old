@@ -152,4 +152,406 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->setMaxResults(5)
             ->getArrayResult();
     }
+
+//    public function obtenIngresosTodos()
+//    {
+//        $resultado = [];
+//        $granVarada = 0;
+//        $granEstadia = 0;
+//        $granRampa = 0;
+//        $granKarcher = 0;
+//        $granExplanada = 0;
+//        $granElectricidad = 0;
+//        $granLimpieza = 0;
+//        $granInspeccionar = 0;
+//        $granDiasAdicionales = 0;
+//        $granSubTotServiciosBasicos = 0;
+//        $granSubTotServicios = 0;
+//        $granSubTotOtros = 0;
+//        $granSubTotProductos = 0;
+//        $granSubtotal = 0;
+//        $granIva = 0;
+//        $granTotal = 0;
+//
+//        $cotizaciones = $this->getEntityManager()
+//            ->createQuery(
+//                'SELECT a,barco ' .
+//                'FROM AppBundle:AstilleroCotizacion a '.
+//                'LEFT JOIN a.barco barco '.
+//                'WHERE a.validacliente = 2'
+//            )->getArrayResult();
+//        foreach ($cotizaciones as $cotizacion){
+//            //dump($cotizacion);
+//            $folio = $cotizacion['foliorecotiza']?$cotizacion['folio'].'-'.$cotizacion['foliorecotiza']:$cotizacion['folio'];
+//            $servicios = $this->getEntityManager()
+//                              ->createQuery('SELECT elemento, astilleroServicio, astilleroServicioBasico, astilleroProducto '.
+//                                                 'FROM AppBundle:AstilleroCotizaServicio elemento '.
+//                                                 'LEFT JOIN elemento.servicio astilleroServicio '.
+//                                                 'LEFT JOIN elemento.astilleroserviciobasico astilleroServicioBasico '.
+//                                                 'LEFT JOIN elemento.producto astilleroProducto '.
+//                                                 'WHERE elemento.astillerocotizacion = :idastillero '
+//                                           )
+//                              ->setParameter('idastillero',$cotizacion['id'])
+//                              ->getArrayResult();
+//            $subTotProductos = 0;
+//            $subTotOtros = 0;
+//            $subTotServicios = 0;
+//            $subTotServiciosBasicos = 0;
+//            $varada = 0;
+//            $estadia = 0;
+//            $rampa = 0;
+//            $karcher = 0;
+//            $explanada = 0;
+//            $electricidad = 0;
+//            $limpieza = 0;
+//            $inspeccionar = 0;
+//            $diasAdicionales = 0;
+//            $subtotal = 0;
+//            $iva = 0;
+//            $total = 0;
+//            $nomServicios = '';
+//            foreach ($servicios as $servicio){
+//                if($servicio['estatus']){
+//                    if($servicio['otroservicio']){
+//                        $subTotOtros += $servicio['subtotal'];
+//                    }
+//                    if ($servicio['producto']) {
+//                        $subTotProductos += $servicio['subtotal'];
+//                    }
+//                    if ($servicio['servicio']) {
+//                        $subTotServicios += $servicio['subtotal'];
+//                        $nomServicios .= $servicio['servicio']['nombre'].'. ';
+//                    }
+//                    if ($servicio['astilleroserviciobasico']) {
+//                        $subTotServiciosBasicos += $servicio['subtotal'];
+//                        switch ($servicio['astilleroserviciobasico']['id']){
+//                            case 1: $varada = $servicio['subtotal']; break;
+//                            case 2: $estadia = $servicio['subtotal']; break;
+//                            case 3: $rampa = $servicio['subtotal']; break;
+//                            case 4: $karcher = $servicio['subtotal']; break;
+//                            case 5: $explanada = $servicio['subtotal']; break;
+//                            case 6: $electricidad = $servicio['subtotal']; break;
+//                            case 7: $limpieza = $servicio['subtotal']; break;
+//                            case 8: $inspeccionar = $servicio['subtotal']; break;
+//                            case 9: $diasAdicionales = $servicio['subtotal']; break;
+//                        }
+//                    }
+//                    $subtotal+=$servicio['subtotal'];
+//                    $iva+=$servicio['iva'];
+//                    $total+=$servicio['total'];
+//                }
+//            }
+//            array_push($resultado,
+//                [
+//                    'anio' => $cotizacion['fechaLlegada']->format('Y'),
+//                    'mes' => $cotizacion['fechaLlegada']->format('m'),
+//                    'dia' => $cotizacion['fechaLlegada']->format('d/m/Y'),
+//                    'folio' => $folio,
+//                    'embarcacion' => $cotizacion['barco']['nombre'],
+//                    'varada' => $this->esMoneda($varada),
+//                    'estadia' => $this->esMoneda($estadia),
+//                    'rampa' => $this->esMoneda($rampa),
+//                    'karcher' => $this->esMoneda($karcher),
+//                    'explanada' => $this->esMoneda($explanada),
+//                    'electricidad' => $this->esMoneda($electricidad),
+//                    'limpieza' => $this->esMoneda($limpieza),
+//                    'inspeccionar' => $this->esMoneda($inspeccionar),
+//                    'diasAdicionales' => $this->esMoneda($diasAdicionales),
+//                    'subTotalServiciosBasicos' => $this->esMoneda($subTotServiciosBasicos),
+//                    'subTotalServicios' => $this->esMoneda($subTotServicios),
+//                    'subTotalOtros' => $this->esMoneda($subTotOtros),
+//                    'subTotalProductos' => $this->esMoneda($subTotProductos),
+//                    'nomServicios' => $nomServicios,
+//                    'subtotal' => $this->esMoneda($subtotal),
+//                    'iva' => $this->esMoneda($iva),
+//                    'total' => $this->esMoneda($total)
+//                ]
+//            );
+//            $granVarada+=$varada;
+//            $granEstadia+=$estadia;
+//            $granRampa+=$rampa;
+//            $granKarcher+=$karcher;
+//            $granExplanada+=$explanada;
+//            $granElectricidad+=$electricidad;
+//            $granLimpieza+=$limpieza;
+//            $granInspeccionar+=$inspeccionar;
+//            $granDiasAdicionales+=$diasAdicionales;
+//            $granSubTotServiciosBasicos+=$subTotServiciosBasicos;
+//            $granSubTotServicios+=$subTotServicios;
+//            $granSubTotOtros+=$subTotOtros;
+//            $granSubTotProductos+=$subTotProductos;
+//
+//            $granSubtotal+=$subtotal;
+//            $granIva+=$iva;
+//            $granTotal+=$total;
+//        }
+//        array_push($resultado,[
+//            'anio' => '',
+//            'mes' => '',
+//            'dia' => '',
+//            'folio' => '',
+//            'embarcacion' => '',
+//            'varada' => $this->esMoneda($granVarada),
+//            'estadia' => $this->esMoneda($granEstadia),
+//            'rampa' => $this->esMoneda($granRampa),
+//            'karcher' => $this->esMoneda($granKarcher),
+//            'explanada' => $this->esMoneda($granExplanada),
+//            'electricidad' => $this->esMoneda($granElectricidad),
+//            'limpieza' => $this->esMoneda($granLimpieza),
+//            'inspeccionar' => $this->esMoneda($granInspeccionar),
+//            'diasAdicionales' => $this->esMoneda($granDiasAdicionales),
+//            'subTotalServiciosBasicos' => $this->esMoneda($granSubTotServiciosBasicos),
+//            'subTotalServicios' => $this->esMoneda($granSubTotServicios),
+//            'subTotalOtros' => $this->esMoneda($granSubTotOtros),
+//            'subTotalProductos' => $this->esMoneda($granSubTotProductos),
+//            'nomServicios' => '',
+//            'subtotal' => $this->esMoneda($granSubtotal),
+//            'iva' => $this->esMoneda($granIva),
+//            'total' => $this->esMoneda($granTotal)
+//        ]);
+//        return $resultado;
+//    }
+
+    function esMoneda($valor){
+        return '$'.number_format($valor/100,2);
+    }
+
+    public function obtenIngresosTodos()
+    {
+        $resultado = [];
+        $granVarada = 0;
+        $granEstadia = 0;
+        $granRampa = 0;
+        $granKarcher = 0;
+        $granExplanada = 0;
+        $granElectricidad = 0;
+        $granLimpieza = 0;
+        $granInspeccionar = 0;
+        $granDiasAdicionales = 0;
+        $granSubTotServiciosBasicos = 0;
+        $granSubTotServicios = 0;
+        $granSubTotOtros = 0;
+        $granSubTotProductos = 0;
+        $granSubtotal = 0;
+        $granIva = 0;
+        $granTotal = 0;
+        //--------------------
+        $subTotProductos = 0;
+        $subTotOtros = 0;
+        $subTotServicios = 0;
+        $subTotServiciosBasicos = 0;
+        $varada = 0;
+        $estadia = 0;
+        $rampa = 0;
+        $karcher = 0;
+        $explanada = 0;
+        $electricidad = 0;
+        $limpieza = 0;
+        $inspeccionar = 0;
+        $diasAdicionales = 0;
+        $subtotal = 0;
+        $iva = 0;
+        $total = 0;
+        $nomServicios = '';
+        //--------------------
+        $servicios = $this->getEntityManager()
+            ->createQuery(
+                'SELECT 
+                      AstilleroCotizacion.id as idCotizacion,
+                      AstilleroCotizacion.fechaLlegada as fecha,
+                      AstilleroCotizacion.folio as folio,
+                      AstilleroCotizacion.foliorecotiza as foliorecotiza,
+                      Barco.nombre as barco,
+                      Servicio.nombre as servicio,
+                      AstilleroServicioBasico.id as idServicioBasico,
+                      AstilleroServicioBasico.nombre as servicioBasico,
+                      Producto.nombre as producto,
+                      acs.otroservicio as otro,
+                      acs.cantidad as cantidad,
+                      acs.subtotal as subtotal,
+                      acs.iva as iva,
+                      acs.total as total,
+                      acs.divisa as divisa,
+                      acs.estatus as estatus
+                      FROM AppBundle:AstilleroCotizaServicio acs
+                      LEFT JOIN acs.servicio Servicio 
+                      LEFT JOIN acs.astilleroserviciobasico AstilleroServicioBasico 
+                      LEFT JOIN acs.producto Producto
+                      LEFT JOIN acs.astillerocotizacion AstilleroCotizacion
+                      LEFT JOIN AstilleroCotizacion.barco Barco
+                      WHERE AstilleroCotizacion.validacliente = 2 AND acs.estatus = 1
+                      ORDER BY fecha,folio,foliorecotiza ASC'
+            )->getArrayResult();
+        $c = 1;
+        foreach ($servicios as $servicio){
+            if($c === 1){
+                $auxIdCotizacion = $servicio['idCotizacion'];
+                $folio = $servicio['foliorecotiza']?$servicio['folio'].'-'.$servicio['foliorecotiza']:$servicio['folio'];
+                $fecha = $servicio['fecha'];
+                $barco = $servicio['barco'];
+            }
+            if($auxIdCotizacion !== $servicio['idCotizacion']){
+                array_push($resultado, [
+                        'anio' => $fecha->format('Y'),
+                        'mes' => $fecha->format('m'),
+                        'dia' => $fecha->format('d/m/Y'),
+                        'folio' => $folio,
+                        'embarcacion' => $barco,
+                        'varada' => $this->esMoneda($varada),
+                        'estadia' => $this->esMoneda($estadia),
+                        'rampa' => $this->esMoneda($rampa),
+                        'karcher' => $this->esMoneda($karcher),
+                        'explanada' => $this->esMoneda($explanada),
+                        'electricidad' => $this->esMoneda($electricidad),
+                        'limpieza' => $this->esMoneda($limpieza),
+                        'inspeccionar' => $this->esMoneda($inspeccionar),
+                        'diasAdicionales' => $this->esMoneda($diasAdicionales),
+                        'subTotalServiciosBasicos' => $this->esMoneda($subTotServiciosBasicos),
+                        'subTotalServicios' => $this->esMoneda($subTotServicios),
+                        'subTotalOtros' => $this->esMoneda($subTotOtros),
+                        'subTotalProductos' => $this->esMoneda($subTotProductos),
+                        'nomServicios' => $nomServicios,
+                        'subtotal' => $this->esMoneda($subtotal),
+                        'iva' => $this->esMoneda($iva),
+                        'total' => $this->esMoneda($total)
+                    ]);
+                // --- variables gran total --
+                $granVarada+=$varada;
+                $granEstadia+=$estadia;
+                $granRampa+=$rampa;
+                $granKarcher+=$karcher;
+                $granExplanada+=$explanada;
+                $granElectricidad+=$electricidad;
+                $granLimpieza+=$limpieza;
+                $granInspeccionar+=$inspeccionar;
+                $granDiasAdicionales+=$diasAdicionales;
+                $granSubTotServiciosBasicos+=$subTotServiciosBasicos;
+                $granSubTotServicios+=$subTotServicios;
+                $granSubTotOtros+=$subTotOtros;
+                $granSubTotProductos+=$subTotProductos;
+                $granSubtotal+=$subtotal;
+                $granIva+=$iva;
+                $granTotal+=$total;
+                // ---------------------------
+                //--- Reiniciar variables ----
+                $subTotProductos = 0;
+                $subTotOtros = 0;
+                $subTotServicios = 0;
+                $subTotServiciosBasicos = 0;
+                $varada = 0;
+                $estadia = 0;
+                $rampa = 0;
+                $karcher = 0;
+                $explanada = 0;
+                $electricidad = 0;
+                $limpieza = 0;
+                $inspeccionar = 0;
+                $diasAdicionales = 0;
+                $subtotal = 0;
+                $iva = 0;
+                $total = 0;
+                $nomServicios = '';
+                $auxIdCotizacion = $servicio['idCotizacion'];
+                $folio = $servicio['foliorecotiza']?$servicio['folio'].'-'.$servicio['foliorecotiza']:$servicio['folio'];
+                $fecha = $servicio['fecha'];
+                $barco = $servicio['barco'];
+                //---------------------------
+            }
+            if ($servicio['otro']) {
+                $subTotOtros += $servicio['subtotal'];
+            }
+            if ($servicio['producto']) {
+                $subTotProductos += $servicio['subtotal'];
+            }
+            if ($servicio['servicio']) {
+                $subTotServicios += $servicio['subtotal'];
+                $nomServicios .= $servicio['servicio'] . '. ';
+            }
+            if ($servicio['servicioBasico']) {
+                $subTotServiciosBasicos += $servicio['subtotal'];
+                switch ($servicio['idServicioBasico']) {
+                    case 1:$varada = $servicio['subtotal'];break;
+                    case 2:$estadia = $servicio['subtotal'];break;
+                    case 3:$rampa = $servicio['subtotal'];break;
+                    case 4:$karcher = $servicio['subtotal'];break;
+                    case 5:$explanada = $servicio['subtotal'];break;
+                    case 6:$electricidad = $servicio['subtotal'];break;
+                    case 7:$limpieza = $servicio['subtotal'];break;
+                    case 8:$inspeccionar = $servicio['subtotal'];break;
+                    case 9:$diasAdicionales = $servicio['subtotal'];break;
+                }
+            }
+            $subtotal += $servicio['subtotal'];
+            $iva += $servicio['iva'];
+            $total += $servicio['total'];
+            $c++;
+        }
+        array_push($resultado, [
+                'anio' => $fecha->format('Y'),
+                'mes' => $fecha->format('m'),
+                'dia' => $fecha->format('d/m/Y'),
+                'folio' => $folio,
+                'embarcacion' => $barco,
+                'varada' => $this->esMoneda($varada),
+                'estadia' => $this->esMoneda($estadia),
+                'rampa' => $this->esMoneda($rampa),
+                'karcher' => $this->esMoneda($karcher),
+                'explanada' => $this->esMoneda($explanada),
+                'electricidad' => $this->esMoneda($electricidad),
+                'limpieza' => $this->esMoneda($limpieza),
+                'inspeccionar' => $this->esMoneda($inspeccionar),
+                'diasAdicionales' => $this->esMoneda($diasAdicionales),
+                'subTotalServiciosBasicos' => $this->esMoneda($subTotServiciosBasicos),
+                'subTotalServicios' => $this->esMoneda($subTotServicios),
+                'subTotalOtros' => $this->esMoneda($subTotOtros),
+                'subTotalProductos' => $this->esMoneda($subTotProductos),
+                'nomServicios' => $nomServicios,
+                'subtotal' => $this->esMoneda($subtotal),
+                'iva' => $this->esMoneda($iva),
+                'total' => $this->esMoneda($total)
+            ]);
+        // --- variables gran total --
+        $granVarada+=$varada;
+        $granEstadia+=$estadia;
+        $granRampa+=$rampa;
+        $granKarcher+=$karcher;
+        $granExplanada+=$explanada;
+        $granElectricidad+=$electricidad;
+        $granLimpieza+=$limpieza;
+        $granInspeccionar+=$inspeccionar;
+        $granDiasAdicionales+=$diasAdicionales;
+        $granSubTotServiciosBasicos+=$subTotServiciosBasicos;
+        $granSubTotServicios+=$subTotServicios;
+        $granSubTotOtros+=$subTotOtros;
+        $granSubTotProductos+=$subTotProductos;
+        $granSubtotal+=$subtotal;
+        $granIva+=$iva;
+        $granTotal+=$total;
+        // ---------------------------
+        array_push($resultado,[
+            'anio' => '',
+            'mes' => '',
+            'dia' => '',
+            'folio' => '',
+            'embarcacion' => '',
+            'varada' => $this->esMoneda($granVarada),
+            'estadia' => $this->esMoneda($granEstadia),
+            'rampa' => $this->esMoneda($granRampa),
+            'karcher' => $this->esMoneda($granKarcher),
+            'explanada' => $this->esMoneda($granExplanada),
+            'electricidad' => $this->esMoneda($granElectricidad),
+            'limpieza' => $this->esMoneda($granLimpieza),
+            'inspeccionar' => $this->esMoneda($granInspeccionar),
+            'diasAdicionales' => $this->esMoneda($granDiasAdicionales),
+            'subTotalServiciosBasicos' => $this->esMoneda($granSubTotServiciosBasicos),
+            'subTotalServicios' => $this->esMoneda($granSubTotServicios),
+            'subTotalOtros' => $this->esMoneda($granSubTotOtros),
+            'subTotalProductos' => $this->esMoneda($granSubTotProductos),
+            'nomServicios' => '',
+            'subtotal' => $this->esMoneda($granSubtotal),
+            'iva' => $this->esMoneda($granIva),
+            'total' => $this->esMoneda($granTotal)
+        ]);
+        return $resultado;
+    }
 }
