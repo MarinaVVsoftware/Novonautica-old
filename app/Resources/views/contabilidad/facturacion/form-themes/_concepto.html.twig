@@ -2,15 +2,16 @@
     {% set prepend = not (money_pattern starts with '{{') %}
     {% set append = not (money_pattern ends with '}}') %}
     {% if prepend or append %}
-        <div class="input-group{{ group_class|default('') }}">
-            {% if prepend %}
-                <span class="input-group-addon" style="-webkit-border-radius: 0;-moz-border-radius: 0;border-radius: 0;">{{ money_pattern|replace({ '{{ widget }}':''}) }}</span>
-            {% endif %}
+        {#<div class="input-group{{ group_class|default('') }}">#}
+            {#{% if prepend %}
+                <span class="input-group-addon"
+                      style="-webkit-border-radius: 0;-moz-border-radius: 0;border-radius: 0;">{{ money_pattern|replace({ '{{ widget }}':''}) }}</span>
+            {% endif %}#}
             {{- block('form_widget_simple') -}}
-            {% if append %}
+            {#{% if append %}
                 <span class="input-group-addon">{{ money_pattern|replace({ '{{ widget }}':''}) }}</span>
-            {% endif %}
-        </div>
+            {% endif %}#}
+        {#</div>#}
     {% else %}
         {{- block('form_widget_simple') -}}
     {% endif %}
@@ -18,15 +19,14 @@
 
 {% block appbundle_contabilidad_facturacion_concepto_widget %}
     {% spaceless %}
-        <tr class="servicio-agregado concepto-item">
-            <td align="center" style="vertical-align: middle">
-                {#<a href="#" class="remove-concepto badge btn-xs btn-naranja">
-                    <i class="fa fa-times"></i>
-                </a>#}
-            </td>
+        <tr class="concepto-agregado table-item">
             <td>
                 {{ form_widget(form.cantidad) }}
                 {{ form_errors(form.cantidad) }}
+            </td>
+            <td>
+                {{ form_widget(form.unidad) }}
+                {{ form_errors(form.unidad) }}
             </td>
             <td>
                 {{ form_widget(form.claveProdServ) }}
@@ -44,21 +44,31 @@
                 {{ form_widget(form.valorunitario) }}
                 {{ form_errors(form.valorunitario) }}
             </td>
-            <td class="pago">
-                {{ form_widget(form.descuento, { 'attr': { 'class': 'descuento-column' } }) }}
-                {{ form_errors(form.descuento) }}
-            </td>
-            <td class="pago">
-                {{ form_widget(form.iva, { 'attr': { 'class': 'iva-column' } }) }}
-                {{ form_errors(form.iva) }}
+            <td>
+                {{ form_widget(form.importe) }}
+                {{ form_errors(form.importe) }}
             </td>
             <td>
-                {{ form_widget(form.subtotal, { 'attr': { 'readonly': true, 'class': 'subtotal-column' } }) }}
-                {{ form_errors(form.subtotal) }}
+                {{ form_widget(form.base) }}
+                {{ form_errors(form.base) }}
             </td>
             <td>
-                {{ form_widget(form.total, { 'attr': { 'readonly': true, 'class': 'total-column' } }) }}
-                {{ form_errors(form.total) }}
+                {{ form_widget(form.impuesto) }}
+                {{ form_errors(form.impuesto) }}
+            </td>
+            <td>
+                {{ form_widget(form.tipoFactor) }}
+                {{ form_errors(form.tipoFactor) }}
+            </td>
+            <td>
+                {{ form_widget(form.tasaOCuota) }}
+                {{ form_errors(form.tasaOCuota) }}
+            </td>
+            <td>
+                {{ form_widget(form.impuestoImporte) }}
+                {{ form_errors(form.impuestoImporte) }}
+            </td>
+            <td valign="middle" class="text-center">
             </td>
         </tr>
     {% endspaceless %}

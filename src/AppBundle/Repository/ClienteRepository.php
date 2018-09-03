@@ -90,4 +90,17 @@ class ClienteRepository extends \Doctrine\ORM\EntityRepository
 
         return $total;
     }
+
+    public function getAllWhereNombreLike($queryString)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT cliente.id, cliente.nombre AS text '.
+                'FROM AppBundle:Cliente cliente '.
+                'WHERE LOWER(cliente.nombre) LIKE :cliente'
+            )
+            ->setParameter('cliente', strtolower("%{$queryString}%"))
+            ->setMaxResults(10)
+            ->getArrayResult();
+    }
 }

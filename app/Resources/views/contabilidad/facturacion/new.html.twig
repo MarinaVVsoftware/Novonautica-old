@@ -103,12 +103,31 @@
         .novo-checkbox-container .checkbox input[type="checkbox"]:checked + label:after {
             opacity: 1;
         }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table > thead > tr > th,
+        .table > tbody > tr > td {
+            padding: 0;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .content form .table > tbody > tr > td > input.form-control,
+        .content form .table > tbody > tr > td > select {
+            border-radius: 0 !important;
+        }
     </style>
 {% endblock %}
+
+{% form_theme form.conceptos 'contabilidad/facturacion/form-themes/_concepto.html.twig' %}
 
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
+
             <div class="row">
                 <div class="col-md-12">
                     {% for message in app.flashes('danger') %}
@@ -123,143 +142,175 @@
                     {% endfor %}
                 </div>
             </div>
+
+            {{ form_start(form) }}
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-sm-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Nueva factura</h4>
+                        </div>
+                        <div class="panel-body" style="min-height: initial">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_row(form.emisor) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{ form_row(form.cliente) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{ form_row(form.receptor) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{ form_row(form.lugarExpedicion) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {{ form_row(form.condicionesPago) }}
+                                </div>
+                                <div class="col-sm-2">
+                                    {{ form_row(form.metodoPago) }}
+                                </div>
+                                <div class="col-sm-2">
+                                    {{ form_row(form.tipoComprobante) }}
+                                </div>
+                                <div class="col-sm-2">
+                                    {{ form_row(form.formaPago) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h3 class="panel-title pull-left">
-                                        Nueva factura
-                                    </h3>
-                                    <a class="btn btn-contorno-azul pull-right"
-                                       href="{{ path('contabilidad_facturacion_index') }}">
-                                        Regresar
-                                    </a>
+                                    <h4 class="panel-title">
+                                        <small>Conceptos</small>
+                                        <button id="add" type="button" class="btn btn-contorno-azul pull-right">
+                                            + Agregar concepto
+                                        </button>
+                                    </h4>
                                 </div>
                             </div>
                         </div>
-                        <div class="panel-body panel-pestanias">
-                            {{ form_start(form) }}
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="primero active">
-                                    <a href="#generales" data-toggle="tab">Generales</a>
-                                </li>
-                                <li class="primero">
-                                    <a href="#conceptos" data-toggle="tab">Conceptos</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <div class="tab-pane active" id="generales">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            {{ form_row(form.emisor) }}
-                                        </div>
-                                        <div class="col-sm-3">
-                                            {{ form_row(form.rfc) }}
-                                        </div>
-                                        <div class="col-sm-3">
-                                            {{ form_row(form.cliente) }}
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="novo-checkbox-container">
-                                                {{ form_row(form.facturaGlobal) }}
-                                            </div>
-                                        </div>
+                        <div class="panel-body no-padding" style="min-height: initial;">
+                            <table class="table table-novo">
+                                <thead>
+                                <tr>
+                                    <th width="1%">Cantidad</th>
+                                    <th width="1%">Unidad</th>
+                                    <th width="10%">ClaveProdServ</th>
+                                    <th width="10%">Clave unidad</th>
+                                    <th width="10%">Descripcion</th>
+                                    <th>Valor Unitario</th>
+                                    <th>Importe</th>
+                                    <th>Base</th>
+                                    <th width="1%">Impuesto</th>
+                                    <th width="2%">Factor</th>
+                                    <th>Valor de factor</th>
+                                    <th>Importe de impuesto</th>
+                                    <th width="1%"></th>
+                                </tr>
+                                <tr>
+                                    <th colspan="7">Concepto</th>
+                                    <th colspan="6">Impuestos</th>
+                                </tr>
+                                </thead>
+                                <tbody id="prototype-holder"
+                                       data-prototype="{{ form_widget(form.conceptos.vars.prototype)|e('html_attr') }}">
+                                {% for concepto in form.conceptos %}
+                                    <tr class="concepto-agregado table-item">
+                                        <td>
+                                            {{ form_widget(concepto.cantidad) }}
+                                            {{ form_errors(concepto.cantidad) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(concepto.unidad) }}
+                                            {{ form_errors(concepto.unidad) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(concepto.claveProdServ) }}
+                                            {{ form_errors(concepto.claveProdServ) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(concepto.claveUnidad) }}
+                                            {{ form_errors(concepto.claveUnidad) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(concepto.descripcion) }}
+                                            {{ form_errors(concepto.descripcion) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(concepto.valorunitario) }}
+                                            {{ form_errors(concepto.valorunitario) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(concepto.importe) }}
+                                            {{ form_errors(concepto.importe) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(concepto.base) }}
+                                            {{ form_errors(concepto.base) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(concepto.impuesto) }}
+                                            {{ form_errors(concepto.impuesto) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(concepto.tipoFactor) }}
+                                            {{ form_errors(concepto.tipoFactor) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(concepto.tasaOCuota) }}
+                                            {{ form_errors(concepto.tasaOCuota) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(concepto.impuestoImporte) }}
+                                            {{ form_errors(concepto.impuestoImporte) }}
+                                        </td>
+                                        <td valign="middle" class="text-center">
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-body" style="min-height: initial;">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <h4>Impuestos totales</h4>
+                                    <div class="col-sm-2">
+                                        {{ form_row(form.impuesto) }}
                                     </div>
-                                    <hr style="margin: 1em 0 !important;">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            {{ form_row(form.numeroTelefonico) }}
-                                            {{ form_row(form.razonSocial) }}
-                                            {{ form_row(form.direccionFiscal) }}
-                                            {{ form_row(form.email) }}
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="pago">
-                                                {{ form_row(form.metodoPago) }}
-                                                {{ form_row(form.formaPago) }}
-                                            </div>
-                                            {{ form_row(form.usoCFDI) }}
-                                        </div>
-                                        <div class="col-sm-3">
-                                            {{ form_row(form.tipoComprobante) }}
-                                            <div class="pago">
-                                                {{ form_row(form.condicionesPago) }}
-                                            </div>
-                                        </div>
+                                    <div class="col-sm-2">
+                                        {{ form_row(form.tipoFactor) }}
                                     </div>
-                                    <hr style="margin: 1em 0 !important;">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            {{ form_row(form.cuerpoCorreo) }}
-                                        </div>
+                                    <div class="col-sm-2">
+                                        {{ form_row(form.tasa) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.importe) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.totalImpuestosTransladados) }}
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="conceptos">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            {{ form_row(form.folioCotizacion) }}
-                                        </div>
-                                        <div class="col-sm-3">
-                                            {{ form_row(form.pagos) }}
-                                        </div>
-                                        <div class="col-sm-3">
-                                            {{ form_row(form.moneda) }}
-                                        </div>
-                                        <div class="col-sm-3">
-                                            {{ form_row(form.tipoCambio) }}
-                                        </div>
+                                <div class="row">
+                                    <h4>Totales</h4>
+                                    <div class="col-sm-3 col-sm-offset-6">
+                                        {{ form_row(form.subtotal) }}
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <table class="table">
-                                                <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th style="vertical-align: middle;">Cantidad</th>
-                                                    <th style="vertical-align: middle">ClaveProdServ</th>
-                                                    <th style="vertical-align: middle">Clave Unidad</th>
-                                                    <th style="vertical-align: middle" width="25%">Descripción</th>
-                                                    <th style="vertical-align: middle">Valor unitario</th>
-                                                    <th class="pago" style="vertical-align: middle">Descuento</th>
-                                                    <th class="pago" style="vertical-align: middle">IVA</th>
-                                                    <th style="vertical-align: middle">Sub-total</th>
-                                                    <th style="vertical-align: middle">Total</th>
-                                                </tr>
-                                                </thead>
-                                                {% form_theme form.conceptos 'contabilidad/facturacion/form-themes/_concepto.html.twig' %}
-                                                <tbody id="prototype-holder"
-                                                       data-prototype="{{ form_widget(form.conceptos.vars.prototype)|e('html_attr') }}">
-                                                {{ form_row(form.conceptos) }}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <a href="#" id="add-servicio" class="btn btn-contorno-azul">
-                                                + Agregar concepto
-                                            </a>
-                                        </div>
-                                        <div class="col-sm-4 col-sm-push-5 text-right">
-                                            {% form_theme form 'contabilidad/facturacion/form-themes/_factura.html.twig' %}
-                                            <h4 class="letra-azul">Sub-total</h4>
-                                            {{ form_widget(form.subtotal) }}
-                                            <hr>
-                                            <div class="pago">
-                                                <h4 class="letra-azul">Descuento</h4>
-                                                {{ form_widget(form.descuento) }}
-                                                <hr>
-                                                <h4 class="letra-azul">IVA</h4>
-                                                {{ form_widget(form.iva) }}
-                                                <hr>
-                                            </div>
-                                            <h4 class="letra-azul">Total</h4>
-                                            {{ form_widget(form.total) }}
-                                            {{ form_errors(form.total) }}
-                                            <hr>
-                                        </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.total) }}
                                     </div>
                                 </div>
                             </div>
@@ -270,579 +321,192 @@
                                     <button type="submit" class="btn btn-azul pull-right">
                                         Facturar
                                     </button>
-                                    {{ form_end(form) }}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {{ form_end(form) }}
+
         </section>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ asset('js/jquery.autocomplete.min.js') }}"></script>
-    <script type="text/javascript">
-      /*
-          JQUERY AUTOCOMPLETE && COLLECCION DE CONCEPTOS
-      */
-      (function ($) {
-        const theForm = document.querySelector('[name="appbundle_contabilidad_facturacion"');
-        const $rfcSelect = $('#appbundle_contabilidad_facturacion_rfc');
-        const $cotizacionSelect = $('#appbundle_contabilidad_facturacion_folioCotizacion');
-        const tipoComprobanteHolder = document.getElementById('appbundle_contabilidad_facturacion_tipoComprobante');
-        const addLink = document.getElementById('add-servicio');
-        const conceptoHolder = document.getElementById('prototype-holder');
-        const facturaGlobal = document.getElementById('appbundle_contabilidad_facturacion_facturaGlobal');
-        const pagosHolder = document.getElementById('appbundle_contabilidad_facturacion_pagos');
-        const tipoCambioHolder = document.getElementById('appbundle_contabilidad_facturacion_tipoCambio');
-        const subtotalHolder = document.getElementById('appbundle_contabilidad_facturacion_subtotal');
-        const descuentoHolder = document.getElementById('appbundle_contabilidad_facturacion_descuento');
-        const ivaHolder = document.getElementById('appbundle_contabilidad_facturacion_iva');
-        const totalHolder = document.getElementById('appbundle_contabilidad_facturacion_total');
-        const monedaSelect = document.getElementById('appbundle_contabilidad_facturacion_moneda');
-        const razon = document.getElementById('appbundle_contabilidad_facturacion_razonSocial');
-        const direccion = document.getElementById('appbundle_contabilidad_facturacion_direccionFiscal');
-        const nombre = document.getElementById('appbundle_contabilidad_facturacion_cliente');
-        const email = document.getElementById('appbundle_contabilidad_facturacion_email');
-        const telefono = document.getElementById('appbundle_contabilidad_facturacion_numeroTelefonico');
+    <script src="{{ asset('js/cleave.min.js') }}"></script>
+    <script>
+      class ElementCollection {
+        constructor(addButton, prototypeHolder, elementListener) {
+          this.addButton = typeof addButton === 'string'
+              ? document.querySelector(addButton)
+              : addButton;
 
-        let cotizacionData = null;
-        let cotizacionesData = null;
-        let conceptoCounter = '{{ form.conceptos|length }}';
-        const autocompleteSettings = {
-          dataType: 'json',
-          deferRequestBy: 300,
-          showNoSuggestionNotice: true,
-          noSuggestionNotice: 'No se encontraron resultados',
-          triggerSelectOnValidInput: false,
-        };
+          this.prototypeHolder = typeof prototypeHolder === 'string'
+              ? document.querySelector(prototypeHolder)
+              : prototypeHolder;
 
-        // Checar si se regreso con un folio de cotizacion
-        if ($cotizacionSelect.val()) {
-          pagosHolder.removeAttribute('multiple');
+          this.elementListener = elementListener;
+
+          this.collection = [];
+
+          Array
+              .from(this.prototypeHolder.querySelectorAll('tr'))
+              .forEach(element => {
+                this.elementListener(element);
+                this.appendRemoveButton(element);
+                this.collection.push(element);
+              });
+
+          this.elementCounter = this.prototypeHolder.childElementCount;
+
+          this.addButton
+              .addEventListener(
+                  'click',
+                  this.addElement.bind(this)
+              );
         }
 
-        // Checar si se esta cargando una factura global
-        if (facturaGlobal.checked) {
-          $cotizacionSelect.parent().addClass('hidden');
-        }
-        // Realizar factura global
-        facturaGlobal.addEventListener('change', function () {
-          const receptor = {
-            rfc: 'XAXX010101000',
-            cliente: 'PUBLICO EN GENERAL',
-          };
+        /* PUBLIC */
+        addElement() {
+          let element = this._getPrototypeElement();
 
-          if (this.checked) {
-            $rfcSelect.val(receptor.rfc);
-            razon.value = nombre.value = direccion.value = receptor.cliente;
-            telefono.value = '00000000';
+          this.elementListener(element);
+          this.appendRemoveButton(element);
+          this.prototypeHolder.appendChild(element);
+          this.collection.push(element);
 
-            $cotizacionSelect.prop('readonly', 'readonly');
-            $cotizacionSelect.val('');
-            $cotizacionSelect.parent().addClass('hidden');
-            pagosHolder.setAttribute('multiple', 'multiple');
-            pagosHolder.innerHTML = '';
-
-            if (!cotizacionesData) {
-              $.ajax({
-                url: 'factura-global.json', success: data => {
-                  cotizacionesData = data;
-                  rollFacturaGlobal(cotizacionesData);
-                }
-              });
-            } else {
-              rollFacturaGlobal(cotizacionesData)
-            }
-          } else {
-            $rfcSelect.val('');
-            razon.value = nombre.value = direccion.value = '';
-            telefono.value = '';
-            pagosHolder.removeAttribute('multiple');
-            $cotizacionSelect.parent().removeClass('hidden');
-            $cotizacionSelect.removeAttr('readonly');
-            pagosHolder.innerHTML = '';
-            conceptoHolder.innerHTML = '';
-            appendRow();
-          }
-
-          // Rellenar datos del receptor
-          function rollFacturaGlobal(cotizacionesData) {
-            let precio = 0;
-            conceptoHolder.innerHTML = '';
-
-            cotizacionesData.forEach(function (cotizacion) {
-              cotizacion.pagos.forEach(function (pago) {
-                precio = pago.cantidad + precio;
-                let opt = new Option(`$${(pago.cantidad / 100).toFixed(2)} USD`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'), pago.id);
-                opt.setAttribute('selected', 'selected');
-                pagosHolder.appendChild(opt);
-              });
-            });
-
-            precio = ((precio / 116) * 100).toFixed(2);
-            // Debido al calculo de diferentes divisas ya no se enviara el total para la factura global
-            appendRow({
-              cantidad: 1,
-              servicio: 'VENTA',
-              precio: 0,
-              cps: '01010101 / No existe en el catálogo',
-              cu: 'ACT / Actividad'
-            }, true);
-          }
-        });
-
-        // En caso de que el tipo de comprobante sea "P", remover todas las dependecias de "I" y "E"
-        checkTipoComprobante();
-        tipoComprobanteHolder.addEventListener('change', checkTipoComprobante);
-
-        // Autocomplete para rellenado de datos de cliente con RFC
-        $rfcSelect.autocomplete({
-          ...autocompleteSettings,
-          minChars: 2,
-          paramName: 'rfc',
-          serviceUrl: `{{ app.request.requestUri }}/../clientes.json`,
-          params: {},
-          transformResult: function (datos) {
-            return {
-              suggestions: datos.map(data => {
-                return {
-                  value: data.rfc,
-                  data: data
-                }
-              })
-            }
-          },
-          beforeRender: function (container, suggestions) {
-            if (!suggestions.length) return;
-            [...container[0].childNodes].map((suggestion, i) => {
-              suggestion.innerHTML = `${suggestion.innerHTML} <small>(${suggestions[i].data.cliente.nombre.substring(0, 15)})</small>`;
-            })
-          },
-          onSelect: function ({data}) {
-            razon.value = data.razonSocial;
-            direccion.value = data.direccion;
-            nombre.value = data.cliente.nombre;
-            email.value = data.correos;
-            telefono.value = data.cliente.telefono;
-          }
-        });
-
-        if ($cotizacionSelect.val().trim()) {
-          pagosHolder.setAttribute('required', 'required');
+          return this.prototypeHolder.childElementCount;
         }
 
-        $cotizacionSelect.on('input', function () {
-          if (this.value.trim()) {
-            pagosHolder.setAttribute('required', 'required');
-            pagosHolder.removeAttribute('multiple');
-          }
-        });
+        removeElement(element) {
+          element = typeof element === 'number' ? this.prototypeHolder.children[(element - 1)] : element;
+          if (!element) throw new Error('No existe el elemento que quieres eliminar');
+          element.parentNode.removeChild(element);
+        }
 
-        // Autocomplete para agregar filas a la tabla de conceptos
-        $cotizacionSelect.autocomplete({
-          ...autocompleteSettings,
-          minChars: 1,
-          paramName: 'folio',
-          serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/cotizaciones.json`,
-          params: {},
-          transformResult: function (cotizaciones) {
-            return {
-              suggestions: cotizaciones.map(cotizacion => {
-                return {
-                  value: cotizacion.foliorecotiza ? `${cotizacion.folio}-${cotizacion.foliorecotiza}` : `${cotizacion.folio}`,
-                  data: cotizacion
-                }
-              })
-            }
-          },
-          onSelect: function ({data}) {
-            pagosHolder.removeAttribute('multiple');
-            conceptoHolder.innerHTML = '';
-            appendRow();
-            pagosHolder.innerHTML = '';
-            pagosHolder.appendChild(new Option('Seleccione un pago', ''));
-            pagosHolder.dataset.folio = data.folio;
-            data.pagos.forEach(function (pago) {
-              let opt = new Option(`$${(pago.cantidad / 100).toFixed(2)} ${pago.divisa}`.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'), pago.id);
-              pagosHolder.appendChild(opt);
-            });
-            cotizacionData = data;
-
-            // Buscar datos si data esta vacio despues de regresar de un error
-          }
-        });
-
-        // Al seleccionar un pago, agrega una row con los conceptos de la cotizacion
-        pagosHolder.addEventListener('change', function (e) {
-          if (!this.options[this.selectedIndex].value) {
-            conceptoHolder.innerHTML = '';
-            appendRow();
-            return;
-          }
-
-          if (null === cotizacionData) {
-            $.ajax({ // Al regresar por un error, cotizacionData no tiene datos
-              url: `{{ app.request.BaseUrl }}/contabilidad/facturacion/cotizaciones.json`,
-              data: {folio: $cotizacionSelect.val()},
-              dataType: 'json',
-              success: function (data) {
-                cotizacionData = data[0];
-
-                let pago = cotizacionData.pagos.filter(v => v.id === Number(pagosHolder.value));
-                monedaSelect.value = pago[0].divisa;
-                tipoCambioHolder.value = `${pago[0].dolar / 100}`;
-
-                conceptoHolder.innerHTML = '';
-                if (cotizacionData.conceptos) {
-                  cotizacionData.conceptos.forEach(concepto => appendRow(concepto, true));
-                }
-
-                if (cotizacionData.producto) {
-
-                  if (cotizacionData.solicitudEspecial) {
-                    cotizacionData.producto.push({
-                      cantidad: 1,
-                      producto: {
-                        nombre: cotizacionData.solicitudEspecial,
-                        precio: cotizacionData.preciosolespecial,
-                        claveProdServ: {
-                          claveProdServ: '01010101',
-                          descripcion: 'No existe en el catálogo'
-                        },
-                        claveUnidad: {
-                          claveUnidad: 'ACT',
-                          nombre: 'Actividad'
-                        }
-                      }
-                    });
-                  }
-
-                  cotizacionData.producto.forEach(producto => {
-                    monedaSelect.value = 'MXN';
-                    producto.precio = producto.producto.precio;
-                    producto.cps = producto.producto.claveProdServ.claveProdServ + ' / ' + producto.producto.claveProdServ.descripcion;
-                    producto.cu = producto.producto.claveUnidad.claveUnidad + ' / ' + producto.producto.claveUnidad.nombre;
-
-                    appendRow(producto, true)
-                  });
-                }
-              }
-            });
-          } else {
-            // Cambiar la moneda a facturar en base al pago realizado
-            let pago = cotizacionData.pagos.filter(v => v.id === Number(this.value));
-            monedaSelect.value = pago[0].divisa;
-            tipoCambioHolder.value = `${pago[0].dolar / 100}`;
-
-            conceptoHolder.innerHTML = '';
-            if (cotizacionData.conceptos) {
-              cotizacionData.conceptos.forEach(concepto => appendRow(concepto, concepto.tipo === 3));
-            }
-
-            if (cotizacionData.producto) {
-
-              if (cotizacionData.solicitudEspecial) {
-                cotizacionData.producto.push({
-                  cantidad: 1,
-                  producto: {
-                    nombre: cotizacionData.solicitudEspecial,
-                    precio: cotizacionData.preciosolespecial,
-                    claveProdServ: {
-                      claveProdServ: '01010101',
-                      descripcion: 'No existe en el catálogo'
-                    },
-                    claveUnidad: {
-                      claveUnidad: 'ACT',
-                      nombre: 'Actividad'
-                    }
-                  }
-                });
-              }
-
-              cotizacionData.producto.forEach(producto => {
-                monedaSelect.value = 'MXN';
-                producto.precio = producto.producto.precio;
-                producto.cps = producto.producto.claveProdServ.claveProdServ + ' / ' + producto.producto.claveProdServ.descripcion;
-                producto.cu = producto.producto.claveUnidad.claveUnidad + ' / ' + producto.producto.claveUnidad.nombre;
-
-                appendRow(producto, true)
-              });
-            }
-          }
-        });
-
-        // Agrega una nueva row vacia
-        addLink.addEventListener('click', function (e) {
-          e.preventDefault();
-          appendRow();
-        });
-
-        // Agrega un row
-        function appendRow(data, writePrice) {
-          let prototype = conceptoHolder.dataset.prototype.replace(/__name__/g, conceptoCounter);
-          let unaTabla = document.createElement('table');
-          unaTabla.innerHTML = prototype;
-          let concepto = unaTabla.querySelector('.concepto-item');
+        appendRemoveButton(element) {
+          let celda = element.cells[element.cells.length - 1];
           let removeButton = document.createElement('a');
+
           removeButton.className = 'badge btn-xs btn-naranja';
-          removeButton.innerHTML = '<i class="fa fa-times"></i>';
+          removeButton.innerHTML = '<i class="fa fa-trash"></i>';
+          removeButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
 
-          removeButton.addEventListener('click', function (e) {
-            e.preventDefault();
-            this.parentNode.parentNode.remove(this);
-            if (!conceptoHolder.children.length) {
-              addLink.classList.remove('hidden');
-              pagosHolder.selectedIndex = 0;
-              pagosHolder.innerHTML = '';
-              $cotizacionSelect.val('');
-              subtotalHolder.value = 0;
-              descuentoHolder.value = 0;
-              ivaHolder.value = 0;
-              totalHolder.value = 0;
-            }
+            this.removeElement(removeButton.parentNode.parentNode)
           });
 
-          if (conceptoHolder.childElementCount > 0) {
-            concepto.cells[0].appendChild(removeButton);
-          }
-
-          // Esconder descuento si el tipo de comprobante es "P"
-          if (tipoComprobanteHolder.value === 'P') {
-            let pagoCell = concepto.querySelectorAll('.pago');
-            pagoCell.forEach(cell => {
-              cell.querySelector('input').removeAttribute('required');
-              cell.classList.add('hidden');
-            });
-          }
-
-          conceptoHolder.appendChild(concepto);
-          addRowListener(concepto, data, writePrice);
-
-          conceptoCounter++;
+          celda.appendChild(removeButton);
         }
 
-        // Agrega funcionalidad a las row existentes
-        [...conceptoHolder.children].forEach(row => addRowListener(row));
+        /* PRIVATE */
 
-        // Le agrega la funcion de calculo a una row y si recibe datos los calcula;
-        function addRowListener(concepto, data, writePrice) {
-          let cantidadConcepto = concepto.children[1].firstElementChild;
-          let cpsConcepto = concepto.children[2].firstElementChild;
-          let cuConcepto = concepto.children[3].firstElementChild;
-          let descripcionConcepto = concepto.children[4].firstElementChild;
-          let vUnitarioConcepto = concepto.children[5].querySelector('input');
-          let descuentoConcepto = concepto.children[6].querySelector('input');
-          let ivaConcepto = concepto.children[7].querySelector('input');
-          let subtotalConcepto = concepto.children[8].querySelector('input');
-          let totalConcepto = concepto.children[9].querySelector('input');
+        _getPrototypeElement() {
+          let prototipo = this.prototypeHolder
+              .dataset
+              .prototype
+              .replace(/__name__/g, this.elementCounter);
 
-          cantidadConcepto.addEventListener('input', calculateConceptos);
-          vUnitarioConcepto.addEventListener('input', calculateConceptos);
-          descuentoConcepto.addEventListener('input', calculateConceptos);
-          ivaConcepto.addEventListener('input', calculateConceptos);
+          let tempElement = document.createElement('table');
+          tempElement.innerHTML = prototipo;
+          let element = tempElement.querySelector('tr');
 
-          if (data) {
-            // Convertir el tipo para MHC de numero a descripcion
-            switch (data.tipo) {
-              case 1:
-                data.nombre = 'Días de estancia';
-                break;
-              case 2:
-                data.nombre = 'Conexión a electricidad';
-                break;
-              case 3:
-                data.nombre = 'Abastecimiento de combustible';
-                break;
-            }
+          this.elementCounter++;
 
-            cantidadConcepto.value = data.cantidad || cantidadConcepto.value;
-            cpsConcepto.value = data.cps || cpsConcepto.value || '';
-            cuConcepto.value = data.cu || cuConcepto.value || '';
-            descripcionConcepto.value = data.nombre || data.serviciobasico || data.servicio || data.producto.nombre || data.producto || data.otroservicio || descripcionConcepto.value;
+          return element;
+        }
+      }
+    </script>
+    <script>
+      (function ($) {
+        const clienteSelect = document.getElementById('appbundle_contabilidad_facturacion_cliente');
+        const receptorSelect = document.getElementById('appbundle_contabilidad_facturacion_receptor');
+        const conceptoTable = new ElementCollection('#add', '#prototype-holder', elementListener);
 
-            // Resta el iva de un precio;
-            // data.precio = ((data.precio / 116) * 100).toFixed(2);
+        const $clienteSelect2 = $(clienteSelect).select2({ajax: {url: 'clientes'}});
+        const $receptorSelect2 = $(receptorSelect).select2();
 
-            vUnitarioConcepto.value = true === writePrice ? `${(data.precio / 100).toFixed(2)}` : 0;
-            descuentoConcepto.value = data.descuento ? `${data.descuento / 100}` : 0;
+        const subtotalInput = new Cleave('#appbundle_contabilidad_facturacion_subtotal', {numeral: true});
+        const totalInput = new Cleave('#appbundle_contabilidad_facturacion_total', {numeral: true});
 
-            // Si el pago esta en MXN y existe un valor unitario, entonces multiplicarlo por el valor del dolar cotizado
-            if (data.tipo === 3 && monedaSelect.value === 'MXN' && writePrice) {
-              vUnitarioConcepto.value = true === writePrice ? `${((data.precio / 100) * (cotizacionData.dolar / 100)).toFixed(2)}` : 0;
-            }
+        const totalImporteImpuestosInput = new Cleave('#appbundle_contabilidad_facturacion_importe', {numeral: true});
+        const totalImpuestosInput = new Cleave('#appbundle_contabilidad_facturacion_totalImpuestosTransladados', {numeral: true});
+
+        function elementListener(element) {
+          const cantidadInput = element.cells[0].firstElementChild;
+          const valorUnitarioInput = new Cleave(element.cells[5].firstElementChild, {numeral: true});
+          const importeInput = new Cleave(element.cells[6].firstElementChild, {numeral: true});
+          const baseInput = new Cleave(element.cells[7].firstElementChild, {numeral: true});
+          const tasaCuotaInput = element.cells[10].firstElementChild;
+          const importeImpuestoInput = new Cleave(element.cells[11].firstElementChild, {numeral: true});
+
+          const $cpsInput = $(element.cells[2].firstElementChild).select2({ajax: {url: 'clavesprodserv'}});
+          const $claveUnidadInput = $(element.cells[3].firstElementChild).select2({ajax: {url: 'claves-unidad'}});
+
+          cantidadInput.addEventListener('input', importeCalc);
+          valorUnitarioInput.element.addEventListener('input', importeCalc);
+          tasaCuotaInput.addEventListener('input', impuestoCalc);
+
+          function importeCalc() {
+            let importeValue = cantidadInput.value * Number(valorUnitarioInput.getRawValue());
+            let impuestoValue = importeValue * Number(tasaCuotaInput.value);
+
+            importeInput.element.value = moneyFormat(importeValue);
+            baseInput.element.value = moneyFormat(importeValue);
+            importeImpuestoInput.element.value = moneyFormat(impuestoValue);
+
+            totalCalc();
           }
 
-          calculateConceptos();
+          function impuestoCalc() {
+            let impuestoValue = Number(baseInput.getRawValue()) * Number(tasaCuotaInput.value);
 
-          function calculateConceptos() {
-            // Valores definidos por el usuario
-            let cantidad = (clearPrice(cantidadConcepto.value) * 1);
-            let precio = (clearPrice(vUnitarioConcepto.value) * 100);
-            let descuento = (clearPrice(descuentoConcepto.value) * 100);
+            importeImpuestoInput.element.value = moneyFormat(impuestoValue);
 
-            if (precio <= descuento) {
-              descuentoConcepto.value = `${precio / 100}`;
-              descuento = (clearPrice(descuentoConcepto.value) * 100);
-            }
-
-            // Calculo automatico
-            let subtotal = (cantidad * precio);
-            let iva = Math.round(subtotal * .16);
-            let total = ((subtotal - descuento) + iva);
-
-            if (tipoComprobanteHolder.value === 'P') {
-              vUnitarioConcepto.value = '0';
-              subtotalConcepto.value = '0';
-              ivaConcepto.value = '0';
-              totalConcepto.value = '0';
-            } else {
-              subtotalConcepto.value = `${subtotal / 100}`;
-              ivaConcepto.value = `${iva / 100}`;
-              totalConcepto.value = `${total / 100}`;
-            }
-
-            calculateTotals();
+            totalCalc();
           }
 
-          const conceptoSettings = {
-            dataType: 'json',
-            deferRequestBy: 150,
-            showNoSuggestionNotice: true,
-            noSuggestionNotice: 'No se encontraron resultados',
-            triggerSelectOnValidInput: true,
-            minChars: 1,
-            paramName: 'q',
-            params: {},
-            autoSelectFirst: true,
-            onSearchStart: function (params) {
-              if (params.q.includes('/')) {
-                params.q = params.q.split(' / ')[1].trim();
-              }
-              return params;
-            },
-          };
+          function totalCalc() {
+            let subtotalValue = 0;
+            let totalValue = 0;
+            let impuestosValue = 0;
 
-          $(cpsConcepto).autocomplete({
-            ...conceptoSettings,
-            serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/claveprodserv.json`,
-            transformResult: function (claves) {
-              return {
-                suggestions: claves.map(clave => {
-                  return {
-                    value: `${clave.claveProdServ} / ${clave.descripcion}`,
-                    data: clave.id
-                  }
-                })
-              }
+            for (const concepto of conceptoTable.collection) {
+              subtotalValue += Number(moneyRawValue(concepto.cells[6].firstElementChild.value));
+              impuestosValue += Number(moneyRawValue(concepto.cells[11].firstElementChild.value));
+              totalValue += subtotalValue + impuestosValue;
             }
-          });
 
-          $(cuConcepto).autocomplete({
-            ...conceptoSettings,
-            serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/clave_unidad.json`,
-            transformResult: function (claves) {
-              return {
-                suggestions: claves.map(clave => {
-                  return {
-                    value: `${clave.claveUnidad} / ${clave.nombre}`,
-                    data: clave.id
-                  }
-                })
-              }
-            }
-          });
+            subtotalInput.element.value = moneyFormat(subtotalValue);
+            totalInput.element.value = moneyFormat(totalValue);
+            totalImporteImpuestosInput.element.value = totalImpuestosInput.element.value = moneyFormat(impuestosValue);
+          }
         }
 
-        // Comprobar que tipo de comprobante antes del submit
-        theForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          const pagoRemovable = document.querySelectorAll('.pago');
-          if (tipoComprobanteHolder.value === 'P') {
-            pagoRemovable.forEach(item => item.parentNode.removeChild(item));
-          }
-          this.submit();
+        function moneyFormat(value) {
+          return value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        }
+
+        function moneyRawValue(value) {
+          return value.replace(/,/g, '');
+        }
+
+        $clienteSelect2.on('select2:select', function () {
+          $receptorSelect2.empty();
+
+          $.get('clientes/rfc', {q: this.value})
+              .done(({results}) => {
+                results.forEach(result => {
+                  $receptorSelect2.append(new Option(result.text, result.id, false, false));
+                });
+
+                $receptorSelect2.trigger('change');
+              })
         });
 
-        function calculateTotals() {
-          if (!conceptoHolder.childElementCount) return;
-          let subtotalColumn = conceptoHolder.getElementsByClassName('subtotal-column');
-          let descuentoColumn = conceptoHolder.getElementsByClassName('descuento-column');
-          let ivaColumn = conceptoHolder.getElementsByClassName('iva-column');
-          let totalColumn = conceptoHolder.getElementsByClassName('total-column');
-
-          if (tipoComprobanteHolder.value === 'P') {
-            subtotalHolder.value = '0';
-            descuentoHolder.value = '0';
-            ivaHolder.value = '0';
-            totalHolder.value = '0';
-          } else {
-            subtotalHolder.value = [...subtotalColumn]
-                .map(row => Number(clearPrice(row.value)))
-                .reduce((a, b) => a + b)
-                .toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            descuentoHolder.value = [...descuentoColumn]
-                .map(row => Number(clearPrice(row.value)))
-                .reduce((a, b) => a + b)
-                .toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            ivaHolder.value = [...ivaColumn]
-                .map(row => Number(clearPrice(row.value)))
-                .reduce((a, b) => a + b)
-                .toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            totalHolder.value = [...totalColumn]
-                .map(row => Number(clearPrice(row.value)))
-                .reduce((a, b) => a + b)
-                .toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          }
-        }
-
-
-        function clearPrice(textPrice) {
-          return textPrice.replace(/(?!-)[^0-9.]/g, '');
-        }
-
-        function clearData(e) {
-          if ((e.keyCode === 8 && !this.value.trim()) || !e.target.value.trim()) {
-            conceptoHolder.innerHTML = '';
-            appendRow();
-            tipoCambioHolder.removeAttribute('readonly');
-            pagosHolder.selectedIndex = 0;
-            pagosHolder.removeAttribute('required');
-            pagosHolder.innerHTML = '';
-            subtotalHolder.value = 0;
-            descuentoHolder.value = 0;
-            ivaHolder.value = 0;
-            totalHolder.value = 0;
-          }
-        }
-
-        function checkTipoComprobante() {
-          const pagoRemovable = document.querySelectorAll('.pago');
-          if (tipoComprobanteHolder.value === 'P') {
-            pagoRemovable.forEach(function (item) {
-              let hasInput = item.querySelector('input');
-              if (hasInput) {
-                hasInput.value = '';
-                hasInput.removeAttribute('required');
-                hasInput.dispatchEvent(new Event('input'));
-              }
-              item.classList.add('hidden');
-            });
-          } else {
-            pagoRemovable.forEach(function (item) {
-              let hasInput = item.querySelector('input');
-              if (hasInput) {
-                hasInput.setAttribute('required', 'required');
-              }
-              item.classList.remove('hidden');
-            });
-          }
-        }
-
-        $(document).on('keyup change', '#appbundle_contabilidad_facturacion_folioCotizacion', clearData);
-      })(jQuery);
+      })(jQuery)
     </script>
 {% endblock %}

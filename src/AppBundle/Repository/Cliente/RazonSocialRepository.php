@@ -10,9 +10,8 @@ namespace AppBundle\Repository\Cliente;
  */
 class RazonSocialRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findLikeRfc($rfc)
+    public function findLikeRfc($cliente)
     {
-
         return $this->createQueryBuilder('rfc')
             ->select('rfc', 'cl')
             ->leftJoin('rfc.cliente', 'cl')
@@ -22,5 +21,17 @@ class RazonSocialRepository extends \Doctrine\ORM\EntityRepository
             ->setMaxResults(10)
             ->getQuery()
             ->getResult();
+    }
+
+    public function getRFCsFromClient($cliente)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT rfc.id, rfc.razonSocial AS text '.
+                'FROM AppBundle:Cliente\RazonSocial rfc '.
+                'WHERE IDENTITY(rfc.cliente) = ?1'
+            )
+            ->setParameter(1, $cliente)
+            ->getArrayResult();
     }
 }

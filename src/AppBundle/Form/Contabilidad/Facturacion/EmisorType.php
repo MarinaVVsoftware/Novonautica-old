@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 use Vich\UploaderBundle\Form\Type\VichImageType;
@@ -21,7 +23,7 @@ class EmisorType extends AbstractType
             ->add('alias')
             ->add('rfc', TextType::class, [
                 'label' => 'RFC',
-                'attr' => ['placeholder' => 'AAA010101AAA']
+                'attr' => ['placeholder' => 'AAA010101AAA'],
             ])
             ->add('regimenFiscal', ChoiceType::class, [
                 'choices' => [
@@ -46,40 +48,50 @@ class EmisorType extends AbstractType
                     'De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales' => '629',
                     'Enajenación de acciones en bolsa de valores' => '630',
                     'Régimen de los ingresos por obtención de premios' => '615',
-                ]
+                ],
             ])
             ->add('nombre', TextType::class, [
                 'label' => 'Razón social',
-                'attr' => ['placeholder' => 'SERVICIOS EMPRESARIALES SC']
-            ])
-            ->add('logoFile', VichImageType::class, [
-                'label' => 'Logo',
-                'download_label' => 'Ver Logo',
-                'allow_delete' => false,
-                'required' => false
-            ])
-            ->add('cerFile', VichFileType::class, [
-                'label' => 'Archivo CER',
-                'allow_delete' => false,
-                'download_label' => '.cer',
-                'required' => false
-            ])
-            ->add('keyFile', VichFileType::class, [
-                'label' => 'Archivo KEY',
-                'allow_delete' => false,
-                'download_label' => '.key',
-                'required' => false
+                'attr' => ['placeholder' => 'SERVICIOS EMPRESARIALES SC'],
             ])
             ->add('usuarioPAC', TextType::class, ['label' => 'Usuario PAC'])
             ->add('passwordPAC', TextType::class, ['label' => 'Password PAC'])
             ->add('emails', TextType::class, [
                 'label' => 'Emails de recepción (Separados por comas)',
-                'attr' => ['placeholder' => 'john@marina.com, jperez@novonautica.com']
+                'attr' => ['placeholder' => 'john@marina.com, jperez@novonautica.com'],
             ])
             ->add('password')
             ->add('codigoPostal')
-            ->add('direccion')
-        ;
+            ->add('direccion');
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $form = $event->getForm();
+                $emisor = $event->getData();
+
+                $form
+                    ->add(
+                        'logoFile',
+                        VichImageType::class, [
+                        'label' => 'Logo',
+                        'download_label' => 'Ver Logo',
+                        'allow_delete' => false,
+                        'required' => null === $emisor->getId() ? true : false,
+                    ])
+                    ->add('cerFile', VichFileType::class, [
+                        'label' => 'Archivo CER',
+                        'allow_delete' => false,
+                        'download_label' => '.cer',
+                        'required' => null === $emisor->getId() ? true : false,
+                    ])
+                    ->add('keyFile', VichFileType::class, [
+                        'label' => 'Archivo KEY',
+                        'allow_delete' => false,
+                        'download_label' => '.key',
+                        'required' => null === $emisor->getId() ? true : false,
+                    ]);
+            });
     }
 
     /**
@@ -88,7 +100,7 @@ class EmisorType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Contabilidad\Facturacion\Emisor'
+            'data_class' => 'AppBundle\Entity\Contabilidad\Facturacion\Emisor',
         ));
     }
 

@@ -10,16 +10,16 @@ namespace AppBundle\Repository\Contabilidad\Facturacion\Concepto;
  */
 class ClaveProdServRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findAllLike($query)
+    public function findAllLikeSelect2($query)
     {
-        $qb = $this->createQueryBuilder('cps');
-
-        return $qb
-            ->where($qb->expr()->like('cps.descripcion', ':query'))
-            ->orWhere($qb->expr()->like('cps.claveProdServ', ':query'))
-            ->setParameter('query', "%{$query}%")
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT cps.id, CONCAT(cps.descripcion, \' - \', cps.claveProdServ) AS text '.
+                'FROM AppBundle:Contabilidad\Facturacion\Concepto\ClaveProdServ cps '.
+                'WHERE cps.descripcion LIKE ?1 OR cps.claveProdServ LIKE ?1'
+            )
+            ->setParameter(1, "%{$query}%")
             ->setMaxResults(10)
-            ->getQuery()
-            ->getResult();
+            ->getArrayResult();
     }
 }

@@ -34,7 +34,7 @@ class ClaveUnidadTransformer implements DataTransformerInterface
      */
     public function transform($claveUnidad)
     {
-        return $claveUnidad === null ? null : $claveUnidad->getClaveUnidad() . ' / ' . $claveUnidad->getNombre();
+        return $claveUnidad === null ? null : $claveUnidad->getClaveUnidad() . ' - ' . $claveUnidad->getNombre();
     }
 
     /**
@@ -49,7 +49,7 @@ class ClaveUnidadTransformer implements DataTransformerInterface
     {
         if (!$claveUnidadString) { return; }
 
-        $claveUnidadCode = explode(' / ', $claveUnidadString);
+        $claveUnidadCode = explode(' - ', $claveUnidadString);
 
         $entity = $this->em
             ->getRepository(ClaveUnidad::class)

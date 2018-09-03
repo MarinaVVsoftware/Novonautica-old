@@ -261,4 +261,12 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
 
         return $factura;
     }
+
+    public function generateFolio()
+    {
+        return $this->createQueryBuilder('facturacion')
+            ->select('COUNT(facturacion.id)')
+            ->getQuery()
+            ->getSingleScalarResult() + 1000;
+    }
 }
