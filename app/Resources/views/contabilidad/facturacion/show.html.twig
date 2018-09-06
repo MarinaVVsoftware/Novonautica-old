@@ -11,7 +11,7 @@
                                 <div class="col-sm-6">
                                     <h3 class="panel-title">
                                         Emisor: {{ factura.emisor.alias }}
-                                        {% if factura.estatus == 0 %}
+                                        {% if factura.cancelada == 1 %}
                                             <span class="label label-danger">CANCELADA</span>
                                         {% endif %}
                                     </h3>
@@ -79,13 +79,13 @@
                                 </tr>
                                 <tr>
                                     <td rowspan="3" colspan="7">
-                                        <strong>{{ factura.razonSocial }}</strong>
+                                        <strong>{{ factura.receptor.razonSocial }}</strong>
                                         <br>
-                                        RFC: {{ factura.rfc }}
+                                        RFC: {{ factura.receptor.rfc }}
                                         <br>
-                                        {{ factura.direccionFiscal }}
+                                        {{ factura.receptor.direccion }}
                                     </td>
-                                    <td colspan="3" class="text-center">{{ factura.folioFiscal }}</td>
+                                    <td colspan="3" class="text-center">{{ factura.uuidFiscal }}</td>
                                 </tr>
                                 <tr class="text-center">
                                     <td colspan="3">
@@ -128,8 +128,8 @@
                                         <td>{{ concepto.claveProdServ.claveProdServ ~ ' / ' ~ concepto.claveProdServ.descripcion }}</td>
                                         <td>{{ concepto.descripcion }}</td>
                                         <td>${{ (concepto.valorunitario / 100)|number_format(2) }}</td>
-                                        <td>IVA ${{ (concepto.iva / 100)|number_format(2) }}</td>
-                                        <td>${{ (concepto.subtotal / 100)|number_format(2) }}</td>
+                                        <td>IVA ${{ (concepto.impuestoImporte / 100)|number_format(2) }}</td>
+                                        <td>${{ (concepto.importe / 100)|number_format(2) }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -149,7 +149,7 @@
                                 <tr>
                                     <td colspan="2">IVA(16%)</td>
                                     <td colspan="2">
-                                        $ {{ (factura.iva / 100)|number_format(2) }} {{ factura.moneda }}</td>
+                                        $ {{ (factura.impuesto / 100)|number_format(2) }} {{ factura.moneda }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">TOTAL</td>

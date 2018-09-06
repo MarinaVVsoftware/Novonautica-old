@@ -21,23 +21,28 @@
                 <div class="col-md-12">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Listado de categorías</h3>
+                            <h3 class="panel-title">
+                                Complementos de pago
+                                <small>factura folio: {{ factura.folio }}</small>
+
+                                <a href="{{ path('contabilidad_facturacion_index') }}"
+                                   class="btn btn-contorno-azul pull-right">
+                                    Regresar
+                                </a>
+                            </h3>
                         </div>
                         <div class="panel-body">
                             <table class="table table-novo">
                                 <thead>
                                 <tr>
                                     <th>Folio de factura</th>
-                                    <th>RFC Emisor / Emisor</th>
-                                    <th>RFC Receptor / Receptor</th>
+                                    <th>Folio de pago</th>
                                     <th>Monto facturado</th>
                                     <th>Fecha</th>
                                     <th width="10%">Archivos</th>
                                     <th width="10%" class="no-sort"></th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -77,34 +82,28 @@
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
       (function ($, datatableSettings) {
-        const $eliminar = $('.ventanaborrar');
-
         $('.table-novo').DataTable({
           ...datatableSettings,
-          ajax: 'facturas-dt',
-          order: [[6, 'desc']],
+          ajax: {
+            url: 'pagos-dt',
+            data(d) {
+              d.factura = '{{ factura.id }}';
+            },
+          },
+          order: [[5, 'desc']],
           createdRow: function (row, data) {
-            row.classList.add('text-center');
-            let url = '{{ app.request.requestUri }}';
             let xmlRoute = '{{ asset('timbrados/') }}';
-            row.cells[5].innerHTML = '';
             let actionsInner = '';
 
-            if (data[6]['metodoPago'] === 'PPD') {
-              actionsInner += `<li><a href="pagos/${data[6].id}/new">Registrar pago</a></li>`;
-
-              row.cells[5].innerHTML += `<a href="pagos/${data[6].id}" class="btn btn-xs btn-azul btn-block">Pagos</a>`;
-            }
-
             actionsInner += `
-            <li><a href="${url}${data[6]['id']}">Detalle</a></li>
-            <li><a href="${url}${data[6]['id']}/reenviar">Reenviar</a></li>
+            <li><a href="${data[5].id}">Detalle</a></li>
+            <li><a href="${data[5].id}/reenviar">Reenviar</a></li>
             `;
 
-            if (!data[6]['status']) {
+            if (!data[5].status) {
               actionsInner += `
                 {% if is_granted(expression('has_role("CONTABILIDAD_CANCEL") or (user.isAdmin())')) %}
-                <li><a href="#" data-url="${url}${data[6]['id']}/cancelar"
+                <li><a href="#" data-url="${data[5].id}/cancelar"
                  data-toggle="modal"
                  data-target=".ventanaborrar"">Cancelar
                  </a></li>
@@ -116,14 +115,14 @@
               `;
             }
 
-            row.cells[5].innerHTML += `
-                <a href="${xmlRoute}${data[5]['xml']}"
+            row.cells[4].innerHTML = `
+                <a href="${xmlRoute}${data[4]['xml']}"
                  target="_blank" class="btn btn-xs btn-azul btn-block">XML</a>
-                <a href="${url}${data[5]['pdf']}/pdf"
+                <a href="${data[5].id}/pdf"
                  target="_blank" class="remove-motor btn btn-xs btn-azul btn-block">PDF</a>
             `;
 
-            row.cells[6].innerHTML = `
+            row.cells[5].innerHTML = `
                 <div class="dropdown">
                   <button class="btn btn-azul btn-xs btn-block dropdown-toggle" type="button" data-toggle="dropdown">
                     Acciones
@@ -136,13 +135,6 @@
             `;
           },
         });
-
-
-        $eliminar.on('show.bs.modal', function (e) {
-          let url = $(e.relatedTarget).data('url');
-          $(this).find('.confirm-cancel').attr('href', url);
-        });
-
       })(jQuery, datatablesSettings);
     </script>
 {% endblock %}

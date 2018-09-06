@@ -167,6 +167,7 @@ class ConceptoType extends AbstractType
                 'label' => false,
                 'class' => Facturacion\Concepto\ClaveProdServ::class,
                 'choices' => $claves,
+                'choice_label' => 'descripcion',
                 'constraints' => [
                     new NotNull(['message' => 'Por favor selecciona una clave'])
                 ]
@@ -187,6 +188,7 @@ class ConceptoType extends AbstractType
                 'label' => false,
                 'class' => Facturacion\Concepto\ClaveUnidad::class,
                 'choices' => $claves,
+                'choice_label' => 'nombre',
                 'constraints' => [
                     new NotNull(['message' => 'Por favor selecciona una clave'])
                 ]

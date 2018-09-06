@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
-class FacturacionType extends AbstractType
+class PreviewType extends AbstractType
 {
     /**
      * @var EntityManagerInterface

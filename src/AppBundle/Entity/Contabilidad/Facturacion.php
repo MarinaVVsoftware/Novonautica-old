@@ -47,7 +47,7 @@ class Facturacion
     /**
      * @var string
      *
-     * @ORM\Column(name="folio", type="string", length=20)
+     * @ORM\Column(name="folio", type="integer")
      */
     private $folio;
 
@@ -83,7 +83,6 @@ class Facturacion
      * @var string
      *
      * @ORM\Column(name="moneda", type="string", length=3)
-     *
      */
     private $moneda;
 
@@ -170,11 +169,11 @@ class Facturacion
      *-----------------------------------------------------------------------------------------------*/
 
     /**
-     * @var string $folioFiscal = UUID de timbrado;
+     * @var string $uuidFiscal = UUID de timbrado;
      *
-     * @ORM\Column(name="folio_fiscal", type="string")
+     * @ORM\Column(name="uuid_fiscal", type="string")
      */
-    private $folioFiscal;
+    private $uuidFiscal;
 
     /**
      * @var string $fechaTimbrado = representacion_impresa_fecha_timbrado
@@ -250,7 +249,7 @@ class Facturacion
 
 
     /*------------------------------------------------------------------------------------------------
-     * DATOS DE FACTURA
+     * DATOS DE ENTIDAD
      *-----------------------------------------------------------------------------------------------*/
 
     // private $cotizacion Se requiere un input de cotizaciones para sacar los pagos?
@@ -327,7 +326,6 @@ class Facturacion
 
     public static $metodosPagos = [
         'Pago en una sola exhibición' =>        'PUE',
-        'Pago inicial y parcialidades' =>       'PIP',
         'Pago en parcialidades o diferido' =>   'PPD',
     ];
 
@@ -395,8 +393,13 @@ class Facturacion
     ];
 
     public static $factores = [
-        'Tasa' => 'TASA',
-        'Cuota' => 'CUOTA',
+        'Tasa' => 'Tasa',
+        'Cuota' => 'Cuota',
+    ];
+
+    public static $monedas = [
+        'USD' => 'USD',
+        'MXN' => 'MXN'
     ];
 
     /**
@@ -407,7 +410,6 @@ class Facturacion
         $this->formaPago = self::$formasPagos['Efectivo'];
         $this->metodoPago = self::$metodosPagos['Pago en una sola exhibición'];
         $this->usoCFDI = self::$CFDIS['Gastos en general'];
-        $this->tipoCambio = self::$tiposComprobantes['Ingreso'];
         $this->impuesto = self::$impuestos['IVA'];
         $this->tipoFactor = self::$factores['Tasa'];
         $this->importe = 0;
@@ -415,9 +417,9 @@ class Facturacion
 
         $this->tasa = '0.160000';
         $this->lugarExpedicion = '77500';
-        $this->tipoCambio = 1.00;
-        $this->serie = 'A';
-        $this->moneda = 'MXN';
+        $this->tipoCambio = 100;
+        $this->serie = 'A'; // FIXME De donde sale la serie?
+        $this->moneda = self::$monedas['MXN'];
 
         $this->subtotal = 0;
         $this->total = 0;
@@ -426,7 +428,6 @@ class Facturacion
         $this->isCancelada = false;
         $this->conceptos = new ArrayCollection();
     }
-
 
     /**
      * Get id.
@@ -471,7 +472,7 @@ class Facturacion
     /**
      * Set folio.
      *
-     * @param string $folio
+     * @param int $folio
      */
     public function setFolio($folio)
     {
@@ -481,7 +482,7 @@ class Facturacion
     /**
      * Get folio.
      *
-     * @return string
+     * @return int
      */
     public function getFolio()
     {
@@ -508,12 +509,22 @@ class Facturacion
         return $this->formaPago;
     }
 
+    public function getFormaPagoValue()
+    {
+        return array_flip(self::$formasPagos)[$this->formaPago];
+    }
+
     /**
      * @return string
      */
     public function getUsoCFDI()
     {
         return $this->usoCFDI;
+    }
+
+    public function getUsoCFDIValue()
+    {
+        return array_flip(self::$CFDIS)[$this->usoCFDI];
     }
 
     /**
@@ -564,6 +575,11 @@ class Facturacion
         return $this->metodoPago;
     }
 
+    public function getMetodoPagoValue()
+    {
+        return array_flip(self::$metodosPagos)[$this->metodoPago];
+    }
+
     /**
      * Set moneda.
      *
@@ -582,6 +598,11 @@ class Facturacion
     public function getMoneda()
     {
         return $this->moneda;
+    }
+
+    public function getMonedaValue()
+    {
+        return array_flip(self::$monedas)[$this->moneda];
     }
 
     /**
@@ -642,6 +663,11 @@ class Facturacion
     public function getTipoComprobante()
     {
         return $this->tipoComprobante;
+    }
+
+    public function getTipoComprobanteValue()
+    {
+        return array_flip(self::$tiposComprobantes)[$this->tipoComprobante];
     }
 
     /**
@@ -783,11 +809,11 @@ class Facturacion
     /**
      * Set folioFiscal.
      *
-     * @param string $folioFiscal
+     * @param string $uuidFiscal
      */
-    public function setFolioFiscal($folioFiscal)
+    public function setUuidFiscal($uuidFiscal)
     {
-        $this->folioFiscal = $folioFiscal;
+        $this->uuidFiscal = $uuidFiscal;
     }
 
     /**
@@ -795,9 +821,9 @@ class Facturacion
      *
      * @return string
      */
-    public function getFolioFiscal()
+    public function getUuidFiscal()
     {
-        return $this->folioFiscal;
+        return $this->uuidFiscal;
     }
 
     /**
@@ -1087,6 +1113,7 @@ class Facturacion
      */
     public function addConcepto(Concepto $concepto)
     {
+        $concepto->setFactura($this);
         $this->conceptos[] = $concepto;
     }
 

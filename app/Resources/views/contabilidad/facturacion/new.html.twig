@@ -148,35 +148,53 @@
                 <div class="col-sm-12">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
-                            <h4 class="panel-title">Nueva factura</h4>
+                            <h4 class="panel-title">
+                                Nueva factura
+                                <span class="factura-folio pull-right">Folio: {{ factura.folio }}</span>
+                            </h4>
                         </div>
                         <div class="panel-body" style="min-height: initial">
                             <div class="row">
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     {{ form_row(form.emisor) }}
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     {{ form_row(form.cliente) }}
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     {{ form_row(form.receptor) }}
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-body" style="min-height: initial">
+                            <div class="row">
                                 <div class="col-sm-3">
                                     {{ form_row(form.lugarExpedicion) }}
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    {{ form_row(form.condicionesPago) }}
-                                </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     {{ form_row(form.metodoPago) }}
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     {{ form_row(form.tipoComprobante) }}
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     {{ form_row(form.formaPago) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{ form_row(form.moneda) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{ form_row(form.tipoCambio) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{ form_row(form.condicionesPago) }}
                                 </div>
                             </div>
                         </div>
@@ -321,6 +339,11 @@
                                     <button type="submit" class="btn btn-azul pull-right">
                                         Facturar
                                     </button>
+                                    <button id="preview-btn"
+                                            type="button"
+                                            class="btn btn-contorno-azul">
+                                        Preview
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -349,14 +372,11 @@
 
           this.elementListener = elementListener;
 
-          this.collection = [];
-
           Array
               .from(this.prototypeHolder.querySelectorAll('tr'))
               .forEach(element => {
-                this.elementListener(element);
                 this.appendRemoveButton(element);
-                this.collection.push(element);
+                this.elementListener(element);
               });
 
           this.elementCounter = this.prototypeHolder.childElementCount;
@@ -372,10 +392,9 @@
         addElement() {
           let element = this._getPrototypeElement();
 
-          this.elementListener(element);
           this.appendRemoveButton(element);
+          this.elementListener(element);
           this.prototypeHolder.appendChild(element);
-          this.collection.push(element);
 
           return this.prototypeHolder.childElementCount;
         }
@@ -422,6 +441,8 @@
     </script>
     <script>
       (function ($) {
+        const facturaForm = document.getElementById('appbundle_contabilidad_facturacion');
+        const previewButton = document.getElementById('preview-btn');
         const clienteSelect = document.getElementById('appbundle_contabilidad_facturacion_cliente');
         const receptorSelect = document.getElementById('appbundle_contabilidad_facturacion_receptor');
         const conceptoTable = new ElementCollection('#add', '#prototype-holder', elementListener);
@@ -442,6 +463,7 @@
           const baseInput = new Cleave(element.cells[7].firstElementChild, {numeral: true});
           const tasaCuotaInput = element.cells[10].firstElementChild;
           const importeImpuestoInput = new Cleave(element.cells[11].firstElementChild, {numeral: true});
+          const removeButton = element.cells[12].firstElementChild;
 
           const $cpsInput = $(element.cells[2].firstElementChild).select2({ajax: {url: 'clavesprodserv'}});
           const $claveUnidadInput = $(element.cells[3].firstElementChild).select2({ajax: {url: 'claves-unidad'}});
@@ -449,6 +471,7 @@
           cantidadInput.addEventListener('input', importeCalc);
           valorUnitarioInput.element.addEventListener('input', importeCalc);
           tasaCuotaInput.addEventListener('input', impuestoCalc);
+          removeButton.addEventListener('click', totalCalc);
 
           function importeCalc() {
             let importeValue = cantidadInput.value * Number(valorUnitarioInput.getRawValue());
@@ -474,10 +497,10 @@
             let totalValue = 0;
             let impuestosValue = 0;
 
-            for (const concepto of conceptoTable.collection) {
+            for (const concepto of conceptoTable.prototypeHolder.children) {
               subtotalValue += Number(moneyRawValue(concepto.cells[6].firstElementChild.value));
               impuestosValue += Number(moneyRawValue(concepto.cells[11].firstElementChild.value));
-              totalValue += subtotalValue + impuestosValue;
+              totalValue = subtotalValue + impuestosValue;
             }
 
             subtotalInput.element.value = moneyFormat(subtotalValue);
@@ -505,6 +528,13 @@
 
                 $receptorSelect2.trigger('change');
               })
+        });
+
+        $(previewButton).on('click', function () {
+          $('<a>')
+              .attr('href', 'preview?' + $('form').serialize())
+              .attr('target', '_blank')[0]
+              .click();
         });
 
       })(jQuery)

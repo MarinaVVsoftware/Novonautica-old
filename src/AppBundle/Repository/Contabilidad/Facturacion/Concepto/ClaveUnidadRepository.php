@@ -14,7 +14,7 @@ class ClaveUnidadRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->getEntityManager()
             ->createQuery(
-                'SELECT claveUnidad.id, CONCAT(claveUnidad.nombre, \' - \', claveUnidad.claveUnidad) AS text '.
+                'SELECT claveUnidad.id, claveUnidad.nombre AS text '.
                 'FROM AppBundle:Contabilidad\Facturacion\Concepto\ClaveUnidad claveUnidad '.
                 'WHERE claveUnidad.nombre LIKE ?1 OR claveUnidad.claveUnidad LIKE ?1'
             )

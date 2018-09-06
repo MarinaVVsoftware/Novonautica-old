@@ -14,7 +14,7 @@ class ClaveProdServRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->getEntityManager()
             ->createQuery(
-                'SELECT cps.id, CONCAT(cps.descripcion, \' - \', cps.claveProdServ) AS text '.
+                'SELECT cps.id, cps.descripcion AS text '.
                 'FROM AppBundle:Contabilidad\Facturacion\Concepto\ClaveProdServ cps '.
                 'WHERE cps.descripcion LIKE ?1 OR cps.claveProdServ LIKE ?1'
             )

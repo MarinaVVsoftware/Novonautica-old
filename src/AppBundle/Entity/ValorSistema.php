@@ -155,6 +155,13 @@ class ValorSistema
     private $terminosAstillero;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="folio_factura_astillero", type="integer")
+     */
+    private $folioFacturaAstillero;
+
+    /**
      * Generate a token
      *
      * @return string (100 characters)
@@ -542,5 +549,21 @@ class ValorSistema
     public function getDiasHabilesCombustible()
     {
         return $this->diasHabilesCombustible;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFolioFacturaAstillero()
+    {
+        return $this->folioFacturaAstillero;
+    }
+
+    /**
+     * @param int $folioFacturaAstillero
+     */
+    public function setFolioFacturaAstillero($folioFacturaAstillero)
+    {
+        $this->folioFacturaAstillero = $folioFacturaAstillero;
     }
 }

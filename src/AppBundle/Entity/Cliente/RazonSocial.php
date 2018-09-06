@@ -52,6 +52,13 @@ class RazonSocial
     /**
      * @var string
      *
+     * @ORM\Column(name="uso_cfdi", type="string", length=10)
+     */
+    private $usoCFDI;
+
+    /**
+     * @var string
+     *
      * @Assert\NotBlank(message="Este campo no puede estar vacio")
      *
      * @Groups({"group1"})
@@ -138,6 +145,22 @@ class RazonSocial
     }
 
     /**
+     * @return string
+     */
+    public function getUsoCFDI()
+    {
+        return $this->usoCFDI;
+    }
+
+    /**
+     * @param string $usoCFDI
+     */
+    public function setUsoCFDI($usoCFDI)
+    {
+        $this->usoCFDI = $usoCFDI;
+    }
+
+    /**
      * Set direccion
      *
      * @param string $direccion
@@ -151,6 +174,7 @@ class RazonSocial
         return $this;
     }
 
+
     /**
      * Get direccion
      *
@@ -160,7 +184,6 @@ class RazonSocial
     {
         return $this->direccion;
     }
-
 
     /**
      * Set correos
