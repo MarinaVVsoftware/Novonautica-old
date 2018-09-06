@@ -24,10 +24,10 @@
                         <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
                     </li>
                     <li role="presentation">
-                        <a href="#totales" aria-controls="totales" role="tab" data-toggle="tab">Totales (USD)</a>
+                        <a href="#totales" aria-controls="totales" role="tab" data-toggle="tab">Totales (MXN)</a>
                     </li>
                     <li role="presentation">
-                        <a href="#totalesmxn" aria-controls="totalesmxn" role="tab" data-toggle="tab">Totales (MXN)</a>
+                        <a href="#totalesusd" aria-controls="totalesusd" role="tab" data-toggle="tab">Totales (USD)</a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -114,6 +114,12 @@
                     </div>
                     <div role="tabpanel" class="tab-pane" id="totales">
                         <div class="row">
+                            <div class="col-sm-12">
+                                <span>Tipo de cotización:</span>
+                                {{ marinaHumedaCotizacionAdicional.tipoNombre }}
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-sm-12 text-right">
                                 <span>Tipo de cambio:</span>
                                 <div id="tipocambio" class="">{{ (marinaHumedaCotizacionAdicional.dolar/100)|number_format(2) }}
@@ -123,7 +129,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <small>Precios en USD</small>
+                                <small>Precios en MXN</small>
                             </div>
                         </div>
                         <div class="row">
@@ -146,10 +152,10 @@
                                                 <td>{{ servicio.cantidad }}</td>
                                                 <td>{{ servicio.marinahumedaservicio }}</td>
                                                 <td>{{ servicio.marinahumedaservicio.unidad }}</td>
-                                                <td>$ {{ (servicio.precio/100)|number_format(2) }}</td>
-                                                <td>$ {{ (servicio.subtotal/100)|number_format(2) }}</td>
-                                                <td>$ {{ (servicio.iva/100)|number_format(2) }}</td>
-                                                <td>$ {{ (servicio.total/100)|number_format(2) }}</td>
+                                                <td>$ {{ (servicio.precio/100)|number_format(2) }} <small>MXN</small></td>
+                                                <td>$ {{ (servicio.subtotal/100)|number_format(2) }} <small>MXN</small></td>
+                                                <td>$ {{ (servicio.iva/100)|number_format(2) }} <small>MXN</small></td>
+                                                <td>$ {{ (servicio.total/100)|number_format(2) }} <small>MXN</small></td>
                                             </tr>
                                     {% endfor %}
                                     </tbody>
@@ -173,7 +179,7 @@
                                 <p class="letra-azul">Sub-Total:</p>
                                 <p>
                                     $ <span id="gransubtot">{{ (marinaHumedaCotizacionAdicional.subtotal/100)|number_format(2,'.',',') }}</span>
-                                    <span class="tipo-letra2">USD</span>
+                                    <span class="tipo-letra2">MXN</span>
                                 </p>
                             </div>
                         </div>
@@ -187,7 +193,7 @@
                                 <p class="letra-azul">I.V.A:</p>
                                 <p>
                                     $ <span>{{ (marinaHumedaCotizacionAdicional.ivatotal/100)|number_format(2,'.',',') }}</span>
-                                    <span class="tipo-letra2">USD</span>
+                                    <span class="tipo-letra2">MXN</span>
                                 </p>
                             </div>
                         </div>
@@ -201,7 +207,7 @@
                                 <p class="letra-azul">Total:</p>
                                 <p>
                                     $ <span>{{ (marinaHumedaCotizacionAdicional.total/100)|number_format(2,'.',',') }}</span>
-                                    <span class="tipo-letra2">USD</span>
+                                    <span class="tipo-letra2">MXN</span>
                                 </p>
                             </div>
                         </div>
@@ -211,7 +217,13 @@
                             </div>
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="totalesmxn">
+                    <div role="tabpanel" class="tab-pane" id="totalesusd">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <span>Tipo de cotización:</span>
+                                {{ marinaHumedaCotizacionAdicional.tipoNombre }}
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-sm-12 text-right">
                                 <span>Tipo de cambio:</span>
@@ -222,7 +234,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <small>Precios en MXN</small>
+                                <small>Precios en USD</small>
                             </div>
                         </div>
                         <div class="row">
@@ -273,7 +285,7 @@
                                 <p class="letra-azul">Sub-Total:</p>
                                 <p>
                                     $ <span id="gransubtot">{{ ((marinaHumedaCotizacionAdicional.subtotal/100) * (marinaHumedaCotizacionAdicional.dolar/100))|number_format(2) }}</span>
-                                    <span class="tipo-letra2">MXN</span>
+                                    <span class="tipo-letra2">USD</span>
                                 </p>
                             </div>
                         </div>
@@ -287,7 +299,7 @@
                                 <p class="letra-azul">I.V.A:</p>
                                 <p>
                                     $ <span id="graniva">{{ ((marinaHumedaCotizacionAdicional.ivatotal/100) *( marinaHumedaCotizacionAdicional.dolar/100))|number_format(2) }}</span>
-                                    <span class="tipo-letra2">MXN</span>
+                                    <span class="tipo-letra2">USD</span>
                                 </p>
                             </div>
                         </div>
@@ -301,7 +313,7 @@
                                 <p class="letra-azul">Total:</p>
                                 <p>
                                     $ <span id="grantot">{{ ((marinaHumedaCotizacionAdicional.total/100) * (marinaHumedaCotizacionAdicional.dolar/100))|number_format(2) }}</span>
-                                    <span class="tipo-letra2">MXN</span>
+                                    <span class="tipo-letra2">USD</span>
                                 </p>
                             </div>
                         </div>

@@ -102,9 +102,9 @@ class MHAdicionalDataTable extends AbstractDataTableHandler
                 $adicional->getId(),
                 $adicional->getCliente()->getNombre(),
                 $adicional->getBarco()->getNombre(),
-                '$ '.number_format($adicional->getSubtotal()/100,2).' USD',
-                '$ '.number_format($adicional->getIvatotal()/100,2).' USD',
-                '$ '.number_format($adicional->getTotal()/100,2).' USD',
+                '$ '.number_format($adicional->getSubtotal()/100,2).' MXN',
+                '$ '.number_format($adicional->getIvatotal()/100,2).' MXN',
+                '$ '.number_format($adicional->getTotal()/100,2).' MXN',
                 $adicional->getFecharegistro()?$adicional->getFecharegistro()->format('d/m/Y'):'',
                 $adicional->getId()
             ];

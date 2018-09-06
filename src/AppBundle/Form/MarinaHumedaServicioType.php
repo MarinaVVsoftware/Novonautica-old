@@ -27,7 +27,7 @@ class MarinaHumedaServicioType extends AbstractType
             ->add('precio',MoneyType::class,[
                 'required'=>false,
                 'attr' => ['class' => 'esdecimal'],
-                'currency' => 'USD',
+                'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
             ]);
