@@ -824,7 +824,9 @@
                                                    data-id="{{ serv.data.id }}"
                                                    data-nombre="{{ serv.data.nombre }}"
                                                    data-precio="{{ serv.data.precio }}"
-                                                   data-divisa="{{ serv.data.divisa }}">
+                                                   data-divisa="{{ serv.data.divisa }}"
+                                                   data-tipo_cantidad="{{ serv.data.tipoCantidad }}"
+                                                   data-dias_descuento="{{ serv.data.diasDescuento }}">
                                                     + {{ serv.data.nombre }}
                                                 </a>
                                             {% endfor %}
@@ -1288,17 +1290,28 @@
               calculaSubtotalesAstillero($('#cotizainspeccionar'));
               calculaSubtotalesAstillero($('#fila_estadia'));
               calculaProductosPorServicio();
+              calculaServiciosExtraAstillero();
               $('#loading').hide();
             }
           });
         }
-
-        function generateProductList() {
-          var idproducto = $('.select-busca-producto:focus option:selected').val();
-          var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-          astilleroBuscaProducto(idproducto, fila);
-        }
-
+          function generateProductList() {
+              var idproducto = $('.select-busca-producto:focus option:selected').val();
+              var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
+              astilleroBuscaProducto(idproducto, fila);
+          }
+          function calculaServiciosExtraAstillero(){
+              let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
+              servicios.forEach(servicio => agregaCantidadServicioAstillero(servicio));
+          }
+          function agregaCantidadServicioAstillero(fila){
+              if(Number(fila.childNodes[10].childNodes[0].value) === 1){
+                  let eslora = document.getElementById('eslora')?document.getElementById('eslora').dataset.valor:1;
+                  fila.childNodes[1].childNodes[0].value = eslora;
+                  $(fila).children('.valorcantidad').data('valor',eslora);
+                  calculaSubtotalesAstillero($(fila));
+              }
+          }
       })(jQuery);
 
       $('.btnPrevious').click(function () {

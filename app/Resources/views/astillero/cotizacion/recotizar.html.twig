@@ -86,7 +86,9 @@
                         </div>
                         <div class="col-sm-2">
                             <div class="barco-eslora">
-                                <label>Eslora</label><div class='info-input'>{{ astilleroCotizacion.barco.eslora }} </div>
+                                <label>Eslora</label><div id='eslora' class='info-input' data-valor="{{ astilleroCotizacion.barco.eslora }}">
+                                    {{ astilleroCotizacion.barco.eslora }}
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-5">
@@ -976,7 +978,8 @@
                                                    data-id="{{ serv.data.id }}"
                                                    data-nombre="{{ serv.data.nombre }}"
                                                    data-precio="{{ serv.data.precio }}"
-                                                   data-divisa="{{ serv.data.divisa }}">
+                                                   data-divisa="{{ serv.data.divisa }}"
+                                                   data-tipo_cantidad="{{ serv.data.tipoCantidad }}">
                                                     + {{ serv.data.nombre }}
                                                 </a>
                                             {% endfor %}
