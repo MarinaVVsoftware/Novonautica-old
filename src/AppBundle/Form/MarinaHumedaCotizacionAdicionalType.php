@@ -4,6 +4,8 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\Cliente;
 
+use AppBundle\Entity\MarinaHumedaCotizacionAdicional;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -42,7 +44,7 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
                 'label' => 'IVA %'
             ])
             ->add('subtotal', MoneyType::class,[
-                'currency' => 'USD',
+                'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
                 'label' => 'Sub-Total',
@@ -50,7 +52,7 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
                 'attr' => ['readonly' => true]
             ])
             ->add('ivatotal', MoneyType::class,[
-                'currency' => 'USD',
+                'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
                 'label' => 'IVA',
@@ -58,7 +60,7 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
                 'attr' => ['readonly' => true]
             ])
             ->add('total', MoneyType::class,[
-                'currency' => 'USD',
+                'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
                 'label_attr' => ['class' => 'letra-azul tipo-letra1'],
@@ -71,6 +73,9 @@ class MarinaHumedaCotizacionAdicionalType extends AbstractType
                 'allow_delete' => true,
                 'prototype' => true,
                 'by_reference' => false
+            ])
+            ->add('tipo', ChoiceType::class, [
+                'choices' => array_flip(MarinaHumedaCotizacionAdicional::getTipoList())
             ]);
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {

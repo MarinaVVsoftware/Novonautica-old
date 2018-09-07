@@ -30,13 +30,13 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="generales">
                             <div class="row">
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     {{ form_row(form.cliente) }}
                                     <div id="info-cliente">
 
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     {{ form_errors(form.barco) }}
                                     <div class="radio buscabarcomh">
                                         {{ form_label(form.barco) }}
@@ -49,6 +49,9 @@
                         </div>
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
+                                <div class="col-sm-4">
+                                    {{ form_row(form.tipo) }}
+                                </div>
                                 <div class="col-sm-4">
                                     <label>Dolar:</label>
                                     {{ form_widget(form.dolar) }}

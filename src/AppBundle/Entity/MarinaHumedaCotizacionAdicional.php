@@ -13,6 +13,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class MarinaHumedaCotizacionAdicional
 {
+    const EXENTO = 1;
+    const TASA_CERO = 2;
+    const IVA = 3;
+
     /**
      * @var int
      *
@@ -97,6 +101,19 @@ class MarinaHumedaCotizacionAdicional
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\MarinaHumedaCotizaServicios", mappedBy="marinahumedacotizacionadicional",cascade={"persist"})
      */
     private $mhcservicios;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="tipo", type="smallint")
+     */
+    private $tipo;
+
+    private static $tipoList = [
+        MarinaHumedaCotizacionAdicional::EXENTO => 'Exento',
+        MarinaHumedaCotizacionAdicional::TASA_CERO => 'Tasa cero',
+        MarinaHumedaCotizacionAdicional::IVA => 'Iva'
+    ];
 
     /**
      * Constructor
@@ -389,5 +406,36 @@ class MarinaHumedaCotizacionAdicional
     public function getMhcservicios()
     {
         return $this->mhcservicios;
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * @param int $tipo
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+    }
+
+    public static function getTipoList()
+    {
+        return self::$tipoList;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTipoNombre()
+    {
+        if (null === $this->tipo) { return null; }
+        return self::$tipoList[$this->tipo];
     }
 }
