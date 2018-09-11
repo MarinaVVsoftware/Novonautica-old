@@ -88,7 +88,7 @@ class FacturacionController extends Controller
 
                 return $this->json($results);
             } catch (HttpException $e) {
-                return $this->json($e->getMessage(), $e->getCode());
+                return $this->json($e->getMessage(), $e->getStatusCode());
             }
         }
     }
@@ -131,7 +131,7 @@ class FacturacionController extends Controller
                 );
 
                 return $this->render('contabilidad/facturacion/new.html.twig', [
-                    'facturacion' => $factura,
+                    'factura' => $factura,
                     'form' => $form->createView(),
                 ]);
             }
