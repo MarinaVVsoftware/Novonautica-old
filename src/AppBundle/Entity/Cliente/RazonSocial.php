@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Cliente;
 
 use AppBundle\Entity\Cliente;
+use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -158,6 +159,11 @@ class RazonSocial
     public function setUsoCFDI($usoCFDI)
     {
         $this->usoCFDI = $usoCFDI;
+    }
+
+    public function getUsoCFDIValue()
+    {
+        return array_flip(Facturacion::$CFDIS)[$this->usoCFDI];
     }
 
     /**
