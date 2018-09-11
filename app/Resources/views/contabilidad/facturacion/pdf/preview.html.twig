@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Factura PDF</title>
+    <title>Preview</title>
     <link rel="stylesheet"
           type="text/css"
           href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"
@@ -50,7 +50,7 @@
                     <td> FOLIO</td>
                 </tr>
                 <tr>
-                    <td>  {{ factura.folio }} </td>
+                    <td>000000</td>
                 </tr>
                 <tr style="background: #CCCCCC">
                     <td> LUGAR Y FECHA</td>
@@ -73,14 +73,27 @@
             </tr>
             <tr>
                 <td rowspan="3" colspan="7">
-                    <h4 style="margin: 0">{{ factura.receptor.razonSocial }}</h4>
-                    RFC: {{ factura.receptor.rfc }}
-                    <br>
-                    Dirección: {{ factura.receptor.direccion }}
-                    <br>
-                    Uso CFDI: {{ factura.usoCFDI }} / {{ factura.usoCFDIValue }}
+                    {% if factura.receptor is not null %}
+                        <h4 style="margin: 0">
+                            {{ factura.receptor.razonSocial }}
+                        </h4>
+                        RFC: {{ factura.receptor.rfc }}
+                        <br>
+                        Dirección: {{ factura.receptor.direccion }}
+                        <br>
+                        Uso CFDI: {{ factura.usoCFDI }} / {{ factura.usoCFDIValue }}
+                    {% else %}
+                        <h4 style="margin: 0">
+                            RAZON SOCIAL RECEPTOR
+                        </h4>
+                        RFC: RFC RECEPTOR
+                        <br>
+                        DIRECCION RECEPTOR
+                        <br>
+                        Uso CFDI: USO CFDI RECEPTOR
+                    {% endif %}
                 </td>
-                <td colspan="3" class="text-center">{{ factura.uuidFiscal }}</td>
+                <td colspan="3" class="text-center">15c4099e-fee8-4cf6-9b7c-ed7aadd567a8</td>
             </tr>
             <tr class="text-center">
                 <td colspan="3">
@@ -88,7 +101,7 @@
                 </td>
             </tr>
             <tr class="text-center">
-                <td colspan="3">{{ factura.serieCertificadoCSD }}</td>
+                <td colspan="3">20001000000300022815</td>
             </tr>
             </tbody>
         </table>
@@ -107,10 +120,26 @@
             <tbody>
             {% for concepto in factura.conceptos %}
                 <tr class="text-center">
-                    <td>{{ concepto.cantidad }}</td>
-                    <td>{{ concepto.claveUnidad.claveUnidad ~ ' / ' ~ concepto.claveUnidad }}</td>
-                    <td>{{ concepto.claveProdServ.claveProdServ ~ ' / ' ~ concepto.claveProdServ.descripcion }}</td>
-                    <td>{{ concepto.descripcion }}</td>
+                    <td>
+                        {% if concepto.cantidad is defined %}
+                            {{ concepto.cantidad }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if concepto.claveUnidad.claveUnidad is defined %}
+                            {{ concepto.claveUnidad.claveUnidad ~ ' / ' ~ concepto.claveUnidad }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if concepto.claveProdServ.claveProdServ is defined %}
+                            {{ concepto.claveProdServ.claveProdServ ~ ' / ' ~ concepto.claveProdServ.descripcion }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if concepto.descripcion is defined %}
+                            {{ concepto.descripcion }}
+                        {% endif %}
+                    </td>
                     <td>${{ (concepto.valorunitario / 100)|number_format(2) }}</td>
                     <td>IVA ${{ (concepto.impuestoImporte / 100)|number_format(2) }}</td>
                     <td>${{ (concepto.importe / 100)|number_format(2) }}</td>
@@ -123,7 +152,7 @@
                 <td rowspan="3" colspan="6">
                     TOTAL CON LETRA:
                     <br>
-                    <strong>{{ numLetras }}</strong>
+                    <strong>{{ num_letras }}</strong>
                     <br>
                     Moneda: {{ factura.moneda }} - {{ factura.moneda == 'MXN' ? 'PESOS MEXICANOS' : 'DOLARES AMERICANOS' }}
                     <br>
@@ -149,28 +178,31 @@
             <div class="row" style="font-size: xx-small">
                 <div class="col-xs-12">
                     <h6>SELLO DIGITAL DEL CFDI:</h6>
-                    <p style="word-break: break-word;">{{ factura.selloCFDI }}</p>
+                    <p style="word-break: break-word;">
+                        LUyUAU9e+Rco6gQO/1KybL1XUzAzHMFIXw9cwqbLJ5MWg6kqgiIe+bB3kxBNByNcXOweaDE2xnddIJVe86Qi1r60adBUSjf21wp4DNRey6ewvcIrxow2X4nuFOlpQAlLnz6HPPibKqvJ2daBES5spK8tZOJGoCkeAv6aXM5p3QWG+KUGzxwoHwVbbXG70h82bXkWfcWG3lMCqBd6aYCEYex87Buxb+6IF3/wX6eUWoIIAIicjYLpnJR6B6SdoWmL1kixovmSOGPSZzwU576Swsp80fumei1TQSQhYYYmSkTSU2K0s0v7hJMQct8j0Kpbj+PbsN8n/U8kqDVZXVYTeg==</p>
                 </div>
                 <div class="col-xs-12">
                     <h6>SELLO DEL SAT:</h6>
-                    <p style="word-break: break-word;">{{ factura.selloSAT }}</p>
+                    <p style="word-break: break-word;">
+                        F2nQAoVgbHZW+PBMzHh9VhFZdvNstTdFrxYPZoURHoIP0epOSLFq2BS7xjsPoIhoQpkmXAUHp7D8D619Y1s9DgOqaSzRzJfgyR+gjDeKYpf0dqT4dUUA1CraU9Hlxm+rjI/lFmHoMfiDzf452AhXLBZgG/Fft0bqgCvqmdPmD2qdRaq1mPxexjpzeELx4NMZYSmX6XVgENkC9VlSr1ao1WtOrhVSd6RoyfAjknvLJcsLbPAR0NK0QQvnsVPSEyht3NmfgFRO7VgSVqfVPFdA1THzYvjgCPfeQnmVYILLh1rF3VdL6RcoX56Cx429Gf9tyQoHRvUy6vb1CyxgpKU89Q==</p>
                 </div>
                 <div class="col-xs-12">
                     <h6>CADENA ORIGINAL:</h6>
-                    <p style="word-break: break-word;">{{ factura.cadenaOriginal }}</p>
+                    <p style="word-break: break-word;">
+                        ||1.1|15c4099e-fee8-4cf6-9b7c-ed7aadd567a8|2018-09-05T16:41:28|LUyUAU9e+Rco6gQO/1KybL1XUzAzHMFIXw9cwqbLJ5MWg6kqgiIe+bB3kxBNByNcXOweaDE2xnddIJVe86Qi1r60adBUSjf21wp4DNRey6ewvcIrxow2X4nuFOlpQAlLnz6HPPibKqvJ2daBES5spK8tZOJGoCkeAv6aXM5p3QWG+KUGzxwoHwVbbXG70h82bXkWfcWG3lMCqBd6aYCEYex87Buxb+6IF3/wX6eUWoIIAIicjYLpnJR6B6SdoWmL1kixovmSOGPSZzwU576Swsp80fumei1TQSQhYYYmSkTSU2K0s0v7hJMQct8j0Kpbj+PbsN8n/U8kqDVZXVYTeg==|20001000000300022323||</p>
                 </div>
             </div>
         </div>
         <div class="col-xs-4" style="padding: 25px 0;">
-            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('timbrados/') ~ factura.pngArchivo|split('/')|last }}"
-                 alt="" class="img-responsive center-block">
+            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('img/untimbre.png') }}"
+                 alt="CODIGO QR" class="img-responsive center-block">
         </div>
         <div class="col-xs-12" style="border: 1px solid #000;">
             <h6>NÚMERO DE SERIE DEL CERTIFICADO DEL SAT:</h6>
-            <small>{{ factura.certificadoSAT }}</small>
+            <small>20001000000300022815</small>
             <h6>FECHA Y HORA DE CERTIFICACIÓN</h6>
-            <small>{{ factura.fechaTimbrado }}</small>
-            <h6 class="text-center">Este documento es una representacion impresa de un CFDI</h6>
+            <small>2018-09-05T16:41:28</small>
+            <h6 class="text-center">VISTA DE EJEMPLO DE UN DOCUMENTO CFDI</h6>
         </div>
     </div>
 </div>

@@ -1,0 +1,6 @@
+{% extends ':mail:base.html.twig' %}
+
+{% block body %}
+    <p class="lead">Cliente, {{ factura.receptor.razonSocial }}</p>
+    A continuación se adjunta el documento CFDI.
+{% endblock %}

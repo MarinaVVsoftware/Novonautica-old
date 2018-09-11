@@ -67,3 +67,6 @@ services:
 
     doctrine.orm.default_entity_manager.property_info_extractor:
         alias: 'Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface'
+
+    Hyperion\MultifacturasBundle\src\Multifacturas:
+        class: Hyperion\MultifacturasBundle\src\Multifacturas

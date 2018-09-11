@@ -50,7 +50,7 @@ class ClaveProdServTransformer implements DataTransformerInterface
      */
     public function transform($claveProdServ)
     {
-        return $claveProdServ === null ? null : $claveProdServ->getClaveProdServ() . ' / ' .$claveProdServ->getDescripcion();
+        return $claveProdServ === null ? null : $claveProdServ->getClaveProdServ() . ' - ' .$claveProdServ->getDescripcion();
     }
 
     /**
@@ -79,7 +79,7 @@ class ClaveProdServTransformer implements DataTransformerInterface
     {
         if (!$claveProdServString) { return; }
 
-        $claveProdServCode = explode(' / ', $claveProdServString);
+        $claveProdServCode = explode(' - ', $claveProdServString);
 
         $claveProdServ = $this->em
             ->getRepository(ClaveProdServ::class)

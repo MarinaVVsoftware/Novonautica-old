@@ -131,13 +131,6 @@ class Pago
      */
     private $fechaRegistro;
 
-    /**
-     * @var Facturacion
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="pagos", cascade={"persist"})
-     */
-    private $factura;
-
     public function __construct()
     {
         $this->fechaRegistro = new \DateTimeImmutable();
@@ -406,30 +399,6 @@ class Pago
     public function getFechaRegistro()
     {
         return $this->fechaRegistro;
-    }
-
-    /**
-     * Set factura
-     *
-     * @param Facturacion $factura
-     *
-     * @return Pago
-     */
-    public function setFactura(Facturacion $factura = null)
-    {
-        $this->factura = $factura;
-
-        return $this;
-    }
-
-    /**
-     * Get factura
-     *
-     * @return Facturacion
-     */
-    public function getFactura()
-    {
-        return $this->factura;
     }
 
     /**

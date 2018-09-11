@@ -10,16 +10,16 @@ namespace AppBundle\Repository\Contabilidad\Facturacion\Concepto;
  */
 class ClaveUnidadRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findAllLike($query)
+    public function findAllLikeSelect2($query)
     {
-        $qb = $this->createQueryBuilder('cu');
-
-        return $qb
-            ->where($qb->expr()->like('cu.nombre', ':query'))
-            ->orWhere($qb->expr()->like('cu.claveUnidad', ':query'))
-            ->setParameter('query', "%{$query}%")
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT claveUnidad.id, claveUnidad.nombre AS text '.
+                'FROM AppBundle:Contabilidad\Facturacion\Concepto\ClaveUnidad claveUnidad '.
+                'WHERE claveUnidad.nombre LIKE ?1 OR claveUnidad.claveUnidad LIKE ?1'
+            )
+            ->setParameter(1, "%{$query}%")
             ->setMaxResults(10)
-            ->getQuery()
-            ->getResult();
+            ->getArrayResult();
     }
 }

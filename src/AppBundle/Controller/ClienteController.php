@@ -93,7 +93,7 @@ class ClienteController extends Controller
 
             /** @var Cliente\RazonSocial $rs */
             foreach ($razonesSociales as $rs) {
-                $rs->setCorreos(preg_replace('/;/', ',', $rs->getCorreos()));
+                $rs->setCorreos(preg_replace('/;\s+/', ',', $rs->getCorreos()));
             }
 
             $fechaHoraActual = new \DateTime('now');
@@ -232,6 +232,7 @@ class ClienteController extends Controller
 
         foreach ($cliente->getRazonesSociales() as $rs) {
             $originalRs->add($rs);
+
         }
 
         $deleteForm = $this->createDeleteForm($cliente);
@@ -254,6 +255,9 @@ class ClienteController extends Controller
             }
 
             foreach ($originalRs as $ors) {
+                /** @var Cliente\RazonSocial $rs */
+                $ors->setCorreos(preg_replace('/;\s+/', ',', $rs->getCorreos()));
+
                 if ($cliente->getRazonesSociales()->contains($ors) === false) {
                     $ors->setCliente(null);
                     $em->remove($ors);

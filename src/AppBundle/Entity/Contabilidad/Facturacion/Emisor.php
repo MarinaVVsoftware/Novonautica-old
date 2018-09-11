@@ -2,10 +2,9 @@
 
 namespace AppBundle\Entity\Contabilidad\Facturacion;
 
-use Doctrine\Common\Annotations\Annotation\Required;
+use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -96,7 +95,6 @@ class Emisor
     /**
      * @var File
      *
-     * @Assert\NotNull(message="Por favor agregar una imagen")
      * @Assert\Image(
      *     mimeTypes={"image/*"},
      *     mimeTypesMessage="Solo se permiten imagenes",
@@ -118,7 +116,6 @@ class Emisor
     /**
      * @var File
      *
-     * @Assert\NotNull(message="Por favor agrega la llave con extension .cer")
      * @Assert\File()
      *
      * @Vich\UploadableField(mapping="facturacion_emisor_cer", fileNameProperty="cer")
@@ -135,7 +132,6 @@ class Emisor
     /**
      * @var File
      *
-     * @Assert\NotNull(message="Por favor agrega la llave con extension .key")
      * @Assert\File()
      *
      * @Vich\UploadableField(mapping="facturacion_emisor_key", fileNameProperty="key")
@@ -257,6 +253,11 @@ class Emisor
         return $this->regimenFiscal;
     }
 
+    public function getRegimenFiscalValue()
+    {
+        return array_flip(Facturacion::$regimenesFiscales)[$this->regimenFiscal];
+    }
+
     /**
      * @param string $regimenFiscal
      */
@@ -264,6 +265,7 @@ class Emisor
     {
         $this->regimenFiscal = $regimenFiscal;
     }
+
 
     /**
      * Set nombre

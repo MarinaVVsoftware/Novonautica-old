@@ -2,13 +2,12 @@
 
 namespace AppBundle\Entity\Contabilidad;
 
+use AppBundle\Entity\Cliente;
+use AppBundle\Entity\Cliente\RazonSocial;
 use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto;
-use AppBundle\Entity\Pago;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Facturacion
@@ -27,89 +26,30 @@ class Facturacion
      */
     private $id;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank(message="Este valor no puede estar vacio")
-     *
-     * @ORM\Column(name="rfc", type="string", length=20)
-     */
-    private $rfc;
+    /*------------------------------------------------------------------------------------------------
+     * DATOS DE FACTURA
+     *-----------------------------------------------------------------------------------------------*/
 
     /**
      * @var string
      *
-     * @Assert\NotBlank(message="Este valor no puede estar vacio")
-     *
-     * @ORM\Column(name="cliente", type="string", length=255)
+     * @ORM\Column(name="condiciones_pago", type="string", nullable=true)
      */
-    private $cliente;
+    private $condicionesPago;
 
     /**
-     * @var string
+     * @var \DateTimeInterface
      *
-     * @Assert\NotBlank(message="Este valor no puede estar vacio")
-     *
-     * @ORM\Column(name="razon_social", type="string", length=255)
-     */
-    private $razonSocial;
-
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank(message="Este valor no puede estar vacio")
-     *
-     * @ORM\Column(name="direccion_fiscal", type="text")
-     */
-    private $direccionFiscal;
-
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank(message="Este valor no puede estar vacio")
-     *
-     * @ORM\Column(name="numero_telefonico", type="string", length=20)
-     */
-    private $numeroTelefonico;
-
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank(message="Este valor no puede estar vacio")
-     * @Assert\Email(message="El valor no parece ser un correo")
-     *
-     * @ORM\Column(name="email", type="string", length=100)
-     */
-    private $email;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="moneda", type="string", length=5)
-     *
-     */
-    private $moneda;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="tipo_cambio", type="integer")
-     */
-    private $tipoCambio;
-
-    /**
-     * @var \DateTimeImmutable
-     *
-     * @ORM\Column(name="fecha", type="datetimetz_immutable")
+     * @ORM\Column(name="fecha", type="datetime")
      */
     private $fecha;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="descuento", type="bigint")
+     * @ORM\Column(name="folio", type="integer")
      */
-    private $descuento;
+    private $folio;
 
     /**
      * @var string
@@ -121,9 +61,51 @@ class Facturacion
     /**
      * @var string
      *
+     * @ORM\Column(name="uso_cfdi", type="string", length=30)
+     */
+    private $usoCFDI;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="lugar_expedicion", type="string", length=10)
+     */
+    private $lugarExpedicion;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="metodo_pago", type="string", length=150)
      */
     private $metodoPago;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="moneda", type="string", length=3)
+     */
+    private $moneda;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="serie", type="string", length=5)
+     */
+    private $serie;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tipo_cambio", type="integer")
+     */
+    private $tipoCambio;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo_comprobante", type="string", length=10)
+     */
+    private $tipoComprobante;
 
     /**
      * @var int
@@ -135,58 +117,70 @@ class Facturacion
     /**
      * @var int
      *
-     * @ORM\Column(name="iva", type="bigint")
-     */
-    private $iva;
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="total", type="bigint")
      */
     private $total;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="tipo_comprobante", type="string", length=10)
-     */
-    private $tipoComprobante;
+    /*------------------------------------------------------------------------------------------------*/
+
+    /*------------------------------------------------------------------------------------------------
+     * DATOS DE TOTAL DE IMPUESTOS (translados, deberia ser una coleccion por cada tipo de traslado, pero por ahora se maneja uno)
+     *-----------------------------------------------------------------------------------------------*/
 
     /**
      * @var string
      *
-     * @ORM\Column(name="uso_cfdi", type="string", length=10)
+     * @ORM\Column(name="impuesto", type="string", length=10)
      */
-    private $usoCFDI;
+    private $impuesto;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="condiciones_pago", type="string", nullable=true)
+     * @ORM\Column(name="tasa", type="string", length=20)
      */
-    private $condicionesPago;
+    private $tasa;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="importe", type="bigint")
+     */
+    private $importe;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="folio", type="string", length=20)
+     * @ORM\Column(name="tipo_factor", type="string", length=20)
      */
-    private $folio;
+    private $tipoFactor;
 
     /**
-     * @var string $folioFiscal = uuid;
+     * @var int
      *
-     * @ORM\Column(name="folio_fiscal", type="string")
+     * @ORM\Column(name="total_impuestos_transladados", type="bigint")
      */
-    private $folioFiscal;
+    private $totalImpuestosTransladados;
+
+    /*------------------------------------------------------------------------------------------------*/
+
+    /*------------------------------------------------------------------------------------------------
+     * DATOS DE TIMBRADO CONFIRMADO
+     *-----------------------------------------------------------------------------------------------*/
 
     /**
-     * @var string|null $folioCotizacion input de busqueda de cotizaciones
+     * @var string $uuidFiscal = UUID de timbrado;
      *
-     * @ORM\Column(name="folio_cotizacion", type="string", length=150, nullable=true)
+     * @ORM\Column(name="uuid_fiscal", type="string")
      */
-    private $folioCotizacion;
+    private $uuidFiscal;
+
+    /**
+     * @var string $fechaTimbrado = representacion_impresa_fecha_timbrado
+     *
+     * @ORM\Column(name="fecha_timbrado", type="string")
+     */
+    private $fechaTimbrado;
 
     /**
      * @var string $cadenaOriginal = representacion_impresa_cadena
@@ -201,13 +195,6 @@ class Facturacion
      * @ORM\Column(name="serie_certificado_csd", type="string")
      */
     private $serieCertificadoCSD;
-
-    /**
-     * @var string $fechaTimbrado = representacion_impresa_fecha_timbrado
-     *
-     * @ORM\Column(name="fecha_timbrado", type="string")
-     */
-    private $fechaTimbrado;
 
     /**
      * @var string $selloCFDI = representacion_impresa_sello
@@ -258,62 +245,192 @@ class Facturacion
      */
     private $pngArchivo;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="factura_global", type="boolean")
-     */
-    private $facturaGlobal;
+    /*------------------------------------------------------------------------------------------------*/
 
-    private $cuerpoCorreo;
+
+    /*------------------------------------------------------------------------------------------------
+     * DATOS DE ENTIDAD
+     *-----------------------------------------------------------------------------------------------*/
+
+    // private $cotizacion Se requiere un input de cotizaciones para sacar los pagos?
+    // private $cuerpoCorreo;
 
     /**
      * @var int $estatus
-     * 1 = Creada [default],
-     * 0 = Cancelada
      *
-     * @ORM\Column(name="estatus", type="smallint")
+     * @ORM\Column(name="cancelada", type="smallint")
      */
-    private $estatus;
+    private $isCancelada;
+
+    /*------------------------------------------------------------------------------------------------*/
+
+
+    /*------------------------------------------------------------------------------------------------
+     * ENTIDADES RELACIONADAS
+     *-----------------------------------------------------------------------------------------------*/
 
     /**
      * @var Emisor
-     *
-     * @Assert\NotNull(message="Por favor elige una opción")
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Emisor")
      */
     private $emisor;
 
     /**
+     * @var RazonSocial
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente\RazonSocial")
+     */
+    private $receptor;
+
+    /**
+     * @var Cliente
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente")
+     */
+    private $cliente;
+
+    /**
      * @var Concepto
      *
-     * @Assert\Valid()
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto", mappedBy="factura", cascade={"persist"})
+     * @ORM\OneToMany(
+     *     targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto",
+     *      mappedBy="factura",
+     *     cascade={"persist"}
+     *     )
      */
     private $conceptos;
 
-    /**
-     * @var Pago
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Pago", mappedBy="factura")
-     */
-    private $pagos;
+    public static $formasPagos = [
+        'Efectivo' =>                               '01',
+        'Cheque nominativo' =>                      '02',
+        'Transferencia electrónica de fondos' =>    '03',
+        'Tarjeta de crédito' =>                     '04',
+        'Monedero electrónico' =>                   '05',
+        'Dinero electrónico' =>                     '06',
+        'Vales de despensa' =>                      '08',
+        'Dación en pago' =>                         '12',
+        'Pago por subrogación' =>                   '13',
+        'Pago por consignación' =>                  '14',
+        'Condonación' =>                            '15',
+        'Compensación' =>                           '17',
+        'Novación' =>                               '23',
+        'Confusión' =>                              '24',
+        'Remisión de deuda' =>                      '25',
+        'Prescripción o caducidad' =>               '26',
+        'A satisfacción del acreedor' =>            '27',
+        'Tarjeta de débito' =>                      '28',
+        'Tarjeta de servicios' =>                   '29',
+        'Por definir' =>                            '99',
+    ];
+
+    public static $metodosPagos = [
+        'Pago en una sola exhibición' =>        'PUE',
+        'Pago en parcialidades o diferido' =>   'PPD',
+    ];
+
+    public static $regimenesFiscales = [
+        'General de Ley Personas Morales' =>                                            '601',
+        'Personas Morales con Fines no Lucrativos' =>                                   '603',
+        'Sueldos y Salarios e Ingresos Asimilados a Salarios' =>                        '605',
+        'Arrendamiento' =>                                                              '606',
+        'Demás ingresos' =>                                                             '608',
+        'Consolidación' =>                                                              '609',
+        'Residentes en el Extranjero sin Establecimiento Permanente en México' =>       '610',
+        'Ingresos por Dividendos (socios y accionistas)' =>                             '611',
+        'Personas Físicas con Actividades Empresariales y Profesionales' =>             '612',
+        'Ingresos por intereses' =>                                                     '614',
+        'Sin obligaciones fiscales' =>                                                  '616',
+        'Sociedades Cooperativas de Producción que optan por diferir sus ingresos' =>   '620',
+        'Incorporación Fiscal' =>                                                       '621',
+        'Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras' =>                   '622',
+        'Opcional para Grupos de Sociedades' =>                                         '623',
+        'Coordinados' =>                                                                '624',
+        'Hidrocarburos' =>                                                              '628',
+        'Régimen de Enajenación o Adquisición de Bienes' =>                             '607',
+        'De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales' =>    '629',
+        'Enajenación de acciones en bolsa de valores' =>                                '630',
+        'Régimen de los ingresos por obtención de premios' =>                           '615',
+    ];
+
+    public static $tiposComprobantes = [
+        'Ingreso'   =>  'I',
+        'Egreso' =>     'E',
+        'Traslado' =>   'T',
+        'Nómina' =>     'N',
+        'Pago' =>       'P',
+    ];
+
+    public static $CFDIS = [
+        'Adquisición de mercancias' =>                                                              'G01',
+        'Devoluciones, descuentos o bonificaciones' =>                                              'G02',
+        'Gastos en general' =>                                                                      'G03',
+        'Construcciones' =>                                                                         'I01',
+        'Mobilario y equipo de oficina por inversiones' =>                                          'I02',
+        'Equipo de transporte' =>                                                                   'I03',
+        'Equipo de computo y accesorios' =>                                                         'I04',
+        'Dados, troqueles, moldes, matrices y herramental' =>                                       'I05',
+        'Comunicaciones telefónicas' =>                                                             'I06',
+        'Comunicaciones satelitales' =>                                                             'I07',
+        'Otra maquinaria y equipo' =>                                                               'I08',
+        'Honorarios médicos, dentales y gastos hospitalarios.' =>                                   'D01',
+        'Gastos médicos por incapacidad o discapacidad' =>                                          'D02',
+        'Gastos funerales.' =>                                                                      'D03',
+        'Donativos.' =>                                                                             'D04',
+        'Intereses reales efectivamente pagados por créditos hipotecarios (casa habitación).' =>    'D05',
+        'Aportaciones voluntarias al SAR.' =>                                                       'D06',
+        'Primas por seguros de gastos médicos.' =>                                                  'D07',
+        'Gastos de transportación escolar obligatoria.' =>                                          'D08',
+        'Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones.' =>  'D09',
+        'Pagos por servicios educativos (colegiaturas)' =>                                          'D10',
+        'Por definir' =>                                                                            'P01',
+    ];
+
+    public static $impuestos = [
+        'ISR' =>    '001',
+        'IVA' =>    '002',
+        'IEPS' =>   '003',
+    ];
+
+    public static $factores = [
+        'Tasa' => 'Tasa',
+        'Cuota' => 'Cuota',
+    ];
+
+    public static $monedas = [
+        'USD' => 'USD',
+        'MXN' => 'MXN'
+    ];
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->estatus = 1;
-        $this->fecha = new \DateTimeImmutable();
+        $this->formaPago = self::$formasPagos['Efectivo'];
+        $this->metodoPago = self::$metodosPagos['Pago en una sola exhibición'];
+        $this->usoCFDI = self::$CFDIS['Gastos en general'];
+        $this->impuesto = self::$impuestos['IVA'];
+        $this->tipoFactor = self::$factores['Tasa'];
+        $this->importe = 0;
+        $this->totalImpuestosTransladados = 0;
+
+        $this->tasa = '0.160000';
+        $this->lugarExpedicion = '77500';
+        $this->tipoCambio = 100;
+        $this->serie = 'A'; // FIXME De donde sale la serie?
+        $this->moneda = self::$monedas['MXN'];
+
+        $this->subtotal = 0;
+        $this->total = 0;
+
+        $this->fecha = new \DateTime();
+        $this->isCancelada = false;
         $this->conceptos = new ArrayCollection();
-        $this->pagos = new ArrayCollection();
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -323,287 +440,29 @@ class Facturacion
     }
 
     /**
-     * Set rfc
+     * Set condicionesPago.
      *
-     * @param string $rfc
-     *
-     * @return Facturacion
+     * @param string|null $condicionesPago
      */
-    public function setRfc($rfc)
+    public function setCondicionesPago($condicionesPago = null)
     {
-        $this->rfc = $rfc;
-
-        return $this;
+        $this->condicionesPago = $condicionesPago;
     }
 
     /**
-     * Get rfc
+     * Get condicionesPago.
      *
-     * @return string
+     * @return string|null
      */
-    public function getRfc()
+    public function getCondicionesPago()
     {
-        return $this->rfc;
+        return $this->condicionesPago;
     }
 
     /**
-     * Set cliente
+     * Get fecha.
      *
-     * @param string $cliente
-     *
-     * @return Facturacion
-     */
-    public function setCliente($cliente)
-    {
-        $this->cliente = $cliente;
-
-        return $this;
-    }
-
-    /**
-     * Get cliente
-     *
-     * @return string
-     */
-    public function getCliente()
-    {
-        return $this->cliente;
-    }
-
-    /**
-     * Set razonSocial
-     *
-     * @param string $razonSocial
-     *
-     * @return Facturacion
-     */
-    public function setRazonSocial($razonSocial)
-    {
-        $this->razonSocial = $razonSocial;
-
-        return $this;
-    }
-
-    /**
-     * Get razonSocial
-     *
-     * @return string
-     */
-    public function getRazonSocial()
-    {
-        return $this->razonSocial;
-    }
-
-    /**
-     * Set direccionFiscal
-     *
-     * @param string $direccionFiscal
-     *
-     * @return Facturacion
-     */
-    public function setDireccionFiscal($direccionFiscal)
-    {
-        $this->direccionFiscal = $direccionFiscal;
-
-        return $this;
-    }
-
-    /**
-     * Get direccionFiscal
-     *
-     * @return string
-     */
-    public function getDireccionFiscal()
-    {
-        return $this->direccionFiscal;
-    }
-
-    /**
-     * Set numeroTelefonico
-     *
-     * @param string $numeroTelefonico
-     *
-     * @return Facturacion
-     */
-    public function setNumeroTelefonico($numeroTelefonico)
-    {
-        $this->numeroTelefonico = $numeroTelefonico;
-
-        return $this;
-    }
-
-    /**
-     * Get numeroTelefonico
-     *
-     * @return string
-     */
-    public function getNumeroTelefonico()
-    {
-        return $this->numeroTelefonico;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return Facturacion
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMoneda()
-    {
-        return $this->moneda;
-    }
-
-    /**
-     * @param string $moneda
-     */
-    public function setMoneda($moneda)
-    {
-        $this->moneda = $moneda;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTipoCambio()
-    {
-        return $this->tipoCambio;
-    }
-
-    /**
-     * @param int $tipoCambio
-     */
-    public function setTipoCambio($tipoCambio)
-    {
-        $this->tipoCambio = $tipoCambio;
-    }
-
-    /**
-     * Set subtotal
-     *
-     * @param integer $subtotal
-     *
-     * @return Facturacion
-     */
-    public function setSubtotal($subtotal)
-    {
-        $this->subtotal = $subtotal;
-
-        return $this;
-    }
-
-    /**
-     * Get subtotal
-     *
-     * @return integer
-     */
-    public function getSubtotal()
-    {
-        return $this->subtotal;
-    }
-
-    /**
-     * Set iva
-     *
-     * @param integer $iva
-     *
-     * @return Facturacion
-     */
-    public function setIva($iva)
-    {
-        $this->iva = $iva;
-
-        return $this;
-    }
-
-    /**
-     * Get iva
-     *
-     * @return integer
-     */
-    public function getIva()
-    {
-        return $this->iva;
-    }
-
-    /**
-     * Set total
-     *
-     * @param integer $total
-     *
-     * @return Facturacion
-     */
-    public function setTotal($total)
-    {
-        $this->total = $total;
-
-        return $this;
-    }
-
-    /**
-     * Get total
-     *
-     * @return integer
-     */
-    public function getTotal()
-    {
-        return $this->total;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTipoComprobante()
-    {
-        return $this->tipoComprobante;
-    }
-
-    /**
-     * @param string $tipoComprobante
-     */
-    public function setTipoComprobante($tipoComprobante)
-    {
-        $this->tipoComprobante = $tipoComprobante;
-    }
-
-    /**
-     * Set fecha
-     *
-     * @param \DateTimeImmutable $fecha
-     *
-     * @return Facturacion
-     */
-    public function setFecha($fecha)
-    {
-        $this->fecha = $fecha;
-
-        return $this;
-    }
-
-    /**
-     * Get fecha
-     *
-     * @return \DateTimeImmutable
+     * @return \DateTime
      */
     public function getFecha()
     {
@@ -611,45 +470,37 @@ class Facturacion
     }
 
     /**
-     * Set descuento
+     * Set folio.
      *
-     * @param integer $descuento
-     *
-     * @return Facturacion
+     * @param int $folio
      */
-    public function setDescuento($descuento)
+    public function setFolio($folio)
     {
-        $this->descuento = $descuento;
-
-        return $this;
+        $this->folio = $folio;
     }
 
     /**
-     * Get descuento
+     * Get folio.
      *
-     * @return integer
+     * @return int
      */
-    public function getDescuento()
+    public function getFolio()
     {
-        return $this->descuento;
+        return $this->folio;
     }
 
     /**
-     * Set formaPago
+     * Set formaPago.
      *
      * @param string $formaPago
-     *
-     * @return Facturacion
      */
     public function setFormaPago($formaPago)
     {
         $this->formaPago = $formaPago;
-
-        return $this;
     }
 
     /**
-     * Get formaPago
+     * Get formaPago.
      *
      * @return string
      */
@@ -658,18 +509,9 @@ class Facturacion
         return $this->formaPago;
     }
 
-    /**
-     * Set metodoPago
-     *
-     * @param string $metodoPago
-     *
-     * @return Facturacion
-     */
-    public function setMetodoPago($metodoPago)
+    public function getFormaPagoValue()
     {
-        $this->metodoPago = $metodoPago;
-
-        return $this;
+        return array_flip(self::$formasPagos)[$this->formaPago];
     }
 
     /**
@@ -678,6 +520,11 @@ class Facturacion
     public function getUsoCFDI()
     {
         return $this->usoCFDI;
+    }
+
+    public function getUsoCFDIValue()
+    {
+        return array_flip(self::$CFDIS)[$this->usoCFDI];
     }
 
     /**
@@ -689,7 +536,37 @@ class Facturacion
     }
 
     /**
-     * Get metodoPago
+     * Set lugarExpedicion.
+     *
+     * @param string $lugarExpedicion
+     */
+    public function setLugarExpedicion($lugarExpedicion)
+    {
+        $this->lugarExpedicion = $lugarExpedicion;
+    }
+
+    /**
+     * Get lugarExpedicion.
+     *
+     * @return string
+     */
+    public function getLugarExpedicion()
+    {
+        return $this->lugarExpedicion;
+    }
+
+    /**
+     * Set metodoPago.
+     *
+     * @param string $metodoPago
+     */
+    public function setMetodoPago($metodoPago)
+    {
+        $this->metodoPago = $metodoPago;
+    }
+
+    /**
+     * Get metodoPago.
      *
      * @return string
      */
@@ -698,166 +575,269 @@ class Facturacion
         return $this->metodoPago;
     }
 
-    /**
-     * @return string
-     */
-    public function getCondicionesPago()
+    public function getMetodoPagoValue()
     {
-        return $this->condicionesPago;
+        return array_flip(self::$metodosPagos)[$this->metodoPago];
     }
 
     /**
-     * @param string $condicionesPago
-     */
-    public function setCondicionesPago($condicionesPago)
-    {
-        $this->condicionesPago = $condicionesPago;
-    }
-
-    /**
-     * Set emisor
+     * Set moneda.
      *
-     * @param Emisor $emisor
-     *
-     * @return Facturacion
+     * @param string $moneda
      */
-    public function setEmisor(Emisor $emisor = null)
+    public function setMoneda($moneda)
     {
-        $this->emisor = $emisor;
-
-        return $this;
+        $this->moneda = $moneda;
     }
 
     /**
-     * Get emisor
-     *
-     * @return Emisor
-     */
-    public function getEmisor()
-    {
-        return $this->emisor;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFolio()
-    {
-        return $this->folio;
-    }
-
-    /**
-     * @param string $folio
-     */
-    public function setFolio($folio)
-    {
-        $this->folio = $folio;
-    }
-
-    /**
-     * Set folioFiscal
-     *
-     * @param string $folioFiscal
-     *
-     * @return Facturacion
-     */
-    public function setFolioFiscal($folioFiscal)
-    {
-        $this->folioFiscal = $folioFiscal;
-
-        return $this;
-    }
-
-    /**
-     * Get folioFiscal
+     * Get moneda.
      *
      * @return string
      */
-    public function getFolioFiscal()
+    public function getMoneda()
     {
-        return $this->folioFiscal;
+        return $this->moneda;
+    }
+
+    public function getMonedaValue()
+    {
+        return array_flip(self::$monedas)[$this->moneda];
     }
 
     /**
-     * @return null|string
-     */
-    public function getFolioCotizacion()
-    {
-        return $this->folioCotizacion;
-    }
-
-    /**
-     * @param null|string $folioCotizacion
-     */
-    public function setFolioCotizacion($folioCotizacion)
-    {
-        $this->folioCotizacion = $folioCotizacion;
-    }
-
-    /**
-     * Set cadenaOriginal
+     * Set serie.
      *
-     * @param string $cadenaOriginal
-     *
-     * @return Facturacion
+     * @param string $serie
      */
-    public function setCadenaOriginal($cadenaOriginal)
+    public function setSerie($serie)
     {
-        $this->cadenaOriginal = $cadenaOriginal;
-
-        return $this;
+        $this->serie = $serie;
     }
 
     /**
-     * Get cadenaOriginal
+     * Get serie.
      *
      * @return string
      */
-    public function getCadenaOriginal()
+    public function getSerie()
     {
-        return $this->cadenaOriginal;
+        return $this->serie;
     }
 
     /**
-     * Set serieCertificadoCSD
+     * Set tipoCambio.
      *
-     * @param string $serieCertificadoCSD
-     *
-     * @return Facturacion
+     * @param int $tipoCambio
      */
-    public function setSerieCertificadoCSD($serieCertificadoCSD)
+    public function setTipoCambio($tipoCambio)
     {
-        $this->serieCertificadoCSD = $serieCertificadoCSD;
-
-        return $this;
+        $this->tipoCambio = $tipoCambio;
     }
 
     /**
-     * Get serieCertificadoCSD
+     * Get tipoCambio.
+     *
+     * @return int
+     */
+    public function getTipoCambio()
+    {
+        return $this->tipoCambio;
+    }
+
+    /**
+     * Set tipoComprobante.
+     *
+     * @param string $tipoComprobante
+     */
+    public function setTipoComprobante($tipoComprobante)
+    {
+        $this->tipoComprobante = $tipoComprobante;
+    }
+
+    /**
+     * Get tipoComprobante.
      *
      * @return string
      */
-    public function getSerieCertificadoCSD()
+    public function getTipoComprobante()
     {
-        return $this->serieCertificadoCSD;
+        return $this->tipoComprobante;
+    }
+
+    public function getTipoComprobanteValue()
+    {
+        return array_flip(self::$tiposComprobantes)[$this->tipoComprobante];
     }
 
     /**
-     * Set fechaTimbrado
+     * Set subtotal.
+     *
+     * @param int $subtotal
+     */
+    public function setSubtotal($subtotal)
+    {
+        $this->subtotal = $subtotal;
+    }
+
+    /**
+     * Get subtotal.
+     *
+     * @return int
+     */
+    public function getSubtotal()
+    {
+        return $this->subtotal;
+    }
+
+    /**
+     * Set total.
+     *
+     * @param int $total
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
+    }
+
+    /**
+     * Get total.
+     *
+     * @return int
+     */
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    /**
+     * Set impuesto.
+     *
+     * @param string $impuesto
+     */
+    public function setImpuesto($impuesto)
+    {
+        $this->impuesto = $impuesto;
+    }
+
+    /**
+     * Get impuesto.
+     *
+     * @return string
+     */
+    public function getImpuesto()
+    {
+        return $this->impuesto;
+    }
+
+    /**
+     * Set tasa.
+     *
+     * @param string $tasa
+     */
+    public function setTasa($tasa)
+    {
+        $this->tasa = $tasa;
+    }
+
+    /**
+     * Get tasa.
+     *
+     * @return string
+     */
+    public function getTasa()
+    {
+        return $this->tasa;
+    }
+
+    /**
+     * Set importe.
+     *
+     * @param int $importe
+     */
+    public function setImporte($importe)
+    {
+        $this->importe = $importe;
+    }
+
+    /**
+     * Get importe.
+     *
+     * @return int
+     */
+    public function getImporte()
+    {
+        return $this->importe;
+    }
+
+    /**
+     * Set tipoFactor.
+     *
+     * @param string $tipoFactor
+     */
+    public function setTipoFactor($tipoFactor)
+    {
+        $this->tipoFactor = $tipoFactor;
+    }
+
+    /**
+     * Get tipoFactor.
+     *
+     * @return string
+     */
+    public function getTipoFactor()
+    {
+        return $this->tipoFactor;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalImpuestosTransladados()
+    {
+        return $this->totalImpuestosTransladados;
+    }
+
+    /**
+     * @param int $totalImpuestosTransladados
+     */
+    public function setTotalImpuestosTransladados($totalImpuestosTransladados)
+    {
+        $this->totalImpuestosTransladados = $totalImpuestosTransladados;
+    }
+
+    /**
+     * Set folioFiscal.
+     *
+     * @param string $uuidFiscal
+     */
+    public function setUuidFiscal($uuidFiscal)
+    {
+        $this->uuidFiscal = $uuidFiscal;
+    }
+
+    /**
+     * Get folioFiscal.
+     *
+     * @return string
+     */
+    public function getUuidFiscal()
+    {
+        return $this->uuidFiscal;
+    }
+
+    /**
+     * Set fechaTimbrado.
      *
      * @param string $fechaTimbrado
-     *
-     * @return Facturacion
      */
     public function setFechaTimbrado($fechaTimbrado)
     {
         $this->fechaTimbrado = $fechaTimbrado;
-
-        return $this;
     }
 
     /**
-     * Get fechaTimbrado
+     * Get fechaTimbrado.
      *
      * @return string
      */
@@ -867,21 +847,57 @@ class Facturacion
     }
 
     /**
-     * Set selloCFDI
+     * Set cadenaOriginal.
+     *
+     * @param string $cadenaOriginal
+     */
+    public function setCadenaOriginal($cadenaOriginal)
+    {
+        $this->cadenaOriginal = $cadenaOriginal;
+    }
+
+    /**
+     * Get cadenaOriginal.
+     *
+     * @return string
+     */
+    public function getCadenaOriginal()
+    {
+        return $this->cadenaOriginal;
+    }
+
+    /**
+     * Set serieCertificadoCSD.
+     *
+     * @param string $serieCertificadoCSD
+     */
+    public function setSerieCertificadoCSD($serieCertificadoCSD)
+    {
+        $this->serieCertificadoCSD = $serieCertificadoCSD;
+    }
+
+    /**
+     * Get serieCertificadoCSD.
+     *
+     * @return string
+     */
+    public function getSerieCertificadoCSD()
+    {
+        return $this->serieCertificadoCSD;
+    }
+
+    /**
+     * Set selloCFDI.
      *
      * @param string $selloCFDI
-     *
-     * @return Facturacion
      */
     public function setSelloCFDI($selloCFDI)
     {
         $this->selloCFDI = $selloCFDI;
-
-        return $this;
     }
 
     /**
-     * Get selloCFDI
+     * Get selloCFDI.
      *
      * @return string
      */
@@ -891,21 +907,17 @@ class Facturacion
     }
 
     /**
-     * Set selloSAT
+     * Set selloSAT.
      *
      * @param string $selloSAT
-     *
-     * @return Facturacion
      */
     public function setSelloSAT($selloSAT)
     {
         $this->selloSAT = $selloSAT;
-
-        return $this;
     }
 
     /**
-     * Get selloSAT
+     * Get selloSAT.
      *
      * @return string
      */
@@ -915,21 +927,17 @@ class Facturacion
     }
 
     /**
-     * Set certificadoSAT
+     * Set certificadoSAT.
      *
      * @param string $certificadoSAT
-     *
-     * @return Facturacion
      */
     public function setCertificadoSAT($certificadoSAT)
     {
         $this->certificadoSAT = $certificadoSAT;
-
-        return $this;
     }
 
     /**
-     * Get certificadoSAT
+     * Get certificadoSAT.
      *
      * @return string
      */
@@ -939,21 +947,17 @@ class Facturacion
     }
 
     /**
-     * Set xml
+     * Set xml.
      *
      * @param string $xml
-     *
-     * @return Facturacion
      */
     public function setXml($xml)
     {
         $this->xml = $xml;
-
-        return $this;
     }
 
     /**
-     * Get xml
+     * Get xml.
      *
      * @return string
      */
@@ -963,21 +967,17 @@ class Facturacion
     }
 
     /**
-     * Set png
+     * Set png.
      *
      * @param string $png
-     *
-     * @return Facturacion
      */
     public function setPng($png)
     {
         $this->png = $png;
-
-        return $this;
     }
 
     /**
-     * Get png
+     * Get png.
      *
      * @return string
      */
@@ -987,21 +987,17 @@ class Facturacion
     }
 
     /**
-     * Set xmlArchivo
+     * Set xmlArchivo.
      *
      * @param string $xmlArchivo
-     *
-     * @return Facturacion
      */
     public function setXmlArchivo($xmlArchivo)
     {
         $this->xmlArchivo = $xmlArchivo;
-
-        return $this;
     }
 
     /**
-     * Get xmlArchivo
+     * Get xmlArchivo.
      *
      * @return string
      */
@@ -1011,21 +1007,17 @@ class Facturacion
     }
 
     /**
-     * Set pngArchivo
+     * Set pngArchivo.
      *
      * @param string $pngArchivo
-     *
-     * @return Facturacion
      */
     public function setPngArchivo($pngArchivo)
     {
         $this->pngArchivo = $pngArchivo;
-
-        return $this;
     }
 
     /**
-     * Get pngArchivo
+     * Get pngArchivo.
      *
      * @return string
      */
@@ -1035,160 +1027,115 @@ class Facturacion
     }
 
     /**
-     * @return bool
+     * Set isCancelada.
+     *
+     * @param int $isCancelada
      */
-    public function isFacturaGlobal()
+    public function setIsCancelada($isCancelada)
     {
-        return $this->facturaGlobal;
+        $this->isCancelada = $isCancelada;
     }
 
     /**
-     * @param bool $facturaGlobal
-     */
-    public function setFacturaGlobal($facturaGlobal)
-    {
-        $this->facturaGlobal = $facturaGlobal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuerpoCorreo()
-    {
-        return $this->cuerpoCorreo;
-    }
-
-    /**
-     * @param mixed $cuerpoCorreo
-     */
-    public function setCuerpoCorreo($cuerpoCorreo)
-    {
-        $this->cuerpoCorreo = $cuerpoCorreo;
-    }
-
-    /**
+     * Get isCancelada.
+     *
      * @return int
      */
-    public function getEstatus()
+    public function isCancelada()
     {
-        return $this->estatus;
+        return $this->isCancelada;
     }
 
     /**
-     * @param int $estatus
+     * Set emisor.
+     *
+     * @param Emisor|null $emisor
      */
-    public function setEstatus($estatus)
+    public function setEmisor(Emisor $emisor = null)
     {
-        $this->estatus = $estatus;
+        $this->emisor = $emisor;
     }
 
     /**
-     * Add concepto
+     * Get emisor.
+     *
+     * @return Emisor|null
+     */
+    public function getEmisor()
+    {
+        return $this->emisor;
+    }
+
+    /**
+     * Set receptor.
+     *
+     * @param RazonSocial|null $receptor
+     */
+    public function setReceptor(RazonSocial $receptor = null)
+    {
+        $this->receptor = $receptor;
+    }
+
+    /**
+     * Get receptor.
+     *
+     * @return RazonSocial|null
+     */
+    public function getReceptor()
+    {
+        return $this->receptor;
+    }
+
+    /**
+     * Set cliente.
+     *
+     * @param Cliente|null $cliente
+     */
+    public function setCliente(Cliente $cliente = null)
+    {
+        $this->cliente = $cliente;
+    }
+
+    /**
+     * Get cliente.
+     *
+     * @return Cliente|null
+     */
+    public function getCliente()
+    {
+        return $this->cliente;
+    }
+
+    /**
+     * Add concepto.
      *
      * @param Concepto $concepto
-     *
-     * @return Facturacion
      */
     public function addConcepto(Concepto $concepto)
     {
-        $this->conceptos->add($concepto);
         $concepto->setFactura($this);
-
-        return $this;
+        $this->conceptos[] = $concepto;
     }
 
     /**
-     * Remove concepto
+     * Remove concepto.
      *
      * @param Concepto $concepto
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
     public function removeConcepto(Concepto $concepto)
     {
-        $this->conceptos->removeElement($concepto);
+        return $this->conceptos->removeElement($concepto);
     }
 
     /**
-     * Get conceptos
+     * Get conceptos.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getConceptos()
     {
         return $this->conceptos;
-    }
-
-    /**
-     * Add pago
-     *
-     * @param Pago $pago
-     *
-     * @return Facturacion
-     */
-    public function addPago(Pago $pago)
-    {
-        $pago->setFactura($this);
-        $this->pagos->add($pago);
-
-        return $this;
-    }
-
-    /**
-     * Remove pago
-     *
-     * @param Pago $pago
-     */
-    public function removePago(Pago $pago)
-    {
-        $this->pagos->removeElement($pago);
-    }
-
-    /**
-     * Get pagos
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPagos()
-    {
-        return $this->pagos;
-    }
-
-    /**
-     * @Assert\Callback()
-     *
-     * @param ExecutionContextInterface $context
-     */
-    public function validate(ExecutionContextInterface $context)
-    {
-        $cantidad = 0;
-
-        if (!$this->getConceptos()->count()) {
-            $context->buildViolation('Debe agregar al menos un concepto.')
-                ->atPath('conceptos')
-                ->addViolation();
-        }
-
-        foreach ($this->getPagos() as $pago) {
-            $cantidad = $cantidad + $pago->getCantidad();
-        }
-
-        $cantidadMXN = ($cantidad * $this->getTipoCambio()) / 100;
-        $totalMXN = $this->getTotal();
-        $min = $cantidadMXN - 5;
-        $max = $cantidadMXN + 5;
-
-        if ($this->getMoneda() === 'MXN') {
-            if ($this->getPagos()->count() && !($min <= $totalMXN && $totalMXN <= $max)) {
-                $context->buildViolation('El total de la factura es diferente a la cantidad total de pagos seleccionados multiplicado por el tipo de cambio.')
-                    ->atPath('total')
-                    ->addViolation();
-            }
-        }
-        else {
-            if ($this->getPagos()->count() && !($this->getTotal() === $cantidad)) {
-                $context->buildViolation('El total de la factura es diferente a la cantidad total de pagos seleccionados.')
-                    ->atPath('total')
-                    ->addViolation();
-            }
-        }
     }
 }

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PREVIEW Recibo electrónico de pago</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"
+    >
+    <style>
+        h6 {
+            margin-bottom: 0;
+        }
+
+        th {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div id="header" class="row">
+        <div class="col-xs-4 text-center">
+            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('uploads/facturacion/emisor/logos/') ~ factura.emisor.logo }}"
+                 alt="" class="img-responsive center-block"
+                 style="max-height: 150px;"
+            >
+        </div>
+        <div class="col-xs-4">
+            <h4>RECIBO ELECTRÓNICO DE PAGO</h4>
+            <h5 style="font-weight: bold;margin-top: 0">{{ factura.emisor.nombre }}</h5>
+            <p style="font-size: smaller">
+                <strong>RFC:</strong> {{ factura.emisor.rfc }}
+                <br>
+                <strong>Régimen fiscal:</strong> {{ factura.emisor.regimenFiscal }}
+                / {{ factura.emisor.regimenFiscalValue }}
+                <br>
+                <strong>Dirección: </strong>{{ factura.emisor.direccion }}
+                <br>
+                <strong>Tipo comprobante:</strong> {{ factura.tipoComprobante }} / {{ factura.tipoComprobanteValue }}
+                <br>
+                <strong>Versión CFDI:</strong> 3.3
+            </p>
+        </div>
+        <div class="col-xs-4">
+            <table class="table table-bordered table-striped table-condensed text-center">
+                <tbody>
+                <tr style="background: #CCCCCC">
+                    <td> FOLIO</td>
+                </tr>
+                <tr>
+                    <td>00000</td>
+                </tr>
+                <tr style="background: #CCCCCC">
+                    <td> LUGAR Y FECHA</td>
+                </tr>
+                <tr>
+                    <td>{{ pago.lugarExpedicion }} - {{ pago.fecha|date('d/m/y') }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="body" class="row">
+        <table class="table table-condensed table-bordered table-striped">
+            <tbody>
+            <tr>
+                <td colspan="7">RECEPTOR DEL COMPROBANTE FISCAL</td>
+                <td colspan="3" class="text-center">
+                    <small>FOLIO FISCAL</small>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3" colspan="7">
+                    <h4 style="margin: 0">{{ factura.receptor.razonSocial }}</h4>
+                    <strong>RFC: </strong>{{ factura.receptor.rfc }}
+                    <br>
+                    <strong>Dirección: </strong>{{ factura.receptor.direccion }}
+                    <br>
+                    <strong>Uso CFDI: </strong>{{ factura.receptor.usoCFDI }}
+                </td>
+                <td colspan="3" class="text-center">a2e158ba-4f08-4c82-b4a5-f018036ed986</td>
+            </tr>
+            <tr class="text-center">
+                <td colspan="3">
+                    <small>SERIE CERTIFICADO CSD</small>
+                </td>
+            </tr>
+            <tr class="text-center">
+                <td colspan="3">20001000000300022323</td>
+            </tr>
+            <tr class="text-center">
+                <td colspan="10">DETALLE DEL PAGO</td>
+            </tr>
+            <tr>
+                <td colspan="5" width="50%">
+                    <h5 style="margin: 0">INFORMACIÓN BANCO EMISOR - RECEPTOR</h5>
+                    <strong>RFC Emisor cuenta ordenante: </strong>
+                    <br>
+                    <strong>Nombre del banco ordenante: </strong>
+                    <br>
+                    <strong>Cuenta ordenante: </strong>
+                </td>
+                <td colspan="5" width="50%">
+                    <strong>RFC Emisor cuenta beneficiario: </strong>
+                    <br>
+                    <strong>Cuenta Beneficiario: </strong>
+                </td>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr>
+                <td colspan="5" width="50%">
+                    <h5 style="margin: 0">INFORMACIÓN DEL PAGO</h5>
+                    <strong>Fecha de pago: </strong>{{ pago.fechaTimbrado }}
+                    <br>
+                    <strong>Forma de pago: </strong>{{ pago.formaPagoPagos }} - {{ pago.formaPagoPagosValue }}
+                    <br>
+                    <strong>Moneda: </strong> {{ pago.monedaPagos }} - {{ pago.monedaPagos == 'MXN' ? 'Pesos Mexicanos' : 'Dolares Americanos' }}
+                    <br>
+                    <h5 style="margin: 0">SPEI Digital</h5>
+                    <strong>Tipo cadena pago: </strong>
+                    <br>
+                    <strong>Cadena original del comprobante de pago: </strong>
+                    <br>
+                    <strong>Sello de pago: </strong>
+                </td>
+                <td colspan="5" width="50%">
+                    <strong>Tipo de cambio: </strong> $ {{ (pago.tipoCambioPagos / 100)|number_format(2) }}
+                    <br>
+                    <strong>Monto: </strong> $ {{ (pago.montoPagos / 100)|number_format(2) }}
+                    <br>
+                    <strong>No. Operación</strong>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-condensed table-bordered table-striped" style="margin-bottom: 0">
+            <thead>
+            <tr class="text-center" bgcolor="#f9f9f9">
+                <td colspan="10">
+                    DOCUMENTOS PAGADOS
+                </td>
+            </tr>
+            </thead>
+            <thead>
+            <tr class="text-center">
+                <th>ID DOCUMENTO</th>
+                <th>SERIE</th>
+                <th>FOLIO</th>
+                <th>MONEDA</th>
+                <th>TIPO CAMBIO</th>
+                <th>MÉTODO DE PAGO</th>
+                <th>NO. PARCIALIDAD</th>
+                <th>IMPORTE SALDO ANTERIOR</th>
+                <th>IMPORTE PAGADO</th>
+                <th>IMPORTE SALDO INSOLUTO</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="text-center">
+                <td>{{ factura.uuidFiscal }}</td>
+                <td></td>
+                <td>{{ factura.folio }}</td>
+                <td>{{ factura.moneda }}</td>
+                <td>{{ factura.tipoCambio }}</td>
+                <td>{{ factura.metodoPago }}</td>
+                <td>{{ pago.numeroParcialidad }}</td>
+                <td>$ {{ (pago.importeSaldoAnterior / 100)|number_format(2) }}</td>
+                <td>$ {{ (pago.importePagado / 100)|number_format(2) }}</td>
+                <td>$ {{ (pago.importeSaldoInsoluto / 100)|number_format(2) }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="footer" class="row">
+        <div class="col-xs-8">
+            <div class="row" style="font-size: xx-small">
+                <div class="col-xs-12">
+                    <h6>TIPO DE RELACIÓN:</h6>
+                    <p style="word-break: break-word;">-</p>
+                </div>
+                <div class="col-xs-12">
+                    <h6>CFDI RELACIONADO:</h6>
+                    <p style="word-break: break-word;">{{ factura.uuidFiscal }}</p>
+                </div>
+                <div class="col-xs-12">
+                    <h6>SELLO DIGITAL DEL CFDI:</h6>
+                    <p style="word-break: break-word;">GPKJmwd1fY+3sBYpNIY5fmebVoS611IylcfzkWCQfjwdC/hRLNVv65GLprCgy20abAspBSSDspAS5sGqPn7gWk850BAxepQzC2BMV5hGxNB
+                        jOn8AdPKwzpqJycb1FMJxcY34dBeEJNLjVEbr1KW3fhGLCC1eod3ZAntPO82+gmQMp2Fa2lX61LBqyxKzx3AJ8vXZmhDT8Z6Gmm44cm0iN5
+                        YV4sOyzN1MTLX2DwuFMTy7rDD0tcSVrAvnC1lZZGyRHhepiYrH11ub6EvxDho7hMPgdUCd6REsVJHMp3w1ti6uyolFueb1vYp7iF3EqchKeFj1V
+                        FlZjRPfGmqH4q3/VQ==</p>
+                </div>
+                <div class="col-xs-12">
+                    <h6>SELLO DEL SAT:</h6>
+                    <p style="word-break: break-word;">gQDPn2gNhLl3Hiklwr/HgCZRe/6ySRFS1LLjHfou+JSp4ETYd6MK6WDUCyCxcj4qLXGALL7sZ+xNhb+2EcqlotJcq/JLeWUuV71N00K3ozIVdDO+
+                        abb7Xls19JZo7U+OnP9x3gPzUXd0cdCJ8xwmYK8E0MaMxR90vLs/3KgfBlZoDqSuwgPudsNyiwTaqDJlgc/auW0JsCnVil/+oWeTiutgF3/d1tClP
+                        zz9JeOdVgPooWkmQsAS+tlsVg/lN8l5W7txi1sGEvM2APtXbd9Ng6prEiX2eK93Ouzmsv8w0a3cogRWGm2U2ZPoVhVyUDd1Rb4Rk1qa2Q2Gaj
+                        zgRvWciw==</p>
+                </div>
+                <div class="col-xs-12">
+                    <h6>CADENA ORIGINAL:</h6>
+                    <p style="word-break: break-word;">||1.1|a2e158ba-4f08-4c82-b4a5-f018036ed986|2018-09-
+                        06T16:37:12|GPKJmwd1fY+3sBYpNIY5fmebVoS611IylcfzkWCQfjwdC/hRLNVv65GLprCgy20abAspBSSDspAS5sGqPn7gWk850BAxepQzC2
+                        BMV5hGxNBjOn8AdPKwzpqJycb1FMJxcY34dBeEJNLjVEbr1KW3fhGLCC1eod3ZAntPO82+gmQMp2Fa2lX61LBqyxKzx3AJ8vXZmhDT8Z6G
+                        mm44cm0iN5YV4sOyzN1MTLX2DwuFMTy7rDD0tcSVrAvnC1lZZGyRHhepiYrH11ub6EvxDho7hMPgdUCd6REsVJHMp3w1ti6uyolFueb1vYp7i
+                        F3EqchKeFj1VFlZjRPfGmqH4q3/VQ==|20001000000300022323||</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4" style="padding: 25px 0;">
+            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('img/untimbre.png') }}"
+                 alt="" class="img-responsive center-block">
+        </div>
+        <div class="col-xs-12" style="border: 1px solid #000;">
+            <h6>NÚMERO DE SERIE DEL CERTIFICADO DEL SAT:</h6>
+            <small>20001000000300022323</small>
+            <h6>FECHA Y HORA DE CERTIFICACIÓN</h6>
+            <small>{{ 'now'|date('Y-m-d\TH:i:s') }}</small>
+            <h6 class="text-center">Este documento es un previo de un CFDI</h6>
+        </div>
+    </div>
+</div>
+</body>
+</html>

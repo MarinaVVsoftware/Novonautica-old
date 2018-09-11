@@ -21,25 +21,39 @@
                 <div class="col-md-12">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Listado de categorías</h3>
+                            <h3 class="panel-title">
+                                Complementos de pago
+                                <small>factura folio: {{ factura.folio }}</small>
+
+                                <a href="{{ path('contabilidad_facturacion_index') }}"
+                                   class="btn btn-contorno-azul pull-right">
+                                    Regresar
+                                </a>
+                            </h3>
                         </div>
                         <div class="panel-body">
                             <table class="table table-novo">
                                 <thead>
                                 <tr>
+                                    <th>Folio</th>
                                     <th>Folio de factura</th>
-                                    <th>RFC Emisor / Emisor</th>
-                                    <th>RFC Receptor / Receptor</th>
-                                    <th>Método de pago</th>
+                                    <th>Folio de pago</th>
                                     <th>Monto facturado</th>
                                     <th>Fecha</th>
                                     <th width="10%">Archivos</th>
                                     <th width="10%" class="no-sort"></th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                </tbody>
                             </table>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="text-right">
+                                <a href="{{ path('contabilidad_factura_pago_new_from_factura', {'id': factura.id}) }}"
+                                   class="btn btn-azul"
+                                >
+                                    Agregar pago
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -78,53 +92,31 @@
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
       (function ($, datatableSettings) {
-        const $eliminar = $('.ventanaborrar');
-
         $('.table-novo').DataTable({
           ...datatableSettings,
-          ajax: 'facturas-dt',
-          order: [[7, 'desc']],
+          ajax: {
+            url: 'pagos-dt',
+            data(d) {
+              d.factura = '{{ factura.id }}';
+            },
+          },
+          order: [[5, 'desc']],
           createdRow: function (row, data) {
-            row.classList.add('text-center');
-            let url = '{{ app.request.requestUri }}';
             let xmlRoute = '{{ asset('timbrados/') }}';
-            row.cells[6].innerHTML = '';
             let actionsInner = '';
 
-            if (data[7]['metodoPago'] === 'PPD') {
-              actionsInner += `<li><a href="pagos/${data[7].id}/new">Registrar pago</a></li>`;
-
-              row.cells[6].innerHTML += `<a href="pagos/${data[7].id}" class="btn btn-xs btn-azul btn-block">Pagos</a>`;
-            }
-
             actionsInner += `
-            <li><a href="${url}${data[7]['id']}">Detalle</a></li>
-            <li><a href="${url}${data[7]['id']}/reenviar">Reenviar</a></li>
+            <li><a href="${location.pathname}/reenviar/${data[6].id}">Reenviar</a></li>
             `;
 
-            if (!data[7]['status']) {
-              actionsInner += `
-                {% if is_granted(expression('has_role("CONTABILIDAD_CANCEL") or (user.isAdmin())')) %}
-                <li><a href="#" data-url="${url}${data[7]['id']}/cancelar"
-                 data-toggle="modal"
-                 data-target=".ventanaborrar"">Cancelar
-                 </a></li>
-                 {% endif %}
-              `;
-            } else {
-              actionsInner += `
-                <span class="label label-danger">Cancelada</span>
-              `;
-            }
-
-            row.cells[6].innerHTML += `
-                <a href="${xmlRoute}${data[6]['xml']}"
+            row.cells[5].innerHTML = `
+                <a href="${xmlRoute}${data[5]['xml']}"
                  target="_blank" class="btn btn-xs btn-azul btn-block">XML</a>
-                <a href="${url}${data[6]['pdf']}/pdf"
+                <a href="${location.pathname}/pdf/${data[6].id}"
                  target="_blank" class="remove-motor btn btn-xs btn-azul btn-block">PDF</a>
             `;
 
-            row.cells[7].innerHTML = `
+            row.cells[6].innerHTML = `
                 <div class="dropdown">
                   <button class="btn btn-azul btn-xs btn-block dropdown-toggle" type="button" data-toggle="dropdown">
                     Acciones
@@ -137,13 +129,6 @@
             `;
           },
         });
-
-
-        $eliminar.on('show.bs.modal', function (e) {
-          let url = $(e.relatedTarget).data('url');
-          $(this).find('.confirm-cancel').attr('href', url);
-        });
-
       })(jQuery, datatablesSettings);
     </script>
 {% endblock %}

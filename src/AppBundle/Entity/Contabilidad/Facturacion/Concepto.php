@@ -4,7 +4,6 @@ namespace AppBundle\Entity\Contabilidad\Facturacion;
 
 use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Concepto
@@ -23,10 +22,12 @@ class Concepto
      */
     private $id;
 
+    /*------------------------------------------------------------------------------------------------
+     * DATOS DE CONCEPTO
+     *-----------------------------------------------------------------------------------------------*/
+
     /**
      * @var int
-     *
-     * @Assert\NotBlank(message="Por favor indique una cantidad")
      *
      * @ORM\Column(name="cantidad", type="integer")
      */
@@ -35,7 +36,12 @@ class Concepto
     /**
      * @var string
      *
-     * @Assert\NotBlank(message="No puede dejar vacio este valor")
+     * @ORM\Column(name="unidad", type="string", length=20)
+     */
+    private $unidad;
+
+    /**
+     * @var string
      *
      * @ORM\Column(name="descripcion", type="string", length=255)
      */
@@ -44,53 +50,73 @@ class Concepto
     /**
      * @var int
      *
-     * @Assert\NotBlank(message="No puede dejar vacio este valor")
-     *
-     * @ORM\Column(name="valorunitario", type="bigint")
+     * @ORM\Column(name="valor_unitario", type="bigint")
      */
-    private $valorunitario;
+    private $valorUnitario;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="importe", type="bigint")
+     */
+    private $importe;
+
+    /*------------------------------------------------------------------------------------------------*/
+
+    /*------------------------------------------------------------------------------------------------
+     * DATOS DE IMPUESTOS ( Deberia ser una coleccion de impuestos, pero ahora solo se agregara uno (iva)
+     *-----------------------------------------------------------------------------------------------*/
 
     /**
      * @var int
      *
-     * @ORM\Column(name="descuento", type="bigint")
+     * @ORM\Column(name="base", type="bigint")
      */
-    private $descuento;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="iva", type="bigint")
-     */
-    private $iva;
-
-    /**
-     * @var int
-     *
-     * @Assert\NotBlank(message="No puede dejar vacio este valor")
-     *
-     * @ORM\Column(name="subtotal", type="bigint")
-     */
-    private $subtotal;
-
-    /**
-     * @var int
-     *
-     * @Assert\NotBlank(message="No puede dejar vacio este valor")
-     *
-     * @ORM\Column(name="total", type="bigint")
-     */
-    private $total;
+    private $base;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="impuesto", type="string", length=10)
+     */
+    private $impuesto;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo_factor", type="string", length=20)
+     */
+    private $tipoFactor;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tasa_o_cuota", type="string", length=10)
+     */
+    private $tasaOCuota;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="impuesto_importe", type="bigint")
+     */
+    private $impuestoImporte;
+
+    /*------------------------------------------------------------------------------------------------*/
+
+    /*------------------------------------------------------------------------------------------------
+     * ENTIDADES RELACIONADAS
+     *-----------------------------------------------------------------------------------------------*/
+
+    /**
+     * @var Facturacion\Concepto\ClaveProdServ
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ")
      */
     private $claveProdServ;
 
     /**
-     * @var string
+     * @var Facturacion\Concepto\ClaveUnidad
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
      */
@@ -103,10 +129,22 @@ class Concepto
      */
     private $factura;
 
+    public function __construct()
+    {
+        $this->cantidad = 1;
+        $this->unidad = 'NA';
+        $this->valorUnitario = 0;
+        $this->importe = 0;
+
+        $this->base = 0;
+        $this->impuesto = Facturacion::$impuestos['IVA'];
+        $this->tipoFactor = Facturacion::$factores['Tasa'];
+        $this->tasaOCuota = '0.160000';
+        $this->impuestoImporte = 0;
+    }
+
     /**
      * Get id
-     *
-     * @return int
      */
     public function getId()
     {
@@ -114,23 +152,17 @@ class Concepto
     }
 
     /**
-     * Set cantidad
+     * Set cantidad.
      *
-     * @param integer $cantidad
-     *
-     * @return Concepto
+     * @param int $cantidad
      */
     public function setCantidad($cantidad)
     {
         $this->cantidad = $cantidad;
-
-        return $this;
     }
 
     /**
-     * Get cantidad
-     *
-     * @return int
+     * Get cantidad.
      */
     public function getCantidad()
     {
@@ -138,23 +170,35 @@ class Concepto
     }
 
     /**
-     * Set descripcion
+     * Set unidad.
+     *
+     * @param string $unidad
+     */
+    public function setUnidad($unidad)
+    {
+        $this->unidad = $unidad;
+    }
+
+    /**
+     * Get unidad.
+     */
+    public function getUnidad()
+    {
+        return $this->unidad;
+    }
+
+    /**
+     * Set descripcion.
      *
      * @param string $descripcion
-     *
-     * @return Concepto
      */
     public function setDescripcion($descripcion)
     {
         $this->descripcion = $descripcion;
-
-        return $this;
     }
 
     /**
-     * Get descripcion
-     *
-     * @return string
+     * Get descripcion.
      */
     public function getDescripcion()
     {
@@ -162,165 +206,143 @@ class Concepto
     }
 
     /**
-     * Set valorunitario
+     * Set valorunitario.
      *
-     * @param integer $valorunitario
-     *
-     * @return Concepto
+     * @param int $valorUnitario
      */
-    public function setValorunitario($valorunitario)
+    public function setValorUnitario($valorUnitario)
     {
-        $this->valorunitario = $valorunitario;
-
-        return $this;
+        $this->valorUnitario = $valorUnitario;
     }
 
     /**
-     * Get valorunitario
-     *
-     * @return int
+     * Get valorunitario.
      */
-    public function getValorunitario()
+    public function getValorUnitario()
     {
-        return $this->valorunitario;
+        return $this->valorUnitario;
     }
 
     /**
-     * Set factura
+     * Set importe.
      *
-     * @param Facturacion $factura
-     *
-     * @return Concepto
+     * @param int $importe
      */
-    public function setFactura(Facturacion $factura = null)
+    public function setImporte($importe)
     {
-        $this->factura = $factura;
-
-        return $this;
+        $this->importe = $importe;
     }
 
     /**
-     * Get factura
-     *
-     * @return Facturacion
+     * Get importe.
      */
-    public function getFactura()
+    public function getImporte()
     {
-        return $this->factura;
+        return $this->importe;
     }
 
     /**
-     * Set descuento
+     * Set base.
      *
-     * @param integer $descuento
-     *
-     * @return Concepto
+     * @param int $base
      */
-    public function setDescuento($descuento)
+    public function setBase($base)
     {
-        $this->descuento = $descuento;
-
-        return $this;
+        $this->base = $base;
     }
 
     /**
-     * Get descuento
-     *
-     * @return integer
+     * Get base.
      */
-    public function getDescuento()
+    public function getBase()
     {
-        return $this->descuento;
+        return $this->base;
     }
 
     /**
-     * Set iva
+     * Set impuesto.
      *
-     * @param integer $iva
-     *
-     * @return Concepto
+     * @param string $impuesto
      */
-    public function setIva($iva)
+    public function setImpuesto($impuesto)
     {
-        $this->iva = $iva;
-
-        return $this;
+        $this->impuesto = $impuesto;
     }
 
     /**
-     * Get iva
-     *
-     * @return integer
+     * Get impuesto.
      */
-    public function getIva()
+    public function getImpuesto()
     {
-        return $this->iva;
+        return $this->impuesto;
     }
 
     /**
-     * Set subtotal
+     * Set tipoFactor.
      *
-     * @param integer $subtotal
-     *
-     * @return Concepto
+     * @param string $tipoFactor
      */
-    public function setSubtotal($subtotal)
+    public function setTipoFactor($tipoFactor)
     {
-        $this->subtotal = $subtotal;
-
-        return $this;
+        $this->tipoFactor = $tipoFactor;
     }
 
     /**
-     * Get subtotal
-     *
-     * @return integer
+     * Get tipoFactor.
      */
-    public function getSubtotal()
+    public function getTipoFactor()
     {
-        return $this->subtotal;
+        return $this->tipoFactor;
     }
 
     /**
-     * Set total
+     * Set tasaOCuota.
      *
-     * @param integer $total
-     *
-     * @return Concepto
+     * @param string $tasaOCuota
      */
-    public function setTotal($total)
+    public function setTasaOCuota($tasaOCuota)
     {
-        $this->total = $total;
-
-        return $this;
+        $this->tasaOCuota = $tasaOCuota;
     }
 
     /**
-     * Get total
-     *
-     * @return integer
+     * Get tasaOCuota.
      */
-    public function getTotal()
+    public function getTasaOCuota()
     {
-        return $this->total;
+        return $this->tasaOCuota;
     }
 
     /**
-     * Set claveProdServ
+     * Set impuestoImporte.
      *
-     * @param Concepto\ClaveProdServ $claveProdServ
+     * @param int $impuestoImporte
+     */
+    public function setImpuestoImporte($impuestoImporte)
+    {
+        $this->impuestoImporte = $impuestoImporte;
+    }
+
+    /**
+     * Get impuestoImporte.
+     */
+    public function getImpuestoImporte()
+    {
+        return $this->impuestoImporte;
+    }
+
+    /**
+     * Set claveProdServ.
      *
-     * @return Concepto
+     * @param Concepto\ClaveProdServ|null $claveProdServ
      */
     public function setClaveProdServ(Concepto\ClaveProdServ $claveProdServ = null)
     {
         $this->claveProdServ = $claveProdServ;
-
-        return $this;
     }
 
     /**
-     * Get claveProdServ
+     * Get claveProdServ.
      */
     public function getClaveProdServ()
     {
@@ -328,24 +350,38 @@ class Concepto
     }
 
     /**
-     * Set claveUnidad
+     * Set claveUnidad.
      *
-     * @param Concepto\ClaveUnidad $claveUnidad
-     *
-     * @return Concepto
+     * @param Concepto\ClaveUnidad|null $claveUnidad
      */
     public function setClaveUnidad(Concepto\ClaveUnidad $claveUnidad = null)
     {
         $this->claveUnidad = $claveUnidad;
-
-        return $this;
     }
 
     /**
-     * Get claveUnidad
+     * Get claveUnidad.
      */
     public function getClaveUnidad()
     {
         return $this->claveUnidad;
+    }
+
+    /**
+     * Set factura.
+     *
+     * @param Facturacion|null $factura
+     */
+    public function setFactura(Facturacion $factura = null)
+    {
+        $this->factura = $factura;
+    }
+
+    /**
+     * Get factura.
+     */
+    public function getFactura()
+    {
+        return $this->factura;
     }
 }

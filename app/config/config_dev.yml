@@ -38,9 +38,12 @@ monolog:
         #    level: info
 
 swiftmailer:
-#    delivery_addresses: ['me@example.com']
-#    port: '%mailer_port%'
-    disable_delivery: true
+    transport: '%mailer_transport%'
+    host: '%mailer_host%'
+    username: '%mailer_user%'
+    password: '%mailer_password%'
+    port: '%mailer_port%'
+#    disable_delivery: true
 
 knp_snappy:
     pdf:

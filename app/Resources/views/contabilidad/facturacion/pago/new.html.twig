@@ -1,0 +1,243 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .help-block {
+            color: #dd4b39;
+        }
+
+        .autocomplete-suggestions {
+            background: #3e4766;
+            overflow: auto;
+            width: auto !important;
+            min-width: 100px;
+            max-width: 300px;
+        }
+
+        .autocomplete-suggestion {
+            padding: 2px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+
+        }
+
+        .autocomplete-selected {
+            background: #0097f6;
+        }
+
+        .autocomplete-suggestions strong {
+            font-weight: normal;
+            color: #3399FF;
+        }
+
+        .autocomplete-suggestion:hover strong {
+            color: #363c52;
+        }
+
+        .autocomplete-group {
+            padding: 2px 5px;
+        }
+
+        .autocomplete-group strong {
+            display: block;
+            border-bottom: 1px solid #000;
+        }
+
+        .novo-checkbox-container .checkbox {
+            position: relative;
+            padding: 20px 0 20px 20px;
+            text-align: left;
+        }
+
+        .novo-checkbox-container .checkbox label {
+            cursor: pointer;
+            padding-left: 10px;
+        }
+
+        .novo-checkbox-container .checkbox label:before,
+        .novo-checkbox-container .checkbox label:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+        }
+
+        .novo-checkbox-container .checkbox label:before {
+            left: 0;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0;
+            border-radius: 4px;
+            background: #3e4766;
+            -webkit-box-shadow: 0 0 1px grey;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .novo-checkbox-container .checkbox label:after {
+            width: 14px;
+            height: 8px;
+            top: 24px;
+            left: 3px;
+            border: 3px solid #0097f6;
+            border-top: none;
+            border-right: none;
+            background: transparent;
+            opacity: 0;
+            -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+
+        .novo-checkbox-container .checkbox label:hover:after {
+            opacity: .5;
+        }
+
+        .novo-checkbox-container .checkbox input[type="radio"],
+        .novo-checkbox-container .checkbox input[type="checkbox"] {
+            position: absolute;
+            top: 0;
+            left: -9999px;
+            visibility: hidden;
+        }
+
+        .novo-checkbox-container .checkbox input[type="radio"]:checked + label:after,
+        .novo-checkbox-container .checkbox input[type="checkbox"]:checked + label:after {
+            opacity: 1;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table > thead > tr > th,
+        .table > tbody > tr > td {
+            padding: 0;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .content form .table > tbody > tr > td > input.form-control,
+        .content form .table > tbody > tr > td > select {
+            border-radius: 0 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+
+            <div class="row">
+                <div class="col-md-12">
+                    {% for message in app.flashes('danger') %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {% for error in form.vars.errors %}
+                        <div class="alert alert-danger">
+                            {{ error.message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {{ form_start(form) }}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                Nuevo pago
+                            </h4>
+                        </div>
+                        <div class="panel-body" style="min-height: initial">
+                            <h4 class="no-margin">Datos de factura relacionada</h4>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    {{ form_row(form.uuidFacturaRelacionada) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ form_row(form.monedaFacturaRelacionada) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ form_row(form.metodoPagoFacturaRelacionada) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-body" style="min-height: initial;">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.numeroParcialidad) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.importeSaldoAnterior) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.importePagado) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.importeSaldoInsoluto) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.formaPagoPagos) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.monedaPagos) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.tipoCambioPagos) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.montoPagos) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-azul pull-right">
+                                        Facturar
+                                    </button>
+                                    <button id="preview-btn"
+                                            type="button"
+                                            class="btn btn-contorno-azul">
+                                        Preview
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_end(form) }}
+
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/cleave.min.js') }}"></script>
+    <script>
+      (function ($) {
+        const previewButton = document.getElementById('preview-btn');
+
+        $(previewButton).on('click', function () {
+          $('<a>')
+              .attr('href', 'preview?' + $('form').serialize())
+              .attr('target', '_blank')[0]
+              .click();
+        });
+
+      })(jQuery)
+    </script>
+{% endblock %}

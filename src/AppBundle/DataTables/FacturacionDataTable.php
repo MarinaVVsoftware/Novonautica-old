@@ -63,7 +63,7 @@ class FacturacionDataTable extends AbstractDataTableHandler
 
         foreach ($request->order as $order) {
             if ($order->column === 0) {
-                $query->addOrderBy('fa.folioFiscal', $order->dir);
+                $query->addOrderBy('fa.folio', $order->dir);
             } elseif ($order->column === 1) {
                 $query->addOrderBy('emi.rfc', $order->dir);
             } elseif ($order->column === 2) {
@@ -92,14 +92,15 @@ class FacturacionDataTable extends AbstractDataTableHandler
 
             $factura = $facturas[$index];
             $emisor = $factura->getEmisor();
+            $receptor = $factura->getReceptor();
             $nombreXML = explode('/', $factura->getXmlArchivo());
             $nombreXML = end($nombreXML);
 
             $results->data[] = [
                 $factura->getFolio(),
                 $emisor->getRfc() . ' / ' . $emisor->getNombre(),
-                $factura->getRfc() . ' / ' . $factura->getCliente(),
-                $factura->getRazonSocial(),
+                $receptor->getRfc() . ' / ' . $receptor->getRazonSocial(),
+                $factura->getMetodoPago(),
                 '$' . number_format($factura->getTotal() / 100, 2) . ' ' . $factura->getMoneda(),
                 $factura->getFechaTimbrado(),
                 [
@@ -108,7 +109,8 @@ class FacturacionDataTable extends AbstractDataTableHandler
                 ],
                 [
                     'id' => $factura->getId(),
-                    'status' => $factura->getEstatus()
+                    'status' => $factura->isCancelada(),
+                    'metodoPago' => $factura->getMetodoPago(),
                 ],
             ];
         }
