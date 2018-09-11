@@ -73,12 +73,14 @@
             </tr>
             <tr>
                 <td rowspan="3" colspan="7">
-                    <h4 style="margin: 0">{{ factura.receptor.razonSocial }}</h4>
+                    <h4 style="margin: 0">
+                        {{ factura.receptor.razonSocial }}
+                    </h4>
                     RFC: {{ factura.receptor.rfc }}
                     <br>
                     Dirección: {{ factura.receptor.direccion }}
                     <br>
-                    Uso CFDI: {{ factura.usoCFDI }} / {{ factura.usoCFDIValue }}
+                    Uso CFDI: {{ factura.receptor.usoCFDI }} / {{ factura.receptor.usoCFDIValue }}
                 </td>
                 <td colspan="3" class="text-center">{{ factura.uuidFiscal }}</td>
             </tr>

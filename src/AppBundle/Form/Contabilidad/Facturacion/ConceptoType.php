@@ -52,7 +52,8 @@ class ConceptoType extends AbstractType
             IntegerType::class,
             [
                 'label' => false,
-                'attr' => ['min' => 1],
+                'attr' => ['min' => 1, 'step' => 'any'],
+                'scale' => 2,
                 'constraints' => [
                     new Range([
                         'min' => 1,
