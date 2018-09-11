@@ -728,6 +728,11 @@ class Pago
         return $this->formaPagoPagos;
     }
 
+    public function getFormaPagoPagosValue()
+    {
+        return array_flip(Facturacion::$formasPagos)[$this->formaPagoPagos];
+    }
+
     /**
      * Set monedaPagos.
      *

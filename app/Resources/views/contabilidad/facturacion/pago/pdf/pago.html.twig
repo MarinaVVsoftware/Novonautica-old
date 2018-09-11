@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>PREVIEW Recibo electrónico de pago</title>
+    <title>Recibo electrónico de pago</title>
     <link rel="stylesheet"
           type="text/css"
           href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"
@@ -52,7 +52,7 @@
                     <td> FOLIO</td>
                 </tr>
                 <tr>
-                    <td>00000</td>
+                    <td>{{ pago.folio }}</td>
                 </tr>
                 <tr style="background: #CCCCCC">
                     <td> LUGAR Y FECHA</td>
@@ -82,7 +82,7 @@
                     <br>
                     <strong>Uso CFDI: </strong>{{ factura.receptor.usoCFDI }}
                 </td>
-                <td colspan="3" class="text-center">a2e158ba-4f08-4c82-b4a5-f018036ed986</td>
+                <td colspan="3" class="text-center">{{ pago.uuidFiscal }}</td>
             </tr>
             <tr class="text-center">
                 <td colspan="3">
@@ -90,7 +90,7 @@
                 </td>
             </tr>
             <tr class="text-center">
-                <td colspan="3">20001000000300022323</td>
+                <td colspan="3">{{ pago.serieCertificadoCSD }}</td>
             </tr>
             <tr class="text-center">
                 <td colspan="10">DETALLE DEL PAGO</td>
@@ -190,38 +190,28 @@
                 </div>
                 <div class="col-xs-12">
                     <h6>SELLO DIGITAL DEL CFDI:</h6>
-                    <p style="word-break: break-word;">GPKJmwd1fY+3sBYpNIY5fmebVoS611IylcfzkWCQfjwdC/hRLNVv65GLprCgy20abAspBSSDspAS5sGqPn7gWk850BAxepQzC2BMV5hGxNB
-                        jOn8AdPKwzpqJycb1FMJxcY34dBeEJNLjVEbr1KW3fhGLCC1eod3ZAntPO82+gmQMp2Fa2lX61LBqyxKzx3AJ8vXZmhDT8Z6Gmm44cm0iN5
-                        YV4sOyzN1MTLX2DwuFMTy7rDD0tcSVrAvnC1lZZGyRHhepiYrH11ub6EvxDho7hMPgdUCd6REsVJHMp3w1ti6uyolFueb1vYp7iF3EqchKeFj1V
-                        FlZjRPfGmqH4q3/VQ==</p>
+                    <p style="word-break: break-word;">{{ pago.selloCFDI }}</p>
                 </div>
                 <div class="col-xs-12">
                     <h6>SELLO DEL SAT:</h6>
-                    <p style="word-break: break-word;">gQDPn2gNhLl3Hiklwr/HgCZRe/6ySRFS1LLjHfou+JSp4ETYd6MK6WDUCyCxcj4qLXGALL7sZ+xNhb+2EcqlotJcq/JLeWUuV71N00K3ozIVdDO+
-                        abb7Xls19JZo7U+OnP9x3gPzUXd0cdCJ8xwmYK8E0MaMxR90vLs/3KgfBlZoDqSuwgPudsNyiwTaqDJlgc/auW0JsCnVil/+oWeTiutgF3/d1tClP
-                        zz9JeOdVgPooWkmQsAS+tlsVg/lN8l5W7txi1sGEvM2APtXbd9Ng6prEiX2eK93Ouzmsv8w0a3cogRWGm2U2ZPoVhVyUDd1Rb4Rk1qa2Q2Gaj
-                        zgRvWciw==</p>
+                    <p style="word-break: break-word;">{{ pago.selloSAT }}</p>
                 </div>
                 <div class="col-xs-12">
                     <h6>CADENA ORIGINAL:</h6>
-                    <p style="word-break: break-word;">||1.1|a2e158ba-4f08-4c82-b4a5-f018036ed986|2018-09-
-                        06T16:37:12|GPKJmwd1fY+3sBYpNIY5fmebVoS611IylcfzkWCQfjwdC/hRLNVv65GLprCgy20abAspBSSDspAS5sGqPn7gWk850BAxepQzC2
-                        BMV5hGxNBjOn8AdPKwzpqJycb1FMJxcY34dBeEJNLjVEbr1KW3fhGLCC1eod3ZAntPO82+gmQMp2Fa2lX61LBqyxKzx3AJ8vXZmhDT8Z6G
-                        mm44cm0iN5YV4sOyzN1MTLX2DwuFMTy7rDD0tcSVrAvnC1lZZGyRHhepiYrH11ub6EvxDho7hMPgdUCd6REsVJHMp3w1ti6uyolFueb1vYp7i
-                        F3EqchKeFj1VFlZjRPfGmqH4q3/VQ==|20001000000300022323||</p>
+                    <p style="word-break: break-word;">{{ pago.cadenaOriginal }}</p>
                 </div>
             </div>
         </div>
         <div class="col-xs-4" style="padding: 25px 0;">
-            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('img/untimbre.png') }}"
+            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('timbrados/') ~ pago.pngArchivo|split('/')|last }}"
                  alt="" class="img-responsive center-block">
         </div>
         <div class="col-xs-12" style="border: 1px solid #000;">
             <h6>NÚMERO DE SERIE DEL CERTIFICADO DEL SAT:</h6>
-            <small>20001000000300022323</small>
+            <small>{{ pago.certificadoSAT }}</small>
             <h6>FECHA Y HORA DE CERTIFICACIÓN</h6>
-            <small>{{ 'now'|date('Y-m-d\TH:i:s') }}</small>
-            <h6 class="text-center">Este documento es un previo de un CFDI</h6>
+            <small>{{ pago.fechaTimbrado }}</small>
+            <h6 class="text-center">Este documento es una representacion impresa de un CFDI</h6>
         </div>
     </div>
 </div>

@@ -35,6 +35,7 @@
                             <table class="table table-novo">
                                 <thead>
                                 <tr>
+                                    <th>Folio</th>
                                     <th>Folio de factura</th>
                                     <th>Folio de pago</th>
                                     <th>Monto facturado</th>
@@ -44,6 +45,15 @@
                                 </tr>
                                 </thead>
                             </table>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="text-right">
+                                <a href="{{ path('contabilidad_factura_pago_new_from_factura', {'id': factura.id}) }}"
+                                   class="btn btn-azul"
+                                >
+                                    Agregar pago
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -96,33 +106,17 @@
             let actionsInner = '';
 
             actionsInner += `
-            <li><a href="${data[5].id}">Detalle</a></li>
-            <li><a href="${data[5].id}/reenviar">Reenviar</a></li>
-            `;
-
-            if (!data[5].status) {
-              actionsInner += `
-                {% if is_granted(expression('has_role("CONTABILIDAD_CANCEL") or (user.isAdmin())')) %}
-                <li><a href="#" data-url="${data[5].id}/cancelar"
-                 data-toggle="modal"
-                 data-target=".ventanaborrar"">Cancelar
-                 </a></li>
-                 {% endif %}
-              `;
-            } else {
-              actionsInner += `
-                <span class="label label-danger">Cancelada</span>
-              `;
-            }
-
-            row.cells[4].innerHTML = `
-                <a href="${xmlRoute}${data[4]['xml']}"
-                 target="_blank" class="btn btn-xs btn-azul btn-block">XML</a>
-                <a href="${data[5].id}/pdf"
-                 target="_blank" class="remove-motor btn btn-xs btn-azul btn-block">PDF</a>
+            <li><a href="${location.pathname}/reenviar/${data[6].id}">Reenviar</a></li>
             `;
 
             row.cells[5].innerHTML = `
+                <a href="${xmlRoute}${data[5]['xml']}"
+                 target="_blank" class="btn btn-xs btn-azul btn-block">XML</a>
+                <a href="${location.pathname}/pdf/${data[6].id}"
+                 target="_blank" class="remove-motor btn btn-xs btn-azul btn-block">PDF</a>
+            `;
+
+            row.cells[6].innerHTML = `
                 <div class="dropdown">
                   <button class="btn btn-azul btn-xs btn-block dropdown-toggle" type="button" data-toggle="dropdown">
                     Acciones

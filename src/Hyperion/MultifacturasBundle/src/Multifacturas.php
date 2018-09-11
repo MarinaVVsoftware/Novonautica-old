@@ -9,6 +9,7 @@
 namespace Hyperion\MultifacturasBundle\src;
 
 use AppBundle\Entity\Contabilidad\Facturacion;
+use AppBundle\Entity\Pago;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class Multifacturas
@@ -235,22 +236,26 @@ class Multifacturas
         return $timbrado;
     }
 
-    public function cancela(Facturacion $factura)
+    /**
+     * @param Facturacion|Pago $factura
+     *
+     * @return mixed
+     */
+    public function cancela($factura)
     {
         require_once 'sdk2.php';
 
-        /**
-         * PAC
-         */
-        $datos['PAC']['usuario'] = $factura->getEmisor()->getUsuarioPAC();
-        $datos['PAC']['pass'] = $factura->getEmisor()->getPasswordPAC();
-        $datos['PAC']['produccion'] = 'NO';
+        $emisor = $factura->getEmisor();
 
-        $datos['cancelar'] = 'NO';
+        $datos['PAC']['produccion'] = $this->environment;
+        $datos['PAC']['usuario'] = $emisor->getUsuarioPAC();
+        $datos['PAC']['pass'] = $emisor->getPasswordPAC();
+
+        $datos['cancelar'] = 'SI';
         $datos['cfdi'] = $factura->getXmlArchivo();
-        $datos['conf']['cer'] = __DIR__.'/certificados/'.$factura->getEmisor()->getCer();
-        $datos['conf']['key'] = __DIR__.'/certificados/'.$factura->getEmisor()->getKey();
-        $datos['conf']['pass'] = $factura->getEmisor()->getPassword();
+        $datos['conf']['cer'] = $this->directory.'/certificados/'.$emisor->getCer();
+        $datos['conf']['key'] = $this->directory.'/certificados/'.$emisor->getKey();
+        $datos['conf']['pass'] = $emisor->getPassword();
 
         return cfdi_cancelar($datos);
     }

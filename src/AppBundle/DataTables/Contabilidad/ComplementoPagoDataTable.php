@@ -16,7 +16,7 @@ use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-class CompletoPagoDataTable extends AbstractDataTableHandler
+class ComplementoPagoDataTable extends AbstractDataTableHandler
 {
     const ID = 'complemento_pago';
     private $doctrine;
@@ -93,6 +93,7 @@ class CompletoPagoDataTable extends AbstractDataTableHandler
             $nombreXML = end($nombreXML);
 
             $results->data[] = [
+                $pago->getFolio(),
                 $pago->getUuidFacturaRelacionada(),
                 $pago->getUuidFiscal(),
                 $pago->getMoneda().'$ '.number_format($pago->getMontoPagos() / 100, 2),

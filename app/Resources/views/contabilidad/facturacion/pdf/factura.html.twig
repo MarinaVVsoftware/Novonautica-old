@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ title }}</title>
+    <title>Factura PDF</title>
     <link rel="stylesheet"
           type="text/css"
           href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"
@@ -34,11 +34,11 @@
             <p style="font-size: smaller">
                 RFC: {{ factura.emisor.rfc }}
                 <br>
-                Régimen fiscal: {{ factura.emisor.regimenFiscal }} / {{ regimenFiscal }}
+                Régimen fiscal: {{ factura.emisor.regimenFiscal }} / {{ factura.emisor.regimenFiscalValue }}
                 <br>
                 {{ factura.emisor.direccion }}
                 <br>
-                Tipo comprobante: {{ factura.tipoComprobante }} / {{ tipoComprobante }}
+                Tipo comprobante: {{ factura.tipoComprobante }} / {{ factura.tipoComprobanteValue }}
                 <br>
                 Versión CFDI: 3.3
             </p>
@@ -56,7 +56,7 @@
                     <td> LUGAR Y FECHA</td>
                 </tr>
                 <tr>
-                    <td> {{ factura.emisor.codigoPostal }}, {{ factura.fechaTimbrado }} </td>
+                    <td> {{ factura.emisor.codigoPostal }}, {{ factura.fecha|date('Y-m-d\TH:i:s') }} </td>
                 </tr>
                 </tbody>
             </table>
@@ -73,14 +73,14 @@
             </tr>
             <tr>
                 <td rowspan="3" colspan="7">
-                    <h4 style="margin: 0">{{ factura.razonSocial }}</h4>
-                    RFC: {{ factura.rfc }}
+                    <h4 style="margin: 0">{{ factura.receptor.razonSocial }}</h4>
+                    RFC: {{ factura.receptor.rfc }}
                     <br>
-                    {{ factura.direccionFiscal }}
+                    Dirección: {{ factura.receptor.direccion }}
                     <br>
-                    Uso CFDI: {{ factura.usoCFDI }} / {{ usoCFDI }}
+                    Uso CFDI: {{ factura.usoCFDI }} / {{ factura.usoCFDIValue }}
                 </td>
-                <td colspan="3" class="text-center">{{ factura.folioFiscal }}</td>
+                <td colspan="3" class="text-center">{{ factura.uuidFiscal }}</td>
             </tr>
             <tr class="text-center">
                 <td colspan="3">
@@ -112,8 +112,8 @@
                     <td>{{ concepto.claveProdServ.claveProdServ ~ ' / ' ~ concepto.claveProdServ.descripcion }}</td>
                     <td>{{ concepto.descripcion }}</td>
                     <td>${{ (concepto.valorunitario / 100)|number_format(2) }}</td>
-                    <td>IVA ${{ (concepto.iva / 100)|number_format(2) }}</td>
-                    <td>${{ (concepto.subtotal / 100)|number_format(2) }}</td>
+                    <td>IVA ${{ (concepto.impuestoImporte / 100)|number_format(2) }}</td>
+                    <td>${{ (concepto.importe / 100)|number_format(2) }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -125,18 +125,18 @@
                     <br>
                     <strong>{{ numLetras }}</strong>
                     <br>
-                    Moneda: {{ factura.moneda }} - {{ moneda }}
+                    Moneda: {{ factura.moneda }} - {{ factura.moneda == 'MXN' ? 'PESOS MEXICANOS' : 'DOLARES AMERICANOS' }}
                     <br>
-                    Forma de pago: {{ factura.formaPago }} - {{ formaPago }}
+                    Forma de pago: {{ factura.formaPago }} - {{ factura.formaPagoValue }}
                     <br>
-                    Método de pago: {{ factura.metodoPago }} - {{ metodoPago }}
+                    Método de pago: {{ factura.metodoPago }} - {{ factura.metodoPagoValue }}
                 </td>
                 <td colspan="2">SUBTOTAL</td>
                 <td colspan="2">$ {{ (factura.subtotal / 100)|number_format(2) }} {{ factura.moneda }}</td>
             </tr>
             <tr>
                 <td colspan="2">IVA(16%)</td>
-                <td colspan="2">$ {{ (factura.iva / 100)|number_format(2) }} {{ factura.moneda }}</td>
+                <td colspan="2">$ {{ (factura.importe / 100)|number_format(2) }} {{ factura.moneda }}</td>
             </tr>
             <tr>
                 <td colspan="2">TOTAL</td>

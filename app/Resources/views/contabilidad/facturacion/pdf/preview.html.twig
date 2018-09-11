@@ -79,7 +79,7 @@
                         </h4>
                         RFC: {{ factura.receptor.rfc }}
                         <br>
-                        {{ factura.receptor.direccion }}
+                        Dirección: {{ factura.receptor.direccion }}
                         <br>
                         Uso CFDI: {{ factura.usoCFDI }} / {{ factura.usoCFDIValue }}
                     {% else %}
@@ -152,9 +152,9 @@
                 <td rowspan="3" colspan="6">
                     TOTAL CON LETRA:
                     <br>
-                    <strong>TOTAL CON LETRA</strong>
+                    <strong>{{ num_letras }}</strong>
                     <br>
-                    Moneda: {{ factura.moneda }}
+                    Moneda: {{ factura.moneda }} - {{ factura.moneda == 'MXN' ? 'PESOS MEXICANOS' : 'DOLARES AMERICANOS' }}
                     <br>
                     Forma de pago: {{ factura.formaPago }} - {{ factura.formaPagoValue }}
                     <br>

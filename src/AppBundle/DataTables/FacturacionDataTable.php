@@ -100,6 +100,7 @@ class FacturacionDataTable extends AbstractDataTableHandler
                 $factura->getFolio(),
                 $emisor->getRfc() . ' / ' . $emisor->getNombre(),
                 $receptor->getRfc() . ' / ' . $receptor->getRazonSocial(),
+                $factura->getMetodoPago(),
                 '$' . number_format($factura->getTotal() / 100, 2) . ' ' . $factura->getMoneda(),
                 $factura->getFechaTimbrado(),
                 [

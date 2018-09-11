@@ -121,7 +121,7 @@ class FacturacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $receptor = $factura->getReceptor();
             $sello = $this->multifacturas->procesa($factura);
 
             if (key_exists('codigo_mf_numero', $sello)) {
@@ -136,32 +136,21 @@ class FacturacionController extends Controller
                 ]);
             }
 
-            /* TODO:
-            $attachment = new Swift_Attachment(
-                $this->getFacturaPDF($factura),
-                'factura_'.$factura->getFolio().'.pdf',
-                'application/pdf'
-            );
-
-            $message = (new \Swift_Message('Factura de su pago realizado en '.$factura->getFecha()->format('d/m/Y')))
-                ->setFrom('noresponder@novonautica.com')
-                ->setTo(explode(',', $factura->getEmail()))
-                ->setBcc(explode(',', $factura->getEmisor()->getEmails()))
-                ->setBody(
-                    $this->renderView('contabilidad/facturacion/email/factura-template.html.twig', [
-                        'cuerpo' => $factura->getCuerpoCorreo(),
-                    ]),
-                    'text/html'
-                )
-                ->attach($attachment);
-
-            $mailer->send($message);
-            */
-
+            // Aqui puede haver un problema de race condition, donde pueden existir mas de dos usuarios creando una
+            // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
+            // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
+            $valoresSistema = $em->getRepository(ValorSistema::class)->find(1);
+            $factura->setFolio($valoresSistema->getFolioFacturaAstillero());
             $valoresSistema->setFolioFacturaAstillero($factura->getFolio() + 1);
 
             $em->persist($factura);
             $em->flush();
+
+            if (is_string($receptor->getCorreos()) && strlen($receptor->getCorreos()) > 0) {
+                $arrayCorreos = explode(',', $receptor->getCorreos());
+
+                $this->enviarFactura($factura, $arrayCorreos, $this->getUser()->getCorreo());
+            }
 
             return $this->redirectToRoute('contabilidad_facturacion_index');
         }
@@ -212,7 +201,7 @@ class FacturacionController extends Controller
             'contabilidad/facturacion/pdf/factura.html.twig',
             [
                 'factura' => $factura,
-                'num_letras' => (new NumberToLetter())->toWord(($factura->getTotal() / 100), $factura->getMoneda()),
+                'numLetras' => (new NumberToLetter())->toWord(($factura->getTotal() / 100), $factura->getMoneda()),
             ]
         );
 
@@ -229,29 +218,17 @@ class FacturacionController extends Controller
      * @Method("GET")
      *
      * @param Facturacion $factura
-     * @param \Swift_Mailer $mailer
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function reenviarAction(Facturacion $factura, \Swift_Mailer $mailer)
+    public function reenviarAction(Facturacion $factura)
     {
-        $attachment = new Swift_Attachment(
-            $this->getFacturaPDF($factura),
-            'factura_'.$factura->getFolio().'.pdf',
-            'application/pdf'
-        );
+        $receptor = $factura->getReceptor();
 
-        $message = (new \Swift_Message('Factura de su pago realizado en '.$factura->getFecha()->format('d/m/Y')))
-            ->setFrom('noresponder@novonautica.com')
-            ->setTo(explode(',', $factura->getEmail()))
-            ->setBcc(explode(',', $factura->getEmisor()->getEmails()))
-            ->setBody(
-                $this->renderView('contabilidad/facturacion/email/factura-template.html.twig'),
-                'text/html'
-            )
-            ->attach($attachment);
-
-        $mailer->send($message);
+        if (is_string($receptor->getCorreos()) && strlen($receptor->getCorreos()) > 0) {
+            $arrayCorreos = explode(',', $receptor->getCorreos());
+            $this->enviarFactura($factura, $arrayCorreos, $this->getUser()->getCorreo());
+        }
 
         return $this->redirectToRoute('contabilidad_facturacion_index');
     }
@@ -267,20 +244,17 @@ class FacturacionController extends Controller
     public function cancelAction(Facturacion $factura)
     {
         $this->denyAccessUnlessGranted('CONTABILIDAD_CANCEL', $factura);
-        // FIXME
 
-        /*
-        $facturador = $this->container->get('multifacturas');
-        $timbrado = $facturador->cancela($factura);
+        $timbrado = $this->multifacturas->cancela($factura);
 
         if ($timbrado['codigo_mf_numero']) {
             $this->addFlash('danger', $timbrado['codigo_mf_texto']);
         } else {
             $this->addFlash('danger', $timbrado['codigo_mf_texto']);
+
             $factura->setIsCancelada(true);
             $this->getDoctrine()->getManager()->flush();
         }
-        */
 
         return $this->redirectToRoute('contabilidad_facturacion_index');
     }
@@ -388,5 +362,38 @@ class FacturacionController extends Controller
                 'factura' => $factura,
             ]
         );
+    }
+
+    private function enviarFactura(Facturacion $factura, array $emails, $bbc = null)
+    {
+        $attachmentPDF = new Swift_Attachment(
+            $this->getFacturaPDF($factura),
+            'factura_'.$factura->getFolio().'.pdf',
+            'application/pdf'
+        );
+
+        $attachmentXML = new Swift_Attachment(
+            $factura->getXml(),
+            'factura_'.$factura->getFolio().'.xml',
+            'application/pdf'
+        );
+
+        $message = (new \Swift_Message('Factura de su pago realizado en '.$factura->getFecha()->format('d/m/Y')))
+            ->setFrom('noresponder@novonautica.com')
+            ->setTo($emails)
+            ->setBody(
+                $this->renderView('mail/envio-factura.html.twig', [
+                    'factura' => $factura,
+                ]),
+                'text/html'
+            )
+            ->attach($attachmentPDF)
+            ->attach($attachmentXML);
+
+        if ($bbc) {
+            $message->setBcc($bbc);
+        }
+
+        $this->mailer->send($message);
     }
 }

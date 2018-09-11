@@ -17,6 +17,7 @@ use DataTables\DataTablesInterface;
 use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
+use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,7 +87,7 @@ class PagoController extends AbstractController
         return $this->render(
             'contabilidad/facturacion/pago/index.html.twig',
             [
-                'title' => 'Listado de facturas',
+                'title' => 'Listado de complementos de pago',
                 'factura' => $factura,
             ]
         );
@@ -116,7 +117,7 @@ class PagoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $receptor = $factura->getReceptor();
             $sello = $this->multifacturas->procesaPago($pago);
 
             if (key_exists('codigo_mf_numero', $sello)) {
@@ -131,17 +132,30 @@ class PagoController extends AbstractController
                 ]);
             }
 
-            $valoresSistema->setFolioFacturaAstillero($pago->getFolio() + 1);
+            // Aqui puede haver un problema de race condition, donde pueden existir mas de dos usuarios creando una
+            // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
+            // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
+            $valoresSistema = $em->getRepository(ValorSistema::class)->find(1);
+            $pago->setFolio($valoresSistema->getFolioFacturaAstillero());
+            $valoresSistema->setFolioFacturaAstillero($factura->getFolio() + 1);
+
             $em->persist($pago);
             $em->flush();
 
-            return $this->redirectToRoute('contabilidad_facturacion_index');
+            if (is_string($receptor->getCorreos()) && strlen($receptor->getCorreos()) > 0) {
+                $arrayCorreos = explode(',', $receptor->getCorreos());
+
+                $this->enviarPago($factura, $pago, $arrayCorreos, $this->getUser()->getCorreo());
+            }
+
+            return $this->redirectToRoute('contabilidad_factura_pago_index', ['id' => $factura->getId()]);
         }
 
         return $this->render(
             'contabilidad/facturacion/pago/new.html.twig',
             [
                 'form' => $form->createView(),
+                'factura' => $factura,
             ]
         );
     }
@@ -170,5 +184,99 @@ class PagoController extends AbstractController
             'application/pdf',
             'inline'
         );
+    }
+
+    /**
+     * @Route("/{id}/pdf/{pago}", name="contabilidad_factura_pago_pdf")
+     */
+    public function pdfAction(Facturacion $factura, Pago $pago)
+    {
+        $html = $this->renderView(
+            'contabilidad/facturacion/pago/pdf/pago.html.twig',
+            [
+                'title' => 'Comprobante de pago',
+                'factura' => $factura,
+                'pago' => $pago,
+                'num_letras' => (new NumberToLetter())->toWord(($factura->getTotal() / 100), $factura->getMoneda()),
+            ]
+        );
+
+        return new PdfResponse(
+            $this->pdf->getOutputFromHtml($html),
+            "factura-{$factura->getFolio()}.pdf",
+            'application/pdf',
+            'inline'
+        );
+    }
+
+    /**
+     * @Route("/{id}/reenviar/{pago}", name="contabilidad_factura_pago_reenvio")
+     */
+    public function reenviarAction(Facturacion $factura, Pago $pago)
+    {
+        $receptor = $factura->getReceptor();
+
+        if (is_string($receptor->getCorreos()) && strlen($receptor->getCorreos()) > 0) {
+            $arrayCorreos = explode(',', $receptor->getCorreos());
+            $this->enviarPago($factura, $pago, $arrayCorreos, $this->getUser()->getCorreo());
+        }
+
+        return $this->redirectToRoute('contabilidad_factura_pago_index', ['id' => $factura->getId()]);
+    }
+
+    /**
+     * @Route("/{id}/cancelar/{pago}", name="contabilidad_facturacion_cancel")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function cancelAction($id, Pago $pago)
+    {
+//        $this->denyAccessUnlessGranted('CONTABILIDAD_CANCEL', $factura); FIXME Permisos
+
+        $timbrado = $this->multifacturas->cancela($pago);
+
+        if ($timbrado['codigo_mf_numero']) {
+            $this->addFlash('danger', $timbrado['codigo_mf_texto']);
+        } else {
+            $this->addFlash('danger', $timbrado['codigo_mf_texto']);
+
+            $pago->setIsCancelado(true);
+            $this->getDoctrine()->getManager()->flush();
+        }
+
+        return $this->redirectToRoute('contabilidad_factura_pago_index', ['id' => $id]);
+    }
+
+    private function enviarPago(Facturacion $factura, Pago $pago, array $emails, $bbc = null)
+    {
+        $attachmentPDF = new Swift_Attachment(
+            $this->pdfAction($factura, $pago),
+            'factura_'.$pago->getFolio().'.pdf',
+            'application/pdf'
+        );
+
+        $attachmentXML = new Swift_Attachment(
+            $pago->getXml(),
+            'factura_'.$pago->getFolio().'.xml',
+            'application/pdf'
+        );
+
+        $message = (new \Swift_Message('Factura de su pago realizado en '.$pago->getFecha()->format('d/m/Y')))
+            ->setFrom('noresponder@novonautica.com')
+            ->setTo($emails)
+            ->setBody(
+                $this->renderView('mail/envio-factura.html.twig', [
+                    'factura' => $factura,
+                ]),
+                'text/html'
+            )
+            ->attach($attachmentPDF)
+            ->attach($attachmentXML);
+
+        if ($bbc) {
+            $message->setBcc($bbc);
+        }
+
+        $this->mailer->send($message);
     }
 }

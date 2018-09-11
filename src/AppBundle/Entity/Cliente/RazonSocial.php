@@ -68,7 +68,7 @@ class RazonSocial
     private $direccion;
 
     /**
-     * @var array
+     * @var string
      *
      * @Assert\NotBlank(message="Este campo no puede estar vacio")
      *
@@ -188,7 +188,7 @@ class RazonSocial
     /**
      * Set correos
      *
-     * @param array $correos
+     * @param string $correos
      *
      * @return RazonSocial
      */
@@ -202,7 +202,7 @@ class RazonSocial
     /**
      * Get correos
      *
-     * @return array
+     * @return string
      */
     public function getCorreos()
     {
