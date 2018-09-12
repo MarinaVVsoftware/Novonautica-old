@@ -126,7 +126,7 @@ class AstilleroCotizacionController extends Controller
             ->setDivisa('MXN');
 
         $astilleroEstadia
-            ->setCantidad(7)
+            ->setCantidad(6)
             ->setPrecio($preciosBasicos[1]['precio'])
             ->setDivisa('USD');
 
@@ -611,7 +611,9 @@ class AstilleroCotizacionController extends Controller
             if($guardarFinalizar){
                 $pincode = $em->getRepository(Pincode::class)
                     ->getOneValid($form->get('pincode')->getViewData());
-                $em->remove($pincode);
+                if($pincode){
+                    $em->remove($pincode);
+                }
 
                 // Buscar correos a notificar
                 $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([

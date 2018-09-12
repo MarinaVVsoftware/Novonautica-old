@@ -58,7 +58,12 @@ class ServicioType extends AbstractType
                 'allow_delete' => true,
                 'prototype' => true,
                 'by_reference' => false
-            ]);
+            ])
+            ->add('tipoCantidad', ChoiceType::class, [
+                'label' => 'Tipo de cantidad',
+                'choices' => ['En base al eslora' => true, 'Fijo' => false],
+            ])
+            ->add('diasDescuento');
     }
     
     /**

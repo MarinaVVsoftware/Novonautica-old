@@ -301,22 +301,24 @@ jQuery('.add-another-servicio').click(function (e) {
 
 $('.lista-servicios').on('click', '.remove-servicio', function (e) {
   e.preventDefault();
-  var fila = $(this).parent().parent();
-  var idservicio = fila.children('.valorgrupo').children('input').val();
-  if(idservicio > 0){ //si se borra un servicio con productos asociados
-      $.each($('#productos tr'), function (i,filaproducto) {
-          // si pertenecen al mismo kit los productos con los servicios
-          if($(filaproducto).children('.valorgrupo').children('input').val() === idservicio){
-              $(filaproducto).remove();
-          }
-      });
-      let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
-      servicios.forEach(fila =>{
-          if(fila.querySelector('.valorgrupo input').value === idservicio){ fila.remove(); }
-      });
-  }
+  // Descomentar si se requiere que se borre el servicio con los productos asociados
+  // var fila = $(this).parent().parent();
+  // var idservicio = fila.children('.valorgrupo').children('input').val();
+  // if(idservicio > 0){ //si se borra un servicio con productos asociados
+  //     $.each($('#productos tr'), function (i,filaproducto) {
+  //         // si pertenecen al mismo kit los productos con los servicios
+  //         if($(filaproducto).children('.valorgrupo').children('input').val() === idservicio){
+  //             $(filaproducto).remove();
+  //         }
+  //     });
+  //     let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
+  //     servicios.forEach(fila =>{
+  //         if(fila.querySelector('.valorgrupo input').value === idservicio){ fila.remove(); }
+  //     });
+  // }
   $(this).parent().parent().remove();
-  calculaTotalesAstillero();
+  calculaDiasEstadiaAstillero();
+  //calculaTotalesAstillero();
   return false;
 });
 
@@ -436,17 +438,30 @@ $('.add-servicio').click(function (e) {
     newWidget = newWidget.replace('td-producto', 'hide');
     newWidget = newWidget.replace('td-servicio', 'hide');
     newWidget = newWidget.replace('input-group', 'hide');
+    newWidget = newWidget.replace('valorpromedio hide', 'valorpromedio');
     totServicios++;
     $('#serviciosextra').data('cantidad', totServicios);
     var newLi = jQuery('<tr class="servicio-agregado" data-id="' + (totServicios - 1) + '"></tr>').html(newWidget);
     newLi.appendTo(servicioListPrimero);
     newLi.before(newLi);
-    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').val(1);
-    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').parent().data('valor',1);
+    let cantidad = 1;
+    if($(this).data('tipo_cantidad') === 1){
+        cantidad = typeof($('#eslora').data('valor')) === 'undefined' ? 1 : $('#eslora').data('valor');
+    }
+    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').val(cantidad);
+    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').parent().data('valor', cantidad);
     $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_servicio').val($(this).data('id'));
+    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_tipoCantidad').val($(this).data('tipo_cantidad'));
+    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_promedio').val($(this).data('dias_descuento'));
+    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_servicio').parent().parent().children('.valorpromedio').append($(this).data('dias_descuento'));
+    //------------- descuenta dias estadia --------------------
+    // let diasEstadia = Number($('#appbundle_astillerocotizacion_diasEstadia').val()) - Number($(this).data('dias_descuento'));
+    // $('#appbundle_astillerocotizacion_diasEstadia').val(diasEstadia);
+    calculaDiasEstadiaAstillero();
+    //--------- fin descuenta dias estadia --------------------
+    
     var fila = $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_servicio').parent().parent();
     var idservicio = $(this).data('id');
-    //fila.data('idservicio',idservicio);
     var dolar = $('#appbundle_astillerocotizacion_dolar').val();
     var precio = 0;
     $(fila).children('.valorgrupo').children('input').val(idservicio);
@@ -716,7 +731,35 @@ function diasEntreFechas(inicio, fin) {
   var days = (diff / 1000 / 60 / 60 / 24);
   return days;
 }
+function totalDiasLaborales(start, end) {
+    // This makes no effort to account for holidays
+    // Counts end day, does not count start day
 
+    // make copies we can normalize without changing passed in objects
+    var start = new Date(start);
+    var end = new Date(end);
+    start.setDate(start.getDate() + 1);
+    end.setDate(end.getDate() + 1);
+    // initial total
+    var totalBusinessDays = 0;
+
+    // normalize both start and end to beginning of the day
+    start.setHours(0,0,0,0);
+    end.setHours(0,0,0,0);
+
+    var current = new Date(start);
+    current.setDate(current.getDate() + 1);
+    var day;
+    // loop through each day, checking
+    while (current <= end) {
+        day = current.getDay();
+        if (day >= 1 && day <= 6) {
+            ++totalBusinessDays;
+        }
+        current.setDate(current.getDate() + 1);
+    }
+    return totalBusinessDays;
+}
 //--- para marina humeda nueva cotización estadia ---
 
 var de_cantidad = 0;
@@ -1048,37 +1091,36 @@ $('#appbundle_astillerocotizacion_dolar').keyup(function () {
 
 // -- fecha llegada --
 $('#appbundle_astillerocotizacion_fechaLlegada').on("change", function () {
-    var llegada = $(this).val();
-    var salida = $('#appbundle_astillerocotizacion_fechaSalida').val();
-    var dias = diasEntreFechas(llegada, salida);
-    $('#appbundle_astillerocotizacion_diasEstadia').val(dias);
-    var nueva_estadia_cantidad = dias * $("#estadia_cantidad").data('eslora');
-    $("#estadia_cantidad").data('dias', dias);
-    $("#estadia_cantidad").data('valor', nueva_estadia_cantidad);
-    $("#estadia_cantidad").html(dias + ' (pie por día)');
-    calculaSubtotalesAstillero($("#fila_estadia"));
+    calculaDiasEstadiaAstillero();
 });
 
 // -- fecha salida --
 $('#appbundle_astillerocotizacion_fechaSalida').on("change", function () {
-    var llegada = $('#appbundle_astillerocotizacion_fechaLlegada').val();
-    var salida = $(this).val();
-    var dias = diasEntreFechas(llegada, salida);
-    $('#appbundle_astillerocotizacion_diasEstadia').val(dias);
-    var nueva_estadia_cantidad = dias * $("#estadia_cantidad").data('eslora');
-    $("#estadia_cantidad").data('dias', dias);
-    $("#estadia_cantidad").data('valor', nueva_estadia_cantidad);
-    $("#estadia_cantidad").html(dias + ' (pie por día)');
-    calculaSubtotalesAstillero($('#fila_estadia'));
+    calculaDiasEstadiaAstillero();
 });
-
+ function calculaDiasEstadiaAstillero(){
+     var llegada = $('#appbundle_astillerocotizacion_fechaLlegada').val();
+     var salida = $('#appbundle_astillerocotizacion_fechaSalida').val();
+     var diasLaborales = totalDiasLaborales(llegada, salida);
+     var diasDescuento = 0;
+     document.getElementById('serviciosextra').querySelectorAll('tr').forEach(
+         servicio => diasDescuento+=Number($(servicio).children('.valorpromedio').children('input').val()));
+     var dias = diasLaborales - diasDescuento;
+     $('#appbundle_astillerocotizacion_diasEstadia').val(dias);
+     var nueva_estadia_cantidad = dias * $("#estadia_cantidad").data('eslora');
+     $("#estadia_cantidad").data('dias', dias);
+     $("#estadia_cantidad").data('valor', nueva_estadia_cantidad);
+     $("#estadia_cantidad").html(dias + ' (pie por día)');
+     calculaSubtotalesAstillero($('#fila_estadia'));
+ }
 $('#appbundle_astillerocotizacion_diasEstadia').keyup(function () {
-    var dias = $(this).val();
-    var nueva_estadia_cantidad = dias * $("#estadia_cantidad").data('eslora');
-    $("#estadia_cantidad").data('dias', dias);
-    $("#estadia_cantidad").data('valor', nueva_estadia_cantidad);
-    $("#estadia_cantidad").html(dias + ' (pie por día)');
-    calculaSubtotalesAstillero($('#fila_estadia'));
+    // var dias = $(this).val();
+    // var nueva_estadia_cantidad = dias * $("#estadia_cantidad").data('eslora');
+    // $("#estadia_cantidad").data('dias', dias);
+    // $("#estadia_cantidad").data('valor', nueva_estadia_cantidad);
+    // $("#estadia_cantidad").html(dias + ' (pie por día)');
+    // calculaSubtotalesAstillero($('#fila_estadia'));
+    calculaDiasEstadiaAstillero();
 });
 $('#appbundle_astillerocotizacion_descuento').keyup(function (){
     calculaTotalesAstillero();

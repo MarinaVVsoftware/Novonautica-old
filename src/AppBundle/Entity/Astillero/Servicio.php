@@ -88,6 +88,22 @@ class Servicio
     private $gruposProductos;
 
     /**
+     * Variable para identificar si se tomara la cantidad el servicio basado en el eslora
+     *
+     * @var bool
+     *
+     * @ORM\Column(name="tipo_cantidad", type="boolean")
+     */
+    private $tipoCantidad;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="dias_descuento", type="integer")
+     */
+    private $diasDescuento;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -264,5 +280,53 @@ class Servicio
     public function getGruposProductos()
     {
         return $this->gruposProductos;
+    }
+
+    /**
+     * Set tipoCantidad.
+     *
+     * @param bool $tipoCantidad
+     *
+     * @return Servicio
+     */
+    public function setTipoCantidad($tipoCantidad)
+    {
+        $this->tipoCantidad = $tipoCantidad;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoCantidad.
+     *
+     * @return bool
+     */
+    public function getTipoCantidad()
+    {
+        return $this->tipoCantidad;
+    }
+
+    /**
+     * Set diasDescuento.
+     *
+     * @param int $diasDescuento
+     *
+     * @return Servicio
+     */
+    public function setDiasDescuento($diasDescuento)
+    {
+        $this->diasDescuento = $diasDescuento;
+
+        return $this;
+    }
+
+    /**
+     * Get diasDescuento.
+     *
+     * @return int
+     */
+    public function getDiasDescuento()
+    {
+        return $this->diasDescuento;
     }
 }

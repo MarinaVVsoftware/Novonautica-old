@@ -37,6 +37,20 @@
                             <label>Descripción</label>
                             <div class="info-input">{{ servicio.descripcion }}</div>
                         </div>
+                        <div class="col-sm-4">
+                            <label>Tipo de cantidad</label>
+                            <div class="info-input">
+                                {% if servicio.tipoCantidad %}
+                                    En base al eslora
+                                {% else %}
+                                    Fijo
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Días de descuento</label>
+                            <div class="info-input">{{ servicio.diasDescuento }}</div>
+                        </div>
                     </div>
                     {% if servicio.gruposProductos|length > 0 %}
                         <div class="row">
@@ -71,7 +85,7 @@
                         </div>
                     {% endif %}
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-12 espacio-linea-arriba2">
                             <a class="btn btn-azul pull-right"
                                href="{{ path('astillero_servicio_edit', { 'id': servicio.id }) }}">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar

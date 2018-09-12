@@ -894,6 +894,7 @@
                                             <th class="col-sm-1">Sub-Total</th>
                                             <th class="col-sm-1">IVA</th>
                                             <th class="col-sm-1">Total</th>
+                                            <th class="col-sm-1">Días descuento</th>
                                             <th class="col-sm-1"></th>
                                         </tr>
                                         </thead>
@@ -943,22 +944,23 @@
                                                             $ {{ (servicioagregado.vars.value.total/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
-                                                        <td class="hide">
-                                                            {{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}
+                                                        <td class="valortipo hide">
+                                                            {{ form_widget(servicioagregado.tipoCantidad) }}
+                                                        </td>
+                                                        <td class="valorpromedio">
+                                                            {{ form_widget(servicioagregado.promedio) }}
+                                                            {{ servicioagregado.vars.value.promedio }}
+                                                        </td>
+                                                        <td class="valorgrupo hide">
+                                                            {{ form_widget(servicioagregado.grupo) }}
                                                         </td>
                                                         <td>
                                                             <a href="#" class="remove-servicio btn-xs btn-naranja">
                                                                 <i class="fa fa-times" aria-hidden="true"></i>
                                                             </a>
                                                         </td>
-                                                        <td class="valortipo hide">
-                                                            {{ form_widget(servicioagregado.tipoCantidad) }}
-                                                        </td>
-                                                        <td class="valorpromedio hide">
-                                                            {{ form_widget(servicioagregado.promedio) }}
-                                                        </td>
-                                                        <td class="valorgrupo hide">
-                                                            {{ form_widget(servicioagregado.grupo) }}
+                                                        <td class="hide">
+                                                            {{ form_widget(servicioagregado.estatus,{'attr':{'class':'hidden'}}) }}
                                                         </td>
                                                     </tr>
                                                 {% endif %}
@@ -977,7 +979,9 @@
                                                    data-id="{{ serv.data.id }}"
                                                    data-nombre="{{ serv.data.nombre }}"
                                                    data-precio="{{ serv.data.precio }}"
-                                                   data-divisa="{{ serv.data.divisa }}">
+                                                   data-divisa="{{ serv.data.divisa }}"
+                                                   data-tipo_cantidad="{{ serv.data.tipoCantidad }}"
+                                                   data-dias_descuento="{{ serv.data.diasDescuento }}">
                                                     + {{ serv.data.nombre }}
                                                 </a>
                                             {% endfor %}
@@ -1461,11 +1465,24 @@
               calculaSubtotalesAstillero($('#cotizainspeccionar'));
               calculaSubtotalesAstillero($('#fila_estadia'));
               calculaProductosPorServicio();
+              calculaServiciosExtraAstillero();
               $('#loading').hide();
             }
           });
         }
-
+          function calculaServiciosExtraAstillero(){
+              let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
+              servicios.forEach(servicio => agregaCantidadServicioAstillero(servicio));
+          }
+          function agregaCantidadServicioAstillero(fila){
+            console.log(fila.childNodes[19].childNodes[1]);
+              if(Number(fila.childNodes[19].childNodes[1].value) === 1){
+                  let eslora = document.getElementById('eslora')?document.getElementById('eslora').dataset.valor:1;
+                  fila.childNodes[1].childNodes[1].value = eslora;
+                  $(fila).children('.valorcantidad').data('valor',eslora);
+                  calculaSubtotalesAstillero($(fila));
+              }
+          }
       })(jQuery);
 
       $('#productos').change('.select-busca-producto', function (e) {
@@ -1484,5 +1501,6 @@
       recalculaPreciosProductos();
       recalculaPreciosOtros();
       recalculaPreciosServicios();
+      calculaDiasEstadiaAstillero();
     </script>
 {% endblock %}

@@ -46,21 +46,7 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane" id="generales">
                             <div class="row">
-                                {#<div class="col-sm-3">#}
-
-                                    {#<div id="info-cliente">#}
-                                        {#<label>Cliente</label>#}
-                                        {#<div class='info-input'>{{ astilleroCotizacion.barco.cliente.nombre }}</div>#}
-                                        {#<label>Correo electrónico</label>#}
-                                        {#<div class='info-input'>{{ astilleroCotizacion.barco.cliente.correo }}</div>#}
-                                        {#<label>Número de teléfono</label>#}
-                                        {#<div class='info-input'>{{ astilleroCotizacion.barco.cliente.telefono }}</div>#}
-                                        {#<label>Dirección</label>#}
-                                        {#<div class='info-input'>{{ astilleroCotizacion.barco.cliente.direccion }}</div>#}
-                                    {#</div>#}
-                                {#</div>#}
                                 <div class="col-sm-3">
-
                                     <div id="info-barco">
                                         <label>Barco</label>
                                         <div class='info-input'>{{ astilleroCotizacion.barco.nombre }}</div>
@@ -230,6 +216,7 @@
                                             <th class="col-sm-1">Sub-Total</th>
                                             <th class="col-sm-1">IVA</th>
                                             <th class="col-sm-1">Total</th>
+                                            <th class="col-sm-1">Días decuento</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -251,6 +238,7 @@
                                                         <td>$ {{ (AstilleroServicio.total/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
+                                                        <td>{{ AstilleroServicio.promedio }}</td>
                                                     </tr>
                                                 {% endif %}
                                             {% endif %}
