@@ -58,36 +58,38 @@
                 <tbody>
                 {% for concepto in conceptos %}
                     <tr>
-                        <th>{{ concepto.producto.nombre }}</th>
-                        <th>{{ concepto.cantidad }}</th>
-                        {% if conceptos is not empty %}
-                            <th>{{ concepto.descuento }} %</th>
+                        <td>{{ concepto.producto.nombre }}</td>
+                        <td>{{ concepto.cantidad }}</td>
+                        {% if concepto.descuento > 0 %}
+                            <td>{{ concepto.descuento }} %</td>
                         {% endif %}
-                        <th>{{ concepto.precioUnitario }}</th>
-                        <th>{{ concepto.subtotal }}</th>
-                        <th>{{ concepto.iva }}</th>
-                        <th>{{ concepto.total }}</th>
+                        <td>{{ (concepto.precioUnitario / 100)|number_format(2) }}</td>
+                        <td>{{ (concepto.subtotal / 100)|number_format(2) }}</td>
+                        <td>{{ (concepto.iva / 100)|number_format(2) }}</td>
+                        <td>{{ (concepto.total / 100)|number_format(2) }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
                 <tfoot>
+                {% if conceptos is not empty and conceptos[0].descuento > 0 %}
                 <tr>
-                    <th colspan="5"></th>
+                    <th colspan="{{ conceptos[0].descuento > 0 ? '5' : '4' }}"></th>
                     <th class="text-right"  style="background-color: #EAEAEA;">Descuento: </th>
                     <th class="text-right">MXN$ {{ (venta.descuento / 100)|number_format(2) }}</th>
                 </tr>
+                {% endif %}
                 <tr>
-                    <th colspan="5"></th>
+                    <th colspan="{{ conceptos[0].descuento > 0 ? '5' : '4' }}"></th>
                     <th class="text-right"  style="background-color: #EAEAEA;">Subtotal: </th>
                     <th class="text-right">MXN$ {{ (venta.subtotal / 100)|number_format(2) }}</th>
                 </tr>
                 <tr>
-                    <th colspan="5"></th>
+                    <th colspan="{{ conceptos[0].descuento > 0 ? '5' : '4' }}"></th>
                     <th class="text-right"  style="background-color: #EAEAEA;">IVA: </th>
                     <th class="text-right">MXN$ {{ (venta.iva / 100)|number_format(2) }}</th>
                 </tr>
                 <tr>
-                    <th colspan="5">
+                    <th colspan="{{ conceptos[0].descuento > 0 ? '5' : '4' }}">
                         <small>"ESTE NO ES UN DOCUMENTO FISCAL"</small>
                     </th>
                     <th class="text-right"  style="background-color: #EAEAEA;">Total: </th>
