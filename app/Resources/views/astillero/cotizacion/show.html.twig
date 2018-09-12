@@ -330,6 +330,7 @@
                                             <th class="col-sm-1">Sub-Total</th>
                                             <th class="col-sm-1">IVA</th>
                                             <th class="col-sm-1">Total</th>
+                                            <th class="col-sm-1">Días descuento</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -351,6 +352,7 @@
                                                         <td>$ {{ (AstilleroServicio.total/100)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
+                                                        <td>{{ AstilleroServicio.promedio }}</td>
                                                     </tr>
                                                 {% endif %}
                                             {% endif %}
