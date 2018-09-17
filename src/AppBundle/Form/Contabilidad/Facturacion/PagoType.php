@@ -5,6 +5,7 @@ namespace AppBundle\Form\Contabilidad\Facturacion;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,6 +27,21 @@ class PagoType extends AbstractType
         ];
 
         $builder->add('numeroParcialidad');
+
+        $builder->add(
+            'fechaPagos',
+            DateTimeType::class,
+            [
+                'label' => 'Fecha de pago',
+                'widget' => 'single_text',
+                'html5' => false,
+                'attr' => [
+                    'class' => 'datepicker',
+                    'readonly' => true,
+                ],
+                'format' => 'dd-MM-yyyy',
+            ]
+        );
 
         $builder->add(
             'importeSaldoAnterior',

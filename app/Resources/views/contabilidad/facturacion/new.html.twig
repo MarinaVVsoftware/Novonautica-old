@@ -445,6 +445,8 @@
         const previewButton = document.getElementById('preview-btn');
         const clienteSelect = document.getElementById('appbundle_contabilidad_facturacion_cliente');
         const receptorSelect = document.getElementById('appbundle_contabilidad_facturacion_receptor');
+        const metodoPagoSelect = document.getElementById('appbundle_contabilidad_facturacion_metodoPago');
+        const formaPagoSelect = document.getElementById('appbundle_contabilidad_facturacion_formaPago');
         const conceptoTable = new ElementCollection('#add', '#prototype-holder', elementListener);
 
         const $clienteSelect2 = $(clienteSelect).select2({ajax: {url: 'clientes'}});
@@ -516,6 +518,16 @@
         function moneyRawValue(value) {
           return value.replace(/,/g, '');
         }
+
+        metodoPagoSelect.addEventListener('change', function (event) {
+          if (this.value === 'PUE') {
+            formaPagoSelect.value = '01';
+            formaPagoSelect.removeAttribute('disabled');
+          } else {
+            formaPagoSelect.value = '99';
+            formaPagoSelect.setAttribute('disabled', 'disabled');
+          }
+        });
 
         $clienteSelect2.on('select2:select', function () {
           $receptorSelect2.empty();

@@ -2,7 +2,25 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
     <style>
+        :root .btn {
+            min-width: initial;
+            text-align: center;
+        }
+
+        .daterangepicker {
+            color: initial;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+            background-color: #292f41;
+            border-color: #2a3041;
+        }
+
+        .ranges li {
+            background-color: hsl(225, 23%, 21%);
+            border: 1px solid #292f41;
+        }
+
         .help-block {
             color: #dd4b39;
         }
@@ -173,16 +191,10 @@
                             <div class="col-sm-12">
                                 <div class="row">
                                     <div class="col-sm-3">
+                                        {{ form_row(form.fechaPagos) }}
+                                    </div>
+                                    <div class="col-sm-3">
                                         {{ form_row(form.numeroParcialidad) }}
-                                    </div>
-                                    <div class="col-sm-3">
-                                        {{ form_row(form.importeSaldoAnterior) }}
-                                    </div>
-                                    <div class="col-sm-3">
-                                        {{ form_row(form.importePagado) }}
-                                    </div>
-                                    <div class="col-sm-3">
-                                        {{ form_row(form.importeSaldoInsoluto) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -197,6 +209,18 @@
                                     </div>
                                     <div class="col-sm-3">
                                         {{ form_row(form.montoPagos) }}
+                                    </div>
+                                </div>
+                                <hr style="margin-top: 20px !important; margin-bottom: 20px !important;">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.importeSaldoAnterior) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.importePagado) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.importeSaldoInsoluto) }}
                                     </div>
                                 </div>
                             </div>
@@ -230,6 +254,12 @@
     <script>
       (function ($) {
         const previewButton = document.getElementById('preview-btn');
+
+        $('.datepicker').datepicker({
+          singleDatePicker: true,
+          timePicker: true,
+          format: 'mm-dd-yyyy'
+        });
 
         $(previewButton).on('click', function () {
           $('<a>')

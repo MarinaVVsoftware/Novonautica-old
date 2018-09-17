@@ -66,7 +66,9 @@ class FacturacionController extends Controller
     {
         return $this->render(
             'contabilidad/facturacion/index.html.twig',
-            ['title' => 'Listado de facturas']
+            [
+                'title' => 'Listado de facturas'
+            ]
         );
     }
 

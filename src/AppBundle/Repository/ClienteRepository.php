@@ -97,9 +97,11 @@ class ClienteRepository extends \Doctrine\ORM\EntityRepository
             ->createQuery(
                 'SELECT cliente.id, cliente.nombre AS text '.
                 'FROM AppBundle:Cliente cliente '.
-                'INNER JOIN cliente.barcos barcos '.
+                'LEFT JOIN cliente.barcos barcos '.
+                'LEFT JOIN cliente.razonesSociales razonSocial '.
                 'WHERE LOWER(cliente.nombre) LIKE :cliente '.
                 'OR LOWER(barcos.nombre) LIKE :cliente '.
+                'OR LOWER(razonSocial.razonSocial) LIKE :cliente '.
                 'GROUP BY cliente.id'
             )
             ->setParameter('cliente', strtolower("%{$queryString}%"))

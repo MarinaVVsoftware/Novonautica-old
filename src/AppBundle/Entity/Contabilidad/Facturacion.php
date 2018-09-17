@@ -418,7 +418,7 @@ class Facturacion
         $this->tasa = '0.160000';
         $this->lugarExpedicion = '77500';
         $this->tipoCambio = 100;
-        $this->serie = 'A'; // FIXME De donde sale la serie?
+        $this->serie = '';
         $this->moneda = self::$monedas['MXN'];
 
         $this->subtotal = 0;

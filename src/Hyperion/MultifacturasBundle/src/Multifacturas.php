@@ -61,7 +61,7 @@ class Multifacturas
         // Datos de facturacion
         $datos['factura']['descuento'] = '0.00';
         $datos['factura']['moneda'] = $factura->getMoneda();
-        $datos['factura']['serie'] = 'A';
+        $datos['factura']['serie'] = $factura->getSerie();
         $datos['factura']['tipocambio'] = ($factura->getTipoCambio() / 100);
 
         $datos['factura']['condicionesDePago'] = $factura->getCondicionesPago();

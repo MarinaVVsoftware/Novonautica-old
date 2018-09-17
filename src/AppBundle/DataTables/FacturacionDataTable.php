@@ -33,12 +33,11 @@ class FacturacionDataTable extends AbstractDataTableHandler
      *
      * @return DataTableResults
      *
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function handle(DataTableQuery $request): DataTableResults
     {
-        $facturasRepo = $this->doctrine->getRepository('AppBundle:Contabilidad\Facturacion');
+        $facturasRepo = $this->doctrine->getRepository(Facturacion::class);
         $results = new DataTableResults();
 
         $query = $facturasRepo->createQueryBuilder('fa');
@@ -50,15 +49,19 @@ class FacturacionDataTable extends AbstractDataTableHandler
         if ($request->search->value) {
             $query
                 ->orWhere(
-                    $query->expr()->like('LOWER(fa.folioFiscal)', ':search'),
+                    $query->expr()->like('LOWER(fa.uuidFiscal)', ':search'),
                     $query->expr()->like('LOWER(emi.nombre)', ':search'),
                     $query->expr()->like('LOWER(emi.rfc)', ':search'),
-                    $query->expr()->like('LOWER(fa.rfc)', ':search'),
-                    $query->expr()->like('LOWER(fa.razonSocial)', ':search'),
                     $query->expr()->like('LOWER(fa.total)', ':search'),
                     $query->expr()->like('LOWER(fa.fechaTimbrado)', ':search')
                 )
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
+        }
+
+        if ($request->customData) {
+            $query->andWhere('fa.fecha BETWEEN :start AND :end');
+            $query->setParameter('start', $request->customData['dates']['start']);
+            $query->setParameter('end', $request->customData['dates']['end']);
         }
 
         foreach ($request->order as $order) {

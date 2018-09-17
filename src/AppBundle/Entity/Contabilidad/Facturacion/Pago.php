@@ -289,7 +289,7 @@ class Pago
         $this->factura = $factura;
         $this->isCancelado = false;
 
-        $this->serie = 'A'; // FIXME De donde sale la serie?
+        $this->serie = ''; // FIXME De donde sale la serie?
         $this->fecha = new \DateTime();
         $this->tipocomprobante = 'P';
         $this->subtotal = 0.00;
