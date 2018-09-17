@@ -21,9 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * Facturacion controller.
@@ -269,7 +266,9 @@ class FacturacionController extends Controller
     public function getClientesLikeAction(Request $request)
     {
         $q = $request->query->get('q');
-        $clientes = $this->getDoctrine()->getRepository(Cliente::class)->getAllWhereNombreLike($q);
+        $clientes = $this->getDoctrine()
+            ->getRepository(Cliente::class)
+            ->getAllWhereNombreLike($q);
 
         return new JsonResponse(
             [
@@ -288,7 +287,9 @@ class FacturacionController extends Controller
     public function getClienteRFCsAction(Request $request)
     {
         $q = $request->query->get('q');
-        $rfcs = $this->getDoctrine()->getRepository(Cliente\RazonSocial::class)->getRFCsFromClient($q);
+        $rfcs = $this->getDoctrine()
+            ->getRepository(Cliente\RazonSocial::class)
+            ->getRFCsFromClient($q);
 
         return new JsonResponse(
             [

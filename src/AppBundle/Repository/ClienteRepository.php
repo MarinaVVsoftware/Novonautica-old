@@ -97,7 +97,10 @@ class ClienteRepository extends \Doctrine\ORM\EntityRepository
             ->createQuery(
                 'SELECT cliente.id, cliente.nombre AS text '.
                 'FROM AppBundle:Cliente cliente '.
-                'WHERE LOWER(cliente.nombre) LIKE :cliente'
+                'INNER JOIN cliente.barcos barcos '.
+                'WHERE LOWER(cliente.nombre) LIKE :cliente '.
+                'OR LOWER(barcos.nombre) LIKE :cliente '.
+                'GROUP BY cliente.id'
             )
             ->setParameter('cliente', strtolower("%{$queryString}%"))
             ->setMaxResults(10)
