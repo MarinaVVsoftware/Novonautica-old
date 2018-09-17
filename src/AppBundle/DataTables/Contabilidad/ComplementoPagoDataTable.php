@@ -89,7 +89,10 @@ class ComplementoPagoDataTable extends AbstractDataTableHandler
         $queryCount->select('COUNT(p.id)');
         $results->recordsFiltered = $queryCount->getQuery()->getSingleScalarResult();
 
-        $query->setMaxResults($request->length);
+        if ($request->length > 0) {
+            $query->setMaxResults($request->length);
+        }
+
         $query->setFirstResult($request->start);
 
         /** @var Pago[] $pagos */
