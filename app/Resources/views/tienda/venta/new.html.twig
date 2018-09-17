@@ -183,6 +183,7 @@
     <script src="{{ asset('js/perfect-scrollbar.min.js') }}"></script>
     <script type="text/javascript">
       (($) => {
+            const body = document.querySelector('body');
             const ventaForm = document.querySelector('form[name="appbundle_tienda_venta"]');
             const SubmitButton = document.getElementById('submit-btn');
             const AddButton = document.getElementById('add');
@@ -227,18 +228,19 @@
             function addSelect2(select) {
               let $select = $(select);
 
-              $select.select2({
-                placeholder: 'Seleccione un producto',
-                ajax: {
-                  url: 'productos',
-                  dataType: 'json',
-                  processResults(response) {
-                    return {
-                      results: response.results.map((result) => getProducto(result)),
-                    }
-                  }
-                }
-              });
+              $select
+                  .select2({
+                    placeholder: 'Seleccione un producto',
+                    ajax: {
+                      url: 'productos',
+                      dataType: 'json',
+                      processResults(response) {
+                        return {
+                          results: response.results.map((result) => getProducto(result)),
+                        }
+                      }
+                    },
+                  });
 
 
               return $select;
@@ -312,6 +314,7 @@
                       $(this).val(null).trigger('change');
                       $QuantityInput.val(0).trigger('input');
                       PrecioInput.value = '0.00';
+                      $(this).select2('open');
 
                       return false;
                     }
@@ -323,6 +326,7 @@
                     PrecioInput.dataset.colaborator = producto.price.colaborator;
                     PrecioInput.value = transformToMoneyFormat(price.toFixed(2));
                     $QuantityInput.val(1).trigger('input');
+                    $QuantityInput.focus();
                   });
 
               $QuantityInput.on('input', computeRowValues);
@@ -509,7 +513,7 @@
                   event.preventDefault();
                   event.stopPropagation();
 
-                  createRow();
+                  $(createRow().cells[1].querySelector('select')).select2('open');
                 });
 
             SubmitButton
@@ -536,6 +540,11 @@
 
             document
                 .addEventListener('scanedbarcode', addProductProgrammatically);
+
+            body.onkeyup = function (event) {
+              if (event.keyCode !== 16) return;
+              AddButton.click();
+            }
 
           }
 
