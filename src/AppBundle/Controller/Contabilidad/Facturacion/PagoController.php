@@ -109,15 +109,21 @@ class PagoController extends AbstractController
 //        $this->denyAccessUnlessGranted('CONTABILIDAD_CREATE_PAGO', $pago); TODO agregar permisos
 
         $em = $this->getDoctrine()->getManager();
-        $valoresSistema = $em->getRepository(ValorSistema::class)->find(1); // TODO: diferenciar folios en base a la empresa y permisos de la cuenta
-
-        $pago->setFolio($valoresSistema->getFolioFacturaAstillero());
 
         $form = $this->createForm(PagoType::class, $pago);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $facturacionRepository = $em->getRepository(Facturacion::class);
             $receptor = $factura->getReceptor();
+
+            // TODO Agregar cuenta del ordenante (quien solicita la factura)
+
+            // Aqui existe un problema de race condition, donde pueden existir mas de dos usuarios creando una
+            // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
+            // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
+            $factura->setFolio($facturacionRepository->getFolioByEmpresa($factura->getEmisor()->getId()));
+
             $sello = $this->multifacturas->procesaPago($pago);
 
             if (key_exists('codigo_mf_numero', $sello)) {
@@ -131,13 +137,6 @@ class PagoController extends AbstractController
                     'form' => $form->createView(),
                 ]);
             }
-
-            // Aqui puede haver un problema de race condition, donde pueden existir mas de dos usuarios creando una
-            // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
-            // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
-            $valoresSistema = $em->getRepository(ValorSistema::class)->find(1);
-            $pago->setFolio($valoresSistema->getFolioFacturaAstillero());
-            $valoresSistema->setFolioFacturaAstillero($factura->getFolio() + 1);
 
             $em->persist($pago);
             $em->flush();

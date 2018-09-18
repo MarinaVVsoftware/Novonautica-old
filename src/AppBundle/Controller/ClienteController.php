@@ -235,6 +235,8 @@ class ClienteController extends Controller
 
         }
 
+        $clonedCuentasBancarias = $cliente->getCuentasBancarias()->toArray();
+
         $deleteForm = $this->createDeleteForm($cliente);
         $editForm = $this->createForm('AppBundle\Form\ClienteType', $cliente);
         $editForm->handleRequest($request);
@@ -261,6 +263,12 @@ class ClienteController extends Controller
                 if ($cliente->getRazonesSociales()->contains($ors) === false) {
                     $ors->setCliente(null);
                     $em->remove($ors);
+                }
+            }
+
+            foreach ($clonedCuentasBancarias as $clonedCuentasBancaria) {
+                if (!$cliente->getCuentasBancarias()->contains($clonedCuentasBancaria)) {
+                    $em->remove($clonedCuentasBancaria);
                 }
             }
 

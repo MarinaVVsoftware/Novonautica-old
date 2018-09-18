@@ -286,6 +286,7 @@ class Pago
 
     public function __construct(Facturacion $factura)
     {
+        $this->folio = 0;
         $this->factura = $factura;
         $this->isCancelado = false;
 

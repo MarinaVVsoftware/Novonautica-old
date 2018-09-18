@@ -116,7 +116,14 @@ class FacturacionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $facturacionRepository = $em->getRepository(Facturacion::class);
             $receptor = $factura->getReceptor();
+
+            // Aqui existe un problema de race condition, donde pueden existir mas de dos usuarios creando una
+            // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
+            // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
+            $factura->setFolio($facturacionRepository->getFolioByEmpresa($factura->getEmisor()->getId()));
+
             $sello = $this->multifacturas->procesa($factura);
 
             if (key_exists('codigo_mf_numero', $sello)) {
@@ -130,11 +137,6 @@ class FacturacionController extends Controller
                     'form' => $form->createView(),
                 ]);
             }
-
-            // Aqui puede haver un problema de race condition, donde pueden existir mas de dos usuarios creando una
-            // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
-            // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
-            $factura->setFolio(000);
 
             $em->persist($factura);
             $em->flush();

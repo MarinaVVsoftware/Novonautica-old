@@ -24,20 +24,20 @@ class ClienteType extends AbstractType
             ->add('correo', EmailType::class)
             ->add('telefono', TextType::class, [
                 'label' => 'Télefono',
-                'required' => false
+                'required' => false,
             ])
             ->add('celular', TextType::class, [
                 'label' => 'Celular',
-                'required' => false
+                'required' => false,
             ])
             ->add('direccion', TextType::class, [
                 'label' => 'Dirección',
-                'required' => false
+                'required' => false,
             ])
             ->add('barcos', CollectionType::class, [
                 'entry_type' => BarcoType::class,
                 'label' => false,
-                'entry_options' => ['label' => false]
+                'entry_options' => ['label' => false],
             ])
             ->add('razonesSociales', CollectionType::class, [
                 'entry_type' => RazonSocialType::class,
@@ -45,7 +45,15 @@ class ClienteType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-                'entry_options' => ['label' => false]
+                'entry_options' => ['label' => false],
+            ])
+            ->add('cuentasBancarias', CollectionType::class, [
+                'entry_type' => \AppBundle\Form\Cliente\CuentaBancariaType::class,
+                'label' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'entry_options' => ['label' => false],
             ]);
     }
 
@@ -55,7 +63,7 @@ class ClienteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Cliente'
+            'data_class' => 'AppBundle\Entity\Cliente',
         ));
     }
 

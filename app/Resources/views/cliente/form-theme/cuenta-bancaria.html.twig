@@ -1,0 +1,18 @@
+{% block appbundle_cliente_cuentabancaria_row %}
+    <div class="row form-group">
+        <div class="col-sm-3">
+            {{ form_row(form.alias) }}
+        </div>
+        <div class="col-sm-3">
+            {{ form_row(form.rfc) }}
+        </div>
+        <div class="col-sm-3">
+            {{ form_row(form.nombre) }}
+        </div>
+        <div class="col-sm-3">
+            {{ form_row(form.numeroCuenta) }}
+        </div>
+        <div class="col-sm-12 remove-container">
+        </div>
+    </div>
+{% endblock %}

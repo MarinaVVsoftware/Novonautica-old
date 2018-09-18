@@ -173,9 +173,26 @@ class Cliente implements UserInterface, \Serializable
      *
      * @Assert\Valid()
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Cliente\RazonSocial", mappedBy="cliente", cascade={"persist", "remove"})
+     * @ORM\OneToMany(
+     *     targetEntity="AppBundle\Entity\Cliente\RazonSocial",
+     *     mappedBy="cliente",
+     *     cascade={"persist", "remove"}
+     * )
      */
     private $razonesSociales;
+
+    /**
+     * @var Cliente\CuentaBancaria
+     *
+     * @Assert\Valid()
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="AppBundle\Entity\Cliente\CuentaBancaria",
+     *     mappedBy="cliente",
+     *     cascade={"persist", "remove"}
+     * )
+     */
+    private $cuentasBancarias;
 
     /**
      * @var Reporte
@@ -203,6 +220,7 @@ class Cliente implements UserInterface, \Serializable
         $this->mhcotizaciones = new ArrayCollection();
         $this->mhcotizacionesadicionales = new ArrayCollection();
         $this->razonesSociales = new ArrayCollection();
+        $this->cuentasBancarias = new ArrayCollection();
         $this->astilleroCotizaciones = new ArrayCollection();
         $this->appgasolinasolicitudes = new ArrayCollection();
         $this->reportes = new ArrayCollection();
@@ -597,6 +615,43 @@ class Cliente implements UserInterface, \Serializable
     public function getRazonesSociales()
     {
         return $this->razonesSociales;
+    }
+
+    /**
+     * Add cuentasBancaria.
+     *
+     * @param Cliente\CuentaBancaria $cuentasBancaria
+     *
+     * @return Cliente
+     */
+    public function addCuentasBancaria(Cliente\CuentaBancaria $cuentasBancaria)
+    {
+        $cuentasBancaria->setCliente($this);
+        $this->cuentasBancarias[] = $cuentasBancaria;
+
+        return $this;
+    }
+
+    /**
+     * Remove cuentasBancaria.
+     *
+     * @param Cliente\CuentaBancaria $cuentasBancaria
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeCuentasBancaria(Cliente\CuentaBancaria $cuentasBancaria)
+    {
+        return $this->cuentasBancarias->removeElement($cuentasBancaria);
+    }
+
+    /**
+     * Get cuentasBancarias.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCuentasBancarias()
+    {
+        return $this->cuentasBancarias;
     }
 
     /**

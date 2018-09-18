@@ -166,6 +166,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 Nuevo pago
+                                <span id="pago-folio" class="pull-right">Folio: {{ form.folio.vars.value }}</span>
                             </h4>
                         </div>
                         <div class="panel-body" style="min-height: initial">
@@ -254,6 +255,10 @@
     <script>
       (function ($) {
         const previewButton = document.getElementById('preview-btn');
+        const folioContainer = document.getElementById('pago-folio');
+        const folioHidden = document.getElementById('appbundle_contabilidad_facturacion_pago_folio');
+
+        getFolio();
 
         $('.datepicker').datepicker({
           singleDatePicker: true,
@@ -267,6 +272,14 @@
               .attr('target', '_blank')[0]
               .click();
         });
+
+        function getFolio() {
+          $.get('../../get-folio', {e: {{ factura.emisor.id }}})
+              .done(({results}) => {
+                folioContainer.innerText = 'Folio: ' + results.folio;
+                folioHidden.value = results.folio;
+              });
+        }
 
       })(jQuery)
     </script>
