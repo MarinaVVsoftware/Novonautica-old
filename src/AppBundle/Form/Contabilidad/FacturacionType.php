@@ -7,11 +7,12 @@ use AppBundle\Entity\Cliente\RazonSocial;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Form\Contabilidad\Facturacion\ConceptoType;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,6 +20,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -29,10 +31,17 @@ class FacturacionType extends AbstractType
      * @var EntityManagerInterface
      */
     private $entityManager;
+    /**
+     * @var Security
+     */
+    private $security;
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        Security $security
+    ) {
         $this->entityManager = $entityManager;
+        $this->security = $security;
     }
 
     /**
@@ -47,11 +56,34 @@ class FacturacionType extends AbstractType
         ];
 
         $builder->add(
+            'folio',
+            HiddenType::class
+        );
+
+        $builder->add(
             'emisor',
             EntityType::class,
             [
                 'class' => Facturacion\Emisor::class,
                 'choice_label' => 'alias',
+                'query_builder' => function (EntityRepository $er) {
+                    $query = $er->createQueryBuilder('e');
+                    $views = [];
+
+                    foreach ($this->security->getUser()->getRoles() as $role) {
+                        if (strpos($role, 'ROLE_ADMIN') === 0) {
+                            return $query;
+                        }
+
+                        if (strpos($role, 'VIEW_EGRESO') === 0) {
+                            $views[] = explode('_', $role)[3];
+                        }
+                    }
+
+                    return $query->where(
+                        $query->expr()->in('e.id', $views)
+                    );
+                },
                 'constraints' => [
                     new NotNull(['message' => 'Por favor selecciona un emisor']),
                 ],

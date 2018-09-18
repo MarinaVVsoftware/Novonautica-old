@@ -150,7 +150,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 Nueva factura
-                                <span class="factura-folio pull-right">Folio: {{ factura.folio }}</span>
+                                <span id="factura-folio" class="pull-right">Folio: {{ form.folio.vars.value }}</span>
                             </h4>
                         </div>
                         <div class="panel-body" style="min-height: initial">
@@ -443,10 +443,14 @@
       (function ($) {
         const facturaForm = document.getElementById('appbundle_contabilidad_facturacion');
         const previewButton = document.getElementById('preview-btn');
+        const folioInput = document.getElementById('appbundle_contabilidad_facturacion_folio');
         const clienteSelect = document.getElementById('appbundle_contabilidad_facturacion_cliente');
+        const emisorSelect = document.getElementById('appbundle_contabilidad_facturacion_emisor');
         const receptorSelect = document.getElementById('appbundle_contabilidad_facturacion_receptor');
         const metodoPagoSelect = document.getElementById('appbundle_contabilidad_facturacion_metodoPago');
         const formaPagoSelect = document.getElementById('appbundle_contabilidad_facturacion_formaPago');
+        const folioContainer = document.getElementById('factura-folio');
+
         const conceptoTable = new ElementCollection('#add', '#prototype-holder', elementListener);
 
         const $clienteSelect2 = $(clienteSelect).select2({ajax: {url: 'clientes'}});
@@ -457,6 +461,8 @@
 
         const totalImporteImpuestosInput = new Cleave('#appbundle_contabilidad_facturacion_importe', {numeral: true});
         const totalImpuestosInput = new Cleave('#appbundle_contabilidad_facturacion_totalImpuestosTransladados', {numeral: true});
+
+        getFolio();
 
         function elementListener(element) {
           const cantidadInput = element.cells[0].firstElementChild;
@@ -511,15 +517,7 @@
           }
         }
 
-        function moneyFormat(value) {
-          return value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-        }
-
-        function moneyRawValue(value) {
-          return value.replace(/,/g, '');
-        }
-
-        metodoPagoSelect.addEventListener('change', function (event) {
+        metodoPagoSelect.addEventListener('change', function () {
           if (this.value === 'PUE') {
             formaPagoSelect.value = '01';
             formaPagoSelect.removeAttribute('disabled');
@@ -528,6 +526,8 @@
             formaPagoSelect.setAttribute('disabled', 'disabled');
           }
         });
+
+        emisorSelect.addEventListener('change', getFolio);
 
         $clienteSelect2.on('select2:select', function () {
           $receptorSelect2.empty();
@@ -548,6 +548,22 @@
               .attr('target', '_blank')[0]
               .click();
         });
+
+        function getFolio() {
+          $.get('get-folio', {e: emisorSelect.value})
+              .done(({results}) => {
+                folioContainer.innerText = 'Folio: ' + results.folio;
+                folioInput.value = results.folio;
+              });
+        }
+
+        function moneyFormat(value) {
+          return value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        }
+
+        function moneyRawValue(value) {
+          return value.replace(/,/g, '');
+        }
 
       })(jQuery)
     </script>

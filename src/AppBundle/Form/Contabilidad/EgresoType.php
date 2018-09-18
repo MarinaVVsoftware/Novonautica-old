@@ -5,7 +5,6 @@ namespace AppBundle\Form\Contabilidad;
 use AppBundle\Entity\Contabilidad\Egreso\Tipo;
 use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use AppBundle\Form\Contabilidad\Egreso\EntradaType;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -20,7 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
 
 class EgresoType extends AbstractType
 {

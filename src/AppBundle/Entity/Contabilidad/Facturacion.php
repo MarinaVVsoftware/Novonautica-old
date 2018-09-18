@@ -407,6 +407,8 @@ class Facturacion
      */
     public function __construct()
     {
+        $this->folio = 000000;
+
         $this->formaPago = self::$formasPagos['Efectivo'];
         $this->metodoPago = self::$metodosPagos['Pago en una sola exhibición'];
         $this->usoCFDI = self::$CFDIS['Gastos en general'];

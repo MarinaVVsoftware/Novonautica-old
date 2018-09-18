@@ -109,12 +109,8 @@ class FacturacionController extends Controller
     {
         $factura = new Facturacion();
         $this->denyAccessUnlessGranted('CONTABILIDAD_CREATE', $factura);
+
         $em = $this->getDoctrine()->getManager();
-
-        $valoresSistema = $em->getRepository(ValorSistema::class)->find(1); // TODO: diferenciar folios en base a la empresa y permisos de la cuenta
-
-        $factura->setFolio($valoresSistema->getFolioFacturaAstillero());
-
 
         $form = $this->createForm(FacturacionType::class, $factura);
         $form->handleRequest($request);
@@ -138,9 +134,7 @@ class FacturacionController extends Controller
             // Aqui puede haver un problema de race condition, donde pueden existir mas de dos usuarios creando una
             // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
             // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
-            $valoresSistema = $em->getRepository(ValorSistema::class)->find(1);
-            $factura->setFolio($valoresSistema->getFolioFacturaAstillero());
-            $valoresSistema->setFolioFacturaAstillero($factura->getFolio() + 1);
+            $factura->setFolio(000);
 
             $em->persist($factura);
             $em->flush();
@@ -256,6 +250,24 @@ class FacturacionController extends Controller
         }
 
         return $this->redirectToRoute('contabilidad_facturacion_index');
+    }
+
+    /**
+     * @Route("/get-folio")
+     */
+    public function getFolio(Request $request)
+    {
+        $e = $request->query->get('e');
+
+        $folio = $this->getDoctrine()
+            ->getRepository(Facturacion::class)
+            ->getFolioByEmpresa($e);
+
+        return new JsonResponse([
+           'results' => [
+               'folio' => $folio,
+           ]
+        ]);
     }
 
     /**
