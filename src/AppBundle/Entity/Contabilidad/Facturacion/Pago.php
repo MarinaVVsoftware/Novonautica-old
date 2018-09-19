@@ -300,10 +300,11 @@ class Pago
     public function __construct(Facturacion $factura)
     {
         $this->folio = 0;
+        $this->numeroParcialidad = 1;
         $this->factura = $factura;
         $this->isCancelado = false;
 
-        $this->serie = ''; // FIXME De donde sale la serie?
+        $this->serie = '';
         $this->fecha = new \DateTime();
         $this->tipocomprobante = 'P';
         $this->subtotal = 0.00;
@@ -318,6 +319,10 @@ class Pago
             $this->metodoPagoFacturaRelacionada = $factura->getMetodoPago();
             $this->tipoCambioFacturaRelacionada = $factura->getTipoCambio();
         }
+
+        $this->montoPagos = 0;
+        $this->importePagado = 0;
+        $this->importeSaldoInsoluto = 0;
 
         $this->tipoCambioPagos = '100';
         $this->monedaPagos = Facturacion::$monedas['MXN'];

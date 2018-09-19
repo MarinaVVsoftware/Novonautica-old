@@ -263,9 +263,20 @@
         const previewButton = document.getElementById('preview-btn');
         const folioContainer = document.getElementById('pago-folio');
         const folioHidden = document.getElementById('appbundle_contabilidad_facturacion_pago_folio');
+        const montoPago = new Cleave('#appbundle_contabilidad_facturacion_pago_montoPagos', {numeral: true});
+        const importeSaldoAnteriorInput = new Cleave('#appbundle_contabilidad_facturacion_pago_importeSaldoAnterior', {numeral: true});
+        const importePagadoInput = new Cleave('#appbundle_contabilidad_facturacion_pago_importePagado', {numeral: true});
+        const importeSaldoInsoluto = new Cleave('#appbundle_contabilidad_facturacion_pago_importeSaldoInsoluto', {numeral: true});
         const $cuentaOrdenanteSelect = $('#appbundle_contabilidad_facturacion_pago_cuentaOrdenante');
 
         getFolio();
+
+        montoPago.element.addEventListener('input', function () {
+          importePagadoInput.setRawValue(this.value);
+          importeSaldoInsoluto.setRawValue(
+              ((importeSaldoAnteriorInput.getRawValue() * 100) - (montoPago.getRawValue() * 100)) / 100
+          );
+        });
 
         $('.datepicker').datepicker({
           singleDatePicker: true,

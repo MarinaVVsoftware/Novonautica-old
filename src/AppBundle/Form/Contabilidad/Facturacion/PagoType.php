@@ -41,6 +41,9 @@ class PagoType extends AbstractType
             'currency' => false,
             'divisor' => 100,
             'grouping' => true,
+            'attr' => [
+                'readonly' => 'readonly'
+            ]
         ];
 
         $builder->add(

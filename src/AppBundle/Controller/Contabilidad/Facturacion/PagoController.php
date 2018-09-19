@@ -14,6 +14,7 @@ use AppBundle\Entity\Contabilidad\Facturacion\Pago;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Extra\NumberToLetter;
 use AppBundle\Form\Contabilidad\Facturacion\PagoType;
+use AppBundle\Repository\Contabilidad\Facturacion\PagoRepository;
 use DataTables\DataTablesInterface;
 use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
@@ -108,9 +109,18 @@ class PagoController extends AbstractController
     public function newFromFacturaAction(Request $request, Facturacion $factura)
     {
         $pago = new Facturacion\Pago($factura);
-//        $this->denyAccessUnlessGranted('CONTABILIDAD_CREATE_PAGO', $pago); TODO agregar permisos
+//        $this->denyAccessUnlessGranted('CONTABILIDAD_CREATE_PAGO', $pago); TODO agregar permisos a pagos
 
         $em = $this->getDoctrine()->getManager();
+        $pagoRepository = $em->getRepository(Pago::class);
+        $totalPagado = $pagoRepository->getTotalPagadoEnFactura($factura->getId());
+
+        if ($totalPagado['parcialidad'] > 0) {
+            $pago->setNumeroParcialidad($totalPagado['parcialidad']);
+            $pago->setImporteSaldoAnterior($factura->getTotal() - $totalPagado['pagado']);
+        } else {
+            $pago->setImporteSaldoAnterior($factura->getTotal());
+        }
 
         $form = $this->createForm(PagoType::class, $pago);
         $form->handleRequest($request);
@@ -132,9 +142,9 @@ class PagoController extends AbstractController
                     'No se pudo sellar la factura, razón: '.$sello['codigo_mf_texto']
                 );
 
-                return $this->render('contabilidad/facturacion/new.html.twig', [
-                    'facturacion' => $factura,
+                return $this->render('contabilidad/facturacion/pago/new.html.twig', [
                     'form' => $form->createView(),
+                    'facturacion' => $factura,
                 ]);
             }
 
