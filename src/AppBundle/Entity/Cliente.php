@@ -169,7 +169,7 @@ class Cliente implements UserInterface, \Serializable
     private $appgasolinasolicitudes;
 
     /**
-     * @var RazonSocial
+     * @var RazonSocial[]
      *
      * @Assert\Valid()
      *

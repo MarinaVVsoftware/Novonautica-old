@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Contabilidad\Facturacion;
 
+use AppBundle\Entity\Cliente\CuentaBancaria;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -282,7 +283,12 @@ class Pago
      */
     private $factura;
 
-//    private $conceptos; se requieren o siempre sera uno?
+    /**
+     * @var CuentaBancaria
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente\CuentaBancaria")
+     */
+    private $cuentaOrdenante;
 
     public function __construct(Facturacion $factura)
     {
@@ -1116,5 +1122,29 @@ class Pago
     public function getFactura()
     {
         return $this->factura;
+    }
+
+    /**
+     * Set cuentaOrdenante.
+     *
+     * @param CuentaBancaria|null $cuentaOrdenante
+     *
+     * @return Pago
+     */
+    public function setCuentaOrdenante(CuentaBancaria $cuentaOrdenante = null)
+    {
+        $this->cuentaOrdenante = $cuentaOrdenante;
+
+        return $this;
+    }
+
+    /**
+     * Get cuentaOrdenante.
+     *
+     * @return CuentaBancaria|null
+     */
+    public function getCuentaOrdenante()
+    {
+        return $this->cuentaOrdenante;
     }
 }

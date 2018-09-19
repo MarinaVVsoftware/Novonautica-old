@@ -197,6 +197,9 @@
                                     <div class="col-sm-3">
                                         {{ form_row(form.numeroParcialidad) }}
                                     </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.cuentaOrdenante) }}
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-3">
@@ -257,6 +260,7 @@
         const previewButton = document.getElementById('preview-btn');
         const folioContainer = document.getElementById('pago-folio');
         const folioHidden = document.getElementById('appbundle_contabilidad_facturacion_pago_folio');
+        const $cuentaOrdenanteSelect = $('#appbundle_contabilidad_facturacion_pago_cuentaOrdenante');
 
         getFolio();
 
@@ -272,6 +276,8 @@
               .attr('target', '_blank')[0]
               .click();
         });
+
+        $cuentaOrdenanteSelect.select2({ajax: {url: 'cuentas-bancarias'}});
 
         function getFolio() {
           $.get('../../get-folio', {e: {{ factura.emisor.id }}})

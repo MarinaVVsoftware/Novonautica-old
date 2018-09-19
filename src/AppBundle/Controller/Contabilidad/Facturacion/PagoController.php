@@ -8,6 +8,7 @@
 namespace AppBundle\Controller\Contabilidad\Facturacion;
 
 
+use AppBundle\Entity\Cliente\CuentaBancaria;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Entity\Contabilidad\Facturacion\Pago;
 use AppBundle\Entity\ValorSistema;
@@ -19,6 +20,7 @@ use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -117,8 +119,6 @@ class PagoController extends AbstractController
             $facturacionRepository = $em->getRepository(Facturacion::class);
             $receptor = $factura->getReceptor();
 
-            // TODO Agregar cuenta del ordenante (quien solicita la factura)
-
             // Aqui existe un problema de race condition, donde pueden existir mas de dos usuarios creando una
             // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
             // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
@@ -155,6 +155,24 @@ class PagoController extends AbstractController
             [
                 'form' => $form->createView(),
                 'factura' => $factura,
+            ]
+        );
+    }
+
+    /**
+     * @Route("/{id}/cuentas-bancarias")
+     */
+    public function getCuentasBancariasAction(Request $request, Facturacion $factura)
+    {
+        $cliente = $factura->getCliente()->getId();
+        $query = $request->query->get('q');
+        $cuentas = $this->getDoctrine()
+            ->getRepository(CuentaBancaria::class)
+            ->getCuentasBancariasLikeSelect2($cliente, $query);
+
+        return new JsonResponse(
+            [
+                'results' => $cuentas,
             ]
         );
     }

@@ -98,14 +98,14 @@
             <tr>
                 <td colspan="5" width="50%">
                     <h5 style="margin: 0">INFORMACIÓN BANCO EMISOR - RECEPTOR</h5>
-                    <strong>RFC Emisor cuenta ordenante: </strong>
+                    <strong>RFC cuenta ordenante: </strong> {{ pago.cuentaOrdenante is not null ? pago.cuentaOrdenante.rfc : '' }}
                     <br>
-                    <strong>Nombre del banco ordenante: </strong>
+                    <strong>Nombre del banco ordenante: </strong> {{ pago.cuentaOrdenante is not null ? pago.cuentaOrdenante.nombre : '' }}
                     <br>
-                    <strong>Cuenta ordenante: </strong>
+                    <strong>Numero de cuenta ordenante: </strong> {{ pago.cuentaOrdenante is not null ? pago.cuentaOrdenante.numeroCuenta : '' }}
                 </td>
                 <td colspan="5" width="50%">
-                    <strong>RFC Emisor cuenta beneficiario: </strong>
+                    <strong>RFC Cuenta beneficiario: </strong>
                     <br>
                     <strong>Cuenta Beneficiario: </strong>
                 </td>
