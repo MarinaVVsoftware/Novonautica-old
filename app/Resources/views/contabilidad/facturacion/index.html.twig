@@ -52,6 +52,7 @@
                                     <th>Método de pago</th>
                                     <th>Monto facturado</th>
                                     <th>Fecha</th>
+                                    <th class="with-options">Pago completado</th>
                                     <th width="10%">Archivos</th>
                                     <th width="10%" class="no-sort"></th>
                                 </tr>
@@ -146,28 +147,47 @@
               }
             ]
           },
+          columns: [
+            {responsivePriority: 1},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 1},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 0},
+            {responsivePriority: 0},
+            {responsivePriority: 0},
+          ],
           createdRow: function (row, data) {
-            row.classList.add('text-center');
+            const aceptado = `<img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">`;
+            const rechazado = `<img src="{{ asset('img/status-desaprovado-icon.svg') }}" class="center-block">`;
+            const pendiente = `<img src="{{ asset('img/status-pendiente-icon.svg') }}" class="center-block">`;
+
             let url = '{{ app.request.requestUri }}';
             let xmlRoute = '{{ asset('timbrados/') }}';
-            row.cells[6].innerHTML = '';
             let actionsInner = '';
 
-            if (data[7]['metodoPago'] === 'PPD') {
-              actionsInner += `<li><a href="pagos/${data[7].id}/new">Registrar pago</a></li>`;
+            row.cells[7].innerHTML = '';
 
-              row.cells[6].innerHTML += `<a href="pagos/${data[7].id}" class="btn btn-xs btn-azul btn-block">Pagos</a>`;
+            if (data[6] === 0) row.children[6].innerHTML = rechazado;
+            if (data[6] === 1) row.children[6].innerHTML = aceptado;
+            if (data[6] === 2) row.children[6].innerHTML = pendiente;
+
+            if (data[8]['metodoPago'] === 'PPD') {
+              actionsInner += `<li><a href="pagos/${data[8].id}/new">Registrar pago</a></li>`;
+
+              row.cells[7].innerHTML += `<a href="pagos/${data[8].id}" class="btn btn-xs btn-azul btn-block">Pagos</a>`;
             }
 
             actionsInner += `
-            <li><a href="${url}${data[7]['id']}">Detalle</a></li>
-            <li><a href="${url}${data[7]['id']}/reenviar">Reenviar</a></li>
+            <li><a href="${url}${data[8]['id']}">Detalle</a></li>
+            <li><a href="${url}${data[8]['id']}/reenviar">Reenviar</a></li>
             `;
 
-            if (!data[7]['status']) {
+            if (!data[8]['status']) {
               actionsInner += `
                 {% if is_granted(expression('has_role("CONTABILIDAD_CANCEL") or (user.isAdmin())')) %}
-                <li><a href="#" data-url="${url}${data[7]['id']}/cancelar"
+                <li><a href="#" data-url="${url}${data[8]['id']}/cancelar"
                  data-toggle="modal"
                  data-target=".ventanaborrar"">Cancelar
                  </a></li>
@@ -179,14 +199,14 @@
               `;
             }
 
-            row.cells[6].innerHTML += `
-                <a href="${xmlRoute}${data[6]['xml']}"
+            row.cells[7].innerHTML += `
+                <a href="${xmlRoute}${data[7]['xml']}"
                  target="_blank" class="btn btn-xs btn-azul btn-block">XML</a>
-                <a href="${url}${data[6]['pdf']}/pdf"
+                <a href="${url}${data[7]['pdf']}/pdf"
                  target="_blank" class="remove-motor btn btn-xs btn-azul btn-block">PDF</a>
             `;
 
-            row.cells[7].innerHTML = `
+            row.cells[8].innerHTML = `
                 <div class="dropdown">
                   <button class="btn btn-azul btn-xs btn-block dropdown-toggle" type="button" data-toggle="dropdown">
                     Acciones
@@ -198,6 +218,26 @@
                 </div>
             `;
           },
+        });
+
+        $table.columns('.with-options').every(function () {
+          const column = this;
+          const columnHeader = column.header();
+          const select = document.createElement('select');
+
+          select.add(new Option(columnHeader.innerHTML, ''));
+          columnHeader.innerHTML = '';
+          columnHeader.appendChild(select);
+
+          select.addEventListener('click', e => e.stopPropagation());
+          select.addEventListener('change', function () {
+            let val = $.fn.dataTable.util.escapeRegex(this.value);
+            column.search(val, true, true).draw();
+          });
+
+          select.add(new Option('Pendiente', '2'));
+          select.add(new Option('Pagada', '1'));
+          select.add(new Option('Sin pagos', '0'));
         });
 
         $('#dates')

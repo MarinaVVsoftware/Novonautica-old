@@ -8,6 +8,7 @@ use AppBundle\Entity\ValorSistema;
 use AppBundle\Extra\NumberToLetter;
 use AppBundle\Form\Contabilidad\FacturacionType;
 use AppBundle\Form\Contabilidad\PreviewType;
+use DataTables\DataTablesInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
@@ -67,7 +68,7 @@ class FacturacionController extends Controller
         return $this->render(
             'contabilidad/facturacion/index.html.twig',
             [
-                'title' => 'Listado de facturas'
+                'title' => 'Listado de facturas',
             ]
         );
     }
@@ -78,17 +79,13 @@ class FacturacionController extends Controller
      *
      * @return JsonResponse
      */
-    public function dataTablesAction(Request $request)
+    public function dataTablesAction(Request $request, DataTablesInterface $dataTables)
     {
-        if ($request->isXmlHttpRequest()) {
-            try {
-                $datatables = $this->get('datatables');
-                $results = $datatables->handle($request, 'facturas');
-
-                return $this->json($results);
-            } catch (HttpException $e) {
-                return $this->json($e->getMessage(), $e->getStatusCode());
-            }
+        try {
+            $results = $dataTables->handle($request, 'facturas');
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
         }
     }
 
@@ -118,6 +115,10 @@ class FacturacionController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $facturacionRepository = $em->getRepository(Facturacion::class);
             $receptor = $factura->getReceptor();
+
+            if ($factura->getMetodoPago() === 'PUE') {
+                $factura->setIsPagada(1);
+            }
 
             // Aqui existe un problema de race condition, donde pueden existir mas de dos usuarios creando una
             // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
@@ -266,9 +267,9 @@ class FacturacionController extends Controller
             ->getFolioByEmpresa($e);
 
         return new JsonResponse([
-           'results' => [
-               'folio' => $folio,
-           ]
+            'results' => [
+                'folio' => $folio,
+            ],
         ]);
     }
 

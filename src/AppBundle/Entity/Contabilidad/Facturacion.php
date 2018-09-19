@@ -262,6 +262,13 @@ class Facturacion
      */
     private $isCancelada;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="pagada", type="smallint")
+     */
+    private $isPagada;
+
     /*------------------------------------------------------------------------------------------------*/
 
 
@@ -428,6 +435,7 @@ class Facturacion
 
         $this->fecha = new \DateTime();
         $this->isCancelada = false;
+        $this->isPagada = 0;
         $this->conceptos = new ArrayCollection();
     }
 
@@ -1046,6 +1054,22 @@ class Facturacion
     public function isCancelada()
     {
         return $this->isCancelada;
+    }
+
+    /**
+     * @param int $isPagada
+     */
+    public function setIsPagada($isPagada)
+    {
+        $this->isPagada = $isPagada;
+    }
+
+    /**
+     * @return int
+     */
+    public function isPagada()
+    {
+        return $this->isPagada;
     }
 
     /**

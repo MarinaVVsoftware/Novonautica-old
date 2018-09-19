@@ -2,8 +2,8 @@
 
 namespace AppBundle\Entity\Contabilidad\Facturacion;
 
-use AppBundle\Entity\Cliente\CuentaBancaria;
 use AppBundle\Entity\Contabilidad\Facturacion;
+use AppBundle\Entity\CuentaBancaria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -146,7 +146,7 @@ class Pago
     private $importeSaldoInsoluto;
 
     /*------------------------------------------------------------------------------------------------
-     * DATOS DE DOCUMENTO RELACIONADO (factura->pagos)
+     * DATOS DEL PAGO
      *-----------------------------------------------------------------------------------------------*/
 
     /**
@@ -284,16 +284,16 @@ class Pago
     private $factura;
 
     /**
-     * @var CuentaBancaria
+     * @var \AppBundle\Entity\Cliente\CuentaBancaria
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente\CuentaBancaria")
      */
     private $cuentaOrdenante;
 
     /**
-     * @var \AppBundle\Entity\CuentaBancaria
+     * @var CuentaBancaria
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente\CuentaBancaria")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CuentaBancaria")
      */
     private $cuentaBeneficiario;
 
@@ -1015,9 +1015,9 @@ class Pago
     /**
      * Set cuentaOrdenante.
      *
-     * @param CuentaBancaria|null $cuentaOrdenante
+     * @param \AppBundle\Entity\Cliente\CuentaBancaria $cuentaOrdenante
      */
-    public function setCuentaOrdenante(CuentaBancaria $cuentaOrdenante = null)
+    public function setCuentaOrdenante(\AppBundle\Entity\Cliente\CuentaBancaria $cuentaOrdenante = null)
     {
         $this->cuentaOrdenante = $cuentaOrdenante;
     }
@@ -1025,7 +1025,7 @@ class Pago
     /**
      * Get cuentaOrdenante.
      *
-     * @return CuentaBancaria|null
+     * @return \AppBundle\Entity\Cliente\CuentaBancaria|null
      */
     public function getCuentaOrdenante()
     {
@@ -1033,7 +1033,7 @@ class Pago
     }
 
     /**
-     * @return \AppBundle\Entity\CuentaBancaria
+     * @return CuentaBancaria
      */
     public function getCuentaBeneficiario()
     {
@@ -1041,9 +1041,9 @@ class Pago
     }
 
     /**
-     * @param \AppBundle\Entity\CuentaBancaria $cuentaBeneficiario
+     * @param CuentaBancaria $cuentaBeneficiario
      */
-    public function setCuentaBeneficiario(\AppBundle\Entity\CuentaBancaria $cuentaBeneficiario = null)
+    public function setCuentaBeneficiario(CuentaBancaria $cuentaBeneficiario = null)
     {
         $this->cuentaBeneficiario = $cuentaBeneficiario;
     }

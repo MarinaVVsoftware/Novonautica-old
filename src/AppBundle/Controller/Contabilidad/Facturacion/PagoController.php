@@ -126,8 +126,13 @@ class PagoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $facturacionRepository = $em->getRepository(Facturacion::class);
             $receptor = $factura->getReceptor();
+
+            if ($pago->getImporteSaldoInsoluto() <= 0.0) {
+                $factura->setIsPagada(1);
+            }
 
             // Aqui existe un problema de race condition, donde pueden existir mas de dos usuarios creando una
             // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
@@ -148,7 +153,8 @@ class PagoController extends AbstractController
                 ]);
             }
 
-            /*$em->persist($pago);
+            $em->persist($factura);
+            $em->persist($pago);
             $em->flush();
 
             if (is_string($receptor->getCorreos()) && strlen($receptor->getCorreos()) > 0) {
@@ -157,7 +163,7 @@ class PagoController extends AbstractController
                 $this->enviarPago($factura, $pago, $arrayCorreos, $this->getUser()->getCorreo());
             }
 
-            return $this->redirectToRoute('contabilidad_factura_pago_index', ['id' => $factura->getId()]);*/
+            return $this->redirectToRoute('contabilidad_factura_pago_index', ['id' => $factura->getId()]);
         }
 
         return $this->render(

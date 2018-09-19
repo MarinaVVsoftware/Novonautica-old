@@ -520,10 +520,8 @@
         metodoPagoSelect.addEventListener('change', function () {
           if (this.value === 'PUE') {
             formaPagoSelect.value = '01';
-            formaPagoSelect.removeAttribute('disabled');
           } else {
             formaPagoSelect.value = '99';
-            formaPagoSelect.setAttribute('disabled', 'disabled');
           }
         });
 

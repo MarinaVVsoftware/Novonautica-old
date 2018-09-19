@@ -204,10 +204,9 @@ class Multifacturas
         $datos['pagos10']['Pagos'][0]['Monto'] = $pago->getMontoPagos();
         $datos['pagos10']['Pagos'][0]['TipoCambioP']= $pago->getTipoCambioPagos();
 
-//        $datos['pagos10']['Pagos'][0]['NumOperacion']= '0.0';
 
         /* TODO Se require un ordenante o beneficiario siempre?
-        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaOrd']= 'XAXX010101000';
+        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaOrd']= 'XAXX010101000'; // RFC INTERNACIONAL
         $datos['pagos10']['Pagos'][0]['NomBancoOrdExt']= '0.0';
         $datos['pagos10']['Pagos'][0]['CtaOrdenante']= '1234567890';
         $datos['pagos10']['Pagos'][0]['RfcEmisorCtaBen']= '0.0';
@@ -221,6 +220,7 @@ class Multifacturas
         $datos['pagos10']['Pagos'][0]['RfcEmisorCtaBen']= $cuentaBeneficiario->getRfc();
         $datos['pagos10']['Pagos'][0]['CtaBeneficiario']= $cuentaBeneficiario->getNumCuenta();
 
+//        $datos['pagos10']['Pagos'][0]['NumOperacion']= '0.0';
 //        $datos['pagos10']['Pagos'][0]['TipoCadPago']= '0.0';
 //        $datos['pagos10']['Pagos'][0]['CertPago']= '0.0';
 //        $datos['pagos10']['Pagos'][0]['CadPago']= '0.0';

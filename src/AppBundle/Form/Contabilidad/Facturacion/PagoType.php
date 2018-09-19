@@ -2,8 +2,8 @@
 
 namespace AppBundle\Form\Contabilidad\Facturacion;
 
-use AppBundle\Entity\Cliente\CuentaBancaria;
 use AppBundle\Entity\Contabilidad\Facturacion;
+use AppBundle\Entity\CuentaBancaria;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -129,7 +129,7 @@ class PagoType extends AbstractType
             'cuentaBeneficiario',
             EntityType::class,
             [
-                'class' => \AppBundle\Entity\CuentaBancaria::class,
+                'class' => CuentaBancaria::class,
                 'required' => true,
                 'attr' => ['required' => 'required'],
                 'constraints' => [
@@ -184,7 +184,7 @@ class PagoType extends AbstractType
                 $data = $event->getData();
 
                 $cuenta = array_key_exists('cuentaOrdenante', $data)
-                    ? $this->entityManager->getRepository(CuentaBancaria::class)->find($data['cuentaOrdenante'])
+                    ? $this->entityManager->getRepository(\AppBundle\Entity\Cliente\CuentaBancaria::class)->find($data['cuentaOrdenante'])
                     : null;
 
                 $this->createCuentaOrdenanteField($form, $cuenta);
@@ -210,7 +210,7 @@ class PagoType extends AbstractType
         return 'appbundle_contabilidad_facturacion_pago';
     }
 
-    private function createCuentaOrdenanteField(FormInterface $form, CuentaBancaria $cuenta = null)
+    private function createCuentaOrdenanteField(FormInterface $form, \AppBundle\Entity\Cliente\CuentaBancaria $cuenta = null)
     {
         $cuentas = null === $cuenta ? [] : [$cuenta];
 
@@ -218,7 +218,7 @@ class PagoType extends AbstractType
             'cuentaOrdenante',
             EntityType::class,
             [
-                'class' => CuentaBancaria::class,
+                'class' => \AppBundle\Entity\Cliente\CuentaBancaria::class,
                 'choice_label' => 'alias',
                 'choices' => $cuentas,
                 'required' => true,

@@ -105,9 +105,9 @@
                     <strong>Numero de cuenta ordenante: </strong> {{ pago.cuentaOrdenante is not null ? pago.cuentaOrdenante.numeroCuenta : '' }}
                 </td>
                 <td colspan="5" width="50%">
-                    <strong>RFC Cuenta beneficiario: </strong>
+                    <strong>RFC Cuenta beneficiario: </strong> {{ pago.cuentaBeneficiario is not null ? pago.cuentaBeneficiario.rfc : '' }}
                     <br>
-                    <strong>Cuenta Beneficiario: </strong>
+                    <strong>Cuenta Beneficiario: </strong> {{ pago.cuentaBeneficiario is not null ? pago.cuentaBeneficiario.numCuenta : '' }}
                 </td>
             </tr>
             </tbody>

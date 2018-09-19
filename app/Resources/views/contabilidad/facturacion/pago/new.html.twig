@@ -166,7 +166,12 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 Nuevo pago
-                                <span id="pago-folio" class="pull-right">Folio: {{ form.folio.vars.value }}</span>
+                                <small   id="pago-folio">Folio: {{ form.folio.vars.value }}</small>
+
+                                <a href="{{ path('contabilidad_factura_pago_index', {'id': factura.id}) }}"
+                                   class="btn btn-contorno-azul pull-right">
+                                    Regresar
+                                </a>
                             </h4>
                         </div>
                         <div class="panel-body" style="min-height: initial">
@@ -269,8 +274,6 @@
         const importeSaldoInsoluto = new Cleave('#appbundle_contabilidad_facturacion_pago_importeSaldoInsoluto', {numeral: true});
         const $cuentaOrdenanteSelect = $('#appbundle_contabilidad_facturacion_pago_cuentaOrdenante');
 
-        getFolio();
-
         montoPago.element.addEventListener('input', function () {
           importePagadoInput.setRawValue(this.value);
           importeSaldoInsoluto.setRawValue(
@@ -293,13 +296,13 @@
 
         $cuentaOrdenanteSelect.select2({ajax: {url: 'cuentas-bancarias'}});
 
-        function getFolio() {
+        (() => {
           $.get('../../get-folio', {e: {{ factura.emisor.id }}})
               .done(({results}) => {
                 folioContainer.innerText = 'Folio: ' + results.folio;
                 folioHidden.value = results.folio;
               });
-        }
+        })();
 
       })(jQuery)
     </script>

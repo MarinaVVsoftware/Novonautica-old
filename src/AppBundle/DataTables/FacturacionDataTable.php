@@ -44,7 +44,9 @@ class FacturacionDataTable extends AbstractDataTableHandler
         $results->recordsTotal = $query->select('COUNT(fa.id)')->getQuery()->getSingleScalarResult();
 
         $query = $facturasRepo->createQueryBuilder('fa')
-            ->leftJoin('fa.emisor', 'emi');
+            ->select('fa', 'emi', 'rec')
+            ->leftJoin('fa.emisor', 'emi')
+            ->leftJoin('fa.receptor', 'rec');
 
         if ($request->search->value) {
             $query
@@ -64,6 +66,11 @@ class FacturacionDataTable extends AbstractDataTableHandler
             $query->setParameter('end', $request->customData['dates']['end']);
         }
 
+        if ($request->columns[6]->search->value >= 0) {
+            $query->andWhere('fa.isPagada = :pagada')
+                ->setParameter('pagada', $request->columns[6]->search->value);
+        }
+
         foreach ($request->order as $order) {
             if ($order->column === 0) {
                 $query->addOrderBy('fa.folio', $order->dir);
@@ -72,11 +79,13 @@ class FacturacionDataTable extends AbstractDataTableHandler
             } elseif ($order->column === 2) {
                 $query->addOrderBy('fa.rfc', $order->dir);
             } elseif ($order->column === 3) {
-                $query->addOrderBy('fa.razonSocial', $order->dir);
+                $query->addOrderBy('fa.metodoPago', $order->dir);
             } elseif ($order->column === 4) {
                 $query->addOrderBy('fa.total', $order->dir);
             } elseif ($order->column === 5) {
                 $query->addOrderBy('fa.fechaTimbrado', $order->dir);
+            } elseif ($order->column === 6) {
+                $query->addOrderBy('fa.isPagada', $order->dir);
             } elseif ($order->column === 7) {
                 $query->addOrderBy('fa.id', $order->dir);
             }
@@ -101,14 +110,15 @@ class FacturacionDataTable extends AbstractDataTableHandler
 
             $results->data[] = [
                 $factura->getFolio(),
-                $emisor->getRfc() . ' / ' . $emisor->getNombre(),
-                $receptor->getRfc() . ' / ' . $receptor->getRazonSocial(),
+                $emisor->getRfc().' / '.$emisor->getNombre(),
+                $receptor->getRfc().' / '.$receptor->getRazonSocial(),
                 $factura->getMetodoPago(),
-                '$' . number_format($factura->getTotal() / 100, 2) . ' ' . $factura->getMoneda(),
+                '$'.number_format($factura->getTotal() / 100, 2).' '.$factura->getMoneda(),
                 $factura->getFechaTimbrado(),
+                $factura->isPagada(),
                 [
                     'xml' => $nombreXML,
-                    'pdf' => $factura->getId()
+                    'pdf' => $factura->getId(),
                 ],
                 [
                     'id' => $factura->getId(),
