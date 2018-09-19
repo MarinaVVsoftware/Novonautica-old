@@ -138,7 +138,7 @@ class PagoController extends AbstractController
                 ]);
             }
 
-            $em->persist($pago);
+            /*$em->persist($pago);
             $em->flush();
 
             if (is_string($receptor->getCorreos()) && strlen($receptor->getCorreos()) > 0) {
@@ -147,7 +147,7 @@ class PagoController extends AbstractController
                 $this->enviarPago($factura, $pago, $arrayCorreos, $this->getUser()->getCorreo());
             }
 
-            return $this->redirectToRoute('contabilidad_factura_pago_index', ['id' => $factura->getId()]);
+            return $this->redirectToRoute('contabilidad_factura_pago_index', ['id' => $factura->getId()]);*/
         }
 
         return $this->render(

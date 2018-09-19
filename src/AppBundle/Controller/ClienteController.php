@@ -249,7 +249,7 @@ class ClienteController extends Controller
 
             foreach ($clonedRazonesSociales as $clonedRazonSocial) {
                 $clonedRazonSocial->setCorreos(
-                    preg_replace('/;\s+/', ',', $rs->getCorreos())
+                    preg_replace('/;\s+/', ',', $clonedRazonSocial->getCorreos())
                 );
 
                 if (!$cliente->getRazonesSociales()->contains($clonedRazonSocial)) {

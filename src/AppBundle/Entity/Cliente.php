@@ -610,7 +610,7 @@ class Cliente implements UserInterface, \Serializable
     /**
      * Get razonesSociales
      *
-     * @return RazonSocial
+     * @return RazonSocial[]
      */
     public function getRazonesSociales()
     {

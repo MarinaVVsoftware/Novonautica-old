@@ -24,7 +24,14 @@ class CuentaBancariaType extends AbstractType
             ]
         );
 
-        $builder->add('nombre');
+        $builder->add(
+            'nombre',
+            TextType::class,
+            [
+                'label' => 'Nombre de banco',
+            ]
+        );
+
         $builder->add('numeroCuenta');
     }
 

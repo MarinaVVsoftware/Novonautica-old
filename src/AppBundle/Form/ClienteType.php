@@ -48,7 +48,7 @@ class ClienteType extends AbstractType
                 'entry_options' => ['label' => false],
             ])
             ->add('cuentasBancarias', CollectionType::class, [
-                'entry_type' => \AppBundle\Form\Cliente\CuentaBancariaType::class,
+                'entry_type' => Cliente\CuentaBancariaType::class,
                 'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,

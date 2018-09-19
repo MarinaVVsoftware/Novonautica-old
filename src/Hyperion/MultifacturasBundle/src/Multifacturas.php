@@ -142,6 +142,7 @@ class Multifacturas
     {
         $factura = $pago->getFactura();
         $cuentaOrdenante = $pago->getCuentaOrdenante();
+        $cuentaBeneficiario = $pago->getCuentaBeneficiario();
         $emisor = $factura->getEmisor();
         $receptor = $factura->getReceptor();
 
@@ -205,18 +206,20 @@ class Multifacturas
 
 //        $datos['pagos10']['Pagos'][0]['NumOperacion']= '0.0';
 
-        /* TODO Se require un ordenante siempre?
+        /* TODO Se require un ordenante o beneficiario siempre?
         $datos['pagos10']['Pagos'][0]['RfcEmisorCtaOrd']= 'XAXX010101000';
         $datos['pagos10']['Pagos'][0]['NomBancoOrdExt']= '0.0';
         $datos['pagos10']['Pagos'][0]['CtaOrdenante']= '1234567890';
+        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaBen']= '0.0';
+        $datos['pagos10']['Pagos'][0]['CtaBeneficiario']= '0.0';
         */
 
         $datos['pagos10']['Pagos'][0]['RfcEmisorCtaOrd']= $cuentaOrdenante->getRfc();
         $datos['pagos10']['Pagos'][0]['NomBancoOrdExt']= $cuentaOrdenante->getNombre();
         $datos['pagos10']['Pagos'][0]['CtaOrdenante']= $cuentaOrdenante->getNumeroCuenta();
 
-//        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaBen']= '0.0';
-//        $datos['pagos10']['Pagos'][0]['CtaBeneficiario']= '0.0';
+        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaBen']= $cuentaBeneficiario->getRfc();
+        $datos['pagos10']['Pagos'][0]['CtaBeneficiario']= $cuentaBeneficiario->getNumCuenta();
 
 //        $datos['pagos10']['Pagos'][0]['TipoCadPago']= '0.0';
 //        $datos['pagos10']['Pagos'][0]['CertPago']= '0.0';

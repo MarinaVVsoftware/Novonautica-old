@@ -87,6 +87,7 @@ class PagoType extends AbstractType
             'formaPagoPagos',
             ChoiceType::class,
             [
+                'label' => 'Forma de pago',
                 'choices' => Facturacion::$formasPagos,
             ]
         );
@@ -118,6 +119,20 @@ class PagoType extends AbstractType
                 'currency' => false,
                 'divisor' => 100,
                 'grouping' => true,
+            ]
+        );
+
+        $builder->add(
+            'cuentaBeneficiario',
+            EntityType::class,
+            [
+                'class' => \AppBundle\Entity\CuentaBancaria::class,
+                'required' => true,
+                'attr' => ['required' => 'required'],
+                'constraints' => [
+                    new NotNull(['message' => 'Por favor selecciona una cuenta de cliente']),
+                    new NotBlank(['message' => 'Por favor selecciona una cuenta de cliente']),
+                ],
             ]
         );
 

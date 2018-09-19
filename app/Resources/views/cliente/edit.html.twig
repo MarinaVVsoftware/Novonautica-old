@@ -32,7 +32,6 @@
                     </div>
                 </div>
                 <div class="panel-body panel-pestanias">
-                    {% form_theme edit_form 'estructura/temaerror.html.twig' %}
                     {{ form_start(edit_form) }}
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="primero active">
@@ -46,32 +45,17 @@
                         {% endfor %}
                     </ul>
                     <div class="tab-content">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                {{ form_errors(edit_form.nombre) }}
-                                {{ form_errors(edit_form.correo) }}
-                                {{ form_errors(edit_form.telefono) }}
-                                {{ form_errors(edit_form.celular) }}
-                            </div>
-                        </div>
                         <div role="tabpanel" class="tab-pane active" id="cliente">
                             <div class="row">
                                 <div class="col-sm-5">
-                                    {{ form_label(edit_form.nombre) }}
-                                    {{ form_widget(edit_form.nombre) }}
-
-                                    {{ form_label(edit_form.correo) }}
-                                    {{ form_widget(edit_form.correo) }}
-
-                                    {{ form_label(edit_form.telefono) }}
-                                    {{ form_widget(edit_form.telefono) }}
-
-                                    {{ form_label(edit_form.celular) }}
-                                    {{ form_widget(edit_form.celular) }}
-
+                                    {{ form_row(edit_form.nombre) }}
+                                    {{ form_row(edit_form.correo) }}
+                                    {{ form_row(edit_form.telefono) }}
+                                    {{ form_row(edit_form.celular) }}
                                     {{ form_row(edit_form.direccion) }}
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="col-sm-12">
                                     {% form_theme edit_form.razonesSociales ':cliente/form-theme:razon-social.html.twig' %}
