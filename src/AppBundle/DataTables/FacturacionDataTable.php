@@ -66,7 +66,7 @@ class FacturacionDataTable extends AbstractDataTableHandler
             $query->setParameter('end', $request->customData['dates']['end']);
         }
 
-        if ($request->columns[6]->search->value >= 0) {
+        if ($request->columns[6]->search->value !== '' && $request->columns[6]->search->value >= 0) {
             $query->andWhere('fa.isPagada = :pagada')
                 ->setParameter('pagada', $request->columns[6]->search->value);
         }
