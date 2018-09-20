@@ -21,5 +21,6 @@ class ClaveProdServRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter(1, "%{$query}%")
             ->setMaxResults(10)
             ->getArrayResult();
+
     }
 }
