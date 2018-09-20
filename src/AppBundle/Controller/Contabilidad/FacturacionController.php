@@ -317,48 +317,6 @@ class FacturacionController extends Controller
     }
 
     /**
-     * @Route("/claves-unidad")
-     *
-     * @param Request $request
-     *
-     * @return string
-     */
-    public function getAllClavesUnidad(Request $request)
-    {
-        $q = $request->query->get('q');
-        $clavesUnidad = $this->getDoctrine()
-            ->getRepository(Facturacion\Concepto\ClaveUnidad::class)
-            ->findAllLikeSelect2($q);
-
-        return new JsonResponse(
-            [
-                'results' => $clavesUnidad,
-            ]
-        );
-    }
-
-    /**
-     * @Route("/clavesprodserv")
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function getAllClaveProdServ(Request $request)
-    {
-        $query = $request->query->get('q');
-        $cps = $this->getDoctrine()
-            ->getRepository(Facturacion\Concepto\ClaveProdServ::class)
-            ->findAllLikeSelect2($query);
-
-        return new JsonResponse(
-            [
-                'results' => $cps,
-            ]
-        );
-    }
-
-    /**
      * @Route("/{id}")
      * @param int $id
      *

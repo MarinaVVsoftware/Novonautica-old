@@ -473,8 +473,8 @@
           const importeImpuestoInput = new Cleave(element.cells[11].firstElementChild, {numeral: true});
           const removeButton = element.cells[12].firstElementChild;
 
-          const $cpsInput = $(element.cells[2].firstElementChild).select2({ajax: {url: 'clavesprodserv'}});
-          const $claveUnidadInput = $(element.cells[3].firstElementChild).select2({ajax: {url: 'claves-unidad'}});
+          const $cpsInput = $(element.cells[2].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveprodserv'}});
+          const $claveUnidadInput = $(element.cells[3].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveunidad'}});
 
           cantidadInput.addEventListener('input', importeCalc);
           valorUnitarioInput.element.addEventListener('input', importeCalc);

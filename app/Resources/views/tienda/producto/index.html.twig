@@ -138,53 +138,12 @@
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
     <script type="text/javascript">
       (function ($, dtSettings) {
-        const conceptoSettings = {
-          dataType: 'json',
-          deferRequestBy: 150,
-          showNoSuggestionNotice: true,
-          noSuggestionNotice: 'No se encontraron resultados',
-          triggerSelectOnValidInput: true,
-          minChars: 1,
-          paramName: 'q',
-          params: {},
-          autoSelectFirst: true,
-          onSearchStart: function (params) {
-            if (params.q.includes('/')) {
-              params.q = params.q.split(' / ')[1].trim();
-            }
-            return params;
-          },
-        };
+        const baseUrl = '{{ app.request.baseUrl }}';
 
-        $('#appbundle_tienda_producto_claveProdServ').autocomplete({
-          ...conceptoSettings,
-          serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/claveprodserv.json`,
-          transformResult: function (claves) {
-            return {
-              suggestions: claves.map(clave => {
-                return {
-                  value: `${clave.claveProdServ} / ${clave.descripcion}`,
-                  data: clave.id
-                }
-              })
-            }
-          }
-        });
-
-        $('#appbundle_tienda_producto_claveUnidad').autocomplete({
-          ...conceptoSettings,
-          serviceUrl: `{{ app.request.BaseUrl }}/contabilidad/facturacion/clave_unidad.json`,
-          transformResult: function (claves) {
-            return {
-              suggestions: claves.map(clave => {
-                return {
-                  value: `${clave.claveUnidad} / ${clave.nombre}`,
-                  data: clave.id
-                }
-              })
-            }
-          }
-        });
+        $('#appbundle_tienda_producto_claveUnidad')
+            .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveunidad'}});
+        $('#appbundle_tienda_producto_claveProdServ')
+            .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveprodserv'}});
 
         $('.table-novo').DataTable({
           ...dtSettings,

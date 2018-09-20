@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\Combustible;
 
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +43,20 @@ class Catalogo
      * @ORM\Column(name="cuota_iesps", type="float", nullable=true)
      */
     private $cuotaIesps;
+
+    /**
+     * @var ClaveUnidad
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
+     */
+    private $claveUnidad;
+
+    /**
+     * @var ClaveProdServ
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ")
+     */
+    private $claveProdServ;
 
     public function __toString()
     {
@@ -127,5 +143,53 @@ class Catalogo
     public function getCuotaIesps()
     {
         return $this->cuotaIesps;
+    }
+
+    /**
+     * Set claveUnidad.
+     *
+     * @param ClaveUnidad|null $claveUnidad
+     *
+     * @return Catalogo
+     */
+    public function setClaveUnidad(ClaveUnidad $claveUnidad = null)
+    {
+        $this->claveUnidad = $claveUnidad;
+
+        return $this;
+    }
+
+    /**
+     * Get claveUnidad.
+     *
+     * @return ClaveUnidad|null
+     */
+    public function getClaveUnidad()
+    {
+        return $this->claveUnidad;
+    }
+
+    /**
+     * Set claveProdServ.
+     *
+     * @param ClaveProdServ|null $claveProdServ
+     *
+     * @return Catalogo
+     */
+    public function setClaveProdServ(ClaveProdServ $claveProdServ = null)
+    {
+        $this->claveProdServ = $claveProdServ;
+
+        return $this;
+    }
+
+    /**
+     * Get claveProdServ.
+     *
+     * @return ClaveProdServ|null
+     */
+    public function getClaveProdServ()
+    {
+        return $this->claveProdServ;
     }
 }
