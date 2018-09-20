@@ -269,6 +269,7 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
             ->createQuery(
               'SELECT COUNT(factura.id) '.
               'FROM AppBundle:Contabilidad\Facturacion factura '.
+              'LEFT JOIN AppBundle:Contabilidad\Facturacion\Pago pagos WITH pagos.factura = factura '.
               'WHERE IDENTITY(factura.emisor) = :empresa'
             )
             ->setParameter('empresa', $empresa)
