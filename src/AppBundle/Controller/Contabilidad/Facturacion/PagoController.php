@@ -130,6 +130,8 @@ class PagoController extends AbstractController
             $facturacionRepository = $em->getRepository(Facturacion::class);
             $receptor = $factura->getReceptor();
 
+            $factura->setIsPagada(2);
+
             if ($pago->getImporteSaldoInsoluto() <= 0.0) {
                 $factura->setIsPagada(1);
             }
