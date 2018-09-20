@@ -136,16 +136,11 @@ class PagoController extends AbstractController
                 $factura->setIsPagada(1);
             }
 
-            dump($factura);
-
             // Aqui existe un problema de race condition, donde pueden existir mas de dos usuarios creando una
             // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
             // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
             $factura->setFolio($facturacionRepository->getFolioByEmpresa($factura->getEmisor()->getId()));
 
-            dump($facturacionRepository->getFolioByEmpresa($factura->getEmisor()->getId()));
-            dump($factura);
-            /*
             $sello = $this->multifacturas->procesaPago($pago);
 
             if (key_exists('codigo_mf_numero', $sello)) {
@@ -171,7 +166,6 @@ class PagoController extends AbstractController
             }
 
             return $this->redirectToRoute('contabilidad_factura_pago_index', ['id' => $factura->getId()]);
-            */
         }
 
         return $this->render(
