@@ -262,20 +262,21 @@ class FacturacionRepository extends \Doctrine\ORM\EntityRepository
         return $factura;
     }
 
-    public function getFolioByEmpresa($empresa) {
+    public function getFolioByEmpresa($empresa)
+    {
         $manager = $this->getEntityManager();
-
-        $folio = $manager
+        $totales = $manager
             ->createQuery(
-              'SELECT COUNT(factura.id) '.
-              'FROM AppBundle:Contabilidad\Facturacion factura '.
-              'LEFT JOIN AppBundle:Contabilidad\Facturacion\Pago pagos WITH pagos.factura = factura '.
-              'WHERE IDENTITY(factura.emisor) = :empresa'
+                'SELECT '.
+                'COUNT(factura.id) AS facturas, '.
+                '(SELECT COUNT(pago.id) FROM AppBundle:Contabilidad\Facturacion\Pago pago WHERE pago.factura = factura.id) AS pagos '.
+                'FROM AppBundle:Contabilidad\Facturacion factura '.
+                'WHERE IDENTITY(factura.emisor) = :empresa'
             )
             ->setParameter('empresa', $empresa)
             ->setMaxResults(1)
-            ->getSingleScalarResult();
+            ->getSingleResult();
 
-        return $folio + 1;
+        return array_sum($totales) + 1;
     }
 }
