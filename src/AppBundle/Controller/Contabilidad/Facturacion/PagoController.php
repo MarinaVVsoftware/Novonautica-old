@@ -139,7 +139,7 @@ class PagoController extends AbstractController
             // Aqui existe un problema de race condition, donde pueden existir mas de dos usuarios creando una
             // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
             // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
-            $factura->setFolio($facturacionRepository->getFolioByEmpresa($factura->getEmisor()->getId()));
+            $pago->setFolio($facturacionRepository->getFolioByEmpresa($factura->getEmisor()->getId()));
 
             $sello = $this->multifacturas->procesaPago($pago);
 
