@@ -2,7 +2,25 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
     <style>
+        :root .btn {
+            min-width: initial;
+            text-align: center;
+        }
+
+        .daterangepicker {
+            color: initial;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+            background-color: #292f41;
+            border-color: #2a3041;
+        }
+
+        .ranges li {
+            background-color: hsl(225, 23%, 21%);
+            border: 1px solid #292f41;
+        }
+
         .help-block {
             color: #dd4b39;
         }
@@ -148,6 +166,12 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 Nuevo pago
+                                <small   id="pago-folio">Folio: {{ form.folio.vars.value }}</small>
+
+                                <a href="{{ path('contabilidad_factura_pago_index', {'id': factura.id}) }}"
+                                   class="btn btn-contorno-azul pull-right">
+                                    Regresar
+                                </a>
                             </h4>
                         </div>
                         <div class="panel-body" style="min-height: initial">
@@ -173,16 +197,16 @@
                             <div class="col-sm-12">
                                 <div class="row">
                                     <div class="col-sm-3">
+                                        {{ form_row(form.cuentaBeneficiario) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.cuentaOrdenante) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.fechaPagos) }}
+                                    </div>
+                                    <div class="col-sm-3">
                                         {{ form_row(form.numeroParcialidad) }}
-                                    </div>
-                                    <div class="col-sm-3">
-                                        {{ form_row(form.importeSaldoAnterior) }}
-                                    </div>
-                                    <div class="col-sm-3">
-                                        {{ form_row(form.importePagado) }}
-                                    </div>
-                                    <div class="col-sm-3">
-                                        {{ form_row(form.importeSaldoInsoluto) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -197,6 +221,18 @@
                                     </div>
                                     <div class="col-sm-3">
                                         {{ form_row(form.montoPagos) }}
+                                    </div>
+                                </div>
+                                <hr style="margin-top: 20px !important; margin-bottom: 20px !important;">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.importeSaldoAnterior) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.importePagado) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.importeSaldoInsoluto) }}
                                     </div>
                                 </div>
                             </div>
@@ -230,6 +266,26 @@
     <script>
       (function ($) {
         const previewButton = document.getElementById('preview-btn');
+        const folioContainer = document.getElementById('pago-folio');
+        const folioHidden = document.getElementById('appbundle_contabilidad_facturacion_pago_folio');
+        const montoPago = new Cleave('#appbundle_contabilidad_facturacion_pago_montoPagos', {numeral: true});
+        const importeSaldoAnteriorInput = new Cleave('#appbundle_contabilidad_facturacion_pago_importeSaldoAnterior', {numeral: true});
+        const importePagadoInput = new Cleave('#appbundle_contabilidad_facturacion_pago_importePagado', {numeral: true});
+        const importeSaldoInsoluto = new Cleave('#appbundle_contabilidad_facturacion_pago_importeSaldoInsoluto', {numeral: true});
+        const $cuentaOrdenanteSelect = $('#appbundle_contabilidad_facturacion_pago_cuentaOrdenante');
+
+        montoPago.element.addEventListener('input', function () {
+          importePagadoInput.setRawValue(this.value);
+          importeSaldoInsoluto.setRawValue(
+              ((importeSaldoAnteriorInput.getRawValue() * 100) - (montoPago.getRawValue() * 100)) / 100
+          );
+        });
+
+        $('.datepicker').datepicker({
+          singleDatePicker: true,
+          timePicker: true,
+          format: 'mm-dd-yyyy'
+        });
 
         $(previewButton).on('click', function () {
           $('<a>')
@@ -237,6 +293,16 @@
               .attr('target', '_blank')[0]
               .click();
         });
+
+        $cuentaOrdenanteSelect.select2({ajax: {url: 'cuentas-bancarias'}});
+
+        (() => {
+          $.get('../../get-folio', {e: {{ factura.emisor.id }}})
+              .done(({results}) => {
+                folioContainer.innerText = 'Folio: ' + results.folio;
+                folioHidden.value = results.folio;
+              });
+        })();
 
       })(jQuery)
     </script>

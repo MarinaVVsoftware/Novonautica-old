@@ -32,7 +32,6 @@
                     </div>
                 </div>
                 <div class="panel-body panel-pestanias">
-                    {% form_theme edit_form 'estructura/temaerror.html.twig' %}
                     {{ form_start(edit_form) }}
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="primero active">
@@ -46,38 +45,35 @@
                         {% endfor %}
                     </ul>
                     <div class="tab-content">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                {{ form_errors(edit_form.nombre) }}
-                                {{ form_errors(edit_form.correo) }}
-                                {{ form_errors(edit_form.telefono) }}
-                                {{ form_errors(edit_form.celular) }}
-                            </div>
-                        </div>
                         <div role="tabpanel" class="tab-pane active" id="cliente">
                             <div class="row">
                                 <div class="col-sm-5">
-                                    {{ form_label(edit_form.nombre) }}
-                                    {{ form_widget(edit_form.nombre) }}
-
-                                    {{ form_label(edit_form.correo) }}
-                                    {{ form_widget(edit_form.correo) }}
-
-                                    {{ form_label(edit_form.telefono) }}
-                                    {{ form_widget(edit_form.telefono) }}
-
-                                    {{ form_label(edit_form.celular) }}
-                                    {{ form_widget(edit_form.celular) }}
-
+                                    {{ form_row(edit_form.nombre) }}
+                                    {{ form_row(edit_form.correo) }}
+                                    {{ form_row(edit_form.telefono) }}
+                                    {{ form_row(edit_form.celular) }}
                                     {{ form_row(edit_form.direccion) }}
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="col-sm-12">
                                     {% form_theme edit_form.razonesSociales ':cliente/form-theme:razon-social.html.twig' %}
                                     {{ form_row(edit_form.razonesSociales) }}
                                     <a href="#" id="add-razon" class="letra-azul">
                                         + Agregar Razón Social
+                                    </a>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {% form_theme edit_form.cuentasBancarias 'cliente/form-theme/cuenta-bancaria.html.twig' %}
+                                    {{ form_row(edit_form.cuentasBancarias) }}
+                                    <a href="#" id="add-cuenta" class="letra-azul">
+                                        + Agregar Cuenta Bancaria
                                     </a>
                                 </div>
                             </div>
@@ -176,44 +172,95 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript">
-      /*
-            SYMFONY COLLECTION "MOTORES"
-      */
-      (function () {
-        const addLink = document.getElementById('add-razon');
-        const prototypeHolder = document.getElementById('appbundle_cliente_razonesSociales');
-        let counter = '{{ edit_form.razonesSociales|length }}';
+    <script>
+      class ElementCollection {
+        constructor(addButton, prototypeHolder, elementListener) {
+          this.addButton = typeof addButton === 'string'
+              ? document.querySelector(addButton)
+              : addButton;
 
-        Array
-            .from(prototypeHolder.children)
-            .forEach((element) => appendRemoveLink(element));
+          this.prototypeHolder = typeof prototypeHolder === 'string'
+              ? document.querySelector(prototypeHolder)
+              : prototypeHolder;
 
-        addLink.addEventListener('click', function (e) {
-          e.preventDefault();
-          const prototype = prototypeHolder.dataset.prototype.replace(/__name__/g, counter);
-          const tempContainer = document.createElement('div');
-          tempContainer.innerHTML = prototype;
+          this.elementListener = elementListener;
 
-          let element = tempContainer.firstElementChild;
-          appendRemoveLink(element);
-          prototypeHolder.appendChild(element);
-          counter++;
-        });
+          Array
+              .from(this.prototypeHolder.children)
+              .forEach(element => {
+                this.appendRemoveButton(element);
 
-        function appendRemoveLink(element) {
-          let removeContainer = element.querySelector('.remove-container');
-          let removeElementLink = document.createElement('a');
+                if (this.elementListener) {
+                  this.elementListener(element);
+                }
+              });
 
-          removeElementLink.className = 'btn btn-xs btn-naranja';
-          removeElementLink.innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> Remover`;
-          removeContainer.appendChild(removeElementLink);
+          this.elementCounter = this.prototypeHolder.childElementCount;
 
-          removeElementLink.addEventListener('click', function (e) {
-            e.preventDefault();
-            this.parentNode.parentNode.remove(this)
-          });
+          this.addButton
+              .addEventListener(
+                  'click',
+                  this.addElement.bind(this)
+              );
         }
-      })();
+
+        /* PUBLIC */
+        addElement() {
+          let element = this._getPrototypeElement();
+
+          this.appendRemoveButton(element);
+
+          if (this.elementListener) {
+            this.elementListener(element);
+          }
+
+          this.prototypeHolder.appendChild(element);
+
+          return this.prototypeHolder.childElementCount;
+        }
+
+        removeElement(element) {
+          element = typeof element === 'number' ? this.prototypeHolder.children[(element - 1)] : element;
+          if (!element) throw new Error('No existe el elemento que quieres eliminar');
+          element.parentNode.removeChild(element);
+        }
+
+        appendRemoveButton(element) {
+          let celda = element.children[element.children.length - 1];
+          let removeButton = document.createElement('a');
+
+          removeButton.className = 'badge btn-xs btn-naranja';
+          removeButton.innerHTML = '<i class="fa fa-trash"></i> Remover';
+          removeButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.removeElement(removeButton.parentNode.parentNode)
+          });
+
+          celda.appendChild(removeButton);
+        }
+
+        /* PRIVATE */
+
+        _getPrototypeElement() {
+          let prototipo = this.prototypeHolder
+              .dataset
+              .prototype
+              .replace(/__name__/g, this.elementCounter);
+
+          let tempElement = document.createElement('div');
+          tempElement.innerHTML = prototipo;
+          let element = tempElement.querySelector('div');
+
+          this.elementCounter++;
+
+          return element;
+        }
+      }
+    </script>
+    <script type="text/javascript">
+      const razonesSocialesCollection = new ElementCollection('#add-razon', '#appbundle_cliente_razonesSociales');
+      const cuentasBancariasCollection = new ElementCollection('#add-cuenta', '#appbundle_cliente_cuentasBancarias');
     </script>
 {% endblock %}

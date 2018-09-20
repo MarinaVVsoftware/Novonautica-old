@@ -8,6 +8,7 @@ use AppBundle\Entity\ValorSistema;
 use AppBundle\Extra\NumberToLetter;
 use AppBundle\Form\Contabilidad\FacturacionType;
 use AppBundle\Form\Contabilidad\PreviewType;
+use DataTables\DataTablesInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
@@ -21,9 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * Facturacion controller.
@@ -69,7 +67,9 @@ class FacturacionController extends Controller
     {
         return $this->render(
             'contabilidad/facturacion/index.html.twig',
-            ['title' => 'Listado de facturas']
+            [
+                'title' => 'Listado de facturas',
+            ]
         );
     }
 
@@ -79,17 +79,13 @@ class FacturacionController extends Controller
      *
      * @return JsonResponse
      */
-    public function dataTablesAction(Request $request)
+    public function dataTablesAction(Request $request, DataTablesInterface $dataTables)
     {
-        if ($request->isXmlHttpRequest()) {
-            try {
-                $datatables = $this->get('datatables');
-                $results = $datatables->handle($request, 'facturas');
-
-                return $this->json($results);
-            } catch (HttpException $e) {
-                return $this->json($e->getMessage(), $e->getStatusCode());
-            }
+        try {
+            $results = $dataTables->handle($request, 'facturas');
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
         }
     }
 
@@ -110,18 +106,25 @@ class FacturacionController extends Controller
     {
         $factura = new Facturacion();
         $this->denyAccessUnlessGranted('CONTABILIDAD_CREATE', $factura);
+
         $em = $this->getDoctrine()->getManager();
-
-        $valoresSistema = $em->getRepository(ValorSistema::class)->find(1); // TODO: diferenciar folios en base a la empresa y permisos de la cuenta
-
-        $factura->setFolio($valoresSistema->getFolioFacturaAstillero());
-
 
         $form = $this->createForm(FacturacionType::class, $factura);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $facturacionRepository = $em->getRepository(Facturacion::class);
             $receptor = $factura->getReceptor();
+
+            if ($factura->getMetodoPago() === 'PUE') {
+                $factura->setIsPagada(1);
+            }
+
+            // Aqui existe un problema de race condition, donde pueden existir mas de dos usuarios creando una
+            // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
+            // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
+            $factura->setFolio($facturacionRepository->getFolioByEmpresa($factura->getEmisor()->getId()));
+
             $sello = $this->multifacturas->procesa($factura);
 
             if (key_exists('codigo_mf_numero', $sello)) {
@@ -135,13 +138,6 @@ class FacturacionController extends Controller
                     'form' => $form->createView(),
                 ]);
             }
-
-            // Aqui puede haver un problema de race condition, donde pueden existir mas de dos usuarios creando una
-            // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
-            // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
-            $valoresSistema = $em->getRepository(ValorSistema::class)->find(1);
-            $factura->setFolio($valoresSistema->getFolioFacturaAstillero());
-            $valoresSistema->setFolioFacturaAstillero($factura->getFolio() + 1);
 
             $em->persist($factura);
             $em->flush();
@@ -260,6 +256,24 @@ class FacturacionController extends Controller
     }
 
     /**
+     * @Route("/get-folio")
+     */
+    public function getFolio(Request $request)
+    {
+        $e = $request->query->get('e');
+
+        $folio = $this->getDoctrine()
+            ->getRepository(Facturacion::class)
+            ->getFolioByEmpresa($e);
+
+        return new JsonResponse([
+            'results' => [
+                'folio' => $folio,
+            ],
+        ]);
+    }
+
+    /**
      * @Route("/clientes")
      *
      * @param Request $request
@@ -269,7 +283,9 @@ class FacturacionController extends Controller
     public function getClientesLikeAction(Request $request)
     {
         $q = $request->query->get('q');
-        $clientes = $this->getDoctrine()->getRepository(Cliente::class)->getAllWhereNombreLike($q);
+        $clientes = $this->getDoctrine()
+            ->getRepository(Cliente::class)
+            ->getAllWhereNombreLike($q);
 
         return new JsonResponse(
             [
@@ -288,7 +304,9 @@ class FacturacionController extends Controller
     public function getClienteRFCsAction(Request $request)
     {
         $q = $request->query->get('q');
-        $rfcs = $this->getDoctrine()->getRepository(Cliente\RazonSocial::class)->getRFCsFromClient($q);
+        $rfcs = $this->getDoctrine()
+            ->getRepository(Cliente\RazonSocial::class)
+            ->getRFCsFromClient($q);
 
         return new JsonResponse(
             [

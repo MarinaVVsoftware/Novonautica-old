@@ -262,6 +262,13 @@ class Facturacion
      */
     private $isCancelada;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="pagada", type="smallint")
+     */
+    private $isPagada;
+
     /*------------------------------------------------------------------------------------------------*/
 
 
@@ -407,6 +414,8 @@ class Facturacion
      */
     public function __construct()
     {
+        $this->folio = 000000;
+
         $this->formaPago = self::$formasPagos['Efectivo'];
         $this->metodoPago = self::$metodosPagos['Pago en una sola exhibición'];
         $this->usoCFDI = self::$CFDIS['Gastos en general'];
@@ -418,7 +427,7 @@ class Facturacion
         $this->tasa = '0.160000';
         $this->lugarExpedicion = '77500';
         $this->tipoCambio = 100;
-        $this->serie = 'A'; // FIXME De donde sale la serie?
+        $this->serie = '';
         $this->moneda = self::$monedas['MXN'];
 
         $this->subtotal = 0;
@@ -426,6 +435,7 @@ class Facturacion
 
         $this->fecha = new \DateTime();
         $this->isCancelada = false;
+        $this->isPagada = 0;
         $this->conceptos = new ArrayCollection();
     }
 
@@ -1044,6 +1054,22 @@ class Facturacion
     public function isCancelada()
     {
         return $this->isCancelada;
+    }
+
+    /**
+     * @param int $isPagada
+     */
+    public function setIsPagada($isPagada)
+    {
+        $this->isPagada = $isPagada;
+    }
+
+    /**
+     * @return int
+     */
+    public function isPagada()
+    {
+        return $this->isPagada;
     }
 
     /**

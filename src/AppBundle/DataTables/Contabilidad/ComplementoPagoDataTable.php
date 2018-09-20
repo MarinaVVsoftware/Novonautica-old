@@ -65,6 +65,12 @@ class ComplementoPagoDataTable extends AbstractDataTableHandler
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
         }
 
+        if ($request->customData['dates']) {
+            $query->andWhere('p.fecha BETWEEN :start AND :end');
+            $query->setParameter('start', $request->customData['dates']['start']);
+            $query->setParameter('end', $request->customData['dates']['end']);
+        }
+
         foreach ($request->order as $order) {
             if ($order->column === 0) {
                 $query->addOrderBy('p.uuidFacturaRelacionada', $order->dir);
@@ -74,6 +80,8 @@ class ComplementoPagoDataTable extends AbstractDataTableHandler
                 $query->addOrderBy('p.montoPagos', $order->dir);
             } elseif ($order->column === 3) {
                 $query->addOrderBy('p.fechaTimbrado', $order->dir);
+            } elseif ($order->column === 4) {
+                $query->addOrderBy('p.id', $order->dir);
             }
         }
 
@@ -81,7 +89,10 @@ class ComplementoPagoDataTable extends AbstractDataTableHandler
         $queryCount->select('COUNT(p.id)');
         $results->recordsFiltered = $queryCount->getQuery()->getSingleScalarResult();
 
-        $query->setMaxResults($request->length);
+        if ($request->length > 0) {
+            $query->setMaxResults($request->length);
+        }
+
         $query->setFirstResult($request->start);
 
         /** @var Pago[] $pagos */

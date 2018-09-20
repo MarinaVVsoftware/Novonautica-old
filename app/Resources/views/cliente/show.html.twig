@@ -98,19 +98,19 @@
                                         <table class="table table-novo">
                                             <tbody>
                                             <tr>
-                                                <th>Razon Social</th>
+                                                <th width="20%">Razon Social</th>
                                                 <td>{{ razon.razonSocial }}</td>
                                             </tr>
                                             <tr>
-                                                <th>RFC</th>
+                                                <th width="20%">RFC</th>
                                                 <td>{{ razon.rfc }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Dirección</th>
+                                                <th width="20%">Dirección</th>
                                                 <td>{{ razon.direccion }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Correos de facturación</th>
+                                                <th width="20%">Correos de facturación</th>
                                                 <td>{{ razon.correos|join(', ') }}</td>
                                             </tr>
                                             </tbody>
@@ -120,6 +120,38 @@
                                             <tbody>
                                             <tr>
                                                 <td>No se registaron datos de facturación</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    {% endfor %}
+
+                                    <h4>Cuentas bancarias</h4>
+                                    {% for cuentaBancaria in cliente.cuentasBancarias %}
+                                        <table class="table table-novo">
+                                            <tbody>
+                                            <tr>
+                                                <th width="20%">Alias</th>
+                                                <td>{{ cuentaBancaria.alias }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th width="20%">Banco</th>
+                                                <td>{{ cuentaBancaria.nombre }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th width="20%">RFC</th>
+                                                <td>{{ cuentaBancaria.rfc }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th width="20%">Dirección</th>
+                                                <td>{{ cuentaBancaria.numeroCuenta }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <table class="table table-novo">
+                                            <tbody>
+                                            <tr>
+                                                <td>No se registaron cuentas</td>
                                             </tr>
                                             </tbody>
                                         </table>

@@ -48,14 +48,12 @@ class ClienteController extends Controller
      */
     public function getClientesDataAction(Request $request, DataTablesInterface $dataTables)
     {
-        if ($request->isXmlHttpRequest()) {
-            try {
-                $results = $dataTables->handle($request, 'cliente');
+        try {
+            $results = $dataTables->handle($request, 'cliente');
 
-                return $this->json($results);
-            } catch (HttpException $e) {
-                return $this->json($e->getMessage(), $e->getCode());
-            }
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
         }
     }
 
@@ -145,7 +143,6 @@ class ClienteController extends Controller
      * @param Cliente $cliente
      *
      * @return Response
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function showAction(Cliente $cliente)
     {
@@ -228,12 +225,8 @@ class ClienteController extends Controller
             $barcomotores[$barco->getId()] = $originalMotores; //guardamos en el arreglo la coleccion de motores correspondiente a su id de barco
         }
 
-        $originalRs = new ArrayCollection();
-
-        foreach ($cliente->getRazonesSociales() as $rs) {
-            $originalRs->add($rs);
-
-        }
+        $clonedRazonesSociales = $cliente->getRazonesSociales()->toArray();
+        $clonedCuentasBancarias = $cliente->getCuentasBancarias()->toArray();
 
         $deleteForm = $this->createDeleteForm($cliente);
         $editForm = $this->createForm('AppBundle\Form\ClienteType', $cliente);
@@ -254,13 +247,19 @@ class ClienteController extends Controller
                 }
             }
 
-            foreach ($originalRs as $ors) {
-                /** @var Cliente\RazonSocial $rs */
-                $ors->setCorreos(preg_replace('/;\s+/', ',', $rs->getCorreos()));
+            foreach ($clonedRazonesSociales as $clonedRazonSocial) {
+                $clonedRazonSocial->setCorreos(
+                    preg_replace('/;\s+/', ',', $clonedRazonSocial->getCorreos())
+                );
 
-                if ($cliente->getRazonesSociales()->contains($ors) === false) {
-                    $ors->setCliente(null);
-                    $em->remove($ors);
+                if (!$cliente->getRazonesSociales()->contains($clonedRazonSocial)) {
+                    $em->remove($clonedRazonSocial);
+                }
+            }
+
+            foreach ($clonedCuentasBancarias as $clonedCuentasBancaria) {
+                if (!$cliente->getCuentasBancarias()->contains($clonedCuentasBancaria)) {
+                    $em->remove($clonedCuentasBancaria);
                 }
             }
 

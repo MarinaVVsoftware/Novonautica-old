@@ -10,4 +10,17 @@ namespace AppBundle\Repository\Contabilidad\Facturacion;
  */
 class PagoRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getTotalPagadoEnFactura($factura)
+    {
+        $manager = $this->getEntityManager();
+
+        $total = $manager->createQuery(
+            'SELECT (COUNT(pago.id) + 1) AS parcialidad, SUM(pago.montoPagos) AS pagado '.
+            'FROM AppBundle:Contabilidad\Facturacion\Pago pago '.
+            'WHERE IDENTITY(pago.factura) = ?1')
+            ->setParameter(1, $factura)
+            ->getSingleResult();
+
+        return $total;
+    }
 }

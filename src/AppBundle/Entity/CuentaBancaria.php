@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,8 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CuentaBancaria
 {
-    const EMPRESA_MARINA = 1;
-    const EMPRESA_ASTILLERO = 2;
     const MONEDA_PESOS = 1;
     const MONEDA_DOLARES = 2;
 
@@ -40,7 +40,7 @@ class CuentaBancaria
      */
     private $sucursal;
 
-     /**
+    /**
      * @var string
      *
      * @ORM\Column(name="clabe", type="string", length=100)
@@ -53,13 +53,6 @@ class CuentaBancaria
      * @ORM\Column(name="num_cuenta", type="string", length=100)
      */
     private $numCuenta;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="empresa", type="smallint")
-     */
-    private $empresa;
 
     /**
      * @var string
@@ -88,14 +81,16 @@ class CuentaBancaria
      */
     private $pagos;
 
-    private static $empresaLista = [
-        CuentaBancaria::EMPRESA_MARINA => 'Marina',
-        CuentaBancaria::EMPRESA_ASTILLERO => 'Astillero'
-    ];
+    /**
+     * @var Emisor
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Emisor")
+     */
+    private $empresa;
 
     private static $monedaLista = [
-      CuentaBancaria::MONEDA_PESOS => 'Pesos',
-      CuentaBancaria::MONEDA_DOLARES => 'Dolares'
+        CuentaBancaria::MONEDA_PESOS => 'Pesos',
+        CuentaBancaria::MONEDA_DOLARES => 'Dolares',
     ];
 
     /**
@@ -103,12 +98,12 @@ class CuentaBancaria
      */
     public function __construct()
     {
-        $this->pagos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->pagos = new ArrayCollection();
     }
 
     public function __toString()
     {
-     return $this->banco." ".$this->clabe;
+        return $this->banco." ".$this->clabe;
     }
 
     /**
@@ -167,40 +162,6 @@ class CuentaBancaria
     public function getClabe()
     {
         return $this->clabe;
-    }
-
-    /**
-     * Add pago
-     *
-     * @param \AppBundle\Entity\Pago $pago
-     *
-     * @return CuentaBancaria
-     */
-    public function addPago(\AppBundle\Entity\Pago $pago)
-    {
-        $this->pagos[] = $pago;
-
-        return $this;
-    }
-
-    /**
-     * Remove pago
-     *
-     * @param \AppBundle\Entity\Pago $pago
-     */
-    public function removePago(\AppBundle\Entity\Pago $pago)
-    {
-        $this->pagos->removeElement($pago);
-    }
-
-    /**
-     * Get pagos
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPagos()
-    {
-        return $this->pagos;
     }
 
     /**
@@ -302,42 +263,11 @@ class CuentaBancaria
     /**
      * @return int
      */
-    public function getEmpresa()
-    {
-        if (null === $this->empresa) { return null; }
-
-        return $this->empresa;
-    }
-
-    /**
-     * @return int
-     */
-    public function getEmpresaNombre()
-    {
-        if (null === $this->empresa) { return null; }
-
-        return self::$empresaLista[$this->empresa];
-    }
-
-    /**
-     * @param int $empresa
-     */
-    public function setEmpresa($empresa)
-    {
-        $this->empresa = $empresa;
-    }
-
-    public static function getEmpresaLista()
-    {
-        return self::$empresaLista;
-    }
-
-    /**
-     * @return int
-     */
     public function getMoneda()
     {
-        if (null === $this->moneda) { return null; }
+        if (null === $this->moneda) {
+            return null;
+        }
 
         return $this->moneda;
     }
@@ -347,7 +277,9 @@ class CuentaBancaria
      */
     public function getMonedaNombre()
     {
-        if (null === $this->moneda) { return null; }
+        if (null === $this->moneda) {
+            return null;
+        }
 
         return self::$monedaLista[$this->moneda];
     }
@@ -363,5 +295,63 @@ class CuentaBancaria
     public static function getMonedaLista()
     {
         return self::$monedaLista;
+    }
+
+    /**
+     * Add pago
+     *
+     * @param Pago $pago
+     *
+     * @return CuentaBancaria
+     */
+    public function addPago(Pago $pago)
+    {
+        $this->pagos[] = $pago;
+
+        return $this;
+    }
+
+    /**
+     * Remove pago
+     *
+     * @param Pago $pago
+     */
+    public function removePago(Pago $pago)
+    {
+        $this->pagos->removeElement($pago);
+    }
+
+    /**
+     * Get pagos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPagos()
+    {
+        return $this->pagos;
+    }
+
+    /**
+     * Set empresa.
+     *
+     * @param Emisor|null $empresa
+     *
+     * @return CuentaBancaria
+     */
+    public function setEmpresa(Emisor $empresa = null)
+    {
+        $this->empresa = $empresa;
+
+        return $this;
+    }
+
+    /**
+     * Get empresa.
+     *
+     * @return Emisor|null
+     */
+    public function getEmpresa()
+    {
+        return $this->empresa;
     }
 }

@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+    database:
+        image: vsamov/mysql-5.1.73:latest
+        volumes:
+            - "./volumes/mysql:/var/lib/mysql"
+        ports:
+            - "3306:3306"
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=novonautica
+            - MYSQL_USER=root
+            - MYSQL_password=root

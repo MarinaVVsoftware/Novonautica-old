@@ -61,7 +61,7 @@ class Multifacturas
         // Datos de facturacion
         $datos['factura']['descuento'] = '0.00';
         $datos['factura']['moneda'] = $factura->getMoneda();
-        $datos['factura']['serie'] = 'A';
+        $datos['factura']['serie'] = $factura->getSerie();
         $datos['factura']['tipocambio'] = ($factura->getTipoCambio() / 100);
 
         $datos['factura']['condicionesDePago'] = $factura->getCondicionesPago();
@@ -141,6 +141,8 @@ class Multifacturas
     public function procesaPago(Facturacion\Pago $pago)
     {
         $factura = $pago->getFactura();
+        $cuentaOrdenante = $pago->getCuentaOrdenante();
+        $cuentaBeneficiario = $pago->getCuentaBeneficiario();
         $emisor = $factura->getEmisor();
         $receptor = $factura->getReceptor();
 
@@ -202,12 +204,23 @@ class Multifacturas
         $datos['pagos10']['Pagos'][0]['Monto'] = $pago->getMontoPagos();
         $datos['pagos10']['Pagos'][0]['TipoCambioP']= $pago->getTipoCambioPagos();
 
+
+        /* TODO Se require un ordenante o beneficiario siempre?
+        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaOrd']= 'XAXX010101000'; // RFC INTERNACIONAL
+        $datos['pagos10']['Pagos'][0]['NomBancoOrdExt']= '0.0';
+        $datos['pagos10']['Pagos'][0]['CtaOrdenante']= '1234567890';
+        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaBen']= '0.0';
+        $datos['pagos10']['Pagos'][0]['CtaBeneficiario']= '0.0';
+        */
+
+        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaOrd']= $cuentaOrdenante->getRfc();
+        $datos['pagos10']['Pagos'][0]['NomBancoOrdExt']= $cuentaOrdenante->getNombre();
+        $datos['pagos10']['Pagos'][0]['CtaOrdenante']= $cuentaOrdenante->getNumeroCuenta();
+
+        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaBen']= $cuentaBeneficiario->getRfc();
+        $datos['pagos10']['Pagos'][0]['CtaBeneficiario']= $cuentaBeneficiario->getNumCuenta();
+
 //        $datos['pagos10']['Pagos'][0]['NumOperacion']= '0.0';
-//        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaOrd']= 'XAXX010101000';
-//        $datos['pagos10']['Pagos'][0]['NomBancoOrdExt']= '0.0';
-//        $datos['pagos10']['Pagos'][0]['CtaOrdenante']= '1234567890';
-//        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaBen']= '0.0';
-//        $datos['pagos10']['Pagos'][0]['CtaBeneficiario']= '0.0';
 //        $datos['pagos10']['Pagos'][0]['TipoCadPago']= '0.0';
 //        $datos['pagos10']['Pagos'][0]['CertPago']= '0.0';
 //        $datos['pagos10']['Pagos'][0]['CadPago']= '0.0';

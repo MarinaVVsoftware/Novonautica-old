@@ -1,16 +1,18 @@
 {% block appbundle_cliente_razonsocial_row %}
     <div class="row form-group">
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             {{ form_row(form.rfc) }}
-            {{ form_row(form.usoCFDI) }}
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             {{ form_row(form.razonSocial) }}
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             {{ form_row(form.direccion) }}
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
+            {{ form_row(form.usoCFDI) }}
+        </div>
+        <div class="col-sm-8">
             {{ form_row(form.correos) }}
         </div>
         <div class="col-sm-12 remove-container">

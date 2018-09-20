@@ -394,8 +394,9 @@ class AstilleroCotizacionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $valor = $em->getRepository('AppBundle:ValorSistema')->find(1);
-        $bancoPesos = $em->getRepository('AppBundle:CuentaBancaria')->findOneBy(['empresa' => 2,'moneda' => 1]);
-        $bancoDolares = $em->getRepository('AppBundle:CuentaBancaria')->findOneBy(['empresa' => 2,'moneda' => 2]);
+
+        $bancoPesos = $em->getRepository('AppBundle:CuentaBancaria')->findOneBy(['empresa' => 5,'moneda' => 1]);
+        $bancoDolares = $em->getRepository('AppBundle:CuentaBancaria')->findOneBy(['empresa' => 5,'moneda' => 2]);
 
 
         if ($tipo == 1) { //pesos

@@ -1,8 +1,27 @@
 {% extends 'estructura/plantilla.twig' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        :root .btn {
+            min-width: initial;
+            text-align: center;
+        }
+
+        .daterangepicker {
+            color: initial;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+            background-color: #292f41;
+            border-color: #2a3041;
+        }
+
+        .ranges li {
+            background-color: hsl(225, 23%, 21%);
+            border: 1px solid #292f41;
+        }
+    </style>
 {% endblock %}
 
 {% block contwrapper %}
@@ -21,7 +40,7 @@
                 <div class="col-md-12">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Listado de categorías</h3>
+                            <h3 class="panel-title">Listado de facturas</h3>
                         </div>
                         <div class="panel-body">
                             <table class="table table-novo">
@@ -33,6 +52,7 @@
                                     <th>Método de pago</th>
                                     <th>Monto facturado</th>
                                     <th>Fecha</th>
+                                    <th class="with-options">Pago completado</th>
                                     <th width="10%">Archivos</th>
                                     <th width="10%" class="no-sort"></th>
                                 </tr>
@@ -56,7 +76,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title text-center" id="myModalLabel">¿Está realmente seguro que desea
-                        borrarlo?</h4>
+                        cancelar?</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -76,36 +96,98 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/daterangepicker.js') }}"></script>
     <script type="text/javascript">
       (function ($, datatableSettings) {
+        moment.locale('es');
+
         const $eliminar = $('.ventanaborrar');
 
-        $('.table-novo').DataTable({
+        let searchData = {
+          start: moment().startOf('month'),
+          end: moment().endOf('month'),
+        };
+
+        const $table = $('.table-novo').DataTable({
           ...datatableSettings,
-          ajax: 'facturas-dt',
+          ajax: {
+            url: 'facturas-dt',
+            data: function (d) {
+              d.dates = {
+                start: searchData.start.format('YYYY-MM-DD'),
+                end: searchData.end.format('YYYY-MM-DD'),
+              };
+            },
+          },
           order: [[7, 'desc']],
+          dom:
+              "<'row'<'col-sm-3'l><'col-sm-3'<'#dates'>><'col-sm-3'B><'col-sm-3'f>>" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+          lengthMenu: [
+            [10, 25, 50, -1],
+            ['10 registros', '25 registros', '50 registros', 'Mostrar todos']
+          ],
+          buttons: {
+            buttons: [
+              {
+                extend: 'excel',
+                text: 'XLS',
+                className: 'btn btn-verde btn-sm',
+                exportOptions: {
+                  columns: [0, 1, 2, 3, 4, 5]
+                }
+              }
+            ]
+          },
+          columns: [
+            {responsivePriority: 1},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 1},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
+            {responsivePriority: 0},
+            {responsivePriority: 0},
+            {responsivePriority: 0},
+          ],
           createdRow: function (row, data) {
-            row.classList.add('text-center');
+            const aceptado = `<img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">`;
+            const rechazado = `<img src="{{ asset('img/status-desaprovado-icon.svg') }}" class="center-block">`;
+            const pendiente = `<img src="{{ asset('img/status-pendiente-icon.svg') }}" class="center-block">`;
+
             let url = '{{ app.request.requestUri }}';
             let xmlRoute = '{{ asset('timbrados/') }}';
-            row.cells[6].innerHTML = '';
             let actionsInner = '';
 
-            if (data[7]['metodoPago'] === 'PPD') {
-              actionsInner += `<li><a href="pagos/${data[7].id}/new">Registrar pago</a></li>`;
+            row.cells[7].innerHTML = '';
 
-              row.cells[6].innerHTML += `<a href="pagos/${data[7].id}" class="btn btn-xs btn-azul btn-block">Pagos</a>`;
+            if (data[6] === 0) row.children[6].innerHTML = rechazado;
+            if (data[6] === 1) row.children[6].innerHTML = aceptado;
+            if (data[6] === 2) row.children[6].innerHTML = pendiente;
+
+            if (data[8]['metodoPago'] === 'PPD') {
+              actionsInner += `<li><a href="pagos/${data[8].id}/new">Registrar pago</a></li>`;
+
+              row.cells[7].innerHTML += `<a href="pagos/${data[8].id}" class="btn btn-xs btn-azul btn-block">Pagos</a>`;
             }
 
             actionsInner += `
-            <li><a href="${url}${data[7]['id']}">Detalle</a></li>
-            <li><a href="${url}${data[7]['id']}/reenviar">Reenviar</a></li>
+            <li><a href="${url}${data[8]['id']}">Detalle</a></li>
+            <li><a href="${url}${data[8]['id']}/reenviar">Reenviar</a></li>
             `;
 
-            if (!data[7]['status']) {
+            if (!data[8]['status']) {
               actionsInner += `
                 {% if is_granted(expression('has_role("CONTABILIDAD_CANCEL") or (user.isAdmin())')) %}
-                <li><a href="#" data-url="${url}${data[7]['id']}/cancelar"
+                <li><a href="#" data-url="${url}${data[8]['id']}/cancelar"
                  data-toggle="modal"
                  data-target=".ventanaborrar"">Cancelar
                  </a></li>
@@ -117,14 +199,14 @@
               `;
             }
 
-            row.cells[6].innerHTML += `
-                <a href="${xmlRoute}${data[6]['xml']}"
+            row.cells[7].innerHTML += `
+                <a href="${xmlRoute}${data[7]['xml']}"
                  target="_blank" class="btn btn-xs btn-azul btn-block">XML</a>
-                <a href="${url}${data[6]['pdf']}/pdf"
+                <a href="${url}${data[7]['pdf']}/pdf"
                  target="_blank" class="remove-motor btn btn-xs btn-azul btn-block">PDF</a>
             `;
 
-            row.cells[7].innerHTML = `
+            row.cells[8].innerHTML = `
                 <div class="dropdown">
                   <button class="btn btn-azul btn-xs btn-block dropdown-toggle" type="button" data-toggle="dropdown">
                     Acciones
@@ -138,6 +220,60 @@
           },
         });
 
+        $table.columns('.with-options').every(function () {
+          const column = this;
+          const columnHeader = column.header();
+          const select = document.createElement('select');
+
+          select.add(new Option(columnHeader.innerHTML, ''));
+          columnHeader.innerHTML = '';
+          columnHeader.appendChild(select);
+
+          select.addEventListener('click', e => e.stopPropagation());
+          select.addEventListener('change', function () {
+            let val = $.fn.dataTable.util.escapeRegex(this.value);
+            column.search(val, true, true).draw();
+          });
+
+          select.add(new Option('Pendiente', '2'));
+          select.add(new Option('Pagada', '1'));
+          select.add(new Option('Sin pagos', '0'));
+        });
+
+        $('#dates')
+            .html(`
+              <div class="dataTables_filter">
+                <label for="date-range">Fecha
+                <input type="text" class="form-control" id="date-range" readonly>
+                </label>
+              </div>
+            `)
+            .find('#date-range')
+            .daterangepicker({
+              startDate: searchData.start,
+              endDate: searchData.end,
+              autoApply: true,
+              ranges: {
+                'Este mes': [moment().startOf('month'), moment().endOf('month')],
+                'Mes pasado': [
+                  moment().subtract(1, 'month').startOf('month'),
+                  moment().subtract(1, 'month').endOf('month')
+                ]
+              },
+              locale: {
+                applyLabel: 'Aplicar',
+                cancelLabel: 'Cancelar',
+                fromLabel: 'Desde',
+                toLabel: 'Hasta',
+                customRangeLabel: 'Definido por usuario',
+              }
+            })
+            .on('apply.daterangepicker', function (e, picker) {
+              searchData.start = picker.startDate;
+              searchData.end = picker.endDate;
+
+              $table.ajax.reload();
+            });
 
         $eliminar.on('show.bs.modal', function (e) {
           let url = $(e.relatedTarget).data('url');

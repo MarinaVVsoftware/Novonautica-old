@@ -1,8 +1,27 @@
 {% extends 'estructura/plantilla.twig' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        :root .btn {
+            min-width: initial;
+            text-align: center;
+        }
+
+        .daterangepicker {
+            color: initial;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+            background-color: #292f41;
+            border-color: #2a3041;
+        }
+
+        .ranges li {
+            background-color: hsl(225, 23%, 21%);
+            border: 1px solid #292f41;
+        }
+    </style>
 {% endblock %}
 
 {% block contwrapper %}
@@ -23,7 +42,7 @@
                         <div class="panel-heading">
                             <h3 class="panel-title">
                                 Complementos de pago
-                                <small>factura folio: {{ factura.folio }}</small>
+                                <small>[Factura] - Razon social: {{ factura.receptor.razonSocial }}, Folio: {{ factura.folio }}</small>
 
                                 <a href="{{ path('contabilidad_facturacion_index') }}"
                                    class="btn btn-contorno-azul pull-right">
@@ -90,17 +109,58 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/daterangepicker.js') }}"></script>
     <script type="text/javascript">
       (function ($, datatableSettings) {
-        $('.table-novo').DataTable({
+        moment.locale('es');
+
+        const $eliminar = $('.ventanaborrar');
+
+        let searchData = {
+          start: moment().startOf('month'),
+          end: moment().endOf('month'),
+        };
+
+        const $table = $('.table-novo').DataTable({
           ...datatableSettings,
           ajax: {
             url: 'pagos-dt',
             data(d) {
               d.factura = '{{ factura.id }}';
+              d.dates = {
+                start: searchData.start.format('YYYY-MM-DD'),
+                end: searchData.end.format('YYYY-MM-DD'),
+              };
             },
           },
-          order: [[5, 'desc']],
+          order: [[4, 'desc']],
+          dom:
+              "<'row'<'col-sm-3'l><'col-sm-3'<'#dates'>><'col-sm-3'B><'col-sm-3'f>>" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+          lengthMenu: [
+            [10, 25, 50, -1],
+            ['10 registros', '25 registros', '50 registros', 'Mostrar todos']
+          ],
+          buttons: {
+            buttons: [
+              {
+                extend: 'excel',
+                text: 'XLS',
+                className: 'btn btn-verde btn-sm',
+                exportOptions: {
+                  columns: [0, 1, 2, 3, 4]
+                }
+              }
+            ]
+          },
           createdRow: function (row, data) {
             let xmlRoute = '{{ asset('timbrados/') }}';
             let actionsInner = '';
@@ -116,6 +176,19 @@
                  target="_blank" class="remove-motor btn btn-xs btn-azul btn-block">PDF</a>
             `;
 
+            if (!data[6].status) {
+              actionsInner += `
+                <li><a href="#" data-url="#"
+                 data-toggle="modal"
+                 data-target=".ventanaborrar"">Cancelar
+                 </a></li>
+              `;
+            } else {
+              actionsInner += `
+                <span class="label label-danger">Cancelada</span>
+              `;
+            }
+
             row.cells[6].innerHTML = `
                 <div class="dropdown">
                   <button class="btn btn-azul btn-xs btn-block dropdown-toggle" type="button" data-toggle="dropdown">
@@ -129,6 +202,47 @@
             `;
           },
         });
+
+        $('#dates')
+            .html(`
+              <div class="dataTables_filter">
+                <label for="date-range">Fecha
+                <input type="text" class="form-control" id="date-range" readonly>
+                </label>
+              </div>
+            `)
+            .find('#date-range')
+            .daterangepicker({
+              startDate: searchData.start,
+              endDate: searchData.end,
+              autoApply: true,
+              ranges: {
+                'Este mes': [moment().startOf('month'), moment().endOf('month')],
+                'Mes pasado': [
+                  moment().subtract(1, 'month').startOf('month'),
+                  moment().subtract(1, 'month').endOf('month')
+                ]
+              },
+              locale: {
+                applyLabel: 'Aplicar',
+                cancelLabel: 'Cancelar',
+                fromLabel: 'Desde',
+                toLabel: 'Hasta',
+                customRangeLabel: 'Definido por usuario',
+              }
+            })
+            .on('apply.daterangepicker', function (e, picker) {
+              searchData.start = picker.startDate;
+              searchData.end = picker.endDate;
+
+              $table.ajax.reload();
+            });
+
+        $eliminar.on('show.bs.modal', function (e) {
+          let url = $(e.relatedTarget).data('url');
+          $(this).find('.confirm-cancel').attr('href', url);
+        });
+
       })(jQuery, datatablesSettings);
     </script>
 {% endblock %}

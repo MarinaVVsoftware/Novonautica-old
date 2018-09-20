@@ -8,17 +8,20 @@
 namespace AppBundle\Controller\Contabilidad\Facturacion;
 
 
+use AppBundle\Entity\Cliente\CuentaBancaria;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Entity\Contabilidad\Facturacion\Pago;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Extra\NumberToLetter;
 use AppBundle\Form\Contabilidad\Facturacion\PagoType;
+use AppBundle\Repository\Contabilidad\Facturacion\PagoRepository;
 use DataTables\DataTablesInterface;
 use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -106,18 +109,36 @@ class PagoController extends AbstractController
     public function newFromFacturaAction(Request $request, Facturacion $factura)
     {
         $pago = new Facturacion\Pago($factura);
-//        $this->denyAccessUnlessGranted('CONTABILIDAD_CREATE_PAGO', $pago); TODO agregar permisos
+//        $this->denyAccessUnlessGranted('CONTABILIDAD_CREATE_PAGO', $pago); TODO agregar permisos a pagos
 
         $em = $this->getDoctrine()->getManager();
-        $valoresSistema = $em->getRepository(ValorSistema::class)->find(1); // TODO: diferenciar folios en base a la empresa y permisos de la cuenta
+        $pagoRepository = $em->getRepository(Pago::class);
+        $totalPagado = $pagoRepository->getTotalPagadoEnFactura($factura->getId());
 
-        $pago->setFolio($valoresSistema->getFolioFacturaAstillero());
+        if ($totalPagado['parcialidad'] > 0) {
+            $pago->setNumeroParcialidad($totalPagado['parcialidad']);
+            $pago->setImporteSaldoAnterior($factura->getTotal() - $totalPagado['pagado']);
+        } else {
+            $pago->setImporteSaldoAnterior($factura->getTotal());
+        }
 
         $form = $this->createForm(PagoType::class, $pago);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $facturacionRepository = $em->getRepository(Facturacion::class);
             $receptor = $factura->getReceptor();
+
+            if ($pago->getImporteSaldoInsoluto() <= 0.0) {
+                $factura->setIsPagada(1);
+            }
+
+            // Aqui existe un problema de race condition, donde pueden existir mas de dos usuarios creando una
+            // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
+            // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
+            $factura->setFolio($facturacionRepository->getFolioByEmpresa($factura->getEmisor()->getId()));
+
             $sello = $this->multifacturas->procesaPago($pago);
 
             if (key_exists('codigo_mf_numero', $sello)) {
@@ -126,19 +147,13 @@ class PagoController extends AbstractController
                     'No se pudo sellar la factura, razón: '.$sello['codigo_mf_texto']
                 );
 
-                return $this->render('contabilidad/facturacion/new.html.twig', [
-                    'facturacion' => $factura,
+                return $this->render('contabilidad/facturacion/pago/new.html.twig', [
                     'form' => $form->createView(),
+                    'facturacion' => $factura,
                 ]);
             }
 
-            // Aqui puede haver un problema de race condition, donde pueden existir mas de dos usuarios creando una
-            // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
-            // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
-            $valoresSistema = $em->getRepository(ValorSistema::class)->find(1);
-            $pago->setFolio($valoresSistema->getFolioFacturaAstillero());
-            $valoresSistema->setFolioFacturaAstillero($factura->getFolio() + 1);
-
+            $em->persist($factura);
             $em->persist($pago);
             $em->flush();
 
@@ -156,6 +171,24 @@ class PagoController extends AbstractController
             [
                 'form' => $form->createView(),
                 'factura' => $factura,
+            ]
+        );
+    }
+
+    /**
+     * @Route("/{id}/cuentas-bancarias")
+     */
+    public function getCuentasBancariasAction(Request $request, Facturacion $factura)
+    {
+        $cliente = $factura->getCliente()->getId();
+        $query = $request->query->get('q');
+        $cuentas = $this->getDoctrine()
+            ->getRepository(CuentaBancaria::class)
+            ->getCuentasBancariasLikeSelect2($cliente, $query);
+
+        return new JsonResponse(
+            [
+                'results' => $cuentas,
             ]
         );
     }

@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Contabilidad\Facturacion;
 
 use AppBundle\Entity\Contabilidad\Facturacion;
+use AppBundle\Entity\CuentaBancaria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -145,7 +146,7 @@ class Pago
     private $importeSaldoInsoluto;
 
     /*------------------------------------------------------------------------------------------------
-     * DATOS DE DOCUMENTO RELACIONADO (factura->pagos)
+     * DATOS DEL PAGO
      *-----------------------------------------------------------------------------------------------*/
 
     /**
@@ -282,14 +283,28 @@ class Pago
      */
     private $factura;
 
-//    private $conceptos; se requieren o siempre sera uno?
+    /**
+     * @var \AppBundle\Entity\Cliente\CuentaBancaria
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente\CuentaBancaria")
+     */
+    private $cuentaOrdenante;
+
+    /**
+     * @var CuentaBancaria
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CuentaBancaria")
+     */
+    private $cuentaBeneficiario;
 
     public function __construct(Facturacion $factura)
     {
+        $this->folio = 0;
+        $this->numeroParcialidad = 1;
         $this->factura = $factura;
         $this->isCancelado = false;
 
-        $this->serie = 'A'; // FIXME De donde sale la serie?
+        $this->serie = '';
         $this->fecha = new \DateTime();
         $this->tipocomprobante = 'P';
         $this->subtotal = 0.00;
@@ -304,6 +319,10 @@ class Pago
             $this->metodoPagoFacturaRelacionada = $factura->getMetodoPago();
             $this->tipoCambioFacturaRelacionada = $factura->getTipoCambio();
         }
+
+        $this->montoPagos = 0;
+        $this->importePagado = 0;
+        $this->importeSaldoInsoluto = 0;
 
         $this->tipoCambioPagos = '100';
         $this->monedaPagos = Facturacion::$monedas['MXN'];
@@ -324,14 +343,10 @@ class Pago
      * Set serie.
      *
      * @param string $serie
-     *
-     * @return Pago
      */
     public function setSerie($serie)
     {
         $this->serie = $serie;
-
-        return $this;
     }
 
     /**
@@ -348,14 +363,10 @@ class Pago
      * Set fecha.
      *
      * @param \DateTime $fecha
-     *
-     * @return Pago
      */
     public function setFecha($fecha)
     {
         $this->fecha = $fecha;
-
-        return $this;
     }
 
     /**
@@ -372,14 +383,10 @@ class Pago
      * Set folio.
      *
      * @param int $folio
-     *
-     * @return Pago
      */
     public function setFolio($folio)
     {
         $this->folio = $folio;
-
-        return $this;
     }
 
     /**
@@ -396,14 +403,10 @@ class Pago
      * Set moneda.
      *
      * @param string $moneda
-     *
-     * @return Pago
      */
     public function setMoneda($moneda)
     {
         $this->moneda = $moneda;
-
-        return $this;
     }
 
     /**
@@ -420,14 +423,10 @@ class Pago
      * Set tipocomprobante.
      *
      * @param string $tipocomprobante
-     *
-     * @return Pago
      */
     public function setTipocomprobante($tipocomprobante)
     {
         $this->tipocomprobante = $tipocomprobante;
-
-        return $this;
     }
 
     /**
@@ -444,14 +443,10 @@ class Pago
      * Set lugarExpedicion.
      *
      * @param string $lugarExpedicion
-     *
-     * @return Pago
      */
     public function setLugarExpedicion($lugarExpedicion)
     {
         $this->lugarExpedicion = $lugarExpedicion;
-
-        return $this;
     }
 
     /**
@@ -468,14 +463,10 @@ class Pago
      * Set subtotal.
      *
      * @param int $subtotal
-     *
-     * @return Pago
      */
     public function setSubtotal($subtotal)
     {
         $this->subtotal = $subtotal;
-
-        return $this;
     }
 
     /**
@@ -492,14 +483,10 @@ class Pago
      * Set total.
      *
      * @param int $total
-     *
-     * @return Pago
      */
     public function setTotal($total)
     {
         $this->total = $total;
-
-        return $this;
     }
 
     /**
@@ -516,14 +503,10 @@ class Pago
      * Set uuidFacturaRelacionada.
      *
      * @param string $uuidFacturaRelacionada
-     *
-     * @return Pago
      */
     public function setUuidFacturaRelacionada($uuidFacturaRelacionada)
     {
         $this->uuidFacturaRelacionada = $uuidFacturaRelacionada;
-
-        return $this;
     }
 
     /**
@@ -540,14 +523,10 @@ class Pago
      * Set monedaFacturaRelacionada.
      *
      * @param string $monedaFacturaRelacionada
-     *
-     * @return Pago
      */
     public function setMonedaFacturaRelacionada($monedaFacturaRelacionada)
     {
         $this->monedaFacturaRelacionada = $monedaFacturaRelacionada;
-
-        return $this;
     }
 
     /**
@@ -564,14 +543,10 @@ class Pago
      * Set metodoPagoFacturaRelacionada.
      *
      * @param string $metodoPagoFacturaRelacionada
-     *
-     * @return Pago
      */
     public function setMetodoPagoFacturaRelacionada($metodoPagoFacturaRelacionada)
     {
         $this->metodoPagoFacturaRelacionada = $metodoPagoFacturaRelacionada;
-
-        return $this;
     }
 
     /**
@@ -588,14 +563,10 @@ class Pago
      * Set numeroParcialidad.
      *
      * @param int $numeroParcialidad
-     *
-     * @return Pago
      */
     public function setNumeroParcialidad($numeroParcialidad)
     {
         $this->numeroParcialidad = $numeroParcialidad;
-
-        return $this;
     }
 
     /**
@@ -612,14 +583,10 @@ class Pago
      * Set importeSaldoAnterior.
      *
      * @param int $importeSaldoAnterior
-     *
-     * @return Pago
      */
     public function setImporteSaldoAnterior($importeSaldoAnterior)
     {
         $this->importeSaldoAnterior = $importeSaldoAnterior;
-
-        return $this;
     }
 
     /**
@@ -636,14 +603,10 @@ class Pago
      * Set importePagado.
      *
      * @param int $importePagado
-     *
-     * @return Pago
      */
     public function setImportePagado($importePagado)
     {
         $this->importePagado = $importePagado;
-
-        return $this;
     }
 
     /**
@@ -660,14 +623,10 @@ class Pago
      * Set importeSaldoInsoluto.
      *
      * @param int $importeSaldoInsoluto
-     *
-     * @return Pago
      */
     public function setImporteSaldoInsoluto($importeSaldoInsoluto)
     {
         $this->importeSaldoInsoluto = $importeSaldoInsoluto;
-
-        return $this;
     }
 
     /**
@@ -684,14 +643,10 @@ class Pago
      * Set fechaPagos.
      *
      * @param \DateTime $fechaPagos
-     *
-     * @return Pago
      */
     public function setFechaPagos($fechaPagos)
     {
         $this->fechaPagos = $fechaPagos;
-
-        return $this;
     }
 
     /**
@@ -708,14 +663,10 @@ class Pago
      * Set formaPagoPagos.
      *
      * @param string $formaPagoPagos
-     *
-     * @return Pago
      */
     public function setFormaPagoPagos($formaPagoPagos)
     {
         $this->formaPagoPagos = $formaPagoPagos;
-
-        return $this;
     }
 
     /**
@@ -737,14 +688,10 @@ class Pago
      * Set monedaPagos.
      *
      * @param string $monedaPagos
-     *
-     * @return Pago
      */
     public function setMonedaPagos($monedaPagos)
     {
         $this->monedaPagos = $monedaPagos;
-
-        return $this;
     }
 
     /**
@@ -761,14 +708,10 @@ class Pago
      * Set montoPagos.
      *
      * @param int $montoPagos
-     *
-     * @return Pago
      */
     public function setMontoPagos($montoPagos)
     {
         $this->montoPagos = $montoPagos;
-
-        return $this;
     }
 
     /**
@@ -833,14 +776,10 @@ class Pago
      * Set uuidFiscal.
      *
      * @param string $uuidFiscal
-     *
-     * @return Pago
      */
     public function setUuidFiscal($uuidFiscal)
     {
         $this->uuidFiscal = $uuidFiscal;
-
-        return $this;
     }
 
     /**
@@ -857,14 +796,10 @@ class Pago
      * Set fechaTimbrado.
      *
      * @param string $fechaTimbrado
-     *
-     * @return Pago
      */
     public function setFechaTimbrado($fechaTimbrado)
     {
         $this->fechaTimbrado = $fechaTimbrado;
-
-        return $this;
     }
 
     /**
@@ -881,14 +816,10 @@ class Pago
      * Set cadenaOriginal.
      *
      * @param string $cadenaOriginal
-     *
-     * @return Pago
      */
     public function setCadenaOriginal($cadenaOriginal)
     {
         $this->cadenaOriginal = $cadenaOriginal;
-
-        return $this;
     }
 
     /**
@@ -905,14 +836,10 @@ class Pago
      * Set serieCertificadoCSD.
      *
      * @param string $serieCertificadoCSD
-     *
-     * @return Pago
      */
     public function setSerieCertificadoCSD($serieCertificadoCSD)
     {
         $this->serieCertificadoCSD = $serieCertificadoCSD;
-
-        return $this;
     }
 
     /**
@@ -929,14 +856,10 @@ class Pago
      * Set selloCFDI.
      *
      * @param string $selloCFDI
-     *
-     * @return Pago
      */
     public function setSelloCFDI($selloCFDI)
     {
         $this->selloCFDI = $selloCFDI;
-
-        return $this;
     }
 
     /**
@@ -953,14 +876,10 @@ class Pago
      * Set selloSAT.
      *
      * @param string $selloSAT
-     *
-     * @return Pago
      */
     public function setSelloSAT($selloSAT)
     {
         $this->selloSAT = $selloSAT;
-
-        return $this;
     }
 
     /**
@@ -977,14 +896,10 @@ class Pago
      * Set certificadoSAT.
      *
      * @param string $certificadoSAT
-     *
-     * @return Pago
      */
     public function setCertificadoSAT($certificadoSAT)
     {
         $this->certificadoSAT = $certificadoSAT;
-
-        return $this;
     }
 
     /**
@@ -1001,14 +916,10 @@ class Pago
      * Set xml.
      *
      * @param string $xml
-     *
-     * @return Pago
      */
     public function setXml($xml)
     {
         $this->xml = $xml;
-
-        return $this;
     }
 
     /**
@@ -1025,14 +936,10 @@ class Pago
      * Set png.
      *
      * @param string $png
-     *
-     * @return Pago
      */
     public function setPng($png)
     {
         $this->png = $png;
-
-        return $this;
     }
 
     /**
@@ -1049,14 +956,10 @@ class Pago
      * Set xmlArchivo.
      *
      * @param string $xmlArchivo
-     *
-     * @return Pago
      */
     public function setXmlArchivo($xmlArchivo)
     {
         $this->xmlArchivo = $xmlArchivo;
-
-        return $this;
     }
 
     /**
@@ -1073,14 +976,10 @@ class Pago
      * Set pngArchivo.
      *
      * @param string $pngArchivo
-     *
-     * @return Pago
      */
     public function setPngArchivo($pngArchivo)
     {
         $this->pngArchivo = $pngArchivo;
-
-        return $this;
     }
 
     /**
@@ -1097,14 +996,10 @@ class Pago
      * Set factura.
      *
      * @param Facturacion|null $factura
-     *
-     * @return Pago
      */
     public function setFactura(Facturacion $factura = null)
     {
         $this->factura = $factura;
-
-        return $this;
     }
 
     /**
@@ -1115,5 +1010,41 @@ class Pago
     public function getFactura()
     {
         return $this->factura;
+    }
+
+    /**
+     * Set cuentaOrdenante.
+     *
+     * @param \AppBundle\Entity\Cliente\CuentaBancaria $cuentaOrdenante
+     */
+    public function setCuentaOrdenante(\AppBundle\Entity\Cliente\CuentaBancaria $cuentaOrdenante = null)
+    {
+        $this->cuentaOrdenante = $cuentaOrdenante;
+    }
+
+    /**
+     * Get cuentaOrdenante.
+     *
+     * @return \AppBundle\Entity\Cliente\CuentaBancaria|null
+     */
+    public function getCuentaOrdenante()
+    {
+        return $this->cuentaOrdenante;
+    }
+
+    /**
+     * @return CuentaBancaria
+     */
+    public function getCuentaBeneficiario()
+    {
+        return $this->cuentaBeneficiario;
+    }
+
+    /**
+     * @param CuentaBancaria $cuentaBeneficiario
+     */
+    public function setCuentaBeneficiario(CuentaBancaria $cuentaBeneficiario = null)
+    {
+        $this->cuentaBeneficiario = $cuentaBeneficiario;
     }
 }
