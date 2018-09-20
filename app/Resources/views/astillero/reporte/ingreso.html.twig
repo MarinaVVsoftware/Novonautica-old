@@ -8,81 +8,100 @@
                     <small>Divisa: MXN</small>
                 </div>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-12 espacio-linea-abajo2">
-                            <a href="{{ path('reporte_ast_ingresos_data') }}" target="_blank"
-                               class="btn-sm btn-verde">
-                                XLS
-                            </a>
+                    {{ form_start(form) }}
+                    <div class="input-daterange" id="rangoFehas">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                {{ form_row(form.inicio) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                {{ form_row(form.fin) }}
+                            </div>
                         </div>
                     </div>
-                    <div class="table-responsive scroll-novo">
-                        <table class="table-novo table text-center">
-                            <thead>
-                            <tr>
-                                <th colspan="5"></th>
-                                <th colspan="9">Servicios Básicos</th>
-                                <th colspan="5">Sub-Totales</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                            <tr>
-                                <th>Año</th>
-                                <th>Mes</th>
-                                <th>Día</th>
-                                <th>Embarcación</th>
-                                <th>Folio</th>
-                                <th>Sacar varada y botadura</th>
-                                <th>Estadía</th>
-                                <th>Rampa</th>
-                                <th>Karcher</th>
-                                <th>explanada</th>
-                                <th>Electricidad</th>
-                                <th>Limpieza</th>
-                                <th>Inspeccionar</th>
-                                <th>Días adicionales</th>
-                                <th>Servicios Básicos</th>
-                                <th colspan="2">Servicios</th>
-                                <th>Otros</th>
-                                <th>Materiales</th>
-                                <th>Sub-Total</th>
-                                <th>Iva</th>
-                                <th>Total</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for c in cotizacion %}
-                                <tr>
-                                    <td>{{ c.anio }}</td>
-                                    <td>{{ c.mes }}</td>
-                                    <td>{{ c.dia }}</td>
-                                    <td>{{ c.embarcacion }}</td>
-                                    <td>{{ c.folio }}</td>
-                                    <td>{{ c.varada }}</td>
-                                    <td>{{ c.estadia }}</td>
-                                    <td>{{ c.rampa }}</td>
-                                    <td>{{ c.karcher }}</td>
-                                    <td>{{ c.explanada }}</td>
-                                    <td>{{ c.electricidad }}</td>
-                                    <td>{{ c.limpieza }}</td>
-                                    <td>{{ c.inspeccionar }}</td>
-                                    <td>{{ c.diasAdicionales }}</td>
-                                    <td>{{ c.subTotalServiciosBasicos }}</td>
-                                    <td>{{ c.nomServicios }}</td>
-                                    <td>{{ c.subTotalServicios }}</td>
-                                    <td>{{ c.subTotalOtros }}</td>
-                                    <td>{{ c.subTotalProductos }}</td>
-                                    <td>{{ c.subtotal }}</td>
-                                    <td>{{ c.iva }}</td>
-                                    <td>{{ c.total }}</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            {{ form_row(form.barco) }}
+                            {{ form_row(form.xls) }}
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="table-responsive scroll-novo">
+                                <table class="table-novo table text-center">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="5"></th>
+                                        <th colspan="9">Servicios Básicos</th>
+                                        <th colspan="5">Sub-Totales</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Año</th>
+                                        <th>Mes</th>
+                                        <th>Día</th>
+                                        <th>Embarcación</th>
+                                        <th>Folio</th>
+                                        <th>Sacar varada y botadura</th>
+                                        <th>Estadía</th>
+                                        <th>Rampa</th>
+                                        <th>Karcher</th>
+                                        <th>explanada</th>
+                                        <th>Electricidad</th>
+                                        <th>Limpieza</th>
+                                        <th>Inspeccionar</th>
+                                        <th>Días adicionales</th>
+                                        <th>Servicios Básicos</th>
+                                        <th colspan="2">Servicios</th>
+                                        <th>Otros</th>
+                                        <th>Materiales</th>
+                                        <th>Sub-Total</th>
+                                        <th>Iva</th>
+                                        <th>Total</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for c in cotizacion %}
+                                        <tr>
+                                            <td>{{ c.anio }}</td>
+                                            <td>{{ c.mes }}</td>
+                                            <td>{{ c.dia }}</td>
+                                            <td>{{ c.embarcacion }}</td>
+                                            <td>{{ c.folio }}</td>
+                                            <td>{{ c.varada }}</td>
+                                            <td>{{ c.estadia }}</td>
+                                            <td>{{ c.rampa }}</td>
+                                            <td>{{ c.karcher }}</td>
+                                            <td>{{ c.explanada }}</td>
+                                            <td>{{ c.electricidad }}</td>
+                                            <td>{{ c.limpieza }}</td>
+                                            <td>{{ c.inspeccionar }}</td>
+                                            <td>{{ c.diasAdicionales }}</td>
+                                            <td>{{ c.subTotalServiciosBasicos }}</td>
+                                            <td>{{ c.nomServicios }}</td>
+                                            <td>{{ c.subTotalServicios }}</td>
+                                            <td>{{ c.subTotalOtros }}</td>
+                                            <td>{{ c.subTotalProductos }}</td>
+                                            <td>{{ c.subtotal }}</td>
+                                            <td>{{ c.iva }}</td>
+                                            <td>{{ c.total }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
 {% endblock %}

@@ -14,7 +14,10 @@ use DataTables\DataTablesInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +30,7 @@ use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Validator\Tests\Fixtures\Entity;
 
 /**
  * Class ReporteController
@@ -246,14 +250,53 @@ class ReporteController extends AbstractController
 
     /**
      * @Route("/ingresos", name="reporte_ast_ingresos")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
+     * @param Request $request
+     * @return Response
      */
-    public function ingresosAstilleroAction(){
+    public function ingresosAstilleroAction(Request $request){
         $em = $this->getDoctrine()->getManager();
-        $astillero = $em->getRepository('AppBundle:AstilleroCotizacion')->obtenIngresosTodos();
+        $astillero = $em->getRepository('AppBundle:AstilleroCotizacion')->obtenIngresosTodos('0','2018-01-01','2018-09-30');
+
+        $form = $this->createFormBuilder()
+            ->add('inicio', DateType::class, [
+                'label' => 'Fecha inicio',
+                'widget' => 'single_text',
+                'html5' => false,
+                'attr' => ['class' => 'datepicker input-calendario', 'readonly' => true],
+                'format' => 'yyyy-MM-dd',
+                'data' => new \DateTime(),
+            ])
+            ->add('fin', DateType::class, [
+                'label' => 'Fecha fin',
+                'widget' => 'single_text',
+                'html5' => false,
+                'attr' => ['class' => 'datepicker input-calendario', 'readonly' => true],
+                'format' => 'yyyy-MM-dd',
+                'data' => new \DateTime(),
+            ])
+            ->add('barco', EntityType::class,[
+                'class' => 'AppBundle:Barco',
+                'placeholder' => 'Todos',
+                'required' => false
+            ])
+            ->add('xls', SubmitType::class, [
+                'attr' => ['class' => 'btn-xs btn-verde no-loading'],
+            ])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $datos = $form->getData();
+            return $this->redirectToRoute('reporte_ast_ingresos_data', [
+                'idbarco' => $datos['barco']?$datos['barco']->getId():'0',
+                'inicio' => $datos['inicio']->format('Y-m-d'),
+                'fin' => $datos['fin']->format('Y-m-d')
+            ]);
+        }
         return $this->render('astillero/reporte/ingreso.html.twig', [
             'title' => 'Ingresos Astillero',
             'cotizacion' => $astillero,
+            'form' => $form->createView()
         ]);
     }
 
@@ -276,13 +319,17 @@ class ReporteController extends AbstractController
 //    }
 
     /**
-     * @Route("/reporte-ingresos", name="reporte_ast_ingresos_data")
-     * @Method("GET")
+     * @Route("/reporte-ingresos/{idbarco}/{inicio}/{fin}", name="reporte_ast_ingresos_data")
+     * @Method({"GET", "POST"})
+     * @param $idbarco
+     * @param $inicio
+     * @param $fin
+     * @return StreamedResponse
      */
-    public function generateCsvAction()
+    public function generateCsvAction($idbarco,$inicio,$fin)
     {
         $response = new StreamedResponse();
-        $response->setCallback(function() {
+        $response->setCallback(function () use ($idbarco, $inicio, $fin) {
             $handle = fopen('php://output', 'w+');
 
             // Add the header of the CSV file
@@ -311,15 +358,15 @@ class ReporteController extends AbstractController
                 'Total'
             ];
             $titulos = [];
-            foreach ($auxTitulos as $auxTitulo){
-                array_push($titulos,mb_convert_encoding($auxTitulo,'UTF-16LE','UTF-8' ));
+            foreach ($auxTitulos as $auxTitulo) {
+                array_push($titulos, mb_convert_encoding($auxTitulo, 'UTF-16LE', 'UTF-8'));
             }
             fputcsv($handle, $titulos);
             // Query data from database
             $em = $this->getDoctrine()->getManager();
-            $astillero = $em->getRepository('AppBundle:AstilleroCotizacion')->obtenIngresosTodos();
+            $astillero = $em->getRepository('AppBundle:AstilleroCotizacion')->obtenIngresosTodos($idbarco, $inicio, $fin);
             // Add the data queried from database
-            foreach ($astillero as $dato){
+            foreach ($astillero as $dato) {
                 fputcsv(
                     $handle, // The file pointer
                     [
