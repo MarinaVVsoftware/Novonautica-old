@@ -5,6 +5,8 @@ namespace AppBundle\Entity\Astillero;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
 
 /**
  * Servicio
@@ -102,6 +104,20 @@ class Servicio
      * @ORM\Column(name="dias_descuento", type="integer")
      */
     private $diasDescuento;
+
+    /**
+     * @var ClaveUnidad
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
+     */
+    private $claveUnidad;
+
+    /**
+     * @var ClaveProdServ
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ")
+     */
+    private $claveProdServ;
 
     /**
      * Constructor
@@ -328,5 +344,53 @@ class Servicio
     public function getDiasDescuento()
     {
         return $this->diasDescuento;
+    }
+
+    /**
+     * Set claveUnidad.
+     *
+     * @param ClaveUnidad|null $claveUnidad
+     *
+     * @return Servicio
+     */
+    public function setClaveUnidad(ClaveUnidad $claveUnidad = null)
+    {
+        $this->claveUnidad = $claveUnidad;
+
+        return $this;
+    }
+
+    /**
+     * Get claveUnidad.
+     *
+     * @return ClaveUnidad|null
+     */
+    public function getClaveUnidad()
+    {
+        return $this->claveUnidad;
+    }
+
+    /**
+     * Set claveProdServ.
+     *
+     * @param ClaveProdServ|null $claveProdServ
+     *
+     * @return Servicio
+     */
+    public function setClaveProdServ(ClaveProdServ $claveProdServ = null)
+    {
+        $this->claveProdServ = $claveProdServ;
+
+        return $this;
+    }
+
+    /**
+     * Get claveProdServ.
+     *
+     * @return ClaveProdServ|null
+     */
+    public function getClaveProdServ()
+    {
+        return $this->claveProdServ;
     }
 }

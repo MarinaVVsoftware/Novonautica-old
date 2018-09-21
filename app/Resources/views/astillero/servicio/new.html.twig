@@ -128,6 +128,14 @@
                             {{ form_row(form.diasDescuento) }}
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            {{ form_row(form.claveUnidad) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.claveProdServ) }}
+                        </div>
+                    </div>
                     <div id="listado0"
                          class="lista-elementos"
                          data-prototype="{% filter escape %}
@@ -161,4 +169,18 @@
             </div>
         </section>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (function ($) {
+            const baseUrl = '{{ app.request.baseUrl }}';
+
+            $('#appbundle_astillero_servicio_claveUnidad')
+                .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveunidad'}});
+            $('#appbundle_astillero_servicio_claveProdServ')
+                .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveprodserv'}});
+
+        })(jQuery);
+    </script>
 {% endblock %}

@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
 
 /**
  * Producto
@@ -70,6 +72,20 @@ class Producto
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizaServicio", mappedBy="producto")
      */
     private $ACotizacionesServicios;
+
+    /**
+     * @var ClaveUnidad
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
+     */
+    private $claveUnidad;
+
+    /**
+     * @var ClaveProdServ
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ")
+     */
+    private $claveProdServ;
 
 
     public function __toString()
@@ -248,5 +264,52 @@ class Producto
     public function getProveedor()
     {
         return $this->proveedor;
+    }
+    /**
+     * Set claveUnidad.
+     *
+     * @param ClaveUnidad|null $claveUnidad
+     *
+     * @return Producto
+     */
+    public function setClaveUnidad(ClaveUnidad $claveUnidad = null)
+    {
+        $this->claveUnidad = $claveUnidad;
+
+        return $this;
+    }
+
+    /**
+     * Get claveUnidad.
+     *
+     * @return ClaveUnidad|null
+     */
+    public function getClaveUnidad()
+    {
+        return $this->claveUnidad;
+    }
+
+    /**
+     * Set claveProdServ.
+     *
+     * @param ClaveProdServ|null $claveProdServ
+     *
+     * @return Producto
+     */
+    public function setClaveProdServ(ClaveProdServ $claveProdServ = null)
+    {
+        $this->claveProdServ = $claveProdServ;
+
+        return $this;
+    }
+
+    /**
+     * Get claveProdServ.
+     *
+     * @return ClaveProdServ|null
+     */
+    public function getClaveProdServ()
+    {
+        return $this->claveProdServ;
     }
 }

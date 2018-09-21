@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
 
 /**
  * AstilleroServicio
@@ -44,6 +46,19 @@ class AstilleroServicioBasico
      * @ORM\Column(name="divisa", type="string", length=3)
      */
     private $divisa;
+
+    /**
+     * @var ClaveUnidad
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
+     */
+    private $claveUnidad;
+    /**
+     * @var ClaveProdServ
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ")
+     */
+    private $claveProdServ;
 
     /**
      * Get id
@@ -125,6 +140,52 @@ class AstilleroServicioBasico
     public function getDivisa()
     {
         return $this->divisa;
+    }
+
+    /**
+     * Set claveUnidad.
+     *
+     * @param ClaveUnidad|null $claveUnidad
+     *
+     * @return AstilleroServicioBasico
+     */
+    public function setClaveUnidad(ClaveUnidad $claveUnidad = null)
+    {
+        $this->claveUnidad = $claveUnidad;
+        return $this;
+    }
+
+    /**
+     * Get claveUnidad.
+     *
+     * @return ClaveUnidad|null
+     */
+    public function getClaveUnidad()
+    {
+        return $this->claveUnidad;
+    }
+
+    /**
+     * Set claveProdServ.
+     *
+     * @param ClaveProdServ|null $claveProdServ
+     *
+     * @return AstilleroServicioBasico
+     */
+    public function setClaveProdServ(ClaveProdServ $claveProdServ = null)
+    {
+        $this->claveProdServ = $claveProdServ;
+        return $this;
+    }
+
+    /**
+     * Get claveProdServ.
+     *
+     * @return ClaveProdServ|null
+     */
+    public function getClaveProdServ()
+    {
+        return $this->claveProdServ;
     }
 
 }

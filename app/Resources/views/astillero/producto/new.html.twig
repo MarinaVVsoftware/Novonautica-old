@@ -38,3 +38,17 @@
         </section>
     </div>
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (function ($) {
+            const baseUrl = '{{ app.request.baseUrl }}';
+
+            $('#appbundle_astillero_producto_claveUnidad')
+                .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveunidad'}});
+            $('#appbundle_astillero_producto_claveProdServ')
+                .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveprodserv'}});
+
+        })(jQuery);
+    </script>
+{% endblock %}
