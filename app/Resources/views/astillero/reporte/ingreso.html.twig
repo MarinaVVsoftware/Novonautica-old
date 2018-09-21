@@ -9,21 +9,26 @@
                 </div>
                 <div class="panel-body">
                     {{ form_start(form) }}
-                    <div class="input-daterange" id="rangoFehas">
-                        <div class="row">
-                            <div class="col-sm-5">
-                                {{ form_row(form.inicio) }}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-daterange" id="rangoFehas">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        {{ form_row(form.inicio) }}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        {{ form_row(form.fin) }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-5">
-                                {{ form_row(form.fin) }}
-                            </div>
+                        <div class="col-sm-6">
+                            {{ form_row(form.barco) }}
+
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-5">
-                            {{ form_row(form.barco) }}
+                        <div class="col-sm-12">
                             {{ form_row(form.xls) }}
                         </div>
                     </div>

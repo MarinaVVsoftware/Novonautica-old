@@ -255,6 +255,7 @@ class ReporteController extends AbstractController
      * @return Response
      */
     public function ingresosAstilleroAction(Request $request){
+
         $em = $this->getDoctrine()->getManager();
         $astillero = $em->getRepository('AppBundle:AstilleroCotizacion')->obtenIngresosTodos('0','2018-01-01','2018-09-30');
 
@@ -282,6 +283,7 @@ class ReporteController extends AbstractController
             ])
             ->add('xls', SubmitType::class, [
                 'attr' => ['class' => 'btn-xs btn-verde no-loading'],
+                'label' => 'xls'
             ])
             ->getForm();
         $form->handleRequest($request);
@@ -299,24 +301,6 @@ class ReporteController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-
-//    /**
-//     * @Route("/reporte-ingresos", name="reporte_ast_ingresos_data")
-//     * @Method("GET")
-//     */
-//    public function reporteIngresosAction(){
-//        $em = $this->getDoctrine()->getManager();
-//        $astillero = $em->getRepository('AppBundle:AstilleroCotizacion')->obtenIngresosTodos();
-//        $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
-//        $csvData = $serializer->encode($astillero, 'csv');
-//        $response = new Response(
-//            $csvData,
-//            Response::HTTP_OK,
-//            ['Content-type' => 'text/csv']
-//        );
-//        $response->headers->set('Content-Disposition', 'attachment; filename="AstilleroIngresos.csv"');
-//        return $response;
-//    }
 
     /**
      * @Route("/reporte-ingresos/{idbarco}/{inicio}/{fin}", name="reporte_ast_ingresos_data")
