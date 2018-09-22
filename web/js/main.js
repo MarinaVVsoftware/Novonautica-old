@@ -1497,10 +1497,11 @@ const datatablesSettings = {
 
 const formularioGeneral = document.querySelector('form');
 if( formularioGeneral ) {
-  $(':input[type="submit"]').data('loading-text', 'Cargando...');
-
-    formularioGeneral.addEventListener('submit', function () {
-        $(':input[type="submit"]').button('loading');
-    });
+    if(!$(':input[type="submit"]').hasClass('no-loading')){
+        $(':input[type="submit"]').data('loading-text', 'Cargando...');
+        formularioGeneral.addEventListener('submit', function () {
+            $(':input[type="submit"]').button('loading');
+        });
+    }
 }
 
