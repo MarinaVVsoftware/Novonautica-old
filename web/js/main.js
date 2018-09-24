@@ -1114,13 +1114,13 @@ $('#appbundle_astillerocotizacion_fechaSalida').on("change", function () {
      calculaSubtotalesAstillero($('#fila_estadia'));
  }
 $('#appbundle_astillerocotizacion_diasEstadia').keyup(function () {
-    // var dias = $(this).val();
-    // var nueva_estadia_cantidad = dias * $("#estadia_cantidad").data('eslora');
-    // $("#estadia_cantidad").data('dias', dias);
-    // $("#estadia_cantidad").data('valor', nueva_estadia_cantidad);
-    // $("#estadia_cantidad").html(dias + ' (pie por día)');
-    // calculaSubtotalesAstillero($('#fila_estadia'));
-    calculaDiasEstadiaAstillero();
+    var dias = $(this).val();
+    var nueva_estadia_cantidad = dias * $("#estadia_cantidad").data('eslora');
+    $("#estadia_cantidad").data('dias', dias);
+    $("#estadia_cantidad").data('valor', nueva_estadia_cantidad);
+    $("#estadia_cantidad").html(dias + ' (pie por día)');
+    calculaSubtotalesAstillero($('#fila_estadia'));
+    //calculaDiasEstadiaAstillero();
 });
 $('#appbundle_astillerocotizacion_descuento').keyup(function (){
     calculaTotalesAstillero();
