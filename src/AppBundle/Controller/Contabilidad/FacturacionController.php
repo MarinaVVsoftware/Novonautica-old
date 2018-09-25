@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Contabilidad;
 
 use AppBundle\Entity\AstilleroCotizacion;
+use AppBundle\Entity\AstilleroCotizaServicio;
 use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Combustible;
 use AppBundle\Entity\Contabilidad\Facturacion;
@@ -277,21 +278,19 @@ class FacturacionController extends Controller
         switch ($emisor) {
             case 4:
                 $combustibleRepository = $manager->getRepository(Combustible::class);
-                $cotizaciones = $combustibleRepository->getOneWithCatalogo($cotizacion);
+                $conceptos = $combustibleRepository->getOneWithCatalogo($cotizacion);
                 break;
             case 5:
-                $astilleroRepository = $manager->getRepository(AstilleroCotizacion::class);
-                $cotizaciones = $astilleroRepository->find($cotizacion);
+                $astilleroRepository = $manager->getRepository(AstilleroCotizaServicio::class);
+                $conceptos = $astilleroRepository->getOneWithCatalogo($cotizacion);
                 break;
             default:
-                $cotizaciones = [];
+                $conceptos = [];
         }
-
-        dump($cotizaciones);
 
         return (new JsonResponse(
             [
-                'results' => $cotizaciones,
+                'results' => $conceptos,
             ]
         ))->setEncodingOptions(JSON_NUMERIC_CHECK);
     }

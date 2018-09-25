@@ -416,7 +416,8 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
             'SELECT cotizaciones.id, CONCAT(cotizaciones.folio, \' \', barco.nombre) AS text '.
             'FROM AppBundle:AstilleroCotizacion cotizaciones '.
             'LEFT JOIN cotizaciones.barco barco '.
-            'WHERE IDENTITY(cotizaciones.cliente) = :client')
+            'WHERE IDENTITY(cotizaciones.cliente) = :client '.
+            'AND cotizaciones.validacliente = 2')
             ->setParameter('client', $client);
 
         return $cotizaciones->getArrayResult();

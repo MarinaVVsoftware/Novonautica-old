@@ -539,13 +539,18 @@
                   element.cells[7].firstElementChild.value = element.cells[6].firstElementChild.value;
                   element.cells[11].firstElementChild.value = moneyFormat(conceptoIVA / 100);
 
-                  $(element.cells[2].firstElementChild)
-                      .append(new Option(result.cpsDescripcion, result.cpsId, true, true))
-                      .trigger('change');
+                  if (result.cpsId && result.cpsDescripcion) {
+                    $(element.cells[2].firstElementChild)
+                        .append(new Option(result.cpsDescripcion, result.cpsId, true, true))
+                        .trigger('change');
+                  }
 
-                  $(element.cells[3].firstElementChild)
-                      .append(new Option(result.cuDescripcion, result.cuId, true, true))
-                      .trigger('change');
+                  if (result.cuId && result.cuDescripcion) {
+                    $(element.cells[3].firstElementChild)
+                        .append(new Option(result.cuDescripcion, result.cuId, true, true))
+                        .trigger('change');
+                  }
+
                 }
               })
               .always(() => {

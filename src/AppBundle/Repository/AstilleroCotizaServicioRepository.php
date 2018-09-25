@@ -15,13 +15,13 @@ class AstilleroCotizaServicioRepository extends \Doctrine\ORM\EntityRepository
         return $this->createQueryBuilder('acs')
 //            ->select('SUM(acs.total) AS Total')
             ->select('a.fechaLlegada AS fecha')
-            ->addSelect('(SUM(CASE WHEN acs.astilleroserviciobasico IS NOT NULL THEN acs.total ELSE 0 END) / 100) AS basicos')
-            ->addSelect('(SUM(CASE WHEN acs.producto IS NOT NULL THEN acs.total ELSE 0 END) / 100) AS productos')
-            ->addSelect('(SUM(CASE WHEN acs.servicio IS NOT NULL THEN acs.total ELSE 0 END) / 100) AS servicios')
+            ->addSelect('(SUM(CASE WHEN acs.astilleroserviciobasico IS NOT NULL THEN acs.total ELSE 0 \'\' END) / 100) AS basicos')
+            ->addSelect('(SUM(CASE WHEN acs.producto IS NOT NULL THEN acs.total ELSE 0 \'\' END) / 100) AS productos')
+            ->addSelect('(SUM(CASE WHEN acs.servicio IS NOT NULL THEN acs.total ELSE 0 \'\' END) / 100) AS servicios')
             ->addSelect('(SUM(CASE WHEN '.
                 '((acs.servicio IS NULL) AND '.
                 '(acs.producto IS NULL) AND '.
-                '(acs.astilleroserviciobasico IS NULL)) THEN acs.total ELSE 0 END) / 100) AS otros')
+                '(acs.astilleroserviciobasico IS NULL)) THEN acs.total ELSE 0 \'\' END) / 100) AS otros')
             ->leftJoin('acs.astillerocotizacion', 'a')
             ->where('a.fechaLlegada BETWEEN :start AND :end')
             ->andWhere('acs.estatus = 1 AND a.validacliente = 2')
@@ -37,8 +37,8 @@ class AstilleroCotizaServicioRepository extends \Doctrine\ORM\EntityRepository
 
     public function getOneWithCatalogo($id)
     {
+        /*
         $manager = $this->getEntityManager();
-
         $cotizacion = $manager->createQuery(
             'SELECT '.
             'cotizacion.cantidad AS conceptoCantidad, cotizacion.total AS conceptoImporte, '.
@@ -52,6 +52,83 @@ class AstilleroCotizaServicioRepository extends \Doctrine\ORM\EntityRepository
             'WHERE cotizacion.id = :id')
             ->setParameter('id', $id)
             ->getArrayResult();
+        */
+
+        $cotizacion = $this->createQueryBuilder('concepto')
+            /*
+        ->select(
+            'concepto',
+            'basico',
+            'basicoCPS',
+            'basicoCU',
+            'producto',
+            'productoCPS',
+            'productoCU',
+            'servicio',
+            'servicioCPS',
+            'servicioCU'
+        )
+        */
+            ->select(
+                'concepto.cantidad AS conceptoCantidad, concepto.total AS conceptoImporte',
+                '(CASE
+                WHEN concepto.otroservicio IS NOT NULL THEN concepto.otroservicio
+                WHEN basico.id IS NOT NULL THEN basico.nombre
+                WHEN producto.id IS NOT NULL THEN producto.nombre
+                WHEN servicio.id IS NOT NULL THEN servicio.nombre
+                ELSE \'Sin descripcion\' END
+                ) AS conceptoDescripcion',
+
+                '(CASE
+                WHEN concepto.otroservicio IS NOT NULL THEN 1
+                WHEN basico.id IS NOT NULL THEN basicoCPS.id
+                WHEN producto.id IS NOT NULL THEN productoCPS.id
+                WHEN servicio.id IS NOT NULL THEN servicioCPS.id
+                ELSE \'\' END
+                ) AS cpsId',
+
+                '(CASE
+                WHEN concepto.otroservicio IS NOT NULL THEN \'No existe en el catálogo\'
+                WHEN basico.id IS NOT NULL THEN basicoCPS.descripcion
+                WHEN producto.id IS NOT NULL THEN productoCPS.descripcion
+                WHEN servicio.id IS NOT NULL THEN servicioCPS.descripcion
+                ELSE \'\' END
+                ) AS cpsDescripcion',
+
+                '(CASE
+                WHEN concepto.otroservicio IS NOT NULL THEN 241
+                WHEN basico.id IS NOT NULL THEN basicoCU.id
+                WHEN producto.id IS NOT NULL THEN productoCU.id
+                WHEN servicio.id IS NOT NULL THEN servicioCU.id
+                ELSE \'\' END
+                ) AS cuId',
+
+                '(CASE
+                WHEN concepto.otroservicio IS NOT NULL THEN \'Actividad\'
+                WHEN basico.id IS NOT NULL THEN basicoCU.nombre
+                WHEN producto.id IS NOT NULL THEN productoCU.nombre
+                WHEN servicio.id IS NOT NULL THEN servicioCU.nombre
+                ELSE \'\' END
+                ) AS cuDescripcion'
+            )
+            ->leftJoin('concepto.astilleroserviciobasico', 'basico')
+            ->leftJoin('basico.claveProdServ', 'basicoCPS')
+            ->leftJoin('basico.claveUnidad', 'basicoCU')
+            ->leftJoin('concepto.producto', 'producto')
+            ->leftJoin('producto.claveProdServ', 'productoCPS')
+            ->leftJoin('producto.claveUnidad', 'productoCU')
+            ->leftJoin('concepto.servicio', 'servicio')
+            ->leftJoin('servicio.claveProdServ', 'servicioCPS')
+            ->leftJoin('servicio.claveUnidad', 'servicioCU')
+            ->where(
+                'IDENTITY(concepto.astillerocotizacion) = :cotizacion ',
+                'concepto.estatus > 0'
+            )
+            ->setParameter('cotizacion', $id)
+            ->getQuery()
+            ->getArrayResult();
+
+        dump($cotizacion);
 
         return $cotizacion;
     }
