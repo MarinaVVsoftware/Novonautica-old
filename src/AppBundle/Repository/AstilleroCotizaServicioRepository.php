@@ -15,7 +15,7 @@ class AstilleroCotizaServicioRepository extends \Doctrine\ORM\EntityRepository
         return $this->createQueryBuilder('acs')
 //            ->select('SUM(acs.total) AS Total')
             ->select('a.fechaLlegada AS fecha')
-            ->addSelect('(SUM(CASE WHEN acs.astilleroserviciobasico IS NOT NULL THEN acs.total ELSE 0 \'\' END) / 100) AS basicos')
+            ->addSelect('(SUM(CASE WHEN acs.astilleroserviciobasico IS NOT NULL THEN acs.total ELSE 0 END) / 100) AS basicos')
             ->addSelect('(SUM(CASE WHEN acs.producto IS NOT NULL THEN acs.total ELSE 0 END) / 100) AS productos')
             ->addSelect('(SUM(CASE WHEN acs.servicio IS NOT NULL THEN acs.total ELSE 0 END) / 100) AS servicios')
             ->addSelect('(SUM(CASE WHEN '.
