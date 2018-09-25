@@ -441,13 +441,11 @@
                                              <th>Fecha</th>
                                              <th>Tipo de cambio</th>
                                              <th>Total en MXN</th>
-                                             <th>Factura</th>
                                          </tr>
                                          </thead>
                                          <tbody>
                                          {% set totUsd = 0 %}
                                          {% for pago in combustible.pagos %}
-                                             {% set factura = pago.factura %}
                                              <tr>
                                                  <td>{{ pago.metodopago }}</td>
                                                  <td>$ {{ (pago.cantidad/100)|number_format(2) }} MXN</td>
@@ -456,17 +454,6 @@
                                                      {% endif %}</td>
                                                  <td>$ {{ (pago.dolar/100)|number_format(2) }} MXN</td>
                                                  <td>$ {{ (pago.cantidad / pago.dolar)|number_format(2) }} USD</td>
-                                                 <td>
-                                                     {% if factura %}
-                                                         <a href="{{ path('contabilidad_factura_pdf', { 'id': factura.id }) }}"
-                                                            target="_blank"
-                                                            class="remove-motor btn btn-xs btn-azul"
-                                                            style="margin: 5px;"
-                                                         >
-                                                             PDF
-                                                         </a>
-                                                     {% endif %}
-                                                 </td>
                                              </tr>
                                              {% set totUsd = totUsd + (pago.cantidad / pago.dolar) %}
                                          {% endfor %}
@@ -620,17 +607,6 @@
                                              </div>
                                          </div>
                                      </li>
-                                     {% if pago.factura %}
-                                         <li>
-                                             <i class="fa fa-file-pdf-o bg-blue"></i>
-                                             <div class="timeline-item">
-                                                <span class="time">
-                                                    {{ pago.factura.fecha|date('d M. Y H:s') }}
-                                                </span>
-                                                 <h3 class="timeline-header">Facturado</h3>
-                                             </div>
-                                         </li>
-                                     {% endif %}
                                  {% endfor %}
                                  {% if combustible.estatuspago == 2 %}
                                      <li>

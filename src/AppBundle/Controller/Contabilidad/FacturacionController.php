@@ -2,13 +2,17 @@
 
 namespace AppBundle\Controller\Contabilidad;
 
+use AppBundle\Entity\AstilleroCotizacion;
+use AppBundle\Entity\AstilleroCotizaServicio;
 use AppBundle\Entity\Cliente;
+use AppBundle\Entity\Combustible;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Extra\NumberToLetter;
 use AppBundle\Form\Contabilidad\FacturacionType;
 use AppBundle\Form\Contabilidad\PreviewType;
 use DataTables\DataTablesInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
@@ -83,6 +87,7 @@ class FacturacionController extends Controller
     {
         try {
             $results = $dataTables->handle($request, 'facturas');
+
             return $this->json($results);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
@@ -184,6 +189,113 @@ class FacturacionController extends Controller
     }
 
     /**
+     * @Route("/get-folio")
+     */
+    public function getFolioAction(Request $request)
+    {
+        $e = $request->query->get('e');
+
+        $folio = $this->getDoctrine()
+            ->getRepository(Facturacion::class)
+            ->getFolioByEmpresa($e);
+
+        return new JsonResponse([
+            'results' => [
+                'folio' => $folio,
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/clientes")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getClientesLikeAction(Request $request)
+    {
+        $q = $request->query->get('q');
+        $clientes = $this->getDoctrine()
+            ->getRepository(Cliente::class)
+            ->getAllWhereNombreLike($q);
+
+        return new JsonResponse(
+            [
+                'results' => $clientes,
+            ],
+            JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @Route("/clientes/rfc")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getClienteRFCsAction(Request $request)
+    {
+        $q = $request->query->get('q');
+        $rfcs = $this->getDoctrine()
+            ->getRepository(Cliente\RazonSocial::class)
+            ->getRFCsFromClient($q);
+
+        return new JsonResponse(
+            [
+                'results' => $rfcs,
+            ],
+            JsonResponse::HTTP_OK
+        );
+    }
+
+    /**
+     * @Route("/cotizaciones")
+     */
+    public function getAllCotizacionesFromClientAction(Request $request)
+    {
+        $emisor = $request->query->get('e');
+        $cliente = $request->query->get('c');
+        $manager = $this->getDoctrine()->getManager();
+
+        return new JsonResponse(
+            [
+                'results' => self::getCotizaciones($manager, $emisor, $cliente),
+            ]
+        );
+    }
+
+    /**
+     * @Route("/conceptos")
+     */
+    public function getConceptosAction(Request $request)
+    {
+        $manager = $this->getDoctrine()->getManager();
+
+        $emisor = $request->query->get('e');
+        $cotizacion = $request->query->get('c');
+
+        switch ($emisor) {
+            case 4:
+                $combustibleRepository = $manager->getRepository(Combustible::class);
+                $conceptos = $combustibleRepository->getOneWithCatalogo($cotizacion);
+                break;
+            case 5:
+                $astilleroRepository = $manager->getRepository(AstilleroCotizaServicio::class);
+                $conceptos = $astilleroRepository->getOneWithCatalogo($cotizacion);
+                break;
+            default:
+                $conceptos = [];
+        }
+
+        return (new JsonResponse(
+            [
+                'results' => $conceptos,
+            ]
+        ))->setEncodingOptions(JSON_NUMERIC_CHECK);
+    }
+
+    /**
      * @Route("/{id}/pdf", name="contabilidad_factura_pdf")
      * @Method("GET")
      *
@@ -191,7 +303,7 @@ class FacturacionController extends Controller
      *
      * @return PdfResponse
      */
-    public function getFacturaPDF(Facturacion $factura)
+    public function getFacturaPDFAction(Facturacion $factura)
     {
         $html = $this->renderView(
             'contabilidad/facturacion/pdf/factura.html.twig',
@@ -256,67 +368,6 @@ class FacturacionController extends Controller
     }
 
     /**
-     * @Route("/get-folio")
-     */
-    public function getFolio(Request $request)
-    {
-        $e = $request->query->get('e');
-
-        $folio = $this->getDoctrine()
-            ->getRepository(Facturacion::class)
-            ->getFolioByEmpresa($e);
-
-        return new JsonResponse([
-            'results' => [
-                'folio' => $folio,
-            ],
-        ]);
-    }
-
-    /**
-     * @Route("/clientes")
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function getClientesLikeAction(Request $request)
-    {
-        $q = $request->query->get('q');
-        $clientes = $this->getDoctrine()
-            ->getRepository(Cliente::class)
-            ->getAllWhereNombreLike($q);
-
-        return new JsonResponse(
-            [
-                'results' => $clientes,
-            ],
-            JsonResponse::HTTP_OK);
-    }
-
-    /**
-     * @Route("/clientes/rfc")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function getClienteRFCsAction(Request $request)
-    {
-        $q = $request->query->get('q');
-        $rfcs = $this->getDoctrine()
-            ->getRepository(Cliente\RazonSocial::class)
-            ->getRFCsFromClient($q);
-
-        return new JsonResponse(
-            [
-                'results' => $rfcs,
-            ],
-            JsonResponse::HTTP_OK
-        );
-    }
-
-    /**
      * @Route("/{id}")
      * @param int $id
      *
@@ -340,10 +391,28 @@ class FacturacionController extends Controller
         );
     }
 
+    public static function getCotizaciones($manager, $emisor, $cliente)
+    {
+        switch ($emisor) {
+            case 4:
+                $combustibleRepository = $manager->getRepository(Combustible::class);
+                $cotizaciones = $combustibleRepository->getCotizacionesFromCliente($cliente);
+                break;
+            case 5:
+                $astilleroRepository = $manager->getRepository(AstilleroCotizacion::class);
+                $cotizaciones = $astilleroRepository->getCotizacionesFromCliente($cliente);
+                break;
+            default:
+                $cotizaciones = [];
+        }
+
+        return $cotizaciones;
+    }
+
     private function enviarFactura(Facturacion $factura, array $emails, $bbc = null)
     {
         $attachmentPDF = new Swift_Attachment(
-            $this->getFacturaPDF($factura),
+            $this->getFacturaPDFAction($factura),
             'factura_'.$factura->getFolio().'.pdf',
             'application/pdf'
         );

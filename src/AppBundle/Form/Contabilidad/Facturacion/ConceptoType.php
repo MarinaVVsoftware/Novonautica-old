@@ -105,7 +105,7 @@ class ConceptoType extends AbstractType
             ]
         );
 
-        $builder->add('valorunitario', MoneyType::class, $moneyOptions);
+        $builder->add('valorunitario',MoneyType::class, $moneyOptions);
         $builder->add('importe', MoneyType::class, $moneyOptions);
         $builder->add('base', MoneyType::class, $moneyOptions);
         $builder->add('impuestoImporte', MoneyType::class, $moneyOptions);
@@ -170,8 +170,8 @@ class ConceptoType extends AbstractType
                 'choices' => $claves,
                 'choice_label' => 'descripcion',
                 'constraints' => [
-                    new NotNull(['message' => 'Por favor selecciona una clave'])
-                ]
+                    new NotNull(['message' => 'Por favor selecciona una clave']),
+                ],
             ]
         );
     }
@@ -191,8 +191,8 @@ class ConceptoType extends AbstractType
                 'choices' => $claves,
                 'choice_label' => 'nombre',
                 'constraints' => [
-                    new NotNull(['message' => 'Por favor selecciona una clave'])
-                ]
+                    new NotNull(['message' => 'Por favor selecciona una clave']),
+                ],
             ]
         );
     }

@@ -10,4 +10,37 @@ namespace AppBundle\Repository;
  */
 class CombustibleRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getCotizacionesFromCliente($client)
+    {
+        $manager = $this->getEntityManager();
+        $cotizaciones = $manager->createQuery(
+            'SELECT cotizaciones.id, CONCAT(cotizaciones.folio, \' \', barco.nombre) AS text '.
+            'FROM AppBundle:Combustible cotizaciones '.
+            'LEFT JOIN cotizaciones.barco barco '.
+            'WHERE IDENTITY(cotizaciones.cliente) = :client')
+            ->setParameter('client', $client);
+
+        return $cotizaciones->getArrayResult();
+    }
+
+    public function getOneWithCatalogo($id)
+    {
+        $manager = $this->getEntityManager();
+
+        $cotizacion = $manager->createQuery(
+            'SELECT '.
+            'cotizacion.cantidad AS conceptoCantidad, cotizacion.total AS conceptoImporte, '.
+            'tipo.nombre AS conceptoDescripcion, '.
+            'cps.id AS cpsId, cps.descripcion as cpsDescripcion, '.
+            'cu.id AS cuId, cu.nombre AS cuDescripcion '.
+            'FROM AppBundle:Combustible cotizacion '.
+            'LEFT JOIN cotizacion.tipo tipo '.
+            'LEFT JOIN tipo.claveProdServ cps '.
+            'LEFT JOIN tipo.claveUnidad cu '.
+            'WHERE cotizacion.id = :id')
+            ->setParameter('id', $id)
+            ->getArrayResult();
+
+        return $cotizacion;
+    }
 }

@@ -165,6 +165,11 @@
                                     {{ form_row(form.receptor) }}
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    {{ form_row(form.cotizaciones) }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -389,14 +394,23 @@
         }
 
         /* PUBLIC */
-        addElement() {
+        addElement(event) {
+          if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
           let element = this._getPrototypeElement();
 
           this.appendRemoveButton(element);
-          this.elementListener(element);
+          this.elementListener(element, event);
           this.prototypeHolder.appendChild(element);
 
-          return this.prototypeHolder.childElementCount;
+          return this.prototypeHolder.children[this.prototypeHolder.children.length - 1];
+        }
+
+        clear() {
+          this.prototypeHolder.innerHTML = '';
         }
 
         removeElement(element) {
@@ -441,8 +455,8 @@
     </script>
     <script>
       (function ($) {
-        const facturaForm = document.getElementById('appbundle_contabilidad_facturacion');
         const previewButton = document.getElementById('preview-btn');
+        const cotizacionSelect = document.getElementById('appbundle_contabilidad_facturacion_cotizaciones');
         const folioInput = document.getElementById('appbundle_contabilidad_facturacion_folio');
         const clienteSelect = document.getElementById('appbundle_contabilidad_facturacion_cliente');
         const emisorSelect = document.getElementById('appbundle_contabilidad_facturacion_emisor');
@@ -465,56 +479,14 @@
         getFolio();
 
         function elementListener(element) {
-          const cantidadInput = element.cells[0].firstElementChild;
-          const valorUnitarioInput = new Cleave(element.cells[5].firstElementChild, {numeral: true});
-          const importeInput = new Cleave(element.cells[6].firstElementChild, {numeral: true});
-          const baseInput = new Cleave(element.cells[7].firstElementChild, {numeral: true});
-          const tasaCuotaInput = element.cells[10].firstElementChild;
-          const importeImpuestoInput = new Cleave(element.cells[11].firstElementChild, {numeral: true});
-          const removeButton = element.cells[12].firstElementChild;
+          new Cleave(element.cells[5].firstElementChild, {numeral: true});
+          new Cleave(element.cells[6].firstElementChild, {numeral: true});
+          new Cleave(element.cells[7].firstElementChild, {numeral: true});
+          new Cleave(element.cells[11].firstElementChild, {numeral: true});
 
-          const $cpsInput = $(element.cells[2].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveprodserv'}});
-          const $claveUnidadInput = $(element.cells[3].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveunidad'}});
-
-          cantidadInput.addEventListener('input', importeCalc);
-          valorUnitarioInput.element.addEventListener('input', importeCalc);
-          tasaCuotaInput.addEventListener('input', impuestoCalc);
-          removeButton.addEventListener('click', totalCalc);
-
-          function importeCalc() {
-            let importeValue = cantidadInput.value * Number(valorUnitarioInput.getRawValue());
-            let impuestoValue = importeValue * Number(tasaCuotaInput.value);
-
-            importeInput.element.value = moneyFormat(importeValue);
-            baseInput.element.value = moneyFormat(importeValue);
-            importeImpuestoInput.element.value = moneyFormat(impuestoValue);
-
-            totalCalc();
-          }
-
-          function impuestoCalc() {
-            let impuestoValue = Number(baseInput.getRawValue()) * Number(tasaCuotaInput.value);
-
-            importeImpuestoInput.element.value = moneyFormat(impuestoValue);
-
-            totalCalc();
-          }
-
-          function totalCalc() {
-            let subtotalValue = 0;
-            let totalValue = 0;
-            let impuestosValue = 0;
-
-            for (const concepto of conceptoTable.prototypeHolder.children) {
-              subtotalValue += Number(moneyRawValue(concepto.cells[6].firstElementChild.value));
-              impuestosValue += Number(moneyRawValue(concepto.cells[11].firstElementChild.value));
-              totalValue = subtotalValue + impuestosValue;
-            }
-
-            subtotalInput.element.value = moneyFormat(subtotalValue);
-            totalInput.element.value = moneyFormat(totalValue);
-            totalImporteImpuestosInput.element.value = totalImpuestosInput.element.value = moneyFormat(impuestosValue);
-          }
+          element.cells[12].firstElementChild.addEventListener('click', computeConceptos);
+          $(element.cells[2].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveprodserv'}});
+          $(element.cells[3].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveunidad'}});
         }
 
         metodoPagoSelect.addEventListener('change', function () {
@@ -529,6 +501,9 @@
 
         $clienteSelect2.on('select2:select', function () {
           $receptorSelect2.empty();
+          conceptoTable.clear();
+
+          getCotizaciones(emisorSelect.value, this.value);
 
           $.get('clientes/rfc', {q: this.value})
               .done(({results}) => {
@@ -540,6 +515,49 @@
               })
         });
 
+        cotizacionSelect.addEventListener('change', function () {
+          if (!this.value) return;
+
+          $.get('conceptos', {e: emisorSelect.value, c: this.value})
+              .done(({results}) => {
+                conceptoTable.clear();
+
+                if (!results.length) return;
+
+                for (const result of results) {
+                  const conceptoImporte = Number(result.conceptoImporte / 1.16);
+                  const conceptoValorUnitario = (conceptoImporte / result.conceptoCantidad);
+                  const conceptoIVA = (conceptoImporte * .16);
+
+                  let element = conceptoTable.addElement();
+
+                  element.cells[0].firstElementChild.value = result.conceptoCantidad;
+                  element.cells[1].firstElementChild.value = result.conceptoUnidad || 'NA';
+                  element.cells[4].firstElementChild.value = result.conceptoDescripcion;
+                  element.cells[5].firstElementChild.value = moneyFormat(conceptoValorUnitario / 100);
+                  element.cells[6].firstElementChild.value = moneyFormat(conceptoImporte / 100);
+                  element.cells[7].firstElementChild.value = element.cells[6].firstElementChild.value;
+                  element.cells[11].firstElementChild.value = moneyFormat(conceptoIVA / 100);
+
+                  if (result.cpsId && result.cpsDescripcion) {
+                    $(element.cells[2].firstElementChild)
+                        .append(new Option(result.cpsDescripcion, result.cpsId, true, true))
+                        .trigger('change');
+                  }
+
+                  if (result.cuId && result.cuDescripcion) {
+                    $(element.cells[3].firstElementChild)
+                        .append(new Option(result.cuDescripcion, result.cuId, true, true))
+                        .trigger('change');
+                  }
+
+                }
+              })
+              .always(() => {
+                computeConceptos();
+              });
+        });
+
         $(previewButton).on('click', function () {
           $('<a>')
               .attr('href', 'preview?' + $('form').serialize())
@@ -548,6 +566,10 @@
         });
 
         function getFolio() {
+          if (clienteSelect.value) {
+            getCotizaciones(emisorSelect.value, clienteSelect.value);
+          }
+
           $.get('get-folio', {e: emisorSelect.value})
               .done(({results}) => {
                 folioContainer.innerText = 'Folio: ' + results.folio;
@@ -555,8 +577,43 @@
               });
         }
 
-        function moneyFormat(value) {
-          return value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        function getCotizaciones(emisor, cliente) {
+          cotizacionSelect.innerHTML = '';
+
+          $.get('cotizaciones', {e: emisor, c: cliente})
+              .done(({results}) => {
+                if (!results.length) {
+                  cotizacionSelect.appendChild(new Option('No se encontraron cotizaciones', ''));
+                  return;
+                }
+
+                cotizacionSelect.appendChild(new Option('Seleccione una cotización', ''));
+
+                for (const result of results) {
+                  cotizacionSelect.appendChild(new Option(result.text, result.id));
+                }
+              });
+        }
+
+        function computeConceptos() {
+          let totalValue;
+          let subtotalValue = 0;
+          let impuestosValue = 0;
+
+          for (const concepto of conceptoTable.prototypeHolder.children) {
+            subtotalValue += Number(moneyRawValue(concepto.cells[6].firstElementChild.value));
+            impuestosValue += Number(moneyRawValue(concepto.cells[11].firstElementChild.value));
+            totalValue = subtotalValue + impuestosValue;
+          }
+
+          subtotalInput.element.value = moneyFormat(subtotalValue);
+          totalInput.element.value = moneyFormat(totalValue);
+          totalImporteImpuestosInput.element.value = totalImpuestosInput.element.value = moneyFormat(impuestosValue);
+        }
+
+        function moneyFormat(value, point) {
+          const fixedPoint = point || 2;
+          return value.toFixed(fixedPoint).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
         }
 
         function moneyRawValue(value) {
