@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Contabilidad;
 
+use AppBundle\Entity\AstilleroCotizacion;
 use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Combustible;
 use AppBundle\Entity\Contabilidad\Facturacion;
@@ -10,6 +11,7 @@ use AppBundle\Extra\NumberToLetter;
 use AppBundle\Form\Contabilidad\FacturacionType;
 use AppBundle\Form\Contabilidad\PreviewType;
 use DataTables\DataTablesInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
@@ -251,31 +253,21 @@ class FacturacionController extends Controller
      */
     public function getAllCotizacionesFromClientAction(Request $request)
     {
-        $manager = $this->getDoctrine()->getManager();
-
         $emisor = $request->query->get('e');
         $cliente = $request->query->get('c');
-
-        switch ($emisor) {
-            case 4:
-                $combustibleRepository = $manager->getRepository(Combustible::class);
-                $cotizaciones = $combustibleRepository->getCotizacionesFromCliente($cliente);
-                break;
-            default:
-                $cotizaciones = [];
-        }
+        $manager = $this->getDoctrine()->getManager();
 
         return new JsonResponse(
             [
-                'results' => $cotizaciones,
+                'results' => self::getCotizaciones($manager, $emisor, $cliente),
             ]
         );
     }
 
     /**
-     * @Route("/cotizacion")
+     * @Route("/conceptos")
      */
-    public function getCotizacionDetailAction(Request $request)
+    public function getConceptosAction(Request $request)
     {
         $manager = $this->getDoctrine()->getManager();
 
@@ -287,9 +279,15 @@ class FacturacionController extends Controller
                 $combustibleRepository = $manager->getRepository(Combustible::class);
                 $cotizaciones = $combustibleRepository->getOneWithCatalogo($cotizacion);
                 break;
+            case 5:
+                $astilleroRepository = $manager->getRepository(AstilleroCotizacion::class);
+                $cotizaciones = $astilleroRepository->find($cotizacion);
+                break;
             default:
                 $cotizaciones = [];
         }
+
+        dump($cotizaciones);
 
         return (new JsonResponse(
             [
@@ -392,6 +390,24 @@ class FacturacionController extends Controller
                 'factura' => $factura,
             ]
         );
+    }
+
+    public static function getCotizaciones($manager, $emisor, $cliente)
+    {
+        switch ($emisor) {
+            case 4:
+                $combustibleRepository = $manager->getRepository(Combustible::class);
+                $cotizaciones = $combustibleRepository->getCotizacionesFromCliente($cliente);
+                break;
+            case 5:
+                $astilleroRepository = $manager->getRepository(AstilleroCotizacion::class);
+                $cotizaciones = $astilleroRepository->getCotizacionesFromCliente($cliente);
+                break;
+            default:
+                $cotizaciones = [];
+        }
+
+        return $cotizaciones;
     }
 
     private function enviarFactura(Facturacion $factura, array $emails, $bbc = null)

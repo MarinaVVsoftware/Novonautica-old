@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Contabilidad;
 
+use AppBundle\Controller\Contabilidad\FacturacionController;
 use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Cliente\RazonSocial;
 use AppBundle\Entity\Contabilidad\Facturacion;
@@ -217,11 +218,16 @@ class FacturacionType extends AbstractType
             ]
         );
 
+        /*
+         * Event listeners
+         */
+
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {
                 $this->createClienteField($event->getForm());
                 $this->createReceptorField($event->getForm());
+                $this->createCotizacionesField($event->getForm());
             }
         );
 
@@ -234,8 +240,15 @@ class FacturacionType extends AbstractType
                     ? $this->entityManager->getRepository(Cliente::class)->find($data['cliente'])
                     : null;
 
+                $cotizaciones = array_key_exists('cotizaciones', $data)
+                    ? $cotizaciones = array_map(function ($cotizacion) {
+                        return [$cotizacion['text'] => $cotizacion['id']];
+                    }, FacturacionController::getCotizaciones($this->entityManager, $data['emisor'], $data['cliente']))
+                    : [];
+
                 $this->createClienteField($event->getForm(), $cliente);
                 $this->createReceptorField($event->getForm(), $cliente);
+                $this->createCotizacionesField($event->getForm(), $cotizaciones);
             }
         );
     }
@@ -245,9 +258,9 @@ class FacturacionType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Contabilidad\Facturacion',
-        ));
+        $resolver->setDefaults([
+            'data_class' => Facturacion::class,
+        ]);
     }
 
     /**
@@ -298,6 +311,18 @@ class FacturacionType extends AbstractType
                     new NotNull(['message' => 'Por favor selecciona un RFC receptor']),
                     new NotBlank(['message' => 'Por favor selecciona un cliente']),
                 ],
+            ]
+        );
+    }
+
+    private function createCotizacionesField(FormInterface $form, $choices = null)
+    {
+        $form->add(
+            'cotizaciones',
+            ChoiceType::class,
+            [
+                'choices' => $choices,
+                'mapped' => false,
             ]
         );
     }

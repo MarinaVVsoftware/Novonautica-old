@@ -167,10 +167,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="cotizaciones">Cotizaciones</label>
-                                        <select id="cotizaciones" class="form-control"></select>
-                                    </div>
+                                    {{ form_row(form.cotizaciones) }}
                                 </div>
                             </div>
                         </div>
@@ -459,7 +456,7 @@
     <script>
       (function ($) {
         const previewButton = document.getElementById('preview-btn');
-        const cotizacionSelect = document.getElementById('cotizaciones');
+        const cotizacionSelect = document.getElementById('appbundle_contabilidad_facturacion_cotizaciones');
         const folioInput = document.getElementById('appbundle_contabilidad_facturacion_folio');
         const clienteSelect = document.getElementById('appbundle_contabilidad_facturacion_cliente');
         const emisorSelect = document.getElementById('appbundle_contabilidad_facturacion_emisor');
@@ -504,6 +501,7 @@
 
         $clienteSelect2.on('select2:select', function () {
           $receptorSelect2.empty();
+          conceptoTable.clear();
 
           getCotizaciones(emisorSelect.value, this.value);
 
@@ -520,9 +518,11 @@
         cotizacionSelect.addEventListener('change', function () {
           if (!this.value) return;
 
-          $.get('cotizacion', {e: emisorSelect.value, c: this.value})
+          $.get('conceptos', {e: emisorSelect.value, c: this.value})
               .done(({results}) => {
                 conceptoTable.clear();
+
+                if (!results.length) return;
 
                 for (const result of results) {
                   const conceptoImporte = Number(result.conceptoImporte / 1.16);
@@ -534,7 +534,7 @@
                   element.cells[0].firstElementChild.value = result.conceptoCantidad;
                   element.cells[1].firstElementChild.value = result.conceptoUnidad || 'NA';
                   element.cells[4].firstElementChild.value = result.conceptoDescripcion;
-                  element.cells[5].firstElementChild.value = moneyFormat(conceptoValorUnitario / 100, 6);
+                  element.cells[5].firstElementChild.value = moneyFormat(conceptoValorUnitario / 100);
                   element.cells[6].firstElementChild.value = moneyFormat(conceptoImporte / 100);
                   element.cells[7].firstElementChild.value = element.cells[6].firstElementChild.value;
                   element.cells[11].firstElementChild.value = moneyFormat(conceptoIVA / 100);
@@ -561,7 +561,9 @@
         });
 
         function getFolio() {
-          getCotizaciones(emisorSelect.value, clienteSelect.value);
+          if (clienteSelect.value) {
+            getCotizaciones(emisorSelect.value, clienteSelect.value);
+          }
 
           $.get('get-folio', {e: emisorSelect.value})
               .done(({results}) => {
@@ -575,7 +577,10 @@
 
           $.get('cotizaciones', {e: emisor, c: cliente})
               .done(({results}) => {
-                if (!results.length) return;
+                if (!results.length) {
+                  cotizacionSelect.appendChild(new Option('No se encontraron cotizaciones', ''));
+                  return;
+                }
 
                 cotizacionSelect.appendChild(new Option('Seleccione una cotización', ''));
 
