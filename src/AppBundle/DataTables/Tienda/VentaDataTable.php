@@ -47,16 +47,20 @@ class VentaDataTable extends AbstractDataTableHandler
 
         foreach ($request->order as $order) {
             if ($order->column == 0) {
-                $query->addOrderBy('v.createdAt', $order->dir);
+                $query->addOrderBy('v.id', $order->dir);
             } elseif ($order->column == 1) {
-                $query->addOrderBy('v.iva', $order->dir);
+                $query->addOrderBy('v.cliente', $order->dir);
             } elseif ($order->column == 2) {
-                $query->addOrderBy('v.descuento', $order->dir);
+                $query->addOrderBy('v.createdAt', $order->dir);
             } elseif ($order->column == 3) {
-                $query->addOrderBy('v.subtotal', $order->dir);
+                $query->addOrderBy('v.iva', $order->dir);
             } elseif ($order->column == 4) {
-                $query->addOrderBy('v.total', $order->dir);
+                $query->addOrderBy('v.descuento', $order->dir);
             } elseif ($order->column == 5) {
+                $query->addOrderBy('v.subtotal', $order->dir);
+            } elseif ($order->column == 6) {
+                $query->addOrderBy('v.total', $order->dir);
+            } elseif ($order->column == 7) {
                 $query->addOrderBy('v.id', $order->dir);
             }
         }
