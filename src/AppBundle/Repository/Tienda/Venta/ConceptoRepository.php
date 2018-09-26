@@ -22,4 +22,32 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter(1, $ventaId)
             ->getResult();
     }
+
+    /**
+     * El metodo de getOneWithCatalogo es para las facturaciones genera los conceptos de la tabla
+     *
+     * @param $id
+     *
+     * @return array
+     */
+    public function getOneWithCatalogo($id)
+    {
+        $manager = $this->getEntityManager();
+
+        $cotizacion = $manager->createQuery(
+            'SELECT '.
+            'concepto.cantidad AS conceptoCantidad, concepto.total AS conceptoImporte, '.
+            'producto.nombre AS conceptoDescripcion, '.
+            'cps.id AS cpsId, cps.descripcion as cpsDescripcion, '.
+            'cu.id AS cuId, cu.nombre AS cuDescripcion '.
+            'FROM AppBundle:Tienda\Venta\Concepto concepto '.
+            'LEFT JOIN concepto.producto producto '.
+            'LEFT JOIN producto.claveProdServ cps '.
+            'LEFT JOIN producto.claveUnidad cu '.
+            'WHERE concepto.venta = :id')
+            ->setParameter('id', $id)
+            ->getArrayResult();
+
+        return $cotizacion;
+    }
 }

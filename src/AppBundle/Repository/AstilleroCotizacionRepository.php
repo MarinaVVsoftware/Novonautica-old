@@ -413,7 +413,12 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
     {
         $manager = $this->getEntityManager();
         $cotizaciones = $manager->createQuery(
-            'SELECT cotizaciones.id, CONCAT(cotizaciones.folio, \' \', barco.nombre) AS text '.
+            'SELECT cotizaciones.id, '.
+            '(CASE '.
+            'WHEN cotizaciones.foliorecotiza > 0 '.
+            'THEN CONCAT(cotizaciones.folio, \'-\', cotizaciones.foliorecotiza, \' \', barco.nombre) '.
+            'ELSE CONCAT(cotizaciones.folio, \' \', barco.nombre) '.
+            'END) AS text '.
             'FROM AppBundle:AstilleroCotizacion cotizaciones '.
             'LEFT JOIN cotizaciones.barco barco '.
             'WHERE IDENTITY(cotizaciones.cliente) = :client '.

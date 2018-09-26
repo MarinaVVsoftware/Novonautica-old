@@ -37,7 +37,7 @@ class VentaDataTable extends AbstractDataTableHandler
      */
     public function handle(DataTableQuery $request): DataTableResults
     {
-        $repository = $this->doctrine->getRepository('AppBundle:Tienda\Venta');
+        $repository = $this->doctrine->getRepository(Venta::class);
         $results = new DataTableResults();
 
         $query = $repository->createQueryBuilder('v')->select('COUNT(v.id)');
@@ -47,16 +47,20 @@ class VentaDataTable extends AbstractDataTableHandler
 
         foreach ($request->order as $order) {
             if ($order->column == 0) {
-                $query->addOrderBy('v.createdAt', $order->dir);
+                $query->addOrderBy('v.id', $order->dir);
             } elseif ($order->column == 1) {
-                $query->addOrderBy('v.iva', $order->dir);
+                $query->addOrderBy('v.cliente', $order->dir);
             } elseif ($order->column == 2) {
-                $query->addOrderBy('v.descuento', $order->dir);
+                $query->addOrderBy('v.createdAt', $order->dir);
             } elseif ($order->column == 3) {
-                $query->addOrderBy('v.subtotal', $order->dir);
+                $query->addOrderBy('v.iva', $order->dir);
             } elseif ($order->column == 4) {
-                $query->addOrderBy('v.total', $order->dir);
+                $query->addOrderBy('v.descuento', $order->dir);
             } elseif ($order->column == 5) {
+                $query->addOrderBy('v.subtotal', $order->dir);
+            } elseif ($order->column == 6) {
+                $query->addOrderBy('v.total', $order->dir);
+            } elseif ($order->column == 7) {
                 $query->addOrderBy('v.id', $order->dir);
             }
         }
@@ -73,6 +77,8 @@ class VentaDataTable extends AbstractDataTableHandler
 
         foreach ($ventas as $venta) {
             $results->data[] = [
+                $venta->getId(),
+                $venta->getCliente() ? $venta->getCliente()->getNombre() : '',
                 $venta->getCreatedAt()->format('d/m/Y'),
                 'MX$ ' . number_format(($venta->getIva() / 100), 2),
                 'MX$ ' . number_format(($venta->getDescuento() / 100), 2),

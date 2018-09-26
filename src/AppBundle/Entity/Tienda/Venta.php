@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Tienda;
 
+use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Tienda\Venta\Concepto;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -67,6 +68,13 @@ class Venta
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @var Cliente
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente")
+     */
+    private $cliente;
 
     /**
      * @var Concepto
@@ -173,6 +181,30 @@ class Venta
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Set cliente.
+     *
+     * @param Cliente|null $cliente
+     *
+     * @return Venta
+     */
+    public function setCliente(Cliente $cliente = null)
+    {
+        $this->cliente = $cliente;
+
+        return $this;
+    }
+
+    /**
+     * Get cliente.
+     *
+     * @return Cliente|null
+     */
+    public function getCliente()
+    {
+        return $this->cliente;
     }
 
     /**

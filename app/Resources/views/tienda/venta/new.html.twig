@@ -121,15 +121,16 @@
                                     </a>
                                 </div>
                                 <div class="col-sm-3">
-                                    <div class="form-inline">
-                                        <div class="form-group">
-                                            <label for="price-selector">Tipo de precio </label>
-                                            <select id="price-selector" class="form-control"
-                                                    style="width: inherit; margin-left: 1rem;">
-                                                <option value="0" selected>Público</option>
-                                                <option value="1">Colaborador</option>
-                                            </select>
-                                        </div>
+                                    {{ form_row(form.cliente) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <select id="price-selector" class="form-control"
+                                                style="width: inherit; margin-left: 1rem;">
+                                            <option>Seleccione el tipo de precio</option>
+                                            <option value="0" selected>Público</option>
+                                            <option value="1">Colaborador</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -189,6 +190,7 @@
             const AddButton = document.getElementById('add');
             const PriceSelect = document.getElementById('price-selector');
             const EntradasHolder = document.getElementById('conceptos');
+            const ClienteSelect = document.getElementById('appbundle_tienda_venta_cliente');
             const DescuentoInput = document.getElementById('appbundle_tienda_venta_descuento');
             const SubtotalInput = document.getElementById('appbundle_tienda_venta_subtotal');
             const IvaInput = document.getElementById('appbundle_tienda_venta_iva');
@@ -197,6 +199,8 @@
             const IVA = .16;
 
             let counter = EntradasHolder.childElementCount;
+
+            $(ClienteSelect).select2({ajax: {url: 'clientes'}});
 
             /**
              * Da formato a un numero en decimales y reduce sus decimales a 2
