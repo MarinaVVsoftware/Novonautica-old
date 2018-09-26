@@ -2,8 +2,9 @@
 
 namespace AppBundle\Form\Cliente;
 
+use AppBundle\Entity\Contabilidad\Banco;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,22 +18,16 @@ class CuentaBancariaType extends AbstractType
         $builder->add('alias');
 
         $builder->add(
-            'rfc',
-            TextType::class,
+            'banco',
+            EntityType::class,
             [
-                'label' => 'RFC',
-            ]
-        );
-
-        $builder->add(
-            'nombre',
-            TextType::class,
-            [
-                'label' => 'Nombre de banco',
+                'class' => Banco::class,
+                'choice_label' => 'razonSocial'
             ]
         );
 
         $builder->add('numeroCuenta');
+        $builder->add('clabe');
     }
 
     /**
