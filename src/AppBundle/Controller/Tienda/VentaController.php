@@ -8,6 +8,7 @@
 namespace AppBundle\Controller\Tienda;
 
 
+use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Tienda\Producto;
 use AppBundle\Entity\Tienda\Venta;
 use AppBundle\Form\Tienda\VentaType;
@@ -66,13 +67,17 @@ class VentaController extends AbstractController
      */
     public function newAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
+        $cliente = $em->getRepository(Cliente::class)->find(413);
+
         $venta = new Venta();
+        $venta->setCliente($cliente);
 
         $form = $this->createForm(VentaType::class, $venta);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->persist($venta);
             $em->flush();
 
@@ -105,6 +110,24 @@ class VentaController extends AbstractController
             JsonResponse::HTTP_OK
         )
             ->setEncodingOptions(JSON_NUMERIC_CHECK);
+    }
+
+    /**
+     * @Route("/clientes")
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getClientesAction(Request $request)
+    {
+        $clienteRepository = $this->getDoctrine()->getRepository(Cliente::class);
+        $q = $request->query->get('q');
+
+        return $this->json(
+            [
+                'results' => $clienteRepository->getAllWhereNombreLike($q)
+            ]
+        );
     }
 
     /**

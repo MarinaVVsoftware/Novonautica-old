@@ -37,7 +37,7 @@ class VentaDataTable extends AbstractDataTableHandler
      */
     public function handle(DataTableQuery $request): DataTableResults
     {
-        $repository = $this->doctrine->getRepository('AppBundle:Tienda\Venta');
+        $repository = $this->doctrine->getRepository(Venta::class);
         $results = new DataTableResults();
 
         $query = $repository->createQueryBuilder('v')->select('COUNT(v.id)');
@@ -73,6 +73,8 @@ class VentaDataTable extends AbstractDataTableHandler
 
         foreach ($ventas as $venta) {
             $results->data[] = [
+                $venta->getId(),
+                $venta->getCliente() ? $venta->getCliente()->getNombre() : '',
                 $venta->getCreatedAt()->format('d/m/Y'),
                 'MX$ ' . number_format(($venta->getIva() / 100), 2),
                 'MX$ ' . number_format(($venta->getDescuento() / 100), 2),
