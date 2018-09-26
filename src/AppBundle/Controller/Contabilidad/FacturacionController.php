@@ -7,6 +7,10 @@ use AppBundle\Entity\AstilleroCotizaServicio;
 use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Combustible;
 use AppBundle\Entity\Contabilidad\Facturacion;
+use AppBundle\Entity\MarinaHumedaCotizacion;
+use AppBundle\Entity\MarinaHumedaCotizacionAdicional;
+use AppBundle\Entity\MarinaHumedaCotizaServicios;
+use AppBundle\Entity\MarinaHumedaServicio;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Extra\NumberToLetter;
 use AppBundle\Form\Contabilidad\FacturacionType;
@@ -276,6 +280,14 @@ class FacturacionController extends Controller
         $cotizacion = $request->query->get('c');
 
         switch ($emisor) {
+            case 3:
+                $marinaRepository = $manager->getRepository(MarinaHumedaCotizaServicios::class);
+                $conceptos = array_map(function ($concepto) {
+                    $concepto['conceptoImporte'] = (int) (($concepto['conceptoImporte'] / 100) * ($concepto['conceptoDolar'] / 100) * 100);
+                    return $concepto;
+                }, $marinaRepository->getOneWithCatalogo($cotizacion));
+
+                break;
             case 4:
                 $combustibleRepository = $manager->getRepository(Combustible::class);
                 $conceptos = $combustibleRepository->getOneWithCatalogo($cotizacion);
@@ -394,6 +406,10 @@ class FacturacionController extends Controller
     public static function getCotizaciones($manager, $emisor, $cliente)
     {
         switch ($emisor) {
+            case 3:
+                $marinaRepository = $manager->getRepository(MarinaHumedaCotizacion::class);
+                $cotizaciones = $marinaRepository->getCotizacionesFromCliente($cliente);
+                break;
             case 4:
                 $combustibleRepository = $manager->getRepository(Combustible::class);
                 $cotizaciones = $combustibleRepository->getCotizacionesFromCliente($cliente);

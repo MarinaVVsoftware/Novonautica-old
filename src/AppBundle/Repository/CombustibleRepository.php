@@ -10,11 +10,25 @@ namespace AppBundle\Repository;
  */
 class CombustibleRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    /**
+     * Los metodos getCotizacionesFromCliente y getOneWithCatalogo son ambos para las facturaciones
+     * muestran los folios de cotizaciones en la facturacion y generan los conceptos de la tabla
+     *
+     * @param $client
+     *
+     * @return array
+     */
     public function getCotizacionesFromCliente($client)
     {
         $manager = $this->getEntityManager();
         $cotizaciones = $manager->createQuery(
-            'SELECT cotizaciones.id, CONCAT(cotizaciones.folio, \' \', barco.nombre) AS text '.
+            'SELECT cotizaciones.id, '.
+            '(CASE '.
+            'WHEN cotizaciones.foliorecotiza > 0 '.
+            'THEN CONCAT(cotizaciones.folio, \'-\', cotizaciones.foliorecotiza, \' \', barco.nombre) '.
+            'ELSE CONCAT(cotizaciones.folio, \' \', barco.nombre) '.
+            'END) AS text '.
             'FROM AppBundle:Combustible cotizaciones '.
             'LEFT JOIN cotizaciones.barco barco '.
             'WHERE IDENTITY(cotizaciones.cliente) = :client')

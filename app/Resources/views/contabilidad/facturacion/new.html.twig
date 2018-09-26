@@ -455,6 +455,7 @@
     </script>
     <script>
       (function ($) {
+        const loadingState = document.getElementById('loading');
         const previewButton = document.getElementById('preview-btn');
         const cotizacionSelect = document.getElementById('appbundle_contabilidad_facturacion_cotizaciones');
         const folioInput = document.getElementById('appbundle_contabilidad_facturacion_folio');
@@ -504,6 +505,7 @@
           conceptoTable.clear();
 
           getCotizaciones(emisorSelect.value, this.value);
+          loadingState.style.display = 'block';
 
           $.get('clientes/rfc', {q: this.value})
               .done(({results}) => {
@@ -513,15 +515,17 @@
 
                 $receptorSelect2.trigger('change');
               })
+              .always(() => { loadingState.style.display = 'none'; })
         });
 
         cotizacionSelect.addEventListener('change', function () {
           if (!this.value) return;
 
+          loadingState.style.display = 'block';
+
           $.get('conceptos', {e: emisorSelect.value, c: this.value})
               .done(({results}) => {
                 conceptoTable.clear();
-
                 if (!results.length) return;
 
                 for (const result of results) {
@@ -555,6 +559,7 @@
               })
               .always(() => {
                 computeConceptos();
+                loadingState.style.display = 'none'
               });
         });
 
@@ -570,14 +575,18 @@
             getCotizaciones(emisorSelect.value, clienteSelect.value);
           }
 
+          loadingState.style.display = 'block';
+
           $.get('get-folio', {e: emisorSelect.value})
               .done(({results}) => {
                 folioContainer.innerText = 'Folio: ' + results.folio;
                 folioInput.value = results.folio;
-              });
+              })
+              .always(() => { loadingState.style.display = 'none'; });
         }
 
         function getCotizaciones(emisor, cliente) {
+          loadingState.style.display = 'block';
           cotizacionSelect.innerHTML = '';
 
           $.get('cotizaciones', {e: emisor, c: cliente})
@@ -592,7 +601,8 @@
                 for (const result of results) {
                   cotizacionSelect.appendChild(new Option(result.text, result.id));
                 }
-              });
+              })
+              .always(() => { loadingState.style.display = 'none'; });
         }
 
         function computeConceptos() {

@@ -214,4 +214,31 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->setMaxResults(5)
             ->getArrayResult();
     }
+
+    /**
+     * Facturacion:
+     * Utilizada para sacar las cotizaciones en el select de cotizaciones para facturar
+     *
+     * @param $client
+     *
+     * @return array
+     */
+    public function getCotizacionesFromCliente($client)
+    {
+        $manager = $this->getEntityManager();
+        $cotizaciones = $manager->createQuery(
+            'SELECT cotizaciones.id, '.
+            '(CASE '.
+            'WHEN cotizaciones.foliorecotiza > 0 '.
+            'THEN CONCAT(cotizaciones.folio, \'-\', cotizaciones.foliorecotiza, \' \', barco.nombre) '.
+            'ELSE CONCAT(cotizaciones.folio, \' \', barco.nombre) '.
+            'END) AS text '.
+            'FROM AppBundle:MarinaHumedaCotizacion cotizaciones '.
+            'LEFT JOIN cotizaciones.barco barco '.
+            'WHERE IDENTITY(cotizaciones.cliente) = :client '.
+            'AND cotizaciones.validacliente = 2')
+            ->setParameter('client', $client);
+
+        return $cotizaciones->getArrayResult();
+    }
 }

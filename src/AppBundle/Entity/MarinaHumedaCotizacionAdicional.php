@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class MarinaHumedaCotizacionAdicional
 {
+    const NADA = 0;
     const EXENTO = 1;
     const TASA_CERO = 2;
     const IVA = 3;
@@ -110,6 +111,7 @@ class MarinaHumedaCotizacionAdicional
     private $tipo;
 
     private static $tipoList = [
+        MarinaHumedaCotizacionAdicional::NADA => 'Sin definir',
         MarinaHumedaCotizacionAdicional::EXENTO => 'Exento',
         MarinaHumedaCotizacionAdicional::TASA_CERO => 'Tasa cero',
         MarinaHumedaCotizacionAdicional::IVA => 'Iva'
