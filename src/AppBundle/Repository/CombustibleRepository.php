@@ -10,7 +10,6 @@ namespace AppBundle\Repository;
  */
 class CombustibleRepository extends \Doctrine\ORM\EntityRepository
 {
-
     /**
      * Los metodos getCotizacionesFromCliente y getOneWithCatalogo son ambos para las facturaciones
      * muestran los folios de cotizaciones en la facturacion y generan los conceptos de la tabla

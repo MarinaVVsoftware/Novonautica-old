@@ -536,7 +536,7 @@
                   let element = conceptoTable.addElement();
 
                   element.cells[0].firstElementChild.value = result.conceptoCantidad;
-                  element.cells[1].firstElementChild.value = result.conceptoUnidad || 'NA';
+                  element.cells[1].firstElementChild.value = result.conceptoUnidad || result.cuDescripcion || 'NA';
                   element.cells[4].firstElementChild.value = result.conceptoDescripcion;
                   element.cells[5].firstElementChild.value = moneyFormat(conceptoValorUnitario / 100);
                   element.cells[6].firstElementChild.value = moneyFormat(conceptoImporte / 100);
@@ -556,9 +556,10 @@
                   }
 
                 }
+
+                computeConceptos();
               })
               .always(() => {
-                computeConceptos();
                 loadingState.style.display = 'none'
               });
         });

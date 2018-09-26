@@ -10,4 +10,24 @@ namespace AppBundle\Repository\Tienda;
  */
 class VentaRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * El metodo getCotizacionesFromCliente sirve para las facturaciones
+     * muestran los folios de cotizaciones en la facturacion y generan los conceptos de la tabla
+     *
+     * @param $client
+     *
+     * @return array
+     */
+    public function getCotizacionesFromCliente($client)
+    {
+        $manager = $this->getEntityManager();
+        $cotizaciones = $manager->createQuery(
+            'SELECT cotizaciones.id, CONCAT(\'Folio: \', cotizaciones.id) AS text '.
+            'FROM AppBundle:Tienda\Venta cotizaciones '.
+            'LEFT JOIN cotizaciones.cliente cliente '.
+            'WHERE IDENTITY(cotizaciones.cliente) = :client')
+            ->setParameter('client', $client);
+
+        return $cotizaciones->getArrayResult();
+    }
 }
