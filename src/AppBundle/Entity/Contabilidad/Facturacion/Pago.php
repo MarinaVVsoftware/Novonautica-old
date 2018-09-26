@@ -440,6 +440,16 @@ class Pago
     }
 
     /**
+     * Get tipocomprobante.
+     *
+     * @return string
+     */
+    public function getTipocomprobanteValue()
+    {
+        return array_flip(Facturacion::$tiposComprobantes)[$this->tipocomprobante];
+    }
+
+    /**
      * Set lugarExpedicion.
      *
      * @param string $lugarExpedicion

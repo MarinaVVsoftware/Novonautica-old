@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Cliente;
 
 use AppBundle\Entity\Cliente;
+use AppBundle\Entity\Contabilidad\Banco;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -35,18 +36,6 @@ class CuentaBancaria
     /**
      * @var string
      *
-     * @Assert\Regex(
-     *     pattern="/^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))((-)?([A-Z\d]{3}))?$/",
-     *     message="El RFC es invalido"
-     *     )
-     *
-     * @ORM\Column(name="rfc", type="string", length=20)
-     */
-    private $rfc;
-
-    /**
-     * @var string
-     *
      * @Assert\NotBlank(message="Este campo no puede estar vacio")
      *
      * @ORM\Column(name="nombre", type="string", length=50)
@@ -63,11 +52,27 @@ class CuentaBancaria
     private $numeroCuenta;
 
     /**
+     * @var string
+     *
+     * @Assert\NotBlank(message="Este campo no puede estar vacio")
+     *
+     * @ORM\Column(name="clabe", type="string", length=25)
+     */
+    private $clabe;
+
+    /**
      * @var Cliente
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cliente", inversedBy="cuentasBancarias")
      */
     private $cliente;
+
+    /**
+     * @var Banco
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Banco")
+     */
+    private $banco;
 
     /**
      * Get id.
@@ -168,6 +173,22 @@ class CuentaBancaria
     }
 
     /**
+     * @return string
+     */
+    public function getClabe()
+    {
+        return $this->clabe;
+    }
+
+    /**
+     * @param string $clabe
+     */
+    public function setClabe($clabe)
+    {
+        $this->clabe = $clabe;
+    }
+
+    /**
      * Set cliente.
      *
      * @param Cliente|null $cliente
@@ -189,5 +210,21 @@ class CuentaBancaria
     public function getCliente()
     {
         return $this->cliente;
+    }
+
+    /**
+     * @return Banco
+     */
+    public function getBanco()
+    {
+        return $this->banco;
+    }
+
+    /**
+     * @param Banco $banco
+     */
+    public function setBanco(Banco $banco = null)
+    {
+        $this->banco = $banco;
     }
 }

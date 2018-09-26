@@ -40,7 +40,7 @@
                 <br>
                 <strong>Dirección: </strong>{{ factura.emisor.direccion }}
                 <br>
-                <strong>Tipo comprobante:</strong> {{ factura.tipoComprobante }} / {{ factura.tipoComprobanteValue }}
+                <strong>Tipo comprobante:</strong> {{ pago.tipoComprobante }} / {{ pago.tipoComprobanteValue }}
                 <br>
                 <strong>Versión CFDI:</strong> 3.3
             </p>
@@ -98,9 +98,9 @@
             <tr>
                 <td colspan="5" width="50%">
                     <h5 style="margin: 0">INFORMACIÓN BANCO EMISOR - RECEPTOR</h5>
-                    <strong>RFC cuenta ordenante: </strong> {{ pago.cuentaOrdenante is not null ? pago.cuentaOrdenante.rfc : '' }}
+                    <strong>RFC cuenta ordenante: </strong> {{ pago.cuentaOrdenante is not null ? pago.cuentaOrdenante.banco.rFC : '' }}
                     <br>
-                    <strong>Nombre del banco ordenante: </strong> {{ pago.cuentaOrdenante is not null ? pago.cuentaOrdenante.nombre : '' }}
+                    <strong>Nombre del banco ordenante: </strong> {{ pago.cuentaOrdenante is not null ? pago.cuentaOrdenante.banco.razonSocial : '' }}
                     <br>
                     <strong>Numero de cuenta ordenante: </strong> {{ pago.cuentaOrdenante is not null ? pago.cuentaOrdenante.numeroCuenta : '' }}
                 </td>

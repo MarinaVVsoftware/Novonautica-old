@@ -165,7 +165,13 @@
         }
 
         /* PUBLIC */
-        addElement() {
+        addElement(event) {
+
+          if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
           let element = this._getPrototypeElement();
 
           this.appendRemoveButton(element);
