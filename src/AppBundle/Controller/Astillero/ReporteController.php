@@ -296,7 +296,7 @@ class ReporteController extends AbstractController
             ]);
         }
         return $this->render('astillero/reporte/ingreso.html.twig', [
-            'title' => 'Ingresos Astillero',
+            'title' => 'Reportes Ingresos Astillero',
             'cotizacion' => $astillero,
             'form' => $form->createView()
         ]);

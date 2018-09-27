@@ -50,4 +50,51 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
 
         return $cotizacion;
     }
+
+    public function getReporteVentas($idproducto,$inicio,$fin)
+    {
+        $resultado = [];
+        $condicion_producto = '';
+        if($idproducto !== '0'){$condicion_producto=' AND producto.id = :idproducto ';}
+        $qry = 'SELECT concepto, producto, venta '.
+            'FROM AppBundle:Tienda\Venta\Concepto concepto '.
+            'LEFT JOIN concepto.producto producto '.
+            'LEFT JOIN concepto.venta venta '.
+            'WHERE venta.createdAt BETWEEN :inicio AND :fin '.
+            $condicion_producto.
+            'ORDER BY venta.createdAt ASC';
+        $ventas = $this->getEntityManager()->createQuery($qry);
+        $ventas->setParameter('inicio',$inicio);
+        $ventas->setParameter('fin',date('Y-m-d H:i:s',strtotime('+23 hour +59 minutes +59 seconds',strtotime($fin))));
+        if($idproducto !== '0'){$ventas->setParameter('idproducto',$idproducto);}
+        if($ventas){
+            foreach ($ventas->getArrayResult() as $venta){
+                array_push($resultado,[
+                    'fecha' => $venta['venta']['createdAt']->format('d/m/Y'),
+                    'producto' => $venta['producto']['nombre'],
+                    'cantidad' => $venta['cantidad'],
+                    'precio' => $this->esMoneda($venta['precioUnitario']),
+                    'subtotal' => $this->esMoneda($venta['subtotal']),
+                    'iva' => $this->esMoneda($venta['iva']),
+                    'descuento' => $this->esMoneda($venta['descuento']),
+                    'total' => $this->esMoneda($venta['total']),
+                ]);
+            }
+        }else{
+            array_push($resultado,[
+                'fecha' => '',
+                'producto' => '',
+                'cantidad' => 0,
+                'precio' => $this->esMoneda(0),
+                'subtotal' => $this->esMoneda(0),
+                'iva' => $this->esMoneda(0),
+                'descuento' => $this->esMoneda(0),
+                'total' => $this->esMoneda(0),
+            ]);
+        }
+        return $resultado;
+    }
+    function esMoneda($valor){
+        return '$'.number_format($valor/100,2);
+    }
 }
