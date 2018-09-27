@@ -1,0 +1,121 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        .list-unstyled li {
+            margin-bottom: .5rem;
+        }
+
+        .percent-input + .input-group-addon {
+            border-radius: 0 17px 17px 0 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                {{ servicio.id is null ? 'Nuevo servicio' : 'Editar servicio: ' ~ servicio.nombre }}
+                            </h3>
+                        </div>
+                        <div class="panel-body" style="min-height: initial">
+                            {{ form_start(form) }}
+                            {{ form_row(form.codigo) }}
+                            {{ form_row(form.nombre) }}
+
+                            {{ form_row(form.claveProdServ) }}
+                            {{ form_row(form.claveUnidad) }}
+                            {{ form_row(form.emisor) }}
+
+                            {% if servicio.id is not null %}
+                                <a href="{{ path('contabilidad_catalogo_servicio_index') }}"
+                                   class="btn btn-naranja">Cancelar</a>
+                            {% endif %}
+
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Listado de servicios</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive scroll-novo">
+                                <table class="table table-condensed table-novo text-center">
+                                    <thead>
+                                    <tr>
+                                        <th>Codigo</th>
+                                        <th>Nombre</th>
+                                        <th>Clave Unidad</th>
+                                        <th>Clave Producto Servicio</th>
+                                        <th>Empresa</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/jquery.autocomplete.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, dtSettings) {
+        const baseUrl = '{{ app.request.baseUrl }}';
+
+        $('#appbundle_contabilidad_catalogo_servicio_claveUnidad')
+            .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveunidad'}});
+        $('#appbundle_contabilidad_catalogo_servicio_claveProdServ')
+            .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveprodserv'}});
+
+        $('.table-novo').DataTable({
+          ...dtSettings,
+          ajax: 'servicios',
+          order: [[0, 'desc']],
+          columns: [
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 0},
+          ],
+          createdRow: function (row, servicio) {
+            row.cells[5].innerHTML = `
+                <div class="dropdown">
+                  <button class="btn btn-azul btn-xs btn-block dropdown-toggle" type="button" data-toggle="dropdown">
+                    Acciones
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-right">
+                    <li><a href="?s=${servicio[5]}">Editar</a></li>
+                    <li><a href="${servicio[5]}/eliminar" class="text-red">Eliminar</a></li>
+                  </ul>
+                </div>
+            `;
+          }
+        });
+
+      })(jQuery, datatablesSettings);
+    </script>
+{% endblock %}

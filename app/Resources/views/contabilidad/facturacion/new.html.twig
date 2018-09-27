@@ -44,6 +44,44 @@
             border-bottom: 1px solid #000;
         }
 
+        .autocomplete-suggestions {
+            text-align: left;
+            cursor: default;
+            border: 1px solid #ccc;
+            border-top: 0;
+            background: #fff;
+            box-shadow: -1px 1px 3px rgba(0, 0, 0, .1);
+
+            /* core styles should not be changed */
+            position: absolute;
+            display: none;
+            z-index: 9999;
+            max-height: 254px;
+            overflow: hidden;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .autocomplete-suggestion {
+            position: relative;
+            padding: 0 .6em;
+            line-height: 23px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 1.02em;
+            color: #333;
+        }
+
+        .autocomplete-suggestion b {
+            font-weight: normal;
+            color: #1f8dd6;
+        }
+
+        .autocomplete-suggestion.selected {
+            background: #f0f0f0;
+        }
+
         .novo-checkbox-container .checkbox {
             position: relative;
             padding: 20px 0 20px 20px;
@@ -364,6 +402,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('js/cleave.min.js') }}"></script>
+    <script src="{{ asset('js/auto-complete.min.js') }}"></script>
     <script>
       class ElementCollection {
         constructor(addButton, prototypeHolder, elementListener) {
@@ -477,6 +516,10 @@
         const totalImporteImpuestosInput = new Cleave('#appbundle_contabilidad_facturacion_importe', {numeral: true});
         const totalImpuestosInput = new Cleave('#appbundle_contabilidad_facturacion_totalImpuestosTransladados', {numeral: true});
 
+        // Incializacion
+
+        document.addEventListener('keydown', (e) => e.keyCode === 13 ? event.preventDefault() : '');
+
         getFolio();
 
         function elementListener(element) {
@@ -486,9 +529,35 @@
           new Cleave(element.cells[11].firstElementChild, {numeral: true});
 
           element.cells[12].firstElementChild.addEventListener('click', computeConceptos);
-          $(element.cells[2].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveprodserv'}});
-          $(element.cells[3].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveunidad'}});
+
+          const $cpsSelect2 = $(element.cells[2].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveprodserv'}});
+          const $cuSelect2 = $(element.cells[3].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveunidad'}});
+
+          new autoComplete({
+            selector: element.cells[4].firstElementChild,
+            source(term, response) {
+              $.getJSON('sugerencias', {q: term}, ({results}) => {
+                response(results);
+              });
+            },
+            renderItem: function (item, term){
+              term = term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+              return `<div class="autocomplete-suggestion"
+                data-cps-id="${item.cpsId}" data-cps-text="${item.cpsDescripcion}"
+                data-cu-id="${item.cuId}" data-cu-text="${item.cuDescripcion}"
+                data-val="${item.text}">
+                  ${item.text.replace(new RegExp(`(${term.split(' ').join('|')})`, 'gi'), '<b>$1</b>')}
+                </div>`;
+            },
+            onSelect(event, term, item) {
+              const claves = item.dataset;
+              $cpsSelect2.append(new Option(claves.cpsText, claves.cpsId, true, true)).trigger('select');
+              $cuSelect2.append(new Option(claves.cuText, claves.cuId, true, true)).trigger('select');
+            }
+          });
         }
+
+        // Eventlisteners
 
         metodoPagoSelect.addEventListener('change', function () {
           if (this.value === 'PUE') {
@@ -515,7 +584,9 @@
 
                 $receptorSelect2.trigger('change');
               })
-              .always(() => { loadingState.style.display = 'none'; })
+              .always(() => {
+                loadingState.style.display = 'none';
+              })
         });
 
         cotizacionSelect.addEventListener('change', function () {
@@ -571,6 +642,8 @@
               .click();
         });
 
+        // Funciones
+
         function getFolio() {
           if (clienteSelect.value) {
             getCotizaciones(emisorSelect.value, clienteSelect.value);
@@ -583,7 +656,9 @@
                 folioContainer.innerText = 'Folio: ' + results.folio;
                 folioInput.value = results.folio;
               })
-              .always(() => { loadingState.style.display = 'none'; });
+              .always(() => {
+                loadingState.style.display = 'none';
+              });
         }
 
         function getCotizaciones(emisor, cliente) {
@@ -603,7 +678,9 @@
                   cotizacionSelect.appendChild(new Option(result.text, result.id));
                 }
               })
-              .always(() => { loadingState.style.display = 'none'; });
+              .always(() => {
+                loadingState.style.display = 'none';
+              });
         }
 
         function computeConceptos() {

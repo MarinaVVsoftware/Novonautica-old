@@ -593,6 +593,20 @@
                                 {% endif %}
                             </ul>
                         </li>
+                        <li class="treeview {{ path.check('contabilidad_catalogo_') }}">
+                            <a href="#">
+                                <i class="fa fa-circle-o"></i> Catalogos
+                                <span class="pull-right-container"><i
+                                            class="fa fa-angle-left pull-right"></i></span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li class="{{ path.check('contabilidad_catalogo_servicio_index') }}">
+                                    <a href="{{ path('contabilidad_catalogo_servicio_index') }}">
+                                        <i class="fa fa-circle-o"></i> Servicios
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="{{ path.check('contabilidad_odt_index') }} {{ path.check('ordendetrabajo_contratista_pago') }}">
                             <a href="{{ path('contabilidad_odt_index') }}">
                                 <i class="fa fa-circle-o"></i> ODT
