@@ -6,6 +6,7 @@ use AppBundle\Entity\AstilleroCotizacion;
 use AppBundle\Entity\AstilleroCotizaServicio;
 use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Combustible;
+use AppBundle\Entity\Contabilidad\Catalogo\Servicio;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizacionAdicional;
@@ -204,11 +205,13 @@ class FacturacionController extends Controller
             ->getRepository(Facturacion::class)
             ->getFolioByEmpresa($e);
 
-        return new JsonResponse([
-            'results' => [
-                'folio' => $folio,
-            ],
-        ]);
+        return $this->json(
+            [
+                'results' => [
+                    'folio' => $folio,
+                ],
+            ]
+        );
     }
 
     /**
@@ -225,11 +228,11 @@ class FacturacionController extends Controller
             ->getRepository(Cliente::class)
             ->getAllWhereNombreLike($q);
 
-        return new JsonResponse(
+        return $this->json(
             [
                 'results' => $clientes,
-            ],
-            JsonResponse::HTTP_OK);
+            ]
+        );
     }
 
     /**
@@ -246,11 +249,10 @@ class FacturacionController extends Controller
             ->getRepository(Cliente\RazonSocial::class)
             ->getRFCsFromClient($q);
 
-        return new JsonResponse(
+        return $this->json(
             [
                 'results' => $rfcs,
-            ],
-            JsonResponse::HTTP_OK
+            ]
         );
     }
 
@@ -263,7 +265,7 @@ class FacturacionController extends Controller
         $cliente = $request->query->get('c');
         $manager = $this->getDoctrine()->getManager();
 
-        return new JsonResponse(
+        return $this->json(
             [
                 'results' => self::getCotizaciones($manager, $emisor, $cliente),
             ]
@@ -284,7 +286,8 @@ class FacturacionController extends Controller
             case 3:
                 $marinaRepository = $manager->getRepository(MarinaHumedaCotizaServicios::class);
                 $conceptos = array_map(function ($concepto) {
-                    $concepto['conceptoImporte'] = (int) (($concepto['conceptoImporte'] / 100) * ($concepto['conceptoDolar'] / 100) * 100);
+                    $concepto['conceptoImporte'] = (int)(($concepto['conceptoImporte'] / 100) * ($concepto['conceptoDolar'] / 100) * 100);
+
                     return $concepto;
                 }, $marinaRepository->getOneWithCatalogo($cotizacion));
 
@@ -305,11 +308,32 @@ class FacturacionController extends Controller
                 $conceptos = [];
         }
 
-        return (new JsonResponse(
+        return $this->json(
             [
                 'results' => $conceptos,
             ]
-        ))->setEncodingOptions(JSON_NUMERIC_CHECK);
+        )->setEncodingOptions(JSON_NUMERIC_CHECK);
+    }
+
+    /**
+     * @Route("/sugerencias")
+     */
+    public function autocompleteAction(Request $request)
+    {
+        $query = $request->query->get('q');
+
+        if (!$query) {
+            return $this->json(['results' => []]);
+        }
+
+        $servicioRepository = $this->getDoctrine()->getRepository(Servicio::class);
+        $suggestions = $servicioRepository->getSuggestions($query);
+
+        return $this->json(
+            [
+                'results' => $suggestions
+            ]
+        );
     }
 
     /**

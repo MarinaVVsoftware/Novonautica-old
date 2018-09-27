@@ -94,7 +94,7 @@ class ServicioType extends AbstractType
             }
         );
     }
-    
+
     /**
      * {@inheritdoc}
      */
