@@ -254,11 +254,9 @@ class ReporteController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function ingresosAstilleroAction(Request $request){
-
-        $em = $this->getDoctrine()->getManager();
-        $astillero = $em->getRepository('AppBundle:AstilleroCotizacion')->obtenIngresosTodos('0','2018-01-01','2018-09-30');
-
+    public function ingresosAstilleroAction(Request $request)
+    {
+        $ingresos = [];
         $form = $this->createFormBuilder()
             ->add('inicio', DateType::class, [
                 'label' => 'Fecha inicio',
@@ -281,6 +279,10 @@ class ReporteController extends AbstractController
                 'placeholder' => 'Todos',
                 'required' => false
             ])
+            ->add('buscar', SubmitType::class, [
+                'attr' => ['class' => 'btn-xs btn-azul pull-right no-loading'],
+                'label' => 'Buscar'
+            ])
             ->add('xls', SubmitType::class, [
                 'attr' => ['class' => 'btn-xs btn-verde no-loading'],
                 'label' => 'xls'
@@ -289,15 +291,25 @@ class ReporteController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $datos = $form->getData();
-            return $this->redirectToRoute('reporte_ast_ingresos_data', [
-                'idbarco' => $datos['barco']?$datos['barco']->getId():'0',
-                'inicio' => $datos['inicio']->format('Y-m-d'),
-                'fin' => $datos['fin']->format('Y-m-d')
-            ]);
+            $idbarco = $datos['barco']?$datos['barco']->getId():'0';
+            if($form->get('buscar')->isClicked()){
+                $em = $this->getDoctrine()->getManager();
+                $ingresos = $em->getRepository('AppBundle:AstilleroCotizacion')
+                               ->obtenIngresosTodos($idbarco,
+                                                    $datos['inicio']->format('Y-m-d'),
+                                                    $datos['fin']->format('Y-m-d')
+                               );
+            }else{
+                return $this->redirectToRoute('reporte_ast_ingresos_data', [
+                    'idbarco' => $idbarco,
+                    'inicio' => $datos['inicio']->format('Y-m-d'),
+                    'fin' => $datos['fin']->format('Y-m-d')
+                ]);
+            }
         }
         return $this->render('astillero/reporte/ingreso.html.twig', [
             'title' => 'Reportes Ingresos Astillero',
-            'cotizacion' => $astillero,
+            'ingresos' => $ingresos,
             'form' => $form->createView()
         ]);
     }

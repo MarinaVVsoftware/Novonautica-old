@@ -1,4 +1,8 @@
 {% extends 'estructura/plantilla.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+{% endblock %}
 {% block contwrapper %}
 <div class="content-wrapper">
     <section class="content">
@@ -37,7 +41,7 @@
                 {{ form_end(form) }}
                 <div class="row">
                     <div class="col-sm-12">
-                        <table class="table">
+                        <table class="table tabla-reporte">
                             <thead>
                             <tr>
                                 <th>Fecha venta</th>
@@ -53,14 +57,14 @@
                             <tbody>
                             {% for venta in ventas %}
                                 <tr>
-                                    <td>{{ venta['fecha'] }}</td>
-                                    <td>{{ venta['producto'] }}</td>
-                                    <td>{{ venta['cantidad'] }}</td>
-                                    <td>{{ venta['precio'] }}</td>
-                                    <td>{{ venta['subtotal'] }}</td>
-                                    <td>{{ venta['iva'] }}</td>
-                                    <td>{{ venta['descuento'] }}</td>
-                                    <td>{{ venta['total'] }}</td>
+                                    <td>{{ venta.fecha }}</td>
+                                    <td>{{ venta.producto }}</td>
+                                    <td>{{ venta.cantidad }}</td>
+                                    <td>{{ venta.precio }}</td>
+                                    <td>{{ venta.subtotal }}</td>
+                                    <td>{{ venta.iva }}</td>
+                                    <td>{{ venta.descuento }}</td>
+                                    <td>{{ venta.total }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -71,4 +75,31 @@
         </div>
     </section>
 </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+        $('.tabla-reporte').DataTable({
+            responsive: true,
+            language: {
+                lengthMenu: 'Mostrar _MENU_ registros',
+                zeroRecords: 'No hay registros',
+                info: 'Mostrando la pagina _PAGE_ de _PAGES_',
+                infoEmpty: 'No hay registros disponibles',
+                infoFiltered: '(filtados de _MAX_ total de registros)',
+                processing: 'Procesando...',
+                loadingRecords: 'Cargando registros...',
+                search: 'Buscar',
+                paginate: {
+                    first: 'Primera',
+                    last: 'Ultima',
+                    next: 'Siguiente',
+                    previous: 'Anterior'
+                }
+            },
+            searchDelay: 500,
+            searching: false
+        });
+    </script>
 {% endblock %}
