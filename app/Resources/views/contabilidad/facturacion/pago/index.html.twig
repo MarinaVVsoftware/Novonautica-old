@@ -82,14 +82,14 @@
 {% endblock %}
 
 {% block modals %}
-    <div class="modal ventanaborrar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal ventanaborrar">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title text-center" id="myModalLabel">¿Está realmente seguro que desea
-                        borrarlo?</h4>
+                    <h4 class="modal-title text-center" id="myModalLabel">¿Está seguro que desea
+                        cancelar el pago?</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -162,11 +162,12 @@
             ]
           },
           createdRow: function (row, data) {
+            let url = '{{ app.request.requestUri }}';
             let xmlRoute = '{{ asset('timbrados/') }}';
             let actionsInner = '';
 
             actionsInner += `
-            <li><a href="${location.pathname}/reenviar/${data[6].id}">Reenviar</a></li>
+            <li><a href="${url}/reenviar/${data[6].id}">Reenviar</a></li>
             `;
 
             row.cells[5].innerHTML = `
@@ -178,17 +179,14 @@
 
             if (!data[6].status) {
               actionsInner += `
-                <li><a href="#" data-url="#"
+                <li><a href="#" data-url="${url}/cancelar/${data[6].id}"
                  data-toggle="modal"
                  data-target=".ventanaborrar"">Cancelar
                  </a></li>
               `;
-            } else {
-              actionsInner += `
-                <span class="label label-danger">Cancelada</span>
-              `;
             }
 
+            row.cells[6].style.textAlign = 'center';
             row.cells[6].innerHTML = `
                 <div class="dropdown">
                   <button class="btn btn-azul btn-xs btn-block dropdown-toggle" type="button" data-toggle="dropdown">
@@ -200,6 +198,10 @@
                   </ul>
                 </div>
             `;
+
+            if (data[6]['status']) {
+              row.cells[6].innerHTML += '<span class="label label-danger">Cancelada</span>';
+            }
           },
         });
 

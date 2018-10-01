@@ -11,10 +11,8 @@ namespace AppBundle\Controller\Contabilidad\Facturacion;
 use AppBundle\Entity\Cliente\CuentaBancaria;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Entity\Contabilidad\Facturacion\Pago;
-use AppBundle\Entity\ValorSistema;
 use AppBundle\Extra\NumberToLetter;
 use AppBundle\Form\Contabilidad\Facturacion\PagoType;
-use AppBundle\Repository\Contabilidad\Facturacion\PagoRepository;
 use DataTables\DataTablesInterface;
 use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
@@ -109,7 +107,6 @@ class PagoController extends AbstractController
     public function newFromFacturaAction(Request $request, Facturacion $factura)
     {
         $pago = new Facturacion\Pago($factura);
-//        $this->denyAccessUnlessGranted('CONTABILIDAD_CREATE_PAGO', $pago); TODO agregar permisos a pagos
 
         $em = $this->getDoctrine()->getManager();
         $pagoRepository = $em->getRepository(Pago::class);
@@ -260,15 +257,16 @@ class PagoController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/cancelar/{pago}", name="contabilidad_facturacion_cancel")
+     * @Route("/{id}/cancelar/{pago}")
+     *
+     * @param $id
+     * @param Pago $pago
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function cancelAction($id, Pago $pago)
     {
-//        $this->denyAccessUnlessGranted('CONTABILIDAD_CANCEL', $factura); FIXME Permisos
-
-        $timbrado = $this->multifacturas->cancela($pago);
+        $timbrado = $this->multifacturas->cancelaPago($pago);
 
         if ($timbrado['codigo_mf_numero']) {
             $this->addFlash('danger', $timbrado['codigo_mf_texto']);
