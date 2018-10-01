@@ -188,13 +188,12 @@ class FacturacionController extends Controller
 
     /**
      * @Route("/preview", name="contabilidad_facturacion_preview")
-     * @Method("GET")
      */
     public function previewAction(Request $request)
     {
         $factura = new Facturacion();
         $form = $this->createForm(PreviewType::class, $factura);
-        $form->submit($request->query->all()['appbundle_contabilidad_facturacion']);
+        $form->handleRequest($request);
 
         $preview = $this->renderView(
             'contabilidad/facturacion/pdf/preview.html.twig',

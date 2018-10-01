@@ -193,10 +193,6 @@
                  </a></li>
                  {% endif %}
               `;
-            } else {
-              actionsInner += `
-                <span class="label label-danger">Cancelada</span>
-              `;
             }
 
             row.cells[7].innerHTML += `
@@ -206,6 +202,7 @@
                  target="_blank" class="remove-motor btn btn-xs btn-azul btn-block">PDF</a>
             `;
 
+            row.cells[8].style.textAlign = 'center';
             row.cells[8].innerHTML = `
                 <div class="dropdown">
                   <button class="btn btn-azul btn-xs btn-block dropdown-toggle" type="button" data-toggle="dropdown">
@@ -217,6 +214,11 @@
                   </ul>
                 </div>
             `;
+
+            if (data[8]['status']) {
+             row.cells[8].innerHTML += '<span class="label label-danger">Cancelada</span>';
+            }
+
           },
         });
 
