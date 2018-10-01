@@ -1,4 +1,14 @@
 {% extends 'estructura/plantilla.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        :root .btn {
+            min-width: initial;
+            text-align: center;
+        }
+    </style>
+{% endblock %}
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -24,28 +34,19 @@
                         </div>
                         <div class="col-sm-6">
                             {{ form_row(form.barco) }}
-
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            {{ form_row(form.xls) }}
+                            {{ form_row(form.buscar) }}
                         </div>
                     </div>
                     {{ form_end(form) }}
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="table-responsive scroll-novo">
-                                <table class="table-novo table text-center">
+                                <table class="table-novo table text-center tabla-reporte">
                                     <thead>
-                                    <tr>
-                                        <th colspan="5"></th>
-                                        <th colspan="9">Servicios Básicos</th>
-                                        <th colspan="5">Sub-Totales</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
                                     <tr>
                                         <th>Año</th>
                                         <th>Mes</th>
@@ -62,7 +63,8 @@
                                         <th>Inspeccionar</th>
                                         <th>Días adicionales</th>
                                         <th>Servicios Básicos</th>
-                                        <th colspan="2">Servicios</th>
+                                        <th>Servicios</th>
+                                        <th>Total Servicios</th>
                                         <th>Otros</th>
                                         <th>Materiales</th>
                                         <th>Sub-Total</th>
@@ -71,30 +73,30 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for c in cotizacion %}
+                                    {% for ingreso in ingresos %}
                                         <tr>
-                                            <td>{{ c.anio }}</td>
-                                            <td>{{ c.mes }}</td>
-                                            <td>{{ c.dia }}</td>
-                                            <td>{{ c.embarcacion }}</td>
-                                            <td>{{ c.folio }}</td>
-                                            <td>{{ c.varada }}</td>
-                                            <td>{{ c.estadia }}</td>
-                                            <td>{{ c.rampa }}</td>
-                                            <td>{{ c.karcher }}</td>
-                                            <td>{{ c.explanada }}</td>
-                                            <td>{{ c.electricidad }}</td>
-                                            <td>{{ c.limpieza }}</td>
-                                            <td>{{ c.inspeccionar }}</td>
-                                            <td>{{ c.diasAdicionales }}</td>
-                                            <td>{{ c.subTotalServiciosBasicos }}</td>
-                                            <td>{{ c.nomServicios }}</td>
-                                            <td>{{ c.subTotalServicios }}</td>
-                                            <td>{{ c.subTotalOtros }}</td>
-                                            <td>{{ c.subTotalProductos }}</td>
-                                            <td>{{ c.subtotal }}</td>
-                                            <td>{{ c.iva }}</td>
-                                            <td>{{ c.total }}</td>
+                                            <td>{{ ingreso.anio }}</td>
+                                            <td>{{ ingreso.mes }}</td>
+                                            <td>{{ ingreso.dia }}</td>
+                                            <td>{{ ingreso.embarcacion }}</td>
+                                            <td>{{ ingreso.folio }}</td>
+                                            <td>{{ ingreso.varada }}</td>
+                                            <td>{{ ingreso.estadia }}</td>
+                                            <td>{{ ingreso.rampa }}</td>
+                                            <td>{{ ingreso.karcher }}</td>
+                                            <td>{{ ingreso.explanada }}</td>
+                                            <td>{{ ingreso.electricidad }}</td>
+                                            <td>{{ ingreso.limpieza }}</td>
+                                            <td>{{ ingreso.inspeccionar }}</td>
+                                            <td>{{ ingreso.diasAdicionales }}</td>
+                                            <td>{{ ingreso.subTotalServiciosBasicos }}</td>
+                                            <td>{{ ingreso.nomServicios }}</td>
+                                            <td>{{ ingreso.subTotalServicios }}</td>
+                                            <td>{{ ingreso.subTotalOtros }}</td>
+                                            <td>{{ ingreso.subTotalProductos }}</td>
+                                            <td>{{ ingreso.subtotal }}</td>
+                                            <td>{{ ingreso.iva }}</td>
+                                            <td>{{ ingreso.total }}</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -109,4 +111,50 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript">
+        $('.tabla-reporte').DataTable({
+            responsive: true,
+            language: {
+                lengthMenu: 'Mostrar _MENU_ registros',
+                zeroRecords: 'No hay registros',
+                info: 'Mostrando la pagina _PAGE_ de _PAGES_',
+                infoEmpty: 'No hay registros disponibles',
+                infoFiltered: '(filtados de _MAX_ total de registros)',
+                processing: 'Procesando...',
+                loadingRecords: 'Cargando registros...',
+                search: 'Buscar',
+                paginate: {
+                    first: 'Primera',
+                    last: 'Ultima',
+                    next: 'Siguiente',
+                    previous: 'Anterior'
+                }
+            },
+            searchDelay: 500,
+            searching: false,
+            order: [[0, 'desc']],
+            dom:
+                "<'row'<'col-sm-3'l><'col-sm-3'><'col-sm-3'B><'col-sm-3'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            buttons: {
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'XLS',
+                        className: 'btn btn-verde btn-sm',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+                        }
+                    }
+                ]
+            }
+        });
+    </script>
 {% endblock %}

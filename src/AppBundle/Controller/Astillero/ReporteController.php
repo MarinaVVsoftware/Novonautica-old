@@ -254,11 +254,9 @@ class ReporteController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function ingresosAstilleroAction(Request $request){
-
-        $em = $this->getDoctrine()->getManager();
-        $astillero = $em->getRepository('AppBundle:AstilleroCotizacion')->obtenIngresosTodos('0','2018-01-01','2018-09-30');
-
+    public function ingresosAstilleroAction(Request $request)
+    {
+        $ingresos = [];
         $form = $this->createFormBuilder()
             ->add('inicio', DateType::class, [
                 'label' => 'Fecha inicio',
@@ -281,110 +279,26 @@ class ReporteController extends AbstractController
                 'placeholder' => 'Todos',
                 'required' => false
             ])
-            ->add('xls', SubmitType::class, [
-                'attr' => ['class' => 'btn-xs btn-verde no-loading'],
-                'label' => 'xls'
+            ->add('buscar', SubmitType::class, [
+                'attr' => ['class' => 'btn-xs btn-azul pull-right no-loading'],
+                'label' => 'Buscar'
             ])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $datos = $form->getData();
-            return $this->redirectToRoute('reporte_ast_ingresos_data', [
-                'idbarco' => $datos['barco']?$datos['barco']->getId():'0',
-                'inicio' => $datos['inicio']->format('Y-m-d'),
-                'fin' => $datos['fin']->format('Y-m-d')
-            ]);
+            $idbarco = $datos['barco']?$datos['barco']->getId():'0';
+            $em = $this->getDoctrine()->getManager();
+            $ingresos = $em->getRepository('AppBundle:AstilleroCotizacion')
+                ->obtenIngresosTodos($idbarco,
+                    $datos['inicio']->format('Y-m-d'),
+                    $datos['fin']->format('Y-m-d')
+                );
         }
         return $this->render('astillero/reporte/ingreso.html.twig', [
-            'title' => 'Ingresos Astillero',
-            'cotizacion' => $astillero,
+            'title' => 'Reportes Ingresos Astillero',
+            'ingresos' => $ingresos,
             'form' => $form->createView()
         ]);
-    }
-
-    /**
-     * @Route("/reporte-ingresos/{idbarco}/{inicio}/{fin}", name="reporte_ast_ingresos_data")
-     * @Method({"GET", "POST"})
-     * @param $idbarco
-     * @param $inicio
-     * @param $fin
-     * @return StreamedResponse
-     */
-    public function generateCsvAction($idbarco,$inicio,$fin)
-    {
-        $response = new StreamedResponse();
-        $response->setCallback(function () use ($idbarco, $inicio, $fin) {
-            $handle = fopen('php://output', 'w+');
-
-            // Add the header of the CSV file
-            $auxTitulos = [
-                'Año',
-                'Mes',
-                'Día',
-                'Folio',
-                'Embarcación',
-                'Varada y botadura',
-                'Estadía',
-                'Rampa',
-                'Karcher',
-                'Uso de explanada',
-                'Electricidad',
-                'Limpieza de locación',
-                'Sacar para Inspeccionar',
-                'Días adicionales',
-                'Ingreso Servicios básicos',
-                'Ingreso Servicios',
-                'Ingreso Otros',
-                'Materiales',
-                'Servicios',
-                'Sub-Total',
-                'IVA',
-                'Total'
-            ];
-            $titulos = [];
-            foreach ($auxTitulos as $auxTitulo) {
-                array_push($titulos, mb_convert_encoding($auxTitulo, 'UTF-16LE', 'UTF-8'));
-            }
-            fputcsv($handle, $titulos);
-            // Query data from database
-            $em = $this->getDoctrine()->getManager();
-            $astillero = $em->getRepository('AppBundle:AstilleroCotizacion')->obtenIngresosTodos($idbarco, $inicio, $fin);
-            // Add the data queried from database
-            foreach ($astillero as $dato) {
-                fputcsv(
-                    $handle, // The file pointer
-                    [
-                        $dato['anio'],
-                        $dato['mes'],
-                        $dato['dia'],
-                        $dato['folio'],
-                        $dato['embarcacion'],
-                        $dato['varada'],
-                        $dato['estadia'],
-                        $dato['rampa'],
-                        $dato['karcher'],
-                        $dato['explanada'],
-                        $dato['electricidad'],
-                        $dato['limpieza'],
-                        $dato['inspeccionar'],
-                        $dato['diasAdicionales'],
-                        $dato['subTotalServiciosBasicos'],
-                        $dato['subTotalServicios'],
-                        $dato['subTotalOtros'],
-                        $dato['subTotalProductos'],
-                        $dato['nomServicios'],
-                        $dato['subtotal'],
-                        $dato['iva'],
-                        $dato['total']
-                    ]
-                );
-            }
-            fclose($handle);
-        });
-        $response->setStatusCode(200);
-        $response->setCharset('UTF-8');
-        $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="AstilleroIngresos.csv"');
-        return $response;
     }
 }
