@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -342,6 +343,13 @@ class MarinaHumedaCotizacion
      * @ORM\Column(name="moratoriaTotal", type="bigint", nullable=true)
      */
     private $moratoriaTotal;
+
+    /**
+     * @var Facturacion
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion")
+     */
+    private $factura;
 
 
     public function __construct()
@@ -1366,5 +1374,21 @@ class MarinaHumedaCotizacion
     public function getLimiteValidaCliente()
     {
         return $this->limiteValidaCliente;
+    }
+
+    /**
+     * @return Facturacion
+     */
+    public function getFactura()
+    {
+        return $this->factura;
+    }
+
+    /**
+     * @param Facturacion $factura
+     */
+    public function setFactura(Facturacion $factura = null)
+    {
+        $this->factura = $factura;
     }
 }

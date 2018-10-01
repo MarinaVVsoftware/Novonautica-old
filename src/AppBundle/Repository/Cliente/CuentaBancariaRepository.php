@@ -18,10 +18,11 @@ class CuentaBancariaRepository extends \Doctrine\ORM\EntityRepository
         $cuentas = $manager->createQuery(
             'SELECT cuenta.id, cuenta.alias AS text '.
             'FROM AppBundle:Cliente\CuentaBancaria cuenta '.
-            'WHERE cuenta.cliente = :cliente '.
-            'OR cuenta.alias LIKE :query '.
-            'OR cuenta.nombre LIKE :query '.
-            'OR cuenta.numeroCuenta LIKE :query')
+            'LEFT JOIN cuenta.banco banco '.
+            'WHERE cuenta.cliente = :cliente AND ('.
+            'cuenta.alias LIKE :query '.
+            'OR banco.razonSocial LIKE :query '.
+            'OR cuenta.numeroCuenta LIKE :query)')
             ->setParameter('cliente', $cliente)
             ->setParameter('query', "%{$query}%")
             ->getArrayResult();

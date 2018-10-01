@@ -17,7 +17,8 @@ class PagoRepository extends \Doctrine\ORM\EntityRepository
         $total = $manager->createQuery(
             'SELECT (COUNT(pago.id) + 1) AS parcialidad, SUM(pago.montoPagos) AS pagado '.
             'FROM AppBundle:Contabilidad\Facturacion\Pago pago '.
-            'WHERE IDENTITY(pago.factura) = ?1')
+            'WHERE IDENTITY(pago.factura) = ?1 '.
+            'AND pago.isCancelado = 0')
             ->setParameter(1, $factura)
             ->getSingleResult();
 

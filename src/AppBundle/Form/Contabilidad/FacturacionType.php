@@ -323,6 +323,9 @@ class FacturacionType extends AbstractType
             [
                 'choices' => $choices,
                 'mapped' => false,
+                'constraints' => [
+                    new NotBlank(['message' => 'Por favor selecciona una cotizacion']),
+                ],
             ]
         );
     }

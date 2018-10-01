@@ -9,7 +9,6 @@
 namespace Hyperion\MultifacturasBundle\src;
 
 use AppBundle\Entity\Contabilidad\Facturacion;
-use AppBundle\Entity\Pago;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class Multifacturas
@@ -28,7 +27,7 @@ class Multifacturas
         $this->kernel = $kernel;
         $this->directory = $kernel->getRootDir().'/../src/Hyperion/MultifacturasBundle/src';
         $this->webDirectory = $kernel->getRootDir().'/../web';
-        $this->environment = $kernel->getEnvironment() === 'PROD' ? 'NO' : 'NO';
+        $this->environment = $kernel->getEnvironment() === 'PROD' ? 'SI' : 'NO';
         $this->version = '3.3';
     }
 
@@ -204,16 +203,6 @@ class Multifacturas
         $datos['pagos10']['Pagos'][0]['Monto'] = $pago->getMontoPagos();
         $datos['pagos10']['Pagos'][0]['TipoCambioP']= $pago->getTipoCambioPagos();
 
-
-        /* TODO Se require un ordenante o beneficiario siempre?
-        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaOrd']= 'XAXX010101000'; // RFC INTERNACIONAL
-        $datos['pagos10']['Pagos'][0]['NomBancoOrdExt']= '0.0';
-        $datos['pagos10']['Pagos'][0]['CtaOrdenante']= '1234567890';
-
-        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaBen']= '0.0';
-        $datos['pagos10']['Pagos'][0]['CtaBeneficiario']= '0.0';
-        */
-
         $datos['pagos10']['Pagos'][0]['RfcEmisorCtaOrd']= $cuentaOrdenante->getBanco()->getRFC();
         $datos['pagos10']['Pagos'][0]['NomBancoOrdExt']= $cuentaOrdenante->getBanco()->getRazonSocial();
         $datos['pagos10']['Pagos'][0]['CtaOrdenante']= $cuentaOrdenante->getNumeroCuenta();
@@ -251,7 +240,7 @@ class Multifacturas
     }
 
     /**
-     * @param Facturacion|Pago $factura
+     * @param Facturacion $factura
      *
      * @return mixed
      */
@@ -267,6 +256,32 @@ class Multifacturas
 
         $datos['cancelar'] = 'SI';
         $datos['cfdi'] = $factura->getXmlArchivo();
+        $datos['conf']['cer'] = $this->directory.'/certificados/'.$emisor->getCer();
+        $datos['conf']['key'] = $this->directory.'/certificados/'.$emisor->getKey();
+        $datos['conf']['pass'] = $emisor->getPassword();
+
+        return cfdi_cancelar($datos);
+    }
+
+
+    /**
+     * @param Facturacion\Pago $pago
+     *
+     * @return mixed
+     */
+    public function cancelaPago($pago)
+    {
+        require_once 'sdk2.php';
+
+        $factura = $pago->getFactura();
+        $emisor = $factura->getEmisor();
+
+        $datos['PAC']['produccion'] = $this->environment;
+        $datos['PAC']['usuario'] = $emisor->getUsuarioPAC();
+        $datos['PAC']['pass'] = $emisor->getPasswordPAC();
+
+        $datos['cancelar'] = 'SI';
+        $datos['cfdi'] = $pago->getXmlArchivo();
         $datos['conf']['cer'] = $this->directory.'/certificados/'.$emisor->getCer();
         $datos['conf']['key'] = $this->directory.'/certificados/'.$emisor->getKey();
         $datos['conf']['pass'] = $emisor->getPassword();

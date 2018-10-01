@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -287,6 +288,13 @@ class Combustible
      * @ORM\Column(name="registro_pago_completado", type="datetime_immutable", nullable=true)
      */
     private $registroPagoCompletado;
+
+    /**
+     * @var Facturacion
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion")
+     */
+    private $factura;
 
     public function __construct()
     {
@@ -1303,5 +1311,21 @@ class Combustible
     public function getLimiteValidaCliente()
     {
         return $this->limiteValidaCliente;
+    }
+
+    /**
+     * @return Facturacion
+     */
+    public function getFactura()
+    {
+        return $this->factura;
+    }
+
+    /**
+     * @param Facturacion $factura
+     */
+    public function setFactura(Facturacion $factura = null)
+    {
+        $this->factura = $factura;
     }
 }

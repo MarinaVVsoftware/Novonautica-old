@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Tienda;
 
 use AppBundle\Entity\Cliente;
+use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Entity\Tienda\Venta\Concepto;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -88,6 +89,13 @@ class Venta
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Venta\Concepto", mappedBy="venta", cascade={"persist"})
      */
     private $conceptos;
+
+    /**
+     * @var Facturacion
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion")
+     */
+    private $factura;
 
     public function __construct()
     {
@@ -236,5 +244,21 @@ class Venta
     public function getConceptos()
     {
         return $this->conceptos;
+    }
+
+    /**
+     * @return Facturacion
+     */
+    public function getFactura()
+    {
+        return $this->factura;
+    }
+
+    /**
+     * @param Facturacion $factura
+     */
+    public function setFactura(Facturacion $factura = null)
+    {
+        $this->factura = $factura;
     }
 }

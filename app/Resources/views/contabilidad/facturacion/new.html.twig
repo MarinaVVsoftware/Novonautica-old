@@ -496,6 +496,7 @@
       (function ($) {
         const loadingState = document.getElementById('loading');
         const previewButton = document.getElementById('preview-btn');
+        const facturaForm = document.querySelector('[name="appbundle_contabilidad_facturacion"]');
         const cotizacionSelect = document.getElementById('appbundle_contabilidad_facturacion_cotizaciones');
         const folioInput = document.getElementById('appbundle_contabilidad_facturacion_folio');
         const clienteSelect = document.getElementById('appbundle_contabilidad_facturacion_cliente');
@@ -540,7 +541,7 @@
                 response(results);
               });
             },
-            renderItem: function (item, term){
+            renderItem: function (item, term) {
               term = term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
               return `<div class="autocomplete-suggestion"
                 data-cps-id="${item.cpsId}" data-cps-text="${item.cpsDescripcion}"
@@ -635,11 +636,13 @@
               });
         });
 
-        $(previewButton).on('click', function () {
-          $('<a>')
-              .attr('href', 'preview?' + $('form').serialize())
-              .attr('target', '_blank')[0]
-              .click();
+        previewButton.addEventListener('click', function () {
+          facturaForm.setAttribute('action', 'preview');
+          facturaForm.setAttribute('target', '_blank');
+          facturaForm.submit();
+
+          facturaForm.removeAttribute('target');
+          facturaForm.removeAttribute('action');
         });
 
         // Funciones
