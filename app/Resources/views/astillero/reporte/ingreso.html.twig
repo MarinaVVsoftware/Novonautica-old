@@ -2,6 +2,12 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        :root .btn {
+            min-width: initial;
+            text-align: center;
+        }
+    </style>
 {% endblock %}
 {% block contwrapper %}
     <div class="content-wrapper">
@@ -31,10 +37,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-6">
-                            {{ form_row(form.xls) }}
-                        </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             {{ form_row(form.buscar) }}
                         </div>
                     </div>
@@ -44,14 +47,6 @@
                             <div class="table-responsive scroll-novo">
                                 <table class="table-novo table text-center tabla-reporte">
                                     <thead>
-                                    <tr>
-                                        <th colspan="5"></th>
-                                        <th colspan="9">Servicios Básicos</th>
-                                        <th colspan="5">Sub-Totales</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
                                     <tr>
                                         <th>Año</th>
                                         <th>Mes</th>
@@ -68,7 +63,8 @@
                                         <th>Inspeccionar</th>
                                         <th>Días adicionales</th>
                                         <th>Servicios Básicos</th>
-                                        <th colspan="2">Servicios</th>
+                                        <th>Servicios</th>
+                                        <th>Total Servicios</th>
                                         <th>Otros</th>
                                         <th>Materiales</th>
                                         <th>Sub-Total</th>
@@ -116,6 +112,11 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js') }}"></script>
     <script type="text/javascript">
         $('.tabla-reporte').DataTable({
             responsive: true,
@@ -136,7 +137,24 @@
                 }
             },
             searchDelay: 500,
-            searching: false
+            searching: false,
+            order: [[0, 'desc']],
+            dom:
+                "<'row'<'col-sm-3'l><'col-sm-3'><'col-sm-3'B><'col-sm-3'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            buttons: {
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'XLS',
+                        className: 'btn btn-verde btn-sm',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+                        }
+                    }
+                ]
+            }
         });
     </script>
 {% endblock %}

@@ -31,10 +31,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
-                        {{ form_row(form.xls) }}
-                    </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-12">
                         {{ form_row(form.buscar) }}
                     </div>
                 </div>
@@ -79,6 +76,11 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js') }}"></script>
     <script type="text/javascript">
         $('.tabla-reporte').DataTable({
             responsive: true,
@@ -99,7 +101,24 @@
                 }
             },
             searchDelay: 500,
-            searching: false
+            searching: false,
+            order: [[0, 'desc']],
+            dom:
+                "<'row'<'col-sm-3'l><'col-sm-3'><'col-sm-3'B><'col-sm-3'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            buttons: {
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'XLS',
+                        className: 'btn btn-verde btn-sm',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        }
+                    }
+                ]
+            },
         });
     </script>
 {% endblock %}
