@@ -34,8 +34,7 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
     {
         $manager = $this->getEntityManager();
 
-        $cotizacion = $manager->createQuery(
-            'SELECT '.
+        $pseudoQuery = 'SELECT '.
             'concepto.cantidad AS conceptoCantidad, concepto.total AS conceptoImporte, '.
             'producto.nombre AS conceptoDescripcion, '.
             'cps.id AS cpsId, cps.descripcion as cpsDescripcion, '.
@@ -43,12 +42,21 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
             'FROM AppBundle:Tienda\Venta\Concepto concepto '.
             'LEFT JOIN concepto.producto producto '.
             'LEFT JOIN producto.claveProdServ cps '.
-            'LEFT JOIN producto.claveUnidad cu '.
-            'WHERE concepto.venta = :id')
+            'LEFT JOIN producto.claveUnidad cu ';
+
+        if ($id === 'ALL') {
+            // Fixme el valor fijo de nuevo donde se espera que el cliente publico en general sea igual a 413
+
+            return $manager->createQuery(
+                $pseudoQuery.
+                'LEFT JOIN concepto.venta venta '.
+                'WHERE IDENTITY(venta.cliente) = 413')
+                ->getArrayResult();
+        }
+
+        return $manager->createQuery($pseudoQuery. 'WHERE concepto.venta = :id')
             ->setParameter('id', $id)
             ->getArrayResult();
-
-        return $cotizacion;
     }
 
     public function getReporteVentas($idproducto,$inicio,$fin)

@@ -38,15 +38,6 @@ class CuentaBancaria
      *
      * @Assert\NotBlank(message="Este campo no puede estar vacio")
      *
-     * @ORM\Column(name="nombre", type="string", length=50)
-     */
-    private $nombre;
-
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank(message="Este campo no puede estar vacio")
-     *
      * @ORM\Column(name="numero_cuenta", type="string", length=25)
      */
     private $numeroCuenta;
@@ -122,30 +113,6 @@ class CuentaBancaria
     public function getRfc()
     {
         return $this->rfc;
-    }
-
-    /**
-     * Set nombre.
-     *
-     * @param string $nombre
-     *
-     * @return CuentaBancaria
-     */
-    public function setNombre($nombre)
-    {
-        $this->nombre = $nombre;
-
-        return $this;
-    }
-
-    /**
-     * Get nombre.
-     *
-     * @return string
-     */
-    public function getNombre()
-    {
-        return $this->nombre;
     }
 
     /**

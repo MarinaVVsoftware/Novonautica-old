@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -336,6 +337,13 @@ class AstilleroCotizacion
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Usuario")
      */
     private $creador;
+
+    /**
+     * @var Facturacion
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion")
+     */
+    private $factura;
 
     public function __construct() {
         $this->acservicios = new ArrayCollection();
@@ -1232,5 +1240,21 @@ class AstilleroCotizacion
     public function getLimiteValidaCliente()
     {
         return $this->limiteValidaCliente;
+    }
+
+    /**
+     * @return Facturacion
+     */
+    public function getFactura()
+    {
+        return $this->factura;
+    }
+
+    /**
+     * @param Facturacion $factura
+     */
+    public function setFactura(Facturacion $factura = null)
+    {
+        $this->factura = $factura;
     }
 }

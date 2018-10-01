@@ -236,6 +236,7 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
             'FROM AppBundle:MarinaHumedaCotizacion cotizaciones '.
             'LEFT JOIN cotizaciones.barco barco '.
             'WHERE IDENTITY(cotizaciones.cliente) = :client '.
+            'AND cotizaciones.factura IS NULL '.
             'AND cotizaciones.validacliente = 2')
             ->setParameter('client', $client);
 

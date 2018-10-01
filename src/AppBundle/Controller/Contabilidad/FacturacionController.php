@@ -9,16 +9,12 @@ use AppBundle\Entity\Combustible;
 use AppBundle\Entity\Contabilidad\Catalogo\Servicio;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Entity\MarinaHumedaCotizacion;
-use AppBundle\Entity\MarinaHumedaCotizacionAdicional;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
-use AppBundle\Entity\MarinaHumedaServicio;
 use AppBundle\Entity\Tienda\Venta;
-use AppBundle\Entity\ValorSistema;
 use AppBundle\Extra\NumberToLetter;
 use AppBundle\Form\Contabilidad\FacturacionType;
 use AppBundle\Form\Contabilidad\PreviewType;
 use DataTables\DataTablesInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
@@ -85,7 +81,9 @@ class FacturacionController extends Controller
 
     /**
      * @Route("/facturas-dt")
+     *
      * @param Request $request
+     * @param DataTablesInterface $dataTables
      *
      * @return JsonResponse
      */
@@ -134,7 +132,9 @@ class FacturacionController extends Controller
             // Aqui existe un problema de race condition, donde pueden existir mas de dos usuarios creando una
             // cotizacion, lo que ocasionara que se dupliquen los folios, para prevenir esto
             // se vuelve a leer el valor y se escribe aun cuando el folio se muestra antes de generar el formulario
-            $factura->setFolio($facturacionRepository->getFolioByEmpresa($factura->getEmisor()->getId()));
+            $factura->setFolio(
+                $facturacionRepository->getFolioByEmpresa($factura->getEmisor()->getId())
+            );
 
             $sello = $this->multifacturas->procesa($factura);
 
@@ -148,6 +148,24 @@ class FacturacionController extends Controller
                     'factura' => $factura,
                     'form' => $form->createView(),
                 ]);
+            }
+
+            // Ciclar cotizaciones y relacionarlas con una factura
+            if ($cotizacionIdentifier = $form->get('cotizaciones')->getData()) {
+                $cotizacionRepository = $this->getCotizacionRepository($factura->getEmisor());
+
+                $cotizaciones = $cotizacionRepository->findBy(['id' => $cotizacionIdentifier]);
+
+                if ($cotizacionIdentifier === 'ALL') {
+                    $cotizaciones = $cotizacionRepository->findBy([
+                        'cliente' => $factura->getCliente()
+                    ]);
+                }
+
+                foreach ($cotizaciones as $cotizacion) {
+                    $cotizacion->setFactura($factura);
+                    $em->persist($cotizacion);
+                }
             }
 
             $em->persist($factura);
@@ -287,10 +305,8 @@ class FacturacionController extends Controller
                 $marinaRepository = $manager->getRepository(MarinaHumedaCotizaServicios::class);
                 $conceptos = array_map(function ($concepto) {
                     $concepto['conceptoImporte'] = (int)(($concepto['conceptoImporte'] / 100) * ($concepto['conceptoDolar'] / 100) * 100);
-
                     return $concepto;
                 }, $marinaRepository->getOneWithCatalogo($cotizacion));
-
                 break;
             case 4:
                 $combustibleRepository = $manager->getRepository(Combustible::class);
@@ -456,6 +472,30 @@ class FacturacionController extends Controller
         }
 
         return $cotizaciones;
+    }
+
+    private function getCotizacionRepository(Facturacion\Emisor $emisor)
+    {
+        $manager = $this->getDoctrine()->getManager();
+
+        switch ($emisor->getId()) {
+            case 3:
+                $repository = $manager->getRepository(MarinaHumedaCotizacion::class);
+                break;
+            case 4:
+                $repository = $manager->getRepository(Combustible::class);
+                break;
+            case 5:
+                $repository = $manager->getRepository(AstilleroCotizacion::class);
+                break;
+            case 7:
+                $repository = $manager->getRepository(Venta::class);
+                break;
+            default:
+                $repository = null;
+        }
+
+        return $repository;
     }
 
     private function enviarFactura(Facturacion $factura, array $emails, $bbc = null)

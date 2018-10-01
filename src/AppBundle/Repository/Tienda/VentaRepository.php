@@ -21,13 +21,24 @@ class VentaRepository extends \Doctrine\ORM\EntityRepository
     public function getCotizacionesFromCliente($client)
     {
         $manager = $this->getEntityManager();
+
         $cotizaciones = $manager->createQuery(
             'SELECT cotizaciones.id, CONCAT(\'Folio: \', cotizaciones.id) AS text '.
             'FROM AppBundle:Tienda\Venta cotizaciones '.
             'LEFT JOIN cotizaciones.cliente cliente '.
-            'WHERE IDENTITY(cotizaciones.cliente) = :client')
-            ->setParameter('client', $client);
+            'WHERE IDENTITY(cotizaciones.cliente) = :client '.
+            'AND cotizaciones.factura IS NULL ')
+            ->setParameter('client', $client)
+            ->getArrayResult();
 
-        return $cotizaciones->getArrayResult();
+        // FIXME Se espera que el cliente tenga el id 413, hasta ahora este valor tiene que quedarse fijo
+        if ($client === '413' && count($cotizaciones)) {
+            $cotizaciones[] = [
+                'id' => 'ALL',
+                'text' => 'Todas las ventas'
+            ];
+        }
+
+        return $cotizaciones;
     }
 }
