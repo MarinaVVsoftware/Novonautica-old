@@ -51,7 +51,7 @@ class CombustibleRepository extends \Doctrine\ORM\EntityRepository
             'LEFT JOIN tipo.claveProdServ cps '.
             'LEFT JOIN tipo.claveUnidad cu '.
             'WHERE cotizacion.id = :id '.
-            'AND cotizaciones.factura IS NULL')
+            'AND cotizacion.factura IS NULL')
             ->setParameter('id', $id)
             ->getArrayResult();
 
