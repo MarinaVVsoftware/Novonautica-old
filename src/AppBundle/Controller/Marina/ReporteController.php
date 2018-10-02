@@ -67,6 +67,28 @@ class ReporteController extends AbstractController
     }
 
     /**
+     * @Route("/ingresos", name="reporte_mar_ingresos")
+     */
+    public function ingresoReporteAction()
+    {
+        return $this->render('marinahumeda/reporte/ingreso.html.twig', ['title' => 'Reporte de ingresos']);
+    }
+
+    /**
+     * @Route("/ingresos-data")
+     */
+    public function ingresoReporteDataAction(Request $request, DataTablesInterface $dataTables)
+    {
+        try {
+            $results = $dataTables->handle($request, 'marina/reporte/ingreso');
+
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
+        }
+    }
+
+    /**
      * @Route("/embarcaciones", name="reporte_mar_embarcaciones")
      * @Method("GET")
      *

@@ -1,0 +1,129 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        :root .btn {
+            min-width: initial;
+            text-align: center;
+        }
+
+        .daterangepicker {
+            color: initial;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+            background-color: #292f41;
+            border-color: #2a3041;
+        }
+
+        .ranges li {
+            background-color: hsl(225, 23%, 21%);
+            border: 1px solid #292f41;
+        }
+    </style>
+{% endblock %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Reporte de clientes morosos</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table-novo table table-condensed text-center">
+                        <thead>
+                        <tr>
+                            <th>Folio</th>
+                            <th>Slip</th>
+                            <th>Embarcación</th>
+                            <th>Amarre</th>
+                            <th>Servicio</th>
+                            <th>Pago subtotal</th>
+                            <th>Pago IVA</th>
+                            <th>Pago acumulado</th>
+                            <th>Total de días</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, datatableSettings) {
+        let searchData = {
+          month: moment().startOf('month'),
+        };
+
+        const $table = $('.table-novo').DataTable({
+          ...datatableSettings,
+          ajax: {
+            url: 'ingresos-data',
+            data: function (d) {
+              d.dates = {
+                month: searchData.month.format('YYYY-MM-DD'),
+              };
+            },
+          },
+          order: [[7, 'desc']],
+          dom:
+              "<'row'<'col-sm-3'l><'col-sm-3'<'#dates'>><'col-sm-3'B><'col-sm-3'f>>" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+          lengthMenu: [
+            [10, 25, 50, -1],
+            ['10', '25', '50', 'Todos']
+          ],
+          buttons: {
+            buttons: [
+              {
+                extend: 'excel',
+                text: 'XLS',
+                className: 'btn btn-verde btn-sm',
+                exportOptions: {
+                  columns: [0, 1, 2, 3, 4, 5]
+                }
+              }
+            ]
+          }
+        });
+
+        $('#dates')
+            .html(`
+              <div class="dataTables_filter">
+                <label for="date-range">Fecha
+                <input type="text" class="form-control" id="date-range" readonly>
+                </label>
+              </div>
+            `)
+            .find('#date-range')
+            .datepicker({
+              format: 'MM yyyy',
+              viewMode: 'months',
+              minViewMode: 'months',
+              language: 'es'
+            })
+            .datepicker('setDate', new Date())
+            .on('changeDate', function (event) {
+              searchData.month = moment(event.date);
+              $table.ajax.reload();
+            });
+
+      })(jQuery, datatablesSettings);
+    </script>
+{% endblock %}
