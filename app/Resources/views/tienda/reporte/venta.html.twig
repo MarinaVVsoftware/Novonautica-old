@@ -42,7 +42,13 @@
                             <thead>
                             <tr>
                                 <th>Fecha venta</th>
+                                <th>Categoría</th>
                                 <th>Producto</th>
+                                <th>Código barras</th>
+                                <th>Clave producto</th>
+                                <th>Descripción producto</th>
+                                <th>Clave unidad</th>
+                                <th>Descripción unidad</th>
                                 <th>Cantidad</th>
                                 <th>Precio</th>
                                 <th>Sub-Total</th>
@@ -55,7 +61,13 @@
                             {% for venta in ventas %}
                                 <tr>
                                     <td>{{ venta.fecha }}</td>
+                                    <td>{{ venta.categoria }}</td>
                                     <td>{{ venta.producto }}</td>
+                                    <td>{{ venta.codigoBarras }}</td>
+                                    <td>{{ venta.claveProducto }}</td>
+                                    <td>{{ venta.descripcionProducto }}</td>
+                                    <td>{{ venta.claveUnidad }}</td>
+                                    <td>{{ venta.descripcionUnidad }}</td>
                                     <td>{{ venta.cantidad }}</td>
                                     <td>{{ venta.precio }}</td>
                                     <td>{{ venta.subtotal }}</td>
@@ -114,7 +126,7 @@
                         text: 'XLS',
                         className: 'btn btn-verde btn-sm',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
                         }
                     }
                 ]
