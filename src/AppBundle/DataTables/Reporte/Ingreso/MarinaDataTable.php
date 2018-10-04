@@ -121,7 +121,10 @@ class MarinaDataTable extends AbstractDataTableHandler
         $queryCount = clone $query;
         $results->recordsFiltered = COUNT($queryCount->select('COUNT(mc.id)')->getQuery()->getResult());
 
-        $query->setMaxResults($request->length);
+        if ($request->length > 0) {
+            $query->setMaxResults($request->length);
+        }
+
         $query->setFirstResult($request->start);
 
         /** @var MarinaHumedaCotizacion[] $cotizacions */
