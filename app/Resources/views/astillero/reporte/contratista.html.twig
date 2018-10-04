@@ -1,8 +1,8 @@
 {% extends 'estructura/plantilla.twig' %}
-
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
     <style>
         :root .btn {
             min-width: initial;
@@ -81,50 +81,19 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-12">
-                            <form id="reporte-data" class="form-inline"
-                                  action="{{ path('reporte_ast_contratista_data') }}">
+                            <form id="reporte-data" class="form-inline" method="post">
                                 <div class="form-group">
                                     <label for="date-range">Rango</label>
-                                    <input type="text" class="form-control" id="date-range" readonly>
+                                    <input type="text" class="form-control" id="date-range"
+                                           name="dates"
+                                           value="{{ values.dates.inicio|date('d/m/Y') ~ ' - ' ~ values.dates.fin|date('d/m/Y') }}"
+                                           readonly>
                                 </div>
                                 <div class="form-group">
                                     <label for="contratista">Contratista</label>
-                                    <input type="text" class="form-control" id="contratista" required>
+                                    <input type="text" class="form-control" id="contratista" name="contratista">
                                 </div>
-                                <input type="submit" value="Consultar" id="consultar" class="btn btn-azul" disabled>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <form style="margin-top: 4rem;">
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="adeudo">Adeudo</label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                            <input type="text" class="form-control" id="adeudo" disabled>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="pagado">Pagado</label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                            <input type="text" class="form-control" id="pagado" disabled>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="total">Total</label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                            <input type="text" class="form-control" id="total" disabled>
-                                        </div>
-                                    </div>
-                                </div>
+                                <input type="submit" value="Consultar" id="consultar" class="btn btn-azul">
                             </form>
                         </div>
                     </div>
@@ -133,15 +102,39 @@
                             <table class="table table-novo">
                                 <thead>
                                 <tr>
-                                    <th width="30%">Descripcion</th>
+                                    <th>Fecha ODT</th>
+                                    <th>Proveedor</th>
+                                    <th>Descripcion</th>
                                     <th width="15%">Embarcación</th>
                                     <th width="15%">Adeudo</th>
                                     <th width="15%">Pagado</th>
-                                    <th width="20%">Fecha</th>
                                 </tr>
                                 </thead>
                                 <tbody>
+                                {% set totalAdeudo = 0  %}
+                                {% set totalPagado = 0  %}
+
+                                {% for trabajo in trabajos %}
+                                    {% set totalAdeudo = totalAdeudo + trabajo.adeudo  %}
+                                    {% set totalPagado = totalPagado + trabajo.pagado  %}
+
+                                    <tr>
+                                        <td>{{ trabajo.fecha|date('d/m/Y') }}</td>
+                                        <td>{{ trabajo.proveedor }}</td>
+                                        <td>{{ trabajo.descripcion }}</td>
+                                        <td>{{ trabajo.embarcacion }}</td>
+                                        <td>$ {{ (trabajo.adeudo / 100)|number_format(2) }}</td>
+                                        <td>$ {{ (trabajo.pagado / 100)|number_format(2) }}</td>
+                                    </tr>
+                                {% endfor %}
                                 </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-center">Totales: </td>
+                                    <td>$ {{ (totalAdeudo / 100)|number_format(2) }}</td>
+                                    <td>$ {{ (totalPagado / 100)|number_format(2) }}</td>
+                                </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -153,35 +146,30 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/daterangepicker.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/jquery.autocomplete.min.js') }}"></script>
     <script type="text/javascript">
-      (function ($) {
+      (function ($, datatableSettings) {
         moment.locale('es');
-
-        const rTabla = document.querySelector('.table > tbody');
-        const rForm = document.getElementById('reporte-data');
-        const submitBtn = document.getElementById('consultar');
-        const adeudoInput = document.getElementById('adeudo');
-        const pagadoInput = document.getElementById('pagado');
-        const totalInput = document.getElementById('total');
 
         const $contratista = $('#contratista');
         const $dateRange = $('#date-range');
 
-        const inicio = moment().subtract(29, 'days');
-        const final = moment();
+        const inicio = moment().startOf('month');
+        const final = moment().endOf('month');
 
         let searchData = {
           start: inicio.format('YYYY-MM-DD'),
           end: final.format('YYYY-MM-DD')
         };
-
-        if (searchData.proveedor) {
-          submitBtn.removeAttribute('disabled');
-        }
 
         $contratista.autocomplete({
           dataType: 'json',
@@ -203,19 +191,12 @@
           },
           onSelect: function ({data}) {
             searchData.proveedor = data;
-            submitBtn.removeAttribute('disabled');
           }
         });
 
         $dateRange.daterangepicker({
-          startDate: inicio,
-          endDate: final,
           autoApply: true,
           ranges: {
-            'Hoy': [moment(), moment()],
-            'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 días': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 días': [moment().subtract(29, 'days'), moment()],
             'Este mes': [moment().startOf('month'), moment().endOf('month')],
             'Mes pasado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
           },
@@ -233,52 +214,29 @@
           searchData.end = picker.endDate.format('YYYY-MM-DD');
         });
 
-        rForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          $.ajax(this.action, {dataType: 'json', data: searchData})
-              .done(function (trabajos) {
-                clearData();
-
-
-                if (!trabajos.length) {
-                  rTabla.innerHTML = `
-                    <tr><td colspan="4" class="text-center">No existen registros en la fecha seleccionada</td></tr>
-                  `;
-
-                  return;
-                }
-
-                let adeudo = trabajos.reduce((a, b) => a + b.total, 0);
-                let pagado = trabajos.map(function (trabajo) {
-                  let dolarCambio = (trabajo.astilleroODT.astilleroCotizacion.dolar / 100);
-                  let pagos = trabajo.contratistapagos.reduce((a, b) => b.divisa === 'USD' ? a + (b.cantidad * dolarCambio) : a + b.cantidad, 0);
-                  let row = rTabla.insertRow();
-
-                  row.insertCell().innerText = trabajo.cotizacionInicial;
-                  row.insertCell().innerText = trabajo.astilleroODT.astilleroCotizacion.barco.nombre;
-                  row.insertCell().innerText = '$' + (trabajo.total / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'MXN';
-                  row.insertCell().innerText = '$' + (pagos / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'MXN';
-                  row.insertCell().innerText = trabajo.astilleroODT.fecha;
-
-                  return pagos;
-                })[0];
-                let total = (adeudo - pagado);
-
-                adeudoInput.value = (adeudo / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'MXN';
-                pagadoInput.value = (pagado / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'MXN';
-                totalInput.value = (total / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'MXN';
-
-              });
+        const $table = $('.table-novo').DataTable({
+          ...datatableSettings,
+          serverSide: false,
+          dom:
+              "<'row'<'col-sm-4'l><'col-sm-4'B><'col-sm-4'f>>" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+          lengthMenu: [
+            [10, 25, 50, -1],
+            ['10', '25', '50', 'Todos']
+          ],
+          buttons: {
+            buttons: [
+              {
+                extend: 'excel',
+                text: 'XLS',
+                footer: true,
+                className: 'btn btn-verde btn-sm',
+              }
+            ]
+          }
         });
 
-
-        function clearData() {
-          rTabla.innerHTML = '';
-          adeudoInput.value = '';
-          pagadoInput.value = '';
-          totalInput.value = '';
-        }
-
-      })(jQuery);
+      })(jQuery, datatablesSettings);
     </script>
 {% endblock %}

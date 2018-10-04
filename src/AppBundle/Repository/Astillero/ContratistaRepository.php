@@ -10,28 +10,37 @@ namespace AppBundle\Repository\Astillero;
  */
 class ContratistaRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function getTrabajosByProveedor($proveedor, $inicio, $fin)
+    public function getTrabajosByProveedor($inicio, $fin, $proveedor = null)
     {
-        return $this->createQueryBuilder('t')
-            ->select('t', 'o', 'pa', 'c', 'b')
+        $query = $this->createQueryBuilder('t')
+            ->select(
+                'o.fecha AS fecha',
+                'p.nombre AS proveedor',
+                't.cotizacionInicial AS descripcion',
+                'b.nombre AS embarcacion',
+                'SUM(t.total) AS adeudo',
+                'SUM(pa.cantidad) AS pagado'
+            )
             ->leftJoin('t.proveedor', 'p')
-            ->leftJoin('t.astilleroODT', 'o')
             ->leftJoin('t.contratistapagos', 'pa')
+            ->leftJoin('t.astilleroODT', 'o')
             ->leftJoin('o.astilleroCotizacion', 'c')
             ->leftJoin('c.barco', 'b')
             ->where('o.fecha BETWEEN :inicio AND :fin')
-            ->andWhere('p.id = :proveedor')
+            ->groupBy('p.nombre')
+            ->orderBy('o.fecha', 'ASC')
             ->setParameters([
-                'proveedor' => $proveedor,
                 'inicio' => $inicio,
-                'fin' => $fin
-            ])
-            ->getQuery()
-            ->getResult();
-    }
+                'fin' => $fin,
+            ]);
 
-    public function getTrabajosByOdt()
-    {
+        if ($proveedor) {
+            $query->andWhere('p.nombre = :proveedor');
+            $query->setParameter('proveedor', $proveedor);
+        }
 
+        $result = $query->getQuery()->getResult();
+
+        return $result;
     }
 }
