@@ -422,7 +422,7 @@
                                                 <tr>
                                                     <td>{{ cont.cotizacionInicial }}</td>
                                                     <td>{{ pc.fecha|date('d/m/Y') }}</td>
-                                                    <td>{{ pc.forma }}</td>
+                                                    <td>{{ pc.formaNombre }}</td>
                                                     {% if pc.divisa == 'USD' %}
                                                         <td>${{ ((pc.cantidad * ct.dolar)/10000)|number_format(2) }}
                                                             <small>MXN</small>
