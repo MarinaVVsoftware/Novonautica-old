@@ -9,9 +9,9 @@
 namespace AppBundle\Controller\Astillero;
 
 
+use AppBundle\Entity\Astillero\Contratista;
 use AppBundle\Entity\AstilleroCotizacion;
 use DataTables\DataTablesInterface;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -21,16 +21,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Validator\Tests\Fixtures\Entity;
 
 /**
  * Class ReporteController
@@ -53,12 +47,40 @@ class ReporteController extends AbstractController
     }
 
     /**
-     * @Route("/contratista", name="reporte_ast_contratista")
-     * @Method("GET")
+     * @Route("/contratista", name="reporte_ast_contratista", methods={"POST", "GET"})
      */
-    public function contratistaReporteAction()
+    public function contratistaReporteAction(Request $request)
     {
-        return $this->render('astillero/reporte/contratista.html.twig', ['title' => 'Contratistas']);
+        $proveedor = $request->request->get('contratista');
+
+        $dates = explode(' - ', $request->request->get('dates'));
+
+        $inicio = isset($dates[0]) && "" !== $dates[0]
+            ? \DateTime::createFromFormat('d/m/Y', $dates[0])
+            : new \DateTime('first day of this month');
+
+        $fin = isset($dates[1])
+            ? \DateTime::createFromFormat('d/m/Y', $dates[1])
+            : new \DateTime('last day of this month');
+
+        $trabajos = $this->getDoctrine()
+            ->getRepository(Contratista::class)
+            ->getTrabajosByProveedor($inicio, $fin, $proveedor);
+
+        return $this->render(
+            'astillero/reporte/contratista.html.twig',
+            [
+                'title' => 'Contratistas',
+                'trabajos' => $trabajos,
+                'values' => [
+                    'dates' => [
+                        'inicio' => $inicio,
+                        'fin' => $fin,
+                    ],
+                    'proveedor' => $proveedor,
+                ],
+            ]
+        );
     }
 
     /**
@@ -83,44 +105,11 @@ class ReporteController extends AbstractController
     {
         try {
             $results = $dataTables->handle($request, 'astilleroReporte');
+
             return $this->json($results);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
         }
-    }
-
-    /**
-     * @Route("/datum.json", name="reporte_ast_contratista_data")
-     * @Method("GET")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     */
-    public function getContratistaReporteDataAction(Request $request)
-    {
-        $proveedor = $request->query->get('proveedor');
-        $inicio = $request->query->get('start');
-        $fin = $request->query->get('end');
-
-        $em = $this->getDoctrine();
-        $contratistaRepository = $em->getRepository('AppBundle:Astillero\Contratista');
-        $trabajos = $contratistaRepository->getTrabajosByProveedor($proveedor, $inicio, $fin);
-
-        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory)];
-        $serializer = new Serializer($normalizers, $encoders);
-
-        $response = $serializer->serialize($trabajos, 'json', [
-            'groups' => ['AstilleroReporte'],
-            DateTimeNormalizer::FORMAT_KEY => 'd-m-Y'
-        ]);
-
-        return JsonResponse::fromJsonString($response)
-            ->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 
     /**
@@ -134,7 +123,9 @@ class ReporteController extends AbstractController
     {
         $query = $request->query->get('query');
 
-        if (null === $query) { return $this->json([]); }
+        if (null === $query) {
+            return $this->json([]);
+        }
 
         $proveedorRepository = $this->getDoctrine()->getRepository('AppBundle:Astillero\Proveedor');
         $proveedores = $proveedorRepository->findProveedorNameLike($query);
@@ -252,6 +243,7 @@ class ReporteController extends AbstractController
      * @Route("/ingresos", name="reporte_ast_ingresos")
      * @Method({"GET", "POST"})
      * @param Request $request
+     *
      * @return Response
      */
     public function ingresosAstilleroAction(Request $request)
@@ -274,20 +266,20 @@ class ReporteController extends AbstractController
                 'format' => 'yyyy-MM-dd',
                 'data' => new \DateTime(),
             ])
-            ->add('barco', EntityType::class,[
+            ->add('barco', EntityType::class, [
                 'class' => 'AppBundle:Barco',
                 'placeholder' => 'Todos',
-                'required' => false
+                'required' => false,
             ])
             ->add('buscar', SubmitType::class, [
                 'attr' => ['class' => 'btn-xs btn-azul pull-right no-loading'],
-                'label' => 'Buscar'
+                'label' => 'Buscar',
             ])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $datos = $form->getData();
-            $idbarco = $datos['barco']?$datos['barco']->getId():'0';
+            $idbarco = $datos['barco'] ? $datos['barco']->getId() : '0';
             $em = $this->getDoctrine()->getManager();
             $ingresos = $em->getRepository('AppBundle:AstilleroCotizacion')
                 ->obtenIngresosTodos($idbarco,
@@ -295,10 +287,11 @@ class ReporteController extends AbstractController
                     $datos['fin']->format('Y-m-d')
                 );
         }
+
         return $this->render('astillero/reporte/ingreso.html.twig', [
             'title' => 'Reportes Ingresos Astillero',
             'ingresos' => $ingresos,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 }
