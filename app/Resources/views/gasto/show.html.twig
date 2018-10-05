@@ -1,0 +1,66 @@
+{% extends 'estructura/plantilla.twig' %}
+{% block contwrapper %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="panel panel-novo">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h3 class="panel-title">{{ title }}</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <a class="btn btn-contorno-azul pull-right" href="{{ path('gasto_index') }}">Regresar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Empresa</label>
+                        <div class="info-input">{{ gasto.empresa }}</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Gran total</label>
+                        <div class="info-input">$ {{ (gasto.total/100)|number_format(2) }} <small>MXN</small></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Fecha</label>
+                        <div class="info-input">{{ gasto.fecha|date('d/m/Y') }}</div>
+                    </div>
+                </div>
+                <div class="row espacio-linea-arriba2">
+                    <div class="col-sm-12">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for concepto in gasto.conceptos %}
+                                <tr>
+                                    <td>{{ concepto.servicio }}</td>
+                                    <td>$ {{ (concepto.total/100)|number_format(2) }} <small>MXN</small></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        {% if is_granted(expression('has_role("GASTO_EDIT") or (user.isAdmin())')) %}
+                            <a href="{{ path('gasto_edit',{ 'id':gasto.id }) }}" class="btn btn-azul">
+                                Editar
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

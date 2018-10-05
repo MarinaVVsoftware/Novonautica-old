@@ -1,0 +1,14 @@
+{% block appbundle_gasto_concepto_widget %}
+    <tr class="servicio-agregado table-item">
+        <td valign="middle" class="text-center">
+        </td>
+        <td>
+            {{ form_widget(form.servicio) }}
+            {{ form_errors(form.servicio) }}
+        </td>
+        <td>
+            {{ form_widget(form.total) }}
+            {{ form_errors(form.total) }}
+        </td>
+    </tr>
+{% endblock %}

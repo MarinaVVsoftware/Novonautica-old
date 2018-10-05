@@ -2,12 +2,14 @@
 
 namespace AppBundle\Form\Contabilidad\Catalogo;
 
+use AppBundle\Entity\Contabilidad\Catalogo\Servicio;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
 use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -34,6 +36,10 @@ class ServicioType extends AbstractType
     {
         $builder->add('codigo');
         $builder->add('nombre');
+        $builder->add('tipoGasto',ChoiceType::class, [
+            'choices' => array_flip(Servicio::getTipoGastoLista()),
+            'placeholder' => 'Seleccionar...'
+        ]);
 
         $builder->add(
             'emisor',

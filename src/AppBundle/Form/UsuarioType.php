@@ -134,6 +134,7 @@ class UsuarioType extends AbstractType
                     'Modificar' => 'AGENDA_EDIT',
                     'Eliminar' => 'AGENDA_DELETE',
                 ],
+                'GASTOS' => $this->getGastosRoles()
             ],
         ]);
         $builder->add('isActive', ChoiceType::class, [
@@ -197,6 +198,21 @@ class UsuarioType extends AbstractType
             $roles[$emisorRole['alias']] = "VIEW_EGRESO_{$alias}_{$emisorRole['id']}";
         }
 
+        return $roles;
+    }
+    private function getGastosRoles()
+    {
+        $emisorRepository = $this->entityManager->getRepository(Emisor::class);
+        $roles = [
+            'Acceso' => 'ROLE_GASTO',
+            'Crear' => 'GASTO_CREATE',
+            'Modificar' => 'GASTO_EDIT',
+            'Eliminar' => 'GASTO_DELETE'
+        ];
+        foreach ($emisorRepository->getEmisorRoles() as $emisorRole) {
+            $alias = join('-', explode(' ', $emisorRole['alias']));
+            $roles[$emisorRole['alias']] = "VIEW_GASTO_{$alias}_{$emisorRole['id']}";
+        }
         return $roles;
     }
 }
