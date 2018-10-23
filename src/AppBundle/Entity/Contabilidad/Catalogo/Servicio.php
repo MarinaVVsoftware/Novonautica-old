@@ -16,6 +16,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Servicio
 {
+    const GASTO_FIJO = 1;
+    const GASTO_VARIABLE = 2;
+
     /**
      * @var int
      *
@@ -33,11 +36,23 @@ class Servicio
     private $codigo;
 
     /**
-     * @var Column
+     * @var string
      *
      * @ORM\Column(name="nombre", type="string", length=50)
      */
     private $nombre;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="tipo_gasto", type="smallint")
+     */
+    private $tipoGasto;
+
+    private static $tipoGastoLista = [
+        Servicio::GASTO_FIJO => 'Gasto fijo',
+        Servicio::GASTO_VARIABLE => 'Gasto variable'
+    ];
 
     /**
      * @var ClaveUnidad
@@ -59,6 +74,12 @@ class Servicio
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Emisor")
      */
     private $emisor;
+
+
+    public function __toString()
+    {
+        return $this->nombre;
+    }
 
     /**
      * Get id.
@@ -188,5 +209,44 @@ class Servicio
     public function getEmisor()
     {
         return $this->emisor;
+    }
+
+    /**
+     * Set tipoGasto.
+     *
+     * @param int $tipoGasto
+     *
+     * @return Servicio
+     */
+    public function setTipoGasto($tipoGasto)
+    {
+        $this->tipoGasto = $tipoGasto;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoGasto.
+     *
+     * @return int
+     */
+    public function getTipoGasto()
+    {
+        return $this->tipoGasto;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTipoGastoNombre()
+    {
+        if(null=== $this->tipoGasto){
+            return null;
+        }
+        return self::$tipoGastoLista[$this->tipoGasto];
+    }
+
+    public static function getTipoGastoLista(){
+        return self::$tipoGastoLista;
     }
 }

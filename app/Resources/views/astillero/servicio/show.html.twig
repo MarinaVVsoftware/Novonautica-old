@@ -52,6 +52,26 @@
                             <div class="info-input">{{ servicio.diasDescuento }}</div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Clave Servicio</label>
+                            <div class="info-input">
+                                {% if servicio.claveProdServ %}
+                                    {{ servicio.claveProdServ.claveProdServ }} /
+                                    {{ servicio.claveProdServ.descripcion }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Clave Unidad</label>
+                            <div class="info-input">
+                                {% if servicio.claveUnidad %}
+                                    {{ servicio.claveUnidad.claveUnidad }} /
+                                    {{ servicio.claveUnidad.nombre }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                     {% if servicio.gruposProductos|length > 0 %}
                         <div class="row">
                             <div class="col-sm-12 espacio-linea-arriba2">

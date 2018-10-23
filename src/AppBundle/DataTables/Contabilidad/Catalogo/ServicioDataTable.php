@@ -63,6 +63,8 @@ class ServicioDataTable extends AbstractDataTableHandler
                 $query->addOrderBy('s.claveProdServ', $order->dir);
             } elseif ($order->column == 4) {
                 $query->addOrderBy('s.emisor', $order->dir);
+            } elseif ($order->column == 5) {
+                $query->addOrderBy('s.tipoGasto', $order->dir);
             }
         }
 
@@ -83,6 +85,7 @@ class ServicioDataTable extends AbstractDataTableHandler
                 "{$servicio->getClaveUnidad()->getClaveUnidad()} / {$servicio->getClaveUnidad()->getNombre()}",
                 "{$servicio->getClaveProdServ()->getClaveProdServ()} / {$servicio->getClaveProdServ()->getDescripcion()}",
                 $servicio->getEmisor()->getAlias(),
+                $servicio->getTipoGastoNombre(),
                 $servicio->getId(),
             ];
         }

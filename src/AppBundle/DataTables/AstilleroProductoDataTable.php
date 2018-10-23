@@ -37,14 +37,19 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
         $qb = $astilleroProductoRepo->createQueryBuilder('ap');
         $results->recordsTotal = $qb->select('COUNT(ap.id)')->getQuery()->getSingleScalarResult();
 
-        $q = $qb->select('ap')
-            ->leftJoin('ap.proveedor', 'p');
+        $q = $qb->select('ap','ClaveProdServ','ClaveUnidad')
+            ->leftJoin('ap.proveedor', 'p')
+            ->leftJoin('ap.claveProdServ','ClaveProdServ')
+            ->leftJoin('ap.claveUnidad','ClaveUnidad');
 
         if ($request->search->value) {
-            $q->where('(LOWER(ap.identificador) LIKE :search OR '.
-                'LOWER(ap.nombre) LIKE :search OR '.
-                'LOWER(ap.unidad) LIKE :search OR '.
-                'LOWER(p.nombre) LIKE :search)'
+            $q->where('(LOWER(ap.identificador) LIKE :search '.
+                ' OR LOWER(ap.nombre) LIKE :search '.
+                ' OR LOWER(ap.unidad) LIKE :search '.
+                ' OR LOWER(p.nombre) LIKE :search '.
+                ' OR ClaveProdServ.claveProdServ LIKE :search' .
+                ' OR ClaveUnidad.claveUnidad LIKE :search' .
+                ')'
             );
             $q->setParameter('search', strtolower("%{$request->search->value}%"));
         }
@@ -60,6 +65,10 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
                 $q->addOrderBy('ap.precio', $order->dir);
             } elseif ($order->column === 4) {
                 $q->addOrderBy('ap.unidad', $order->dir);
+            } elseif ($order->column === 5) {
+                $q->addOrderBy('ClaveProdServ.claveProdServ', $order->dir);
+            } elseif ($order->column === 6) {
+                $q->addOrderBy('ClaveUnidad.claveUnidad', $order->dir);
             }
         }
 
@@ -83,6 +92,8 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
                 $producto->getNombre(),
                 '$'.number_format($producto->getPrecio() / 100, 2).' MXN',
                 $producto->getUnidad(),
+                $producto->getClaveProdServ()?$producto->getClaveProdServ()->getClaveProdServ():'',
+                $producto->getClaveUnidad()?$producto->getClaveUnidad()->getClaveUnidad():'',
                 $producto->getId(),
             ];
         }

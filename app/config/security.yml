@@ -183,6 +183,8 @@ security:
         - { path: ^/historial-correo/notificacion, roles: ROLE_HCORREO_NOTIFICACION }
         - { path: ^/historial-correo, roles: ROLE_HCORREO }
 
+        - { path: ^/gastos, roles: ROLE_GASTO }
+
         - { path: ^/usuario, roles: ROLE_RH }
 
         - { path: ^/ajustes/cuentas-bancarias/, roles: ROLE_AJUSTES_CUENTAS_BANCARIAS }
@@ -264,3 +266,4 @@ security:
             - ROLE_RH
             - ROLE_WHOLE_AJUSTES
             - ROLE_AGENDA
+            - ROLE_GASTO

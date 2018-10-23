@@ -15,6 +15,8 @@
                             <tr>
                                 <th>Servicio</th>
                                 <th>Precio</th>
+                                <th>Clave servicio</th>
+                                <th>Clave unidad</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -23,6 +25,18 @@
                                 <tr>
                                     <td>{{ astilleroServicioBasico.nombre }}</td>
                                     <td>${{ (astilleroServicioBasico.precio/100)|number_format(2) }} {{ astilleroServicioBasico.divisa }}</td>
+                                    <td>
+                                        {% if astilleroServicioBasico.claveProdServ %}
+                                            {{ astilleroServicioBasico.claveProdServ.claveProdServ }} /
+                                            {{ astilleroServicioBasico.claveProdServ.descripcion }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if astilleroServicioBasico.claveUnidad %}
+                                            {{ astilleroServicioBasico.claveUnidad.claveUnidad }} /
+                                            {{ astilleroServicioBasico.claveUnidad.nombre }}
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         <a class="btn btn-azul" href="{{ path('astillero_servicio-basico_edit', { 'id': astilleroServicioBasico.id }) }}">
                                             <i class="fa fa-pencil-square-o"></i>

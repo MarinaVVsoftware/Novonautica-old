@@ -29,10 +29,10 @@
                             {{ form_start(form) }}
                             {{ form_row(form.codigo) }}
                             {{ form_row(form.nombre) }}
-
                             {{ form_row(form.claveProdServ) }}
                             {{ form_row(form.claveUnidad) }}
                             {{ form_row(form.emisor) }}
+                            {{ form_row(form.tipoGasto) }}
 
                             {% if servicio.id is not null %}
                                 <a href="{{ path('contabilidad_catalogo_servicio_index') }}"
@@ -62,6 +62,7 @@
                                         <th>Clave Unidad</th>
                                         <th>Clave Producto Servicio</th>
                                         <th>Empresa</th>
+                                        <th>Tipo gasto</th>
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
@@ -99,17 +100,18 @@
             {responsivePriority: 1},
             {responsivePriority: 1},
             {responsivePriority: 0},
+            {responsivePriority: 0},
           ],
           createdRow: function (row, servicio) {
-            row.cells[5].innerHTML = `
+            row.cells[6].innerHTML = `
                 <div class="dropdown">
                   <button class="btn btn-azul btn-xs btn-block dropdown-toggle" type="button" data-toggle="dropdown">
                     Acciones
                     <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="?s=${servicio[5]}">Editar</a></li>
-                    <li><a href="${servicio[5]}/eliminar" class="text-red">Eliminar</a></li>
+                    <li><a href="?s=${servicio[6]}">Editar</a></li>
+                    <li><a href="${servicio[6]}/eliminar" class="text-red">Eliminar</a></li>
                   </ul>
                 </div>
             `;
