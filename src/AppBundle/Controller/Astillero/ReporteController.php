@@ -270,6 +270,7 @@ class ReporteController extends AbstractController
                 'class' => 'AppBundle:Barco',
                 'placeholder' => 'Todos',
                 'required' => false,
+                'attr' => ['class' => 'select-buscador' ]
             ])
             ->add('buscar', SubmitType::class, [
                 'attr' => ['class' => 'btn-xs btn-azul pull-right no-loading'],
