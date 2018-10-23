@@ -20,6 +20,8 @@
                                     <th>Precio</th>
                                     <th>Unidad</th>
                                     <th>Descripción</th>
+                                    <th>Clave servicio</th>
+                                    <th>Clave unidad</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -41,16 +43,16 @@
                 ajax: '{{ path('astillero_servicio_index') }}',
                 order: [[0, 'desc']],
                 createdRow: function (row, data) {
-                let actionsCell = row.cells[4];
+                let actionsCell = row.cells[6];
                 actionsCell.innerHTML = `
             <ul class="unstyled-list list-inline" style="margin: 0">
                 <li>
-                <a href="${data[4]}/editar">
+                <a href="${data[6]}/editar">
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                 </a>
                 </li>
                 <li>
-                <a href="${data[4]}">
+                <a href="${data[6]}">
                     <i class="fa fa-eye" aria-hidden="true"></i>
                 </a>
                 </li>

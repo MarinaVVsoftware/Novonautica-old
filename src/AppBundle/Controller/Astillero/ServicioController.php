@@ -62,7 +62,7 @@ class ServicioController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($servicio);
             $em->flush();
-            return $this->redirectToRoute('astillero_servicio_index');
+            return $this->redirectToRoute('astillero_servicio_show',['id'=>$servicio->getId()]);
         }
         return $this->render('astillero/servicio/new.html.twig', array(
             'servicio' => $servicio,
@@ -126,7 +126,7 @@ class ServicioController extends Controller
             }
             $em->persist($servicio);
             $em->flush();
-            return $this->redirectToRoute('astillero_servicio_index');
+            return $this->redirectToRoute('astillero_servicio_show',['id' => $servicio->getId()]);
         }
         return $this->render('astillero/servicio/edit.html.twig', array(
             'servicio' => $servicio,
