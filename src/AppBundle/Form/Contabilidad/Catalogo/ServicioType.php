@@ -36,10 +36,6 @@ class ServicioType extends AbstractType
     {
         $builder->add('codigo');
         $builder->add('nombre');
-        $builder->add('tipoGasto',ChoiceType::class, [
-            'choices' => array_flip(Servicio::getTipoGastoLista()),
-            'placeholder' => 'Seleccionar...'
-        ]);
 
         $builder->add(
             'emisor',

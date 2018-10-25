@@ -299,29 +299,60 @@ jQuery('.add-another-servicio').click(function (e) {
   newLi.before(newLi);
 });
 
-$('.lista-servicios').on('click', '.remove-servicio', function (e) {
+$('#serviciosextra').on('click', '.remove-servicio', function (e) {
   e.preventDefault();
   // Descomentar si se requiere que se borre el servicio con los productos asociados
-  // var fila = $(this).parent().parent();
-  // var idservicio = fila.children('.valorgrupo').children('input').val();
-  // if(idservicio > 0){ //si se borra un servicio con productos asociados
-  //     $.each($('#productos tr'), function (i,filaproducto) {
-  //         // si pertenecen al mismo kit los productos con los servicios
-  //         if($(filaproducto).children('.valorgrupo').children('input').val() === idservicio){
-  //             $(filaproducto).remove();
-  //         }
-  //     });
-  //     let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
-  //     servicios.forEach(fila =>{
-  //         if(fila.querySelector('.valorgrupo input').value === idservicio){ fila.remove(); }
-  //     });
-  // }
+  var fila = $(this).parent().parent();
+  var idservicio = fila.children('.valorgrupo').children('input').val();
+  if(idservicio > 0){ //si se borra un servicio con productos asociados
+      $.each($('#productos tr'), function (i,filaproducto) {
+          // si pertenecen al mismo kit los productos con los servicios
+          if($(filaproducto).children('.valorgrupo').children('input').val() === idservicio){
+              $(filaproducto).remove();
+          }
+      });
+      let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
+      servicios.forEach(fila =>{
+          if(fila.querySelector('.valorgrupo input').value === idservicio){ fila.remove(); }
+      });
+  }
   $(this).parent().parent().remove();
   calculaDiasEstadiaAstillero();
   //calculaTotalesAstillero();
   return false;
 });
-
+$('#otros').on('click', '.remove-servicio', function (e) {
+    e.preventDefault();
+    $(this).parent().parent().remove();
+    calculaTotalesAstillero();
+    return false;
+});
+$('#productos').on('click', '.remove-servicio', function (e) {
+    e.preventDefault();
+    $(this).parent().parent().remove();
+    calculaTotalesAstillero();
+    return false;
+});
+$('.lista-servicios').on('click', '.elimina-producto', function (e) {
+    e.preventDefault();
+    // var fila = $(this).parent().parent();
+    // var idservicio = fila.children('.valorgrupo').children('input').val();
+    // if(idservicio > 0){ //si se borra un servicio con productos asociados
+    //     $.each($('#productos tr'), function (i,filaproducto) {
+    //         // si pertenecen al mismo kit los productos con los servicios
+    //         if($(filaproducto).children('.valorgrupo').children('input').val() === idservicio){
+    //             $(filaproducto).remove();
+    //         }
+    //     });
+    //     let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
+    //     servicios.forEach(fila =>{
+    //         if(fila.querySelector('.valorgrupo input').value === idservicio){ fila.remove(); }
+    // });
+    // }
+    $(this).parent().parent().remove();
+    calculaTotalesAstillero();
+    return false;
+});
 //---- aparecer form collection con select de productos ----
 $('.add-producto').click(function (e){
     e.preventDefault();

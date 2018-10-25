@@ -36,6 +36,11 @@ class Concepto
      */
     private $empresa;
 
+    public function __toString()
+    {
+        return $this->descripcion.' - '.substr($this->empresa,0,8);
+    }
+
     /**
      * Get id.
      *
