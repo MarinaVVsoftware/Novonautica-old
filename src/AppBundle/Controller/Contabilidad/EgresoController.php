@@ -71,12 +71,14 @@ class EgresoController extends AbstractController
     {
         $egreso = new Egreso();
         $egreso->setFecha(new \DateTime());
-
+        $em = $this->getDoctrine()->getManager();
+        $iva = $em->getRepository('AppBundle:ValorSistema')->findOneBy(['id' => 1]);
+        $egreso->setIva($iva->getIva());
         $form = $this->createForm(EgresoType::class, $egreso);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+
             $em->persist($egreso);
             $em->flush();
 

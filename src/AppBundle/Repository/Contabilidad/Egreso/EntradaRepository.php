@@ -10,4 +10,56 @@ namespace AppBundle\Repository\Contabilidad\Egreso;
  */
 class EntradaRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getReporteEgresos($idempresa,$idconcepto,$idtipo,$inicio,$fin)
+    {
+        $resultado = [];
+        $granTotal = 0;
+        $condicion_empresa = '';
+        $condicion_concepto = '';
+        $condicion_tipo = '';
+        if($idempresa !== 0){$condicion_empresa = ' AND emisor.id = :idEmisor ';}
+        if($idconcepto !== 0){$condicion_concepto = ' AND concepto.id = :idConcepto ';}
+        if($idtipo !== 0){$condicion_tipo = ' AND tipo.id = :idTipo ';}
+        $qry = 'SELECT entrada, egreso, concepto, proveedor, emisor, tipo '.
+            ' FROM AppBundle:Contabilidad\Egreso\Entrada entrada '.
+            ' LEFT JOIN entrada.egreso egreso '.
+            ' LEFT JOIN entrada.concepto concepto '.
+            ' LEFT JOIN entrada.proveedor proveedor '.
+            ' LEFT JOIN egreso.empresa emisor '.
+            ' LEFT JOIN egreso.tipo tipo '.
+            ' WHERE egreso.fecha BETWEEN :inicio AND :fin '.
+            $condicion_empresa.
+            $condicion_concepto.
+            $condicion_tipo.
+            ' ORDER BY egreso.fecha ASC';
+        $conceptos = $this->getEntityManager()->createQuery($qry);
+        $conceptos->setParameter('inicio',$inicio);
+        $conceptos->setParameter('fin',date('Y-m-d H:i:s',strtotime('+23 hour +59 minutes +59 seconds',strtotime($fin))));
+        if($idempresa !== 0){$conceptos->setParameter('idEmisor',$idempresa);}
+        if($idconcepto !== 0){$conceptos->setParameter('idConcepto',$idconcepto);}
+        if($idtipo !== 0){$conceptos->setParameter('idTipo',$idtipo);}
+        dump($conceptos->getArrayResult());
+        foreach ($conceptos->getArrayResult() as $concepto){
+            array_push($resultado,[
+                'fecha' => $concepto['egreso']['fecha']->format('d/m/Y'),
+                'empresa' => $concepto['egreso']['empresa']['nombre'],
+                'concepto' => $concepto['concepto']['descripcion'],
+                'tipo' => $concepto['egreso']['tipo']['descripcion'],
+                'total' => $this->esMoneda($concepto['importe']),
+            ]);
+            $granTotal+=$concepto['importe'];
+        }
+        array_push($resultado,[
+            'fecha' => '',
+            'empresa' => '',
+            'concepto' => '',
+            'tipo' => '',
+            'total' => $this->esMoneda($granTotal)
+        ]);
+        return $resultado;
+    }
+
+    function esMoneda($valor){
+        return '$'.number_format($valor/100,2);
+    }
 }

@@ -426,9 +426,9 @@
                                 <i class="fa fa-circle-o"></i> Tienda
                             </a>
                         </li>
-                        <li class="{{ path.check('reporte_gasto') }}">
-                            <a href="{{ path('reporte_gasto') }}">
-                                <i class="fa fa-circle-o"></i> Gastos
+                        <li class="{{ path.check('reporte_egreso') }}">
+                            <a href="{{ path('reporte_egreso') }}">
+                                <i class="fa fa-circle-o"></i> Egresos
                             </a>
                         </li>
                     </ul>
@@ -669,28 +669,28 @@
             <!-- END CONTABILIDAD -->
 
             <!-- START GASTOS -->
-            {% if is_granted('ROLE_GASTO') %}
-                <li class="treeview {{ path.check('gasto_') }}">
-                    <a href="#">
-                        <i class="fa fa-money"></i> <span>Gastos</span>
-                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="{{ path.check('gasto_index') }} {{ path.check('gasto_show') }}">
-                            <a href="{{ path('gasto_index') }}">
-                                <i class="fa fa-circle-o"></i> <span>Listado</span>
-                            </a>
-                        </li>
-                        {% if is_granted(expression('has_role("GASTO_CREATE") or (user.isAdmin())')) %}
-                            <li class="{{ path.check('gasto_new') }}">
-                                <a href="{{ path('gasto_new') }}">
-                                    <i class="fa fa-circle-o"></i> <span>Nuevo</span>
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </li>
-            {% endif %}
+            {#{% if is_granted('ROLE_GASTO') %}#}
+                {#<li class="treeview {{ path.check('gasto_') }}">#}
+                    {#<a href="#">#}
+                        {#<i class="fa fa-money"></i> <span>Gastos</span>#}
+                        {#<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>#}
+                    {#</a>#}
+                    {#<ul class="treeview-menu">#}
+                        {#<li class="{{ path.check('gasto_index') }} {{ path.check('gasto_show') }}">#}
+                            {#<a href="{{ path('gasto_index') }}">#}
+                                {#<i class="fa fa-circle-o"></i> <span>Listado</span>#}
+                            {#</a>#}
+                        {#</li>#}
+                        {#{% if is_granted(expression('has_role("GASTO_CREATE") or (user.isAdmin())')) %}#}
+                            {#<li class="{{ path.check('gasto_new') }}">#}
+                                {#<a href="{{ path('gasto_new') }}">#}
+                                    {#<i class="fa fa-circle-o"></i> <span>Nuevo</span>#}
+                                {#</a>#}
+                            {#</li>#}
+                        {#{% endif %}#}
+                    {#</ul>#}
+                {#</li>#}
+            {#{% endif %}#}
             <!-- END GASTOS -->
 
             <!-- START HISTORIAL CORREOS -->

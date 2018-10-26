@@ -41,6 +41,8 @@
                                     <th>Concepto</th>
                                     <th>Proveedor</th>
                                     <th>Comentarios</th>
+                                    <th width="20%">Sub-Total</th>
+                                    <th width="20%">I.V.A. {{ egreso.iva }}%</th>
                                     <th width="20%">Importe</th>
                                 </tr>
                                 </thead>
@@ -50,11 +52,27 @@
                                         <td>{{ entrada.concepto.descripcion }}</td>
                                         <td>{{ entrada.proveedor.nombre }}</td>
                                         <td>{{ entrada.comentario }}</td>
+                                        <td>MX$ {{ (entrada.subtotal / 100)|number_format(2) }}</td>
+                                        <td>MX$ {{ (entrada.ivatotal / 100)|number_format(2) }}</td>
                                         <td>MX$ {{ (entrada.importe / 100)|number_format(2) }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-push-8 text-right">
+                            <h4 class="letra-azul">Sub-Total</h4>
+                            <hr>
+                            <h4>MX$ {{ (egreso.subtotal / 100)|number_format(2) }}</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-push-8 text-right">
+                            <h4 class="letra-azul">I.V.A. {{ egreso.iva }}%</h4>
+                            <hr>
+                            <h4>MX$ {{ (egreso.ivatotal / 100)|number_format(2) }}</h4>
                         </div>
                     </div>
                     <div class="row">
