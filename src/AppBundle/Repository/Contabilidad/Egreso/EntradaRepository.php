@@ -13,6 +13,8 @@ class EntradaRepository extends \Doctrine\ORM\EntityRepository
     public function getReporteEgresos($idempresa,$idconcepto,$idtipo,$inicio,$fin)
     {
         $resultado = [];
+        $granSubtotal = 0;
+        $granIvatotal = 0;
         $granTotal = 0;
         $condicion_empresa = '';
         $condicion_concepto = '';
@@ -38,22 +40,27 @@ class EntradaRepository extends \Doctrine\ORM\EntityRepository
         if($idempresa !== 0){$conceptos->setParameter('idEmisor',$idempresa);}
         if($idconcepto !== 0){$conceptos->setParameter('idConcepto',$idconcepto);}
         if($idtipo !== 0){$conceptos->setParameter('idTipo',$idtipo);}
-        dump($conceptos->getArrayResult());
         foreach ($conceptos->getArrayResult() as $concepto){
             array_push($resultado,[
                 'fecha' => $concepto['egreso']['fecha']->format('d/m/Y'),
                 'empresa' => $concepto['egreso']['empresa']['nombre'],
                 'concepto' => $concepto['concepto']['descripcion'],
                 'tipo' => $concepto['egreso']['tipo']['descripcion'],
+                'subtotal' => $this->esMoneda($concepto['subtotal']),
+                'ivatotal' => $this->esMoneda($concepto['ivatotal']),
                 'total' => $this->esMoneda($concepto['importe']),
             ]);
+            $granSubtotal+=$concepto['subtotal'];
+            $granIvatotal+=$concepto['ivatotal'];
             $granTotal+=$concepto['importe'];
         }
         array_push($resultado,[
             'fecha' => '',
             'empresa' => '',
             'concepto' => '',
-            'tipo' => '',
+            'tipo' => 'Totales:',
+            'subtotal' => $this->esMoneda($granSubtotal),
+            'ivatotal' => $this->esMoneda($granIvatotal),
             'total' => $this->esMoneda($granTotal)
         ]);
         return $resultado;
