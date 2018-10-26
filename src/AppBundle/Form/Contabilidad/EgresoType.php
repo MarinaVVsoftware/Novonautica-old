@@ -100,7 +100,36 @@ class EgresoType extends AbstractType
                 'by_reference' => false,
             ]
         );
-
+        $builder->add(
+            'iva',
+            TextType::class,
+            [
+                'label' => '% I.V.A.',
+                'attr' => ['class' => 'esdecimal'],
+            ]
+        );
+        $builder->add(
+            'subtotal',
+            MoneyType::class,
+            [
+                'label' => false,
+                'currency' => 'MXN',
+                'divisor' => 100,
+                'grouping' => true,
+                'attr' => ['class' => 'money-input'],
+            ]
+        );
+        $builder->add(
+            'ivatotal',
+            MoneyType::class,
+            [
+                'label' => false,
+                'currency' => 'MXN',
+                'divisor' => 100,
+                'grouping' => true,
+                'attr' => ['class' => 'money-input'],
+            ]
+        );
         $builder->add(
             'total',
             MoneyType::class,
@@ -109,7 +138,6 @@ class EgresoType extends AbstractType
                 'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
-                'data' => 0,
                 'attr' => ['class' => 'money-input'],
             ]
         );

@@ -34,14 +34,36 @@ class EntradaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
+            'subtotal',
+            MoneyType::class,
+            [
+                'currency' => 'MXN',
+                'divisor' => 100,
+                'grouping' => true,
+
+                'attr' => ['class' => 'money-input subtotal','readonly' => 'readonly'],
+            ]
+        );
+        $builder->add(
+            'ivatotal',
+            MoneyType::class,
+            [
+                'currency' => 'MXN',
+                'divisor' => 100,
+                'grouping' => true,
+
+                'attr' => ['class' => 'money-input ivatotal','readonly' => 'readonly'],
+            ]
+        );
+        $builder->add(
             'importe',
             MoneyType::class,
             [
                 'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
-                'data' => 0,
-                'attr' => ['class' => 'money-input'],
+
+                'attr' => ['class' => 'money-input importe'],
             ]
         );
 

@@ -61,6 +61,11 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-sm-4 col-sm-offset-8">
+                                    {{ form_row(form.iva) }}
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-sm-12">
                                     <table class="table">
                                         <thead>
@@ -71,6 +76,8 @@
                                             <th>Concepto</th>
                                             <th>Proveedor</th>
                                             <th>Comentario</th>
+                                            <th>Sub-Total</th>
+                                            <th>IVA</th>
                                             <th width="20%">Importe</th>
                                         </tr>
                                         </thead>
@@ -93,6 +100,14 @@
                                                     {{ form_errors(entrada.comentario) }}
                                                 </td>
                                                 <td>
+                                                    {{ form_widget(entrada.subtotal) }}
+                                                    {{ form_errors(entrada.subtotal) }}
+                                                </td>
+                                                <td>
+                                                    {{ form_widget(entrada.ivatotal) }}
+                                                    {{ form_errors(entrada.ivatotal) }}
+                                                </td>
+                                                <td>
                                                     {{ form_widget(entrada.importe) }}
                                                     {{ form_errors(entrada.importe) }}
                                                 </td>
@@ -100,6 +115,20 @@
                                         {% endfor %}
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-8">
+                                    <h4 class="letra-azul">Sub-Total</h4>
+                                    <hr>
+                                    {{ form_row(form.subtotal) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-sm-offset-8">
+                                    <h4 class="letra-azul">I.V.A.</h4>
+                                    <hr>
+                                    {{ form_row(form.ivatotal) }}
                                 </div>
                             </div>
                             <div class="row">
@@ -140,9 +169,13 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+      const iva = document.getElementById('appbundle_contabilidad_egreso_iva');
+      const SubtotalInput = document.getElementById('appbundle_contabilidad_egreso_subtotal');
+      const IvatotalInput = document.getElementById('appbundle_contabilidad_egreso_ivatotal');
+      const TotalInput = document.getElementById('appbundle_contabilidad_egreso_total');
       const Table = (($) => {
         const EmpresaSelector = document.getElementById('appbundle_contabilidad_egreso_empresa');
-        const TotalInput = document.getElementById('appbundle_contabilidad_egreso_total');
+
 
         class Table {
           constructor(element, prototypeHolder) {
@@ -194,7 +227,7 @@
           // Private
 
           _addListeners(row) {
-            let importe = row.cells[4].querySelector('input');
+            let importe = row.cells[6].querySelector('input');
             let $proveedor = $(row).find('td:nth-child(3) select');
             let $concepto = $(row).find('td:nth-child(2) select');
 
@@ -240,17 +273,19 @@
                 'input',
                 (function (event) {
                   if (!event.target.value) return;
-                  event.target.value = event.target.value.replace(/[^\d,.]/g, '');
-
-                  TotalInput.value = Array
-                      .from(this.prototypeHolder.querySelectorAll('.money-input'))
-                      .reduce((a, b) => a + Number(b.value.replace(/[^\d.]/g, '')), 0)
-                      .toFixed(2)
-                      .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-
+                  calculoXfila(event.path[3]);
+                  // let porcentajeIva = Number(iva.value);
+                  // let total = Number(event.target.value);
+                  // let ivatotal = (total * porcentajeIva)/100;
+                  // let subtotal = total - ivatotal;
+                  // event.path[3].cells[4].querySelector('input').value = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+                  // event.path[3].cells[5].querySelector('input').value = ivatotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+                  // event.target.value = event.target.value.replace(/[^\d,.]/g, '');
+                  sumatoriasTotales(this,SubtotalInput,IvatotalInput,TotalInput);
                 }).bind(this)
             );
           }
+
 
           _appendRemoveButton(element) {
             let celda = element.cells[0];
@@ -286,5 +321,39 @@
 
         return new Table('#add', '#entradas')
       })(jQuery)
+
+      iva.addEventListener(
+          'input',
+          (function (event) {
+              Table.prototypeHolder.querySelectorAll('tr').forEach(fila => calculoXfila(fila))
+              sumatoriasTotales(Table,SubtotalInput,IvatotalInput,TotalInput);
+          })
+      );
+      function calculoXfila(fila){
+          let porcentajeIva = Number(iva.value);
+          let total = Number(fila.cells[6].querySelector('input').value.replace(/[^\d.]/g, ''));
+          let ivatotal = (total * porcentajeIva)/100;
+          let subtotal = total - ivatotal;
+          fila.cells[4].querySelector('input').value = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          fila.cells[5].querySelector('input').value = ivatotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          //event.target.value = event.target.value.replace(/[^\d,.]/g, '');
+      }
+          function sumatoriasTotales(elemento,SubtotalInput,IvatotalInput,TotalInput){
+              SubtotalInput.value = Array
+                  .from(elemento.prototypeHolder.querySelectorAll('.subtotal'))
+                  .reduce((a, b) => a + Number(b.value.replace(/[^\d.]/g, '')), 0)
+                  .toFixed(2)
+                  .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+              IvatotalInput.value = Array
+                  .from(elemento.prototypeHolder.querySelectorAll('.ivatotal'))
+                  .reduce((a, b) => a + Number(b.value.replace(/[^\d.]/g, '')), 0)
+                  .toFixed(2)
+                  .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+              TotalInput.value = Array
+                  .from(elemento.prototypeHolder.querySelectorAll('.importe'))
+                  .reduce((a, b) => a + Number(b.value.replace(/[^\d.]/g, '')), 0)
+                  .toFixed(2)
+                  .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          }
     </script>
 {% endblock javascripts %}

@@ -28,6 +28,24 @@ class Entrada
      *
      * @Assert\NotNull(message="Este campo no puede estar vacio")
      *
+     * @ORM\Column(name="subtotal", type="bigint")
+     */
+    private $subtotal;
+
+    /**
+     * @var float
+     *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
+     *
+     * @ORM\Column(name="ivatotal", type="float")
+     */
+    private $ivatotal;
+
+    /**
+     * @var int
+     *
+     * @Assert\NotNull(message="Este campo no puede estar vacio")
+     *
      * @ORM\Column(name="importe", type="bigint")
      */
     private $importe;
@@ -183,5 +201,53 @@ class Entrada
     public function getProveedor()
     {
         return $this->proveedor;
+    }
+
+    /**
+     * Set subtotal.
+     *
+     * @param int $subtotal
+     *
+     * @return Entrada
+     */
+    public function setSubtotal($subtotal)
+    {
+        $this->subtotal = $subtotal;
+
+        return $this;
+    }
+
+    /**
+     * Get subtotal.
+     *
+     * @return int
+     */
+    public function getSubtotal()
+    {
+        return $this->subtotal;
+    }
+
+    /**
+     * Set ivatotal.
+     *
+     * @param int $ivatotal
+     *
+     * @return Entrada
+     */
+    public function setIvatotal($ivatotal)
+    {
+        $this->ivatotal = $ivatotal;
+
+        return $this;
+    }
+
+    /**
+     * Get ivatotal.
+     *
+     * @return int
+     */
+    public function getIvatotal()
+    {
+        return $this->ivatotal;
     }
 }

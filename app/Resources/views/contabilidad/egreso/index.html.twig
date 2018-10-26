@@ -39,6 +39,8 @@
                                 <tr>
                                     <th>Fecha</th>
                                     <th>Empresa</th>
+                                    <th>Sub-Total</th>
+                                    <th>I.V.A.</th>
                                     <th>Total</th>
                                     <th width="10%" class="no-sort"></th>
                                 </tr>
@@ -101,7 +103,7 @@
                 text: 'XLS',
                 className: 'btn btn-verde btn-sm',
                 exportOptions: {
-                  columns: [0, 1, 2]
+                  columns: [0, 1, 2,3,4]
                 }
               }
             ]
@@ -109,6 +111,8 @@
           columns: [
             {responsivePriority: 2},
             {responsivePriority: 1},
+            {responsivePriority: 2},
+            {responsivePriority: 2},
             {responsivePriority: 2},
             {responsivePriority: 0},
           ],
@@ -118,8 +122,8 @@
             detailButton.innerText = 'Detalle';
             detailButton.href = `${egreso[3]}`;
 
-            row.cells[3].innerHTML = '';
-            row.cells[3].appendChild(detailButton);
+            row.cells[5].innerHTML = '';
+            row.cells[5].appendChild(detailButton);
           }
         });
 

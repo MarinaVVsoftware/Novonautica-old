@@ -69,8 +69,11 @@ class EgresoDataTable extends AbstractDataTableHandler
         }
 
         if ($request->search->value) {
-            $query->andWhere('(LOWER(empresa.nombre) LIKE :search OR '.
-                'LOWER(e.total) LIKE :search)'
+            $query->andWhere('(LOWER(empresa.nombre) LIKE :search '.
+                ' OR LOWER(e.subtotal) LIKE :search '.
+                ' OR LOWER(e.ivatotal) LIKE :search '.
+                ' OR LOWER(e.total) LIKE :search '.
+                ') '
             );
             $query->setParameter('search', strtolower("%{$request->search->value}%"));
         }
@@ -87,8 +90,12 @@ class EgresoDataTable extends AbstractDataTableHandler
             } elseif ($order->column == 1) {
                 $query->addOrderBy('empresa.nombre', $order->dir);
             } elseif ($order->column == 2) {
-                $query->addOrderBy('e.total', $order->dir);
+                $query->addOrderBy('e.subtotal', $order->dir);
             } elseif ($order->column == 3) {
+                $query->addOrderBy('e.ivatotal', $order->dir);
+            } elseif ($order->column == 4) {
+                $query->addOrderBy('e.total', $order->dir);
+            } elseif ($order->column == 5) {
                 $query->addOrderBy('e.id', $order->dir);
             }
         }
@@ -109,6 +116,8 @@ class EgresoDataTable extends AbstractDataTableHandler
             $results->data[] = [
                 $egreso->getFecha()->format('d/m/Y'),
                 $egreso->getEmpresa()->getNombre(),
+                'MX$ '.number_format(($egreso->getSubtotal() / 100), 2),
+                'MX$ '.number_format(($egreso->getIvatotal() / 100), 2),
                 'MX$ '.number_format(($egreso->getTotal() / 100), 2),
                 $egreso->getId(),
             ];

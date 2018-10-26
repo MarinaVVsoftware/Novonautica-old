@@ -36,6 +36,27 @@ class Egreso
     /**
      * @var integer
      *
+     * @ORM\Column(name="iva", type="bigint")
+     */
+    private $iva;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="subtotal", type="bigint")
+     */
+    private $subtotal;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ivatotal", type="bigint")
+     */
+    private $ivatotal;
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="total", type="bigint")
      */
     private $total;
@@ -246,5 +267,77 @@ class Egreso
     public function setUpdateAt($updateAt)
     {
         $this->updateAt = $updateAt;
+    }
+
+    /**
+     * Set iva.
+     *
+     * @param int $iva
+     *
+     * @return Egreso
+     */
+    public function setIva($iva)
+    {
+        $this->iva = $iva;
+
+        return $this;
+    }
+
+    /**
+     * Get iva.
+     *
+     * @return int
+     */
+    public function getIva()
+    {
+        return $this->iva;
+    }
+
+    /**
+     * Set subtotal.
+     *
+     * @param int $subtotal
+     *
+     * @return Egreso
+     */
+    public function setSubtotal($subtotal)
+    {
+        $this->subtotal = $subtotal;
+
+        return $this;
+    }
+
+    /**
+     * Get subtotal.
+     *
+     * @return int
+     */
+    public function getSubtotal()
+    {
+        return $this->subtotal;
+    }
+
+    /**
+     * Set ivatotal.
+     *
+     * @param int $ivatotal
+     *
+     * @return Egreso
+     */
+    public function setIvatotal($ivatotal)
+    {
+        $this->ivatotal = $ivatotal;
+
+        return $this;
+    }
+
+    /**
+     * Get ivatotal.
+     *
+     * @return int
+     */
+    public function getIvatotal()
+    {
+        return $this->ivatotal;
     }
 }
