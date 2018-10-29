@@ -59,6 +59,12 @@ class ReporteController extends AbstractController
                 'required' => false,
                 'attr' => ['class' => 'select-buscador' ]
             ])
+            ->add('cliente',EntityType::class,[
+                'class' => 'AppBundle\Entity\Cliente',
+                'placeholder' => 'Todos',
+                'required' => false,
+                'attr' => ['class' => 'select-buscador' ]
+            ])
             ->add('buscar', SubmitType::class, [
                 'attr' => ['class' => 'btn-xs btn-azul pull-right no-loading'],
                 'label' => 'Buscar'
@@ -69,9 +75,11 @@ class ReporteController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $datos = $form->getData();
             $idproducto = $datos['producto'] ? $datos['producto']->getId() : '0';
+            $idcliente = $datos['cliente'] ? $datos['cliente']->getId() : '0';
             $em = $this->getDoctrine()->getManager();
             $ventas = $em->getRepository('AppBundle:Tienda\Venta\Concepto')
                 ->getReporteVentas($idproducto,
+                    $idcliente,
                     $datos['inicio']->format('Y-m-d'),
                     $datos['fin']->format('Y-m-d')
                 );

@@ -60,7 +60,7 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
             ->getArrayResult();
     }
 
-    public function getReporteVentas($idproducto, $inicio, $fin)
+    public function getReporteVentas($idproducto, $idcliente, $inicio, $fin)
     {
         $resultado = [];
         $granSubtotal = 0;
@@ -68,25 +68,31 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
         $granDescuento = 0;
         $granTotal = 0;
         $condicion_producto = '';
+        $condicion_cliente = '';
         if($idproducto !== '0'){$condicion_producto=' AND producto.id = :idproducto ';}
-        $qry = 'SELECT concepto, venta, producto, categoria, claveProdServ, claveUnidad '.
+        if($idcliente !== '0'){$condicion_cliente=' AND cliente.id = :idcliente ';}
+        $qry = 'SELECT concepto, venta, producto, categoria, claveProdServ, claveUnidad, cliente '.
             'FROM AppBundle:Tienda\Venta\Concepto concepto '.
             'LEFT JOIN concepto.producto producto '.
             'LEFT JOIN producto.categoria categoria '.
             'LEFT JOIN producto.claveProdServ claveProdServ '.
             'LEFT JOIN producto.claveUnidad claveUnidad '.
             'LEFT JOIN concepto.venta venta '.
+            'LEFT JOIN venta.cliente cliente '.
             'WHERE venta.createdAt BETWEEN :inicio AND :fin '.
             $condicion_producto.
+            $condicion_cliente.
             'ORDER BY venta.createdAt ASC';
         $ventas = $this->getEntityManager()->createQuery($qry);
         $ventas->setParameter('inicio',$inicio);
         $ventas->setParameter('fin',date('Y-m-d H:i:s',strtotime('+23 hour +59 minutes +59 seconds',strtotime($fin))));
         if($idproducto !== '0'){$ventas->setParameter('idproducto',$idproducto);}
+        if($idcliente !== '0'){$ventas->setParameter('idcliente',$idcliente);}
         if($ventas){
             foreach ($ventas->getArrayResult() as $venta){
                 array_push($resultado,[
                     'fecha' => $venta['venta']['createdAt']->format('d/m/Y'),
+                    'cliente' => $venta['venta']['cliente']?$venta['venta']['cliente']['nombre']:'',
                     'categoria' => $venta['producto']['categoria']['nombre'],
                     'producto' => $venta['producto']['nombre'],
                     'claveProducto' => $venta['producto']['claveProdServ']['claveProdServ'],
@@ -109,6 +115,7 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
         }else{
             array_push($resultado,[
                 'fecha' => '',
+                'cliente' => '',
                 'categoria' => '',
                 'producto' => '',
                 'claveProducto' => '',
@@ -126,6 +133,7 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
         }
         array_push($resultado,[
             'fecha' => '',
+            'cliente' => '',
             'categoria' => '',
             'producto' => '',
             'claveProducto' => '',

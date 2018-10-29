@@ -14,7 +14,7 @@
             <div class="panel-body">
                 {{ form_start(form) }}
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <div class="input-daterange" id="rangoFehas">
                             <div class="row">
                                 <div class="col-sm-6">
@@ -26,8 +26,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         {{ form_row(form.producto) }}
+                    </div>
+                    <div class="col-sm-4">
+                        {{ form_row(form.cliente) }}
                     </div>
                 </div>
                 <div class="row">
@@ -42,6 +45,7 @@
                             <thead>
                             <tr>
                                 <th>Fecha venta</th>
+                                <th>Cliente</th>
                                 <th>Categoría</th>
                                 <th>Producto</th>
                                 <th>Código barras</th>
@@ -61,6 +65,7 @@
                             {% for venta in ventas %}
                                 <tr>
                                     <td>{{ venta.fecha }}</td>
+                                    <td>{{ venta.cliente }}</td>
                                     <td>{{ venta.categoria }}</td>
                                     <td>{{ venta.producto }}</td>
                                     <td>{{ venta.codigoBarras }}</td>
