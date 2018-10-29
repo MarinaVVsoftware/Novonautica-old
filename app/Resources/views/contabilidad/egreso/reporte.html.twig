@@ -51,6 +51,8 @@
                                     <th>Fecha</th>
                                     <th>Concepto</th>
                                     <th>Tipo</th>
+                                    <th>Sub-Total</th>
+                                    <th>I.V.A.</th>
                                     <th>Total</th>
                                 </tr>
                                 </thead>
@@ -61,6 +63,8 @@
                                         <td>{{ gasto.fecha }}</td>
                                         <td>{{ gasto.concepto }}</td>
                                         <td>{{ gasto.tipo }}</td>
+                                        <td>{{ gasto.subtotal }}</td>
+                                        <td>{{ gasto.ivatotal }}</td>
                                         <td>{{ gasto.total }}</td>
                                     </tr>
                                 {% endfor %}
@@ -114,7 +118,7 @@
                         text: 'XLS',
                         className: 'btn btn-verde btn-sm',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4]
+                            columns: [0, 1, 2, 3, 4, 5, 6]
                         }
                     }
                 ]
