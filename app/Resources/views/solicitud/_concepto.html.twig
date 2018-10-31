@@ -1,0 +1,30 @@
+{% block appbundle_solicitud_concepto_widget %}
+    <tr class="servicio-agregado table-item">
+        <td valign="middle" class="text-center">
+        </td>
+        <td>
+            {{ form_widget(form.cantidad) }}
+            {{ form_errors(form.cantidad) }}
+        </td>
+        <td class="hide">
+            {{ form_widget(form.marinaServicio) }}
+            {{ form_errors(form.marinaServicio) }}
+        </td>
+        <td class="hide">
+            {{ form_widget(form.combustibleCatalogo) }}
+            {{ form_errors(form.combustibleCatalogo) }}
+        </td>
+        <td class="hide">
+            {{ form_widget(form.astilleroProducto) }}
+            {{ form_errors(form.astilleroProducto) }}
+        </td>
+        <td class="hide">
+            {{ form_widget(form.tiendaProducto) }}
+            {{ form_errors(form.tiendaProducto) }}
+        </td>
+        <td>
+            {{ form_widget(form.nota) }}
+            {{ form_errors(form.nota) }}
+        </td>
+    </tr>
+{% endblock %}

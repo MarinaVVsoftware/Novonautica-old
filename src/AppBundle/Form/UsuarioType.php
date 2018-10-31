@@ -135,6 +135,13 @@ class UsuarioType extends AbstractType
                     'Modificar' => 'AGENDA_EDIT',
                     'Eliminar' => 'AGENDA_DELETE',
                 ],
+                'Solicitud' => $this->getSolicitudRoles(),
+                'Compras' => [
+                    'Acceso' => 'ROLE_COMPRA',
+                    'Crear' => 'COMPRA_CREATE',
+                    'Modificar' => 'COMPRA_EDIT',
+                    'Eliminar' => 'COMPRA_DELETE'
+                ]
             ],
         ]);
 
@@ -201,6 +208,23 @@ class UsuarioType extends AbstractType
 
         return $roles;
     }
+    private function getSolicitudRoles()
+    {
+        $emisorRepository = $this->entityManager->getRepository(Emisor::class);
+        $roles = [
+            'Acceso' => 'ROLE_SOLICITUD',
+            'Crear' => 'SOLICITUD_CREATE',
+            'Modificar' => 'SOLICITUD_EDIT',
+            'Eliminar' => 'SOLICITUD_DELETE',
+            'Validar' => 'SOLICITUD_VALIDAR'
+        ];
+        foreach ($emisorRepository->getEmisorRoles() as $emisorRole) {
+            $alias = join('-', explode(' ', $emisorRole['alias']));
+            $roles[$emisorRole['alias']] = "VIEW_SOLICITUD_{$alias}_{$emisorRole['id']}";
+        }
+        return $roles;
+    }
+
 //    private function getGastosRoles()
 //    {
 //        $emisorRepository = $this->entityManager->getRepository(Emisor::class);

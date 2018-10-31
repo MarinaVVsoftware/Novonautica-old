@@ -1,0 +1,147 @@
+{% extends 'estructura/plantilla.twig' %}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">{{ title }}</h3>
+                            {{ compra.folio }}
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('compra_index') }}">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Fecha</label>
+                            <div class="info-input">{{ compra.fecha|date('d/m/Y') }}</div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Solicitud</label>
+                            <div class="info-input">{{ compra.solicitud.folio }}</div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Proveedor</label>
+                            <div class="info-input">{{ compra.proveedor.nombre }}</div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Creado por</label>
+                            <div class="info-input">{{ compra.creador }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Estatus validación</label>
+                            <div class="info-input">
+                                {% if compra.validado %}
+                                    Validado
+                                {% else %}
+                                    No validado
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Validado por</label>
+                            <div class="info-input">{{ compra.nombreValido }}</div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Estatus general</label>
+                            <div class="info-input">
+                                {% if compra.estatus %}
+                                    Vigente
+                                {% else %}
+                                    Ya utilizado
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Unidad</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Sub-Total</th>
+                                    <th>IVA %{{ compra.iva|number_format(2) }}</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for concepto in compra.conceptos %}
+                                    <tr>
+                                        <td>
+                                            {% if concepto.marinaServicio %}
+                                                {{ concepto.marinaServicio }}
+                                                {% set unidad = concepto.marinaServicio.claveUnidad %}
+                                            {% elseif concepto.combustibleCatalogo %}
+                                                {{ concepto.combustibleCatalogo }}
+                                                {% set unidad = concepto.combustibleCatalogo.claveUnidad %}
+                                            {% elseif concepto.astilleroProducto %}
+                                                {{ concepto.astilleroProducto }}
+                                                {% set unidad = concepto.astilleroProducto.claveUnidad %}
+                                            {% elseif concepto.tiendaProducto %}
+                                                {{ concepto.tiendaProducto }}
+                                                {% set unidad = concepto.tiendaProducto.claveUnidad %}
+                                            {% else %}
+                                                {% set unidad = '' %}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if unidad %}
+                                                {{ unidad.nombre }}
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ concepto.cantidad|number_format(2) }}</td>
+                                        <td>${{ concepto.precio|number_format(2) }} <small>MXN</small></td>
+                                        <td>${{ concepto.subtotal|number_format(2) }} <small>MXN</small></td>
+                                        <td>${{ concepto.ivatotal|number_format(2) }} <small>MXN</small></td>
+                                        <td>${{ concepto.total|number_format(2) }} <small>MXN</small></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-6 text-right">
+                            <h4 class="letra-azul">Sub-Total</h4>
+                            <hr>
+                            <h4>MX$ {{ (compra.subtotal / 100)|number_format(2) }}</h4>
+                            <h4 class="letra-azul">IVA %{{ compra.iva|number_format(2) }}</h4>
+                            <hr>
+                            <h4>MX$ {{ (compra.ivatotal / 100)|number_format(2) }}</h4>
+                            <h4 class="letra-azul">Total</h4>
+                            <hr>
+                            <h4>MX$ {{ (compra.total / 100)|number_format(2) }}</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <label>Notas</label>
+                            <div class="info-input">{{ compra.nota }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {% if is_granted(expression('has_role("COMPRA_EDIT") or (user.isAdmin())')) and compra.validado == false %}
+                                <a href="{{ path('compra_edit',{'id':compra.id }) }}" class="btn btn-azul">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    Editar
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
