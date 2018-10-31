@@ -5,7 +5,11 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\MarinaHumedaServicio;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use DataTables\DataTablesInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Marinahumedaservicio controller.
@@ -19,23 +23,29 @@ class MarinaHumedaServicioController extends Controller
      *
      * @Route("/", name="marina-humeda-servicio_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
      */
-    public function indexAction()
+    public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $marinaHumedaServicios = $em->getRepository('AppBundle:MarinaHumedaServicio')->findAll();
-
-        return $this->render('marinahumeda/servicio/index.html.twig', [
-            'title' => 'Catálogo',
-            'marinaHumedaServicios' => $marinaHumedaServicios,
-        ]);
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $results = $dataTables->handle($request, 'MarinaServicioAdicional');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getStatusCode());
+            }
+        }
+        return $this->render('marinahumeda/servicio/index.html.twig', ['title' => 'Catálogo productos/servicios']);
     }
 
     /**
      * Creates a new marinaHumedaServicio entity.
      *
-     * @Route("/new", name="marina-humeda-servicio_new")
+     * @Route("/nuevo", name="marina-humeda-servicio_new")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -79,7 +89,7 @@ class MarinaHumedaServicioController extends Controller
     /**
      * Displays a form to edit an existing marinaHumedaServicio entity.
      *
-     * @Route("/{id}/edit", name="marina-humeda-servicio_edit")
+     * @Route("/{id}/editar", name="marina-humeda-servicio_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, MarinaHumedaServicio $marinaHumedaServicio)

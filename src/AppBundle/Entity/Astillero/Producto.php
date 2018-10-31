@@ -64,6 +64,18 @@ class Producto
     private $unidad;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="existencia", type="float", nullable=true)
+     */
+    private $existencia;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizaServicio", mappedBy="producto")
+     */
+    private $ACotizacionesServicios;
+
+    /**
      * @var ClaveUnidad
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
@@ -77,10 +89,6 @@ class Producto
      */
     private $claveProdServ;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizaServicio", mappedBy="producto")
-     */
-    private $ACotizacionesServicios;
 
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Astillero\Proveedor")
@@ -291,6 +299,30 @@ class Producto
     public function getClaveProdServ()
     {
         return $this->claveProdServ;
+    }
+
+    /**
+     * Set existencia.
+     *
+     * @param float|null $existencia
+     *
+     * @return Producto
+     */
+    public function setExistencia($existencia = null)
+    {
+        $this->existencia = $existencia;
+
+        return $this;
+    }
+
+    /**
+     * Get existencia.
+     *
+     * @return float|null
+     */
+    public function getExistencia()
+    {
+        return $this->existencia;
     }
 
     /**

@@ -2,8 +2,11 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * MarinaHumedaServicio
@@ -51,6 +54,31 @@ class MarinaHumedaServicio
      * @ORM\Column(name="precio", type="integer", nullable=true)
      */
     private $precio;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="existencia", type="float", nullable=true)
+     */
+    private $existencia;
+
+    /**
+     * @var ClaveProdServ
+     *
+     * @Groups({"facturacion"})
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ")
+     */
+    private $claveProdServ;
+
+    /**
+     * @var ClaveUnidad
+     *
+     * @Groups({"facturacion"})
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
+     */
+    private $claveUnidad;
 
     public function __toString()
     {
@@ -132,4 +160,76 @@ class MarinaHumedaServicio
     }
 
 
+
+    /**
+     * Set existencia.
+     *
+     * @param float|null $existencia
+     *
+     * @return MarinaHumedaServicio
+     */
+    public function setExistencia($existencia = null)
+    {
+        $this->existencia = $existencia;
+
+        return $this;
+    }
+
+    /**
+     * Get existencia.
+     *
+     * @return float|null
+     */
+    public function getExistencia()
+    {
+        return $this->existencia;
+    }
+
+    /**
+     * Set claveProdServ.
+     *
+     * @param \AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ|null $claveProdServ
+     *
+     * @return MarinaHumedaServicio
+     */
+    public function setClaveProdServ(\AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ $claveProdServ = null)
+    {
+        $this->claveProdServ = $claveProdServ;
+
+        return $this;
+    }
+
+    /**
+     * Get claveProdServ.
+     *
+     * @return \AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ|null
+     */
+    public function getClaveProdServ()
+    {
+        return $this->claveProdServ;
+    }
+
+    /**
+     * Set claveUnidad.
+     *
+     * @param \AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad|null $claveUnidad
+     *
+     * @return MarinaHumedaServicio
+     */
+    public function setClaveUnidad(\AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad $claveUnidad = null)
+    {
+        $this->claveUnidad = $claveUnidad;
+
+        return $this;
+    }
+
+    /**
+     * Get claveUnidad.
+     *
+     * @return \AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad|null
+     */
+    public function getClaveUnidad()
+    {
+        return $this->claveUnidad;
+    }
 }

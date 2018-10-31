@@ -113,6 +113,13 @@ class Producto implements \JsonSerializable
     private $updateAt;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="existencia", type="float", nullable=true)
+     */
+    private $existencia;
+
+    /**
      * @var ClaveProdServ
      *
      * @Groups({"facturacion"})
@@ -441,5 +448,63 @@ class Producto implements \JsonSerializable
             'precioColaborador' => $this->preciocolaborador,
             'codigoBarras' => $this->codigoBarras,
         ];
+    }
+
+    /**
+     * Get isActive.
+     *
+     * @return bool
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Set updateAt.
+     *
+     * @param \DateTime $updateAt
+     *
+     * @return Producto
+     */
+    public function setUpdateAt($updateAt)
+    {
+        $this->updateAt = $updateAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updateAt.
+     *
+     * @return \DateTime
+     */
+    public function getUpdateAt()
+    {
+        return $this->updateAt;
+    }
+
+    /**
+     * Set existencia.
+     *
+     * @param float|null $existencia
+     *
+     * @return Producto
+     */
+    public function setExistencia($existencia = null)
+    {
+        $this->existencia = $existencia;
+
+        return $this;
+    }
+
+    /**
+     * Get existencia.
+     *
+     * @return float|null
+     */
+    public function getExistencia()
+    {
+        return $this->existencia;
     }
 }

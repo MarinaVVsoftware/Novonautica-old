@@ -66,6 +66,8 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
                 $q->addOrderBy('ClaveProdServ.claveProdServ', $order->dir);
             } elseif ($order->column === 6) {
                 $q->addOrderBy('ClaveUnidad.claveUnidad', $order->dir);
+            } elseif ($order->column === 7) {
+                $q->addOrderBy('ap.existencia', $order->dir);
             }
         }
 

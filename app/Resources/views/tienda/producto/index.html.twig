@@ -130,6 +130,7 @@
                                         <th>Precio Colaborador</th>
                                         <th>Imagen</th>
                                         {% if canCreate %}
+                                        <th>Existencia</th>
                                         <th>Acciones</th>
                                         {% endif %}
                                     </tr>
@@ -139,7 +140,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
     </div>
@@ -170,6 +170,7 @@
             {responsivePriority: 0},
             {% if canCreate %}
             {responsivePriority: 0},
+            {responsivePriority: 0},
             {% endif %}
           ],
           createdRow: function (row, producto) {
@@ -187,13 +188,13 @@
             row.cells[5].innerHTML = `
                     <ul class="list-unstyled">
                         <li>
-                            <a href="?producto=${producto[5].id}" class="btn btn-xs btn-block btn-azul">
+                            <a href="?producto=${producto[6].id}" class="btn btn-xs btn-block btn-azul">
                             Editar
                             </a>
                         </li>
                         <li>
-                            <a href="{{ app.request.baseUrl ~ app.request.pathInfo }}eliminar/${producto[5].id}"
-                             class="btn btn-xs btn-block ${producto[5].estatus ? 'btn-danger' : 'btn-success'}"
+                            <a href="{{ app.request.baseUrl ~ app.request.pathInfo }}eliminar/${producto[6].id}"
+                             class="btn btn-xs btn-block ${producto[6].estatus ? 'btn-danger' : 'btn-success'}"
                              >
                             ${producto[5].estatus ? 'Desactivar' : 'Activar'}
                             </a>
