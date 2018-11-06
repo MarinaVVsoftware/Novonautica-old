@@ -51,6 +51,12 @@
     </style>
 {% endblock %}
 
+{% set canCreate = false %}
+
+{% if is_granted(expression('has_role("TIENDA_PRODUCTO_CREATE") or (user.isAdmin())')) %}
+    {% set canCreate = true %}
+{% endif %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -66,6 +72,8 @@
                 </div>
             </div>
             <div class="row">
+
+                {% if canCreate %}
                 <div class="col-md-4">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
@@ -104,7 +112,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-8">
+                {% endif %}
+
+                <div class="col-md-{{ canCreate == true ? '4' : '12' }}">
                     <div class="panel panel-novo">
                         <div class="panel-heading">
                             <h3 class="panel-title">Listado de productos</h3>
@@ -119,7 +129,9 @@
                                         <th>Precio Público</th>
                                         <th>Precio Colaborador</th>
                                         <th>Imagen</th>
+                                        {% if canCreate %}
                                         <th>Acciones</th>
+                                        {% endif %}
                                     </tr>
                                     </thead>
                                 </table>
@@ -155,7 +167,9 @@
             {responsivePriority: 1},
             {responsivePriority: 1},
             {responsivePriority: 0},
+            {% if canCreate %}
             {responsivePriority: 0},
+            {% endif %}
           ],
           createdRow: function (row, producto) {
             let imgSource = producto[4]
@@ -168,6 +182,7 @@
                   </a>
                   `;
 
+            {% if canCreate %}
             row.cells[5].innerHTML = `
                     <ul class="list-unstyled">
                         <li>
@@ -183,7 +198,8 @@
                             </a>
                         </li>
                     </ul>
-                    `
+                    `;
+            {% endif %}
           },
         });
 
