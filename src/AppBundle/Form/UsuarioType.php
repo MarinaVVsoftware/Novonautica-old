@@ -106,7 +106,8 @@ class UsuarioType extends AbstractType
                 'V&V Store' => [
                     'Acceso' => 'ROLE_TIENDA',
                     'Crear' => 'TIENDA_CREATE',
-                    'Productos' => 'ROLE_TIENDA_PRODUCTO',
+                    'Ver productos' => 'ROLE_TIENDA_PRODUCTO',
+                    'Agregar productos' => 'TIENDA_PRODUCTO_CREATE',
                     'Gerente de punto de venta' => 'ROLE_ADMIN_POV',
                     'Punto de venta' => 'ROLE_TIENDA_POV',
                     'Inventario' => 'ROLE_TIENDA_INVENTARIO',
@@ -134,9 +135,9 @@ class UsuarioType extends AbstractType
                     'Modificar' => 'AGENDA_EDIT',
                     'Eliminar' => 'AGENDA_DELETE',
                 ],
-                //'GASTOS' => $this->getGastosRoles()
             ],
         ]);
+
         $builder->add('isActive', ChoiceType::class, [
             'label' => 'Estatus',
             'choices' => ['Activo' => true, 'Inactivo' => false],

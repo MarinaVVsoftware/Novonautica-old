@@ -1,26 +1,24 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Luiz
- * Date: 21/06/2018
- * Time: 04:33 PM
+ * User: inrumi
+ * Date: 11/6/18
+ * Time: 11:07 AM
  */
 
-namespace AppBundle\Security;
+namespace AppBundle\Security\Tienda;
 
 
-use AppBundle\Entity\Evento;
+use AppBundle\Entity\Tienda\Producto;
 use AppBundle\Entity\Usuario;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class AgendaVoter extends Voter
+class ProductoVoter extends Voter
 {
-    const CREATE = 'AGENDA_CREATE';
-    const EDIT = 'AGENDA_EDIT';
-    const DELETE = 'AGENDA_DELETE';
+    const CREATE = 'TIENDA_PRODUCTO_CREATE';
 
     private $decisionManager;
 
@@ -28,7 +26,6 @@ class AgendaVoter extends Voter
     {
         $this->decisionManager = $decisionManager;
     }
-
 
     /**
      * Determines if the attribute and subject are supported by this voter.
@@ -40,12 +37,14 @@ class AgendaVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, [self::CREATE, self::EDIT, self::DELETE])) {
+        if (!in_array($attribute, [self::CREATE])) {
             return false;
         }
-        if(!$subject instanceof Evento){
+
+        if (!$subject instanceof Producto) {
             return false;
         }
+
         return true;
     }
 
@@ -62,44 +61,30 @@ class AgendaVoter extends Voter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         $user = $token->getUser();
+
         if (!$user instanceof UserInterface) {
             return false;
         }
+
         if ($this->decisionManager->decide($token, ['ROLE_ADMIN'])) {
             return true;
         }
+
         switch ($attribute) {
             case self::CREATE:
                 return $this->canCreate($user);
                 break;
-            case self::EDIT:
-                return $this->canEdit($user,$subject);
-                break;
-            case self::DELETE:
-                return $this->canDelete($user, $subject);
-                break;
         }
-        throw new \LogicException('Olvidaste validar la acción?');
+
+        throw new \LogicException('Hey!, No deberias ver esto, no se esta retornando nada');
     }
-    private function canCreate(Usuario $usuario)
+
+    private function canCreate(Usuario $user)
     {
-        if (!in_array(self::CREATE, $usuario->getRoles())) {
+        if (!in_array(self::CREATE, $user->getRoles())) {
             return false;
         }
-        return true;
-    }
-    private function canEdit(Usuario $usuario,$subject)
-    {
-        if (!in_array(self::EDIT, $usuario->getRoles()) || ($usuario !== $subject->getUsuario())) {
-            return false;
-        }
-        return true;
-    }
-    private function canDelete(Usuario $usuario, $subject)
-    {
-        if (!in_array(self::DELETE, $usuario->getRoles()) || ($usuario !== $subject->getUsuario())) {
-            return false;
-        }
+
         return true;
     }
 }
