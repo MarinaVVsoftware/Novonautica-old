@@ -205,6 +205,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label class="control-label required" for="date-range">
+                                            Facturas en mes
+                                        </label>
+                                        <input type="text" id="date-range" required="required" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
                                     {{ form_row(form.cotizaciones) }}
                                 </div>
                             </div>
@@ -403,6 +411,9 @@
     {{ parent() }}
     <script src="{{ asset('js/cleave.min.js') }}"></script>
     <script src="{{ asset('js/auto-complete.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js') }}"></script>
     <script>
       class ElementCollection {
         constructor(addButton, prototypeHolder, elementListener) {
@@ -497,6 +508,7 @@
         const loadingState = document.getElementById('loading');
         const previewButton = document.getElementById('preview-btn');
         const facturaForm = document.querySelector('[name="appbundle_contabilidad_facturacion"]');
+        const dateInput = document.getElementById('date-range');
         const cotizacionSelect = document.getElementById('appbundle_contabilidad_facturacion_cotizaciones');
         const folioInput = document.getElementById('appbundle_contabilidad_facturacion_folio');
         const clienteSelect = document.getElementById('appbundle_contabilidad_facturacion_cliente');
@@ -516,6 +528,15 @@
 
         const totalImporteImpuestosInput = new Cleave('#appbundle_contabilidad_facturacion_importe', {numeral: true});
         const totalImpuestosInput = new Cleave('#appbundle_contabilidad_facturacion_totalImpuestosTransladados', {numeral: true});
+
+        const $dateInputPicker = $(dateInput)
+            .datepicker({
+              format: 'MM yyyy',
+              viewMode: 'months',
+              minViewMode: 'months',
+              language: 'es'
+            })
+            .datepicker('setDate', new Date());
 
         // Incializacion
 
@@ -574,7 +595,6 @@
           $receptorSelect2.empty();
           conceptoTable.clear();
 
-          getCotizaciones(emisorSelect.value, this.value);
           loadingState.style.display = 'block';
 
           $.get('clientes/rfc', {q: this.value})
@@ -587,7 +607,14 @@
               })
               .always(() => {
                 loadingState.style.display = 'none';
-              })
+              });
+
+          getCotizaciones(emisorSelect.value, this.value);
+
+        });
+
+        $dateInputPicker.on('changeDate', function () {
+          getCotizaciones(emisorSelect.value, $clienteSelect2.val());
         });
 
         cotizacionSelect.addEventListener('change', function () {
@@ -595,45 +622,49 @@
 
           loadingState.style.display = 'block';
 
-          $.get('conceptos', {e: emisorSelect.value, c: this.value})
-              .done(({results}) => {
-                conceptoTable.clear();
-                if (!results.length) return;
+          $.get('conceptos',
+              {
+                e: emisorSelect.value,
+                c: this.value,
+                m: moment($dateInputPicker.datepicker('getDate')).format('YYYY-MM-DD')
+              }
+          ).done(({results}) => {
+            conceptoTable.clear();
+            if (!results.length) return;
 
-                for (const result of results) {
-                  const conceptoImporte = Number(result.conceptoImporte / 1.16);
-                  const conceptoValorUnitario = (conceptoImporte / result.conceptoCantidad);
-                  const conceptoIVA = (conceptoImporte * .16);
+            for (const result of results) {
+              const conceptoImporte = Number(result.conceptoImporte / 1.16);
+              const conceptoValorUnitario = (conceptoImporte / result.conceptoCantidad);
+              const conceptoIVA = (conceptoImporte * .16);
 
-                  let element = conceptoTable.addElement();
+              let element = conceptoTable.addElement();
 
-                  element.cells[0].firstElementChild.value = result.conceptoCantidad;
-                  element.cells[1].firstElementChild.value = result.conceptoUnidad || result.cuDescripcion || 'NA';
-                  element.cells[4].firstElementChild.value = result.conceptoDescripcion;
-                  element.cells[5].firstElementChild.value = moneyFormat(conceptoValorUnitario / 100);
-                  element.cells[6].firstElementChild.value = moneyFormat(conceptoImporte / 100);
-                  element.cells[7].firstElementChild.value = element.cells[6].firstElementChild.value;
-                  element.cells[11].firstElementChild.value = moneyFormat(conceptoIVA / 100);
+              element.cells[0].firstElementChild.value = result.conceptoCantidad;
+              element.cells[1].firstElementChild.value = result.conceptoUnidad || result.cuDescripcion || 'NA';
+              element.cells[4].firstElementChild.value = result.conceptoDescripcion;
+              element.cells[5].firstElementChild.value = moneyFormat(conceptoValorUnitario / 100);
+              element.cells[6].firstElementChild.value = moneyFormat(conceptoImporte / 100);
+              element.cells[7].firstElementChild.value = element.cells[6].firstElementChild.value;
+              element.cells[11].firstElementChild.value = moneyFormat(conceptoIVA / 100);
 
-                  if (result.cpsId && result.cpsDescripcion) {
-                    $(element.cells[2].firstElementChild)
-                        .append(new Option(result.cpsDescripcion, result.cpsId, true, true))
-                        .trigger('change');
-                  }
+              if (result.cpsId && result.cpsDescripcion) {
+                $(element.cells[2].firstElementChild)
+                    .append(new Option(result.cpsDescripcion, result.cpsId, true, true))
+                    .trigger('change');
+              }
 
-                  if (result.cuId && result.cuDescripcion) {
-                    $(element.cells[3].firstElementChild)
-                        .append(new Option(result.cuDescripcion, result.cuId, true, true))
-                        .trigger('change');
-                  }
+              if (result.cuId && result.cuDescripcion) {
+                $(element.cells[3].firstElementChild)
+                    .append(new Option(result.cuDescripcion, result.cuId, true, true))
+                    .trigger('change');
+              }
 
-                }
+            }
 
-                computeConceptos();
-              })
-              .always(() => {
-                loadingState.style.display = 'none'
-              });
+            computeConceptos();
+          }).always(() => {
+            loadingState.style.display = 'none'
+          });
         });
 
         previewButton.addEventListener('click', function () {
@@ -668,22 +699,26 @@
           loadingState.style.display = 'block';
           cotizacionSelect.innerHTML = '';
 
-          $.get('cotizaciones', {e: emisor, c: cliente})
-              .done(({results}) => {
-                if (!results.length) {
-                  cotizacionSelect.appendChild(new Option('No se encontraron cotizaciones', ''));
-                  return;
-                }
+          $.get('cotizaciones',
+              {
+                e: emisor,
+                c: cliente,
+                m: moment($dateInputPicker.datepicker('getDate')).format('YYYY-MM-DD')
+              }
+          ).done(({results}) => {
+            if (!results.length) {
+              cotizacionSelect.appendChild(new Option('No se encontraron cotizaciones', ''));
+              return;
+            }
 
-                cotizacionSelect.appendChild(new Option('Seleccione una cotización', ''));
+            cotizacionSelect.appendChild(new Option('Seleccione una cotización', ''));
 
-                for (const result of results) {
-                  cotizacionSelect.appendChild(new Option(result.text, result.id));
-                }
-              })
-              .always(() => {
-                loadingState.style.display = 'none';
-              });
+            for (const result of results) {
+              cotizacionSelect.appendChild(new Option(result.text, result.id));
+            }
+          }).always(() => {
+            loadingState.style.display = 'none';
+          });
         }
 
         function computeConceptos() {

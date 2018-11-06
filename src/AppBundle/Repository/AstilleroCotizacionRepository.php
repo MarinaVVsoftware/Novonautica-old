@@ -409,7 +409,7 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
         return $resultado;
     }
 
-    public function getCotizacionesFromCliente($client)
+    public function getCotizacionesFromCliente($client, $inicio, $fin)
     {
         $manager = $this->getEntityManager();
         $cotizaciones = $manager->createQuery(
@@ -423,7 +423,10 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
             'LEFT JOIN cotizaciones.barco barco '.
             'WHERE IDENTITY(cotizaciones.cliente) = :client '.
             'AND cotizaciones.factura IS NULL '.
-            'AND cotizaciones.validacliente = 2')
+            'AND cotizaciones.validacliente = 2'.
+            'AND cotizaciones.fecharegistro BETWEEN :inicio AND :fin')
+            ->setParameter('inicio', $inicio)
+            ->setParameter('fin', $fin)
             ->setParameter('client', $client);
 
         return $cotizaciones->getArrayResult();

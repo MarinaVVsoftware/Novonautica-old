@@ -16,9 +16,12 @@ class CombustibleRepository extends \Doctrine\ORM\EntityRepository
      *
      * @param $client
      *
+     * @param $inicio
+     * @param $fin
+     *
      * @return array
      */
-    public function getCotizacionesFromCliente($client)
+    public function getCotizacionesFromCliente($client, $inicio, $fin)
     {
         $manager = $this->getEntityManager();
         $cotizaciones = $manager->createQuery(
@@ -30,7 +33,10 @@ class CombustibleRepository extends \Doctrine\ORM\EntityRepository
             'END) AS text '.
             'FROM AppBundle:Combustible cotizaciones '.
             'LEFT JOIN cotizaciones.barco barco '.
-            'WHERE IDENTITY(cotizaciones.cliente) = :client')
+            'WHERE IDENTITY(cotizaciones.cliente) = :client'.
+            'AND cotizaciones.fecha BETWEEN :inicio AND :fin')
+            ->setParameter('inicio', $inicio)
+            ->setParameter('fin', $fin)
             ->setParameter('client', $client);
 
         return $cotizaciones->getArrayResult();
