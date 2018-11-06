@@ -27,10 +27,12 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
      * El metodo de getOneWithCatalogo es para las facturaciones genera los conceptos de la tabla
      *
      * @param $id
+     * @param null $inicio
+     * @param null $fin
      *
      * @return array
      */
-    public function getOneWithCatalogo($id)
+    public function getOneWithCatalogo($id, $inicio = null, $fin = null)
     {
         $manager = $this->getEntityManager();
 
@@ -47,12 +49,22 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
         if ($id === 'ALL') {
             // Fixme el valor fijo de nuevo donde se espera que el cliente publico en general sea igual a 413
 
-            return $manager->createQuery(
-                $pseudoQuery.
-                'LEFT JOIN concepto.venta venta '.
-                'WHERE IDENTITY(venta.cliente) = 413 '.
-                'AND venta.factura IS NULL')
-                ->getArrayResult();
+            $pseudoQuery .= 'LEFT JOIN concepto.venta venta WHERE IDENTITY(venta.cliente) = 413 AND venta.factura IS NULL';
+
+            if ($inicio && $fin) {
+                $pseudoQuery .= ' AND venta.createdAt BETWEEN :inicio AND :fin';
+            }
+
+            $query = $manager->createQuery($pseudoQuery);
+
+            if ($inicio && $fin) {
+                return $query
+                    ->setParameter('inicio', $inicio)
+                    ->setParameter('fin', $fin)
+                    ->getArrayResult();
+            }
+
+            return $query->getArrayResult();
         }
 
         return $manager->createQuery($pseudoQuery.'WHERE concepto.venta = :id')
@@ -69,8 +81,12 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
         $granTotal = 0;
         $condicion_producto = '';
         $condicion_cliente = '';
-        if($idproducto !== '0'){$condicion_producto=' AND producto.id = :idproducto ';}
-        if($idcliente !== '0'){$condicion_cliente=' AND cliente.id = :idcliente ';}
+        if ($idproducto !== '0') {
+            $condicion_producto = ' AND producto.id = :idproducto ';
+        }
+        if ($idcliente !== '0') {
+            $condicion_cliente = ' AND cliente.id = :idcliente ';
+        }
         $qry = 'SELECT concepto, venta, producto, categoria, claveProdServ, claveUnidad, cliente '.
             'FROM AppBundle:Tienda\Venta\Concepto concepto '.
             'LEFT JOIN concepto.producto producto '.
@@ -84,15 +100,20 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
             $condicion_cliente.
             'ORDER BY venta.createdAt ASC';
         $ventas = $this->getEntityManager()->createQuery($qry);
-        $ventas->setParameter('inicio',$inicio);
-        $ventas->setParameter('fin',date('Y-m-d H:i:s',strtotime('+23 hour +59 minutes +59 seconds',strtotime($fin))));
-        if($idproducto !== '0'){$ventas->setParameter('idproducto',$idproducto);}
-        if($idcliente !== '0'){$ventas->setParameter('idcliente',$idcliente);}
-        if($ventas){
-            foreach ($ventas->getArrayResult() as $venta){
-                array_push($resultado,[
+        $ventas->setParameter('inicio', $inicio);
+        $ventas->setParameter('fin',
+            date('Y-m-d H:i:s', strtotime('+23 hour +59 minutes +59 seconds', strtotime($fin))));
+        if ($idproducto !== '0') {
+            $ventas->setParameter('idproducto', $idproducto);
+        }
+        if ($idcliente !== '0') {
+            $ventas->setParameter('idcliente', $idcliente);
+        }
+        if ($ventas) {
+            foreach ($ventas->getArrayResult() as $venta) {
+                array_push($resultado, [
                     'fecha' => $venta['venta']['createdAt']->format('d/m/Y'),
-                    'cliente' => $venta['venta']['cliente']?$venta['venta']['cliente']['nombre']:'',
+                    'cliente' => $venta['venta']['cliente'] ? $venta['venta']['cliente']['nombre'] : '',
                     'categoria' => $venta['producto']['categoria']['nombre'],
                     'producto' => $venta['producto']['nombre'],
                     'claveProducto' => $venta['producto']['claveProdServ']['claveProdServ'],
@@ -107,13 +128,13 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
                     'descuento' => $this->esMoneda($venta['descuento']),
                     'total' => $this->esMoneda($venta['total']),
                 ]);
-                $granSubtotal+=$venta['subtotal'];
-                $granIva+=$venta['iva'];
-                $granDescuento+=$venta['descuento'];
-                $granTotal+=$venta['total'];
+                $granSubtotal += $venta['subtotal'];
+                $granIva += $venta['iva'];
+                $granDescuento += $venta['descuento'];
+                $granTotal += $venta['total'];
             }
-        }else{
-            array_push($resultado,[
+        } else {
+            array_push($resultado, [
                 'fecha' => '',
                 'cliente' => '',
                 'categoria' => '',
@@ -131,7 +152,7 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
                 'total' => $this->esMoneda(0),
             ]);
         }
-        array_push($resultado,[
+        array_push($resultado, [
             'fecha' => '',
             'cliente' => '',
             'categoria' => '',
@@ -148,9 +169,12 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
             'descuento' => $this->esMoneda($granDescuento),
             'total' => $this->esMoneda($granTotal),
         ]);
+
         return $resultado;
     }
-    function esMoneda($valor){
-        return '$'.number_format($valor/100,2);
+
+    function esMoneda($valor)
+    {
+        return '$'.number_format($valor / 100, 2);
     }
 }

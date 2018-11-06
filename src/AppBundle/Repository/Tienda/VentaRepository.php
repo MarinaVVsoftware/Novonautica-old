@@ -16,9 +16,12 @@ class VentaRepository extends \Doctrine\ORM\EntityRepository
      *
      * @param $client
      *
+     * @param $inicio
+     * @param $fin
+     *
      * @return array
      */
-    public function getCotizacionesFromCliente($client)
+    public function getCotizacionesFromCliente($client, $inicio, $fin)
     {
         $manager = $this->getEntityManager();
 
@@ -27,7 +30,10 @@ class VentaRepository extends \Doctrine\ORM\EntityRepository
             'FROM AppBundle:Tienda\Venta cotizaciones '.
             'LEFT JOIN cotizaciones.cliente cliente '.
             'WHERE IDENTITY(cotizaciones.cliente) = :client '.
-            'AND cotizaciones.factura IS NULL ')
+            'AND cotizaciones.factura IS NULL '.
+            'AND cotizaciones.createdAt BETWEEN :inicio AND :fin')
+            ->setParameter('inicio', $inicio)
+            ->setParameter('fin', $fin)
             ->setParameter('client', $client)
             ->getArrayResult();
 

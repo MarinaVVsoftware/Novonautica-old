@@ -158,7 +158,7 @@ class FacturacionController extends Controller
 
                 if ($cotizacionIdentifier === 'ALL') {
                     $cotizaciones = $cotizacionRepository->findBy([
-                        'cliente' => $factura->getCliente()
+                        'cliente' => $factura->getCliente(),
                     ]);
                 }
 
@@ -280,11 +280,13 @@ class FacturacionController extends Controller
     {
         $emisor = $request->query->get('e');
         $cliente = $request->query->get('c');
+        $fecha = $request->query->get('m');
+
         $manager = $this->getDoctrine()->getManager();
 
         return $this->json(
             [
-                'results' => self::getCotizaciones($manager, $emisor, $cliente),
+                'results' => self::getCotizaciones($manager, $emisor, $cliente, $fecha),
             ]
         );
     }
@@ -298,12 +300,17 @@ class FacturacionController extends Controller
 
         $emisor = $request->query->get('e');
         $cotizacion = $request->query->get('c');
+        $fecha = $request->query->get('m');
+
+        $inicio = \DateTime::createFromFormat('Y-m-d', $fecha)->setTime(0, 0, 0);
+        $fin = (clone $inicio)->modify('last day of this month');
 
         switch ($emisor) {
             case 3:
                 $marinaRepository = $manager->getRepository(MarinaHumedaCotizaServicios::class);
                 $conceptos = array_map(function ($concepto) {
                     $concepto['conceptoImporte'] = (int)(($concepto['conceptoImporte'] / 100) * ($concepto['conceptoDolar'] / 100) * 100);
+
                     return $concepto;
                 }, $marinaRepository->getOneWithCatalogo($cotizacion));
                 break;
@@ -317,7 +324,9 @@ class FacturacionController extends Controller
                 break;
             case 7:
                 $tiendaRepository = $manager->getRepository(Venta\Concepto::class);
-                $conceptos = $tiendaRepository->getOneWithCatalogo($cotizacion);
+                $conceptos = $fecha
+                    ? $tiendaRepository->getOneWithCatalogo($cotizacion, $inicio, $fin)
+                    : $tiendaRepository->getOneWithCatalogo($cotizacion);
                 break;
             default:
                 $conceptos = [];
@@ -346,7 +355,7 @@ class FacturacionController extends Controller
 
         return $this->json(
             [
-                'results' => $suggestions
+                'results' => $suggestions,
             ]
         );
     }
@@ -447,24 +456,27 @@ class FacturacionController extends Controller
         );
     }
 
-    public static function getCotizaciones($manager, $emisor, $cliente)
+    public static function getCotizaciones($manager, $emisor, $cliente, $fecha)
     {
+        $inicio = \DateTime::createFromFormat('Y-m-d', $fecha)->setTime(0, 0, 0);
+        $fin = (clone $inicio)->modify('last day of this month');
+
         switch ($emisor) {
             case 3:
                 $marinaRepository = $manager->getRepository(MarinaHumedaCotizacion::class);
-                $cotizaciones = $marinaRepository->getCotizacionesFromCliente($cliente);
+                $cotizaciones = $marinaRepository->getCotizacionesFromCliente($cliente, $inicio, $fin);
                 break;
             case 4:
                 $combustibleRepository = $manager->getRepository(Combustible::class);
-                $cotizaciones = $combustibleRepository->getCotizacionesFromCliente($cliente);
+                $cotizaciones = $combustibleRepository->getCotizacionesFromCliente($cliente, $inicio, $fin);
                 break;
             case 5:
                 $astilleroRepository = $manager->getRepository(AstilleroCotizacion::class);
-                $cotizaciones = $astilleroRepository->getCotizacionesFromCliente($cliente);
+                $cotizaciones = $astilleroRepository->getCotizacionesFromCliente($cliente, $inicio, $fin);
                 break;
             case 7:
                 $tiendaRepository = $manager->getRepository(Venta::class);
-                $cotizaciones = $tiendaRepository->getCotizacionesFromCliente($cliente);
+                $cotizaciones = $tiendaRepository->getCotizacionesFromCliente($cliente, $inicio, $fin);
                 break;
             default:
                 $cotizaciones = [];
