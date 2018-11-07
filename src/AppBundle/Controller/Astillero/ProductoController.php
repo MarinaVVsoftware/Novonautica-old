@@ -3,21 +3,17 @@
 namespace AppBundle\Controller\Astillero;
 
 use AppBundle\Entity\Astillero\Producto;
+use AppBundle\Entity\Astillero\Proveedor;
+use AppBundle\Form\Astillero\ProductoType;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use DataTables\DataTablesInterface;
-use Proxies\__CG__\AppBundle\Entity\Astillero\Servicio;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Producto controller.
@@ -27,67 +23,84 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class ProductoController extends Controller
 {
     /**
-     * Lists all producto entities.
-     *
      * @Route("/", name="astillero_producto_index")
-     * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
+     */
+    public function indexAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $productos = $em->getRepository(Producto::class);
+        $proveedoresRepository = $em->getRepository(Proveedor::class);
+
+        $producto = $request->query->get('producto') ?: null;
+        $producto = $producto ? $productos->find($producto) : new Producto();
+
+        if (!$producto->getId()) {
+            $producto->addProveedore(
+                $proveedoresRepository->find(1)
+            );
+        }
+
+        $form = $this->createForm(ProductoType::class, $producto);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            dump($producto);
+//            $em->persist($producto);
+//            $em->flush();
+
+//            return $this->redirect($request->headers->get('referer'));
+        }
+
+        return $this->render(
+            'astillero/producto/index.html.twig',
+            [
+                'title' => 'Astillero Productos',
+                'producto' => $producto,
+                'form' => $form->createView(),
+                'deleteForm' => $producto->getId() ? $this->createDeleteForm($producto)->createView() : null,
+            ]
+        );
+    }
+
+    /**
+     * @Route("/productos")
      *
      * @param Request $request
      * @param DataTablesInterface $dataTables
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
+     * @return JsonResponse|Response
      */
-    public function indexAction(Request $request, DataTablesInterface $dataTables)
+    public function indexDataAction(Request $request, DataTablesInterface $dataTables)
     {
-        if ($request->isXmlHttpRequest()) {
-            try {
-                $results = $dataTables->handle($request, 'AstilleroProducto');
-                return $this->json($results);
-            } catch (HttpException $e) {
-                return $this->json($e->getMessage(), $e->getStatusCode());
-            }
-            }
+        try {
+            $results = $dataTables->handle($request, 'AstilleroProducto');
 
-        return $this->render('astillero/producto/index.html.twig', ['title' => 'Astillero Productos']);
-    }
-
-    /**
-     * Creates a new producto entity.
-     *
-     * @Route("/nuevo", name="astillero_producto_new")
-     * @Method({"GET", "POST"})
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse|Response
-     */
-    public function newAction(Request $request)
-    {
-        $producto = new Producto();
-        $form = $this->createForm('AppBundle\Form\Astillero\ProductoType', $producto);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($producto);
-            $em->flush();
-
-            return $this->redirectToRoute('astillero_producto_index');
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
         }
-
-        return $this->render('astillero/producto/new.html.twig', [
-            'producto' => $producto,
-            'form' => $form->createView(),
-            'title' => 'Astillero Nuevo Producto'
-        ]);
     }
 
     /**
-     * @Route("/buscarproducto/{id}.{_format}", name="ajax_astillero_busca_producto", defaults={"_format"="json"})
+     * @Route(
+     *     "/buscarproducto/{id}.{_format}",
+     *     name="ajax_astillero_busca_producto",
+     *     defaults={"_format"="json"}
+     *     )
+     * @param $id
      *
+     * @return JsonResponse
      */
-    public function buscarAction(Request $request, $id){
+    public function buscarAction($id)
+    {
         $productoRepository = $this->getDoctrine()->getRepository(Producto::class);
+
         return new JsonResponse(
             $productoRepository->obtenerProducto($id),
             JsonResponse::HTTP_OK
@@ -95,61 +108,7 @@ class ProductoController extends Controller
     }
 
     /**
-     * Finds and displays a producto entity.
-     *
-     * @Route("/{id}", name="astillero_producto_show")
-     * @Method("GET")
-     * @param Producto $producto
-     * @return Response
-     */
-    public function showAction(Producto $producto)
-    {
-        $deleteForm = $this->createDeleteForm($producto);
-
-        return $this->render('astillero/producto/show.html.twig', array(
-            'producto' => $producto,
-            'delete_form' => $deleteForm->createView(),
-            'title' => 'Astillero Detalle Producto',
-        ));
-    }
-
-    /**
-     * Displays a form to edit an existing producto entity.
-     *
-     * @Route("/{id}/editar", name="astillero_producto_edit")
-     * @Method({"GET", "POST"})
-     *
-     *
-     * @param Request $request
-     * @param Producto $producto
-     *
-     * @return RedirectResponse|Response
-     */
-    public function editAction(Request $request, Producto $producto)
-    {
-        $deleteForm = $this->createDeleteForm($producto);
-        $editForm = $this->createForm('AppBundle\Form\Astillero\ProductoType', $producto);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('astillero_producto_index');
-        }
-
-        return $this->render('astillero/producto/edit.html.twig', array(
-            'producto' => $producto,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            'title' => 'Astillero Editar Producto'
-        ));
-    }
-
-    /**
-     * Deletes a producto entity.
-     *
-     * @Route("/{id}", name="astillero_producto_delete")
-     * @Method("DELETE")
+     * @Route("/{id}", name="astillero_producto_delete", methods={"DELETE"})
      *
      * @param Request $request
      * @param Producto $producto
@@ -162,17 +121,24 @@ class ProductoController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try{
+            try {
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($producto);
                 $em->flush();
+
                 return $this->redirectToRoute('astillero_producto_index');
-            }catch (ForeignKeyConstraintViolationException $e){
-                $this->addFlash('error','Error!, No se puede borrar este producto, esta siendo utilizado en las cotizaciones');
+            } catch (ForeignKeyConstraintViolationException $e) {
+                $this->addFlash(
+                    'error',
+                    'Error!, No se puede borrar este producto, esta siendo utilizado en las cotizaciones'
+                );
             }
 
         }
-        return $this->redirectToRoute('astillero_producto_edit',['id'=>$producto->getId()]);
+
+        return $this->redirectToRoute(
+            $request->headers->get('referer')
+        );
     }
 
     /**
@@ -185,9 +151,13 @@ class ProductoController extends Controller
     private function createDeleteForm(Producto $producto)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('astillero_producto_delete', ['id' => $producto->getId()]))
+            ->setAction(
+                $this->generateUrl(
+                    'astillero_producto_delete',
+                    ['id' => $producto->getId()]
+                )
+            )
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

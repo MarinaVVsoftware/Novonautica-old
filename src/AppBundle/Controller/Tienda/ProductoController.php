@@ -30,11 +30,10 @@ class ProductoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $productos = $em->getRepository('AppBundle:Tienda\Producto');
+        $productos = $em->getRepository(Producto::class);
 
         $producto = $request->query->get('producto') ?: null;
         $producto = $producto ? $productos->find($producto) : new Producto();
-        $listado = $productos->findAll();
 
         $form = $this->createForm('AppBundle\Form\Tienda\ProductoType', $producto);
         $form->handleRequest($request);
@@ -49,7 +48,6 @@ class ProductoController extends Controller
         return $this->render(':tienda/producto:index.html.twig', [
             'title' => 'Productos',
             'producto' => $producto,
-            'productos' => $listado,
             'form' => $form->createView(),
         ]);
     }

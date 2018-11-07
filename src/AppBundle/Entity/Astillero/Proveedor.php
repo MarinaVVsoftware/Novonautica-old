@@ -144,11 +144,6 @@ class Proveedor implements UserInterface, \Serializable
     private $Trabajos;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Astillero\Producto", mappedBy="proveedor")
-     */
-    private $productos;
-
-    /**
      * Constructor
      */
     public function __construct()
@@ -568,26 +563,6 @@ class Proveedor implements UserInterface, \Serializable
     }
 
     /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     *
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     *
-     * @return void
-     * @since 5.1.0
-     */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->nombre,
-            $this->password,
-            ) = unserialize($serialized, ['allowed_classes' => false]);
-    }
-
-    /**
      * Set isActive.
      *
      * @param bool $isActive
@@ -612,38 +587,22 @@ class Proveedor implements UserInterface, \Serializable
     }
 
     /**
-     * Add producto.
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
      *
-     * @param \AppBundle\Entity\Astillero\Producto $producto
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
      *
-     * @return Proveedor
+     * @return void
+     * @since 5.1.0
      */
-    public function addProducto(\AppBundle\Entity\Astillero\Producto $producto)
+    public function unserialize($serialized)
     {
-        $this->productos[] = $producto;
-
-        return $this;
-    }
-
-    /**
-     * Remove producto.
-     *
-     * @param \AppBundle\Entity\Astillero\Producto $producto
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeProducto(\AppBundle\Entity\Astillero\Producto $producto)
-    {
-        return $this->productos->removeElement($producto);
-    }
-
-    /**
-     * Get productos.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getProductos()
-    {
-        return $this->productos;
+        list (
+            $this->id,
+            $this->nombre,
+            $this->password,
+            ) = unserialize($serialized, ['allowed_classes' => false]);
     }
 }
