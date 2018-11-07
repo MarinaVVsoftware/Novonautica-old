@@ -2,10 +2,10 @@
 
 namespace AppBundle\Entity\Solicitud;
 
-use AppBundle\Entity\Astillero\Producto;
-use AppBundle\Entity\MarinaHumedaServicio;
+
 use AppBundle\Entity\Solicitud;
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Entity\Astillero\Proveedor;
 
 
 /**
@@ -33,11 +33,32 @@ class Concepto
     private $cantidad;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="nota", type="string", length=255, nullable=true)
+     * @ORM\Column(name="precio", type="bigint")
      */
-    private $nota;
+    private $precio;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="subtotal", type="bigint")
+     */
+    private $subtotal;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="ivatotal", type="bigint")
+     */
+    private $ivatotal;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="total", type="bigint")
+     */
+    private $total;
 
     /**
      * @var bool
@@ -82,10 +103,21 @@ class Concepto
     private $tiendaProducto;
 
     /**
+     * @var Proveedor
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Astillero\Proveedor")
+     */
+    private $proveedor;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
+        $this->precio = 0;
+        $this->subtotal = 0;
+        $this->ivatotal = 0;
+        $this->total = 0;
         $this->solicitado = false;
     }
 
@@ -268,26 +300,122 @@ class Concepto
     }
 
     /**
-     * Set nota.
+     * Set precio.
      *
-     * @param string|null $nota
+     * @param int $precio
      *
      * @return Concepto
      */
-    public function setNota($nota = null)
+    public function setPrecio($precio)
     {
-        $this->nota = $nota;
+        $this->precio = $precio;
 
         return $this;
     }
 
     /**
-     * Get nota.
+     * Get precio.
      *
-     * @return string|null
+     * @return int
      */
-    public function getNota()
+    public function getPrecio()
     {
-        return $this->nota;
+        return $this->precio;
+    }
+
+    /**
+     * Set subtotal.
+     *
+     * @param int $subtotal
+     *
+     * @return Concepto
+     */
+    public function setSubtotal($subtotal)
+    {
+        $this->subtotal = $subtotal;
+
+        return $this;
+    }
+
+    /**
+     * Get subtotal.
+     *
+     * @return int
+     */
+    public function getSubtotal()
+    {
+        return $this->subtotal;
+    }
+
+    /**
+     * Set ivatotal.
+     *
+     * @param int $ivatotal
+     *
+     * @return Concepto
+     */
+    public function setIvatotal($ivatotal)
+    {
+        $this->ivatotal = $ivatotal;
+
+        return $this;
+    }
+
+    /**
+     * Get ivatotal.
+     *
+     * @return int
+     */
+    public function getIvatotal()
+    {
+        return $this->ivatotal;
+    }
+
+    /**
+     * Set total.
+     *
+     * @param int $total
+     *
+     * @return Concepto
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
+
+        return $this;
+    }
+
+    /**
+     * Get total.
+     *
+     * @return int
+     */
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    /**
+     * Set proveedor.
+     *
+     * @param \AppBundle\Entity\Astillero\Proveedor|null $proveedor
+     *
+     * @return Concepto
+     */
+    public function setProveedor(\AppBundle\Entity\Astillero\Proveedor $proveedor = null)
+    {
+        $this->proveedor = $proveedor;
+
+        return $this;
+    }
+
+    /**
+     * Get proveedor.
+     *
+     * @return \AppBundle\Entity\Astillero\Proveedor|null
+     */
+    public function getProveedor()
+    {
+        return $this->proveedor;
     }
 }

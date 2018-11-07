@@ -654,32 +654,32 @@
             {% endif %}
             <!-- END CONTABILIDAD -->
 
-            <!-- START SOLICITUDES-->
+            <!-- START SOLICITUD -->
             {% if is_granted('ROLE_SOLICITUD') %}
                 <li class="treeview {{ path.check('solicitud_') }}">
                     <a href="#">
-                        <i class="fa fa-external-link"></i> <span>Solicitudes</span>
+                        <i class="fa fa-file-text-o"></i> <span>Solicitudes</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{ path.check('solicitud_index') }} {{ path.check('solicitud_show') }}">
                             <a href="{{ path('solicitud_index') }}">
-                                <i class="fa fa-circle-o"></i> <span>Listado</span>
+                                <i class="fa fa-minus"></i> <span>Listado</span>
                             </a>
                         </li>
                         {% if is_granted(expression('has_role("SOLICITUD_CREATE") or (user.isAdmin())')) %}
                             <li class="{{ path.check('solicitud_new') }}">
                                 <a href="{{ path('solicitud_new') }}">
-                                    <i class="fa fa-circle-o"></i> <span>Nuevo</span>
+                                    <i class="fa fa-minus"></i> <span>Nuevo</span>
                                 </a>
                             </li>
                         {% endif %}
                     </ul>
                 </li>
             {% endif %}
-            <!-- END SOLICITUDES -->
+            <!-- END SOLICITUD -->
 
-            <!-- START COMPRAS-->
+            <!-- START COMPRAS -->
             {% if is_granted('ROLE_COMPRA') %}
                 <li class="treeview {{ path.check('compra_') }}">
                     <a href="#">
@@ -687,22 +687,33 @@
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{ path.check('compra_index') }} {{ path.check('compra_show') }}">
+                        <li class="{{ path.check('compra_') }}">
                             <a href="{{ path('compra_index') }}">
                                 <i class="fa fa-circle-o"></i> <span>Listado</span>
                             </a>
                         </li>
-                        {% if is_granted(expression('has_role("COMPRA_CREATE") or (user.isAdmin())')) %}
-                            <li class="{{ path.check('compra_new') }}">
-                                <a href="{{ path('compra_new') }}">
-                                    <i class="fa fa-circle-o"></i> <span>Nuevo</span>
-                                </a>
-                            </li>
-                        {% endif %}
                     </ul>
                 </li>
             {% endif %}
             <!-- END COMPRAS -->
+
+            <!-- START ALMACÉN-->
+            {% if is_granted('ROLE_ALMACEN') %}
+                <li class="treeview {{ path.check('almacen_') }} ">
+                    <a href="#">
+                        <i class="fa fa-external-link"></i> <span>Almacén</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ path.check('almacen_') }}">
+                            <a href="{{ path('almacen_index') }}">
+                                <i class="fa fa-circle-o"></i> <span>Listado</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            {% endif %}
+            <!-- END ALMACÉN -->
 
             <!-- START HISTORIAL CORREOS -->
             {% if is_granted('ROLE_HCORREO') %}

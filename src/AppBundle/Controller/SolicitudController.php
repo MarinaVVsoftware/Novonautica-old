@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class SolicitudController
- * @Route("solicitudes")
+ * @Route("solicitud")
  */
 class SolicitudController extends Controller
 {
@@ -34,7 +34,7 @@ class SolicitudController extends Controller
      * @param DataTablesInterface $dataTables
      * @return JsonResponse|Response
      */
-    public function indexAction(Request $request, DataTablesInterface $dataTables)
+    public function indexSolicitudAction(Request $request, DataTablesInterface $dataTables)
     {
         if($request->isXmlHttpRequest()){
             try{
@@ -53,7 +53,7 @@ class SolicitudController extends Controller
      * @param Request $request
      * @return RedirectResponse|Response
      */
-    public function newAction(Request $request)
+    public function newSolicitudAction(Request $request)
     {
         $solicitud = new Solicitud();
         $this->denyAccessUnlessGranted('SOLICITUD_CREATE',$solicitud);
@@ -76,7 +76,7 @@ class SolicitudController extends Controller
 
         return $this->render('solicitud/edit.html.twig',[
             'form' => $form->createView(),
-            'title' => 'Nueva solicitud'
+            'title' => 'Nueva solicitud',
         ]);
     }
 
@@ -86,7 +86,7 @@ class SolicitudController extends Controller
      * @param Solicitud $solicitud
      * @return Response
      */
-    public function showAction(Solicitud $solicitud)
+    public function showSolicitudAction(Solicitud $solicitud)
     {
         $em = $this->getDoctrine()->getManager();
         $permiso = $em->getRepository(Solicitud::class)
@@ -102,14 +102,14 @@ class SolicitudController extends Controller
      * @Route("/{id}/editar", name="solicitud_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Solicitud $solicitud)
+    public function editSolicitudAction(Request $request, Solicitud $solicitud)
     {
         $this->denyAccessUnlessGranted('SOLICITUD_EDIT',$solicitud);
 
         $em = $this->getDoctrine()->getManager();
         $permiso = $em->getRepository(Solicitud::class)
             ->compruebaRol($this->getUser()->getRoles(),$solicitud->getEmpresa()->getId());
-        if(!$permiso || $solicitud->getValidado()){ throw new NotFoundHttpException(); }
+        if(!$permiso || $solicitud->getValidadoCompra()){ throw new NotFoundHttpException(); }
 
         $solicitud = $em->getRepository(Solicitud::class)->find($solicitud->getId());
         $originalConceptos = new ArrayCollection();
@@ -127,10 +127,6 @@ class SolicitudController extends Controller
                     $em->remove($concepto);
                 }
             }
-            if($solicitud->getValidado()){
-                $solicitud->setNombreValido($this->getUser()->getNombre());
-            }
-
             $em->persist($solicitud);
             $em->flush();
             return $this->redirectToRoute('solicitud_show',['id' => $solicitud->getId()]);
@@ -145,7 +141,7 @@ class SolicitudController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="solicitud_delete")
+     * @Route("/solicitud/{id}", name="solicitud_delete")
      * @Method("DELETE")
      * @param Request $request
      * @param Solicitud $solicitud
@@ -178,5 +174,4 @@ class SolicitudController extends Controller
             ->setMethod('DELETE')
             ->getForm();
     }
-
 }

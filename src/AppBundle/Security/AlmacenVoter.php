@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Luiz
  * Date: 12/11/2018
- * Time: 12:50 PM
+ * Time: 12:57 PM
  */
 
 namespace AppBundle\Security;
@@ -15,15 +15,15 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class CompraVoter extends Voter
+class AlmacenVoter extends Voter
 {
-    const EDIT = 'COMPRA_EDIT';
+    const VALIDAR = 'ALMACEN_VALIDAR';
 
     private $decisionManager;
 
-    public function __construct(AccessDecisionManagerInterface $decisionMAnager)
+    public function __construct(AccessDecisionManagerInterface $decisionManager)
     {
-        $this->decisionManager = $decisionMAnager;
+        $this->decisionManager = $decisionManager;
     }
 
     /**
@@ -36,7 +36,7 @@ class CompraVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, [self::EDIT])) {
+        if (!in_array($attribute, [self::VALIDAR])) {
             return false;
         }
 
@@ -70,17 +70,17 @@ class CompraVoter extends Voter
         }
 
         switch ($attribute) {
-            case self::EDIT:
-                return $this->canEdit($user);
+            case self::VALIDAR:
+                return $this->canValidar($user);
                 break;
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canEdit(Usuario $usuario)
+    private function canValidar(Usuario $usuario)
     {
-        if(!in_array(self::EDIT,$usuario->getRoles())){
+        if (!in_array(self::VALIDAR, $usuario->getRoles())) {
             return false;
         }
         return true;

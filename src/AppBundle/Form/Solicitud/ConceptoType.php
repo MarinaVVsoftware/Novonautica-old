@@ -54,9 +54,6 @@ class ConceptoType extends AbstractType
                 'choice_label' => function ($concepto) {
                     return $concepto.' - '.$concepto->getClaveUnidad();
                 }
-            ])
-            ->add('nota',TextType::class,[
-                'required' => false,
             ]);
     }
 

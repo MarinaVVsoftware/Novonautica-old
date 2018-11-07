@@ -22,7 +22,6 @@ class ConceptoType extends AbstractType
             'currency' => 'MXN',
             'divisor' => 100,
             'grouping' => true,
-            'data' => 0,
             'attr' => ['class' => 'esdecimal', 'readonly' => 'readonly'],
         ];
 
@@ -69,7 +68,6 @@ class ConceptoType extends AbstractType
                 'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
-                'data' => 0,
                 'attr' => ['class' => 'esdecimal'],
             ])
             ->add('subtotal',MoneyType::class,$formatoMoney)
@@ -83,7 +81,7 @@ class ConceptoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'AppBundle\Entity\Compra\Concepto',
+            'data_class' => 'AppBundle\Entity\Solicitud\Concepto',
         ]);
     }
 
@@ -92,6 +90,6 @@ class ConceptoType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'appbundle_compra_concepto';
+        return 'appbundle_solicitud_concepto';
     }
 }

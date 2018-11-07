@@ -14,12 +14,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -73,27 +70,11 @@ class SolicitudType extends AbstractType
                 'by_reference' => false,
                 'allow_delete' => true,
             ])
-            ->add('nota',TextareaType::class,[
+            ->add('notaSolicitud',TextareaType::class,[
                 'required' => false,
                 'attr' => ['rows' => 5, 'class' => 'info-input'],
                 'label' => 'Notas'
             ]);
-
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $solicitud = $event->getData();
-            $form = $event->getForm();
-            $permisoValidar = false;
-            foreach ($this->security->getUser()->getRoles() as $role){
-                if(strpos($role, 'ROLE_ADMIN') === 0 || strpos($role, 'SOLICITUD_VALIDAR') === 0){
-                    $permisoValidar = true;
-                }
-            }
-            if($solicitud->getId() && $permisoValidar){
-                $form->add('validado',CheckboxType::class,[
-                    'label' => 'Validado',
-                ]);
-            }
-        });
     }
 
     /**

@@ -23,7 +23,13 @@
                             {% endif %}
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-contorno-azul pull-right" href="{{ path('solicitud_index') }}">
+                            <a class="btn btn-contorno-azul pull-right" href="
+                            {% if  solicitud is defined %}
+                                    {{ path('solicitud_show',{'id':solicitud.id}) }}
+                            {% else %}
+                                    {{ path('solicitud_index') }}
+                            {% endif %}
+                            ">
                                 Regresar
                             </a>
                         </div>
@@ -36,25 +42,25 @@
                         </div>
                         <div class="col-sm-5">
                             <label>Fecha</label>
-                            <div class="info-input">{{ "now"|date("m/d/Y") }}</div>
-                        </div>
-                        {% if form.validado is defined %}
-                            <div class="col-sm-2 text-right">
-                                {{ form_row(form.validado) }}
+                            <div class="info-input">
+                                {% if  solicitud is defined and solicitud.fecha %}
+                                    {{ solicitud.fecha|date('d/m/Y') }}
+                                {% else %}
+                                    {{ "now"|date("d/m/Y") }}
+                                {% endif %}
                             </div>
-                        {% endif %}
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-10">
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th width="3%" valign="middle" class="text-center">
+                                    <th width="4%" valign="middle" class="text-center">
                                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                                     </th>
-                                    <th width="8%">Cantidad</th>
-                                    <th width="15%">Producto</th>
-                                    <th width="10%">Notas</th>
+                                    <th width="10%">Cantidad</th>
+                                    <th width="10%">Producto</th>
                                 </tr>
                                 </thead>
                                 <tbody id="conceptos" data-prototype="{{ form_widget(form.conceptos.vars.prototype)|e('html_attr') }}">
@@ -82,10 +88,6 @@
                                             {{ form_widget(concepto.tiendaProducto) }}
                                             {{ form_errors(concepto.tiendaProducto) }}
                                         </td>
-                                        <td class="p-0">
-                                            {{ form_widget(concepto.nota) }}
-                                            {{ form_errors(concepto.nota) }}
-                                        </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -93,8 +95,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-8">
-                            {{ form_row(form.nota) }}
+                        <div class="col-sm-10">
+                            {{ form_row(form.notaSolicitud) }}
                         </div>
                     </div>
                     <div class="row espacio-linea-arriba2">
@@ -142,12 +144,6 @@
 
         let counter = EntradasHolder.childElementCount;
 
-        /**
-         * Da formato a un numero en decimales y reduce sus decimales a 2
-         */
-        function transformToMoneyFormat(numero) {
-            return numero.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-        }
 
         /**
          * Crea una fila en la tabla de entradas con un boton que la remueve
@@ -198,28 +194,17 @@
                 event.preventDefault();
             event.stopPropagation();
             removeButton.parentNode.parentNode.remove(removeButton);
-            //sumaGranTotal();
         });
 
             celda.appendChild(removeButton);
         }
 
         function addRowListeners(row){
-            // row.cells[2].querySelector('input').onkeyup =  function (ev) {
-            //     //sumaGranTotal();
-            // };
             row.cells[1].querySelector('input').onkeypress = function(ev){
                 return esNumeroDecimal(ev,this);
             };
         }
 
-        // function sumaGranTotal(){
-        //     let sumGranTot = 0;
-        //     EntradasHolder.querySelectorAll('tr').forEach(
-        //         fila => sumGranTot += Number((fila.cells[2].querySelector('input').value).replace(',',''))
-        // );
-        //     InputGranTotal.value  = transformToMoneyFormat(String(sumGranTot));
-        // }
 
         AddButton.addEventListener('click', (event) => {
             event.preventDefault();
@@ -252,7 +237,6 @@
 
         SelectEmpresa.addEventListener('change',function (ev) {
             EntradasHolder.querySelectorAll('tr').forEach(fila => fila.remove());
-            //sumaGranTotal();
         });
 
         })(jQuery);

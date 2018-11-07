@@ -82,8 +82,7 @@ class SolicitudDataTable extends AbstractDataTableHandler
                 '(LOWER(s.fecha) LIKE :search '.
                 ' OR s.folio LIKE :search '.
                 ' OR LOWER(contabilidadFacturacionEmisor.nombre) LIKE :search '.
-                ' OR s.validado LIKE :search '.
-                ' OR s.estatus LIKE :search '.
+                ' OR s.validadoCompra LIKE :search '.
                 ')')
                 ->setParameter('search',strtolower("%{$request->search->value}%"));
         }
@@ -101,11 +100,8 @@ class SolicitudDataTable extends AbstractDataTableHandler
                     $q->andWhere('s.fecha LIKE :fecha')
                         ->setParameter('fecha',"%{$value}%");
                 } else if($column->data == 4){
-                    $q->andWhere('s.validado LIKE :validado')
+                    $q->andWhere('s.validadoCompra LIKE :validadoCompra')
                         ->setParameter('validado',"%{$value}%");
-                } else if($column->data == 5){
-                    $q->andWhere('s.estatus LIKE :estatus')
-                        ->setParameter('estatus',"%{$value}%");
                 }
             }
         }
@@ -118,9 +114,7 @@ class SolicitudDataTable extends AbstractDataTableHandler
             } elseif ($order->column === 2) {
                 $q->addOrderBy('s.fecha', $order->dir);
             } elseif ($order->column === 3) {
-                $q->addOrderBy('s.validado', $order->dir);
-            } elseif ($order->column === 4) {
-                $q->addOrderBy('s.estatus', $order->dir);
+                $q->addOrderBy('s.validadoCompra', $order->dir);
             }
         }
 
@@ -138,9 +132,8 @@ class SolicitudDataTable extends AbstractDataTableHandler
                 $solicitud->getFolio(),
                 $solicitud->getEmpresa()->getNombre(),
                 $solicitud->getFecha()->format('d/m/Y') ?? '',
-                $solicitud->getValidado()?'Validado':'No validado',
-                $solicitud->getEstatus()?'Vigente':'Ya utilizado',
-                [$solicitud->getId(),$solicitud->getValidado()]
+                $solicitud->getValidadoCompra()?'Validado':'No validado',
+                [$solicitud->getId(),$solicitud->getValidadoCompra()]
             ];
         }
         return $results;

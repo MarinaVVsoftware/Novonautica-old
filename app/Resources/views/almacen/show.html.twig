@@ -10,7 +10,7 @@
                             {{ solicitud.folio }}
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-contorno-azul pull-right" href="{{ path('compra_index') }}">Regresar</a>
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('almacen_index') }}">Regresar</a>
                         </div>
                     </div>
                 </div>
@@ -156,8 +156,9 @@
                 <div class="panel-footer">
                     <div class="row">
                         <div class="col-sm-6">
-                            {% if is_granted(expression('has_role("COMPRA_EDIT") or (user.isAdmin())')) and solicitud.validadoCompra == false %}
-                                <a href="{{ path('compra_edit',{'id':solicitud.id }) }}" class="btn btn-azul">
+                            {% if is_granted(expression('has_role("ALMACEN_VALIDAR") or (user.isAdmin())')) and solicitud.validadoCompra and solicitud.validadoAlmacen == false %}
+                                <a href="{{ path('almacen_validar',{'id':solicitud.id }) }}"
+                                   class="btn btn-azul">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     Validar
                                 </a>

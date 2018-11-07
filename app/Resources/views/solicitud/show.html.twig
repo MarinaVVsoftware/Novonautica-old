@@ -25,32 +25,46 @@
                             <div class="info-input">{{ solicitud.fecha|date('d/m/Y') }}</div>
                         </div>
                         <div class="col-sm-4">
-                            <label>Solicitado por</label>
+                            <label>Creado por</label>
                             <div class="info-input">{{ solicitud.creador }}</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-4">
-                            <label>Estatus validación</label>
+                            <label>Validación compra</label>
                             <div class="info-input">
-                                {% if solicitud.validado %}
-                                    Validado
+                                {% if solicitud.validadoCompra %}
+                                    Validado - {{ solicitud.nombreValidoCompra }}
                                 {% else %}
                                     No validado
                                 {% endif %}
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <label>Validado por</label>
-                            <div class="info-input">{{ solicitud.nombreValido }}</div>
+                            <label>Fecha validación compra</label>
+                            <div class="info-input">
+                                {% if solicitud.fechaValidoCompra %}
+                                    {{ solicitud.fechaValidoCompra|date('d/m/Y') }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Validación almacén</label>
+                            <div class="info-input">
+                                {% if solicitud.validadoAlmacen %}
+                                    Validado - {{ solicitud.nombreValidoAlmacen }}
+                                {% else %}
+                                    No validado
+                                {% endif %}
+                            </div>
                         </div>
                         <div class="col-sm-4">
-                            <label>Estatus general</label>
+                            <label>Fecha validación almacén</label>
                             <div class="info-input">
-                                {% if solicitud.estatus %}
-                                    Vigente
-                                {% else %}
-                                    Ya utilizado
+                                {% if solicitud.fechaValidoAlmacen %}
+                                    {{ solicitud.fechaValidoAlmacen|date('d/m/Y') }}
                                 {% endif %}
                             </div>
                         </div>
@@ -63,7 +77,6 @@
                                     <th>Producto</th>
                                     <th>Unidad</th>
                                     <th>Cantidad</th>
-                                    <th>Notas</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -92,7 +105,6 @@
                                             {% endif %}
                                         </td>
                                         <td>{{ concepto.cantidad|number_format(2) }}</td>
-                                        <td>{{ concepto.nota }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -101,15 +113,27 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-8">
-                            <label>Notas</label>
-                            <div class="info-input">{{ solicitud.nota }}</div>
+                            <label>Notas solicitud</label>
+                            <div class="info-input">{{ solicitud.notaSolicitud }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <label>Notas compra</label>
+                            <div class="info-input">{{ solicitud.notaCompra }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <label>Notas almacén</label>
+                            <div class="info-input">{{ solicitud.notaAlmacen }}</div>
                         </div>
                     </div>
                 </div>
                 <div class="panel-footer">
                     <div class="row">
                         <div class="col-sm-12">
-                            {% if is_granted(expression('has_role("SOLICITUD_EDIT") or (user.isAdmin())')) and solicitud.validado == false %}
+                            {% if is_granted(expression('has_role("SOLICITUD_EDIT") or (user.isAdmin())')) and solicitud.validadoCompra == false %}
                                 <a href="{{ path('solicitud_edit',{'id':solicitud.id }) }}" class="btn btn-azul">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     Editar
