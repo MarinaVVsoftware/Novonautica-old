@@ -163,7 +163,7 @@ class OrdenDeTrabajoController extends Controller
             ->join('ac.acservicios', 'AstilleroCotizaServicio')
             ->leftJoin('AstilleroCotizaServicio.astilleroserviciobasico', 'AstilleroServicioBasico')
             ->leftJoin('AstilleroCotizaServicio.producto', 'AstilleroProducto')
-            ->leftJoin('AstilleroProducto.proveedor', 'AstilleroProveedor')
+            ->leftJoin('AstilleroProducto.proveedores', 'AstilleroProveedor')
             ->leftJoin('AstilleroCotizaServicio.servicio', 'AstilleroServicio')
             ->andWhere('ac.id = ' . $idcotizacion)
             ->getQuery()

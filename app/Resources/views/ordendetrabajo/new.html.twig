@@ -13,7 +13,8 @@
                             <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
                         </li>
                         <li role="presentation">
-                            <a href="#asignacion" aria-controls="asignacion" role="tab" data-toggle="tab">Contratistas</a>
+                            <a href="#asignacion" aria-controls="asignacion" role="tab"
+                               data-toggle="tab">Contratistas</a>
                         </li>
                     </ul>
                     {{ form_start(form) }}
@@ -30,7 +31,9 @@
                                 </div>
                                 <div class="col-sm-8">
                                     <small class="pull-left">Precios en MXN</small>
-                                    <small class="pull-right">Tipo de cambio: <span id="precio-dolar" data-valor="0">0</span> MXN</small>
+                                    <small class="pull-right">Tipo de cambio: <span id="precio-dolar"
+                                                                                    data-valor="0">0</span> MXN
+                                    </small>
                                     <table class="table">
                                         <thead>
                                         <tr>
@@ -64,7 +67,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div href="#" id="" class="add-another-proveedor letra-azul" data-cantidad="{{ form.contratistas|length }}" data-idlista="0">
+                                    <div href="#" id="" class="add-another-proveedor letra-azul"
+                                         data-cantidad="{{ form.contratistas|length }}" data-idlista="0">
                                         {#+ Agregar Contratista#}
                                     </div>
                                 </div>
@@ -92,114 +96,130 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-<script type="text/javascript">
-    (function ($) {
+    <script type="text/javascript">
+      (function ($) {
         $('.buscarfolio').change(function (e) {
-            $('#datos-cotizacion').empty();
-            $('#servicios-cotizacion').empty();
-            $('#porcentaje-iva').html('-');
-            $('#precio-dolar').html('0');
-            $.ajax({
-                method: "GET",
-                url: '{{ path('odt_busca_cotizacion') }}',
-                dataType: 'json',
-                contentType: "application/json; charset=utf-8",
-                type: "POST",
-                data: {
-                  'idcotizacion':$(this).val()
-                },
-                success: function (cotizacion) {
-                    $('#proveedor-fields-list0').empty();
-                    $('#datos-cotizacion').html('<div class="row"><div class="col-sm-12"><div class="letra-azul">Nombre:</div><ul>'+cotizacion[0].cliente.nombre+'</ul></div></div>'+
-                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Teléfono:</div><ul>'+cotizacion[0].cliente.telefono+'</ul></div></div>'+
-                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Celular:</div><ul>'+cotizacion[0].cliente.celular+'</ul></div></div>'+
-                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">E-mail:</div><ul>'+cotizacion[0].cliente.correo+'</ul></div></div>'+
-                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Embarcación:</div><ul>'+cotizacion[0].barco.nombre+'</ul></div></div>'+
-                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Modelo:</div><ul>'+cotizacion[0].barco.modelo+'</ul></div></div>'+
-                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Calado:</div><ul>'+cotizacion[0].barco.calado+'</ul></div></div>'+
-                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Manga:</div><ul>'+cotizacion[0].barco.manga+'</ul></div></div>'+
-                                                '<div class="row"><div class="col-sm-12"><div class="letra-azul">Eslora:</div><ul>'+cotizacion[0].barco.eslora+'</ul></div></div>'
-                    );
+          $('#datos-cotizacion').empty();
+          $('#servicios-cotizacion').empty();
+          $('#porcentaje-iva').html('-');
+          $('#precio-dolar').html('0');
 
-                    for(var i=0;i<cotizacion[0].acservicios.length;i++){
-                        if(cotizacion[0].acservicios[i].estatus){
-                            var elemento = '';
-                            var tipoelemento = '';
-                            var idproveedor = '';
-                            var cantidad = cotizacion[0].acservicios[i].cantidad;
-                            if(cotizacion[0].acservicios[i].servicio){
-                                elemento = cotizacion[0].acservicios[i].servicio.nombre;
-                                tipoelemento = 1;
-                            }
-                            if(cotizacion[0].acservicios[i].producto){
-                                elemento = cotizacion[0].acservicios[i].producto.nombre;
-                                tipoelemento = 2;
-                                if(cotizacion[0].acservicios[i].producto.proveedor){
-                                    idproveedor = cotizacion[0].acservicios[i].producto.proveedor.id;
-                                }
-                            }
-                            if(cotizacion[0].acservicios[i].astilleroserviciobasico){
-                                elemento = cotizacion[0].acservicios[i].astilleroserviciobasico.nombre;
-                                tipoelemento = 1;
-                            }
-                            if(cotizacion[0].acservicios[i].otroservicio){
-                                elemento = cotizacion[0].acservicios[i].otroservicio;
-                                tipoelemento = 1;
-                            }
-                            $('#servicios-cotizacion').append('<tr><td>'+cantidad+'</td>' +
-                                '<td>'+elemento+'</td>' +
-                                '<td>$ '+(cotizacion[0].acservicios[i].precio/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
-                                '<td>$ '+(cotizacion[0].acservicios[i].subtotal/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
-                                '<td>$ '+(cotizacion[0].acservicios[i].iva/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td>' +
-                                '<td>$ '+(cotizacion[0].acservicios[i].total/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")+'</td></tr>');
-                            if(!cotizacion[0].acservicios[i].astilleroserviciobasico){
-                                coleccionContratistaODT(e,'.add-another-proveedor',elemento,cantidad,cotizacion[0].acservicios[i].subtotal,tipoelemento,idproveedor);
-                            }
-                        }
+          $.ajax({
+            method: "GET",
+            url: '{{ path('odt_busca_cotizacion') }}',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            type: "POST",
+            data: {
+              'idcotizacion': $(this).val()
+            },
+            success: function (cotizacion) {
+              $('#proveedor-fields-list0').empty();
+              $('#datos-cotizacion').html(
+                  '<div class="row"><div class="col-sm-12"><div class="letra-azul">Nombre:</div><ul>' + cotizacion[0].cliente.nombre + '</ul></div></div>' +
+                  '<div class="row"><div class="col-sm-12"><div class="letra-azul">Teléfono:</div><ul>' + cotizacion[0].cliente.telefono + '</ul></div></div>' +
+                  '<div class="row"><div class="col-sm-12"><div class="letra-azul">Celular:</div><ul>' + cotizacion[0].cliente.celular + '</ul></div></div>' +
+                  '<div class="row"><div class="col-sm-12"><div class="letra-azul">E-mail:</div><ul>' + cotizacion[0].cliente.correo + '</ul></div></div>' +
+                  '<div class="row"><div class="col-sm-12"><div class="letra-azul">Embarcación:</div><ul>' + cotizacion[0].barco.nombre + '</ul></div></div>' +
+                  '<div class="row"><div class="col-sm-12"><div class="letra-azul">Modelo:</div><ul>' + cotizacion[0].barco.modelo + '</ul></div></div>' +
+                  '<div class="row"><div class="col-sm-12"><div class="letra-azul">Calado:</div><ul>' + cotizacion[0].barco.calado + '</ul></div></div>' +
+                  '<div class="row"><div class="col-sm-12"><div class="letra-azul">Manga:</div><ul>' + cotizacion[0].barco.manga + '</ul></div></div>' +
+                  '<div class="row"><div class="col-sm-12"><div class="letra-azul">Eslora:</div><ul>' + cotizacion[0].barco.eslora + '</ul></div></div>'
+              );
+
+              for (var i = 0; i < cotizacion[0].acservicios.length; i++) {
+                if (cotizacion[0].acservicios[i].estatus) {
+                  var elemento = '';
+                  var tipoelemento = '';
+                  var idproveedor = '';
+                  var cantidad = cotizacion[0].acservicios[i].cantidad;
+
+                  if (cotizacion[0].acservicios[i].servicio) {
+                    elemento = cotizacion[0].acservicios[i].servicio.nombre;
+                    tipoelemento = 1;
+                  }
+
+                  if (cotizacion[0].acservicios[i].producto) {
+                    elemento = cotizacion[0].acservicios[i].producto.nombre;
+                    tipoelemento = 2;
+                    if (cotizacion[0].acservicios[i].producto.proveedor) {
+                      idproveedor = cotizacion[0].acservicios[i].producto.proveedor.id;
                     }
-                    $('#porcentaje-iva').html(cotizacion[0].iva);
-                    $('#porcentaje-iva').data('valor',cotizacion[0].iva);
-                    $('#precio-dolar').html((cotizacion[0].dolar/100).toFixed(2));
-                    $('#precio-dolar').data('valor',(cotizacion[0].dolar/100).toFixed(2));
-                    $('#loading').hide();
-                },
-                error: function (jqXHR, exception) {
-                    if (jqXHR.status === 405) {
-                        console.error("METHOD NOT ALLOWED!");
-                    }
-                    $('#loading').hide();
+                  }
+
+                  if (cotizacion[0].acservicios[i].astilleroserviciobasico) {
+                    elemento = cotizacion[0].acservicios[i].astilleroserviciobasico.nombre;
+                    tipoelemento = 1;
+                  }
+
+                  if (cotizacion[0].acservicios[i].otroservicio) {
+                    elemento = cotizacion[0].acservicios[i].otroservicio;
+                    tipoelemento = 1;
+                  }
+
+                  $('#servicios-cotizacion').append(
+                      '<tr><td>' + cantidad + '</td>' +
+                      '<td>' + elemento + '</td>' +
+                      '<td>$ ' + (cotizacion[0].acservicios[i].precio / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,") + '</td>' +
+                      '<td>$ ' + (cotizacion[0].acservicios[i].subtotal / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,") + '</td>' +
+                      '<td>$ ' + (cotizacion[0].acservicios[i].iva / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,") + '</td>' +
+                      '<td>$ ' + (cotizacion[0].acservicios[i].total / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,") + '</td></tr>'
+                  );
+
+                  if (!cotizacion[0].acservicios[i].astilleroserviciobasico) {
+                      coleccionContratistaODT(
+                          e,
+                          '.add-another-proveedor',
+                          elemento,
+                          cantidad,
+                          cotizacion[0].acservicios[i].subtotal,
+                          tipoelemento,
+                          idproveedor,
+                          cotizacion[0].acservicios[i]
+                      );
+                  }
+
                 }
-            }).fail(function () {
-                $('#loading').hide();
-            });
+              }
+
+              $('#porcentaje-iva').html(cotizacion[0].iva);
+              $('#porcentaje-iva').data('valor', cotizacion[0].iva);
+              $('#precio-dolar').html((cotizacion[0].dolar / 100).toFixed(2));
+              $('#precio-dolar').data('valor', (cotizacion[0].dolar / 100).toFixed(2));
+              $('#loading').hide();
+            }
+          }).always(function () {
+            $('#loading').hide();
+          });
         });
-    $(document).on('change','.buscaproveedor',function (e){
-        var idproveedor = $(this);
-        $.ajax({
+
+        $(document).on('change', '.buscaproveedor', function (e) {
+          var idproveedor = $(this);
+          $.ajax({
             method: "GET",
             url: '{{ path('astillero_proveedor_ajax') }}',
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
             type: "POST",
             data: {
-                'idproveedor':idproveedor.val()
+              'idproveedor': idproveedor.val()
             },
             success: function (proveedor) {
 
-                var elemento = $(idproveedor).parent().parent().parent().parent().children('div').children('div').children('div').children('div');
-                var porcentajeVV =  (proveedor.porcentaje + 100)/100;
-                var precioVV = elemento.children('.preciovv').val();
-                var precioContratista = (precioVV.replace(',',''))/porcentajeVV;
-                var utilidadVv = (precioVV.replace(',','')*proveedor.porcentaje)/(proveedor.porcentaje + 100);
+              var elemento = $(idproveedor).parent().parent().parent().parent().children('div').children('div').children('div').children('div');
+              var porcentajeVV = (proveedor.porcentaje + 100) / 100;
+              var precioVV = elemento.children('.preciovv').val();
+              var precioContratista = (precioVV.replace(',', '')) / porcentajeVV;
+              var utilidadVv = (precioVV.replace(',', '') * proveedor.porcentaje) / (proveedor.porcentaje + 100);
 
-                elemento.children('.preciocontratista').val(precioContratista.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-                elemento.children('.utilidadvv').val(utilidadVv.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-                $(idproveedor).parent().parent().parent().parent().children('div').children('div').children('div').children('.porcentajevv').val(porcentajeVV);
+              elemento.children('.preciocontratista').val(precioContratista.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+              elemento.children('.utilidadvv').val(utilidadVv.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+              $(idproveedor).parent().parent().parent().parent().children('div').children('div').children('div').children('.porcentajevv').val(porcentajeVV);
 
             }
+          });
         });
-    });
-    })(jQuery);
+      })(jQuery);
 
-</script>
+    </script>
 {% endblock %}

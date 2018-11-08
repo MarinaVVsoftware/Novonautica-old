@@ -46,7 +46,6 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
                 '(LOWER(ap.identificador) LIKE :search '.
                 'OR LOWER(ap.nombre) LIKE :search '.
                 'OR LOWER(ap.unidad) LIKE :search '.
-                'OR LOWER(p.nombre) LIKE :search '.
                 'OR ClaveProdServ.claveProdServ LIKE :search '.
                 'OR ClaveUnidad.claveUnidad LIKE :search'.
                 ')'
