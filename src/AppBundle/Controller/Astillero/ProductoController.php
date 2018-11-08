@@ -49,12 +49,10 @@ class ProductoController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($producto);
+            $em->flush();
 
-            dump($producto);
-//            $em->persist($producto);
-//            $em->flush();
-
-//            return $this->redirect($request->headers->get('referer'));
+            return $this->redirectToRoute('astillero_producto_index');
         }
 
         return $this->render(
