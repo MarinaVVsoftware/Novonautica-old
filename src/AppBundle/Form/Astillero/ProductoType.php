@@ -5,6 +5,7 @@ namespace AppBundle\Form\Astillero;
 use AppBundle\Entity\Astillero\Producto;
 use AppBundle\Entity\Astillero\Proveedor;
 use AppBundle\Form\Astillero\Producto\ProveedorType;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
@@ -61,7 +62,11 @@ class ProductoType extends AbstractType
                 'entry_type' => EntityType::class,
                 'entry_options' => [
                     'label' => false,
-                    'class' => Proveedor::class
+                    'class' => Proveedor::class,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('proveedor')
+                            ->where('proveedor.proveedorcontratista = 0');
+                    }
                 ],
                 'allow_add' => true,
                 'allow_delete' => true,
