@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Astillero;
 use AppBundle\Entity\AstilleroCotizaServicio;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
@@ -37,12 +38,6 @@ class Producto
     private $identificador;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Astillero\Proveedor", inversedBy="productos")
-     * @ORM\JoinColumn(name="idproveedor", referencedColumnName="id")
-     */
-    private $proveedor;
-
-    /**
      * @var string
      *
      * @Groups({"facturacion"})
@@ -69,11 +64,6 @@ class Producto
     private $unidad;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizaServicio", mappedBy="producto")
-     */
-    private $ACotizacionesServicios;
-
-    /**
      * @var ClaveUnidad
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
@@ -87,11 +77,20 @@ class Producto
      */
     private $claveProdServ;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizaServicio", mappedBy="producto")
+     */
+    private $ACotizacionesServicios;
 
-    public function __toString()
-    {
-        return $this->nombre;
-    }
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Astillero\Proveedor")
+     * @ORM\JoinTable(
+     *     name="astillero_productos_x_proveedores",
+     *     joinColumns={@ORM\JoinColumn(name="producto_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="proveedor_id", referencedColumnName="id")}
+     * )
+     */
+    private $proveedores;
 
     /**
      * Constructor
@@ -99,6 +98,12 @@ class Producto
     public function __construct()
     {
         $this->ACotizacionesServicios = new ArrayCollection();
+        $this->proveedores = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->nombre;
     }
     /**
      * Get id
@@ -240,31 +245,6 @@ class Producto
         return $this->ACotizacionesServicios;
     }
 
-
-
-    /**
-     * Set proveedor.
-     *
-     * @param \AppBundle\Entity\Astillero\Proveedor|null $proveedor
-     *
-     * @return Producto
-     */
-    public function setProveedor(\AppBundle\Entity\Astillero\Proveedor $proveedor = null)
-    {
-        $this->proveedor = $proveedor;
-
-        return $this;
-    }
-
-    /**
-     * Get proveedor.
-     *
-     * @return \AppBundle\Entity\Astillero\Proveedor|null
-     */
-    public function getProveedor()
-    {
-        return $this->proveedor;
-    }
     /**
      * Set claveUnidad.
      *
@@ -311,5 +291,41 @@ class Producto
     public function getClaveProdServ()
     {
         return $this->claveProdServ;
+    }
+
+    /**
+     * Add proveedor.
+     *
+     * @param Proveedor $proveedores
+     *
+     * @return Producto
+     */
+    public function addProveedore(Proveedor $proveedores)
+    {
+        $this->proveedores[] = $proveedores;
+
+        return $this;
+    }
+
+    /**
+     * Remove proveedor.
+     *
+     * @param Proveedor $proveedores
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeProveedore(Proveedor $proveedores)
+    {
+        return $this->proveedores->removeElement($proveedores);
+    }
+
+    /**
+     * Get proveedores.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProveedores()
+    {
+        return $this->proveedores;
     }
 }

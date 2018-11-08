@@ -1,23 +1,92 @@
 {% extends 'estructura/plantilla.twig' %}
+{% import 'estructura/modalborrar.twig' as modal %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
 {% endblock %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
-            <div class="panel panel-novo">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ title }}</h3>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    {% for message in app.flashes('notice') %}
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×
+                            </button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
                 </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-12">
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                {{ producto.id is null ? 'Nuevo producto' : 'Editar: ' ~ producto.nombre }}
+                            </h3>
+                        </div>
+                        <div class="panel-body" style="min-height: initial">
+                            {{ form_start(form) }}
+
+                            {{ form_row(form.identificador) }}
+                            {{ form_row(form.nombre) }}
+                            {{ form_row(form.precio) }}
+                            {{ form_row(form.unidad) }}
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {{ form_row(form.claveProdServ) }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ form_row(form.claveUnidad) }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {{ form_row(form.proveedores) }}
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <button id="add" type="button" class="btn btn-link btn-xs">
+                                        + Agregar concepto
+                                    </button>
+                                </div>
+                            </div>
+
+                            {% if producto.id is not null %}
+                                <a href="{{ path('astillero_producto_index') }}"
+                                   class="btn btn-naranja">Cancelar</a>
+                            {% endif %}
+
+                            {{ deleteForm is null ? '' : modal.deleteButton() }}
+
+                            <button type="submit" class="btn btn-azul pull-right">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-8">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Listado de productos</h3>
+                        </div>
+                        <div class="panel-body">
                             <table class="table table-novo">
                                 <thead>
                                 <tr>
-                                    <th>ID. Producto</th>
-                                    <th>Proveedor</th>
+                                    <th>Identificador</th>
                                     <th>Nombre</th>
                                     <th>Precio</th>
                                     <th>Unidad</th>
@@ -30,18 +99,123 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
     </div>
 {% endblock %}
+
+{% block modals %}
+    {{ deleteForm is null ? '' : modal.deleteModal(deleteForm) }}
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script>
+      class ElementCollection {
+        constructor(addButton, prototypeHolder, elementListener) {
+          this.addButton = typeof addButton === 'string'
+              ? document.querySelector(addButton)
+              : addButton;
+
+          this.prototypeHolder = typeof prototypeHolder === 'string'
+              ? document.querySelector(prototypeHolder)
+              : prototypeHolder;
+
+          this.elementListener = elementListener || (() => {});
+
+          Array
+              .from(this.prototypeHolder.children)
+              .forEach(element => {
+                this.appendRemoveButton(element);
+                this.elementListener(element);
+              });
+
+          this.elementCounter = this.prototypeHolder.childElementCount;
+
+          this.addButton
+              .addEventListener(
+                  'click',
+                  this.addElement.bind(this)
+              );
+        }
+
+        /* PUBLIC */
+        addElement(event) {
+
+          if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          let element = this._getPrototypeElement();
+
+          this.appendRemoveButton(element);
+
+          if (this.elementListener) {
+            this.elementListener(element);
+          }
+
+          this.prototypeHolder.appendChild(element);
+
+          return this.prototypeHolder.childElementCount;
+        }
+
+        removeElement(element) {
+          element = typeof element === 'number' ? this.prototypeHolder.children[(element - 1)] : element;
+          if (!element) throw new Error('No existe el elemento que quieres eliminar');
+          element.parentNode.removeChild(element);
+        }
+
+        appendRemoveButton(element) {
+          let celda = element.querySelector('select').parentNode;
+          let removeButton = document.createElement('a');
+
+          removeButton.className = 'badge btn-xs btn-naranja';
+          removeButton.innerHTML = '<i class="fa fa-trash"></i>';
+          removeButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.removeElement(removeButton.parentNode)
+          });
+
+          celda.appendChild(removeButton);
+        }
+
+        /* PRIVATE */
+
+        _getPrototypeElement() {
+          let prototipo = this.prototypeHolder
+              .dataset
+              .prototype
+              .replace(/__name__/g, this.elementCounter);
+
+          let tempElement = document.createElement('div');
+          tempElement.classList.add('form-group');
+          tempElement.innerHTML = prototipo;
+
+          this.elementCounter++;
+
+          return tempElement;
+        }
+      }
+    </script>
     <script type="text/javascript">
       (function ($, settings) {
+        const baseUrl = '{{ app.request.baseUrl }}';
+
+        $('#appbundle_astillero_producto_claveUnidad')
+            .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveunidad'}});
+        $('#appbundle_astillero_producto_claveProdServ')
+            .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveprodserv'}});
+
+        new ElementCollection('#add', '#appbundle_astillero_producto_proveedores');
+
         $('.table-novo').DataTable({
           ...settings,
-          ajax: '{{ path('astillero_producto_index') }}',
+          ajax: 'productos',
           order: [[0, 'desc']],
           columns: [
             {responsivePriority: 1},
@@ -51,21 +225,21 @@
             {responsivePriority: 1},
             {responsivePriority: 0},
             {responsivePriority: 0},
-            {responsivePriority: 0},
           ],
-          createdRow: function (row, data) {
-            let actionsCell = row.cells[7];
-            actionsCell.innerHTML = `
-            <ul class="unstyled-list list-inline" style="margin: 0">
-                <li>
-                <a href="${data[7]}/editar">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>
+          createdRow: function (row, producto) {
+
+            row.cells[6].innerHTML = `
+            <ul class="list-unstyled">
+              <li>
+                <a href="?producto=${producto[6]}" class="btn btn-xs btn-block btn-azul">
+                  Editar
                 </a>
-                </li>
+              </li>
             </ul>
             `
           },
         });
+
       })(jQuery, datatablesSettings);
     </script>
 {% endblock %}

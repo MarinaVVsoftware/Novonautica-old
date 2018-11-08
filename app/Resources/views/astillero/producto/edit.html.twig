@@ -49,9 +49,11 @@
         </section>
     </div>
 {% endblock %}
+
 {% block modals %}
     {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">

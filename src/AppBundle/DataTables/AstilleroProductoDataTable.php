@@ -37,18 +37,17 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
         $qb = $astilleroProductoRepo->createQueryBuilder('ap');
         $results->recordsTotal = $qb->select('COUNT(ap.id)')->getQuery()->getSingleScalarResult();
 
-        $q = $qb->select('ap','ClaveProdServ','ClaveUnidad')
-            ->leftJoin('ap.proveedor', 'p')
-            ->leftJoin('ap.claveProdServ','ClaveProdServ')
-            ->leftJoin('ap.claveUnidad','ClaveUnidad');
+        $q = $qb->select('ap', 'ClaveProdServ', 'ClaveUnidad')
+            ->leftJoin('ap.claveProdServ', 'ClaveProdServ')
+            ->leftJoin('ap.claveUnidad', 'ClaveUnidad');
 
         if ($request->search->value) {
-            $q->where('(LOWER(ap.identificador) LIKE :search '.
-                ' OR LOWER(ap.nombre) LIKE :search '.
-                ' OR LOWER(ap.unidad) LIKE :search '.
-                ' OR LOWER(p.nombre) LIKE :search '.
-                ' OR ClaveProdServ.claveProdServ LIKE :search' .
-                ' OR ClaveUnidad.claveUnidad LIKE :search' .
+            $q->where(
+                '(LOWER(ap.identificador) LIKE :search '.
+                'OR LOWER(ap.nombre) LIKE :search '.
+                'OR LOWER(ap.unidad) LIKE :search '.
+                'OR ClaveProdServ.claveProdServ LIKE :search '.
+                'OR ClaveUnidad.claveUnidad LIKE :search'.
                 ')'
             );
             $q->setParameter('search', strtolower("%{$request->search->value}%"));
@@ -57,8 +56,6 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
         foreach ($request->order as $order) {
             if ($order->column === 0) {
                 $q->addOrderBy('ap.identificador', $order->dir);
-            } elseif ($order->column === 1) {
-                $q->addOrderBy('ap.proveedor', $order->dir);
             } elseif ($order->column === 2) {
                 $q->addOrderBy('ap.nombre', $order->dir);
             } elseif ($order->column === 3) {
@@ -88,12 +85,11 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
 
             $results->data[] = [
                 $producto->getIdentificador(),
-                $producto->getProveedor() ? $producto->getProveedor()->getNombre() : '',
                 $producto->getNombre(),
                 '$'.number_format($producto->getPrecio() / 100, 2).' MXN',
                 $producto->getUnidad(),
-                $producto->getClaveProdServ()?$producto->getClaveProdServ()->getClaveProdServ():'',
-                $producto->getClaveUnidad()?$producto->getClaveUnidad()->getClaveUnidad():'',
+                $producto->getClaveProdServ() ? $producto->getClaveProdServ()->getClaveProdServ() : '',
+                $producto->getClaveUnidad() ? $producto->getClaveUnidad()->getClaveUnidad() : '',
                 $producto->getId(),
             ];
         }

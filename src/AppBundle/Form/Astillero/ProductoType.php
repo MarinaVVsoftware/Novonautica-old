@@ -2,9 +2,14 @@
 
 namespace AppBundle\Form\Astillero;
 
+use AppBundle\Entity\Astillero\Producto;
+use AppBundle\Entity\Astillero\Proveedor;
+use AppBundle\Form\Astillero\Producto\ProveedorType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,8 +19,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class ProductoType extends AbstractType
 {
@@ -24,7 +31,8 @@ class ProductoType extends AbstractType
      */
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager) {
+    public function __construct(EntityManagerInterface $entityManager)
+    {
         $this->entityManager = $entityManager;
     }
 
@@ -33,30 +41,43 @@ class ProductoType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('identificador')
-            ->add('proveedor',EntityType::class,[
-                'class' => 'AppBundle\Entity\Astillero\Proveedor',
-                'placeholder' => 'Seleccionar...',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('p')
-                        ->where('p.proveedorcontratista = 0');
-                },
-            ])
-            ->add('nombre')
-            ->add('precio',MoneyType::class,[
-                'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
-                'currency' => 'MXN',
-                'divisor' => 100,
-                'grouping' => true,
-                'empty_data' => 0,
-                'label' => 'Precio (MXN)'
-            ])
-            ->add('unidad');
+        $builder->add('identificador');
+        $builder->add('nombre');
+
+        $builder->add('precio', MoneyType::class, [
+            'attr' => ['class' => 'esdecimal', 'autocomplete' => 'off'],
+            'currency' => 'MXN',
+            'divisor' => 100,
+            'grouping' => true,
+            'empty_data' => 0,
+            'label' => 'Precio (MXN)',
+        ]);
+
+        $builder->add('unidad');
+
+        $builder->add(
+            'proveedores',
+            CollectionType::class,
+            [
+                'entry_type' => EntityType::class,
+                'entry_options' => [
+                    'label' => false,
+                    'class' => Proveedor::class,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('proveedor')
+                            ->where('proveedor.proveedorcontratista = 0');
+                    }
+                ],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+            ]
+        );
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {
+                /** @var Producto $producto */
                 $producto = $event->getData();
 
                 $this->createClaveUnidadField($event->getForm(), $producto->getClaveUnidad());
@@ -82,15 +103,15 @@ class ProductoType extends AbstractType
             }
         );
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Astillero\Producto'
-        ));
+        $resolver->setDefaults([
+            'data_class' => Producto::class,
+        ]);
     }
 
     /**

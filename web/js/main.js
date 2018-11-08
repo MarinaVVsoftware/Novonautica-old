@@ -428,7 +428,10 @@ function calculaProductosPorServicio(){
     });
 }
 function astilleroBuscaProducto(idproducto,fila){
-    var url = `${location.protocol + '//' + location.host}/astillero/producto/buscarproducto/${idproducto}`;
+    // var url = `${location.protocol + '//' + location.host}/astillero/producto/buscarproducto/${idproducto}`;
+    var baseurl = location.href.endsWith('/') ? location.href : location.href + '/';
+    var url = baseurl + '../producto/buscarproducto/' + idproducto;
+
     $.ajax({
         method: "GET",
         url: url,
@@ -490,7 +493,7 @@ $('.add-servicio').click(function (e) {
     // $('#appbundle_astillerocotizacion_diasEstadia').val(diasEstadia);
     calculaDiasEstadiaAstillero();
     //--------- fin descuenta dias estadia --------------------
-    
+
     var fila = $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_servicio').parent().parent();
     var idservicio = $(this).data('id');
     var dolar = $('#appbundle_astillerocotizacion_dolar').val();
@@ -509,7 +512,9 @@ $('.add-servicio').click(function (e) {
     $(fila.children('.valorprecio')).data('divisa',$(this).data('divisa'));
     calculaSubtotalesAstillero(fila);
 
-    let url = `${location.protocol + '//' + location.host}/astillero/servicio/buscarservicio/${idservicio}`;
+    // let url = `${location.protocol + '//' + location.host}/astillero/servicio/buscarservicio/${idservicio}`;
+    var baseurl = location.href.endsWith('/') ? location.href : location.href + '/';
+    var url = baseurl + '../servicio/buscarservicio/' + idservicio;
 
     $.ajax({
         method: "GET",
@@ -594,7 +599,7 @@ $('.lista-proveedores').on('click', '.remove-proveedor', function (e) {
     $(this).parent().parent().remove();
     return false;
 });
-function coleccionContratistaODT(e,objeto,descripcion,cantidad,total,tipoelemento,idproveedor){
+function coleccionContratistaODT(e,objeto,descripcion,cantidad,total,tipoelemento,idproveedor, element){
     e.preventDefault();
     var totProveedor = $(objeto).data('cantidad');
     var lista = $(objeto).data('idlista');
@@ -608,28 +613,34 @@ function coleccionContratistaODT(e,objeto,descripcion,cantidad,total,tipoelement
     $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_cotizacionInicial').val(descripcion);
     $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_cantidad').val(cantidad);
     $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_preciovv').val((total/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-    $('#appbundle_ordendetrabajo_contratistas_'+(totProveedor-1)+'_proveedor option').each(function () {
-        // 1 = servicio, 2 = producto
-        if(tipoelemento === 2){
-            // data-id es el id del proveedor del select, la variable idproveedor viene desde el producto,
-            // deben coincidir para que este producto sea de este proveedor, en caso de no tener proveedor se
-            // mostrara el listado proveedores para elegir uno
-            if($(this).data('trabajador') === 1 || ($(this).data('id') !== idproveedor && idproveedor )){
-                $(this).hide();
-            }else{
-                $(this).show();
-            }
-        }else{
-          if(tipoelemento === 1){
-              if($(this).data('trabajador') === 0){
-                  $(this).hide();
-              }else{
-                  $(this).show();
-              }
+
+    const proveedorSelect = newLi[0].querySelector('select');
+    const proveedorLabel = proveedorSelect.parentNode.children[0];
+
+    if (element.producto) {
+      proveedorLabel.innerText = 'Proveedor';
+    }
+
+    for (let childOption of proveedorSelect.children) {
+      if (tipoelemento === 1 && childOption.dataset.trabajador === '0') {
+        childOption.classList.add('hidden');
+      }
+
+      if (childOption.value && element.producto) {
+        childOption.style.display = 'none';
+
+        for (let proveedor of element.producto.proveedores) {
+          if (childOption.innerText === proveedor.nombre) {
+            childOption.style.display = 'block';
           }
         }
-    });
+
+      }
+    }
+
     newLi.before(newLi);
+
+    return newLi[0];
 }
 //---------- colection al agregar bancos a un proveedor -----------------
 jQuery('.add-another-banco').click(function (e) {
