@@ -60,6 +60,91 @@ class AlmacenController extends Controller
     }
 
     /**
+     * Lists all marinaHumedaServicio entities.
+     *
+     * @Route("/inventario/puerto-mujeres", name="almacen_inventario-marina")
+     * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
+     */
+    public function inventarioMarinaAction(Request $request, DataTablesInterface $dataTables)
+    {
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $results = $dataTables->handle($request, 'inventario_marina');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getStatusCode());
+            }
+        }
+        return $this->render('almacen/inventario/marina.html.twig', ['title' => 'Inventario Puerto Mujeres']);
+    }
+
+    /**
+     * @Route("/inventario/servicios-marinos", name="almacen_inventario-combustible")
+     * @Method("GET")
+     */
+    public function inventarioCombustibleAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $catalogo = $em->getRepository('AppBundle:Combustible\Catalogo')->findAll();
+        return $this->render('almacen/inventario/combustible.html.twig', [
+            'catalogo' => $catalogo,
+            'title' => 'Inventario Servicios Marinos'
+        ]);
+    }
+
+    /**
+     * Lists all producto entities.
+     *
+     * @Route("/inventario/astillero", name="almacen_inventario-astillero")
+     * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
+     */
+    public function inventarioAstilleroAction(Request $request, DataTablesInterface $dataTables)
+    {
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $results = $dataTables->handle($request, 'inventario_astillero');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getStatusCode());
+            }
+        }
+
+        return $this->render('almacen/inventario/astillero.html.twig', ['title' => 'Inventario Astillero']);
+    }
+
+    /**
+     * @Route("/inventario/tienda", name="almacen_inventario-tienda")
+     * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
+     */
+    public function inventarioTiendaAction(Request $request, DataTablesInterface $dataTables)
+    {
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $results = $dataTables->handle($request, 'inventario_tienda');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getStatusCode());
+            }
+        }
+        return $this->render('almacen/inventario/tienda.html.twig',['title' => 'Inventario V&V Store']);
+    }
+
+    /**
      * @Route("/{id}/validar", name="almacen_validar")
      * @Method({"GET", "POST"})
      */

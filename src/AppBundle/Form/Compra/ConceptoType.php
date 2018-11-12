@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Compra;
 
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -63,6 +64,11 @@ class ConceptoType extends AbstractType
                 'placeholder' => 'Selecionar...',
                 'constraints' => [new NotNull(['message' => 'Por favor selecciona un proveedor'])],
                 'required' => false,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('p')
+                        ->where('p.proveedorcontratista = 0')
+                        ->orderBy('p.nombre', 'ASC');
+                },
             ])
             ->add('precio',MoneyType::class,[
                 'currency' => 'MXN',

@@ -142,7 +142,8 @@ class UsuarioType extends AbstractType
                 ],
                 'Almacén' => [
                     'Acceso' => 'ROLE_ALMACEN',
-                    'Validar' => 'ALMACEN_VALIDAR'
+                    'Validar' => 'ALMACEN_VALIDAR',
+                    'Inventario' => 'ROLE_INVENTARIO'
                 ]
 
             ],

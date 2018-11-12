@@ -1,0 +1,59 @@
+{% extends 'estructura/plantilla.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+{% endblock %}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ title }}</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-novo">
+                                <thead>
+                                <tr>
+                                    <th>ID. Producto</th>
+                                    <th>Proveedor</th>
+                                    <th>Nombre</th>
+                                    <th>Clave producto</th>
+                                    <th>Clave Unidad</th>
+                                    <th>Unidad</th>
+                                    <th>Precio</th>
+                                    <th>Existencias</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+        (function ($, settings) {
+            $('.table-novo').DataTable({
+                    ...settings,
+                ajax: '{{ path('almacen_inventario-astillero') }}',
+                order: [[0, 'desc']],
+                columns: [
+                {responsivePriority: 1},
+                {responsivePriority: 1},
+                {responsivePriority: 0},
+                {responsivePriority: 1},
+                {responsivePriority: 1},
+                {responsivePriority: 0},
+                {responsivePriority: 0},
+                {responsivePriority: 0},
+            ],
+        });
+        })(jQuery, datatablesSettings);
+    </script>
+{% endblock %}

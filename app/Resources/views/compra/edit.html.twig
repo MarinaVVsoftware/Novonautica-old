@@ -317,9 +317,9 @@
                 let subtotal = row.cells[0].querySelector('input').value * row.cells[3].querySelector('input').value;
                 let ivatotal = subtotal * (iva.value/100);
                 let total = subtotal + ivatotal;
-                row.cells[4].querySelector('input').value = subtotal;
-                row.cells[5].querySelector('input').value = ivatotal;
-                row.cells[6].querySelector('input').value = total;
+                row.cells[4].querySelector('input').value = subtotal.toFixed(2);
+                row.cells[5].querySelector('input').value = ivatotal.toFixed(2);
+                row.cells[6].querySelector('input').value = total.toFixed(2);
                 sumaGranTotal();
             }
 
@@ -334,9 +334,9 @@
                         sumaGranTotal += Number((fila.cells[6].querySelector('input').value).replace(',',''))
                     ]
                 );
-                granSub.value = transformToMoneyFormat(String(sumaGranSubtotal));
-                granIva.value = transformToMoneyFormat(String(sumaGranIvatotal));
-                granTot.value = transformToMoneyFormat(String(sumaGranTotal));
+                granSub.value = transformToMoneyFormat(String(sumaGranSubtotal.toFixed(2)));
+                granIva.value = transformToMoneyFormat(String(sumaGranIvatotal.toFixed(2)));
+                granTot.value = transformToMoneyFormat(String(sumaGranTotal.toFixed(2)));
             }
 
             iva.addEventListener('keyup',(event) => {
