@@ -32,7 +32,6 @@ class AstilleroDataTable extends AbstractDataTableHandler
         $results->recordsTotal = $qb->select('COUNT(ap.id)')->getQuery()->getSingleScalarResult();
 
         $q = $qb->select('ap','ClaveProdServ','ClaveUnidad')
-            ->leftJoin('ap.proveedor', 'p')
             ->leftJoin('ap.claveProdServ','ClaveProdServ')
             ->leftJoin('ap.claveUnidad','ClaveUnidad');
 
@@ -40,7 +39,6 @@ class AstilleroDataTable extends AbstractDataTableHandler
             $q->where('(LOWER(ap.identificador) LIKE :search '.
                 ' OR LOWER(ap.nombre) LIKE :search '.
                 ' OR LOWER(ap.unidad) LIKE :search '.
-                ' OR LOWER(p.nombre) LIKE :search '.
                 ' OR ClaveProdServ.claveProdServ LIKE :search' .
                 ' OR ClaveUnidad.claveUnidad LIKE :search' .
                 ')'
@@ -52,18 +50,16 @@ class AstilleroDataTable extends AbstractDataTableHandler
             if ($order->column === 0) {
                 $q->addOrderBy('ap.identificador', $order->dir);
             } elseif ($order->column === 1) {
-                $q->addOrderBy('ap.proveedor', $order->dir);
-            } elseif ($order->column === 2) {
                 $q->addOrderBy('ap.nombre', $order->dir);
-            } elseif ($order->column === 3) {
+            } elseif ($order->column === 2) {
                 $q->addOrderBy('ClaveProdServ.claveProdServ', $order->dir);
-            } elseif ($order->column === 4) {
+            } elseif ($order->column === 3) {
                 $q->addOrderBy('ClaveUnidad.claveUnidad', $order->dir);
-            } elseif ($order->column === 5) {
+            } elseif ($order->column === 4) {
                 $q->addOrderBy('ClaveUnidad.nombre', $order->dir);
-            } elseif ($order->column === 6) {
+            } elseif ($order->column === 5) {
                 $q->addOrderBy('ap.precio', $order->dir);
-            } elseif ($order->column === 7) {
+            } elseif ($order->column === 6) {
                 $q->addOrderBy('ap.existencia', $order->dir);
             }
         }
@@ -84,7 +80,6 @@ class AstilleroDataTable extends AbstractDataTableHandler
 
             $results->data[] = [
                 $producto->getIdentificador(),
-                $producto->getProveedor() ? $producto->getProveedor()->getNombre() : '',
                 $producto->getNombre(),
                 $producto->getClaveProdServ()?$producto->getClaveProdServ()->getClaveProdServ():'',
                 $producto->getClaveUnidad()?$producto->getClaveUnidad()->getClaveUnidad():'',

@@ -39,4 +39,13 @@ class ProveedorRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getOneOrNullResult(Query::HYDRATE_ARRAY);
     }
+
+    public function findFirst()
+    {
+        return $this->createQueryBuilder('ap')
+            ->setMaxResults( 1 )
+            ->orderBy('ap.id', 'ASC')
+            ->getQuery()->getSingleResult();
+    }
+
 }

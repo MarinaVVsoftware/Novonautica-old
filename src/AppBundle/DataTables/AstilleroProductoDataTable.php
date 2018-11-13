@@ -56,17 +56,17 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
         foreach ($request->order as $order) {
             if ($order->column === 0) {
                 $q->addOrderBy('ap.identificador', $order->dir);
-            } elseif ($order->column === 2) {
+            } elseif ($order->column === 1) {
                 $q->addOrderBy('ap.nombre', $order->dir);
-            } elseif ($order->column === 3) {
+            } elseif ($order->column === 2) {
                 $q->addOrderBy('ap.precio', $order->dir);
-            } elseif ($order->column === 4) {
+            } elseif ($order->column === 3) {
                 $q->addOrderBy('ap.unidad', $order->dir);
-            } elseif ($order->column === 5) {
+            } elseif ($order->column === 4) {
                 $q->addOrderBy('ClaveProdServ.claveProdServ', $order->dir);
-            } elseif ($order->column === 6) {
+            } elseif ($order->column === 5) {
                 $q->addOrderBy('ClaveUnidad.claveUnidad', $order->dir);
-            } elseif ($order->column === 7) {
+            } elseif ($order->column === 6) {
                 $q->addOrderBy('ap.existencia', $order->dir);
             }
         }
@@ -92,6 +92,7 @@ class AstilleroProductoDataTable extends AbstractDataTableHandler
                 $producto->getUnidad(),
                 $producto->getClaveProdServ() ? $producto->getClaveProdServ()->getClaveProdServ() : '',
                 $producto->getClaveUnidad() ? $producto->getClaveUnidad()->getClaveUnidad() : '',
+                $producto->getExistencia() ? $producto->getExistencia():'0',
                 $producto->getId(),
             ];
         }
