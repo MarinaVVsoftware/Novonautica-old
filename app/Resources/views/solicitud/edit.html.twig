@@ -164,10 +164,6 @@
         function muestraListado(row){
             let empresaActual = Number(SelectEmpresa.value);
             switch (empresaActual){
-                //case 1: //Empresa pruebas break;
-                case 2: //Empresa JRF (tienda)
-                    row.cells[5].className = '';
-                    break;
                 case 3: //Empresa Marina
                     row.cells[2].className = '';
                     break;
@@ -177,7 +173,9 @@
                 case 5: //Empresa Astillero
                     row.cells[4].className = '';
                     break;
-                //case 6: //Empresa Toro break;
+                case 7: //V&V Store (tienda)
+                    row.cells[5].className = '';
+                    break;
             }
         }
 
