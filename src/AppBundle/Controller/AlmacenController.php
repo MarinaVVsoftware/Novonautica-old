@@ -32,7 +32,7 @@ class AlmacenController extends Controller
      * @param DataTablesInterface $dataTables
      * @return JsonResponse|Response
      */
-    public function indexAlmacenAction(Request $request, DataTablesInterface $dataTables)
+    public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
         if($request->isXmlHttpRequest()){
             try{
@@ -51,7 +51,7 @@ class AlmacenController extends Controller
      * @param Solicitud $solicitud
      * @return Response
      */
-    public function showAlmacenction(Solicitud $solicitud)
+    public function showAction(Solicitud $solicitud)
     {
         return $this->render('almacen/show.html.twig',[
             'title' => 'Detalle almacén',
@@ -148,7 +148,7 @@ class AlmacenController extends Controller
      * @Route("/{id}/validar", name="almacen_validar")
      * @Method({"GET", "POST"})
      */
-    public function validarAlmacenAction(Request $request, Solicitud $solicitud)
+    public function validarAction(Request $request, Solicitud $solicitud)
     {
         $em = $this->getDoctrine()->getManager();
         $this->denyAccessUnlessGranted('ALMACEN_VALIDAR',$solicitud);

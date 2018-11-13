@@ -24,18 +24,12 @@ use Symfony\Component\Validator\Constraints\NotNull;
 class SolicitudType extends AbstractType
 {
     /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
      * @var Security
      */
     private $security;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security)
+    public function __construct(Security $security)
     {
-        $this->entityManager = $entityManager;
         $this->security = $security;
     }
 

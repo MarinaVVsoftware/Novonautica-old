@@ -10,7 +10,7 @@ namespace AppBundle\Repository;
  */
 class SolicitudRepository extends \Doctrine\ORM\EntityRepository
 {
-    function compruebaRol($roles,$idEmpresa)
+    public function compruebaRol($roles,$idEmpresa)
     {
         $coincide = false;
         foreach ($roles as $role){
