@@ -13,6 +13,7 @@
                             <th>Combustible</th>
                             <th>Precio</th>
                             <th>Cuota IESPS</th>
+                            <th>Existencia</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -22,6 +23,13 @@
                             <td>{{ c.nombre }}</td>
                             <td>$ {{ (c.precio/100)|number_format(2) }} <small>MXN</small></td>
                             <td>{{ c.cuotaIesps }}</td>
+                            <td>{% if c.existencia %}
+                                    {{ c.existencia }}
+                                {% else %}
+                                    0.00
+                                {% endif %}
+                                lts
+                            </td>
                             <td>
                                 <a class="btn btn-azul" href="{{ path('combustible_catalogo_edit', { 'id': c.id }) }}">
                                     Editar

@@ -61,6 +61,20 @@ class ValorSistema
     private $folioCombustible;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="folio_solicitud", type="bigint")
+     */
+    private $folioSolicitud;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="folio_compra", type="bigint")
+     */
+    private $folioCompra;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="mensaje_correo_marina", type="text")
@@ -542,5 +556,53 @@ class ValorSistema
     public function getDiasHabilesCombustible()
     {
         return $this->diasHabilesCombustible;
+    }
+
+    /**
+     * Set folioSolicitud.
+     *
+     * @param int $folioSolicitud
+     *
+     * @return ValorSistema
+     */
+    public function setFolioSolicitud($folioSolicitud)
+    {
+        $this->folioSolicitud = $folioSolicitud;
+
+        return $this;
+    }
+
+    /**
+     * Get folioSolicitud.
+     *
+     * @return int
+     */
+    public function getFolioSolicitud()
+    {
+        return $this->folioSolicitud;
+    }
+
+    /**
+     * Set folioCompra.
+     *
+     * @param int $folioCompra
+     *
+     * @return ValorSistema
+     */
+    public function setFolioCompra($folioCompra)
+    {
+        $this->folioCompra = $folioCompra;
+
+        return $this;
+    }
+
+    /**
+     * Get folioCompra.
+     *
+     * @return int
+     */
+    public function getFolioCompra()
+    {
+        return $this->folioCompra;
     }
 }

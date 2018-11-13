@@ -1,0 +1,367 @@
+{% extends 'estructura/plantilla.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .p-0{
+            padding: 0 !important;
+        }
+        .help-block{
+            color: #dd4b39;
+        }
+
+        .novo-checkbox-container .checkbox {
+            position: relative;
+            padding: 20px 0 20px 20px;
+            text-align: left;
+        }
+
+        .novo-checkbox-container .checkbox label {
+            cursor: pointer;
+            padding-left: 10px;
+        }
+
+        .novo-checkbox-container .checkbox label:before,
+        .novo-checkbox-container .checkbox label:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+        }
+
+        .novo-checkbox-container .checkbox label:before {
+            left: 0;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0;
+            border-radius: 4px;
+            background: #3e4766;
+            -webkit-box-shadow: 0 0 1px grey;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .novo-checkbox-container .checkbox label:after {
+            width: 14px;
+            height: 8px;
+            top: 24px;
+            left: 3px;
+            border: 3px solid #0097f6;
+            border-top: none;
+            border-right: none;
+            background: transparent;
+            opacity: 0;
+            -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+
+        .novo-checkbox-container .checkbox label:hover:after {
+            opacity: .5;
+        }
+
+        .novo-checkbox-container .checkbox input[type="radio"],
+        .novo-checkbox-container .checkbox input[type="checkbox"] {
+            position: absolute;
+            top: 0;
+            left: -9999px;
+            visibility: hidden;
+        }
+
+        .novo-checkbox-container .checkbox input[type="radio"]:checked + label:after,
+        .novo-checkbox-container .checkbox input[type="checkbox"]:checked + label:after {
+            opacity: 1;
+        }
+    </style>
+{% endblock %}
+{% form_theme form.conceptos '/compra/_concepto.html.twig' %}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            {{ form_start(form) }}
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">{{ title }}</h3>
+                                {{ solicitud.folio }}
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('compra_show',{'id':solicitud.id }) }}">
+                                Regresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div id="products-pane" class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Fecha solicitud</label>
+                            <div class="info-input">
+                                {% if solicitud.fecha %}
+                                    {{ solicitud.fecha|date("d/m/Y") }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.iva) }}
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="novo-checkbox-container">
+                                {{ form_row(form.validadoCompra) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th width="8%">Cantidad</th>
+                                    <th width="15%">Producto</th>
+                                    <th>Proveedor</th>
+                                    <th>Precio</th>
+                                    <th>Sub-Total</th>
+                                    <th>IVA</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody id="conceptos" data-prototype="{{ form_widget(form.conceptos.vars.prototype)|e('html_attr') }}">
+                                {% for concepto in form.conceptos %}
+                                    <tr class="servicio-agregado table-item">
+                                        <td class="p-0">
+                                            {{ form_widget(concepto.cantidad) }}
+                                            {{ form_errors(concepto.cantidad) }}
+                                        </td>
+                                        <td class="p-0 text-center">
+                                            {% if concepto.marinaServicio.vars.value %}
+                                                {{ concepto.marinaServicio.vars.data.nombre }}
+                                                {% if concepto.marinaServicio.vars.data.claveUnidad %}
+                                                    - {{ concepto.marinaServicio.vars.data.claveUnidad.nombre }}
+                                                {% endif %}
+                                            {% endif %}
+                                            {% if concepto.combustibleCatalogo.vars.value %}
+                                                {{ concepto.combustibleCatalogo.vars.data.nombre }}
+                                                {% if concepto.combustibleCatalogo.vars.data.claveUnidad %}
+                                                    - {{ concepto.combustibleCatalogo.vars.data.claveUnidad.nombre }}
+                                                {% endif %}
+                                            {% endif %}
+                                            {% if concepto.astilleroProducto.vars.value %}
+                                                {{ concepto.astilleroProducto.vars.data.nombre }}
+                                                {% if concepto.astilleroProducto.vars.data.claveUnidad %}
+                                                    - {{ concepto.astilleroProducto.vars.data.claveUnidad.nombre }}
+                                                {% endif %}
+                                            {% endif %}
+                                            {% if concepto.tiendaProducto.vars.value %}
+                                                {{ concepto.tiendaProducto.vars.data.nombre }}
+                                                {% if concepto.tiendaProducto.vars.data.claveUnidad %}
+                                                    - {{ concepto.tiendaProducto.vars.data.claveUnidad.nombre }}
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                        <td class="p-0">
+                                            {{ form_widget(concepto.proveedor) }}
+                                            {{ form_errors(concepto.proveedor) }}
+                                        </td>
+                                        <td class="p-0">
+                                            {{ form_widget(concepto.precio) }}
+                                            {{ form_errors(concepto.precio) }}
+                                        </td>
+                                        <td class="p-0">
+                                            {{ form_widget(concepto.subtotal) }}
+                                            {{ form_errors(concepto.subtotal) }}
+                                        </td>
+                                        <td class="p-0">
+                                            {{ form_widget(concepto.ivatotal) }}
+                                            {{ form_errors(concepto.ivatotal) }}
+                                        </td>
+                                        <td class="p-0">
+                                            {{ form_widget(concepto.total) }}
+                                            {{ form_errors(concepto.total) }}
+                                        </td>
+                                        <td class="hide">
+                                            {{ form_widget(concepto.marinaServicio) }}
+                                            {{ form_errors(concepto.marinaServicio) }}
+                                        </td>
+                                        <td class="hide">
+                                            {{ form_widget(concepto.combustibleCatalogo) }}
+                                            {{ form_errors(concepto.combustibleCatalogo) }}
+                                        </td>
+                                        <td class="hide">
+                                            {{ form_widget(concepto.astilleroProducto) }}
+                                            {{ form_errors(concepto.astilleroProducto) }}
+                                        </td>
+                                        <td class="hide">
+                                            {{ form_widget(concepto.tiendaProducto) }}
+                                            {{ form_errors(concepto.tiendaProducto) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-offset-8">
+                            <h4 class="letra-azul">Sub-Total</h4>
+                            {{ form_row(form.subtotal) }}
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-offset-8">
+                            <h4 class="letra-azul">I.V.A.</h4>
+                            {{ form_row(form.ivatotal) }}
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-offset-8">
+                            <h4 class="letra-azul">Total</h4>
+                            {{ form_row(form.total) }}
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ form_row(form.notaCompra) }}
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-6">
+                            <button id="submit-btn" class="btn btn-azul">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+                        </div>
+                        {% if is_granted(expression('has_role("COMPRA_DELETE") or (user.isAdmin())')) %}
+                            <div class="col-sm-6 text-right">
+                                {{ delete_form is defined ? modal.deleteButton('Compra') : '' }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </section>
+    </div>
+{% endblock %}
+{% block modals %}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (($) => {
+            const body = document.querySelector('body');
+            const solicitudForm = document.querySelector('form[name="appbundle_solicitud"]');
+            const SubmitButton = document.getElementById('submit-btn');
+            const EntradasHolder = document.getElementById('conceptos');
+            const granSub = document.getElementById('appbundle_solicitud_subtotal');
+            const granIva = document.getElementById('appbundle_solicitud_ivatotal');
+            const granTot = document.getElementById('appbundle_solicitud_total');
+            const iva = document.getElementById('appbundle_solicitud_iva');
+
+            let counter = EntradasHolder.childElementCount;
+
+            /**
+             * Da formato a un numero en decimales y reduce sus decimales a 2
+             */
+            function transformToMoneyFormat(numero) {
+                return numero.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            }
+
+            function createRowData(concepto)
+            {
+                let prototipo = EntradasHolder.dataset.prototype.replace(/__name__/g, counter);
+                let tempTable = document.createElement('table');
+                tempTable.innerHTML = prototipo;
+                let row = tempTable.querySelector('tr');
+                row.cells[0].querySelector('input').value = concepto.cantidad;
+                if(concepto.marinaServicio){
+                    row.cells[7].querySelector('select').value = concepto.marinaServicio.id;
+                    row.cells[1].innerHTML = concepto.marinaServicio.nombre;
+                }
+                if(concepto.combustibleCatalogo){
+                    row.cells[8].querySelector('select').value = concepto.combustibleCatalogo.id;
+                    row.cells[1].innerHTML = concepto.combustibleCatalogo.nombre;
+                }
+                if(concepto.astilleroProducto){
+                    row.cells[9].querySelector('select').value = concepto.astilleroProducto.id;
+                    row.cells[1].innerHTML = concepto.astilleroProducto.nombre;
+                }
+                if(concepto.tiendaProducto){
+                    row.cells[10].querySelector('select').value = concepto.tiendaProducto.id;
+                    row.cells[1].innerHTML = concepto.tiendaProducto.nombre;
+                }
+                addRowListeners(row);
+                EntradasHolder.appendChild(row);
+                counter++;
+                return row;
+            }
+
+            function addRowListeners(row){
+                let precio = row.cells[3].querySelector('input');
+                row.cells[0].querySelector('input').onkeypress = function(ev){
+                    return esNumeroDecimal(ev,this);
+                };
+                precio.onkeypress = function(ev){
+                    return esNumeroDecimal(ev,this);
+                };
+                precio.onkeyup = function (ev) {
+                    calculaSubIvaTot(row);
+                };
+            }
+
+            function calculaSubIvaTot(row){
+                let subtotal = row.cells[0].querySelector('input').value * row.cells[3].querySelector('input').value;
+                let ivatotal = subtotal * (iva.value/100);
+                let total = subtotal + ivatotal;
+                row.cells[4].querySelector('input').value = subtotal.toFixed(2);
+                row.cells[5].querySelector('input').value = ivatotal.toFixed(2);
+                row.cells[6].querySelector('input').value = total.toFixed(2);
+                sumaGranTotal();
+            }
+
+            function sumaGranTotal(){
+                let sumaGranSubtotal = 0;
+                let sumaGranIvatotal = 0;
+                let sumaGranTotal = 0;
+                EntradasHolder.querySelectorAll('tr').forEach(
+                    fila => [
+                        sumaGranSubtotal += Number((fila.cells[4].querySelector('input').value).replace(',','')),
+                        sumaGranIvatotal += Number((fila.cells[5].querySelector('input').value).replace(',','')),
+                        sumaGranTotal += Number((fila.cells[6].querySelector('input').value).replace(',',''))
+                    ]
+                );
+                granSub.value = transformToMoneyFormat(String(sumaGranSubtotal.toFixed(2)));
+                granIva.value = transformToMoneyFormat(String(sumaGranIvatotal.toFixed(2)));
+                granTot.value = transformToMoneyFormat(String(sumaGranTotal.toFixed(2)));
+            }
+
+            iva.addEventListener('keyup',(event) => {
+                EntradasHolder.querySelectorAll('tr').forEach(fila => calculaSubIvaTot(fila));
+            });
+
+            SubmitButton
+                .addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $('<input type="submit" class="hidden">')
+                        .appendTo(solicitudForm)
+                        .click()
+                        .remove();
+                    if (solicitudForm.checkValidity()) {
+                        solicitudForm.submit();
+                    }
+                });
+
+            EntradasHolder
+                .querySelectorAll('tr')
+                .forEach((row) => {
+                    addRowListeners(row);
+                });
+
+        })(jQuery);
+    </script>
+{% endblock %}

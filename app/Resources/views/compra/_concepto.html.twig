@@ -1,0 +1,47 @@
+{% block appbundle_compra_concepto_widget %}
+    <tr class="servicio-agregado table-item">
+        <td>
+            {{ form_widget(form.cantidad) }}
+            {{ form_errors(form.cantidad) }}
+        </td>
+        <td class="text-center">
+
+        </td>
+        <td>
+            {{ form_widget(form.proveedor) }}
+            {{ form_errors(form.proveedor) }}
+        </td>
+        <td>
+            {{ form_widget(form.precio) }}
+            {{ form_errors(form.precio) }}
+        </td>
+        <td>
+            {{ form_widget(form.subtotal) }}
+            {{ form_errors(form.subtotal) }}
+        </td>
+        <td>
+            {{ form_widget(form.ivatotal) }}
+            {{ form_errors(form.ivatotal) }}
+        </td>
+        <td>
+            {{ form_widget(form.total) }}
+            {{ form_errors(form.total) }}
+        </td>
+        <td class="hide">
+            {{ form_widget(form.marinaServicio) }}
+            {{ form_errors(form.marinaServicio) }}
+        </td>
+        <td class="hide">
+            {{ form_widget(form.combustibleCatalogo) }}
+            {{ form_errors(form.combustibleCatalogo) }}
+        </td>
+        <td class="hide">
+            {{ form_widget(form.astilleroProducto) }}
+            {{ form_errors(form.astilleroProducto) }}
+        </td>
+        <td class="hide">
+            {{ form_widget(form.tiendaProducto) }}
+            {{ form_errors(form.tiendaProducto) }}
+        </td>
+    </tr>
+{% endblock %}

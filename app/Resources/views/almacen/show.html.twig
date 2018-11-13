@@ -1,0 +1,172 @@
+{% extends 'estructura/plantilla.twig' %}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">{{ title }}</h3>
+                            {{ solicitud.folio }}
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('almacen_index') }}">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Fecha solicitud</label>
+                            <div class="info-input">{{ solicitud.fecha|date('d/m/Y') }}</div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Creado por</label>
+                            <div class="info-input">{{ solicitud.creador }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Validación compra</label>
+                            <div class="info-input">
+                                {% if solicitud.validadoCompra %}
+                                    Validado - {{ solicitud.nombreValidoCompra }}
+                                {% else %}
+                                    No validado
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Fecha validación compra</label>
+                            <div class="info-input">
+                                {% if solicitud.fechaValidoCompra %}
+                                    {{ solicitud.fechaValidoCompra|date('d/m/Y') }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Validación almacén</label>
+                            <div class="info-input">
+                                {% if solicitud.validadoAlmacen %}
+                                    Validado - {{ solicitud.nombreValidoAlmacen }}
+                                {% else %}
+                                    No validado
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Fecha validación almacén</label>
+                            <div class="info-input">
+                                {% if solicitud.fechaValidoAlmacen %}
+                                    {{ solicitud.fechaValidoAlmacen|date('d/m/Y') }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Proveedor</th>
+                                    <th>Producto</th>
+                                    <th>Unidad</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Sub-Total</th>
+                                    <th>IVA {{ solicitud.iva|number_format(2) }}%</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for concepto in solicitud.conceptos %}
+                                    <tr>
+                                        <td>
+                                            {% if concepto.proveedor %}
+                                                {{ concepto.proveedor.nombre }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if concepto.marinaServicio %}
+                                                {{ concepto.marinaServicio }}
+                                                {% set unidad = concepto.marinaServicio.claveUnidad %}
+                                            {% elseif concepto.combustibleCatalogo %}
+                                                {{ concepto.combustibleCatalogo }}
+                                                {% set unidad = concepto.combustibleCatalogo.claveUnidad %}
+                                            {% elseif concepto.astilleroProducto %}
+                                                {{ concepto.astilleroProducto }}
+                                                {% set unidad = concepto.astilleroProducto.claveUnidad %}
+                                            {% elseif concepto.tiendaProducto %}
+                                                {{ concepto.tiendaProducto }}
+                                                {% set unidad = concepto.tiendaProducto.claveUnidad %}
+                                            {% else %}
+                                                {% set unidad = '' %}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if unidad %}
+                                                {{ unidad.nombre }}
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ concepto.cantidad|number_format(2) }}</td>
+                                        <td>${{ (concepto.precio/100)|number_format(2) }} <small>MXN</small></td>
+                                        <td>${{ (concepto.subtotal/100)|number_format(2) }} <small>MXN</small></td>
+                                        <td>${{ (concepto.ivatotal/100)|number_format(2) }} <small>MXN</small></td>
+                                        <td>${{ (concepto.total/100)|number_format(2) }} <small>MXN</small></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-6 text-right">
+                            <h4 class="letra-azul">Sub-Total</h4>
+                            <hr>
+                            <h4>MX$ {{ (solicitud.subtotal / 100)|number_format(2) }}</h4>
+                            <h4 class="letra-azul">IVA {{ solicitud.iva|number_format(2) }}%</h4>
+                            <hr>
+                            <h4>MX$ {{ (solicitud.ivatotal / 100)|number_format(2) }}</h4>
+                            <h4 class="letra-azul">Total</h4>
+                            <hr>
+                            <h4>MX$ {{ (solicitud.total / 100)|number_format(2) }}</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <label>Notas solicitud</label>
+                            <div class="info-input">{{ solicitud.notaSolicitud }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <label>Notas compra</label>
+                            <div class="info-input">{{ solicitud.notaCompra }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <label>Notas almacén</label>
+                            <div class="info-input">{{ solicitud.notaAlmacen }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {% if is_granted(expression('has_role("ALMACEN_VALIDAR") or (user.isAdmin())')) and solicitud.validadoCompra and solicitud.validadoAlmacen == false %}
+                                <a href="{{ path('almacen_validar',{'id':solicitud.id }) }}"
+                                   class="btn btn-azul">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    Validar
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

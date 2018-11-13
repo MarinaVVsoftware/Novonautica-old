@@ -45,6 +45,13 @@ class Catalogo
     private $cuotaIesps;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="existencia", type="float", nullable=true)
+     */
+    private $existencia;
+
+    /**
      * @var ClaveUnidad
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
@@ -191,5 +198,29 @@ class Catalogo
     public function getClaveProdServ()
     {
         return $this->claveProdServ;
+    }
+
+    /**
+     * Set existencia.
+     *
+     * @param float|null $existencia
+     *
+     * @return Catalogo
+     */
+    public function setExistencia($existencia = null)
+    {
+        $this->existencia = $existencia;
+
+        return $this;
+    }
+
+    /**
+     * Get existencia.
+     *
+     * @return float|null
+     */
+    public function getExistencia()
+    {
+        return $this->existencia;
     }
 }

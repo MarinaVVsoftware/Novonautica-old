@@ -41,7 +41,7 @@ class ProductoController extends Controller
 
         if (!$producto->getId()) {
             $producto->addProveedore(
-                $proveedoresRepository->find(1)
+                $proveedoresRepository->findFirst()
             );
         }
 

@@ -1,0 +1,244 @@
+{% extends 'estructura/plantilla.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .p-0{
+            padding: 0 !important;
+        }
+    </style>
+{% endblock %}
+{% import 'estructura/modalborrar.twig' as modal %}
+{% form_theme form.conceptos '/solicitud/_concepto.html.twig' %}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            {{ form_start(form) }}
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">{{ title }}</h3>
+                            {% if solicitud is defined and solicitud.folio %}
+                                {{ solicitud.folio }}
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right" href="
+                            {% if  solicitud is defined %}
+                                    {{ path('solicitud_show',{'id':solicitud.id}) }}
+                            {% else %}
+                                    {{ path('solicitud_index') }}
+                            {% endif %}
+                            ">
+                                Regresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div id="products-pane" class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            {{ form_row(form.empresa) }}
+                        </div>
+                        <div class="col-sm-5">
+                            <label>Fecha</label>
+                            <div class="info-input">
+                                {% if  solicitud is defined and solicitud.fecha %}
+                                    {{ solicitud.fecha|date('d/m/Y') }}
+                                {% else %}
+                                    {{ "now"|date("d/m/Y") }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th width="4%" valign="middle" class="text-center">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </th>
+                                    <th width="10%">Cantidad</th>
+                                    <th width="10%">Producto</th>
+                                </tr>
+                                </thead>
+                                <tbody id="conceptos" data-prototype="{{ form_widget(form.conceptos.vars.prototype)|e('html_attr') }}">
+                                {% for concepto in form.conceptos %}
+                                    <tr class="servicio-agregado table-item">
+                                        <td valign="middle" class="text-center">
+                                        </td>
+                                        <td class="p-0">
+                                            {{ form_widget(concepto.cantidad) }}
+                                            {{ form_errors(concepto.cantidad) }}
+                                        </td>
+                                        <td class="p-0 {% if concepto.marinaServicio.vars.value is empty %}hide{% endif %}">
+                                            {{ form_widget(concepto.marinaServicio) }}
+                                            {{ form_errors(concepto.marinaServicio) }}
+                                        </td>
+                                        <td class="p-0 {% if concepto.combustibleCatalogo.vars.value is empty %}hide{% endif %}">
+                                            {{ form_widget(concepto.combustibleCatalogo) }}
+                                            {{ form_errors(concepto.combustibleCatalogo) }}
+                                        </td>
+                                        <td class="p-0 {% if concepto.astilleroProducto.vars.value is empty %}hide{% endif %}">
+                                            {{ form_widget(concepto.astilleroProducto) }}
+                                            {{ form_errors(concepto.astilleroProducto) }}
+                                        </td>
+                                        <td class="p-0 {% if concepto.tiendaProducto.vars.value is empty %}hide{% endif %}">
+                                            {{ form_widget(concepto.tiendaProducto) }}
+                                            {{ form_errors(concepto.tiendaProducto) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10">
+                            {{ form_row(form.notaSolicitud) }}
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-6">
+                            <button id="submit-btn" class="btn btn-azul">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Guardar
+                            </button>
+                        </div>
+                        {% if is_granted(expression('has_role("SOLICITUD_DELETE") or (user.isAdmin())')) %}
+                            <div class="col-sm-6 text-right">
+                                {{ delete_form is defined ? modal.deleteButton('Solicitud') : '' }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <a href="#" id="add" class="btn btn-block btn-contorno-azul pull-right">
+                                + Concepto
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </section>
+    </div>
+{% endblock %}
+{% block modals %}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (($) => {
+            const body = document.querySelector('body');
+        const solicitudForm = document.querySelector('form[name="appbundle_solicitud"]');
+        const SubmitButton = document.getElementById('submit-btn');
+        const AddButton = document.getElementById('add');
+        const EntradasHolder = document.getElementById('conceptos');
+        const SelectEmpresa = document.getElementById('appbundle_solicitud_empresa');
+
+        let counter = EntradasHolder.childElementCount;
+
+
+        /**
+         * Crea una fila en la tabla de entradas con un boton que la remueve
+         */
+        function createRow()
+        {
+            let prototipo = EntradasHolder.dataset.prototype.replace(/__name__/g, counter);
+            let tempTable = document.createElement('table');
+            tempTable.innerHTML = prototipo;
+            let row = tempTable.querySelector('tr');
+            muestraListado(row);
+            addRowListeners(row);
+            addRowRemove(row);
+            EntradasHolder.appendChild(row);
+            counter++;
+            return row;
+        }
+        function muestraListado(row){
+            let empresaActual = Number(SelectEmpresa.value);
+            switch (empresaActual){
+                //case 1: //Empresa pruebas break;
+                case 2: //Empresa JRF (tienda)
+                    row.cells[5].className = '';
+                    break;
+                case 3: //Empresa Marina
+                    row.cells[2].className = '';
+                    break;
+                case 4: //Empresa Combustible
+                    row.cells[3].className = '';
+                    break;
+                case 5: //Empresa Astillero
+                    row.cells[4].className = '';
+                    break;
+                //case 6: //Empresa Toro break;
+            }
+        }
+
+        /**
+         * Agrega un boton para remover su propia row
+         */
+        function addRowRemove(row) {
+            let celda = row.cells[0];
+            let removeButton = document.createElement('a');
+
+            removeButton.className = 'badge btn-xs btn-naranja';
+            removeButton.innerHTML = '<i class="fa fa-times"></i>';
+            removeButton.addEventListener('click', (event) => {
+                event.preventDefault();
+            event.stopPropagation();
+            removeButton.parentNode.parentNode.remove(removeButton);
+        });
+
+            celda.appendChild(removeButton);
+        }
+
+        function addRowListeners(row){
+            row.cells[1].querySelector('input').onkeypress = function(ev){
+                return esNumeroDecimal(ev,this);
+            };
+        }
+
+
+        AddButton.addEventListener('click', (event) => {
+            event.preventDefault();
+        event.stopPropagation();
+        if(Number(SelectEmpresa.value) !== 0){
+            $(createRow().cells[1].querySelector('select')); //.select2('open');
+        }
+        });
+
+        SubmitButton
+            .addEventListener('click', (event) => {
+            event.preventDefault();
+        event.stopPropagation();
+
+        $('<input type="submit" class="hidden">')
+            .appendTo(solicitudForm)
+            .click()
+            .remove();
+        if (solicitudForm.checkValidity()) {
+            solicitudForm.submit();
+        }
+        });
+
+        EntradasHolder
+            .querySelectorAll('tr')
+            .forEach((row) => {
+            addRowListeners(row);
+        addRowRemove(row);
+        });
+
+        SelectEmpresa.addEventListener('change',function (ev) {
+            EntradasHolder.querySelectorAll('tr').forEach(fila => fila.remove());
+        });
+
+        })(jQuery);
+    </script>
+{% endblock %}

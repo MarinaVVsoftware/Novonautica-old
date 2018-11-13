@@ -135,6 +135,17 @@ class UsuarioType extends AbstractType
                     'Modificar' => 'AGENDA_EDIT',
                     'Eliminar' => 'AGENDA_DELETE',
                 ],
+                'Solicitud' => $this->getSolicitudRoles(),
+                'Compra' => [
+                    'Acceso' => 'ROLE_COMPRA',
+                    'Validar' => 'COMPRA_VALIDA'
+                ],
+                'Almacén' => [
+                    'Acceso' => 'ROLE_ALMACEN',
+                    'Validar' => 'ALMACEN_VALIDAR',
+                    'Inventario' => 'ROLE_INVENTARIO'
+                ]
+
             ],
         ]);
 
@@ -201,19 +212,19 @@ class UsuarioType extends AbstractType
 
         return $roles;
     }
-//    private function getGastosRoles()
-//    {
-//        $emisorRepository = $this->entityManager->getRepository(Emisor::class);
-//        $roles = [
-//            'Acceso' => 'ROLE_GASTO',
-//            'Crear' => 'GASTO_CREATE',
-//            'Modificar' => 'GASTO_EDIT',
-//            'Eliminar' => 'GASTO_DELETE'
-//        ];
-//        foreach ($emisorRepository->getEmisorRoles() as $emisorRole) {
-//            $alias = join('-', explode(' ', $emisorRole['alias']));
-//            $roles[$emisorRole['alias']] = "VIEW_GASTO_{$alias}_{$emisorRole['id']}";
-//        }
-//        return $roles;
-//    }
+    private function getSolicitudRoles()
+    {
+        $emisorRepository = $this->entityManager->getRepository(Emisor::class);
+        $roles = [
+            'Acceso' => 'ROLE_SOLICITUD',
+            'Crear' => 'SOLICITUD_CREATE',
+            'Modificar' => 'SOLICITUD_EDIT',
+            'Eliminar' => 'SOLICITUD_DELETE'
+        ];
+        foreach ($emisorRepository->getEmisorRoles() as $emisorRole) {
+            $alias = join('-', explode(' ', $emisorRole['alias']));
+            $roles[$emisorRole['alias']] = "VIEW_SOLICITUD_{$alias}_{$emisorRole['id']}";
+        }
+        return $roles;
+    }
 }

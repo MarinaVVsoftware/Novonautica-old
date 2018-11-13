@@ -654,6 +654,97 @@
             {% endif %}
             <!-- END CONTABILIDAD -->
 
+            <!-- START SOLICITUD -->
+            {% if is_granted('ROLE_SOLICITUD') %}
+                <li class="treeview {{ path.check('solicitud_') }}">
+                    <a href="#">
+                        <i class="fa fa-file-text-o"></i> <span>Solicitudes</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ path.check('solicitud_index') }} {{ path.check('solicitud_show') }}">
+                            <a href="{{ path('solicitud_index') }}">
+                                <i class="fa fa-minus"></i> <span>Listado</span>
+                            </a>
+                        </li>
+                        {% if is_granted(expression('has_role("SOLICITUD_CREATE") or (user.isAdmin())')) %}
+                            <li class="{{ path.check('solicitud_new') }}">
+                                <a href="{{ path('solicitud_new') }}">
+                                    <i class="fa fa-minus"></i> <span>Nuevo</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </li>
+            {% endif %}
+            <!-- END SOLICITUD -->
+
+            <!-- START COMPRAS -->
+            {% if is_granted('ROLE_COMPRA') %}
+                <li class="treeview {{ path.check('compra_') }}">
+                    <a href="#">
+                        <i class="fa fa-money"></i> <span>Compras</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ path.check('compra_') }}">
+                            <a href="{{ path('compra_index') }}">
+                                <i class="fa fa-circle-o"></i> <span>Listado</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            {% endif %}
+            <!-- END COMPRAS -->
+
+            <!-- START ALMACÉN-->
+            {% if is_granted('ROLE_ALMACEN') %}
+                <li class="treeview {{ path.check('almacen_') }} ">
+                    <a href="#">
+                        <i class="fa fa-external-link"></i> <span>Almacén</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ path.check('almacen_index') }}">
+                            <a href="{{ path('almacen_index') }}">
+                                <i class="fa fa-circle-o"></i> <span>Listado</span>
+                            </a>
+                        </li>
+                        {% if is_granted('ROLE_INVENTARIO') %}
+                        <li class="treeview {{ path.check('almacen_inventario-') }}">
+                            <a href="#">
+                                <i class="fa fa-circle-o"></i> <span>Inventario</span>
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li class="{{ path.check('almacen_inventario-marina') }}">
+                                    <a href="{{ path('almacen_inventario-marina') }}">
+                                        <i class="fa fa-minus"></i> <span>Puerto Mujeres</span>
+                                    </a>
+                                </li>
+                                <li class="{{ path.check('almacen_inventario-combustible') }}">
+                                    <a href="{{ path('almacen_inventario-combustible') }}">
+                                        <i class="fa fa-minus"></i> <span>Servicios Marinos</span>
+                                    </a>
+                                </li>
+                                <li class="{{ path.check('almacen_inventario-astillero') }}">
+                                    <a href="{{ path('almacen_inventario-astillero') }}">
+                                        <i class="fa fa-minus"></i> <span>Astillero</span>
+                                    </a>
+                                </li>
+                                <li class="{{ path.check('almacen_inventario-tienda') }}">
+                                    <a href="{{ path('almacen_inventario-tienda') }}">
+                                        <i class="fa fa-minus"></i> <span>V&V Store</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </li>
+            {% endif %}
+            <!-- END ALMACÉN -->
+
             <!-- START HISTORIAL CORREOS -->
             {% if is_granted('ROLE_HCORREO') %}
                 <li class="treeview {{ path.check('historial-correo') }}">

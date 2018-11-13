@@ -184,6 +184,11 @@ security:
         - { path: ^/historial-correo, roles: ROLE_HCORREO }
 
         - { path: ^/gastos, roles: ROLE_GASTO }
+        - { path: ^/solicitud, roles: ROLE_SOLICITUD }
+        - { path: ^/compra, roles: ROLE_COMPRA }
+
+        - { path: ^/almacen/inventario, roles: ROLE_INVENTARIO }
+        - { path: ^/almacen, roles: ROLE_ALMACEN }
 
         - { path: ^/usuario, roles: ROLE_RH }
 
@@ -267,3 +272,7 @@ security:
             - ROLE_WHOLE_AJUSTES
             - ROLE_AGENDA
             - ROLE_GASTO
+            - ROLE_SOLICITUD
+            - ROLE_COMPRA
+            - ROLE_ALMACEN
+            - ROLE_INVENTARIO

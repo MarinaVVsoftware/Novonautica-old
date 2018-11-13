@@ -23,24 +23,12 @@
                     {% form_theme edit_form 'estructura/temaerror.html.twig' %}
                     {{ form_start(edit_form) }}
                     <div class="row">
-                        <div class="col-sm-6">
-                            {{ form_errors(edit_form.nombre) }}
-                            {{ form_errors(edit_form.unidad) }}
-                            {{ form_errors(edit_form.precio) }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            {{ form_label(edit_form.nombre) }}
-                            {{ form_widget(edit_form.nombre) }}
-                            {{ form_label(edit_form.unidad) }}
-                            {{ form_widget(edit_form.unidad) }}
-                            {{ form_label(edit_form.precio) }}
-                            {{ form_widget(edit_form.precio) }}
+                        <div class="col-sm-8">
+                            {{ form_widget(edit_form) }}
                         </div>
                     </div>
                     <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-6">
+                        <div class="col-sm-8">
                             <button type="submit" class="btn btn-azul pull-right">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 Guardar
@@ -49,7 +37,7 @@
                     </div>
                     {{ form_end(edit_form) }}
                     <div class="row  espacio-linea-arriba2">
-                        <div class="col-sm-6">
+                        <div class="col-sm-8">
                             <button type="button" class="btn btn-borrar pull-right" data-toggle="modal"
                                     data-target="#modalBorrar">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -61,6 +49,20 @@
             </div>
         </section>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (function ($) {
+            const baseUrl = '{{ app.request.baseUrl }}';
+
+            $('#appbundle_marinahumedaservicio_claveUnidad')
+                .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveunidad'}});
+            $('#appbundle_marinahumedaservicio_claveProdServ')
+                .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveprodserv'}});
+
+        })(jQuery);
+    </script>
 {% endblock %}
 {% block modals %}
     {% embed 'estructura/modalborrar.twig' %}
