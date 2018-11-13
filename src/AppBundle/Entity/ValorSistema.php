@@ -68,13 +68,6 @@ class ValorSistema
     private $folioSolicitud;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="folio_compra", type="bigint")
-     */
-    private $folioCompra;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="mensaje_correo_marina", type="text")
@@ -580,29 +573,5 @@ class ValorSistema
     public function getFolioSolicitud()
     {
         return $this->folioSolicitud;
-    }
-
-    /**
-     * Set folioCompra.
-     *
-     * @param int $folioCompra
-     *
-     * @return ValorSistema
-     */
-    public function setFolioCompra($folioCompra)
-    {
-        $this->folioCompra = $folioCompra;
-
-        return $this;
-    }
-
-    /**
-     * Get folioCompra.
-     *
-     * @return int
-     */
-    public function getFolioCompra()
-    {
-        return $this->folioCompra;
     }
 }
