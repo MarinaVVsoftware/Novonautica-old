@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<link rel="stylesheet" type="text/css" href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+<style type="text/css">
+    body {
+        font-size: 10px;
+    }
+
+    .letra-blanca {
+        color: #ffffff;
+    }
+
+    .fondo-bicolor-arriba {
+        background: url("{{ absolute_url(asset('img/imagen-03.jpg')) }}") no-repeat top right;
+        background-size: 100% 120%;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-3" style="margin-top: 5px">
+            <img src="{{ absolute_url(asset('img/cotizacion-03.png') ) }}" class="img-responsive imagenlogo">
+        </div>
+        <div class="col-xs-9 text-right letra-blanca fondo-bicolor-arriba" style="height: 90px; padding-top: 3px">
+            <h4 style="margin: 0;">
+                <strong>Productos</strong>
+            </h4>
+            <p style="margin: 0;">
+
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

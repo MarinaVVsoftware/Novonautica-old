@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 
 /**
  * Class CompraController
@@ -90,5 +91,38 @@ class CompraController extends Controller
             'solicitud' => $solicitud,
             'title' => 'Compra validar'
         ]);
+    }
+
+    /**
+     * @Route("/{id}/pdf", name="compra_pdf")
+     * @Method("GET")
+     *
+     * @param Solicitud $solicitud
+     * @return PdfResponse
+     */
+    public function displayPdfAction(Solicitud $solicitud)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $valor = $em->getRepository('AppBundle:ValorSistema')->find(1);
+        $html = $this->renderView('compra/pdf/body.html.twig',['solicitud' => $solicitud]);
+        $header = $this->renderView('compra/pdf/header.html.twig');
+        $footer = $this->renderView('compra/pdf/footer.html.twig',['valor' => $valor]);
+
+        $hojapdf = $this->get('knp_snappy.pdf');
+
+        $options = [
+            'margin-top' => 19,
+            'margin-right' => 0,
+            'margin-left' => 0,
+            'header-html' => utf8_decode($header),
+            'footer-html' => utf8_decode($footer)
+        ];
+
+        return new PdfResponse(
+            $hojapdf->getOutputFromHtml($html, $options),
+            'compra-' . $solicitud->getFolio() . '.pdf',
+            'application/pdf',
+            'inline'
+        );
     }
 }

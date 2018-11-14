@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css"
+          href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+    <title>Compra</title>
+    <style>
+        body {
+            color: #666;
+            width: 100% !important;
+            height: 100%;
+            font-size: 12px;
+        }
+
+        h4, h5, h6 {
+            margin-top: 5px !important;
+            margin-bottom: 5px !important;
+        }
+
+        .informacion p {
+            margin: 0 !important;
+        }
+
+        .nopadding {
+            padding: 0;
+        }
+        .container-fluid {
+            page-break-after: always;
+        }
+        .grey-background {
+            background-color: #ddd;
+        }
+        table.table thead tr th {
+            border: 1px solid #458fce !important;
+            border-bottom: 0 !important;
+            background-color: #458fce;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row informacion" style="background-color: #EAEAEA; padding-top: .5rem; padding-bottom: 1rem;">
+        <div class="col-xs-8">
+            <h4>Información</h4>
+            <p><strong>Empresa: </strong> {{ solicitud.empresa.nombre }}</p>
+            <p><strong>No. folio: </strong> {{ solicitud.folio }}</p>
+            <p><strong>Fecha solicitud: </strong> {{ solicitud.fecha|date('d/m/Y') }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 text-center nopadding">
+            <table class="table">
+                <thead>
+                <tr class="text-center">
+                    <th>Proveedor</th>
+                    <th>Producto</th>
+                    <th>Unidad</th>
+                    <th>Cantidad</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for concepto in solicitud.conceptos %}
+                    <tr class="text-left">
+                        <td>
+                            {% if concepto.proveedor %}
+                                {{ concepto.proveedor.nombre }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if concepto.marinaServicio %}
+                                {{ concepto.marinaServicio }}
+                                {% set unidad = concepto.marinaServicio.claveUnidad %}
+                            {% elseif concepto.combustibleCatalogo %}
+                                {{ concepto.combustibleCatalogo }}
+                                {% set unidad = concepto.combustibleCatalogo.claveUnidad %}
+                            {% elseif concepto.astilleroProducto %}
+                                {{ concepto.astilleroProducto }}
+                                {% set unidad = concepto.astilleroProducto.claveUnidad %}
+                            {% elseif concepto.tiendaProducto %}
+                                {{ concepto.tiendaProducto }}
+                                {% set unidad = concepto.tiendaProducto.claveUnidad %}
+                            {% else %}
+                                {% set unidad = '' %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if unidad %}
+                                {{ unidad.nombre }}
+                            {% endif %}
+                        </td>
+                        <td>{{ concepto.cantidad }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
