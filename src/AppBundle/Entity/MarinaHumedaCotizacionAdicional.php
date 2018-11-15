@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="marina_humeda_cotizacion_adicional")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MarinaHumedaCotizacionAdicionalRepository")
+ * @ORM\EntityListeners({"AppBundle\Entity\Marina\CotizacionAdicionalListener"})
  */
 class MarinaHumedaCotizacionAdicional
 {

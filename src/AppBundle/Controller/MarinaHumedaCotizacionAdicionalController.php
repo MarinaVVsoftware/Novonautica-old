@@ -140,8 +140,10 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
     public function editAction(Request $request, MarinaHumedaCotizacionAdicional $marinaHumedaCotizacionAdicional)
     {
         $originalServicios = new ArrayCollection();
+        $clonServicios = new ArrayCollection();
         foreach ($marinaHumedaCotizacionAdicional->getMhcservicios() as $serv){
             $originalServicios->add($serv);
+            $clonServicios->add(clone $serv);
         }
         $deleteForm = $this->createDeleteForm($marinaHumedaCotizacionAdicional);
         $editForm = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionAdicionalType', $marinaHumedaCotizacionAdicional);
@@ -152,6 +154,17 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
                 if (false === $marinaHumedaCotizacionAdicional->getMhcservicios()->contains($serv)) {
                     $em->persist($serv);
                     $em->remove($serv);
+                }else{
+                    foreach ($clonServicios as $clonServicio){
+                        if($serv->getId() === $clonServicio->getId()){
+                            $diferenciaCantidad = $clonServicio->getCantidad() - $serv->getCantidad();
+                            $productosRepositorio = $em->getRepository('AppBundle:MarinaHumedaServicio');
+                            $producto = $productosRepositorio->findOneBy(['id'=>$serv->getMarinahumedaservicio()->getId()]);
+                            $nuevaExistencia = $producto->getExistencia() + $diferenciaCantidad;
+                            $producto->setExistencia($nuevaExistencia);
+                            $em->persist($producto);
+                        }
+                    }
                 }
             }
             $em->persist($marinaHumedaCotizacionAdicional);
