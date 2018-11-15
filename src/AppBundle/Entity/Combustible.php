@@ -1330,18 +1330,4 @@ class Combustible
     {
         $this->factura = $factura;
     }
-
-    /**
-     *  este metodo se ocupara para sacar los items y restar su inventario en facturacion
-     *
-     * @return Catalogo[]
-     */
-    public function getItems()
-    {
-        $productos = [];
-
-        $productos[] = $this->tipo;
-
-        return $productos;
-    }
 }
