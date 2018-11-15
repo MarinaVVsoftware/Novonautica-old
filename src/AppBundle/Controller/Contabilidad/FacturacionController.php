@@ -2,13 +2,13 @@
 
 namespace AppBundle\Controller\Contabilidad;
 
+use AppBundle\Entity\Astillero;
 use AppBundle\Entity\AstilleroCotizacion;
 use AppBundle\Entity\AstilleroCotizaServicio;
 use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Combustible;
 use AppBundle\Entity\Contabilidad\Catalogo\Servicio;
 use AppBundle\Entity\Contabilidad\Facturacion;
-use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Entity\Tienda\Venta;
 use AppBundle\Extra\FacturacionHelper;
@@ -169,7 +169,25 @@ class FacturacionController extends Controller
                 $em->persist($cotizacion);
             }
 
-            // TODO checar si la factura pertenece a astillero y verificar si hay que restar o devolver productos de su inventario
+            // checar si la factura pertenece a astillero y verificar si hay que restar o devolver productos de su inventario
+            if ($cotizacionRepository->getClassName() === AstilleroCotizacion::class) {
+                $astilleroProductoRepository = $em->getRepository(Astillero\Producto::class);
+                $conceptos = $form->get('conceptos')->all();
+
+                foreach ($conceptos as $concepto) {
+                    if ($productoId = $concepto->get('producto')->getData()) {
+                        $producto = $astilleroProductoRepository->find($productoId);
+
+                        $cantidadInicial = $producto->getExistencia() ?? 0;
+                        $cantidadDevolver = $concepto->getData()->getCantidad();
+                        $cantidadRemover = $concepto->get('productoRemover')->getData();
+                        $cantidadFinal = ($cantidadInicial - ($cantidadDevolver - $cantidadRemover));
+
+                        $producto->setExistencia($cantidadFinal);
+                        $em->persist($producto);
+                    }
+                }
+            }
 
             $em->persist($factura);
             $em->flush();
@@ -183,10 +201,13 @@ class FacturacionController extends Controller
             return $this->redirectToRoute('contabilidad_facturacion_index');
         }
 
-        return $this->render('contabilidad/facturacion/new.html.twig', [
+        return $this->render(
+            'contabilidad/facturacion/new.html.twig',
+            [
             'form' => $form->createView(),
             'factura' => $factura,
-        ]);
+        ]
+        );
     }
 
     /**

@@ -16,6 +16,7 @@ class MarinaHumedaCotizaServiciosRepository extends \Doctrine\ORM\EntityReposito
 
         $conceptos = $manager->createQuery(
             'SELECT '.
+            'concepto.id AS productoId, '.
             'concepto.cantidad AS conceptoCantidad, ' .
             'concepto.total AS conceptoImporte, '.
             'cotizacion.dolar AS conceptoDolar, '.

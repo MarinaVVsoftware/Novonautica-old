@@ -24,6 +24,10 @@ class FacturacionHelper
 
         $cotizacionRepository = FacturacionHelper::getCotizacionRepository($manager, $emisor);
 
+        if (!$cotizacionRepository) {
+            return [];
+        }
+
         return $cotizacionRepository->getCotizacionesFromCliente($cliente, $inicio, $fin);
     }
 

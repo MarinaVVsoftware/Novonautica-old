@@ -205,14 +205,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4">
-                                    {#
-                                    <div class="form-group">
-                                        <label class="control-label required" for="date-range">
-                                            Facturas en mes
-                                        </label>
-                                        <input type="text" id="date-range" required="required" class="form-control">
-                                    </div>
-                                    #}
                                     {{ form_row(form.fechaFiltro) }}
                                 </div>
                                 <div class="col-sm-4">
@@ -345,6 +337,10 @@
                                             {{ form_errors(concepto.impuestoImporte) }}
                                         </td>
                                         <td valign="middle" class="text-center">
+                                            {{ form_widget(concepto.producto) }}
+                                            {{ form_errors(concepto.producto) }}
+                                            {{ form_widget(concepto.productoRemover) }}
+                                            {{ form_errors(concepto.productoRemover) }}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -652,6 +648,8 @@
               element.cells[6].firstElementChild.value = moneyFormat(conceptoImporte / 100);
               element.cells[7].firstElementChild.value = element.cells[6].firstElementChild.value;
               element.cells[11].firstElementChild.value = moneyFormat(conceptoIVA / 100);
+              element.cells[12].children[0].value = result.productoId || 0;
+              element.cells[12].children[1].value = result.conceptoCantidad;
 
               if (result.cpsId && result.cpsDescripcion) {
                 $(element.cells[2].firstElementChild)

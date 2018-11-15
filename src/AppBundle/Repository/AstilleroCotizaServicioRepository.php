@@ -39,7 +39,14 @@ class AstilleroCotizaServicioRepository extends \Doctrine\ORM\EntityRepository
     {
         $cotizacion = $this->createQueryBuilder('concepto')
             ->select(
-                'concepto.cantidad AS conceptoCantidad, concepto.total AS conceptoImporte',
+                'concepto.cantidad AS conceptoCantidad, ' .
+                'concepto.total AS conceptoImporte',
+
+                '(CASE
+                WHEN producto.id IS NOT NULL THEN producto.id
+                ELSE 0 END
+                ) AS productoId',
+
                 '(CASE
                 WHEN concepto.otroservicio IS NOT NULL THEN concepto.otroservicio
                 WHEN basico.id IS NOT NULL THEN basico.nombre

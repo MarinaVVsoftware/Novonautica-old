@@ -69,6 +69,10 @@
                 {{ form_errors(form.impuestoImporte) }}
             </td>
             <td valign="middle" class="text-center">
+                {{ form_widget(form.producto) }}
+                {{ form_errors(form.producto) }}
+                {{ form_widget(form.productoRemover) }}
+                {{ form_errors(form.productoRemover) }}
             </td>
         </tr>
     {% endspaceless %}

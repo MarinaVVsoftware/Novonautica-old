@@ -81,6 +81,7 @@ class CombustibleRepository extends \Doctrine\ORM\EntityRepository
         $cotizacion = $manager->createQuery(
             'SELECT '.
             'cotizacion.cantidad AS conceptoCantidad, cotizacion.total AS conceptoImporte, '.
+            'tipo.id AS productoId, '.
             'tipo.nombre AS conceptoDescripcion, '.
             'cps.id AS cpsId, cps.descripcion as cpsDescripcion, '.
             'cu.id AS cuId, cu.nombre AS cuDescripcion '.
