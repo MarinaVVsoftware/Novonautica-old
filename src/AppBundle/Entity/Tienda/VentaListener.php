@@ -8,7 +8,6 @@
 namespace AppBundle\Entity\Tienda;
 
 
-use AppBundle\Entity\Tienda\Inventario\Registro;
 use AppBundle\Entity\Tienda\Venta\Concepto;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 

@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="combustible")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CombustibleRepository")
+ * @ORM\EntityListeners({"CombustibleListener"})
  */
 class Combustible
 {
