@@ -189,7 +189,7 @@
 
             <!-- START ASTILLERO -->
             {% if is_granted('ROLE_ASTILLERO') %}
-                <li class="treeview {{ path.check('astillero') }}">
+                <li class="treeview {{ path.check('astillero_') }}{{ path.check('a_monedero') }}{{ path.check('ordendetrabajo') }}">
                     <a href="#">
                         <i class="fa fa-anchor"></i> <span>Astillero</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
@@ -514,45 +514,48 @@
                                 </a>
                             </li>
                         {% endif %}
-                        {% if is_granted('ROLE_TIENDA_INVENTARIO') %}
-                            <li class="{{ path.check('tienda_inventario_index') }}">
-                                <a href="{{ path('tienda_inventario_index') }}">
-                                    <i class="fa fa-circle-o"></i> Inventario
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if is_granted('ROLE_TIENDA_REGISTRO') %}
-                            <li class="treeview {{ path.check(
-                                [
-                                    'tienda_inventario_registro_index_entrada',
-                                    'tienda_inventario_registro_index_salida',
-                                    'tienda_inventario_registro_new_entrada'
-                                ]
-                            ) }}">
-                                <a href="#">
-                                    <i class="fa fa-circle-o"></i> Registros
-                                    <span class="pull-right-container"><i
-                                                class="fa fa-angle-left pull-right"></i></span>
-                                </a>
-                                <ul class="treeview-menu">
-                                    <li class="{{ path.check('tienda_inventario_registro_new_entrada') }}">
-                                        <a href="{{ path('tienda_inventario_registro_new_entrada') }}">
-                                            <i class="fa fa-minus"></i> Nueva entrada
-                                        </a>
-                                    </li>
-                                    <li class="{{ path.check('tienda_inventario_registro_index_entrada') }}">
-                                        <a href="{{ path('tienda_inventario_registro_index_entrada') }}">
-                                            <i class="fa fa-minus"></i> Entradas
-                                        </a>
-                                    </li>
-                                    <li class="{{ path.check('tienda_inventario_registro_index_salida') }}">
-                                        <a href="{{ path('tienda_inventario_registro_index_salida') }}">
-                                            <i class="fa fa-minus"></i> Salidas
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        {% endif %}
+                        {#
+
+{% if is_granted('ROLE_TIENDA_INVENTARIO') %}
+    <li class="{{ path.check('tienda_inventario_index') }}">
+        <a href="{{ path('tienda_inventario_index') }}">
+            <i class="fa fa-circle-o"></i> Inventario
+        </a>
+    </li>
+{% endif %}
+{% if is_granted('ROLE_TIENDA_REGISTRO') %}
+<li class="treeview {{ path.check(
+[
+'tienda_inventario_registro_index_entrada',
+'tienda_inventario_registro_index_salida',
+'tienda_inventario_registro_new_entrada'
+]
+) }}">
+<a href="#">
+<i class="fa fa-circle-o"></i> Registros
+<span class="pull-right-container"><i
+class="fa fa-angle-left pull-right"></i></span>
+</a>
+<ul class="treeview-menu">
+<li class="{{ path.check('tienda_inventario_registro_new_entrada') }}">
+<a href="{{ path('tienda_inventario_registro_new_entrada') }}">
+<i class="fa fa-minus"></i> Nueva entrada
+</a>
+</li>
+<li class="{{ path.check('tienda_inventario_registro_index_entrada') }}">
+<a href="{{ path('tienda_inventario_registro_index_entrada') }}">
+<i class="fa fa-minus"></i> Entradas
+</a>
+</li>
+<li class="{{ path.check('tienda_inventario_registro_index_salida') }}">
+<a href="{{ path('tienda_inventario_registro_index_salida') }}">
+<i class="fa fa-minus"></i> Salidas
+</a>
+</li>
+</ul>
+</li>
+{% endif %}
+#}
                     </ul>
                 </li>
             {% endif %}
@@ -711,34 +714,35 @@
                             </a>
                         </li>
                         {% if is_granted('ROLE_INVENTARIO') %}
-                        <li class="treeview {{ path.check('almacen_inventario-') }}">
-                            <a href="#">
-                                <i class="fa fa-circle-o"></i> <span>Inventario</span>
-                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li class="{{ path.check('almacen_inventario-marina') }}">
-                                    <a href="{{ path('almacen_inventario-marina') }}">
-                                        <i class="fa fa-minus"></i> <span>Puerto Mujeres</span>
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('almacen_inventario-combustible') }}">
-                                    <a href="{{ path('almacen_inventario-combustible') }}">
-                                        <i class="fa fa-minus"></i> <span>Servicios Marinos</span>
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('almacen_inventario-astillero') }}">
-                                    <a href="{{ path('almacen_inventario-astillero') }}">
-                                        <i class="fa fa-minus"></i> <span>Astillero</span>
-                                    </a>
-                                </li>
-                                <li class="{{ path.check('almacen_inventario-tienda') }}">
-                                    <a href="{{ path('almacen_inventario-tienda') }}">
-                                        <i class="fa fa-minus"></i> <span>V&V Store</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="treeview {{ path.check('almacen_inventario-') }}">
+                                <a href="#">
+                                    <i class="fa fa-circle-o"></i> <span>Inventario</span>
+                                    <span class="pull-right-container"><i
+                                                class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ path.check('almacen_inventario-marina') }}">
+                                        <a href="{{ path('almacen_inventario-marina') }}">
+                                            <i class="fa fa-minus"></i> <span>Puerto Mujeres</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('almacen_inventario-combustible') }}">
+                                        <a href="{{ path('almacen_inventario-combustible') }}">
+                                            <i class="fa fa-minus"></i> <span>Servicios Marinos</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('almacen_inventario-astillero') }}">
+                                        <a href="{{ path('almacen_inventario-astillero') }}">
+                                            <i class="fa fa-minus"></i> <span>Astillero</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('almacen_inventario-tienda') }}">
+                                        <a href="{{ path('almacen_inventario-tienda') }}">
+                                            <i class="fa fa-minus"></i> <span>V&V Store</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         {% endif %}
                     </ul>
                 </li>

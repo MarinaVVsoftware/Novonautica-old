@@ -33,13 +33,45 @@ class CombustibleRepository extends \Doctrine\ORM\EntityRepository
             'END) AS text '.
             'FROM AppBundle:Combustible cotizaciones '.
             'LEFT JOIN cotizaciones.barco barco '.
-            'WHERE IDENTITY(cotizaciones.cliente) = :client'.
+            'WHERE IDENTITY(cotizaciones.cliente) = :client '.
             'AND cotizaciones.fecha BETWEEN :inicio AND :fin')
             ->setParameter('inicio', $inicio)
             ->setParameter('fin', $fin)
             ->setParameter('client', $client);
 
         return $cotizaciones->getArrayResult();
+    }
+
+    /**
+     * Se utiliza para sacar las cotizaciones y relacionarlas con una factura
+     *
+     * @param $client
+     *
+     * @param $inicio
+     * @param $fin
+     *
+     * @param null $cotizacionId
+     *
+     * @return array
+     */
+    public function getFullCotizacionesFromCliente($client, $inicio, $fin, $cotizacionId = null)
+    {
+        $qb = $this->createQueryBuilder('cotizaciones')
+            ->select('cotizaciones', 'conceptos')
+            ->leftJoin('cotizaciones.tipo', 'conceptos')
+            ->where('IDENTITY(cotizaciones.cliente) = :client')
+            ->andWhere('cotizaciones.fecha BETWEEN :inicio AND :fin')
+            ->andWhere('cotizaciones.factura IS NULL')
+            ->setParameter('inicio', $inicio)
+            ->setParameter('fin', $fin)
+            ->setParameter('client', $client);
+
+        if ($cotizacionId) {
+            $qb->andWhere('cotizaciones.id IN (:cotizacionId)');
+            $qb->setParameter('cotizacionId', $cotizacionId);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     public function getOneWithCatalogo($id)

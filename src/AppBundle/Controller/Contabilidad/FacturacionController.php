@@ -11,6 +11,7 @@ use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Entity\Tienda\Venta;
+use AppBundle\Extra\FacturacionHelper;
 use AppBundle\Extra\NumberToLetter;
 use AppBundle\Form\Contabilidad\FacturacionType;
 use AppBundle\Form\Contabilidad\PreviewType;
@@ -150,23 +151,25 @@ class FacturacionController extends Controller
                 ]);
             }
 
-            // Ciclar cotizaciones y relacionarlas con una factura
-            if ($cotizacionIdentifier = $form->get('cotizaciones')->getData()) {
-                $cotizacionRepository = $this->getCotizacionRepository($factura->getEmisor());
+            // Buscar las cotizaciones
+            $cotizacionRepository = FacturacionHelper::getCotizacionRepository($em, $factura->getEmisor()->getId());
+            $cotizacionFecha = $form->get('fechaFiltro')->getData();
+            $cotizacionId = $form->get('cotizaciones')->getData();
 
-                $cotizaciones = $cotizacionRepository->findBy(['id' => $cotizacionIdentifier]);
+            $cotizaciones = $cotizacionRepository->getFullCotizacionesFromCliente(
+                $factura->getCliente()->getId(),
+                $cotizacionFecha->modify('first day of this month'),
+                (clone $cotizacionFecha)->modify('last day of this month'),
+                $cotizacionId === 'ALL' ? null : $cotizacionId
+            );
 
-                if ($cotizacionIdentifier === 'ALL') {
-                    $cotizaciones = $cotizacionRepository->findBy([
-                        'cliente' => $factura->getCliente(),
-                    ]);
-                }
-
-                foreach ($cotizaciones as $cotizacion) {
-                    $cotizacion->setFactura($factura);
-                    $em->persist($cotizacion);
-                }
+            // Ciclar por cada cotizacion y asignarle la factura
+            foreach ($cotizaciones as $cotizacion) {
+                $cotizacion->setFactura($factura);
+                $em->persist($cotizacion);
             }
+
+            // TODO checar si la factura pertenece a astillero y verificar si hay que restar o devolver productos de su inventario
 
             $em->persist($factura);
             $em->flush();
@@ -286,7 +289,7 @@ class FacturacionController extends Controller
 
         return $this->json(
             [
-                'results' => self::getCotizaciones($manager, $emisor, $cliente, $fecha),
+                'results' => FacturacionHelper::getCotizaciones($manager, $emisor, $cliente, $fecha),
             ]
         );
     }
@@ -302,7 +305,7 @@ class FacturacionController extends Controller
         $cotizacion = $request->query->get('c');
         $fecha = $request->query->get('m');
 
-        $inicio = \DateTime::createFromFormat('Y-m-d', $fecha)->setTime(0, 0, 0);
+        $inicio = \DateTime::createFromFormat('Y-m-d', $fecha)->modify('first day of this month');
         $fin = (clone $inicio)->modify('last day of this month');
 
         switch ($emisor) {
@@ -454,59 +457,6 @@ class FacturacionController extends Controller
                 'factura' => $factura,
             ]
         );
-    }
-
-    public static function getCotizaciones($manager, $emisor, $cliente, $fecha)
-    {
-        $inicio = \DateTime::createFromFormat('Y-m-d', $fecha)->setTime(0, 0, 0);
-        $fin = (clone $inicio)->modify('last day of this month');
-
-        switch ($emisor) {
-            case 3:
-                $marinaRepository = $manager->getRepository(MarinaHumedaCotizacion::class);
-                $cotizaciones = $marinaRepository->getCotizacionesFromCliente($cliente, $inicio, $fin);
-                break;
-            case 4:
-                $combustibleRepository = $manager->getRepository(Combustible::class);
-                $cotizaciones = $combustibleRepository->getCotizacionesFromCliente($cliente, $inicio, $fin);
-                break;
-            case 5:
-                $astilleroRepository = $manager->getRepository(AstilleroCotizacion::class);
-                $cotizaciones = $astilleroRepository->getCotizacionesFromCliente($cliente, $inicio, $fin);
-                break;
-            case 7:
-                $tiendaRepository = $manager->getRepository(Venta::class);
-                $cotizaciones = $tiendaRepository->getCotizacionesFromCliente($cliente, $inicio, $fin);
-                break;
-            default:
-                $cotizaciones = [];
-        }
-
-        return $cotizaciones;
-    }
-
-    private function getCotizacionRepository(Facturacion\Emisor $emisor)
-    {
-        $manager = $this->getDoctrine()->getManager();
-
-        switch ($emisor->getId()) {
-            case 3:
-                $repository = $manager->getRepository(MarinaHumedaCotizacion::class);
-                break;
-            case 4:
-                $repository = $manager->getRepository(Combustible::class);
-                break;
-            case 5:
-                $repository = $manager->getRepository(AstilleroCotizacion::class);
-                break;
-            case 7:
-                $repository = $manager->getRepository(Venta::class);
-                break;
-            default:
-                $repository = null;
-        }
-
-        return $repository;
     }
 
     private function enviarFactura(Facturacion $factura, array $emails, $bbc = null)

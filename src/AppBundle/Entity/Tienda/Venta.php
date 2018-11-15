@@ -261,4 +261,21 @@ class Venta
     {
         $this->factura = $factura;
     }
+
+    /**
+     * este metodo se ocupara para sacar los items y restar su inventario en facturacion
+     *
+     * @return Producto[]
+     */
+    public function getItems()
+    {
+        $productos = [];
+
+        /** @var Concepto $concepto */
+        foreach ($this->conceptos as $concepto) {
+            $productos[] = $concepto->getProducto();
+        }
+
+        return $productos;
+    }
 }

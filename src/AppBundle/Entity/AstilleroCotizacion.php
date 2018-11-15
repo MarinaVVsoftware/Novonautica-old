@@ -1258,4 +1258,21 @@ class AstilleroCotizacion
     {
         $this->factura = $factura;
     }
+
+    /**
+     * este metodo se ocupara para sacar los items y restar su inventario en facturacion
+     *
+     * @return \AppBundle\Entity\Astillero\Producto[]
+     */
+    public function getItems()
+    {
+        $productos = [];
+
+        /** @var AstilleroCotizaServicio $concepto */
+        foreach ($this->acservicios as $concepto) {
+            $productos[] = $concepto->getProducto();
+        }
+
+        return $productos;
+    }
 }

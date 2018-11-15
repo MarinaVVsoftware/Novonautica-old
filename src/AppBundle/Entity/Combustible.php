@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Combustible\Catalogo;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -1327,5 +1328,19 @@ class Combustible
     public function setFactura(Facturacion $factura = null)
     {
         $this->factura = $factura;
+    }
+
+    /**
+     *  este metodo se ocupara para sacar los items y restar su inventario en facturacion
+     *
+     * @return Catalogo[]
+     */
+    public function getItems()
+    {
+        $productos = [];
+
+        $productos[] = $this->tipo;
+
+        return $productos;
     }
 }

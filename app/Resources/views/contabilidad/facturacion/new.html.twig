@@ -205,12 +205,15 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4">
+                                    {#
                                     <div class="form-group">
                                         <label class="control-label required" for="date-range">
                                             Facturas en mes
                                         </label>
                                         <input type="text" id="date-range" required="required" class="form-control">
                                     </div>
+                                    #}
+                                    {{ form_row(form.fechaFiltro) }}
                                 </div>
                                 <div class="col-sm-4">
                                     {{ form_row(form.cotizaciones) }}
@@ -508,7 +511,7 @@
         const loadingState = document.getElementById('loading');
         const previewButton = document.getElementById('preview-btn');
         const facturaForm = document.querySelector('[name="appbundle_contabilidad_facturacion"]');
-        const dateInput = document.getElementById('date-range');
+        const dateInput = document.getElementById('appbundle_contabilidad_facturacion_fechaFiltro');
         const cotizacionSelect = document.getElementById('appbundle_contabilidad_facturacion_cotizaciones');
         const folioInput = document.getElementById('appbundle_contabilidad_facturacion_folio');
         const clienteSelect = document.getElementById('appbundle_contabilidad_facturacion_cliente');
@@ -531,14 +534,17 @@
 
         const $dateInputPicker = $(dateInput)
             .datepicker({
+              orientation: 'bottom',
               format: 'MM yyyy',
               viewMode: 'months',
               minViewMode: 'months',
-              language: 'es'
-            })
-            .datepicker('setDate', new Date());
+            });
 
         // Incializacion
+
+        if (!dateInput.value) {
+          $dateInputPicker.datepicker('setDate', new Date());
+        }
 
         document.addEventListener('keydown', (e) => e.keyCode === 13 ? event.preventDefault() : '');
 
@@ -679,7 +685,7 @@
         // Funciones
 
         function getFolio() {
-          if (clienteSelect.value) {
+          if (clienteSelect.value && !cotizacionSelect.value) {
             getCotizaciones(emisorSelect.value, clienteSelect.value);
           }
 
