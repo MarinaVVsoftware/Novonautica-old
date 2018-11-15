@@ -49,7 +49,7 @@ class CompraDataTable extends AbstractDataTableHandler
                 '(c.fecha LIKE :search '.
                 ' OR c.folio LIKE :search '.
                 ' OR LOWER(contabilidadFacturacionEmisor.nombre) LIKE :search '.
-                ' OR c.validadoCompra LIKE :search '.
+                ' OR c.fechaValidadoCompra LIKE :search '.
                 ' OR c.total LIKE :search '.
                 ')')
                 ->setParameter('search',strtolower("%{$request->search->value}%"));
@@ -77,8 +77,8 @@ class CompraDataTable extends AbstractDataTableHandler
                     $q->andWhere('c.total LIKE :total')
                         ->setParameter('total',"%{$value}%");
                 } else if($column->data == 7){
-                    $q->andWhere('c.validadoCompra LIKE :validadocompra')
-                        ->setParameter('validadocompra',"%{$value}%");
+                    $q->andWhere('c.fechaValidadoCompra LIKE :fechavalidadocompra')
+                        ->setParameter('fechavalidadocompra',"%{$value}%");
                 }
             }
         }
@@ -97,7 +97,7 @@ class CompraDataTable extends AbstractDataTableHandler
             } elseif ($order->column === 5) {
                 $q->addOrderBy('c.total', $order->dir);
             } elseif ($order->column === 6) {
-                $q->addOrderBy('c.validadoCompra', $order->dir);
+                $q->addOrderBy('c.fechaValidadoCompra', $order->dir);
             }
         }
 
@@ -118,7 +118,7 @@ class CompraDataTable extends AbstractDataTableHandler
                 '$ '.number_format($solicitud->getSubtotal()/100,2).' <small>MXN</small>',
                 '$ '.number_format($solicitud->getIvatotal()/100,2).' <small>MXN</small>',
                 '$ '.number_format($solicitud->getTotal()/100,2).' <small>MXN</small>',
-                $solicitud->getValidadoCompra()?'Validado':'No validado',
+                $solicitud->getFechaValidoCompra()?$solicitud->getFechaValidoCompra()->format('d/m/Y'):'No validado',
                 [$solicitud->getId(),$solicitud->getValidadoCompra()]
             ];
         }

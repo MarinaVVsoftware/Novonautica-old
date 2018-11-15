@@ -82,7 +82,8 @@ class SolicitudDataTable extends AbstractDataTableHandler
                 '(LOWER(s.fecha) LIKE :search '.
                 ' OR s.folio LIKE :search '.
                 ' OR LOWER(contabilidadFacturacionEmisor.nombre) LIKE :search '.
-                ' OR s.validadoCompra LIKE :search '.
+                ' OR s.fechaValidadoCompra LIKE :search '.
+                ' OR s.fechaValidadoAlmacen LIKE :search '.
                 ')')
                 ->setParameter('search',strtolower("%{$request->search->value}%"));
         }
@@ -100,8 +101,11 @@ class SolicitudDataTable extends AbstractDataTableHandler
                     $q->andWhere('s.fecha LIKE :fecha')
                         ->setParameter('fecha',"%{$value}%");
                 } else if($column->data == 4){
-                    $q->andWhere('s.validadoCompra LIKE :validadoCompra')
-                        ->setParameter('validado',"%{$value}%");
+                    $q->andWhere('s.fechaValidadoCompra LIKE :fechavalidadoCompra')
+                        ->setParameter('fechavalidadoCompra',"%{$value}%");
+                } else if($column->data == 5){
+                    $q->andWhere('s.fechaValidadoAlmacen LIKE :fechavalidadoAlamcen')
+                        ->setParameter('fechavalidadoAlamcen',"%{$value}%");
                 }
             }
         }
@@ -114,7 +118,9 @@ class SolicitudDataTable extends AbstractDataTableHandler
             } elseif ($order->column === 2) {
                 $q->addOrderBy('s.fecha', $order->dir);
             } elseif ($order->column === 3) {
-                $q->addOrderBy('s.validadoCompra', $order->dir);
+                $q->addOrderBy('s.fechaValidadoCompra', $order->dir);
+            } elseif ($order->column === 4) {
+                $q->addOrderBy('s.fechaValidadoAlmacen', $order->dir);
             }
         }
 
@@ -132,7 +138,8 @@ class SolicitudDataTable extends AbstractDataTableHandler
                 $solicitud->getFolio(),
                 $solicitud->getEmpresa()->getNombre(),
                 $solicitud->getFecha()->format('d/m/Y') ?? '',
-                $solicitud->getValidadoCompra()?'Validado':'No validado',
+                $solicitud->getFechaValidoCompra()?$solicitud->getFechaValidoCompra()->format('d/m/Y'):'No validado',
+                $solicitud->getFechaValidoAlmacen()?$solicitud->getFechaValidoAlmacen()->format('d/m/Y'):'No validado',
                 [$solicitud->getId(),$solicitud->getValidadoCompra()]
             ];
         }

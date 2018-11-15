@@ -50,7 +50,7 @@ class AlmacenDataTable extends AbstractDataTableHandler
                 ' OR c.folio LIKE :search '.
                 ' OR LOWER(contabilidadFacturacionEmisor.nombre) LIKE :search '.
                 ' OR LOWER(c.referencia) LIKE :search '.
-                ' OR c.validadoAlmacen LIKE :search '.
+                ' OR c.fechaValidadoAlmacen LIKE :search '.
                 ' OR c.total LIKE :search '.
                 ')')
                 ->setParameter('search',strtolower("%{$request->search->value}%"));
@@ -81,8 +81,8 @@ class AlmacenDataTable extends AbstractDataTableHandler
                     $q->andWhere('c.total LIKE :total')
                         ->setParameter('total',"%{$value}%");
                 } else if($column->data == 8){
-                    $q->andWhere('c.validadoAlmacen LIKE :validadoalmacen')
-                        ->setParameter('validadoalmacen',"%{$value}%");
+                    $q->andWhere('c.fechaValidadoAlmacen LIKE :fechavalidadoalmacen')
+                        ->setParameter('fechavalidadoalmacen',"%{$value}%");
                 }
             }
         }
@@ -103,7 +103,7 @@ class AlmacenDataTable extends AbstractDataTableHandler
             } elseif ($order->column === 6) {
                 $q->addOrderBy('c.total', $order->dir);
             } elseif ($order->column === 7) {
-                $q->addOrderBy('c.validadoAlmacen', $order->dir);
+                $q->addOrderBy('c.fechaValidadoAlmacen', $order->dir);
             }
         }
 
@@ -125,7 +125,7 @@ class AlmacenDataTable extends AbstractDataTableHandler
                 '$ '.number_format($solicitud->getSubtotal()/100,2).' <small>MXN</small>',
                 '$ '.number_format($solicitud->getIvatotal()/100,2).' <small>MXN</small>',
                 '$ '.number_format($solicitud->getTotal()/100,2).' <small>MXN</small>',
-                $solicitud->getValidadoAlmacen()?'Validado':'No validado',
+                $solicitud->getFechaValidoAlmacen()?$solicitud->getFechaValidoAlmacen()->format('d/m/Y'):'No validado',
                 [$solicitud->getId(),$solicitud->getValidadoCompra(),$solicitud->getValidadoAlmacen()]
             ];
         }

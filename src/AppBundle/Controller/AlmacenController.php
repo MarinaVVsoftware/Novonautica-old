@@ -180,7 +180,7 @@ class AlmacenController extends Controller
             }
             $em->persist($solicitud);
             $em->flush();
-            return $this->redirectToRoute('compra_show',['id' => $solicitud->getId()]);
+            return $this->redirectToRoute('almacen_show',['id' => $solicitud->getId()]);
         }
         return $this->render('almacen/validar.html.twig',[
             'form' => $editForm->createView(),
