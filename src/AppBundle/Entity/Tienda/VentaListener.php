@@ -23,27 +23,18 @@ class VentaListener
      */
     public function postPersist(Venta $venta, LifecycleEventArgs $eventArgs)
     {
-        $registro = new Registro();
-
-        $registro->setReferencia('PUNTO DE VENTA');
-        $registro->setTipo(Registro::TIPO_SALIDA);
-        $registro->setFecha($venta->getCreatedAt());
-        $registro->setTotal($venta->getTotal());
+        $entityManager = $eventArgs->getEntityManager();
 
         /** @var Concepto $concepto */
         foreach ($venta->getConceptos() as $concepto) {
-            $entrada = new Registro\Entrada();
+            $producto = $concepto->getProducto();
+            $existenciaInicial = $producto->getExistencia();
+            $existenciaRemover = $concepto->getCantidad();
 
-            $entrada->setProducto($concepto->getProducto());
-            $entrada->setCantidad($concepto->getCantidad());
-            $entrada->setImporte($concepto->getTotal());
-            $entrada->setRegistro($registro);
-
-            $registro->addEntrada($entrada);
+            $producto->setExistencia($existenciaInicial - $existenciaRemover);
+            $entityManager->persist($producto);
         }
 
-        $entityManager = $eventArgs->getEntityManager();
-        $entityManager->persist($registro);
         $entityManager->flush();
     }
 }
