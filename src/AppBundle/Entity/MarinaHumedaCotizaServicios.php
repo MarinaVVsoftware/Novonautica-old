@@ -10,6 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *
  * @ORM\Table(name="marina_humeda_cotiza_servicios")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MarinaHumedaCotizaServiciosRepository")
+ * @ORM\EntityListeners({"AppBundle\Entity\Marina\CotizaServiciosListener"})
  */
 class MarinaHumedaCotizaServicios
 {

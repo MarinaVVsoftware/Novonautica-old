@@ -20,6 +20,7 @@
                                     <th>Empresa</th>
                                     <th>Fecha</th>
                                     <th>Validación Compra</th>
+                                    <th>Validación Almacén</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -47,12 +48,13 @@
                 {responsivePriority: 0},
                 {responsivePriority: 0},
                 {responsivePriority: 0},
+                {responsivePriority: 0},
             ],
                 rowCallback: function (row,data) {
-                row.cells[4].innerHTML = `<a href="${data[4][0]}" class="btn btn-xs btn-morado-claro btn-block">Ver</a>`;
+                row.cells[5].innerHTML = `<a href="${data[5][0]}" class="btn btn-xs btn-morado-claro btn-block">Ver</a>`;
                 {% if is_granted(expression('has_role("SOLICITUD_EDIT") or (user.isAdmin())')) %}
-                    if(data[4][1] === false){
-                        row.cells[4].innerHTML = row.cells[4].innerHTML + `<a href="${data[4][0]}/editar" class="btn btn-xs btn-azul btn-block">Editar</a>`;
+                    if(data[5][1] === false){
+                        row.cells[5].innerHTML = row.cells[5].innerHTML + `<a href="${data[5][0]}/editar" class="btn btn-xs btn-azul btn-block">Editar</a>`;
                     }
                 {% endif %}
             }
