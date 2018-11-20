@@ -67,17 +67,23 @@ class CombustibleController extends Controller
     public function newAction(Request $request, \Swift_Mailer $mailer)
     {
         $combustible = new Combustible();
+
         $this->denyAccessUnlessGranted('COMBUSTIBLE_COTIZACION_CREATE', $combustible);
+
         $em = $this->getDoctrine()->getManager();
+
         $qb = $em->getRepository('AppBundle:ValorSistema')->findOneBy(['id' => 1]);
         $dolarBase = $qb->getDolar();
         $iva = $qb->getIva();
+
         $mensaje = $qb->getMensajeCorreoMarinaGasolina();
         $combustible
             ->setIva($iva)
             ->setDolar($dolarBase)
             ->setMensaje($mensaje);
+
         $barcoid = $request->query->get('id');
+
         if ($barcoid !== null) {
             $solicitud = $em->getRepository('AppBundle:MarinaHumedaSolicitudGasolina')->find($barcoid);
             $cliente = $solicitud->getCliente();
@@ -90,10 +96,13 @@ class CombustibleController extends Controller
                 ->setBarco($barco)
                 ->setCliente($cliente);
         }
+
         $form = $this->createForm(CombustibleType::class, $combustible,[
             'attr' =>['class' => 'form-combustible']
         ]);
+
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $foliobase = $qb->getFolioCombustible();
             $folionuevo = $foliobase + 1;

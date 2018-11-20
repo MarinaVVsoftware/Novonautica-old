@@ -239,7 +239,7 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
             'FROM AppBundle:MarinaHumedaCotizacion cotizaciones '.
             'LEFT JOIN cotizaciones.barco barco '.
             'WHERE IDENTITY(cotizaciones.cliente) = :client '.
-            'AND cotizaciones.fecharegistro BETWEEN :inicio AND :fin'.
+            'AND cotizaciones.fecharegistro BETWEEN :inicio AND :fin '.
             'AND cotizaciones.factura IS NULL '.
             'AND cotizaciones.validacliente = 2')
             ->setParameter('inicio', $inicio)
@@ -247,5 +247,35 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter('client', $client);
 
         return $cotizaciones->getArrayResult();
+    }
+
+    /**
+     * Facturacion:
+     * Utilizada para sacar las cotizaciones y hacer la relacion de estas con una factura
+     *
+     * @param $client
+     * @param $inicio
+     * @param $fin
+     * @param null $cotizacionId
+     *
+     * @return array
+     */
+    public function getFullCotizacionesFromCliente($client, $inicio, $fin, $cotizacionId = null)
+    {
+        $qb = $this->createQueryBuilder('cotizaciones')
+            ->where('IDENTITY(cotizaciones.cliente) = :client')
+            ->andWhere('cotizaciones.fecharegistro BETWEEN :inicio AND :fin')
+            ->andWhere('cotizaciones.factura IS NULL')
+            ->andWhere('cotizaciones.validacliente = 2')
+            ->setParameter('inicio', $inicio)
+            ->setParameter('fin', $fin)
+            ->setParameter('client', $client);
+
+        if ($cotizacionId) {
+            $qb->andWhere('cotizaciones.id IN (:cotizacionId)');
+            $qb->setParameter('cotizacionId', $cotizacionId);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

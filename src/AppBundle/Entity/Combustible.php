@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Combustible\Catalogo;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="combustible")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CombustibleRepository")
+ * @ORM\EntityListeners({"CombustibleListener"})
  */
 class Combustible
 {

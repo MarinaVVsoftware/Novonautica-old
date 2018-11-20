@@ -6,6 +6,7 @@ use AppBundle\Controller\Contabilidad\FacturacionController;
 use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Cliente\RazonSocial;
 use AppBundle\Entity\Contabilidad\Facturacion;
+use AppBundle\Extra\FacturacionHelper;
 use AppBundle\Form\Contabilidad\Facturacion\ConceptoType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -13,6 +14,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -219,6 +221,20 @@ class FacturacionType extends AbstractType
         );
 
         /*
+         * Unmapped fields
+         */
+        $builder->add(
+            'fechaFiltro',
+            DateType::class,
+            [
+                'mapped' => false,
+                'html5' => false,
+                'widget' => 'single_text',
+                'format' => 'MMMM yyyy',
+            ]
+        );
+
+        /*
          * Event listeners
          */
 
@@ -235,20 +251,24 @@ class FacturacionType extends AbstractType
             FormEvents::PRE_SUBMIT,
             function (FormEvent $event) {
                 $data = $event->getData();
+                $fecha = \DateTime::createFromFormat('F Y', $data['fechaFiltro']);
 
                 $cliente = array_key_exists('cliente', $data)
                     ? $this->entityManager->getRepository(Cliente::class)->find($data['cliente'])
                     : null;
 
                 $cotizaciones = array_key_exists('cotizaciones', $data)
-                    ? $cotizaciones = array_map(function ($cotizacion) {
-                        return [$cotizacion['text'] => $cotizacion['id']];
-                    }, FacturacionController::getCotizaciones($this->entityManager, $data['emisor'], $data['cliente']))
+                    ? FacturacionHelper::getCotizaciones($this->entityManager, $data['emisor'], $data['cliente'], $fecha->format('Y-m-d'))
                     : [];
+
+                $cotizacionesChoices = [];
+                foreach ($cotizaciones as $cotizacion) {
+                    $cotizacionesChoices[$cotizacion['text']] = $cotizacion['id'];
+                }
 
                 $this->createClienteField($event->getForm(), $cliente);
                 $this->createReceptorField($event->getForm(), $cliente);
-                $this->createCotizacionesField($event->getForm(), $cotizaciones);
+                $this->createCotizacionesField($event->getForm(), $cotizacionesChoices);
             }
         );
     }
@@ -323,6 +343,7 @@ class FacturacionType extends AbstractType
             [
                 'choices' => $choices,
                 'mapped' => false,
+                'placeholder' => 'Seleccione una cotización',
                 'constraints' => [
                     new NotBlank(['message' => 'Por favor selecciona una cotizacion']),
                 ],

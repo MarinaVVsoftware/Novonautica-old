@@ -47,4 +47,36 @@ class VentaRepository extends \Doctrine\ORM\EntityRepository
 
         return $cotizaciones;
     }
+
+    /**
+     * Se utiliza para sacar las cotizaciones y relacionarlas con una factura
+     *
+     * @param $client
+     *
+     * @param $inicio
+     * @param $fin
+     *
+     * @param null $cotizacionId
+     *
+     * @return array
+     */
+    public function getFullCotizacionesFromCliente($client, $inicio, $fin, $cotizacionId = null)
+    {
+        $qb = $this->createQueryBuilder('cotizaciones')
+            ->select('cotizaciones', 'conceptos')
+            ->leftJoin('cotizaciones.conceptos', 'conceptos')
+            ->where('IDENTITY(cotizaciones.cliente) = :client')
+            ->andWhere('cotizaciones.createdAt BETWEEN :inicio AND :fin')
+            ->andWhere('cotizaciones.factura IS NULL')
+            ->setParameter('inicio', $inicio)
+            ->setParameter('fin', $fin)
+            ->setParameter('client', $client);
+
+        if ($cotizacionId) {
+            $qb->andWhere('cotizaciones.id IN (:cotizacionId)');
+            $qb->setParameter('cotizacionId', $cotizacionId);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

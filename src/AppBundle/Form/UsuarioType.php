@@ -110,9 +110,11 @@ class UsuarioType extends AbstractType
                     'Agregar productos' => 'TIENDA_PRODUCTO_CREATE',
                     'Gerente de punto de venta' => 'ROLE_ADMIN_POV',
                     'Punto de venta' => 'ROLE_TIENDA_POV',
-                    'Inventario' => 'ROLE_TIENDA_INVENTARIO',
-                    'Registros' => 'ROLE_TIENDA_REGISTRO',
-                    'Editar Registro' => 'TIENDA_REGISTRO_EDIT',
+                //  Aun no se sabe que pasara con estos permisos, ya que no son necesarios si tenemos en cuenta que
+                //  Los inventarios son manejados por el workflow de solicitudes/compras/almacen
+//                    'Inventario' => 'ROLE_TIENDA_INVENTARIO',
+//                    'Registros' => 'ROLE_TIENDA_REGISTRO',
+//                    'Editar Registro' => 'TIENDA_REGISTRO_EDIT',
                 ],
                 'Contabilidad' => $this->getContabilidadRoles(),
                 'Correos' => [

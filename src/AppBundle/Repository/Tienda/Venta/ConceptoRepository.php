@@ -38,6 +38,7 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
 
         $pseudoQuery = 'SELECT '.
             'concepto.cantidad AS conceptoCantidad, concepto.total AS conceptoImporte, '.
+            'producto.id AS productoId, '.
             'producto.nombre AS conceptoDescripcion, '.
             'cps.id AS cpsId, cps.descripcion as cpsDescripcion, '.
             'cu.id AS cuId, cu.nombre AS cuDescripcion '.

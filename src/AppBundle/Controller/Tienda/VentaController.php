@@ -180,6 +180,7 @@ class VentaController extends AbstractController
             ->getRepository(Venta\Concepto::class)
             ->getAllByVenta($venta->getId());
 
+        /*
         return $this->render(
             'tienda/venta/ticket-pdf.html.twig',
             [
@@ -187,6 +188,7 @@ class VentaController extends AbstractController
                 'conceptos' => $conceptos,
             ]
         );
+        */
 
         $ventaHTML = $this->renderView(
             'tienda/venta/ticket-pdf.html.twig',

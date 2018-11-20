@@ -48,10 +48,8 @@ class ProductoRepository extends \Doctrine\ORM\EntityRepository
                 'p.precio',
                 'p.preciocolaborador',
                 'p.codigoBarras',
-                'COALESCE(SUM(CASE WHEN r.tipo = 1 THEN e.cantidad ELSE -e.cantidad END), 0) AS quantity'
+                'COALESCE(p.existencia, 0) AS quantity'
             )
-            ->leftJoin(Registro\Entrada::class, 'e', 'WITH', 'p.id = e.producto')
-            ->leftJoin(Registro::class, 'r', 'WITH', 'r.id = e.registro')
             ->where('p.isActive = 1')
             ->groupBy('p.id');
     }
