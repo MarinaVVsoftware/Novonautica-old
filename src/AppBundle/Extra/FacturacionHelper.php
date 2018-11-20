@@ -9,9 +9,11 @@
 namespace AppBundle\Extra;
 
 
+use AppBundle\Entity\Astillero\Producto;
 use AppBundle\Entity\AstilleroCotizacion;
 use AppBundle\Entity\Combustible;
 use AppBundle\Entity\MarinaHumedaCotizacion;
+use AppBundle\Entity\MarinaHumedaServicio;
 use AppBundle\Entity\Tienda\Venta;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -29,6 +31,28 @@ class FacturacionHelper
         }
 
         return $cotizacionRepository->getCotizacionesFromCliente($cliente, $inicio, $fin);
+    }
+
+    public static function getProductoRepositoryByEmpresa(ObjectManager $manager, $emisor)
+    {
+        switch ($emisor) {
+            case 3:
+                $repository = $manager->getRepository(MarinaHumedaServicio::class);
+                break;
+            case 4:
+                $repository = $manager->getRepository(Combustible\Catalogo::class);
+                break;
+            case 5:
+                $repository = $manager->getRepository(Producto::class);
+                break;
+            case 7:
+                $repository = $manager->getRepository(\AppBundle\Entity\Tienda\Producto::class);
+                break;
+            default:
+                $repository = null;
+        }
+
+        return $repository;
     }
 
     public static function getCotizacionRepository(ObjectManager $manager, $emisor)

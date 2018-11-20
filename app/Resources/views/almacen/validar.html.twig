@@ -2,17 +2,18 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        .p-0{
-            padding: 0 !important;
+        .novo-checkbox-container .form-group{
+            margin-bottom: 0;
         }
-        .help-block{
-            color: #dd4b39;
+        table > tbody > .table-item > td{
+            vertical-align: middle;
         }
 
         .novo-checkbox-container .checkbox {
             position: relative;
-            padding: 20px 0 20px 20px;
+            padding-left: 20px;
             text-align: left;
+            margin: 0;
         }
 
         .novo-checkbox-container .checkbox label {
@@ -41,7 +42,7 @@
         .novo-checkbox-container .checkbox label:after {
             width: 14px;
             height: 8px;
-            top: 24px;
+            top: 7px;
             left: 3px;
             border: 3px solid #0097f6;
             border-top: none;
@@ -112,6 +113,7 @@
                             <table class="table">
                                 <thead>
                                 <tr>
+                                    <th>Validación</th>
                                     <th width="8%">Cantidad</th>
                                     <th width="15%">Producto</th>
                                     <th>Proveedor</th>
@@ -122,42 +124,55 @@
                                 </tr>
                                 </thead>
                                 <tbody id="conceptos" class="text-center">
-                                {% for concepto in solicitud.conceptos %}
-                                    <tr class="servicio-agregado table-item">
-                                        <td>{{ concepto.cantidad }}</td>
+                                {% for concepto in form.conceptos %}
+                                    <tr class="table-item">
+                                        <td class="novo-checkbox-container pl-1 {% if concepto.vars.value.validadoAlmacen %}
+                                                                                    hide
+                                                                                {% else %}
+                                                                                    visible
+                                                                                {% endif %}">
+                                            {{ form_row(concepto.validadoAlmacen) }}
+                                        </td>
+                                        <td class="{% if concepto.vars.value.validadoAlmacen == false %}hide{% endif %}">
+                                            {{ concepto.vars.value.fechaValidoAlmacen|date('d/m/Y') }} -
+                                            {{ concepto.vars.value.nombreValidoAlmacen }}
+                                        </td>
                                         <td>
-                                            {% if concepto.marinaServicio %}
-                                                {{ concepto.marinaServicio.nombre }}
-                                                {% if concepto.marinaServicio.claveUnidad %}
-                                                    - {{ concepto.marinaServicio.claveUnidad.nombre }}
+                                            {{ concepto.vars.value.cantidad }}
+                                        </td>
+                                        <td>
+                                            {% if concepto.vars.value.marinaServicio %}
+                                                {{ concepto.vars.value.marinaServicio.nombre }}
+                                                {% if concepto.vars.value.marinaServicio.claveUnidad %}
+                                                    - {{ concepto.vars.value.marinaServicio.claveUnidad.nombre }}
                                                 {% endif %}
                                             {% endif %}
-                                            {% if concepto.combustibleCatalogo %}
-                                                {{ concepto.combustibleCatalogo.nombre }}
-                                                {% if concepto.combustibleCatalogo.claveUnidad %}
-                                                    - {{ concepto.combustibleCatalogo.claveUnidad.nombre }}
+                                            {% if concepto.vars.value.combustibleCatalogo %}
+                                                {{ concepto.vars.value.combustibleCatalogo.nombre }}
+                                                {% if concepto.vars.value.combustibleCatalogo.claveUnidad %}
+                                                    - {{ concepto.vars.value.combustibleCatalogo.claveUnidad.nombre }}
                                                 {% endif %}
                                             {% endif %}
-                                            {% if concepto.astilleroProducto %}
-                                                {{ concepto.astilleroProducto.nombre }}
-                                                {% if concepto.astilleroProducto.claveUnidad %}
-                                                    - {{ concepto.astilleroProducto.claveUnidad.nombre }}
+                                            {% if concepto.vars.value.astilleroProducto %}
+                                                {{ concepto.vars.value.astilleroProducto.nombre }}
+                                                {% if concepto.vars.value.astilleroProducto.claveUnidad %}
+                                                    - {{ concepto.vars.value.astilleroProducto.claveUnidad.nombre }}
                                                 {% endif %}
                                             {% endif %}
-                                            {% if concepto.tiendaProducto %}
-                                                {{ concepto.tiendaProducto.nombre }}
-                                                {% if concepto.tiendaProducto.claveUnidad %}
-                                                    - {{ concepto.tiendaProducto.claveUnidad.nombre }}
+                                            {% if concepto.vars.value.tiendaProducto %}
+                                                {{ concepto.vars.value.tiendaProducto.nombre }}
+                                                {% if concepto.vars.value.tiendaProducto.claveUnidad %}
+                                                    - {{ concepto.vars.value.tiendaProducto.claveUnidad.nombre }}
                                                 {% endif %}
                                             {% endif %}
                                         </td>
-                                        <td class="p-0">
-                                            {{ concepto.proveedor }}
+                                        <td>
+                                            {{ concepto.vars.value.proveedor }}
                                         </td>
-                                        <td>${{ (concepto.precio/100)|number_format(2) }} <small>MXN</small></td>
-                                        <td>${{ (concepto.subtotal/100)|number_format(2) }} <small>MXN</small></td>
-                                        <td>${{ (concepto.ivatotal/100)|number_format(2) }} <small>MXN</small></td>
-                                        <td>${{ (concepto.total/100)|number_format(2) }} <small>MXN</small></td>
+                                        <td>${{ (concepto.vars.value.precio/100)|number_format(2) }} <small>MXN</small></td>
+                                        <td>${{ (concepto.vars.value.subtotal/100)|number_format(2) }} <small>MXN</small></td>
+                                        <td>${{ (concepto.vars.value.ivatotal/100)|number_format(2) }} <small>MXN</small></td>
+                                        <td>${{ (concepto.vars.value.total/100)|number_format(2) }} <small>MXN</small></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -199,4 +214,34 @@
             {{ form_end(form) }}
         </section>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (function () {
+            const tabla = document.querySelector('table');
+            const checkboxes = tabla.querySelectorAll('.visible [type="checkbox"]'); //chekbox que se ven
+            const validaTodo = document.getElementById('appbundle_solicitud_validadoAlmacen');
+
+            validaTodo.addEventListener('click',function () {
+                checkboxes.forEach(function (checkbox) {
+                    checkbox.checked = validaTodo.checked;
+                });
+            });
+            checkboxes.forEach(function(checkbox){
+               checkbox.addEventListener('click',function () {
+                   revisaValidaciones();
+               });
+            });
+            function revisaValidaciones(){
+                let estatusValidacionTodo = true;
+                checkboxes.forEach(function (checkbox) {
+                    if(!checkbox.checked){
+                        estatusValidacionTodo = false;
+                    }
+                });
+                validaTodo.checked = estatusValidacionTodo;
+            }
+        })();
+    </script>
 {% endblock %}

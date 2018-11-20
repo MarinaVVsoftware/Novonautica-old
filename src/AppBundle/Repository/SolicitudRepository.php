@@ -24,4 +24,18 @@ class SolicitudRepository extends \Doctrine\ORM\EntityRepository
         }
         return $coincide;
     }
+
+    public function seleccionaObjetoProducto($concepto){
+        $producto = null;
+        if ($concepto->getMarinaServicio()) {
+            $producto = $concepto->getMarinaServicio();
+        } elseif ($concepto->getCombustibleCatalogo()) {
+            $producto =  $concepto->getCombustibleCatalogo();
+        } elseif ($concepto->getAstilleroProducto()) {
+            $producto = $concepto->getAstilleroProducto();
+        } elseif ($concepto->getTiendaProducto()) {
+            $producto = $concepto->getTiendaProducto();
+        }
+        return $producto;
+    }
 }

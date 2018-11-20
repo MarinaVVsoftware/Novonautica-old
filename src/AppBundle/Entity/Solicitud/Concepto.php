@@ -61,11 +61,25 @@ class Concepto
     private $total;
 
     /**
-     * @var bool
+     * @var bool|null
      *
-     * @ORM\Column(name="solicitado", type="boolean")
+     * @ORM\Column(name="validado_almacen", type="boolean", nullable=true)
      */
-    private $solicitado;
+    private $validadoAlmacen;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="nombre_valido_almacen", type="string", length=255, nullable=true)
+     */
+    private $nombreValidoAlmacen;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_valido_almacen", type="datetime", nullable=true)
+     */
+    private $fechaValidoAlmacen;
 
     /**
      * @var Solicitud
@@ -118,7 +132,7 @@ class Concepto
         $this->subtotal = 0;
         $this->ivatotal = 0;
         $this->total = 0;
-        $this->solicitado = false;
+        $this->validadoAlmacen = false;
     }
 
     /**
@@ -153,30 +167,6 @@ class Concepto
     public function getCantidad()
     {
         return $this->cantidad;
-    }
-
-    /**
-     * Set solicitado.
-     *
-     * @param bool $solicitado
-     *
-     * @return Concepto
-     */
-    public function setSolicitado($solicitado)
-    {
-        $this->solicitado = $solicitado;
-
-        return $this;
-    }
-
-    /**
-     * Get solicitado.
-     *
-     * @return bool
-     */
-    public function getSolicitado()
-    {
-        return $this->solicitado;
     }
 
     /**
@@ -417,5 +407,77 @@ class Concepto
     public function getProveedor()
     {
         return $this->proveedor;
+    }
+
+    /**
+     * Set validadoAlmacen.
+     *
+     * @param bool|null $validadoAlmacen
+     *
+     * @return Concepto
+     */
+    public function setValidadoAlmacen($validadoAlmacen = null)
+    {
+        $this->validadoAlmacen = $validadoAlmacen;
+
+        return $this;
+    }
+
+    /**
+     * Get validadoAlmacen.
+     *
+     * @return bool|null
+     */
+    public function getValidadoAlmacen()
+    {
+        return $this->validadoAlmacen;
+    }
+
+    /**
+     * Set nombreValidoAlmacen.
+     *
+     * @param string|null $nombreValidoAlmacen
+     *
+     * @return Concepto
+     */
+    public function setNombreValidoAlmacen($nombreValidoAlmacen = null)
+    {
+        $this->nombreValidoAlmacen = $nombreValidoAlmacen;
+
+        return $this;
+    }
+
+    /**
+     * Get nombreValidoAlmacen.
+     *
+     * @return string|null
+     */
+    public function getNombreValidoAlmacen()
+    {
+        return $this->nombreValidoAlmacen;
+    }
+
+    /**
+     * Set fechaValidoAlmacen.
+     *
+     * @param \DateTime|null $fechaValidoAlmacen
+     *
+     * @return Concepto
+     */
+    public function setFechaValidoAlmacen($fechaValidoAlmacen = null)
+    {
+        $this->fechaValidoAlmacen = $fechaValidoAlmacen;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaValidoAlmacen.
+     *
+     * @return \DateTime|null
+     */
+    public function getFechaValidoAlmacen()
+    {
+        return $this->fechaValidoAlmacen;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Almacen;
 
-use AppBundle\Form\Compra\ConceptoType;
+use AppBundle\Form\Almacen\ConceptoType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -38,6 +38,14 @@ class ValidarType extends AbstractType
                 'required' => false,
                 'attr' => ['rows' => 5, 'class' => 'info-input'],
                 'label' => 'Notas'
+            ])
+            ->add('conceptos',CollectionType::class,[
+                'label' => false,
+                'entry_type' => ConceptoType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'by_reference' => false,
+                'allow_delete' => true,
             ]);
     }
 
