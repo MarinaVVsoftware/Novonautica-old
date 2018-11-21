@@ -74,6 +74,7 @@
                             <table class="table">
                                 <thead>
                                 <tr>
+                                    <th>Validación</th>
                                     <th>Proveedor</th>
                                     <th>Producto</th>
                                     <th>Unidad</th>
@@ -87,6 +88,12 @@
                                 <tbody>
                                 {% for concepto in solicitud.conceptos %}
                                     <tr>
+                                        <td>
+                                            {% if concepto.fechaValidoAlmacen %}
+                                                {{ concepto.fechaValidoAlmacen|date('d/m/Y') }} -
+                                                {{ concepto.nombreValidoAlmacen }}
+                                            {% endif %}
+                                        </td>
                                         <td>
                                             {% if concepto.proveedor %}
                                                 {{ concepto.proveedor.nombre }}

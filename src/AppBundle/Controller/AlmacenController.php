@@ -9,7 +9,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Solicitud;
+use AppBundle\Extra\FacturacionHelper;
 use DataTables\DataTablesInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -154,29 +156,33 @@ class AlmacenController extends Controller
         $this->denyAccessUnlessGranted('ALMACEN_VALIDAR',$solicitud);
 
         if($solicitud->getValidadoCompra() === false || $solicitud->getValidadoAlmacen()){ throw new NotFoundHttpException(); }
+
+        $clonConceptos = new ArrayCollection();
+        foreach ($solicitud->getConceptos() as $concepto){
+            $clonConceptos->add(clone $concepto);
+        }
         $editForm = $this->createForm('AppBundle\Form\Almacen\ValidarType',$solicitud);
         $editForm->handleRequest($request);
         if($editForm->isSubmitted() && $editForm->isValid()){
+            foreach ($solicitud->getConceptos() as $concepto){
+                foreach ($clonConceptos as $clonConcepto){
+                    if($concepto->getId() === $clonConcepto->getId()){
+                        //Sí es un concepto validado actualmente y antes no estaba validado entonces se suman las existencias
+                        if($concepto->getValidadoAlmacen() && $clonConcepto->getValidadoAlmacen() !== true){
+                            $repositorio = FacturacionHelper::getProductoRepositoryByEmpresa($this->getDoctrine()->getManager(),$solicitud->getEmpresa()->getId());
+                            $objetoProducto = $em->getRepository('AppBundle:Solicitud')->seleccionaObjetoProducto($concepto);
+                            $producto = $repositorio->find($objetoProducto);
+                            $producto->setExistencia($producto->getExistencia() + $concepto->getCantidad());
+                            $concepto->setNombreValidoAlmacen($this->getUser()->getNombre());
+                            $concepto->setFechaValidoAlmacen(new \DateTime());
+                            $em->persist($concepto);
+                        }
+                    }
+                }
+            }
             if($solicitud->getValidadoAlmacen()){
                 $solicitud->setNombreValidoAlmacen($this->getUser()->getNombre());
-                $solicitud->setFechaValidoAlmacen(new \DateTime('now'));
-                $repositorio = '';
-                foreach ($solicitud->getConceptos() as $concepto){
-                    if($concepto->getMarinaServicio()){
-                        $repositorio = $em->getRepository('AppBundle:MarinaHumedaServicio')
-                            ->findOneBy(['id' => $concepto->getMarinaServicio()->getId()]);
-                    }elseif($concepto->getCombustibleCatalogo()){
-                        $repositorio = $em->getRepository('AppBundle:Combustible\Catalogo')
-                            ->findOneBy(['id' => $concepto->getCombustibleCatalogo()->getId()]);
-                    }elseif($concepto->getAstilleroProducto()){
-                        $repositorio = $em->getRepository('AppBundle:Astillero\Producto')
-                            ->findOneBy(['id' => $concepto->getAstilleroProducto()->getId()]);
-                    }elseif($concepto->getTiendaProducto()){
-                        $repositorio = $em->getRepository('AppBundle:Tienda\Producto')
-                            ->findOneBy(['id' => $concepto->getTiendaProducto()->getId()]);
-                    }
-                    $repositorio->setExistencia($repositorio->getExistencia() + $concepto->getCantidad());
-                }
+                $solicitud->setFechaValidoAlmacen(new \DateTime());
             }
             $em->persist($solicitud);
             $em->flush();
