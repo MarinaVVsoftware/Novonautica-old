@@ -171,10 +171,10 @@ class AlmacenController extends Controller
                         if($concepto->getValidadoAlmacen() && $clonConcepto->getValidadoAlmacen() !== true){
                             $repositorio = FacturacionHelper::getProductoRepositoryByEmpresa($this->getDoctrine()->getManager(),$solicitud->getEmpresa()->getId());
                             $objetoProducto = $em->getRepository('AppBundle:Solicitud')->seleccionaObjetoProducto($concepto);
-                            $producto = $repositorio->findOneBy(['id' => $objetoProducto->getId()]);
+                            $producto = $repositorio->find($objetoProducto);
                             $producto->setExistencia($producto->getExistencia() + $concepto->getCantidad());
                             $concepto->setNombreValidoAlmacen($this->getUser()->getNombre());
-                            $concepto->setFechaValidoAlmacen(new \DateTime('now'));
+                            $concepto->setFechaValidoAlmacen(new \DateTime());
                             $em->persist($concepto);
                         }
                     }
@@ -182,7 +182,7 @@ class AlmacenController extends Controller
             }
             if($solicitud->getValidadoAlmacen()){
                 $solicitud->setNombreValidoAlmacen($this->getUser()->getNombre());
-                $solicitud->setFechaValidoAlmacen(new \DateTime('now'));
+                $solicitud->setFechaValidoAlmacen(new \DateTime());
             }
             $em->persist($solicitud);
             $em->flush();
