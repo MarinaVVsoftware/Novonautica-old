@@ -170,9 +170,6 @@ class Solicitud
     public function __construct()
     {
         $this->conceptos = new ArrayCollection();
-        $this->validadoCompra = false;
-        $this->validadoAlmacen = false;
-
     }
 
     public function __toString()

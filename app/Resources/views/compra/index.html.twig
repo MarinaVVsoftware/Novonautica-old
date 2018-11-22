@@ -57,12 +57,17 @@
                 rowCallback: function (row,data) {
                     row.cells[7].innerHTML = `<a href="${data[7][0]}" class="btn btn-xs btn-morado-claro btn-block">Ver</a>`;
                     {% if is_granted(expression('has_role("COMPRA_EDIT") or (user.isAdmin())')) %}
-                    if(data[7][1] === false){
-                        row.cells[7].innerHTML = row.cells[7].innerHTML +
-                            `<a href="${data[7][0]}/editar" class="btn btn-xs btn-azul btn-block">Validar</a>`;
-                    }
+                        if(data[7][1] === false || data[7][1] === null){
+                            row.cells[7].innerHTML = row.cells[7].innerHTML +
+                                `<a href="${data[7][0]}/editar" class="btn btn-xs btn-azul btn-block">Editar</a>`;
+                        }
                     {% endif %}
-
+                    {% if is_granted(expression('has_role("COMPRA_VALIDAR") or (user.isAdmin())')) %}
+                        if (data[7][1] === false || data[7][1] === null) {
+                            row.cells[7].innerHTML = row.cells[7].innerHTML +
+                                `<a href="${data[7][0]}/validar" class="btn btn-xs btn-azul btn-block">Validar</a>`;
+                        }
+                    {% endif %}
                 }
             });
         })(jQuery, datatablesSettings)

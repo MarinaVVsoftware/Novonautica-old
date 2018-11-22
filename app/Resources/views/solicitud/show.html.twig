@@ -35,8 +35,10 @@
                             <div class="info-input">
                                 {% if solicitud.validadoCompra %}
                                     Validado - {{ solicitud.nombreValidoCompra }}
+                                {% elseif solicitud.validadoCompra == false %}
+                                    Rechazado - {{ solicitud.nombreValidoCompra }}
                                 {% else %}
-                                    No validado
+                                    Pendiente
                                 {% endif %}
                             </div>
                         </div>

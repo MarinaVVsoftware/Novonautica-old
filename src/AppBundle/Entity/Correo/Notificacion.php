@@ -15,10 +15,15 @@ class Notificacion
     const EVENTO_CREAR = 1;
     const EVENTO_VALIDAR = 2;
     const EVENTO_ACEPTAR = 3;
+    const EVENTO_EDITAR = 4;
+
     const TIPO_MARINA = 1;
     const TIPO_ASTILLERO = 2;
     const TIPO_ODT = 3;
     const TIPO_COMBUSTIBLE = 4;
+    const TIPO_SOLICITUD = 5;
+    const TIPO_COMPRA = 6;
+    const TIPO_ALMACEN = 7;
 
     /**
      * @var int
@@ -54,13 +59,17 @@ class Notificacion
         Notificacion::EVENTO_CREAR => 'Nueva',
         Notificacion::EVENTO_VALIDAR => 'Validar',
         Notificacion::EVENTO_ACEPTAR => 'Aceptar',
+        Notificacion::EVENTO_EDITAR => 'Editar'
     ];
 
     private static $tipoList = [
-      Notificacion::TIPO_MARINA => 'Marina',
-      Notificacion::TIPO_ASTILLERO => 'Astillero',
-      Notificacion::TIPO_ODT => 'ODT',
-      Notificacion::TIPO_COMBUSTIBLE => 'Combustible'
+        Notificacion::TIPO_MARINA => 'Marina',
+        Notificacion::TIPO_ASTILLERO => 'Astillero',
+        Notificacion::TIPO_ODT => 'ODT',
+        Notificacion::TIPO_COMBUSTIBLE => 'Combustible',
+        Notificacion::TIPO_SOLICITUD => 'Solicitud',
+        Notificacion::TIPO_COMPRA => 'Compra',
+        Notificacion::TIPO_ALMACEN => 'Almacén'
     ];
 
     /**

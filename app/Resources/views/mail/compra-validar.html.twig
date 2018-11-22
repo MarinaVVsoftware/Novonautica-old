@@ -1,0 +1,68 @@
+{% extends ':mail:base.html.twig' %}
+{% block body %}
+    <h3>Notificación del estatus de validación de compra</h3>
+    <p class="lead">Se le ha enviado este correo para notificarle el siguiente evento:</p>
+    <p>
+        <strong>Folio: </strong> {{ solicitud.folio }}
+        <br>
+        <strong>Evento: </strong> Estatus de validación de compra de productos
+        <br>
+        <strong>Estatus validación: </strong>
+        {% if solicitud.validadoCompra %}
+            Aceptado
+            <br>
+            <strong>Validado por: </strong> {{ solicitud.nombreValidoCompra }}
+            <br>
+            <strong>Fecha de validación: </strong> {{ solicitud.fechaValidoCompra|date('d/m/Y') }}
+        {% elseif solicitud.validadoCompra == false %}
+            Rechazado
+        {% else %}
+            Pendiente
+        {% endif %}
+        <br>
+        <strong>Notas: </strong> {{ solicitud.notaCompra }}
+        <br>
+    </p>
+    <br/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th colspan="3">Productos</th>
+        </tr>
+        <tr>
+            <th>Producto</th>
+            <th>Unidad</th>
+            <th>Cantidad</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for concepto in solicitud.conceptos %}
+            <tr>
+                <td>
+                    {% if concepto.marinaServicio %}
+                        {{ concepto.marinaServicio }}
+                        {% set unidad = concepto.marinaServicio.claveUnidad %}
+                    {% elseif concepto.combustibleCatalogo %}
+                        {{ concepto.combustibleCatalogo }}
+                        {% set unidad = concepto.combustibleCatalogo.claveUnidad %}
+                    {% elseif concepto.astilleroProducto %}
+                        {{ concepto.astilleroProducto }}
+                        {% set unidad = concepto.astilleroProducto.claveUnidad %}
+                    {% elseif concepto.tiendaProducto %}
+                        {{ concepto.tiendaProducto }}
+                        {% set unidad = concepto.tiendaProducto.claveUnidad %}
+                    {% else %}
+                        {% set unidad = '' %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if unidad %}
+                        {{ unidad.nombre }}
+                    {% endif %}
+                </td>
+                <td>{{ concepto.cantidad|number_format(2) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock body %}

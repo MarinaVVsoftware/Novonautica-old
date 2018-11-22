@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Solicitud;
+use AppBundle\Entity\Correo;
 use AppBundle\Extra\FacturacionHelper;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -149,8 +150,12 @@ class AlmacenController extends Controller
     /**
      * @Route("/{id}/validar", name="almacen_validar")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     * @param Solicitud $solicitud
+     * @param \Swift_Mailer $mailer
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function validarAction(Request $request, Solicitud $solicitud)
+    public function validarAction(Request $request, Solicitud $solicitud, \Swift_Mailer $mailer)
     {
         $em = $this->getDoctrine()->getManager();
         $this->denyAccessUnlessGranted('ALMACEN_VALIDAR',$solicitud);
@@ -176,6 +181,8 @@ class AlmacenController extends Controller
                             $concepto->setNombreValidoAlmacen($this->getUser()->getNombre());
                             $concepto->setFechaValidoAlmacen(new \DateTime());
                             $em->persist($concepto);
+
+
                         }
                     }
                 }
@@ -193,5 +200,37 @@ class AlmacenController extends Controller
             'solicitud' => $solicitud,
             'title' => 'Almacen - Validar'
         ]);
+    }
+
+    /**
+     * @param Correo\Notificacion[] $notificables
+     * @param Solicitud $solicitud
+     * @param \Swift_Mailer $mailer
+     *
+     * @return void
+     */
+    private function enviaCorreoNotificacion($mailer, $notificables, $solicitud)
+    {
+        if (!count($notificables)) {
+            return;
+        }
+
+        $recipientes = [];
+        foreach ($notificables as $key => $notificable) {
+            $recipientes[$key] = $notificable->getCorreo();
+        }
+
+        $message = (new \Swift_Message('¡Compra de productos validada!'));
+        $message->setFrom('noresponder@novonautica.com');
+        $message->setTo($recipientes);
+
+        $message->setBody(
+            $this->renderView('mail/validar-almacen.html.twig', [
+                'notificacion' => $notificables[0],
+                'solicitud' => $solicitud
+            ]),
+            'text/html'
+        );
+        $mailer->send($message);
     }
 }

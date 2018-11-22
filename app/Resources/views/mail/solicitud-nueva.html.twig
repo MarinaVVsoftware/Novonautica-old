@@ -1,0 +1,59 @@
+{% extends ':mail:base.html.twig' %}
+{% block body %}
+    <h3>Notificación de nueva solicitud</h3>
+    <p class="lead">Se le ha enviado este correo para notificarle el siguiente evento:</p>
+    <p>
+        <strong>Folio: </strong> {{ solicitud.folio }}
+        <br>
+        <strong>Evento: </strong> Nueva solicitud de productos
+        <br>
+        <strong>Solicitado por: </strong>{{ solicitud.empresa }} - {{ solicitud.creador }}
+        <br>
+        <strong>Creada el día: </strong> {{ solicitud.fecha|date('d/m/Y') }}
+        <br>
+        <strong>Notas: </strong> {{ solicitud.notaSolicitud }}
+        <br>
+    </p>
+    <br/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th colspan="3">Productos solicitados</th>
+        </tr>
+        <tr>
+            <th>Producto</th>
+            <th>Unidad</th>
+            <th>Cantidad</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for concepto in solicitud.conceptos %}
+            <tr>
+                <td>
+                    {% if concepto.marinaServicio %}
+                        {{ concepto.marinaServicio }}
+                        {% set unidad = concepto.marinaServicio.claveUnidad %}
+                    {% elseif concepto.combustibleCatalogo %}
+                        {{ concepto.combustibleCatalogo }}
+                        {% set unidad = concepto.combustibleCatalogo.claveUnidad %}
+                    {% elseif concepto.astilleroProducto %}
+                        {{ concepto.astilleroProducto }}
+                        {% set unidad = concepto.astilleroProducto.claveUnidad %}
+                    {% elseif concepto.tiendaProducto %}
+                        {{ concepto.tiendaProducto }}
+                        {% set unidad = concepto.tiendaProducto.claveUnidad %}
+                    {% else %}
+                        {% set unidad = '' %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if unidad %}
+                        {{ unidad.nombre }}
+                    {% endif %}
+                </td>
+                <td>{{ concepto.cantidad|number_format(2) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock body %}

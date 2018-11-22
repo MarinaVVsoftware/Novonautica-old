@@ -111,6 +111,15 @@ class CompraDataTable extends AbstractDataTableHandler
 
             /** @var Solicitud $solicitud */
             $solicitud = $solicitudes[$index];
+            $estatus = '';
+            if($solicitud->getValidadoCompra()){
+                $estatus = $solicitud->getFechaValidoCompra()->format('d/m/Y');
+            }elseif($solicitud->getValidadoCompra() === false){
+                $estatus = 'Rechazado';
+            }else{
+                $estatus = 'Pendiente';
+            }
+
             $results->data[] = [
                 $solicitud->getFecha()->format('d/m/Y') ?? '',
                 $solicitud->getFolio(),
@@ -118,7 +127,7 @@ class CompraDataTable extends AbstractDataTableHandler
                 '$ '.number_format($solicitud->getSubtotal()/100,2).' <small>MXN</small>',
                 '$ '.number_format($solicitud->getIvatotal()/100,2).' <small>MXN</small>',
                 '$ '.number_format($solicitud->getTotal()/100,2).' <small>MXN</small>',
-                $solicitud->getFechaValidoCompra()?$solicitud->getFechaValidoCompra()->format('d/m/Y'):'No validado',
+                $estatus,
                 [$solicitud->getId(),$solicitud->getValidadoCompra()]
             ];
         }

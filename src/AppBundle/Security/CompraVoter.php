@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class CompraVoter extends Voter
 {
     const EDIT = 'COMPRA_EDIT';
+    const VALIDAR = 'COMPRA_VALIDAR';
 
     private $decisionManager;
 
@@ -36,7 +37,7 @@ class CompraVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, [self::EDIT])) {
+        if (!in_array($attribute, [self::EDIT, self::VALIDAR])) {
             return false;
         }
 
@@ -73,6 +74,9 @@ class CompraVoter extends Voter
             case self::EDIT:
                 return $this->canEdit($user);
                 break;
+            case self::VALIDAR:
+                return $this->canValidar($user);
+                break;
         }
 
         throw new \LogicException('This code should not be reached!');
@@ -81,6 +85,14 @@ class CompraVoter extends Voter
     private function canEdit(Usuario $usuario)
     {
         if(!in_array(self::EDIT,$usuario->getRoles())){
+            return false;
+        }
+        return true;
+    }
+
+    private function canValidar(Usuario $usuario)
+    {
+        if(!in_array(self::VALIDAR,$usuario->getRoles())){
             return false;
         }
         return true;
