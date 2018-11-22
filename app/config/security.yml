@@ -186,6 +186,7 @@ security:
         - { path: ^/solicitud, roles: ROLE_SOLICITUD }
         - { path: ^/compra, roles: ROLE_COMPRA }
 
+        - { path: ^/almacen/inventario/modificar, roles: ROLE_INVENTARIO_MODIFICAR }
         - { path: ^/almacen/inventario, roles: ROLE_INVENTARIO }
         - { path: ^/almacen, roles: ROLE_ALMACEN }
 

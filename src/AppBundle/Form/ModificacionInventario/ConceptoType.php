@@ -8,6 +8,8 @@
 
 namespace AppBundle\Form\ModificacionInventario;
 
+use AppBundle\Extra\FacturacionHelper;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -15,10 +17,21 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Range;
 
-class Concepto extends AbstractType
+class ConceptoType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -26,12 +39,12 @@ class Concepto extends AbstractType
             IntegerType::class,
             [
                 'label' => false,
-                'attr' => ['min' => 1, 'step' => 'any'],
+                'attr' => ['min' => 0, 'step' => 'any'],
                 'scale' => 2,
                 'constraints' => [
                     new Range([
-                        'min' => 1,
-                        'minMessage' => 'El valor minimo es 1',
+                        'min' => 0,
+                        'minMessage' => 'El valor minimo es 0',
                     ]),
                 ],
             ]
@@ -43,35 +56,56 @@ class Concepto extends AbstractType
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) {
-                dump($event->getData());
-
-                $this->createProductoField($event->getForm());
+            function (FormEvent $event) use ($options) {
+                $this->createProductoField(
+                    $event->getForm(),
+                    $options['empresa'],
+                    $event->getData()['producto']
+                );
             }
         );
 
         $builder->addEventListener(
             FormEvents::PRE_SUBMIT,
-            function (FormEvent $event) {
-                dump($event->getData());
-
-                $this->createProductoField($event->getForm());
+            function (FormEvent $event) use ($options) {
+                $this->createProductoField(
+                    $event->getForm(),
+                    $options['empresa'],
+                    $event->getData()['producto']
+                );
             }
         );
     }
 
-    private function createProductoField(FormInterface $form, $productoId = null)
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
     {
-//        $producto = null === $productoId ? [] : FacturacionHelper::getProductoRepositoryByEmpresa($productoId);
+        return 'appbundle_modificacioninventario_concepto';
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired(['empresa']);
+    }
+
+    private function createProductoField(FormInterface $form, $emisorId, $productoId = null)
+    {
+        $productoRepository = FacturacionHelper::getProductoRepositoryByEmpresa($this->entityManager, $emisorId);
+
+        if ($productoId) {
+            $producto = $productoRepository->find($productoId);
+            $productos = [$producto->getNombre() => $producto->getId()];
+        } else {
+            $productos = [];
+        }
 
         $form->add(
-            'Producto',
+            'producto',
             ChoiceType::class,
             [
-                'choices' => [
-                    'Un producto' => 1,
-                    'Dos productos' => 2
-                ]
+                'choices' => $productos,
             ]
         );
     }

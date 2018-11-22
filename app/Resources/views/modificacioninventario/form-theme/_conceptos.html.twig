@@ -1,0 +1,13 @@
+{% block appbundle_modificacioninventario_concepto_widget %}
+    <tr class="concepto-agregado table-item">
+        <td></td>
+        <td>
+            {{ form_widget(form.producto) }}
+            {{ form_errors(form.producto) }}
+        </td>
+        <td>
+            {{ form_widget(form.existencia) }}
+            {{ form_errors(form.existencia) }}
+        </td>
+    </tr>
+{% endblock %}

@@ -10,4 +10,16 @@ namespace AppBundle\Repository\Combustible;
  */
 class CatalogoRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getProductoSelect2($query)
+    {
+        $builder = $this->createQueryBuilder('producto');
+
+        return $builder
+            ->select('producto.id, producto.nombre AS text, producto.existencia AS quantity')
+            ->where('LOWER(producto.nombre) LIKE :query')
+            ->setParameter('query', strtolower("%{$query}%"))
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

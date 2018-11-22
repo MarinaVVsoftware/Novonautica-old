@@ -713,6 +713,13 @@ class="fa fa-angle-left pull-right"></i></span>
                                 <i class="fa fa-circle-o"></i> <span>Listado</span>
                             </a>
                         </li>
+                        {% if is_granted('ROLE_INVENTARIO_MODIFICAR') %}
+                        <li class="{{ path.check('almacen_modificacion_index') }}">
+                            <a href="{{ path('almacen_modificacion_index') }}">
+                                <i class="fa fa-circle-o"></i> <span>Registros de modificación</span>
+                            </a>
+                        </li>
+                        {% endif %}
                         {% if is_granted('ROLE_INVENTARIO') %}
                             <li class="treeview {{ path.check('almacen_inventario-') }}">
                                 <a href="#">

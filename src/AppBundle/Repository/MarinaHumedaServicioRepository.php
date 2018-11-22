@@ -10,12 +10,27 @@ namespace AppBundle\Repository;
  */
 class MarinaHumedaServicioRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function getServicioCatalogo($servicioId){
+    public function getServicioCatalogo($servicioId)
+    {
         $qry = $this->getEntityManager()
             ->createQuery('SELECT mhs.nombre,mhs.unidad,mhs.precio '.
                 'FROM AppBundle:MarinaHumedaServicio mhs '.
                 'WHERE mhs.id = :id'
-            )->setParameter('id',$servicioId);
+            )->setParameter('id', $servicioId);
+
         return $qry->getArrayResult()[0];
+    }
+
+    public function getProductoSelect2($query)
+    {
+        $builder = $this->createQueryBuilder('producto');
+
+        return $builder
+            ->select('producto.id, producto.nombre AS text, producto.existencia AS quantity')
+            ->where('LOWER(producto.nombre) LIKE :query')
+            ->setParameter('query', strtolower("%{$query}%"))
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getArrayResult();
     }
 }
