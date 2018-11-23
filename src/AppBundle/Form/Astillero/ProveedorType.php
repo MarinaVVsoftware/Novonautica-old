@@ -8,10 +8,10 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class ProveedorType extends AbstractType
 {
@@ -64,7 +64,11 @@ class ProveedorType extends AbstractType
                 'choices'=>[ 'Proveedor'=>'0','Contratista'=>'1' ],
                 'label'=>'Tipo Trabajador'
             ])
-        ;
+            ->add('empresa',EntityType::class,[
+                'class' => 'AppBundle\Entity\Contabilidad\Facturacion\Emisor',
+                'placeholder' => 'Seleccionar...',
+                'constraints' => [new NotNull(['message' => 'Por favor selecciona una empresa'])]
+            ]);
     }/**
      * {@inheritdoc}
      */

@@ -92,7 +92,7 @@
                         <h3 class="panel-title">{{ title }}</h3>
                     </div>
                     <div class="col-sm-6">
-                        <a class="btn btn-contorno-azul pull-right" href="{{ path('astillero_proveedor_index') }}">Regresar</a>
+                        <a class="btn btn-contorno-azul pull-right" href="{{ path('proveedor_index') }}">Regresar</a>
                     </div>
                 </div>
             </div>
@@ -100,14 +100,15 @@
                 {{ form_start(form) }}
                 <div class="row">
                     <div class="col-sm-6">
+                        {{ form_row(form.empresa) }}
                         {{ form_row(form.nombre) }}
                         {{ form_row(form.correo) }}
                         {{ form_row(form.password) }}
                         {{ form_row(form.porcentaje) }}
                         {{ form_row(form.rfc) }}
-                        {{ form_row(form.proveedorcontratista) }}
                     </div>
                     <div class="col-sm-6">
+                        {{ form_row(form.proveedorcontratista) }}
                         {{ form_row(form.razonsocial) }}
                         {{ form_row(form.telefono) }}
                         {{ form_row(form.tipo) }}

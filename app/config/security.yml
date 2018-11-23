@@ -180,6 +180,9 @@ security:
         - { path: ^/contabilidad/egreso, roles: ROLE_CONTABILIDAD_EGRESO }
         - { path: ^/contabilidad, roles: ROLE_CONTABILIDAD }
 
+        - { path: ^/proveedor/oficio, roles: ROLE_OFICIO }
+        - { path: ^/proveedor, roles: ROLE_PROVEEDOR }
+
         - { path: ^/historial-correo/notificacion, roles: ROLE_HCORREO_NOTIFICACION }
         - { path: ^/historial-correo, roles: ROLE_HCORREO }
 
@@ -220,7 +223,6 @@ security:
             - ROLE_ASTILLERO_PRODUCTO
             - ROLE_ASTILLERO_SERVICIO
             - ROLE_ASTILLERO_PAGO
-            - ROLE_ASTILLERO_PROVEEDOR
             - ROLE_ASTILLERO_SERVICIOBASICO
         ROLE_WHOLE_ODT:
             - ROLE_ODT
@@ -275,3 +277,5 @@ security:
             - ROLE_COMPRA
             - ROLE_ALMACEN
             - ROLE_INVENTARIO
+            - ROLE_PROVEEDOR
+            - ROLE_OFICIO

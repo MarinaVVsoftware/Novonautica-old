@@ -18,14 +18,14 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 /**
  * Proveedor controller.
  *
- * @Route("astillero/proveedor")
+ * @Route("proveedor")
  */
 class ProveedorController extends Controller
 {
     /**
      * Lists all proveedor entities.
      *
-     * @Route("/", name="astillero_proveedor_index")
+     * @Route("/", name="proveedor_index")
      * @Method("GET")
      *
      * @param Request $request
@@ -52,7 +52,7 @@ class ProveedorController extends Controller
     /**
      * Creates a new proveedor entity.
      *
-     * @Route("/nuevo", name="astillero_proveedor_new")
+     * @Route("/nuevo", name="proveedor_new")
      * @Method({"GET", "POST"})
      *
      * @param Request $request
@@ -63,6 +63,8 @@ class ProveedorController extends Controller
     {
         $proveedor = new Proveedor();
         $banco = new Proveedor\Banco();
+
+        $this->denyAccessUnlessGranted('PROVEEDOR_CREATE', $proveedor);
 
         $proveedor->setPassword($this->generateRandomString());
         $proveedor->addBanco($banco);
@@ -75,7 +77,7 @@ class ProveedorController extends Controller
             $em->persist($proveedor);
             $em->flush();
 
-            return $this->redirectToRoute('astillero_proveedor_show', ['id' => $proveedor->getId()]);
+            return $this->redirectToRoute('proveedor_show', ['id' => $proveedor->getId()]);
         }
 
         return $this->render('astillero/proveedor/new.html.twig', array(
@@ -109,7 +111,7 @@ class ProveedorController extends Controller
     /**
      * Finds and displays a proveedor entity.
      *
-     * @Route("/{id}", name="astillero_proveedor_show")
+     * @Route("/{id}", name="proveedor_show")
      * @Method("GET")
      *
      * @param Proveedor $proveedor
@@ -127,7 +129,7 @@ class ProveedorController extends Controller
     /**
      * Displays a form to edit an existing proveedor entity.
      *
-     * @Route("/{id}/editar", name="astillero_proveedor_edit")
+     * @Route("/{id}/editar", name="proveedor_edit")
      * @Method({"GET", "POST"})
      *
      * @param Request $request
@@ -137,6 +139,7 @@ class ProveedorController extends Controller
      */
     public function editAction(Request $request, Proveedor $proveedor)
     {
+        $this->denyAccessUnlessGranted('PROVEEDOR_EDIT', $proveedor);
         $em = $this->getDoctrine()->getManager();
         $originalBancos = new ArrayCollection();
         foreach ($proveedor->getBancos() as $banco) {
@@ -158,7 +161,7 @@ class ProveedorController extends Controller
             $em->persist($proveedor);
             $em->flush();
 
-            return $this->redirectToRoute('astillero_proveedor_show', ['id' => $proveedor->getId()]);
+            return $this->redirectToRoute('proveedor_show', ['id' => $proveedor->getId()]);
         }
 
         return $this->render('astillero/proveedor/edit.html.twig', array(
@@ -172,11 +175,12 @@ class ProveedorController extends Controller
     /**
      * Deletes a proveedor entity.
      *
-     * @Route("/{id}", name="astillero_proveedor_delete")
+     * @Route("/{id}", name="proveedor_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Proveedor $proveedor)
     {
+        $this->denyAccessUnlessGranted('PROVEEDOR_DELETE', $proveedor);
         $form = $this->createDeleteForm($proveedor);
         $form->handleRequest($request);
 
@@ -186,7 +190,7 @@ class ProveedorController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('astillero_proveedor_index');
+        return $this->redirectToRoute('proveedor_index');
     }
 
     /**
@@ -199,7 +203,7 @@ class ProveedorController extends Controller
     private function createDeleteForm(Proveedor $proveedor)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('astillero_proveedor_delete', array('id' => $proveedor->getId())))
+            ->setAction($this->generateUrl('proveedor_delete', array('id' => $proveedor->getId())))
             ->setMethod('DELETE')
             ->getForm();
     }

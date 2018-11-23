@@ -282,34 +282,6 @@
                         {% endif %}
                         <!-- END ASTILLERO/ODT -->
 
-                        <!-- START ASTILLERO/PROVEEDORES -->
-                        {% if is_granted('ROLE_ASTILLERO_PROVEEDOR') %}
-                            <li class="treeview {{ path.check('_proveedor_') }}">
-                                <a href="#">
-                                    <i class="fa fa-circle-o"></i> Proveedor/Contratista
-                                    <span class="pull-right-container"><i
-                                                class="fa fa-angle-left pull-right"></i></span>
-                                </a>
-                                <ul class="treeview-menu">
-                                    <li class="{{ path.check('astillero_proveedor_index') }}">
-                                        <a href="{{ path('astillero_proveedor_index') }}">
-                                            <i class="fa fa-minus"></i> Listado
-                                        </a>
-                                    </li>
-                                    <li class="{{ path.check('astillero_proveedor_new') }}">
-                                        <a href="{{ path('astillero_proveedor_new') }}">
-                                            <i class="fa fa-minus"></i> Nuevo
-                                        </a>
-                                    </li>
-                                    <li class="{{ path.check('astillero_proveedor_trabajo_') }}">
-                                        <a href="{{ path('astillero_proveedor_trabajo_index') }}">
-                                            <i class="fa fa-minus"></i> Catálogo oficios
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        {% endif %}
-                        <!-- END ASTILLERO/PROVEEDORES -->
                         {% if is_granted('ROLE_ASTILLERO_MONEDERO') %}
                             <li class="{{ path.check('a_monedero_') }}">
                                 <a href="{{ path('a_monedero_index') }}">
@@ -514,48 +486,6 @@
                                 </a>
                             </li>
                         {% endif %}
-                        {#
-
-{% if is_granted('ROLE_TIENDA_INVENTARIO') %}
-    <li class="{{ path.check('tienda_inventario_index') }}">
-        <a href="{{ path('tienda_inventario_index') }}">
-            <i class="fa fa-circle-o"></i> Inventario
-        </a>
-    </li>
-{% endif %}
-{% if is_granted('ROLE_TIENDA_REGISTRO') %}
-<li class="treeview {{ path.check(
-[
-'tienda_inventario_registro_index_entrada',
-'tienda_inventario_registro_index_salida',
-'tienda_inventario_registro_new_entrada'
-]
-) }}">
-<a href="#">
-<i class="fa fa-circle-o"></i> Registros
-<span class="pull-right-container"><i
-class="fa fa-angle-left pull-right"></i></span>
-</a>
-<ul class="treeview-menu">
-<li class="{{ path.check('tienda_inventario_registro_new_entrada') }}">
-<a href="{{ path('tienda_inventario_registro_new_entrada') }}">
-<i class="fa fa-minus"></i> Nueva entrada
-</a>
-</li>
-<li class="{{ path.check('tienda_inventario_registro_index_entrada') }}">
-<a href="{{ path('tienda_inventario_registro_index_entrada') }}">
-<i class="fa fa-minus"></i> Entradas
-</a>
-</li>
-<li class="{{ path.check('tienda_inventario_registro_index_salida') }}">
-<a href="{{ path('tienda_inventario_registro_index_salida') }}">
-<i class="fa fa-minus"></i> Salidas
-</a>
-</li>
-</ul>
-</li>
-{% endif %}
-#}
                     </ul>
                 </li>
             {% endif %}
@@ -656,6 +586,39 @@ class="fa fa-angle-left pull-right"></i></span>
                 </li>
             {% endif %}
             <!-- END CONTABILIDAD -->
+
+            <!-- START ASTILLERO/PROVEEDORES -->
+            {% if is_granted('ROLE_PROVEEDOR') %}
+                <li class="treeview {{ path.check('proveedor_') }}">
+                    <a href="#">
+                        <i class="fa fa-cube"></i> Proveedor/Contratista
+                        <span class="pull-right-container"><i
+                                    class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ path.check('proveedor_index') }}">
+                            <a href="{{ path('proveedor_index') }}">
+                                <i class="fa fa-minus"></i> Listado
+                            </a>
+                        </li>
+                        {% if is_granted(expression('has_role("PROVEEDOR_CREATE") or (user.isAdmin())')) %}
+                            <li class="{{ path.check('proveedor_new') }}">
+                                <a href="{{ path('proveedor_new') }}">
+                                    <i class="fa fa-minus"></i> Nuevo
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_OFICIO') %}
+                            <li class="{{ path.check('proveedor_trabajo_') }}">
+                                <a href="{{ path('proveedor_trabajo_index') }}">
+                                    <i class="fa fa-minus"></i> Catálogo oficios
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </li>
+            {% endif %}
+            <!-- END ASTILLERO/PROVEEDORES -->
 
             <!-- START SOLICITUD -->
             {% if is_granted('ROLE_SOLICITUD') %}

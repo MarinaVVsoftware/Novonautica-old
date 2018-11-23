@@ -11,7 +11,6 @@ namespace AppBundle\DataTables;
 
 use AppBundle\Entity\Astillero\Proveedor;
 use DataTables\AbstractDataTableHandler;
-//use DataTables\DataTableException;
 use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -41,19 +40,29 @@ class AstilleroProveedorDataTable extends AbstractDataTableHandler
 
         $q = $qb->select('ap');
         if($request->search->value){
-            $q->where('(LOWER(ap.nombre) LIKE :search OR ap.razonsocial LIKE :search OR ap.porcentaje LIKE :search OR ap.correo LIKE :search OR ap.telefono LIKE :search OR ap.proveedorcontratista LIKE :search)')
+            $q->where('(LOWER(ap.nombre) LIKE :search '.
+                ' OR ap.empresa LIKE :search '.
+                ' OR ap.razonsocial LIKE :search '.
+                ' OR ap.porcentaje LIKE :search ' .
+                ' OR ap.correo LIKE :search ' .
+                ' OR ap.telefono LIKE :search '.
+                ' OR ap.proveedorcontratista LIKE :search '.
+                ')')
+
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
         }
         foreach ($request->order as $order) {
             if($order->column === 0){
+                $q->addOrderBy('ap.empresa', $order->dir);
+            } elseif($order->column === 1){
                 $q->addOrderBy('ap.proveedorcontratista', $order->dir);
-            } elseif ($order->column === 1) {
-                $q->addOrderBy('ap.nombre', $order->dir);
             } elseif ($order->column === 2) {
-                $q->addOrderBy('ap.razonsocial', $order->dir);
+                $q->addOrderBy('ap.nombre', $order->dir);
             } elseif ($order->column === 3) {
-                $q->addOrderBy('ap.porcentaje', $order->dir);
+                $q->addOrderBy('ap.razonsocial', $order->dir);
             } elseif ($order->column === 4) {
+                $q->addOrderBy('ap.porcentaje', $order->dir);
+            } elseif ($order->column === 5) {
                 $q->addOrderBy('ap.tipo', $order->dir);
             }
         }
@@ -70,6 +79,7 @@ class AstilleroProveedorDataTable extends AbstractDataTableHandler
             $proveedor = $proveedores[$index];
 
             $results->data[] = [
+                $proveedor->getEmpresa()?$proveedor->getEmpresa()->getNombre():'',
                 $proveedor->getProveedorcontratista() == 0 ? 'Proveedor' : 'Contratista',
                 $proveedor->getNombre(),
                 $proveedor->getRazonsocial(),

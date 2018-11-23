@@ -10,14 +10,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 /**
  * Trabajo controller.
  *
- * @Route("astillero/proveedor/oficio")
+ * @Route("proveedor/oficio")
  */
 class TrabajoController extends Controller
 {
     /**
      * Lists all trabajo entities.
      *
-     * @Route("/", name="astillero_proveedor_trabajo_index")
+     * @Route("/", name="proveedor_trabajo_index")
      * @Method("GET")
      */
     public function indexAction()
@@ -35,7 +35,7 @@ class TrabajoController extends Controller
     /**
      * Creates a new trabajo entity.
      *
-     * @Route("/nuevo", name="astillero_proveedor_trabajo_new")
+     * @Route("/nuevo", name="proveedor_trabajo_new")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -49,7 +49,7 @@ class TrabajoController extends Controller
             $em->persist($trabajo);
             $em->flush();
 
-            return $this->redirectToRoute('astillero_proveedor_trabajo_index');
+            return $this->redirectToRoute('proveedor_trabajo_index');
         }
 
         return $this->render('astillero/proveedor/trabajo/new.html.twig', array(
@@ -62,7 +62,7 @@ class TrabajoController extends Controller
     /**
      * Finds and displays a trabajo entity.
      *
-     * @Route("/{id}", name="astillero_proveedor_trabajo_show")
+     * @Route("/{id}", name="proveedor_trabajo_show")
      * @Method("GET")
      */
     public function showAction(Trabajo $trabajo)
@@ -78,7 +78,7 @@ class TrabajoController extends Controller
     /**
      * Displays a form to edit an existing trabajo entity.
      *
-     * @Route("/{id}/editar", name="astillero_proveedor_trabajo_edit")
+     * @Route("/{id}/editar", name="proveedor_trabajo_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Trabajo $trabajo)
@@ -90,7 +90,7 @@ class TrabajoController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('astillero_proveedor_trabajo_index');
+            return $this->redirectToRoute('proveedor_trabajo_index');
         }
 
         return $this->render('astillero/proveedor/trabajo/edit.html.twig', array(
@@ -104,7 +104,7 @@ class TrabajoController extends Controller
     /**
      * Deletes a trabajo entity.
      *
-     * @Route("/{id}", name="astillero_proveedor_trabajo_delete")
+     * @Route("/{id}", name="proveedor_trabajo_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Trabajo $trabajo)
@@ -118,7 +118,7 @@ class TrabajoController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('astillero_proveedor_trabajo_index');
+        return $this->redirectToRoute('proveedor_trabajo_index');
     }
 
     /**
@@ -126,14 +126,13 @@ class TrabajoController extends Controller
      *
      * @param Trabajo $trabajo The trabajo entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\FormInterface The form
      */
     private function createDeleteForm(Trabajo $trabajo)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('astillero_proveedor_trabajo_delete', array('id' => $trabajo->getId())))
+            ->setAction($this->generateUrl('proveedor_trabajo_delete', array('id' => $trabajo->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

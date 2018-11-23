@@ -11,7 +11,7 @@
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right"
-                               href="{{ path('astillero_proveedor_index') }}">Regresar</a>
+                               href="{{ path('proveedor_index') }}">Regresar</a>
                         </div>
                     </div>
                 </div>
@@ -20,6 +20,14 @@
                         <div class="col-sm-12">
                             <table class="table">
                                 <tbody>
+                                <tr>
+                                    <th>Empresa</th>
+                                    <td>
+                                        {% if proveedor.empresa %}
+                                            {{ proveedor.empresa }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
                                 <tr>
                                     <th>Tipo trabajador</th>
                                     <td>{% if proveedor.proveedorcontratista == 0 %}
@@ -106,15 +114,17 @@
                     </div>
                 </div>
                 <div class="panel-footer">
+                    {% if is_granted(expression('has_role("PROVEEDOR_EDIT") or (user.isAdmin())')) %}
                     <div class="row">
                         <div class="col-sm-12">
                             <a class="btn btn-azul pull-right"
-                               href="{{ path('astillero_proveedor_edit', { 'id': proveedor.id }) }}">
+                               href="{{ path('proveedor_edit', { 'id': proveedor.id }) }}">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                 Editar
                             </a>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </section>
