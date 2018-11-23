@@ -229,7 +229,7 @@ class AlmacenController extends Controller
             $recipientes[$key] = $notificable->getCorreo();
         }
 
-        $message = (new \Swift_Message('¡Compra de productos validada!'));
+        $message = (new \Swift_Message('¡Validaciones de almacén!'));
         $message->setFrom('noresponder@novonautica.com');
         $message->setTo($recipientes);
 
