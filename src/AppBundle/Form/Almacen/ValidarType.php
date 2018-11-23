@@ -36,9 +36,9 @@ class ValidarType extends AbstractType
                 'label' => false,
                 'entry_type' => ConceptoType::class,
                 'entry_options' => ['label' => false],
-                'allow_add' => true,
+                'allow_add' => false,
                 'by_reference' => false,
-                'allow_delete' => true,
+                'allow_delete' => false,
             ]);
     }
 

@@ -9,19 +9,23 @@
         <br>
         <strong>Validado por: </strong>{{ solicitud.nombreValidoAlmacen }}
         <br>
-        <strong>Fecha de validación: </strong> {{ solicitud.fechaValidoAlmacen|date('d/m/Y') }}
+        <strong>Fecha de validación: </strong>
+        {% if solicitud.fechaValidoAlmacen %}
+            {{ solicitud.fechaValidoAlmacen|date('d/m/Y') }}
+        {% endif %}
         <br>
     </p>
     <br/>
     <table class="table">
         <thead>
         <tr>
-            <th colspan="3">Productos</th>
+            <th colspan="4">Productos</th>
         </tr>
         <tr>
             <th>Producto</th>
             <th>Unidad</th>
             <th>Cantidad</th>
+            <th>Validación</th>
         </tr>
         </thead>
         <tbody>
@@ -50,6 +54,14 @@
                     {% endif %}
                 </td>
                 <td>{{ concepto.cantidad|number_format(2) }}</td>
+                <td>
+                    {% if concepto.fechaValidoAlmacen %}
+                        {{ concepto.fechaValidoAlmacen|date('d/m/Y') }} -
+                        {{ concepto.nombreValidoAlmacen }}
+                    {% else %}
+                        No validado
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>

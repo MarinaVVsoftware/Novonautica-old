@@ -134,11 +134,18 @@ class SolicitudDataTable extends AbstractDataTableHandler
 
             /** @var Solicitud $solicitud */
             $solicitud = $solicitudes[$index];
+            if(is_null($solicitud->getValidadoCompra())){
+                $estatusCompra = 'Pendiente';
+            }elseif($solicitud->getValidadoCompra()){
+                $estatusCompra = $solicitud->getFechaValidoCompra()->format('d/m/Y');
+            }else{
+                $estatusCompra = 'Rechazado';
+            }
             $results->data[] = [
                 $solicitud->getFolio(),
                 $solicitud->getEmpresa()->getNombre(),
                 $solicitud->getFecha()->format('d/m/Y') ?? '',
-                $solicitud->getFechaValidoCompra()?$solicitud->getFechaValidoCompra()->format('d/m/Y'):'No validado',
+                $estatusCompra,
                 $solicitud->getFechaValidoAlmacen()?$solicitud->getFechaValidoAlmacen()->format('d/m/Y'):'No validado',
                 [$solicitud->getId(),$solicitud->getValidadoCompra()]
             ];

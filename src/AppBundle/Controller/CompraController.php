@@ -90,33 +90,8 @@ class CompraController extends Controller
                     'evento' => Correo\Notificacion::EVENTO_EDITAR,
                     'tipo' => Correo\Notificacion::TIPO_COMPRA
             ]);
-            $this->enviaCorreoNotificacion($mailer,$notificables,$solicitud,'Solicitud Aceptada');
-
-//            if($solicitud->getValidadoCompra()){
-//                $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
-//                    'evento' => Correo\Notificacion::EVENTO_VALIDAR,
-//                    'tipo' => Correo\Notificacion::TIPO_COMPRA
-//                ]);
-//                $this->enviaCorreoNotificacion($mailer,$notificables,$solicitud,'Solicitud Aceptada');
-//            }elseif($solicitud->getValidadoCompra() === false){
-//                $this->enviaCorreoNotificacion($mailer,[$solicitud->getCreador()->getCorreo()],$solicitud,'Solicitud rechazada');
-//            }else{
-//                $provedorSeleccionado = false;
-//                foreach ($solicitud->getConceptos() as $concepto){
-//                    if($concepto->getProveedor()){
-//                        $provedorSeleccionado = true;
-//                        break;
-//                    }
-//                }
-//                if($provedorSeleccionado){
-//                    $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
-//                        'evento' => Correo\Notificacion::EVENTO_PROVEEDOR,
-//                        'tipo' => Correo\Notificacion::TIPO_COMPRA
-//                    ]);
-//                    $this->enviaCorreoNotificacion($mailer,$notificables,$solicitud,'Solicitud pendiente');
-//                }
-//            }
-
+            $this->enviaCorreoNotificacion($mailer,$notificables,$solicitud,
+                'Notificación de compras - Asignación de proveedor');
             return $this->redirectToRoute('compra_show',['id' => $solicitud->getId()]);
         }
         return $this->render('compra/edit.html.twig',[
@@ -144,10 +119,27 @@ class CompraController extends Controller
         $editForm = $this->createForm('AppBundle\Form\Compra\ValidarType',$solicitud);
         $editForm->handleRequest($request);
         if($editForm->isSubmitted() && $editForm->isValid()){
-            if($solicitud->getValidadoCompra() || $solicitud->getValidadoCompra() === false){
+
+            if(!is_null($solicitud->getValidadoCompra())){
                 $solicitud->setNombreValidoCompra($this->getUser()->getNombre());
                 $solicitud->setFechaValidoCompra(new \DateTime());
+
+                //Buscar correos a notificar, el que creo la solicitud le llegará un correo si es rechazado.
+                //Si es aceptado llegra correo a los asignados con EVENTO_VALIDAR y EVENTO_ACEPTAR
+                if($solicitud->getValidadoCompra()){
+                   $asunto = 'Notificación compras - Aceptado';
+                    $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                        'evento' => [Correo\Notificacion::EVENTO_VALIDAR, Correo\Notificacion::EVENTO_ACEPTAR],
+                        'tipo' => Correo\Notificacion::TIPO_COMPRA
+                    ]);
+                }else{
+                    $asunto = 'Notificación compras - Rechazado';
+                    $notificables = [$solicitud->getCreador()];
+                }
+                $this->enviaCorreoNotificacion($mailer, $notificables, $solicitud, $asunto);
+
             }
+
             $em->persist($solicitud);
             $em->flush();
             return $this->redirectToRoute('compra_show',['id' => $solicitud->getId()]);
@@ -197,6 +189,7 @@ class CompraController extends Controller
      * @param Correo\Notificacion[] $notificables
      * @param Solicitud $solicitud
      * @param $asunto
+     * @param $plantilla
      *
      * @return void
      */
@@ -216,9 +209,10 @@ class CompraController extends Controller
         $message->setTo($recipientes);
 
         $message->setBody(
-            $this->renderView('mail/compra-validar.html.twig', [
+            $this->renderView('mail/compra.html.twig', [
                 'notificacion' => $notificables[0],
-                'solicitud' => $solicitud
+                'solicitud' => $solicitud,
+                'asunto' => $asunto
             ]),
             'text/html'
         );

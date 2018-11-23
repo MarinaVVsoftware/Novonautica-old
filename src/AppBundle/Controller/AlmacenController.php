@@ -180,12 +180,11 @@ class AlmacenController extends Controller
                             $producto->setExistencia($producto->getExistencia() + $concepto->getCantidad());
                             $concepto->setNombreValidoAlmacen($this->getUser()->getNombre());
                             $concepto->setFechaValidoAlmacen(new \DateTime());
-                            $em->persist($concepto);
-
 
                         }
                     }
                 }
+                $em->persist($concepto);
             }
             if($solicitud->getValidadoAlmacen()){
                 $solicitud->setNombreValidoAlmacen($this->getUser()->getNombre());
@@ -193,6 +192,16 @@ class AlmacenController extends Controller
             }
             $em->persist($solicitud);
             $em->flush();
+
+            //Buscar correos a notificar
+            $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                'evento' => [Correo\Notificacion::EVENTO_VALIDAR, Correo\Notificacion::EVENTO_ACEPTAR],
+                'tipo' => Correo\Notificacion::TIPO_ALMACEN
+            ]);
+
+            $this->enviaCorreoNotificacion($mailer,$notificables,$solicitud);
+            $this->enviaCorreoNotificacion($mailer,[$solicitud->getCreador()],$solicitud);
+
             return $this->redirectToRoute('almacen_show',['id' => $solicitud->getId()]);
         }
         return $this->render('almacen/validar.html.twig',[
@@ -225,7 +234,7 @@ class AlmacenController extends Controller
         $message->setTo($recipientes);
 
         $message->setBody(
-            $this->renderView('mail/validar-almacen.html.twig', [
+            $this->renderView('mail/almacen-validar.html.twig', [
                 'notificacion' => $notificables[0],
                 'solicitud' => $solicitud
             ]),

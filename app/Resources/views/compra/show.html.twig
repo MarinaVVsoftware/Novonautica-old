@@ -33,12 +33,12 @@
                         <div class="col-sm-4">
                             <label>Validación compra</label>
                             <div class="info-input">
-                                {% if solicitud.validadoCompra %}
-                                    Validado - {{ solicitud.nombreValidoCompra }}
-                                {% elseif solicitud.validadoCompra == false %}
-                                    Rechazado - {{ solicitud.nombreValidoCompra }}
-                                {% else %}
+                                {% if solicitud.validadoCompra is null %}
                                     Pendiente
+                                {% elseif solicitud.validadoCompra %}
+                                    Validado - {{ solicitud.nombreValidoCompra }}
+                                {% else %}
+                                    Rechazado - {{ solicitud.nombreValidoCompra }}
                                 {% endif %}
                             </div>
                         </div>

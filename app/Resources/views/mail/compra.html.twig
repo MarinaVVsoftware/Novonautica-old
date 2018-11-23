@@ -1,23 +1,23 @@
 {% extends ':mail:base.html.twig' %}
 {% block body %}
-    <h3>Notificación del estatus de validación de compra</h3>
+    <h3>Notificación de compras</h3>
     <p class="lead">Se le ha enviado este correo para notificarle el siguiente evento:</p>
     <p>
         <strong>Folio: </strong> {{ solicitud.folio }}
         <br>
-        <strong>Evento: </strong> Estatus de validación de compra de productos
+        <strong>Evento: </strong> {{ asunto }}
         <br>
         <strong>Estatus validación: </strong>
-        {% if solicitud.validadoCompra %}
+        {% if solicitud.validadoCompra is null %}
+            Pendiente
+        {% elseif solicitud.validadoCompra %}
             Aceptado
             <br>
             <strong>Validado por: </strong> {{ solicitud.nombreValidoCompra }}
             <br>
             <strong>Fecha de validación: </strong> {{ solicitud.fechaValidoCompra|date('d/m/Y') }}
-        {% elseif solicitud.validadoCompra == false %}
-            Rechazado
         {% else %}
-            Pendiente
+            Rechazado
         {% endif %}
         <br>
         <strong>Notas: </strong> {{ solicitud.notaCompra }}
@@ -27,17 +27,27 @@
     <table class="table">
         <thead>
         <tr>
-            <th colspan="3">Productos</th>
+            <th colspan="8">Productos</th>
         </tr>
         <tr>
+            <th>Proveedor</th>
             <th>Producto</th>
             <th>Unidad</th>
             <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Sub-Total</th>
+            <th>IVA {{ solicitud.iva|number_format(2) }}%</th>
+            <th>Total</th>
         </tr>
         </thead>
         <tbody>
         {% for concepto in solicitud.conceptos %}
             <tr>
+                <td>
+                    {% if concepto.proveedor %}
+                        {{ concepto.proveedor.nombre }}
+                    {% endif %}
+                </td>
                 <td>
                     {% if concepto.marinaServicio %}
                         {{ concepto.marinaServicio }}
@@ -61,8 +71,22 @@
                     {% endif %}
                 </td>
                 <td>{{ concepto.cantidad|number_format(2) }}</td>
+                <td>${{ (concepto.precio/100)|number_format(2) }} <small>MXN</small></td>
+                <td>${{ (concepto.subtotal/100)|number_format(2) }} <small>MXN</small></td>
+                <td>${{ (concepto.ivatotal/100)|number_format(2) }} <small>MXN</small></td>
+                <td>${{ (concepto.total/100)|number_format(2) }} <small>MXN</small></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    <p>
+    <hr>
+    <strong>Sub-Total:</strong> MX$ {{ (solicitud.subtotal / 100)|number_format(2) }}
+    <br>
+    <hr>
+    <strong>IVA {{ solicitud.iva|number_format(2) }}%: </strong> MX$ {{ (solicitud.ivatotal / 100)|number_format(2) }}
+    <br>
+    <hr>
+    <strong>Total: </strong> MX$ {{ (solicitud.total / 100)|number_format(2) }}
+    </p>
 {% endblock body %}
