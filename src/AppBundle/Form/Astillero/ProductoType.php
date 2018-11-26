@@ -4,10 +4,8 @@ namespace AppBundle\Form\Astillero;
 
 use AppBundle\Entity\Astillero\Producto;
 use AppBundle\Entity\Astillero\Proveedor;
-use AppBundle\Form\Astillero\Producto\ProveedorType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -19,10 +17,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class ProductoType extends AbstractType
 {
@@ -65,7 +61,8 @@ class ProductoType extends AbstractType
                     'class' => Proveedor::class,
                     'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('proveedor')
-                            ->where('proveedor.proveedorcontratista = 0');
+                            ->where('proveedor.proveedorcontratista = 0')
+                            ->andWhere('proveedor.empresa = 5');
                     }
                 ],
                 'allow_add' => true,
