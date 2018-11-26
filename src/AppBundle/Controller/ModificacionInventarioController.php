@@ -191,6 +191,7 @@ class ModificacionInventarioController extends AbstractController
         foreach ($modificacionInventario->getConceptos() as $i => $concepto) {
             $conceptos[] =
                 [
+                    'antiguaExistencia' => $concepto['antiguaExistencia'],
                     'existencia' => $concepto['existencia'],
                     'producto' => $productoRepository->find($concepto['producto']),
                 ];

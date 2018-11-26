@@ -35,6 +35,16 @@ class ConceptoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
+            'antiguaExistencia',
+            IntegerType::class,
+            [
+                'label' => false,
+                'attr' => ['readonly' => 'readonly'],
+                'scale' => 2,
+            ]
+        );
+
+        $builder->add(
             'existencia',
             IntegerType::class,
             [

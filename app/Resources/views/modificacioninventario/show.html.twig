@@ -39,7 +39,8 @@
                                 <thead>
                                 <tr>
                                     <th>Producto</th>
-                                    <th width="15%">Existencia</th>
+                                    <th width="15%">Antigua existencia</th>
+                                    <th width="15%">Nueva existencia</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -47,6 +48,9 @@
                                     <tr>
                                         <td>
                                             {{ concepto['producto'].nombre }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ concepto['antiguaExistencia'] }}
                                         </td>
                                         <td class="text-center">
                                             {{ concepto['existencia'] }}

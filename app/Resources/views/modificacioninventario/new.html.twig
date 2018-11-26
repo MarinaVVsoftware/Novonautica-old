@@ -92,6 +92,7 @@
                                                 <i class="fa fa-trash-o"></i>
                                             </th>
                                             <th>Producto</th>
+                                            <th width="18%">Existencia actual</th>
                                             <th width="18%">Existencia</th>
                                         </tr>
                                         </thead>
@@ -103,6 +104,10 @@
                                                 <td>
                                                     {{ form_widget(concepto.producto) }}
                                                     {{ form_errors(concepto.producto) }}
+                                                </td>
+                                                <td>
+                                                    {{ form_widget(concepto.antiguaExistencia) }}
+                                                    {{ form_errors(concepto.antiguaExistencia) }}
                                                 </td>
                                                 <td>
                                                     {{ form_widget(concepto.existencia) }}
@@ -246,6 +251,7 @@
 
           $productoSelect2.on('select2:select', () => {
             element.cells[2].firstElementChild.value = $productoSelect2.select2('data')[0].quantity || 0;
+            element.cells[3].firstElementChild.value = $productoSelect2.select2('data')[0].quantity || 0;
           });
         }
 
