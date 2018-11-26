@@ -8,66 +8,6 @@
         .help-block{
             color: #dd4b39;
         }
-
-        .novo-checkbox-container .checkbox {
-            position: relative;
-            padding: 20px 0 20px 20px;
-            text-align: left;
-        }
-
-        .novo-checkbox-container .checkbox label {
-            cursor: pointer;
-            padding-left: 10px;
-        }
-
-        .novo-checkbox-container .checkbox label:before,
-        .novo-checkbox-container .checkbox label:after {
-            content: '';
-            position: absolute;
-            top: 50%;
-        }
-
-        .novo-checkbox-container .checkbox label:before {
-            left: 0;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0;
-            border-radius: 4px;
-            background: #3e4766;
-            -webkit-box-shadow: 0 0 1px grey;
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .novo-checkbox-container .checkbox label:after {
-            width: 14px;
-            height: 8px;
-            top: 24px;
-            left: 3px;
-            border: 3px solid #0097f6;
-            border-top: none;
-            border-right: none;
-            background: transparent;
-            opacity: 0;
-            -webkit-transform: rotate(-45deg);
-            transform: rotate(-45deg);
-        }
-
-        .novo-checkbox-container .checkbox label:hover:after {
-            opacity: .5;
-        }
-
-        .novo-checkbox-container .checkbox input[type="radio"],
-        .novo-checkbox-container .checkbox input[type="checkbox"] {
-            position: absolute;
-            top: 0;
-            left: -9999px;
-            visibility: hidden;
-        }
-
-        .novo-checkbox-container .checkbox input[type="radio"]:checked + label:after,
-        .novo-checkbox-container .checkbox input[type="checkbox"]:checked + label:after {
-            opacity: 1;
-        }
     </style>
 {% endblock %}
 {% form_theme form.conceptos '/compra/_concepto.html.twig' %}
@@ -101,11 +41,6 @@
                         </div>
                         <div class="col-sm-4">
                             {{ form_row(form.iva) }}
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="novo-checkbox-container">
-                                {{ form_row(form.validadoCompra) }}
-                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -218,11 +153,6 @@
                             <hr>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            {{ form_row(form.notaCompra) }}
-                        </div>
-                    </div>
                     <div class="row espacio-linea-arriba2">
                         <div class="col-sm-6">
                             <button id="submit-btn" class="btn btn-azul">
@@ -230,11 +160,6 @@
                                 Guardar
                             </button>
                         </div>
-                        {% if is_granted(expression('has_role("COMPRA_DELETE") or (user.isAdmin())')) %}
-                            <div class="col-sm-6 text-right">
-                                {{ delete_form is defined ? modal.deleteButton('Compra') : '' }}
-                            </div>
-                        {% endif %}
                     </div>
 
                 </div>
@@ -245,9 +170,6 @@
             {{ form_end(form) }}
         </section>
     </div>
-{% endblock %}
-{% block modals %}
-    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

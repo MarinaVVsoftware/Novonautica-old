@@ -62,7 +62,6 @@ class ConceptoType extends AbstractType
             ->add('proveedor',EntityType::class,[
                 'class' => 'AppBundle\Entity\Astillero\Proveedor',
                 'placeholder' => 'Selecionar...',
-                'constraints' => [new NotNull(['message' => 'Por favor selecciona un proveedor'])],
                 'required' => false,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('p')

@@ -1,16 +1,19 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Luiz
+ * Date: 22/11/2018
+ * Time: 03:43 PM
+ */
 
-namespace AppBundle\Form\Almacen;
+namespace AppBundle\Form\Compra;
 
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
 
 class ValidarType extends AbstractType
 {
@@ -20,25 +23,18 @@ class ValidarType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('referencia',TextType::class,[
-                'required' => false
+            ->add('validadoCompra',ChoiceType::class,[
+                'label' => 'Validación',
+                'choices' => [
+                    'Pendiente' => null,
+                    'Aceptar' => true,
+                    'Rechazar' => false,
+                ],
             ])
-            ->add('validadoAlmacen',CheckboxType::class,[
-                'label' => 'Validar',
-                'required' => false,
-            ])
-            ->add('notaAlmacen',TextareaType::class,[
+            ->add('notaCompra',TextareaType::class,[
                 'required' => false,
                 'attr' => ['rows' => 5, 'class' => 'info-input'],
                 'label' => 'Notas'
-            ])
-            ->add('conceptos',CollectionType::class,[
-                'label' => false,
-                'entry_type' => ConceptoType::class,
-                'entry_options' => ['label' => false],
-                'allow_add' => false,
-                'by_reference' => false,
-                'allow_delete' => false,
             ]);
     }
 

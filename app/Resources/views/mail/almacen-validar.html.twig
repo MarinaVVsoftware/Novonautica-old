@@ -1,0 +1,69 @@
+{% extends ':mail:base.html.twig' %}
+{% block body %}
+    <h3>Notificación de validación de almacén</h3>
+    <p class="lead">Se le ha enviado este correo para notificarle el siguiente evento:</p>
+    <p>
+        <strong>Folio: </strong> {{ solicitud.folio }}
+        <br>
+        <strong>Evento: </strong> Validación de productos que llegarón a almacén
+        <br>
+        <strong>Validado por: </strong>{{ solicitud.nombreValidoAlmacen }}
+        <br>
+        <strong>Fecha de validación: </strong>
+        {% if solicitud.fechaValidoAlmacen %}
+            {{ solicitud.fechaValidoAlmacen|date('d/m/Y') }}
+        {% endif %}
+        <br>
+    </p>
+    <br/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th colspan="4">Productos</th>
+        </tr>
+        <tr>
+            <th>Producto</th>
+            <th>Unidad</th>
+            <th>Cantidad</th>
+            <th>Validación</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for concepto in solicitud.conceptos %}
+            <tr>
+                <td>
+                    {% if concepto.marinaServicio %}
+                        {{ concepto.marinaServicio }}
+                        {% set unidad = concepto.marinaServicio.claveUnidad %}
+                    {% elseif concepto.combustibleCatalogo %}
+                        {{ concepto.combustibleCatalogo }}
+                        {% set unidad = concepto.combustibleCatalogo.claveUnidad %}
+                    {% elseif concepto.astilleroProducto %}
+                        {{ concepto.astilleroProducto }}
+                        {% set unidad = concepto.astilleroProducto.claveUnidad %}
+                    {% elseif concepto.tiendaProducto %}
+                        {{ concepto.tiendaProducto }}
+                        {% set unidad = concepto.tiendaProducto.claveUnidad %}
+                    {% else %}
+                        {% set unidad = '' %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if unidad %}
+                        {{ unidad.nombre }}
+                    {% endif %}
+                </td>
+                <td>{{ concepto.cantidad|number_format(2) }}</td>
+                <td>
+                    {% if concepto.fechaValidoAlmacen %}
+                        {{ concepto.fechaValidoAlmacen|date('d/m/Y') }} -
+                        {{ concepto.nombreValidoAlmacen }}
+                    {% else %}
+                        No validado
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock body %}

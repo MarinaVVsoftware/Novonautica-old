@@ -12,6 +12,7 @@ use AppBundle\Form\Compra\ConceptoType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -44,21 +45,12 @@ class CompraType extends AbstractType
                 'by_reference' => false,
                 'allow_delete' => true,
             ])
-            ->add('notaCompra',TextareaType::class,[
-                'required' => false,
-                'attr' => ['rows' => 5, 'class' => 'info-input'],
-                'label' => 'Notas'
-            ])
             ->add('iva',TextType::class,[
                 'attr' => ['class' => 'esdecimal'],
             ])
             ->add('subtotal',MoneyType::class,$formatoMoney)
             ->add('ivatotal',MoneyType::class,$formatoMoney)
-            ->add('total',MoneyType::class,$formatoMoney)
-            ->add('validadoCompra',CheckboxType::class,[
-                'label' => 'Validar',
-                'required' => false
-            ]);
+            ->add('total',MoneyType::class,$formatoMoney);
     }
 
     /**

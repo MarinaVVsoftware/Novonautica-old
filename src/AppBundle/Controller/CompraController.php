@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Solicitud;
+use AppBundle\Entity\Correo;
 use DataTables\DataTablesInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -63,8 +64,12 @@ class CompraController extends Controller
     /**
      * @Route("/{id}/editar", name="compra_edit")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     * @param Solicitud $solicitud
+     * @param \Swift_Mailer $mailer
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function editCompraAction(Request $request, Solicitud $solicitud)
+    public function editCompraAction(Request $request, Solicitud $solicitud, \Swift_Mailer $mailer)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -78,15 +83,68 @@ class CompraController extends Controller
         $editForm = $this->createForm('AppBundle\Form\CompraType',$solicitud);
         $editForm->handleRequest($request);
         if($editForm->isSubmitted() && $editForm->isValid()){
-            if($solicitud->getValidadoCompra()){
+            $em->persist($solicitud);
+            $em->flush();
+
+            $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                    'evento' => Correo\Notificacion::EVENTO_EDITAR,
+                    'tipo' => Correo\Notificacion::TIPO_COMPRA
+            ]);
+            $this->enviaCorreoNotificacion($mailer,$notificables,$solicitud,
+                'Notificación de compras - Asignación de proveedor');
+            return $this->redirectToRoute('compra_show',['id' => $solicitud->getId()]);
+        }
+        return $this->render('compra/edit.html.twig',[
+            'form' => $editForm->createView(),
+            'solicitud' => $solicitud,
+            'title' => 'Compra editar'
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/validar", name="compra_validar")
+     * @Method({"GET", "POST"})
+     * @param Request $request
+     * @param Solicitud $solicitud
+     * @param \Swift_Mailer $mailer
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function validarAction(Request $request, Solicitud $solicitud, \Swift_Mailer $mailer)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $this->denyAccessUnlessGranted('COMPRA_VALIDAR',$solicitud);
+
+        if($solicitud->getValidadoCompra()){ throw new NotFoundHttpException(); }
+
+        $editForm = $this->createForm('AppBundle\Form\Compra\ValidarType',$solicitud);
+        $editForm->handleRequest($request);
+        if($editForm->isSubmitted() && $editForm->isValid()){
+
+            if(!is_null($solicitud->getValidadoCompra())){
                 $solicitud->setNombreValidoCompra($this->getUser()->getNombre());
-                $solicitud->setFechaValidoCompra(new \DateTime('now'));
+                $solicitud->setFechaValidoCompra(new \DateTime());
+
+                //Buscar correos a notificar, el que creo la solicitud le llegará un correo si es rechazado.
+                //Si es aceptado llegra correo a los asignados con EVENTO_VALIDAR y EVENTO_ACEPTAR
+                if($solicitud->getValidadoCompra()){
+                   $asunto = 'Notificación compras - Aceptado';
+                    $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                        'evento' => [Correo\Notificacion::EVENTO_VALIDAR, Correo\Notificacion::EVENTO_ACEPTAR],
+                        'tipo' => Correo\Notificacion::TIPO_COMPRA
+                    ]);
+                }else{
+                    $asunto = 'Notificación compras - Rechazado';
+                    $notificables = [$solicitud->getCreador()];
+                }
+                $this->enviaCorreoNotificacion($mailer, $notificables, $solicitud, $asunto);
+
             }
+
             $em->persist($solicitud);
             $em->flush();
             return $this->redirectToRoute('compra_show',['id' => $solicitud->getId()]);
         }
-        return $this->render('compra/edit.html.twig',[
+        return $this->render('compra/validar.html.twig',[
             'form' => $editForm->createView(),
             'solicitud' => $solicitud,
             'title' => 'Compra validar'
@@ -124,5 +182,40 @@ class CompraController extends Controller
             'application/pdf',
             'inline'
         );
+    }
+
+    /**
+     * @param \Swift_Mailer $mailer
+     * @param Correo\Notificacion[] $notificables
+     * @param Solicitud $solicitud
+     * @param $asunto
+     * @param $plantilla
+     *
+     * @return void
+     */
+    private function enviaCorreoNotificacion($mailer, $notificables, $solicitud, $asunto)
+    {
+        if (!count($notificables)) {
+            return;
+        }
+
+        $recipientes = [];
+        foreach ($notificables as $key => $notificable) {
+            $recipientes[$key] = $notificable->getCorreo();
+        }
+
+        $message = (new \Swift_Message($asunto));
+        $message->setFrom('noresponder@novonautica.com');
+        $message->setTo($recipientes);
+
+        $message->setBody(
+            $this->renderView('mail/compra.html.twig', [
+                'notificacion' => $notificables[0],
+                'solicitud' => $solicitud,
+                'asunto' => $asunto
+            ]),
+            'text/html'
+        );
+        $mailer->send($message);
     }
 }

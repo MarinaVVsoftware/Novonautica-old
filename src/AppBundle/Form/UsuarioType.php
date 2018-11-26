@@ -140,7 +140,8 @@ class UsuarioType extends AbstractType
                 'Solicitud' => $this->getSolicitudRoles(),
                 'Compra' => [
                     'Acceso' => 'ROLE_COMPRA',
-                    'Validar' => 'COMPRA_VALIDA'
+                    'Modificar' => 'COMPRA_EDIT',
+                    'Validar' => 'COMPRA_VALIDAR'
                 ],
                 'Almacén' => [
                     'Acceso' => 'ROLE_ALMACEN',

@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Solicitud;
+use AppBundle\Entity\Correo;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -51,9 +52,10 @@ class SolicitudController extends Controller
      * @Route("/nuevo", name="solicitud_new")
      * @Method({"GET","POST"})
      * @param Request $request
+     * @param \Swift_Mailer $mailer
      * @return RedirectResponse|Response
      */
-    public function newSolicitudAction(Request $request)
+    public function newSolicitudAction(Request $request, \Swift_Mailer $mailer)
     {
         $solicitud = new Solicitud();
         $this->denyAccessUnlessGranted('SOLICITUD_CREATE',$solicitud);
@@ -70,6 +72,13 @@ class SolicitudController extends Controller
             $em->persist($solicitud);
             $em->persist($variable);
             $em->flush();
+
+            //Buscar correos a notificar
+            $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
+                'evento' => Correo\Notificacion::EVENTO_CREAR,
+                'tipo' => Correo\Notificacion::TIPO_SOLICITUD
+            ]);
+            $this->enviaCorreoNotificacion($mailer,$notificables,$solicitud);
 
             return $this->redirectToRoute('solicitud_show',['id' => $solicitud->getId()]);
         }
@@ -173,5 +182,37 @@ class SolicitudController extends Controller
             ->setAction($this->generateUrl('solicitud_delete', ['id' => $solicitud->getId()]))
             ->setMethod('DELETE')
             ->getForm();
+    }
+
+    /**
+     * @param Correo\Notificacion[] $notificables
+     * @param Solicitud $solicitud
+     * @param \Swift_Mailer $mailer
+     *
+     * @return void
+     */
+    private function enviaCorreoNotificacion($mailer, $notificables, $solicitud)
+    {
+        if (!count($notificables)) {
+            return;
+        }
+
+        $recipientes = [];
+        foreach ($notificables as $key => $notificable) {
+            $recipientes[$key] = $notificable->getCorreo();
+        }
+
+        $message = (new \Swift_Message('¡Solicitud de productos!'));
+        $message->setFrom('noresponder@novonautica.com');
+        $message->setTo($recipientes);
+
+        $message->setBody(
+            $this->renderView('mail/solicitud-nueva.html.twig', [
+                'notificacion' => $notificables[0],
+                'solicitud' => $solicitud
+            ]),
+            'text/html'
+        );
+        $mailer->send($message);
     }
 }

@@ -33,10 +33,12 @@
                         <div class="col-sm-4">
                             <label>Validación compra</label>
                             <div class="info-input">
-                                {% if solicitud.validadoCompra %}
+                                {% if solicitud.validadoCompra is null %}
+                                    Pendiente
+                                {% elseif solicitud.validadoCompra %}
                                     Validado - {{ solicitud.nombreValidoCompra }}
                                 {% else %}
-                                    No validado
+                                    Rechazado - {{ solicitud.nombreValidoCompra }}
                                 {% endif %}
                             </div>
                         </div>
@@ -158,17 +160,30 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            {% if is_granted(expression('has_role("COMPRA_EDIT") or (user.isAdmin())')) and solicitud.validadoCompra == false %}
+                    {% if is_granted(expression('has_role("COMPRA_EDIT") or (user.isAdmin())')) and solicitud.validadoCompra == false %}
+                        <div class="row">
+                            <div class="col-sm-12 text-right espacio-linea-abajo2">
                                 <a href="{{ path('compra_edit',{'id':solicitud.id }) }}" class="btn btn-azul">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    Editar
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if is_granted(expression('has_role("COMPRA_VALIDAR") or (user.isAdmin())')) and solicitud.validadoCompra == false %}
+                        <div class="row">
+                            <div class="col-sm-12 text-right espacio-linea-abajo2">
+                                <a href="{{ path('compra_validar',{'id':solicitud.id }) }}"
+                                   class="btn btn-azul pull-right">
+                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
                                     Validar
                                 </a>
-                            {% endif %}
+                            </div>
                         </div>
-                        <div class="col-sm-6">
-                            <a target="_blank" class="btn btn-morado-claro pull-right"
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-sm-12 text-right">
+                            <a target="_blank" class="btn btn-morado-claro"
                                href="{{ path('compra_pdf',{'id':solicitud.id }) }}">
                                 <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                 PDF
