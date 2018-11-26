@@ -8,6 +8,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use AppBundle\Entity\Solicitud;
 use AppBundle\Entity\Correo;
 use AppBundle\Extra\FacturacionHelper;
@@ -33,32 +34,36 @@ class AlmacenController extends Controller
      * @Method("GET")
      * @param Request $request
      * @param DataTablesInterface $dataTables
+     *
      * @return JsonResponse|Response
      */
     public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
-        if($request->isXmlHttpRequest()){
-            try{
-                $results = $dataTables->handle($request,'almacen');
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $results = $dataTables->handle($request, 'almacen');
+
                 return $this->json($results);
-            } catch(HttpException $e){
-                return $this->json($e->getMessage(),$e->getStatusCode());
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getStatusCode());
             }
         }
-        return $this->render('almacen/index.html.twig',['title' => 'Almacén']);
+
+        return $this->render('almacen/index.html.twig', ['title' => 'Almacén']);
     }
 
     /**
      * @Route("/{id}", name="almacen_show")
      * @Method("GET")
      * @param Solicitud $solicitud
+     *
      * @return Response
      */
     public function showAction(Solicitud $solicitud)
     {
-        return $this->render('almacen/show.html.twig',[
+        return $this->render('almacen/show.html.twig', [
             'title' => 'Detalle almacén',
-            'solicitud' => $solicitud
+            'solicitud' => $solicitud,
         ]);
     }
 
@@ -78,12 +83,22 @@ class AlmacenController extends Controller
         if ($request->isXmlHttpRequest()) {
             try {
                 $results = $dataTables->handle($request, 'inventario_marina');
+
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getStatusCode());
             }
         }
-        return $this->render('almacen/inventario/marina.html.twig', ['title' => 'Inventario Puerto Mujeres']);
+
+        $empresa = $this->getDoctrine()->getRepository(Emisor::class)->getEmisorLike('Puerto Mujeres');
+
+        return $this->render(
+            'almacen/inventario/marina.html.twig',
+            [
+                'title' => 'Inventario Puerto Mujeres',
+                'empresa' => $empresa,
+            ]
+        );
     }
 
     /**
@@ -94,10 +109,17 @@ class AlmacenController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $catalogo = $em->getRepository('AppBundle:Combustible\Catalogo')->findAll();
-        return $this->render('almacen/inventario/combustible.html.twig', [
-            'catalogo' => $catalogo,
-            'title' => 'Inventario Servicios Marinos'
-        ]);
+
+        $empresa = $em->getRepository(Emisor::class)->getEmisorLike('Servicios Marinos');
+
+        return $this->render(
+            'almacen/inventario/combustible.html.twig',
+            [
+                'catalogo' => $catalogo,
+                'title' => 'Inventario Servicios Marinos',
+                'empresa' => $empresa,
+            ]
+        );
     }
 
     /**
@@ -116,13 +138,24 @@ class AlmacenController extends Controller
         if ($request->isXmlHttpRequest()) {
             try {
                 $results = $dataTables->handle($request, 'inventario_astillero');
+
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getStatusCode());
             }
         }
 
-        return $this->render('almacen/inventario/astillero.html.twig', ['title' => 'Inventario Astillero']);
+        $empresa = $this->getDoctrine()->getManager()
+            ->getRepository(Emisor::class)
+            ->getEmisorLike('Astillero');
+
+        return $this->render(
+            'almacen/inventario/astillero.html.twig',
+            [
+                'title' => 'Inventario Astillero',
+                'empresa' => $empresa,
+            ]
+        );
     }
 
     /**
@@ -139,12 +172,24 @@ class AlmacenController extends Controller
         if ($request->isXmlHttpRequest()) {
             try {
                 $results = $dataTables->handle($request, 'inventario_tienda');
+
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getStatusCode());
             }
         }
-        return $this->render('almacen/inventario/tienda.html.twig',['title' => 'Inventario V&V Store']);
+
+        $empresa = $this->getDoctrine()->getManager()
+            ->getRepository(Emisor::class)
+            ->getEmisorLike('V&V Store');
+
+        return $this->render(
+            'almacen/inventario/tienda.html.twig',
+            [
+                'title' => 'Inventario V&V Store',
+                'empresa' =>  $empresa,
+            ]
+        );
     }
 
     /**

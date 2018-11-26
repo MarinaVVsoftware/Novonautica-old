@@ -564,7 +564,7 @@
                 response(results);
               });
             },
-            renderItem: function (item, term) {
+            renderItem(item, term) {
               term = term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
               return `<div class="autocomplete-suggestion"
                 data-cps-id="${item.cpsId}" data-cps-text="${item.cpsDescripcion}"
@@ -641,7 +641,11 @@
 
               let element = conceptoTable.addElement();
 
-              element.cells[0].firstElementChild.value = result.conceptoCantidad;
+              let cantidadInput = element.cells[0].firstElementChild;
+
+              cantidadInput.setAttribute('readonly', 'readonly');
+              cantidadInput.value = result.conceptoCantidad;
+
               element.cells[1].firstElementChild.value = result.conceptoUnidad || result.cuDescripcion || 'NA';
               element.cells[4].firstElementChild.value = result.conceptoDescripcion;
               element.cells[5].firstElementChild.value = moneyFormat(conceptoValorUnitario / 100);

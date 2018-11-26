@@ -1,0 +1,56 @@
+{% extends 'estructura/plantilla.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    {{ parent() }}
+{% endblock %}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        {{ title }}
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-novo">
+                                <thead>
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>Comentario</th>
+                                    <th>Fecha</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, datatableSettings) {
+        $('.table-novo').DataTable({
+          ...datatableSettings,
+          ajax: 'index-data',
+          order: [[0, 'desc']],
+          columns: [
+            {responsivePriority: 1},
+            {responsivePriority: 0},
+            {responsivePriority: 2},
+            {responsivePriority: 0}
+          ],
+          rowCallback: function (row, data) {
+            row.cells[3].innerHTML = `<a href="${data[3]}" class="btn btn-xs btn-morado-claro btn-block">Ver</a>`;
+          }
+        });
+      })(jQuery, datatablesSettings)
+    </script>
+{% endblock %}

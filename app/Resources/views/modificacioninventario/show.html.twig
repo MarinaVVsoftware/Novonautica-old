@@ -1,0 +1,68 @@
+{% extends 'estructura/plantilla.twig' %}
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="panel panel-novo">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="panel-title">{{ title }}</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-contorno-azul pull-right"
+                               href="{{ path('almacen_modificacion_index') }}">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <h4>Empresa</h4>
+                            {{ modificacion.empresa.alias }}
+                        </div>
+                        <div class="col-sm-4">
+                            <h4>Fecha de modificación</h4>
+                            {{ modificacion.createdAt|date('d/m/Y') }}
+                        </div>
+                        <div class="col-sm-4">
+                            <h4>Modificado por</h4>
+                            {{ modificacion.creador.nombre }}
+                        </div>
+                        <div class="col-sm-12">
+                            <h4>Comentario:</h4>
+                            {{ modificacion.comentario }}
+                        </div>
+                    </div>
+                    <div class="row espacio-linea-arriba2">
+                        <div class="col-sm-12">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th width="15%">Antigua existencia</th>
+                                    <th width="15%">Nueva existencia</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for concepto in conceptos %}
+                                    <tr>
+                                        <td>
+                                            {{ concepto['producto'].nombre }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ concepto['antiguaExistencia'] }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ concepto['existencia'] }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

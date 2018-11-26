@@ -15,7 +15,6 @@ class EmisorRepository extends \Doctrine\ORM\EntityRepository
     {
         $qb = $this->createQueryBuilder('emi');
         $qb
-//            ->where('emi.estatus = 1')
             ->addOrderBy('emi.id', $order)
             ->setFirstResult($length * ((int)$page - 1))
             ->setMaxResults($length);
@@ -33,5 +32,18 @@ class EmisorRepository extends \Doctrine\ORM\EntityRepository
                 'FROM AppBundle:Contabilidad\Facturacion\Emisor em'
             )
             ->getArrayResult();
+    }
+
+    public function getEmisorLike($query)
+    {
+        return $this->createQueryBuilder('emisor')
+            ->where(
+                'LOWER(emisor.alias) LIKE :emisor '.
+                'OR LOWER(emisor.nombre) LIKE :emisor'
+            )
+            ->setParameter('emisor', strtolower("%{$query}%"))
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()[0];
     }
 }

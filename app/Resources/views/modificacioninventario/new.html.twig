@@ -1,0 +1,260 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .help-block {
+            color: #dd4b39;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table > thead > tr > th,
+        .table > tbody > tr > td {
+            padding: 0;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .content form .table > tbody > tr > td > input.form-control,
+        .content form .table > tbody > tr > td > select {
+            border-radius: 0 !important;
+        }
+    </style>
+{% endblock %}
+
+{% form_theme form.conceptos 'modificacioninventario/form-theme/_conceptos.html.twig' %}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+
+            <div class="row">
+                <div class="col-md-12">
+                    {% for message in app.flashes('danger') %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {% for error in form.vars.errors %}
+                        <div class="alert alert-danger">
+                            {{ error.message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {{ form_start(form) }}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                Nuevo registro de modificación de inventario
+                                <a href="{{ path('almacen_modificacion_index') }}" class="pull-right btn btn-azul" style="color: #fff">
+                                    Regresar
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="panel-body" style="min-height: initial">
+
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    {{ form_row(form.comentario) }}
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <label for="fecha">Fecha</label>
+                                        <input type="text" id="fecha" class="form-control text-center"
+                                               value="{{ 'now'|date('d/m/y') }}" disabled="disabled">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12" style="margin-bottom: 1rem;">
+                                    <h4 class="panel-title">
+                                        <small>Productos</small>
+                                        <button id="add" type="button" class="btn btn-contorno-azul pull-right">
+                                            + Agregar productos
+                                        </button>
+                                    </h4>
+                                </div>
+
+                                <div class="col-sm-12">
+
+                                    <table class="table table-novo">
+                                        <thead>
+                                        <tr>
+                                            <th width="2%">
+                                                <i class="fa fa-trash-o"></i>
+                                            </th>
+                                            <th>Producto</th>
+                                            <th width="18%">Existencia actual</th>
+                                            <th width="18%">Existencia</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="prototype-holder"
+                                               data-prototype="{{ form_row(form.conceptos.vars.prototype)|e }}">
+                                        {% for concepto in form.conceptos %}
+                                            <tr class="concepto-agregado table-item">
+                                                <td></td>
+                                                <td>
+                                                    {{ form_widget(concepto.producto) }}
+                                                    {{ form_errors(concepto.producto) }}
+                                                </td>
+                                                <td>
+                                                    {{ form_widget(concepto.antiguaExistencia) }}
+                                                    {{ form_errors(concepto.antiguaExistencia) }}
+                                                </td>
+                                                <td>
+                                                    {{ form_widget(concepto.existencia) }}
+                                                    {{ form_errors(concepto.existencia) }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row" style="margin-top: 1rem;">
+                                <div class="col-sm-12">
+                                    <input type="submit" value="Guardar" class="btn btn-azul pull-right">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_end(form) }}
+
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/cleave.min.js') }}"></script>
+    <script src="{{ asset('js/auto-complete.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js') }}"></script>
+    <script>
+      class ElementCollection {
+        constructor(addButton, prototypeHolder, elementListener) {
+          this.addButton = typeof addButton === 'string'
+              ? document.querySelector(addButton)
+              : addButton;
+
+          this.prototypeHolder = typeof prototypeHolder === 'string'
+              ? document.querySelector(prototypeHolder)
+              : prototypeHolder;
+
+          this.elementListener = elementListener || (() => {
+          });
+
+          Array
+              .from(this.prototypeHolder.querySelectorAll('tr'))
+              .forEach(element => {
+                this.appendRemoveButton(element);
+                this.elementListener(element);
+              });
+
+          this.addButton
+              .addEventListener(
+                  'click',
+                  this.addElement.bind(this)
+              );
+        }
+
+        /* PUBLIC */
+        addElement(event) {
+          if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          let element = this._getPrototypeElement();
+
+          this.appendRemoveButton(element);
+          this.elementListener(element, event);
+          this.prototypeHolder.appendChild(element);
+
+          return this.prototypeHolder.children[this.prototypeHolder.children.length - 1];
+        }
+
+        clear() {
+          this.prototypeHolder.innerHTML = '';
+        }
+
+        removeElement(element) {
+          element = typeof element === 'number' ? this.prototypeHolder.children[(element - 1)] : element;
+          if (!element) throw new Error('No existe el elemento que quieres eliminar');
+          element.parentNode.removeChild(element);
+        }
+
+        appendRemoveButton(element) {
+          let celda = element.cells[0];
+          let removeButton = document.createElement('a');
+
+          removeButton.className = 'badge btn-xs btn-naranja';
+          removeButton.innerHTML = '<i class="fa fa-trash"></i>';
+          removeButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.removeElement(removeButton.parentNode.parentNode)
+          });
+
+          celda.appendChild(removeButton);
+        }
+
+        /* PRIVATE */
+
+        _getPrototypeElement() {
+          let prototipo = this.prototypeHolder
+              .dataset
+              .prototype
+              .replace(/__name__/g, this.prototypeHolder.children.length);
+
+          let tempElement = document.createElement('table');
+          tempElement.innerHTML = prototipo;
+          let element = tempElement.querySelector('tr');
+
+          return element;
+        }
+      }
+    </script>
+    <script>
+      (function ($) {
+        const loadingState = document.getElementById('loading');
+        const empresa = '{{ empresa.id }}';
+        const conceptoTable = new ElementCollection('#add', '#prototype-holder', elementListener);
+
+        function elementListener(element) {
+          const $productoSelect2 = $(element.cells[1].children[0]).select2({
+            ajax: {
+              url: 'productos',
+              data(params) {
+                return {
+                  e: empresa,
+                  search: params.term || '%'
+                }
+              }
+            }
+          });
+
+          $productoSelect2.on('select2:select', () => {
+            element.cells[2].firstElementChild.value = $productoSelect2.select2('data')[0].quantity || 0;
+            element.cells[3].firstElementChild.value = $productoSelect2.select2('data')[0].quantity || 0;
+          });
+        }
+
+      })(jQuery);
+    </script>
+{% endblock %}
