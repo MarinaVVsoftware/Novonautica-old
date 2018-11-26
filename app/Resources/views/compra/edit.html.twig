@@ -42,6 +42,12 @@
                         <div class="col-sm-4">
                             {{ form_row(form.iva) }}
                         </div>
+                        <div class="col-sm-4">
+                            <label>Empresa</label>
+                            <div id="empresa" class="info-input" data-empresa="{{ solicitud.empresa.id }}">
+                                {{ solicitud.empresa }}
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
@@ -183,6 +189,7 @@
             const granIva = document.getElementById('appbundle_solicitud_ivatotal');
             const granTot = document.getElementById('appbundle_solicitud_total');
             const iva = document.getElementById('appbundle_solicitud_iva');
+            const empresaActual = document.getElementById('empresa').dataset.empresa;
 
             let counter = EntradasHolder.childElementCount;
 
@@ -233,6 +240,8 @@
                 precio.onkeyup = function (ev) {
                     calculaSubIvaTot(row);
                 };
+
+                row.cells[2].querySelectorAll('select option').forEach(opcion => ocultaOptionEmpresa(opcion));
             }
 
             function calculaSubIvaTot(row){
@@ -259,6 +268,12 @@
                 granSub.value = transformToMoneyFormat(String(sumaGranSubtotal.toFixed(2)));
                 granIva.value = transformToMoneyFormat(String(sumaGranIvatotal.toFixed(2)));
                 granTot.value = transformToMoneyFormat(String(sumaGranTotal.toFixed(2)));
+            }
+
+            function ocultaOptionEmpresa(opcion){
+                if(opcion.value !== '' &&  opcion.dataset.empresa !== empresaActual){
+                    opcion.parentNode.removeChild(opcion);
+                }
             }
 
             iva.addEventListener('keyup',(event) => {

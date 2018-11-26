@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Compra;
 
-
+use AppBundle\Entity\Solicitud;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -10,7 +10,6 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotNull;
 
 class ConceptoType extends AbstractType
 {
@@ -67,6 +66,9 @@ class ConceptoType extends AbstractType
                     return $er->createQueryBuilder('p')
                         ->where('p.proveedorcontratista = 0')
                         ->orderBy('p.nombre', 'ASC');
+                },
+                'choice_attr' => function($choiceValue, $key, $value) {
+                    return ['data-empresa' => $choiceValue->getEmpresa()->getId()];
                 },
             ])
             ->add('precio',MoneyType::class,[
