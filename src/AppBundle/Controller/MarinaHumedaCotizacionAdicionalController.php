@@ -7,6 +7,7 @@ use AppBundle\Entity\MarinaHumedaCotizacionAdicional;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Entity\MarinaHumedaServicio;
 use AppBundle\Entity\ValorSistema;
+use AppBundle\Form\MarinaHumedaCotizacionAdicionalType;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -66,26 +67,42 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
     public function newAction(Request $request)
     {
         $marinaHumedaCotizacionAdicional = new MarinaHumedaCotizacionAdicional();
+
         $em = $this->getDoctrine()->getManager();
+
         $sistema = $em->getRepository('AppBundle:ValorSistema')->findOneBy(['id'=>1]);
         $dolarBase = $sistema->getDolar();
         $iva = $sistema->getIva();
+
         $marinaHumedaCotizacionAdicional
             ->setDolar($dolarBase)
             ->setIva($iva);
-        $form = $this->createForm('AppBundle\Form\MarinaHumedaCotizacionAdicionalType', $marinaHumedaCotizacionAdicional);
+
+        $form = $this->createForm(MarinaHumedaCotizacionAdicionalType::class, $marinaHumedaCotizacionAdicional);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $marinaHumedaCotizacionAdicional->setFecharegistro(new \DateTime('now'));
+            $marinaHumedaCotizacionAdicional->setFecharegistro(new \DateTime());
+
             $em->persist($marinaHumedaCotizacionAdicional);
             $em->flush();
-            return $this->redirectToRoute('marina-humeda-cotizacion-adicional_show', ['id' => $marinaHumedaCotizacionAdicional->getId()]);
+
+            return $this->redirectToRoute(
+                'marina-humeda-cotizacion-adicional_show',
+                [
+                    'id' => $marinaHumedaCotizacionAdicional->getId()
+                ]
+            );
         }
-        return $this->render('marinahumeda/cotizacionadicional/new.html.twig', [
+
+        return $this->render(
+            'marinahumeda/cotizacionadicional/new.html.twig',
+            [
             'title' => 'Nuevo Servicio',
             'marinaHumedaCotizacionAdicional' => $marinaHumedaCotizacionAdicional,
             'form' => $form->createView(),
-        ]);
+            ]
+        );
     }
 
     /**
@@ -189,7 +206,10 @@ class MarinaHumedaCotizacionAdicionalController extends Controller
     public function buscarAction($id)
     {
         $servicioRepository = $this->getDoctrine()->getRepository(MarinaHumedaServicio::class);
-        return new JsonResponse($servicioRepository->getServicioCatalogo($id),JsonResponse::HTTP_OK);
+
+        return $this->json(
+            $servicioRepository->getServicioCatalogo($id)
+        );
     }
 
 
