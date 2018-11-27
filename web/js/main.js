@@ -1,4 +1,6 @@
 $(document).ready(function () {
+
+
   $('#loading').hide();
   $('.loadpage').on('click', function () {
     $('#loading').show();
@@ -1536,6 +1538,30 @@ const datatablesSettings = {
     return false;
   }
 })(jQuery);
+
+/*
+  ALERTAS PARA INVENTARIO
+ */
+$('.content-wrapper > .content').prepend('<div id="errors"></div>');
+
+function throwAlert(message, type) {
+  const $ErrorContainer = $('#errors');
+
+  const html = `
+       <div class="alert alert-dismissable alert-${type || 'info'}" role="alert">
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+         </button>
+         ${message}
+       </div>
+   `;
+
+  $ErrorContainer.append(html);
+
+  if ($ErrorContainer.children().length > 2) {
+    $ErrorContainer.children().first().remove();
+  }
+}
 
 const formularioGeneral = document.querySelector('form');
 if( formularioGeneral ) {

@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Table(name="contabilidad_facturacion_concepto_clave_prod_serv")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Contabilidad\Facturacion\Concepto\ClaveProdServRepository")
  */
-class ClaveProdServ
+class ClaveProdServ implements \JsonSerializable
 {
     /**
      * @var int
@@ -101,6 +101,15 @@ class ClaveProdServ
     public function getDescripcion()
     {
         return $this->descripcion;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'nombre' => $this->descripcion,
+            'clave' => $this->claveProdServ,
+        ];
     }
 }
 

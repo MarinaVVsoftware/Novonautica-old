@@ -63,6 +63,7 @@ class CombustibleController extends Controller
      * @param \Swift_Mailer $mailer
      *
      * @return RedirectResponse|Response
+     * @throws \Exception
      */
     public function newAction(Request $request, \Swift_Mailer $mailer)
     {
@@ -200,22 +201,17 @@ class CombustibleController extends Controller
      * @Route("/{id}/tipo-combustible.json", name="json_tipo_combustible")
      * @Method("GET")
      *
-     * @param Combustible\Catalogo $tipo
+     * @param int $tipo
      *
      * @return Response
      */
-    public function getTipoCombustibleAction(Combustible\Catalogo $tipo)
+    public function getTipoCombustibleAction($id)
     {
-        $combustible = $this->getDoctrine()->getRepository('AppBundle:Combustible\Catalogo')->find($tipo);
-        return  new Response($this->serializeEntities($combustible,'json'));
-    }
+        $productoRepository = $this->getDoctrine()->getRepository(Combustible\Catalogo::class);
 
-    private function serializeEntities($entity, $format, $ignoredAttributes = [])
-    {
-        $normalizer = new ObjectNormalizer();
-        $serializer = new Serializer([$normalizer], [new JsonEncoder(), new XmlEncoder()]);
-        $normalizer->setIgnoredAttributes($ignoredAttributes);
-        return $serializer->serialize($entity, $format);
+        return $this->json(
+            $productoRepository->getProducto($id)
+        );
     }
 
     /**
