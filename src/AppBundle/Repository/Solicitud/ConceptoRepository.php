@@ -10,7 +10,7 @@ namespace AppBundle\Repository\Solicitud;
  */
 class ConceptoRepository extends \Doctrine\ORM\EntityRepository
 {
-    function getConceptos($id)
+    public function getConceptos($id)
     {
         $q = $this->createQueryBuilder('cs');
         return $q->select('cs','solicitud','marinaHumedaServicio','combustibleCatalogo','astilleroProducto','tiendaProducto')
@@ -21,6 +21,18 @@ class ConceptoRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin('cs.tiendaProducto','tiendaProducto')
             ->where($q->expr()->eq('cs.solicitud',':idsolicitud'))
             ->setParameter('idsolicitud',$id)
+            ->getQuery()
+            ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+    }
+
+    public function getCorreoProveedores($solicitud)
+    {
+        $q = $this->createQueryBuilder('cs');
+        return $q->select('proveedor.id','proveedor.correo')
+            ->leftJoin('cs.proveedor','proveedor')
+            ->where($q->expr()->eq('cs.solicitud',':idsolicitud'))
+            ->setParameter('idsolicitud',$solicitud)
+            ->distinct()
             ->getQuery()
             ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
     }

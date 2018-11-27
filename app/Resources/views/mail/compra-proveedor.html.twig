@@ -1,0 +1,67 @@
+{% extends ':mail:base.html.twig' %}
+{% block body %}
+    <h3>Notificación de productos</h3>
+    <p class="lead">Se le ha enviado este correo para notificarle el siguiente evento:</p>
+    <p>
+        <strong>Folio: </strong> {{ solicitud.folio }}
+        <br>
+        <strong>Evento: </strong> Solicitud de productos
+        <br>
+    </p>
+    <br/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th colspan="8">Productos</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>Producto</th>
+            <th>Unidad</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Sub-Total</th>
+            <th>IVA {{ solicitud.iva|number_format(2) }}%</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for concepto in solicitud.conceptos %}
+            {% if concepto.proveedor.id == idproveedor %}
+            <tr>
+                <td>
+                    {{ concepto.proveedor.nombre }}
+                </td>
+                <td>
+                    {% if concepto.marinaServicio %}
+                        {{ concepto.marinaServicio }}
+                        {% set unidad = concepto.marinaServicio.claveUnidad %}
+                    {% elseif concepto.combustibleCatalogo %}
+                        {{ concepto.combustibleCatalogo }}
+                        {% set unidad = concepto.combustibleCatalogo.claveUnidad %}
+                    {% elseif concepto.astilleroProducto %}
+                        {{ concepto.astilleroProducto }}
+                        {% set unidad = concepto.astilleroProducto.claveUnidad %}
+                    {% elseif concepto.tiendaProducto %}
+                        {{ concepto.tiendaProducto }}
+                        {% set unidad = concepto.tiendaProducto.claveUnidad %}
+                    {% else %}
+                        {% set unidad = '' %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if unidad %}
+                        {{ unidad.nombre }}
+                    {% endif %}
+                </td>
+                <td>{{ concepto.cantidad|number_format(2) }}</td>
+                <td>${{ (concepto.precio/100)|number_format(2) }} <small>MXN</small></td>
+                <td>${{ (concepto.subtotal/100)|number_format(2) }} <small>MXN</small></td>
+                <td>${{ (concepto.ivatotal/100)|number_format(2) }} <small>MXN</small></td>
+                <td>${{ (concepto.total/100)|number_format(2) }} <small>MXN</small></td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock body %}
