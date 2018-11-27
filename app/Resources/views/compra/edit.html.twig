@@ -200,35 +200,6 @@
                 return numero.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
             }
 
-            function createRowData(concepto)
-            {
-                let prototipo = EntradasHolder.dataset.prototype.replace(/__name__/g, counter);
-                let tempTable = document.createElement('table');
-                tempTable.innerHTML = prototipo;
-                let row = tempTable.querySelector('tr');
-                row.cells[0].querySelector('input').value = concepto.cantidad;
-                if(concepto.marinaServicio){
-                    row.cells[7].querySelector('select').value = concepto.marinaServicio.id;
-                    row.cells[1].innerHTML = concepto.marinaServicio.nombre;
-                }
-                if(concepto.combustibleCatalogo){
-                    row.cells[8].querySelector('select').value = concepto.combustibleCatalogo.id;
-                    row.cells[1].innerHTML = concepto.combustibleCatalogo.nombre;
-                }
-                if(concepto.astilleroProducto){
-                    row.cells[9].querySelector('select').value = concepto.astilleroProducto.id;
-                    row.cells[1].innerHTML = concepto.astilleroProducto.nombre;
-                }
-                if(concepto.tiendaProducto){
-                    row.cells[10].querySelector('select').value = concepto.tiendaProducto.id;
-                    row.cells[1].innerHTML = concepto.tiendaProducto.nombre;
-                }
-                addRowListeners(row);
-                EntradasHolder.appendChild(row);
-                counter++;
-                return row;
-            }
-
             function addRowListeners(row){
                 let precio = row.cells[3].querySelector('input');
                 row.cells[0].querySelector('input').onkeypress = function(ev){
@@ -240,7 +211,6 @@
                 precio.onkeyup = function (ev) {
                     calculaSubIvaTot(row);
                 };
-
                 row.cells[2].querySelectorAll('select option').forEach(opcion => ocultaOptionEmpresa(opcion));
             }
 
