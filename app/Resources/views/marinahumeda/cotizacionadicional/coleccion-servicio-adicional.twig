@@ -1,6 +1,9 @@
 {% block form_widget %}
     {% spaceless %}
-        <td class="valorcantidad">{{ form_widget(form.cantidad,{'value':0}) }}</td>
+        <td class="valorcantidad">
+            {{ form_widget(form.cantidad,{'value':0}) }}
+            {{ form_errors(form.cantidad,{'value':0}) }}
+        </td>
         <td class="td-servicio">{{ form_widget(form.marinahumedaservicio) }}</td>
         <td class="valorunidad"></td>
         <td class="valorprecio">{{ form_widget(form.precio) }}</td>

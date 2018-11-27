@@ -47,21 +47,11 @@ class ProductHaveStockValidator extends ConstraintValidator
 
         $requiredQuantity = $concepto->getCantidad();
 
-        $query = 'SELECT '.
-            'COALESCE(SUM(CASE WHEN r.tipo = 1 THEN e.cantidad ELSE - e.cantidad END), 0) AS quantity '.
-            'FROM '.Entrada::class.' e '.
-            'LEFT JOIN '.Registro::class.' r WITH e.registro = r.id '.
-            'WHERE IDENTITY(e.producto) = ?1 '.
-            'ORDER BY quantity';
-
-        $stockQuantity = (int) $this->entityManager
-            ->createQuery($query)
-            ->setParameter(1, $concepto->getProducto()->getId())
-            ->getSingleScalarResult();
+        $stockQuantity = $concepto->getProducto()->getExistencia();
 
         if ($requiredQuantity > $stockQuantity) {
             $this->context->buildViolation($constraint->message)
-                ->setParameter('{{ quantity }}', $stockQuantity)
+                ->setParameter('{{ quantity }}', $stockQuantity ?? 0)
                 ->atPath('cantidad')
                 ->addViolation();
         }
