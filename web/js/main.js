@@ -439,6 +439,8 @@ function astilleroBuscaProducto(idproducto,fila){
         url: url,
         dataType: 'json',
         success: function(datos) {
+          throwAlert(`El producto "${datos.nombre}" tiene ${datos.existencia || '0'} existencía${datos.existencia > 1 ? 's' : ''} en el inventario`, 'info');
+
             fila.children('.valorprecio').html('$ '+parseFloat((datos.precio)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
             fila.children('.valorprecio').data('valor',((datos.precio)/100));
             calculaSubtotalesAstillero(fila);
@@ -1542,11 +1544,14 @@ const datatablesSettings = {
 /*
   ALERTAS PARA INVENTARIO
  */
-$('.content-wrapper > .content').prepend('<div id="errors"></div>');
+let $ErrorContainer = $('#errors');
+
+if (!$ErrorContainer.length) {
+  $('.content-wrapper > .content').prepend('<div id="errors"></div>');
+  $ErrorContainer = $('#errors');
+}
 
 function throwAlert(message, type) {
-  const $ErrorContainer = $('#errors');
-
   const html = `
        <div class="alert alert-dismissable alert-${type || 'info'}" role="alert">
          <button type="button" class="close" data-dismiss="alert" aria-label="Close">

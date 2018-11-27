@@ -79,9 +79,7 @@
                                     class="fa fa-minus"></i>
                         </button>
                     </div>
-                    <!-- /.box-tools -->
                 </div>
-                <!-- /.box-header -->
                 <div class="box-body" style="">
                     <div class="row">
                         <div class="col-sm-5">
@@ -98,7 +96,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- /.box-body -->
             </div>
 
             <div class="panel panel-novo">
@@ -1297,23 +1294,25 @@
             }
           });
         }
-          function generateProductList() {
-              var idproducto = $('.select-busca-producto:focus option:selected').val();
-              var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-              astilleroBuscaProducto(idproducto, fila);
-          }
-          function calculaServiciosExtraAstillero(){
-              let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
-              servicios.forEach(servicio => agregaCantidadServicioAstillero(servicio));
-          }
-          function agregaCantidadServicioAstillero(fila){
-              if(Number($(fila).children('.valortipo').children('input').val()) === 1){
-                  let eslora = document.getElementById('eslora')?document.getElementById('eslora').dataset.valor:1;
-                  $(fila).children('.valorcantidad').children('input').val(eslora);
-                  $(fila).children('.valorcantidad').data('valor',eslora);
-                  calculaSubtotalesAstillero($(fila));
-              }
-          }
+
+        function generateProductList() {
+            var idproducto = $('.select-busca-producto:focus option:selected').val();
+            var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
+            astilleroBuscaProducto(idproducto, fila);
+        }
+
+        function calculaServiciosExtraAstillero(){
+            let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
+            servicios.forEach(servicio => agregaCantidadServicioAstillero(servicio));
+        }
+        function agregaCantidadServicioAstillero(fila){
+            if(Number($(fila).children('.valortipo').children('input').val()) === 1){
+                let eslora = document.getElementById('eslora')?document.getElementById('eslora').dataset.valor:1;
+                $(fila).children('.valorcantidad').children('input').val(eslora);
+                $(fila).children('.valorcantidad').data('valor',eslora);
+                calculaSubtotalesAstillero($(fila));
+            }
+        }
       })(jQuery);
 
       $('.btnPrevious').click(function () {
