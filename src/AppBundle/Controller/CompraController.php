@@ -144,9 +144,9 @@ class CompraController extends Controller
 
             }
 
-//            $em->persist($solicitud);
-//            $em->flush();
-//            return $this->redirectToRoute('compra_show',['id' => $solicitud->getId()]);
+            $em->persist($solicitud);
+            $em->flush();
+            return $this->redirectToRoute('compra_show',['id' => $solicitud->getId()]);
         }
         return $this->render('compra/validar.html.twig',[
             'form' => $editForm->createView(),
