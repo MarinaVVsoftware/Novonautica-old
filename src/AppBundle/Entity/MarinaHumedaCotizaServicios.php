@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use AppBundle\Validator\Constraints as NovoAssert;
 
 /**
  * MarinaHumedaCotizaServicios
@@ -11,6 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Table(name="marina_humeda_cotiza_servicios")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MarinaHumedaCotizaServiciosRepository")
  * @ORM\EntityListeners({"AppBundle\Entity\Marina\CotizaServiciosListener"})
+ * @NovoAssert\ProductHaveStock
  */
 class MarinaHumedaCotizaServicios
 {
@@ -404,6 +406,11 @@ class MarinaHumedaCotizaServicios
      * @return \AppBundle\Entity\MarinaHumedaServicio
      */
     public function getMarinahumedaservicio()
+    {
+        return $this->marinahumedaservicio;
+    }
+
+    public function getProducto()
     {
         return $this->marinahumedaservicio;
     }

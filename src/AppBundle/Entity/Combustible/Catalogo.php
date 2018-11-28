@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="combustible_catalogo")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Combustible\CatalogoRepository")
  */
-class Catalogo
+class Catalogo implements \JsonSerializable
 {
     /**
      * @var int
@@ -222,5 +222,18 @@ class Catalogo
     public function getExistencia()
     {
         return $this->existencia;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'existencia' => $this->existencia,
+            'nombre' => $this->nombre,
+            'precio' => $this->precio,
+            'cuotaIesps' => $this->cuotaIesps,
+            'claveProdServ' => $this->claveProdServ,
+            'claveUnidad' => $this->claveUnidad,
+        ];
     }
 }

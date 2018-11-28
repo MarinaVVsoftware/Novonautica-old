@@ -1,4 +1,6 @@
 $(document).ready(function () {
+
+
   $('#loading').hide();
   $('.loadpage').on('click', function () {
     $('#loading').show();
@@ -437,6 +439,8 @@ function astilleroBuscaProducto(idproducto,fila){
         url: url,
         dataType: 'json',
         success: function(datos) {
+          throwAlert(`El producto "${datos.nombre}" tiene ${datos.existencia || '0'} existencía${datos.existencia > 1 ? 's' : ''} en el inventario`, 'info');
+
             fila.children('.valorprecio').html('$ '+parseFloat((datos.precio)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
             fila.children('.valorprecio').data('valor',((datos.precio)/100));
             calculaSubtotalesAstillero(fila);
@@ -1536,6 +1540,33 @@ const datatablesSettings = {
     return false;
   }
 })(jQuery);
+
+/*
+  ALERTAS PARA INVENTARIO
+ */
+let $ErrorContainer = $('#errors');
+
+if (!$ErrorContainer.length) {
+  $('.content-wrapper > .content').prepend('<div id="errors"></div>');
+  $ErrorContainer = $('#errors');
+}
+
+function throwAlert(message, type) {
+  const html = `
+       <div class="alert alert-dismissable alert-${type || 'info'}" role="alert">
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+         </button>
+         ${message}
+       </div>
+   `;
+
+  $ErrorContainer.append(html);
+
+  if ($ErrorContainer.children().length > 2) {
+    $ErrorContainer.children().first().remove();
+  }
+}
 
 const formularioGeneral = document.querySelector('form');
 if( formularioGeneral ) {

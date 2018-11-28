@@ -2,11 +2,11 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Combustible\Catalogo;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as NovoAssert;
 
 /**
  * Combustible
@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="combustible")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CombustibleRepository")
  * @ORM\EntityListeners({"CombustibleListener"})
+ * @NovoAssert\ProductHaveStock
  */
 class Combustible
 {
@@ -845,6 +846,11 @@ class Combustible
      * @return \AppBundle\Entity\Combustible\Catalogo|null
      */
     public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    public function getProducto()
     {
         return $this->tipo;
     }

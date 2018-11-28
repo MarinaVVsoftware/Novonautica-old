@@ -4,6 +4,11 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/perfect-scrollbar.css') }}">
     <style>
+        .alert {
+            padding: 7px;
+            margin-bottom: 5px;
+        }
+
         .ps__rail-y {
             z-index: 10;
         }
@@ -313,7 +318,7 @@
                     const producto = event.params.data;
 
                     if (producto.quantity <= 0) {
-                      throwAlert(`El producto "${producto.text}" no tiene más stock en el inventario`);
+                      throwAlert(`El producto "${producto.text}" no tiene más stock en el inventario`, 'danger');
 
                       $(this).val(null).trigger('change');
                       $QuantityInput.val(0).trigger('input');
@@ -331,6 +336,8 @@
                     PrecioInput.value = transformToMoneyFormat(price.toFixed(2));
                     $QuantityInput.val(1).trigger('input');
                     $QuantityInput.focus();
+
+                    throwAlert(`El producto "${producto.text}" tiene ${producto.quantity} de existencía${producto.quantity > 1 ? 's' : ''} en el inventario`, 'success');
                   });
 
               $QuantityInput.on('input', computeRowValues);
@@ -392,24 +399,6 @@
               celda.appendChild(removeButton);
             }
 
-            function throwAlert(message) {
-              const $ErrorContainer = $('#errors');
-              const html = `
-                          <div class="alert alert-danger" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            ${message}
-                          </div>
-                      `;
-
-              $ErrorContainer.append(html);
-
-              if ($ErrorContainer.children().length > 2) {
-                $ErrorContainer.children().first().remove();
-              }
-            }
-
             /**
              * Agrega una fila que fue escaneada por una pistola de barcodes
              */
@@ -419,7 +408,7 @@
                   {
                     success(producto) {
                       if (producto.quantity <= 0) {
-                        throwAlert(`El producto "${producto.nombre}" no más tiene stock en el inventario.`);
+                        throwAlert(`El producto "${producto.nombre}" no más tiene stock en el inventario.`, 'danger');
                         return;
                       }
 
@@ -449,10 +438,12 @@
                           data: getProducto(producto),
                         }
                       });
+
+                      throwAlert(`El producto "${producto.text}" tiene ${producto.quantity} de existencía${producto.quantity > 1 ? 's' : ''} en el inventario`, 'success');
                     },
                     error(response) {
                       if (response.status !== 404) return;
-                      throwAlert(`El producto "${event.detail}" no existe en la base de datos`);
+                      throwAlert(`El producto "${event.detail}" no existe en la base de datos`, 'error');
                     },
                   }
               );
@@ -545,11 +536,14 @@
             document
                 .addEventListener('scanedbarcode', addProductProgrammatically);
 
-            body.onkeyup = function (event) {
-              if (event.keyCode !== 16) return;
-              AddButton.click();
-            }
+            body.addEventListener('keyup', function (event) {
+              if (event.keyCode === 16) {
+                AddButton.click();
+                return;
+              }
 
+              return;
+            });
           }
 
       )(jQuery);

@@ -163,6 +163,7 @@ class AstilleroCotizacion
     /**
      *
      * @Groups({"facturacion"})
+     * @Assert\Valid()
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\AstilleroCotizaServicio", mappedBy="astillerocotizacion",cascade={"persist"})
      */

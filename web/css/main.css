@@ -191,11 +191,14 @@ form > .btn-borrar:hover, .btn-borrar:hover {
 /*++ fin botones color ++*/
 
 /*++++ mensajes sistema ++++*/
+.alert {
+    padding: 7px;
+    margin-bottom: 3px;
+}
+
 .alert-danger {
     background: #FF6600 !important;
     border-color: #FF6600;
-    padding: 7px;
-    margin-bottom: 3px;
 }
 
 /*++ fin mensajes sistema ++*/

@@ -22,4 +22,20 @@ class CatalogoRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getArrayResult();
     }
+
+    public function getProducto($producto)
+    {
+        return $this->createQueryBuilder('producto')
+            ->select(
+                'producto',
+                'claveUnidad',
+                'claveProdServ'
+            )
+            ->leftJoin('producto.claveProdServ', 'claveProdServ')
+            ->leftJoin('producto.claveUnidad', 'claveUnidad')
+            ->where('producto.id = :producto')
+            ->setParameter('producto', $producto)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

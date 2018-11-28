@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Table(name="contabilidad_facturacion_concepto_clave_unidad")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Contabilidad\Facturacion\Concepto\ClaveUnidadRepository")
  */
-class ClaveUnidad
+class ClaveUnidad implements \JsonSerializable
 {
     /**
      * @var int
@@ -101,6 +101,15 @@ class ClaveUnidad
     public function getNombre()
     {
         return $this->nombre;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'nombre' => $this->nombre,
+            'clave' => $this->claveUnidad,
+        ];
     }
 }
 
