@@ -125,13 +125,17 @@ class CompraController extends Controller
                 $solicitud->setFechaValidoCompra(new \DateTime());
 
                 //Buscar correos a notificar, el que creo la solicitud le llegará un correo si es rechazado.
-                //Si es aceptado llegra correo a los asignados con EVENTO_VALIDAR y EVENTO_ACEPTAR
+                //Si es aceptado llegará correo a los asignados con EVENTO_VALIDAR y EVENTO_ACEPTAR
                 if($solicitud->getValidadoCompra()){
                    $asunto = 'Notificación compras - Aceptado';
                     $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                         'evento' => [Correo\Notificacion::EVENTO_VALIDAR, Correo\Notificacion::EVENTO_ACEPTAR],
                         'tipo' => Correo\Notificacion::TIPO_COMPRA
                     ]);
+                    $proveedores = $em->getRepository('AppBundle:Solicitud\Concepto')->getCorreoProveedores($solicitud);
+                    foreach ($proveedores as $proveedor){
+                        $this->enviaCorreoProveedor($mailer,$proveedor['correo'],$solicitud,$proveedor['id']);
+                    }
                 }else{
                     $asunto = 'Notificación compras - Rechazado';
                     $notificables = [$solicitud->getCreador()];
@@ -189,7 +193,6 @@ class CompraController extends Controller
      * @param Correo\Notificacion[] $notificables
      * @param Solicitud $solicitud
      * @param $asunto
-     * @param $plantilla
      *
      * @return void
      */
@@ -217,5 +220,31 @@ class CompraController extends Controller
             'text/html'
         );
         $mailer->send($message);
+    }
+
+    /**
+     * @param \Swift_Mailer $mailer
+     * @param $correo
+     * @param $solicitud
+     * @param $idproveedor
+     * @return void
+     */
+    private function enviaCorreoProveedor($mailer,$correo,$solicitud,$idproveedor)
+    {
+        if (is_null($correo)) {
+            return;
+        }
+        $message = (new \Swift_Message('Solicitud de productos'));
+        $message->setFrom('noresponder@novonautica.com');
+        $message->setTo($correo);
+        $message->setBody(
+            $this->renderView('mail/compra-proveedor.html.twig', [
+                'solicitud' => $solicitud,
+                'idproveedor' => $idproveedor
+            ]),
+            'text/html'
+        );
+        $mailer->send($message);
+
     }
 }

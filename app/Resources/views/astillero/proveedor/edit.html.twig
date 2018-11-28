@@ -93,7 +93,7 @@
                         <h3 class="panel-title">{{ title }}</h3>
                     </div>
                     <div class="col-sm-6">
-                        <a class="btn btn-contorno-azul pull-right" href="{{ path('astillero_proveedor_show',{'id':proveedor.id}) }}">Regresar</a>
+                        <a class="btn btn-contorno-azul pull-right" href="{{ path('proveedor_show',{'id':proveedor.id}) }}">Regresar</a>
                     </div>
                 </div>
             </div>
@@ -101,14 +101,15 @@
                 {{ form_start(edit_form) }}
                 <div class="row">
                     <div class="col-sm-6">
+                        {{ form_row(edit_form.empresa) }}
                         {{ form_row(edit_form.nombre) }}
                         {{ form_row(edit_form.correo) }}
                         {{ form_row(edit_form.password) }}
                         {{ form_row(edit_form.porcentaje) }}
                         {{ form_row(edit_form.rfc) }}
-                        {{ form_row(edit_form.proveedorcontratista) }}
                     </div>
                     <div class="col-sm-6">
+                        {{ form_row(edit_form.proveedorcontratista) }}
                         {{ form_row(edit_form.razonsocial) }}
                         {{ form_row(edit_form.telefono) }}
                         {{ form_row(edit_form.tipo) }}
@@ -151,7 +152,9 @@
                 {{ form_end(edit_form) }}
             </div>
             <div class="panel-footer">
-                {{ delete_form is defined ? modal.deleteButton() : '' }}
+                {% if is_granted(expression('has_role("PROVEEDOR_DELETE") or (user.isAdmin())')) %}
+                    {{ delete_form is defined ? modal.deleteButton() : '' }}
+                {% endif %}
             </div>
         </div>
     </section>

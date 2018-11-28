@@ -16,6 +16,7 @@
                         <table class="table table-novo">
                             <thead>
                             <tr>
+                                <th>Empresa</th>
                                 <th>Tipo Trabajador</th>
                                 <th>Nombre</th>
                                 <th>Razón Social</th>
@@ -28,21 +29,6 @@
                                 <th></th>
                             </tr>
                             </thead>
-                            {#<tbody>#}
-                            {#{% for proveedor in proveedors %}#}
-                                {#<tr>#}
-                                    {#<td>{{ proveedor.nombre }}</td>#}
-                                    {#<td>{{ proveedor.razonsocial }}</td>#}
-                                    {#<td>{{ proveedor.porcentaje|number_format(2) }} %</td>#}
-                                    {#<td>{% if proveedor.tipo == 0 %} Externo {% else %} Interno {% endif %}</td>#}
-                                    {#<td>#}
-                                        {#<a class="btn btn-azul" href="{{ path('astillero_proveedor_edit', { 'id': proveedor.id }) }}">#}
-                                            {#Editar#}
-                                        {#</a>#}
-                                    {#</td>#}
-                                {#</tr>#}
-                            {#{% endfor %}#}
-                            {#</tbody>#}
                         </table>
                     </div>
                 </div>
@@ -58,24 +44,15 @@
         (function ($, settings) {
             $('.table-novo').DataTable({
                     ...settings,
-                ajax: '{{ path('astillero_proveedor_index') }}',
-                order: [[1, 'desc']],
+                ajax: '{{ path('proveedor_index') }}',
+                order: [[2, 'desc']],
                 createdRow: function (row, data) {
-                let actionsCell = row.cells[9];
-                actionsCell.innerHTML = `
-            <ul class="unstyled-list list-inline" style="margin: 0">
-                <li>
-                <a href="${data[9]}">
-                    <i class="fa fa-eye" aria-hidden="true"></i>
-                </a>
-                </li>
-                <li>
-                <a href="${data[9]}/editar">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                </a>
-                </li>
-            </ul>
-            `
+                let actionsCell = row.cells[10];
+                actionsCell.innerHTML = `<a href="${data[10]}"><i class="fa fa-eye" aria-hidden="true"></i></a>`;
+                {% if is_granted(expression('has_role("PROVEEDOR_EDIT") or (user.isAdmin())')) %}
+                    actionsCell.innerHTML = actionsCell.innerHTML +
+                        `<a href="${data[10]}/editar"><i class="fa fa-pencil" aria-hidden="true"></i></a>`;
+                {% endif %}
             },
         });
         })(jQuery, datatablesSettings);

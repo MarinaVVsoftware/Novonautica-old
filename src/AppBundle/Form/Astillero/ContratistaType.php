@@ -67,6 +67,8 @@ class ContratistaType extends AbstractType
                 'attr' => ['class'=>'buscaproveedor lista-trabajadores'],
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('t')
+                        // Empresa 5 = Astillero
+                        ->where('t.empresa = 5')
                         ->orderBy('t.nombre', 'ASC');
                 },
                 'choice_attr' => function(Proveedor $proveedor, $key, $index) {

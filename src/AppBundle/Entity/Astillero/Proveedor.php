@@ -144,6 +144,12 @@ class Proveedor implements UserInterface, \Serializable
     private $Trabajos;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Emisor")
+     * @ORM\JoinColumn(name="idempresa", referencedColumnName="id")
+     */
+    private $empresa;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -604,5 +610,28 @@ class Proveedor implements UserInterface, \Serializable
             $this->nombre,
             $this->password,
             ) = unserialize($serialized, ['allowed_classes' => false]);
+    }
+
+    /**
+     * Set empresa.
+     *
+     * @param \AppBundle\Entity\Contabilidad\Facturacion\Emisor|null $empresa
+     *
+     * @return Proveedor
+     */
+    public function setEmpresa(\AppBundle\Entity\Contabilidad\Facturacion\Emisor $empresa = null)
+    {
+        $this->empresa = $empresa;
+        return $this;
+    }
+
+    /**
+     * Get empresa.
+     *
+     * @return \AppBundle\Entity\Contabilidad\Facturacion\Emisor|null
+     */
+    public function getEmpresa()
+    {
+        return $this->empresa;
     }
 }

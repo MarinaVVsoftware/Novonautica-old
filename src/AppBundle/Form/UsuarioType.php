@@ -79,7 +79,6 @@ class UsuarioType extends AbstractType
                     'Monedero' => 'ROLE_ASTILLERO_MONEDERO',
                     'Productos' => 'ROLE_ASTILLERO_PRODUCTO',
                     'Servicios' => 'ROLE_ASTILLERO_SERVICIO',
-                    'Proveedores' => 'ROLE_ASTILLERO_PROVEEDOR',
                     'Servicios básicos' => 'ROLE_ASTILLERO_SERVICIOBASICO',
                     'Responsable' => 'ROLE_ASTILLERO_RESPONSABLE',
                 ],
@@ -112,6 +111,13 @@ class UsuarioType extends AbstractType
                     'Punto de venta' => 'ROLE_TIENDA_POV',
                 ],
                 'Contabilidad' => $this->getContabilidadRoles(),
+                'Proveedores' =>[
+                    'Acceso' => 'ROLE_PROVEEDOR',
+                    'Crear' => 'PROVEEDOR_CREATE',
+                    'Modificar' => 'PROVEEDOR_EDIT',
+                    'Eliminar' => 'PROVEEDOR_DELETE',
+                    'Oficios' => 'ROLE_OFICIO'
+                ],
                 'Correos' => [
                     'Acceso' => 'ROLE_HCORREO',
                     'Notificaciones' => 'ROLE_HCORREO_NOTIFICACION',

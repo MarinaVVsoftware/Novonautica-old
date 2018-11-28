@@ -42,6 +42,12 @@
                         <div class="col-sm-4">
                             {{ form_row(form.iva) }}
                         </div>
+                        <div class="col-sm-4">
+                            <label>Empresa</label>
+                            <div id="empresa" class="info-input" data-empresa="{{ solicitud.empresa.id }}">
+                                {{ solicitud.empresa }}
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
@@ -183,6 +189,7 @@
             const granIva = document.getElementById('appbundle_solicitud_ivatotal');
             const granTot = document.getElementById('appbundle_solicitud_total');
             const iva = document.getElementById('appbundle_solicitud_iva');
+            const empresaActual = document.getElementById('empresa').dataset.empresa;
 
             let counter = EntradasHolder.childElementCount;
 
@@ -191,35 +198,6 @@
              */
             function transformToMoneyFormat(numero) {
                 return numero.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            }
-
-            function createRowData(concepto)
-            {
-                let prototipo = EntradasHolder.dataset.prototype.replace(/__name__/g, counter);
-                let tempTable = document.createElement('table');
-                tempTable.innerHTML = prototipo;
-                let row = tempTable.querySelector('tr');
-                row.cells[0].querySelector('input').value = concepto.cantidad;
-                if(concepto.marinaServicio){
-                    row.cells[7].querySelector('select').value = concepto.marinaServicio.id;
-                    row.cells[1].innerHTML = concepto.marinaServicio.nombre;
-                }
-                if(concepto.combustibleCatalogo){
-                    row.cells[8].querySelector('select').value = concepto.combustibleCatalogo.id;
-                    row.cells[1].innerHTML = concepto.combustibleCatalogo.nombre;
-                }
-                if(concepto.astilleroProducto){
-                    row.cells[9].querySelector('select').value = concepto.astilleroProducto.id;
-                    row.cells[1].innerHTML = concepto.astilleroProducto.nombre;
-                }
-                if(concepto.tiendaProducto){
-                    row.cells[10].querySelector('select').value = concepto.tiendaProducto.id;
-                    row.cells[1].innerHTML = concepto.tiendaProducto.nombre;
-                }
-                addRowListeners(row);
-                EntradasHolder.appendChild(row);
-                counter++;
-                return row;
             }
 
             function addRowListeners(row){
@@ -233,6 +211,7 @@
                 precio.onkeyup = function (ev) {
                     calculaSubIvaTot(row);
                 };
+                row.cells[2].querySelectorAll('select option').forEach(opcion => ocultaOptionEmpresa(opcion));
             }
 
             function calculaSubIvaTot(row){
@@ -259,6 +238,12 @@
                 granSub.value = transformToMoneyFormat(String(sumaGranSubtotal.toFixed(2)));
                 granIva.value = transformToMoneyFormat(String(sumaGranIvatotal.toFixed(2)));
                 granTot.value = transformToMoneyFormat(String(sumaGranTotal.toFixed(2)));
+            }
+
+            function ocultaOptionEmpresa(opcion){
+                if(opcion.value !== '' &&  opcion.dataset.empresa !== empresaActual){
+                    opcion.parentNode.removeChild(opcion);
+                }
             }
 
             iva.addEventListener('keyup',(event) => {

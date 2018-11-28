@@ -25,7 +25,7 @@
                                 <tr>
                                     <td>{{ trabajo.nombre }}</td>
                                     <td>
-                                        <a class="btn btn-azul" href="{{ path('astillero_proveedor_trabajo_edit', { 'id': trabajo.id }) }}">Editar</a>
+                                        <a class="btn btn-azul" href="{{ path('proveedor_trabajo_edit', { 'id': trabajo.id }) }}">Editar</a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <a class="btn btn-azul" href="{{ path('astillero_proveedor_trabajo_new') }}">
+                <a class="btn btn-azul" href="{{ path('proveedor_trabajo_new') }}">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     Agregar
                 </a>
