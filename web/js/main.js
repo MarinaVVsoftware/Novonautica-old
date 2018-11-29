@@ -293,10 +293,12 @@ jQuery('.add-another-servicio').click(function (e) {
   newWidget = newWidget.replace('td-producto', 'hide');
   newWidget = newWidget.replace('td-servicio', 'hide');
   newWidget = newWidget.replace('td-libre', 'hide');
-  //newWidget = newWidget.replace('td-precio', 'hide');
   totServicios++;
   $('#serviciosextra').data('cantidad', totServicios);
   var newLi = jQuery('<tr class="servicio-agregado" data-id="' + (totServicios - 1) + '"></tr>').html(newWidget);
+  newLi.children('.valorcantidad').children('input').prop('required',true);
+  newLi.children('.td-otroservicio').children('input').prop('required',true);
+  newLi.children('.valorprecio').children('.input-group').children('input').prop('required',true);
   newLi.appendTo(servicioListPrimero);
   newLi.before(newLi);
 });
