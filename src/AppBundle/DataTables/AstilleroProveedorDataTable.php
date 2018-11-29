@@ -38,10 +38,11 @@ class AstilleroProveedorDataTable extends AbstractDataTableHandler
         $qb = $astilleroProveedorRepo->createQueryBuilder('ap');
         $results->recordsTotal = $qb->select('COUNT(ap.id)')->getQuery()->getSingleScalarResult();
 
-        $q = $qb->select('ap');
+        $q = $qb->select('ap','contabilidadFacturacionEmisor')
+                ->leftJoin('ap.empresa','contabilidadFacturacionEmisor');
         if($request->search->value){
             $q->where('(LOWER(ap.nombre) LIKE :search '.
-                ' OR ap.empresa LIKE :search '.
+                ' OR LOWER(contabilidadFacturacionEmisor.nombre) LIKE :search '.
                 ' OR ap.razonsocial LIKE :search '.
                 ' OR ap.porcentaje LIKE :search ' .
                 ' OR ap.correo LIKE :search ' .
@@ -55,7 +56,7 @@ class AstilleroProveedorDataTable extends AbstractDataTableHandler
             if($order->column === 0){
                 $q->addOrderBy('ap.empresa', $order->dir);
             } elseif($order->column === 1){
-                $q->addOrderBy('ap.proveedorcontratista', $order->dir);
+                $q->addOrderBy('contabilidadFacturacionEmisor.nombre', $order->dir);
             } elseif ($order->column === 2) {
                 $q->addOrderBy('ap.nombre', $order->dir);
             } elseif ($order->column === 3) {
