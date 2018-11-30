@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
@@ -37,7 +38,9 @@ class ProductoType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('identificador');
+        $builder->add('identificador',TextType::class,[
+            'label' => 'Código'
+        ]);
         $builder->add('nombre');
 
         $builder->add('precio', MoneyType::class, [
