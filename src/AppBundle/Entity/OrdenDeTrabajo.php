@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="orden_de_trabajo")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\OrdenDeTrabajoRepository")
+ * @ORM\EntityListeners({"OrdenDeTrabajoListener"})
  */
 class OrdenDeTrabajo
 {
