@@ -5,12 +5,14 @@ namespace AppBundle\Entity\Astillero;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as NovoAssert;
 
 /**
  * Contratista
  *
  * @ORM\Table(name="astillero_contratista")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Astillero\ContratistaRepository")
+ * @NovoAssert\ProductHaveStock
  */
 class Contratista
 {
@@ -110,6 +112,11 @@ class Contratista
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Astillero\Contratista\Actividad", mappedBy="contratista", cascade={"persist"})
      */
     private $contratistaactividades;
+
+    /**
+     * @var Producto
+     */
+    private $producto;
 
     /**
      * Constructor
@@ -419,5 +426,21 @@ class Contratista
     public function getCantidad()
     {
         return $this->cantidad;
+    }
+
+    /**
+     * @return Producto
+     */
+    public function getProducto()
+    {
+        return $this->producto;
+    }
+
+    /**
+     * @param Producto $producto
+     */
+    public function setProducto(Producto $producto = null)
+    {
+        $this->producto = $producto;
     }
 }

@@ -1,11 +1,11 @@
-{% block form_widget %}
-    {% spaceless %}
+{% block appbundle_astillerocontratista_widget %}
         <div class="col-sm-12 espacio-linea-abajo2">
             <hr>
         </div>
         <div class="col-sm-7">
             <div class="form-group">
                 {{ form_row(form.cotizacionInicial) }}
+                {{ form_row(form.producto) }}
             </div>
         </div>
         <div class="col-sm-2">
@@ -38,11 +38,4 @@
                 {{ form_row(form.precio) }}
             </div>
         </div>
-        {#<div class="col-sm-2">#}
-            {#<a href="#" class="remove-proveedor btn btn-xs btn-naranja">#}
-                {#<i class="fa fa-times" aria-hidden="true"></i>#}
-                {#Remover Contratista#}
-            {#</a>#}
-        {#</div>#}
-    {% endspaceless %}
-{% endblock form_widget %}
+{% endblock %}

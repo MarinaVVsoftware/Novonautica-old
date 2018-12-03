@@ -40,6 +40,7 @@ class OrdenDeTrabajoController extends Controller
         if ($request->isXmlHttpRequest()) {
             try {
                 $results = $dataTables->handle($request, 'ODT');
+
                 return $this->json($results);
             } catch (HttpException $e) {
                 return $this->json($e->getMessage(), $e->getStatusCode());
@@ -47,7 +48,7 @@ class OrdenDeTrabajoController extends Controller
         }
 
         return $this->render('ordendetrabajo/index.html.twig', [
-            'title' => 'Ordenes de trabajo'
+            'title' => 'Ordenes de trabajo',
         ]);
     }
 
@@ -95,7 +96,8 @@ class OrdenDeTrabajoController extends Controller
                     array_push($notificados,$contratista->getProveedor()->getCorreo());
                 }
             }
-            $fechaHoraActual = new \DateTime('now');
+
+            $fechaHoraActual = new \DateTime();
             $ordenDeTrabajo
                 ->setPrecioTotal($precioTotal)
                 ->setUtilidadvvTotal($utilidadvvTotal)
@@ -135,11 +137,14 @@ class OrdenDeTrabajoController extends Controller
             return $this->redirectToRoute('ordendetrabajo_index');
         }
 
-        return $this->render('ordendetrabajo/new.html.twig', array(
-            'ordenDeTrabajo' => $ordenDeTrabajo,
-            'form' => $form->createView(),
-            'title' => 'Nueva Orden de Trabajo'
-        ));
+        return $this->render(
+            'ordendetrabajo/new.html.twig',
+            [
+                'ordenDeTrabajo' => $ordenDeTrabajo,
+                'form' => $form->createView(),
+                'title' => 'Nueva Orden de Trabajo',
+            ]
+        );
     }
 
     /**
@@ -157,7 +162,8 @@ class OrdenDeTrabajoController extends Controller
 
         $cotizacion = $em->getRepository('AppBundle:AstilleroCotizacion')
             ->createQueryBuilder('ac')
-            ->select('ac', 'cliente', 'barco', 'AstilleroCotizaServicio', 'AstilleroServicioBasico', 'AstilleroProducto', 'AstilleroServicio', 'AstilleroProveedor')
+            ->select('ac', 'cliente', 'barco', 'AstilleroCotizaServicio', 'AstilleroServicioBasico',
+                'AstilleroProducto', 'AstilleroServicio', 'AstilleroProveedor')
             ->join('ac.cliente', 'cliente')
             ->join('ac.barco', 'barco')
             ->join('ac.acservicios', 'AstilleroCotizaServicio')
@@ -165,9 +171,10 @@ class OrdenDeTrabajoController extends Controller
             ->leftJoin('AstilleroCotizaServicio.producto', 'AstilleroProducto')
             ->leftJoin('AstilleroProducto.proveedores', 'AstilleroProveedor')
             ->leftJoin('AstilleroCotizaServicio.servicio', 'AstilleroServicio')
-            ->andWhere('ac.id = ' . $idcotizacion)
+            ->andWhere('ac.id = '.$idcotizacion)
             ->getQuery()
             ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
         return $this->json($cotizacion);
     }
 
@@ -185,12 +192,13 @@ class OrdenDeTrabajoController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_ODT', $ordenDeTrabajo);
         $folio = $ordenDeTrabajo->getAstilleroCotizacion()->getFoliorecotiza()
-            ? $ordenDeTrabajo->getAstilleroCotizacion()->getFolio() . '-' . $ordenDeTrabajo->getAstilleroCotizacion()->getFoliorecotiza()
+            ? $ordenDeTrabajo->getAstilleroCotizacion()->getFolio().'-'.$ordenDeTrabajo->getAstilleroCotizacion()->getFoliorecotiza()
             : $ordenDeTrabajo->getAstilleroCotizacion()->getFolio();
+
         return $this->render('ordendetrabajo/show.html.twig', [
             'title' => 'Detalle ODT',
             'ordenDeTrabajo' => $ordenDeTrabajo,
-            'folio' => $folio
+            'folio' => $folio,
         ]);
     }
 
@@ -368,7 +376,7 @@ class OrdenDeTrabajoController extends Controller
         return $this->render('ordendetrabajo/actividad.html.twig', [
             'title' => 'Registrar Actividad Contratista',
             'contratista' => $contratista,
-            'edit_form' => $editForm->createView()
+            'edit_form' => $editForm->createView(),
         ]);
     }
 
@@ -388,7 +396,7 @@ class OrdenDeTrabajoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $fechaPausa = new \DateTime('now');
-            if($fechaPausa->format('d-m-Y') >= $actividad->getInicio()->format('d-m-Y') && $fechaPausa->format('d-m-Y') <= $actividad->getFin()->format('d-m-Y')){
+            if ($fechaPausa->format('d-m-Y') >= $actividad->getInicio()->format('d-m-Y') && $fechaPausa->format('d-m-Y') <= $actividad->getFin()->format('d-m-Y')) {
                 $em = $this->getDoctrine()->getManager();
                 $pausa
                     ->setInicio($fechaPausa)
@@ -399,15 +407,18 @@ class OrdenDeTrabajoController extends Controller
                 $em->persist($pausa);
                 $em->persist($actividad);
                 $em->flush();
-                return $this->redirectToRoute('ordendetrabajo_show', ['id' => $actividad->getContratista()->getAstilleroODT()->getId()]);
-            }else{
+
+                return $this->redirectToRoute('ordendetrabajo_show',
+                    ['id' => $actividad->getContratista()->getAstilleroODT()->getId()]);
+            } else {
                 $this->addFlash('notice', 'Error! la actividad que ha intenta pausar no esta vigente');
             }
         }
-        return $this->render('ordendetrabajo/pausa.html.twig',[
+
+        return $this->render('ordendetrabajo/pausa.html.twig', [
             'title' => 'Pausando actividad',
             'actividad' => $actividad,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -433,7 +444,9 @@ class OrdenDeTrabajoController extends Controller
         $em->persist($actividad);
         $em->persist($pausaActual);
         $em->flush();
-        return $this->redirectToRoute('ordendetrabajo_show', ['id' => $actividad->getContratista()->getAstilleroODT()->getId()]);
+
+        return $this->redirectToRoute('ordendetrabajo_show',
+            ['id' => $actividad->getContratista()->getAstilleroODT()->getId()]);
     }
 
     /**
@@ -447,10 +460,10 @@ class OrdenDeTrabajoController extends Controller
     public function displayODTpdf(OrdenDeTrabajo $odt)
     {
         $html = $this->renderView('ordendetrabajo/pdf/contenido.html.twig', [
-            'odt' => $odt
+            'odt' => $odt,
         ]);
         $header = $this->renderView('ordendetrabajo/pdf/encabezado.html.twig', [
-            'astillero' => $odt->getAstilleroCotizacion()
+            'astillero' => $odt->getAstilleroCotizacion(),
         ]);
         $footer = $this->renderView('ordendetrabajo/pdf/pie.html.twig');
         $hojapdf = $this->get('knp_snappy.pdf');
@@ -459,12 +472,12 @@ class OrdenDeTrabajoController extends Controller
             'margin-right' => 0,
             'margin-left' => 0,
             'header-html' => utf8_decode($header),
-            'footer-html' => utf8_decode($footer)
+            'footer-html' => utf8_decode($footer),
         ];
 
         return new PdfResponse(
             $hojapdf->getOutputFromHtml($html, $options),
-            'Cotizacion-' . $odt->getAstilleroCotizacion()->getFolio() . '-' . $odt->getAstilleroCotizacion()->getFoliorecotiza() . '.pdf',
+            'Cotizacion-'.$odt->getAstilleroCotizacion()->getFolio().'-'.$odt->getAstilleroCotizacion()->getFoliorecotiza().'.pdf',
             'application/pdf',
             'inline'
         );
@@ -521,7 +534,9 @@ class OrdenDeTrabajoController extends Controller
      */
     private function enviaCorreoNotificacion($mailer, $notificables, $odt)
     {
-        if (!count($notificables)) { return; }
+        if (!count($notificables)) {
+            return;
+        }
         $recipientes = [];
         foreach ($notificables as $key => $notificable) {
             $recipientes[$key] = $notificable->getCorreo();
@@ -532,7 +547,7 @@ class OrdenDeTrabajoController extends Controller
         $message->setBody(
             $this->renderView('mail/notificacion-odt.html.twig', [
                 'notificacion' => $notificables[0],
-                'odt' => $odt
+                'odt' => $odt,
             ]),
             'text/html'
         );

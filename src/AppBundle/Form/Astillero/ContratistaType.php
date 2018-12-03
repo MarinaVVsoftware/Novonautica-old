@@ -9,20 +9,36 @@
 namespace AppBundle\Form\Astillero;
 
 
+use AppBundle\Entity\Astillero\Contratista;
+use AppBundle\Entity\Astillero\Producto;
 use AppBundle\Entity\Astillero\Proveedor;
-use DateTime;
+use AppBundle\Validator\Constraints\ProductHaveStockValidator;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 
 class ContratistaType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $manager;
+
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -79,15 +95,44 @@ class ContratistaType extends AbstractType
 
             ])
         ;
+
+        /**
+         * UNMAPPED FIELDS
+         */
+
+        $builder->add(
+            'producto',
+            HiddenType::class
+        );
+
+        /**
+         * DATA TRANSFORMER
+         */
+
+        $builder->get('producto')
+            ->addModelTransformer(
+                new CallbackTransformer(
+                    function ($value) {
+                        return $value;
+                    },
+                    function ($value) {
+                        if (!$value) {
+                            return null;
+                        }
+
+                        return $this->manager->getRepository(Producto::class)->find($value);
+                    }
+                )
+            );
     }
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Astillero\Contratista'
-        ));
+        $resolver->setDefaults([
+            'data_class' => Contratista::class,
+        ]);
     }
 
     /**
