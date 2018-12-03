@@ -1027,14 +1027,14 @@
                                                     <tr class="servicio-agregado" data-id="0">
                                                         <td class="valorcantidad"
                                                             data-valor="{{ servicioagregado.vars.value.cantidad }}">
-                                                            {{ form_widget(servicioagregado.cantidad) }}
+                                                            {{ form_widget(servicioagregado.cantidad,{ 'attr': {'required': 'required'} }) }}
                                                         </td>
                                                         <td class="td-producto hide">{{ form_widget(servicioagregado.producto) }}</td>
                                                         <td class="td-servicio hide">{{ form_widget(servicioagregado.servicio) }}</td>
-                                                        <td class="td-otroservicio">{{ form_widget(servicioagregado.otroservicio) }}</td>
+                                                        <td class="td-otroservicio">{{ form_widget(servicioagregado.otroservicio,{ 'attr': {'required': 'required'} }) }}</td>
                                                         <td class="valorprecio"
                                                             data-valor="{{ servicioagregado.vars.value.precio/100 }}">
-                                                            {{ form_widget(servicioagregado.precio) }}
+                                                            {{ form_widget(servicioagregado.precio,{ 'attr': {'required': 'required'} }) }}
                                                         </td>
                                                         <td class="valorsubtotal"
                                                             data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">

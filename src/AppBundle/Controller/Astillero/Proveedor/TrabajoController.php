@@ -5,7 +5,11 @@ namespace AppBundle\Controller\Astillero\Proveedor;
 use AppBundle\Entity\Astillero\Proveedor\Trabajo;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Trabajo controller.
@@ -19,17 +23,25 @@ class TrabajoController extends Controller
      *
      * @Route("/", name="proveedor_trabajo_index")
      * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse|Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $trabajos = $em->getRepository('AppBundle:Astillero\Proveedor\Trabajo')->findAll();
-
-        return $this->render('astillero/proveedor/trabajo/index.html.twig', array(
-            'trabajos' => $trabajos,
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $datatables = $this->get('datatables');
+                $results = $datatables->handle($request, 'ProveedorTrabajo');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getStatusCode());
+            }
+        }
+        return $this->render('astillero/proveedor/trabajo/index.html.twig', [
             'title' => 'Catálogo oficios'
-        ));
+        ]);
     }
 
     /**

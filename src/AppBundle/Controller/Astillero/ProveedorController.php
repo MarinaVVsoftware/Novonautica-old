@@ -4,8 +4,6 @@ namespace AppBundle\Controller\Astillero;
 
 use AppBundle\Entity\Astillero\Proveedor;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\DBAL\LockMode;
-use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

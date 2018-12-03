@@ -59,7 +59,7 @@
                 rowCallback: function (row,data) {
                 row.cells[8].innerHTML = `<a href="${data[8][0]}" class="btn btn-xs btn-morado-claro btn-block">Ver</a>`;
                 {% if is_granted(expression('has_role("ALMACEN_VALIDAR") or (user.isAdmin())')) %}
-                if(data[8][1] && data[8][2] === false){
+                if(data[8][1] && (data[8][2] === false || data[8][2] === null)){
                     row.cells[8].innerHTML = row.cells[8].innerHTML +
                         `<a href="${data[8][0]}/validar" class="btn btn-xs btn-azul btn-block">Validar</a>`;
                 }

@@ -18,9 +18,10 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
 
 class AstilleroCotizaServicioType extends AbstractType
 {
@@ -32,9 +33,12 @@ class AstilleroCotizaServicioType extends AbstractType
         $builder
             //->add('servicio')
             ->add('cantidad', null,[
-                'attr' => ['class' => 'cantidad-elemento']
+                'attr' => ['class' => 'cantidad-elemento'],
+                'required' => false,
             ])
-            ->add('otroservicio')
+            ->add('otroservicio',TextType::class,[
+                'required' => false,
+            ])
             ->add('precio', MoneyType::class, [
                 'required'=>false,
                 'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
@@ -50,7 +54,7 @@ class AstilleroCotizaServicioType extends AbstractType
                 'label' => ' ',
                 'placeholder' => 'Seleccionar...',
                 'attr' => ['class' => 'select-busca-producto'],
-                'required'=>false,
+                'required' => false,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('p')
                         ->orderBy('p.nombre', 'ASC');

@@ -1,4 +1,8 @@
 {% extends 'estructura/plantilla.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+{% endblock %}
 {% block contwrapper %}
 <div class="content-wrapper">
     <section class="content">
@@ -12,7 +16,7 @@
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-sm-10">
+                    <div class="col-sm-9">
                         <table class="table table-novo">
                             <thead>
                             <tr>
@@ -20,16 +24,6 @@
                                 <th></th>
                             </tr>
                             </thead>
-                            <tbody>
-                            {% for trabajo in trabajos %}
-                                <tr>
-                                    <td>{{ trabajo.nombre }}</td>
-                                    <td>
-                                        <a class="btn btn-azul" href="{{ path('proveedor_trabajo_edit', { 'id': trabajo.id }) }}">Editar</a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -43,4 +37,21 @@
         </div>
     </section>
 </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+        (function ($, settings) {
+            $('.table-novo').DataTable({
+                    ...settings,
+                ajax: '{{ path('proveedor_trabajo_index') }}',
+                order: [[0, 'desc']],
+                createdRow: function (row, data) {
+                    let actionsCell = row.cells[1];
+                    actionsCell.innerHTML = `<a href="${data[1]}/editar"><i class="fa fa-pencil" aria-hidden="true"></i></a>`;
+                },
+            });
+        })(jQuery, datatablesSettings);
+    </script>
 {% endblock %}

@@ -33,6 +33,7 @@
             <th>Proveedor</th>
             <th>Producto</th>
             <th>Unidad</th>
+            <th>Código</th>
             <th>Cantidad</th>
             <th>Precio</th>
             <th>Sub-Total</th>
@@ -52,17 +53,22 @@
                     {% if concepto.marinaServicio %}
                         {{ concepto.marinaServicio }}
                         {% set unidad = concepto.marinaServicio.claveUnidad %}
+                        {% set codigo = '' %}
                     {% elseif concepto.combustibleCatalogo %}
                         {{ concepto.combustibleCatalogo }}
                         {% set unidad = concepto.combustibleCatalogo.claveUnidad %}
+                        {% set codigo = '' %}
                     {% elseif concepto.astilleroProducto %}
                         {{ concepto.astilleroProducto }}
                         {% set unidad = concepto.astilleroProducto.claveUnidad %}
+                        {% set codigo = concepto.astilleroProducto.identificador %}
                     {% elseif concepto.tiendaProducto %}
                         {{ concepto.tiendaProducto }}
                         {% set unidad = concepto.tiendaProducto.claveUnidad %}
+                        {% set codigo = '' %}
                     {% else %}
                         {% set unidad = '' %}
+                        {% set codigo = '' %}
                     {% endif %}
                 </td>
                 <td>
@@ -70,6 +76,7 @@
                         {{ unidad.nombre }}
                     {% endif %}
                 </td>
+                <td>{{ codigo }}</td>
                 <td>{{ concepto.cantidad|number_format(2) }}</td>
                 <td>${{ (concepto.precio/100)|number_format(2) }} <small>MXN</small></td>
                 <td>${{ (concepto.subtotal/100)|number_format(2) }} <small>MXN</small></td>
