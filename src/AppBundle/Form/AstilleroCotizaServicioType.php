@@ -51,8 +51,12 @@ class AstilleroCotizaServicioType extends AbstractType
             ])
             ->add('producto',EntityType::class,[
                 'class' => 'AppBundle:Astillero\Producto',
-                'label' => ' ',
+                'label' => false,
                 'placeholder' => 'Seleccionar...',
+                'choice_label' => function (Producto $producto) {
+                    $existencia = $producto->getExistencia() ?? '0';
+                    return "{$producto->getNombre()} [Existencia: {$existencia}]";
+                },
                 'attr' => ['class' => 'select-busca-producto'],
                 'required' => false,
                 'query_builder' => function (EntityRepository $er) {

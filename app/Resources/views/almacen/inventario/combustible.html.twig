@@ -6,9 +6,11 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         {{ title }}
+                        {% if is_granted('ROLE_INVENTARIO_MODIFICAR') %}
                         <a href="{{ path('almacen_modificacion_new', {e: empresa.id}) }}" class="pull-right btn btn-azul" style="color: #fff">
                             Modificar Inventario
                         </a>
+                        {% endif %}
                     </h3>
                 </div>
                 <div class="panel-body">

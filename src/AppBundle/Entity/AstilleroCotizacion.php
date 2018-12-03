@@ -13,7 +13,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="astillero_cotizacion")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AstilleroCotizacionRepository")
- * @ORM\EntityListeners({"AppBundle\Entity\AstilleroCotizacionListener"})
  */
 class AstilleroCotizacion
 {

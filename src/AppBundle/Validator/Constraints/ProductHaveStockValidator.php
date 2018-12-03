@@ -8,8 +8,6 @@
 namespace AppBundle\Validator\Constraints;
 
 
-use AppBundle\Entity\Tienda\Inventario\Registro;
-use AppBundle\Entity\Tienda\Inventario\Registro\Entrada;
 use AppBundle\Entity\Tienda\Venta\Concepto;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraint;

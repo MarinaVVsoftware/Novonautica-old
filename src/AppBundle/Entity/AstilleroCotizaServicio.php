@@ -4,14 +4,12 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use AppBundle\Validator\Constraints as NovoAssert;
 
 /**
  * AstilleroCotizaServicio
  *
  * @ORM\Table(name="astillero_cotiza_servicio")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AstilleroCotizaServicioRepository")
- * @NovoAssert\ProductHaveStock
  */
 class AstilleroCotizaServicio
 {

@@ -4,12 +4,14 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * OrdenDeTrabajo
  *
  * @ORM\Table(name="orden_de_trabajo")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\OrdenDeTrabajoRepository")
+ * @ORM\EntityListeners({"OrdenDeTrabajoListener"})
  */
 class OrdenDeTrabajo
 {
@@ -96,6 +98,7 @@ class OrdenDeTrabajo
     private $astilleroCotizacion;
 
     /**
+     * @Assert\Valid()
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Astillero\Contratista", mappedBy="astilleroODT", cascade={"persist"})
      */
     private $contratistas;

@@ -441,9 +441,9 @@ function astilleroBuscaProducto(idproducto,fila){
         url: url,
         dataType: 'json',
         success: function(datos) {
-          throwAlert(`El producto "${datos.nombre}" tiene ${datos.existencia || '0'} existencía${datos.existencia > 1 ? 's' : ''} en el inventario`, 'info');
-
-            fila.children('.valorprecio').html('$ '+parseFloat((datos.precio)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>');
+            fila.children('.valorprecio').html(
+                '$ '+parseFloat((datos.precio)/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' <small>MXN</small>'
+            );
             fila.children('.valorprecio').data('valor',((datos.precio)/100));
             calculaSubtotalesAstillero(fila);
         }
@@ -625,6 +625,7 @@ function coleccionContratistaODT(e,objeto,descripcion,cantidad,total,tipoelement
 
     if (element.producto) {
       proveedorLabel.innerText = 'Proveedor';
+      newLi[0].children[1].children[0].children[1].value = element.producto.id;
     }
 
     for (let childOption of proveedorSelect.children) {
