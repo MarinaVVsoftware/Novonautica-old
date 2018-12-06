@@ -83,7 +83,7 @@
                                             <th>Pago</th>
                                             <th>Fecha de pago</th>
                                             <th>Valor del dolar</th>
-                                            <th>Factura</th>
+                                            {#<th>Factura</th>#}
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -95,7 +95,7 @@
                                      {% endfilter %}
                                      ">
                                         {% for i, pagoField in form.pagos %}
-                                            {% set factura = astilleroCotizacion.pagos[i].factura %}
+                                            {#{% set factura = astilleroCotizacion.pagos[i].factura %}#}
                                             {% form_theme pagoField 'marinahumeda/cotizacion/pago/coleccion-pago.twig' %}
                                             <tr class="pago-agregado">
                                                 <td>{{ form_widget(pagoField.metodopago) }}</td>
@@ -103,7 +103,7 @@
                                                 <td>{{ form_widget(pagoField.cantidad) }} </td>
                                                 <td>{{ form_widget(pagoField.fecharealpago) }} </td>
                                                 <td>{{ form_widget(pagoField.dolar) }}</td>
-                                                <td style="vertical-align: middle">
+                                                {#<td style="vertical-align: middle">
                                                     {% if astilleroCotizacion.pagos[i].factura %}
                                                         <a href="{{ path('contabilidad_factura_pdf', { 'id': factura.id }) }}"
                                                            target="_blank"
@@ -113,7 +113,7 @@
                                                             PDF
                                                         </a>
                                                     {% endif %}
-                                                </td>
+                                                </td>#}
                                                 <td style="vertical-align: middle">
                                                     <a href="#" class="remove-pago btn btn-xs btn-naranja">
                                                         <i class="fa fa-times" aria-hidden="true"></i>
