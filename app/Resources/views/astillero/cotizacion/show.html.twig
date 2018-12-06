@@ -614,13 +614,13 @@
                                             <th>Fecha</th>
                                             <th>Tipo de cambio</th>
                                             <th>Total en USD</th>
-                                            <th>Factura</th>
+                                            {#<th>Factura</th>#}
                                         </tr>
                                         </thead>
                                         <tbody>
                                         {% set totUSD = 0 %}
                                         {% for pago in astilleroCotizacion.pagos %}
-                                            {% set factura = pago.factura %}
+                                            {#{% set factura = pago.factura %}#}
                                             <tr>
                                                 <td>{{ pago.metodopago }}</td>
                                                 <td>$ {{ (pago.cantidad/100)|number_format(2) }} MXN</td>
@@ -629,7 +629,7 @@
                                                     {% endif %}</td>
                                                 <td>$ {{ (pago.dolar/100)|number_format(2) }} MXN</td>
                                                 <td>$ {{ (pago.cantidad / pago.dolar)|number_format(2) }} USD</td>
-                                                <td>
+                                                {#<td>
                                                     {% if factura %}
                                                         <a href="{{ path('contabilidad_factura_pdf', { 'id': factura.id }) }}"
                                                            target="_blank"
@@ -639,7 +639,7 @@
                                                             PDF
                                                         </a>
                                                     {% endif %}
-                                                </td>
+                                                </td>#}
                                             </tr>
                                             {% set totUSD = totUSD + (pago.cantidad / pago.dolar)  %}
                                         {% endfor %}
