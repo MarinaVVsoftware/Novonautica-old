@@ -143,7 +143,7 @@
               ${(validacion === 1 || aceptacion === 1) && item.estatus ? `<li><a class="${btnClass}naranja" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/recotizar' }}">Recotizar</a></li>` : ''}
               {% endif %}
               {% if is_granted('ROLE_MARINA_PAGO') %}
-              ${(aceptacion === 2 && pago !== 2) ? `<li><a class="${btnClass}verde" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/pago' }}">Pagos</a></li>` : ''}
+              ${(aceptacion === 2) ? `<li><a class="${btnClass}verde" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/pago' }}">Pagos</a></li>` : ''}
               {% endif %}
               {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_CREATE") or (user.isAdmin())')) %}
                         ${item.borrador == 1 ? `<li><a class="${btnClass}azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/editar' }}">Editar</a></li>` : ''}
