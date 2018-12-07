@@ -126,7 +126,7 @@
               ${(aceptacion === 2) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.requestUri ~ '../estadia/${item.id}/renovar' }}">Renovar</a></li>` : ''}
               {% endif %}
               {% if is_granted('ROLE_MARINA_PAGO') %}
-              ${(aceptacion === 2 && pago !== 2) ? `<li><a class="btn btn-xs btn-block btn-verde" href="{{ app.request.requestUri ~ '../${item.id}/pago' }}">Pagos</a></li>` : ''}
+              ${(aceptacion === 2) ? `<li><a class="btn btn-xs btn-block btn-verde" href="{{ app.request.requestUri ~ '../${item.id}/pago' }}">Pagos</a></li>` : ''}
               {% endif %}
               {% if is_granted(expression('has_role("MARINA_COTIZACION_MORATORIA") or (user.isAdmin())')) %}
               ${(aceptacion === 2) ? `<li><a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.requestUri ~ '../${item.id}/moratoria' }}">Moratoria</a></li>` : ''}
