@@ -491,6 +491,47 @@
             {% endif %}
             <!-- END TIENDA -->
 
+            <!-- START JRFMARINE -->
+            {% if is_granted('ROLE_JRF') %}
+            <li class="treeview {{ path.check('jrfmarine_') }}">
+                <a href="#">
+                    <i class="fa fa-tags"></i> <span>JRF Marine</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    {% if is_granted('ROLE_JRF_PRODUCTO') %}
+                        <li class="{{ path.check('jrfmarine_productos_index') }}">
+                            <a href="{{ path('jrfmarine_productos_index') }}">
+                                <i class="fa fa-circle-o"></i> Productos
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_JRF_MARCA') %}
+                    <li class="{{ path.check('jrfmarine_marcas_index') }}">
+                        <a href="{{ path('jrfmarine_marcas_index') }}">
+                            <i class="fa fa-circle-o"></i> Marcas
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_JRF_CATEGORIA') %}
+                    <li class="{{ path.check('jrfmarine_categorias_index') }}">
+                        <a href="{{ path('jrfmarine_categorias_index') }}">
+                            <i class="fa fa-circle-o"></i> Categorias
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_JRF_SUBCATEGORIA') %}
+                    <li class="{{ path.check('jrfmarine_subcategorias_index') }}">
+                        <a href="{{ path('jrfmarine_subcategorias_index') }}">
+                            <i class="fa fa-circle-o"></i> Subcategorias
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </li>
+            {% endif %}
+            <!-- END JRFMARINE -->
+
             <!-- START CONTABILIDAD -->
             {% if is_granted('ROLE_CONTABILIDAD') %}
                 <li class="treeview {{ path.check('contabilidad_') }} {{ path.check('ordendetrabajo_contratista_pago') }}">
@@ -709,6 +750,11 @@
                                     <li class="{{ path.check('almacen_inventario-tienda') }}">
                                         <a href="{{ path('almacen_inventario-tienda') }}">
                                             <i class="fa fa-minus"></i> <span>V&V Store</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ path.check('almacen_inventario-jrf') }}">
+                                        <a href="{{ path('almacen_inventario-jrf') }}">
+                                            <i class="fa fa-minus"></i> <span>JRF Marine</span>
                                         </a>
                                     </li>
                                 </ul>

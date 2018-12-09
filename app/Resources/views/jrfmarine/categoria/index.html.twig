@@ -1,0 +1,182 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        .autocomplete-suggestions {
+            background: #3e4766;
+            overflow: auto;
+            width: auto !important;
+            min-width: 100px;
+            max-width: 300px;
+        }
+
+        .autocomplete-suggestion {
+            padding: 2px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+
+        }
+
+        .autocomplete-selected {
+            background: #0097f6;
+        }
+
+        .autocomplete-suggestions strong {
+            font-weight: normal;
+            color: #3399FF;
+        }
+
+        .autocomplete-suggestion:hover strong {
+            color: #363c52;
+        }
+
+        .autocomplete-group {
+            padding: 2px 5px;
+        }
+
+        .autocomplete-group strong {
+            display: block;
+            border-bottom: 1px solid #000;
+        }
+
+        .list-unstyled li {
+            margin-bottom: .5rem;
+        }
+
+        .percent-input + .input-group-addon {
+            border-radius: 0 17px 17px 0 !important;
+        }
+    </style>
+{% endblock %}
+
+{% set canCreate = true %}
+{#{% set canCreate = is_granted(expression('has_role("TIENDA_PRODUCTO_CREATE") or (user.isAdmin())')) %}#}
+
+{#{% if is_granted(expression('has_role("TIENDA_PRODUCTO_CREATE") or (user.isAdmin())')) %}#}
+    {#{% set canCreate = true %}#}
+{#{% endif %}#}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            {#<div class="row">
+                <div class="col-xs-12">
+                    {% for message in app.flashes('notice') %}
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×
+                            </button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>#}
+            <div class="row">
+
+                {% if canCreate %}
+                    <div class="col-md-4">
+                        <div class="panel panel-novo">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    {{ categoria.id is null ? 'Nueva categoria' : 'Editar: ' ~ categoria.nombre }}
+                                </h3>
+                            </div>
+                            <div class="panel-body" style="min-height: initial">
+                                {{ form_start(form) }}
+
+                                {{ form_row(form.nombre) }}
+                                {{ form_row(form.imagenFile) }}
+
+                                {% if categoria.id is not null %}
+                                    <a href="{{ path('jrfmarine_categorias_index') }}"
+                                       class="btn btn-naranja">Cancelar</a>
+                                {% endif %}
+
+                                <button type="submit" class="btn btn-azul pull-right">
+                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                    Guardar
+                                </button>
+
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="col-md-{{ canCreate == true ? '8' : '12' }}">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Listado de categorias</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive scroll-novo">
+                                <table class="table table-novo text-center">
+                                    <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Imagen</th>
+                                        {#{% if canCreate %}#}
+                                        <th width="10%">Acciones</th>
+                                        {#{% endif %}#}
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/jquery.autocomplete.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, dtSettings) {
+
+        $('.table-novo').DataTable({
+          ...dtSettings,
+          ajax: 'data',
+          order: [[0, 'asc']],
+          columns: [
+            {responsivePriority: 0},
+            {responsivePriority: 1},
+            {responsivePriority: 0},
+          ],
+          createdRow: function (row, categoria) {
+            let imgSource = categoria[1]
+                ? `{{ asset('uploads/jrf/categoria/') }}/${categoria[1]}`
+                : "{{ asset('img/image-not-found.jpg') }}";
+
+            row.cells[1].innerHTML = `
+                  <a href="${imgSource}" target="_blank">
+                   <img src="${imgSource}" width="50px">
+                  </a>
+                  `;
+
+              {% if canCreate %}
+            row.cells[2].innerHTML = `
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="?categoria=${categoria[2]}" class="btn btn-xs btn-block btn-azul">
+                            Editar
+                            </a>
+                        </li>
+                        <li>
+                            <a href="../subcategorias?categoria=${categoria[2]}" class="btn btn-xs btn-block btn-morado">
+                            Subcategorias
+                            </a>
+                        </li>
+                    </ul>
+                    `;
+              {% endif %}
+          },
+        });
+
+      })(jQuery, datatablesSettings);
+    </script>
+{% endblock %}

@@ -119,6 +119,10 @@
                                                 {{ concepto.tiendaProducto }}
                                                 {% set unidad = concepto.tiendaProducto.claveUnidad %}
                                                 {% set codigo = '' %}
+                                            {% elseif concepto.jrfProducto %}
+                                                {{ concepto.jrfProducto.nombre }}
+                                                {% set unidad = concepto.jrfProducto.claveUnidad %}
+                                                {% set codigo = '' %}
                                             {% else %}
                                                 {% set unidad = '' %}
                                                 {% set codigo = '' %}

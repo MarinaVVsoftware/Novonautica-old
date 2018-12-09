@@ -110,6 +110,13 @@ class UsuarioType extends AbstractType
                     'Gerente de punto de venta' => 'ROLE_ADMIN_POV',
                     'Punto de venta' => 'ROLE_TIENDA_POV',
                 ],
+                'JRF Marine' => [
+                    'Acceso' => 'ROLE_JRF',
+                    'Productos' => 'ROLE_JRF_PRODUCTO',
+                    'Marcas' => 'ROLE_JRF_MARCA',
+                    'Categorias' => 'ROLE_JRF_CATEGORIA',
+                    'Subcategorias' => 'ROLE_JRF_SUBCATEGORIA',
+                ],
                 'Contabilidad' => $this->getContabilidadRoles(),
                 'Proveedores' =>[
                     'Acceso' => 'ROLE_PROVEEDOR',

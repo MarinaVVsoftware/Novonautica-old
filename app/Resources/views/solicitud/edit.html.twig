@@ -2,7 +2,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        .p-0{
+        .p-0 {
             padding: 0 !important;
         }
     </style>
@@ -63,7 +63,8 @@
                                     <th width="10%">Producto</th>
                                 </tr>
                                 </thead>
-                                <tbody id="conceptos" data-prototype="{{ form_widget(form.conceptos.vars.prototype)|e('html_attr') }}">
+                                <tbody id="conceptos"
+                                       data-prototype="{{ form_widget(form.conceptos.vars.prototype)|e('html_attr') }}">
                                 {% for concepto in form.conceptos %}
                                     <tr class="servicio-agregado table-item">
                                         <td valign="middle" class="text-center">
@@ -87,6 +88,10 @@
                                         <td class="p-0 {% if concepto.tiendaProducto.vars.value is empty %}hide{% endif %}">
                                             {{ form_widget(concepto.tiendaProducto) }}
                                             {{ form_errors(concepto.tiendaProducto) }}
+                                        </td>
+                                        <td class="p-0 {% if concepto.jrfProducto.vars.value is empty %}hide{% endif %}">
+                                            {{ form_widget(concepto.jrfProducto) }}
+                                            {{ form_errors(concepto.jrfProducto) }}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -134,8 +139,8 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        (($) => {
-            const body = document.querySelector('body');
+      (($) => {
+        const body = document.querySelector('body');
         const solicitudForm = document.querySelector('form[name="appbundle_solicitud"]');
         const SubmitButton = document.getElementById('submit-btn');
         const AddButton = document.getElementById('add');
@@ -148,95 +153,98 @@
         /**
          * Crea una fila en la tabla de entradas con un boton que la remueve
          */
-        function createRow()
-        {
-            let prototipo = EntradasHolder.dataset.prototype.replace(/__name__/g, counter);
-            let tempTable = document.createElement('table');
-            tempTable.innerHTML = prototipo;
-            let row = tempTable.querySelector('tr');
-            muestraListado(row);
-            addRowListeners(row);
-            addRowRemove(row);
-            EntradasHolder.appendChild(row);
-            counter++;
-            return row;
+        function createRow() {
+          let prototipo = EntradasHolder.dataset.prototype.replace(/__name__/g, counter);
+          let tempTable = document.createElement('table');
+          tempTable.innerHTML = prototipo;
+          let row = tempTable.querySelector('tr');
+          muestraListado(row);
+          addRowListeners(row);
+          addRowRemove(row);
+          EntradasHolder.appendChild(row);
+          counter++;
+          return row;
         }
-        function muestraListado(row){
-            let empresaActual = Number(SelectEmpresa.value);
-            switch (empresaActual){
-                case 3: //Empresa Marina
-                    row.cells[2].className = '';
-                    break;
-                case 4: //Empresa Combustible
-                    row.cells[3].className = '';
-                    break;
-                case 5: //Empresa Astillero
-                    row.cells[4].className = '';
-                    break;
-                case 7: //V&V Store (tienda)
-                    row.cells[5].className = '';
-                    break;
-            }
+
+        function muestraListado(row) {
+          let empresaActual = Number(SelectEmpresa.value);
+          switch (empresaActual) {
+            case 2: //Empresa JRF
+              row.cells[6].className = '';
+              break;
+            case 3: //Empresa Marina
+              row.cells[2].className = '';
+              break;
+            case 4: //Empresa Combustible
+              row.cells[3].className = '';
+              break;
+            case 5: //Empresa Astillero
+              row.cells[4].className = '';
+              break;
+            case 7: //V&V Store (tienda)
+              row.cells[5].className = '';
+              break;
+          }
         }
 
         /**
          * Agrega un boton para remover su propia row
          */
         function addRowRemove(row) {
-            let celda = row.cells[0];
-            let removeButton = document.createElement('a');
+          let celda = row.cells[0];
+          let removeButton = document.createElement('a');
 
-            removeButton.className = 'badge btn-xs btn-naranja';
-            removeButton.innerHTML = '<i class="fa fa-times"></i>';
-            removeButton.addEventListener('click', (event) => {
-                event.preventDefault();
+          removeButton.className = 'badge btn-xs btn-naranja';
+          removeButton.innerHTML = '<i class="fa fa-times"></i>';
+          removeButton.addEventListener('click', (event) => {
+            event.preventDefault();
             event.stopPropagation();
             removeButton.parentNode.parentNode.remove(removeButton);
-        });
+          });
 
-            celda.appendChild(removeButton);
+          celda.appendChild(removeButton);
         }
 
-        function addRowListeners(row){
-            row.cells[1].querySelector('input').onkeypress = function(ev){
-                return esNumeroDecimal(ev,this);
-            };
+        function addRowListeners(row) {
+          row.cells[1].querySelector('input').onkeypress = function (ev) {
+            return esNumeroDecimal(ev, this);
+          };
         }
 
 
         AddButton.addEventListener('click', (event) => {
-            event.preventDefault();
-        event.stopPropagation();
-        if(Number(SelectEmpresa.value) !== 0){
+          event.preventDefault();
+          event.stopPropagation();
+          if (Number(SelectEmpresa.value) !== 0) {
             $(createRow().cells[1].querySelector('select')); //.select2('open');
-        }
+          }
         });
 
         SubmitButton
             .addEventListener('click', (event) => {
-            event.preventDefault();
-        event.stopPropagation();
+              event.preventDefault();
+              event.stopPropagation();
 
-        $('<input type="submit" class="hidden">')
-            .appendTo(solicitudForm)
-            .click()
-            .remove();
-        if (solicitudForm.checkValidity()) {
-            solicitudForm.submit();
-        }
-        });
+              $('<input type="submit" class="hidden">')
+                  .appendTo(solicitudForm)
+                  .click()
+                  .remove();
+              if (solicitudForm.checkValidity()) {
+                solicitudForm.submit();
+              }
+            });
 
         EntradasHolder
             .querySelectorAll('tr')
             .forEach((row) => {
-            addRowListeners(row);
-        addRowRemove(row);
+              addRowListeners(row);
+              addRowRemove(row);
+            });
+
+        SelectEmpresa.addEventListener('change', function (ev) {
+          EntradasHolder.querySelectorAll('tr').forEach(fila => fila.remove());
         });
 
-        SelectEmpresa.addEventListener('change',function (ev) {
-            EntradasHolder.querySelectorAll('tr').forEach(fila => fila.remove());
-        });
-
-        })(jQuery);
+      })(jQuery);
     </script>
 {% endblock %}

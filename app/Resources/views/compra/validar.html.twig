@@ -93,6 +93,9 @@
                                                     - {{ concepto.tiendaProducto.claveUnidad.nombre }}
                                                 {% endif %}
                                             {% endif %}
+                                            {% if concepto.jrfProducto %}
+                                                {{ concepto.jrfProducto.nombre }}
+                                            {% endif %}
                                         </td>
                                         <td class="p-0">
                                             {{ concepto.proveedor }}

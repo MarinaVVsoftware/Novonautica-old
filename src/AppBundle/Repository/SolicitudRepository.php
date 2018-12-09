@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Solicitud\Concepto;
+
 /**
  * SolicitudRepository
  *
@@ -27,6 +29,7 @@ class SolicitudRepository extends \Doctrine\ORM\EntityRepository
 
     public function seleccionaObjetoProducto($concepto){
         $producto = null;
+
         if ($concepto->getMarinaServicio()) {
             $producto = $concepto->getMarinaServicio();
         } elseif ($concepto->getCombustibleCatalogo()) {
@@ -35,6 +38,8 @@ class SolicitudRepository extends \Doctrine\ORM\EntityRepository
             $producto = $concepto->getAstilleroProducto();
         } elseif ($concepto->getTiendaProducto()) {
             $producto = $concepto->getTiendaProducto();
+        } elseif ($concepto->getJrfProducto()) {
+            $producto = $concepto->getJrfProducto();
         }
         return $producto;
     }
