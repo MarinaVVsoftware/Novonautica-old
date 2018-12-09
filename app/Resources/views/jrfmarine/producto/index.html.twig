@@ -1,0 +1,222 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        .autocomplete-suggestions {
+            background: #3e4766;
+            overflow: auto;
+            width: auto !important;
+            min-width: 100px;
+            max-width: 300px;
+        }
+
+        .autocomplete-suggestion {
+            padding: 2px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+
+        }
+
+        .autocomplete-selected {
+            background: #0097f6;
+        }
+
+        .autocomplete-suggestions strong {
+            font-weight: normal;
+            color: #3399FF;
+        }
+
+        .autocomplete-suggestion:hover strong {
+            color: #363c52;
+        }
+
+        .autocomplete-group {
+            padding: 2px 5px;
+        }
+
+        .autocomplete-group strong {
+            display: block;
+            border-bottom: 1px solid #000;
+        }
+
+        .list-unstyled li {
+            margin-bottom: .5rem;
+        }
+
+        .percent-input + .input-group-addon {
+            border-radius: 0 17px 17px 0 !important;
+        }
+    </style>
+{% endblock %}
+
+{% set canCreate = true %}
+{#{% set canCreate = is_granted(expression('has_role("TIENDA_PRODUCTO_CREATE") or (user.isAdmin())')) %}#}
+
+{#{% if is_granted(expression('has_role("TIENDA_PRODUCTO_CREATE") or (user.isAdmin())')) %}#}
+    {#{% set canCreate = true %}#}
+{#{% endif %}#}
+
+{% block contwrapper %}
+    <div class="content-wrapper">
+        <section class="content">
+            {#<div class="row">
+                <div class="col-xs-12">
+                    {% for message in app.flashes('notice') %}
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×
+                            </button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>#}
+            <div class="row">
+
+                {% if canCreate %}
+                    <div class="col-md-4">
+                        <div class="panel panel-novo">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    {{ producto.id is null ? 'Nuevo producto' : 'Editar: ' ~ producto.nombre }}
+                                </h3>
+                            </div>
+                            <div class="panel-body" style="min-height: initial">
+                                {{ form_start(form) }}
+                                {{ form_row(form.nombre) }}
+                                {{ form_row(form.precio) }}
+
+                                {{ form_row(form.marca) }}
+                                {{ form_row(form.categoria) }}
+                                {{ form_row(form.subcategoria) }}
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        {{ form_row(form.codigoBarras) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.unidad) }}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{ form_row(form.existencia) }}
+                                    </div>
+                                </div>
+
+                                {{ form_row(form.claveProdServ) }}
+                                {{ form_row(form.claveUnidad) }}
+
+                                {{ form_row(form.imagenFile) }}
+
+                                {% if producto.id is not null %}
+                                    <a href="{{ path('tienda_producto_index') }}"
+                                       class="btn btn-naranja">Cancelar</a>
+                                {% endif %}
+
+                                <button type="submit" class="btn btn-azul pull-right">
+                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                    Guardar
+                                </button>
+
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="col-md-{{ canCreate == true ? '8' : '12' }}">
+                    <div class="panel panel-novo">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Listado de productos</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive scroll-novo">
+                                <table class="table table-novo text-center">
+                                    <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                        <th>Categoria / Subcategoria</th>
+                                        <th>Marca</th>
+                                        <th>Imagen</th>
+                                        <th>Existencia</th>
+                                        {#{% if canCreate %}#}
+                                        <th>Acciones</th>
+                                        {#{% endif %}#}
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/jquery.autocomplete.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, dtSettings) {
+        const baseUrl = '{{ app.request.baseUrl }}';
+        const categoriaSelect = document.getElementById('appbundle_jrfmarine_producto_categoria');
+        const subcategoriaSelect = document.getElementById('appbundle_jrfmarine_producto_subcategoria');
+
+        $('#appbundle_jrfmarine_producto_claveProdServ')
+            .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveunidad'}});
+        $('#appbundle_jrfmarine_producto_claveUnidad')
+            .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveprodserv'}});
+
+        $('.table-novo').DataTable({
+          ...dtSettings,
+          ajax: 'data',
+          order: [[0, 'asc']],
+          columns: [
+            {responsivePriority: 0},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 1},
+            {responsivePriority: 0},
+          ],
+          createdRow: function (row, producto) {
+            let imgSource = producto[4]
+                ? `{{ asset('uploads/jrf/producto/') }}/${producto[4]}`
+                : "{{ asset('img/image-not-found.jpg') }}";
+
+            row.cells[4].innerHTML = `
+                  <a href="${imgSource}" target="_blank">
+                   <img src="${imgSource}" width="50px">
+                  </a>
+                  `;
+
+              {% if canCreate %}
+            row.cells[6].innerHTML = `
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="?producto=${producto[6]}" class="btn btn-xs btn-block btn-azul">
+                            Editar
+                            </a>
+                        </li>
+                    </ul>
+                    `;
+              {% endif %}
+          },
+        });
+
+        categoriaSelect.addEventListener('change', function (event) {
+          subcategoriaSelect.innerHTML = '';
+
+          $.get(`subcategorias/${this.value}`)
+              .done(({results}) => {
+                results.map(subcategoria => subcategoriaSelect.append(new Option(subcategoria.nombre, subcategoria.id)))
+              })
+        });
+
+      })(jQuery, datatablesSettings);
+    </script>
+{% endblock %}

@@ -176,6 +176,12 @@ security:
         - { path: ^/tienda/inventario/registro/*, roles: ROLE_TIENDA_REGISTRO }
         - { path: ^/tienda, roles: ROLE_TIENDA }
 
+        - { path: ^/jrfmarine, roles: ROLE_JRF }
+        - { path: ^/jrfmarine/productos, roles: ROLE_JRF_PRODUCTO }
+        - { path: ^/jrfmarine/marcas, roles: ROLE_JRF_MARCA }
+        - { path: ^/jrfmarine/categorias, roles: ROLE_JRF_CATEGORIA }
+        - { path: ^/jrfmarine/subcategorias, roles: ROLE_JRF_SUBCATEGORIA }
+
         - { path: ^/contabilidad/facturacion/emisor/, roles: ROLE_CONTABILIDAD_EMISOR }
         - { path: ^/contabilidad/egreso, roles: ROLE_CONTABILIDAD_EGRESO }
         - { path: ^/contabilidad, roles: ROLE_CONTABILIDAD }
@@ -245,6 +251,12 @@ security:
             - ROLE_ADMIN_POV
             - ROLE_TIENDA_INVENTARIO
             - ROLE_TIENDA_REGISTRO
+        ROLE_WHOLE_JRF:
+            - ROLE_JRF
+            - ROLE_JRF_PRODUCTO
+            - ROLE_JRF_MARCA
+            - ROLE_JRF_CATEGORIA
+            - ROLE_JRF_SUBCATEGORIA
         ROLE_WHOLE_CONTABILIDAD:
             - ROLE_CONTABILIDAD
             - ROLE_CONTABILIDAD_EMISOR
@@ -268,6 +280,7 @@ security:
             - ROLE_WHOLE_REPORTE
             - ROLE_WHOLE_EMBARCACION
             - ROLE_WHOLE_TIENDA
+            - ROLE_WHOLE_JRF
             - ROLE_WHOLE_CONTABILIDAD
             - ROLE_WHOLE_CORREO
             - ROLE_RH

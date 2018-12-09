@@ -116,3 +116,19 @@ vich_uploader:
         tienda_producto_imagen:
             uri_prefix: /uploads/tienda/producto/imagenes
             upload_destination: '%kernel.root_dir%/../web/uploads/tienda/producto/imagenes'
+        jrf_producto_imagen:
+            uri_prefix: /uploads/jrf/producto
+            upload_destination: '%kernel.root_dir%/../web/uploads/jrf/producto'
+            namer: vich_uploader.namer_origname
+        jrf_producto_marca:
+            uri_prefix: /uploads/jrf/marca
+            upload_destination: '%kernel.root_dir%/../web/uploads/jrf/marca'
+            namer: vich_uploader.namer_origname
+        jrf_producto_categoria:
+            uri_prefix: /uploads/jrf/categoria
+            upload_destination: '%kernel.root_dir%/../web/uploads/jrf/categoria'
+            namer: vich_uploader.namer_origname
+        jrf_producto_subcategoria:
+            uri_prefix: /uploads/jrf/subcategoria
+            upload_destination: '%kernel.root_dir%/../web/uploads/jrf/subcategoria'
+            namer: vich_uploader.namer_origname
