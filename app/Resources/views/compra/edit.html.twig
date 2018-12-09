@@ -95,6 +95,9 @@
                                                     - {{ concepto.tiendaProducto.vars.data.claveUnidad.nombre }}
                                                 {% endif %}
                                             {% endif %}
+                                            {% if concepto.jrfProducto.vars.value %}
+                                                {{ concepto.jrfProducto.vars.data.nombre }}
+                                            {% endif %}
                                         </td>
                                         <td class="p-0">
                                             {{ form_widget(concepto.proveedor) }}
@@ -131,6 +134,10 @@
                                         <td class="hide">
                                             {{ form_widget(concepto.tiendaProducto) }}
                                             {{ form_errors(concepto.tiendaProducto) }}
+                                        </td>
+                                        <td class="hide">
+                                            {{ form_widget(concepto.jrfProducto) }}
+                                            {{ form_errors(concepto.jrfProducto) }}
                                         </td>
                                     </tr>
                                 {% endfor %}

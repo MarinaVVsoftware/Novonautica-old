@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Solicitud;
 
 
+use AppBundle\Entity\JRFMarine\Producto;
 use AppBundle\Entity\Solicitud;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\Astillero\Proveedor;
@@ -115,6 +116,13 @@ class Concepto
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tienda\Producto")
      */
     private $tiendaProducto;
+
+    /**
+     * @var Producto
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\JRFMarine\Producto")
+     */
+    private $jrfProducto;
 
     /**
      * @var Proveedor
@@ -287,6 +295,26 @@ class Concepto
     public function getTiendaProducto()
     {
         return $this->tiendaProducto;
+    }
+
+    /**
+     * @return Producto
+     */
+    public function getJrfProducto()
+    {
+        return $this->jrfProducto;
+    }
+
+    /**
+     * @param Producto $jrfProducto
+     *
+     * @return Concepto
+     */
+    public function setJrfProducto(Producto $jrfProducto = null)
+    {
+        $this->jrfProducto = $jrfProducto;
+
+        return $this;
     }
 
     /**

@@ -9,6 +9,7 @@
 namespace AppBundle\Form\Solicitud;
 
 
+use AppBundle\Entity\JRFMarine\Producto;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -54,6 +55,12 @@ class ConceptoType extends AbstractType
                 'choice_label' => function ($concepto) {
                     return $concepto.' - '.$concepto->getClaveUnidad();
                 }
+            ])
+            ->add('jrfProducto',EntityType::class,[
+                'class' => Producto::class,
+                'placeholder' => 'Seleccionar...',
+                'required' => false,
+                'choice_label' => 'nombre'
             ]);
     }
 

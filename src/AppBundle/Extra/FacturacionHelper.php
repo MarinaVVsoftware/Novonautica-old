@@ -36,6 +36,9 @@ class FacturacionHelper
     public static function getProductoRepositoryByEmpresa(ObjectManager $manager, $emisor)
     {
         switch ($emisor) {
+            case 2:
+                $repository = $manager->getRepository(\AppBundle\Entity\JRFMarine\Producto::class);
+                break;
             case 3:
                 $repository = $manager->getRepository(MarinaHumedaServicio::class);
                 break;

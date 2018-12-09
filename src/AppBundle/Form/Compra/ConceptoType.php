@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Compra;
 
+use AppBundle\Entity\JRFMarine\Producto;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -56,6 +57,12 @@ class ConceptoType extends AbstractType
                 'choice_label' => function ($concepto) {
                     return $concepto.' - '.$concepto->getClaveUnidad();
                 }
+            ])
+            ->add('jrfProducto',EntityType::class,[
+                'class' => Producto::class,
+                'placeholder' => 'Seleccionar...',
+                'required' => false,
+                'choice_label' => 'nombre'
             ])
             ->add('proveedor',EntityType::class,[
                 'class' => 'AppBundle\Entity\Astillero\Proveedor',

@@ -83,13 +83,11 @@
                                 <table class="table table-novo text-center">
                                     <thead>
                                     <tr>
-                                        <th>Categoria</th>
                                         <th>Nombre</th>
-                                        <th>Clave producto</th>
-                                        <th>Clave Unidad</th>
-                                        <th>Unidad</th>
-                                        <th>Precio Público</th>
-                                        <th>Precio Colaborador</th>
+                                        <th>Precio</th>
+                                        <th>Categoria / Subcategoria</th>
+                                        <th>Marca</th>
+                                        <th>Imagen</th>
                                         <th>Existencia</th>
                                     </tr>
                                     </thead>
@@ -111,15 +109,13 @@
         (function ($, dtSettings) {
             $('.table-novo').DataTable({
                     ...dtSettings,
-                ajax: '{{ path('almacen_inventario-tienda') }}',
+                ajax: '{{ path('almacen_inventario-jrf') }}',
                 order: [[0, 'asc']],
                 columns: [
                 {responsivePriority: 0},
                 {responsivePriority: 1},
                 {responsivePriority: 1},
                 {responsivePriority: 1},
-                {responsivePriority: 0},
-                {responsivePriority: 0},
                 {responsivePriority: 0},
                 {responsivePriority: 0},
             ],

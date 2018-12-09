@@ -187,7 +187,41 @@ class AlmacenController extends Controller
             'almacen/inventario/tienda.html.twig',
             [
                 'title' => 'Inventario V&V Store',
-                'empresa' =>  $empresa,
+                'empresa' => $empresa,
+            ]
+        );
+    }
+
+    /**
+     * @Route("/inventario/jrf", name="almacen_inventario-jrf")
+     * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
+     */
+    public function inventarioJRFAction(Request $request, DataTablesInterface $dataTables)
+    {
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $results = $dataTables->handle($request, 'jrfmarine/productos');
+
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getStatusCode());
+            }
+        }
+
+        $empresa = $this->getDoctrine()->getManager()
+            ->getRepository(Emisor::class)
+            ->getEmisorLike('JRF Marine');
+
+        return $this->render(
+            'almacen/inventario/jrf.html.twig',
+            [
+                'title' => 'Inventario JRF Marine',
+                'empresa' => $empresa,
             ]
         );
     }
@@ -198,61 +232,78 @@ class AlmacenController extends Controller
      * @param Request $request
      * @param Solicitud $solicitud
      * @param \Swift_Mailer $mailer
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function validarAction(Request $request, Solicitud $solicitud, \Swift_Mailer $mailer)
     {
         $em = $this->getDoctrine()->getManager();
-        $this->denyAccessUnlessGranted('ALMACEN_VALIDAR',$solicitud);
+        $this->denyAccessUnlessGranted('ALMACEN_VALIDAR', $solicitud);
 
-        if($solicitud->getValidadoCompra() === false || $solicitud->getValidadoAlmacen()){ throw new NotFoundHttpException(); }
+        if ($solicitud->getValidadoCompra() === false || $solicitud->getValidadoAlmacen()) {
+            throw new NotFoundHttpException();
+        }
 
         $clonConceptos = new ArrayCollection();
-        foreach ($solicitud->getConceptos() as $concepto){
+
+        foreach ($solicitud->getConceptos() as $concepto) {
             $clonConceptos->add(clone $concepto);
         }
-        $editForm = $this->createForm('AppBundle\Form\Almacen\ValidarType',$solicitud);
+
+        $editForm = $this->createForm('AppBundle\Form\Almacen\ValidarType', $solicitud);
         $editForm->handleRequest($request);
-        if($editForm->isSubmitted() && $editForm->isValid()){
-            foreach ($solicitud->getConceptos() as $concepto){
-                foreach ($clonConceptos as $clonConcepto){
-                    if($concepto->getId() === $clonConcepto->getId()){
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            foreach ($solicitud->getConceptos() as $concepto) {
+
+                foreach ($clonConceptos as $clonConcepto) {
+
+                    if ($concepto->getId() === $clonConcepto->getId()) {
                         //Sí es un concepto validado actualmente y antes no estaba validado entonces se suman las existencias
-                        if($concepto->getValidadoAlmacen() && $clonConcepto->getValidadoAlmacen() !== true){
-                            $repositorio = FacturacionHelper::getProductoRepositoryByEmpresa($this->getDoctrine()->getManager(),$solicitud->getEmpresa()->getId());
+                        if ($concepto->getValidadoAlmacen() && $clonConcepto->getValidadoAlmacen() !== true) {
+                            $repositorio = FacturacionHelper::getProductoRepositoryByEmpresa($this->getDoctrine()->getManager(),
+                                $solicitud->getEmpresa()->getId());
+
                             $objetoProducto = $em->getRepository('AppBundle:Solicitud')->seleccionaObjetoProducto($concepto);
+
                             $producto = $repositorio->find($objetoProducto);
                             $producto->setExistencia($producto->getExistencia() + $concepto->getCantidad());
+
                             $concepto->setNombreValidoAlmacen($this->getUser()->getNombre());
                             $concepto->setFechaValidoAlmacen(new \DateTime());
 
                         }
                     }
                 }
+
                 $em->persist($concepto);
             }
-            if($solicitud->getValidadoAlmacen()){
+
+            if ($solicitud->getValidadoAlmacen()) {
                 $solicitud->setNombreValidoAlmacen($this->getUser()->getNombre());
                 $solicitud->setFechaValidoAlmacen(new \DateTime());
             }
+
             $em->persist($solicitud);
             $em->flush();
 
             //Buscar correos a notificar
             $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                 'evento' => [Correo\Notificacion::EVENTO_VALIDAR, Correo\Notificacion::EVENTO_ACEPTAR],
-                'tipo' => Correo\Notificacion::TIPO_ALMACEN
+                'tipo' => Correo\Notificacion::TIPO_ALMACEN,
             ]);
 
-            $this->enviaCorreoNotificacion($mailer,$notificables,$solicitud);
-            $this->enviaCorreoNotificacion($mailer,[$solicitud->getCreador()],$solicitud);
+            $this->enviaCorreoNotificacion($mailer, $notificables, $solicitud);
+            $this->enviaCorreoNotificacion($mailer, [$solicitud->getCreador()], $solicitud);
 
-            return $this->redirectToRoute('almacen_show',['id' => $solicitud->getId()]);
+            return $this->redirectToRoute('almacen_show', ['id' => $solicitud->getId()]);
         }
-        return $this->render('almacen/validar.html.twig',[
+
+        return $this->render('almacen/validar.html.twig', [
             'form' => $editForm->createView(),
             'solicitud' => $solicitud,
-            'title' => 'Almacen - Validar'
+            'title' => 'Almacen - Validar',
         ]);
     }
 
@@ -281,7 +332,7 @@ class AlmacenController extends Controller
         $message->setBody(
             $this->renderView('mail/almacen-validar.html.twig', [
                 'notificacion' => $notificables[0],
-                'solicitud' => $solicitud
+                'solicitud' => $solicitud,
             ]),
             'text/html'
         );

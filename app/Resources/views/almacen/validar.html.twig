@@ -165,6 +165,12 @@
                                                     - {{ concepto.vars.value.tiendaProducto.claveUnidad.nombre }}
                                                 {% endif %}
                                             {% endif %}
+                                            {% if concepto.vars.value.jrfProducto %}
+                                                {{ concepto.vars.value.jrfProducto.nombre }}
+                                                {% if concepto.vars.value.jrfProducto.claveUnidad %}
+                                                    - {{ concepto.vars.value.jrfProducto.claveUnidad.nombre }}
+                                                {% endif %}
+                                            {% endif %}
                                         </td>
                                         <td>
                                             {{ concepto.vars.value.proveedor }}
