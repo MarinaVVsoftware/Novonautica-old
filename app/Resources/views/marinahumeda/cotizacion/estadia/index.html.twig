@@ -59,7 +59,7 @@
 
         const $tabla = $('.table-novo').DataTable({
           ...datatableSettings,
-          ajax: '{{ path('marina-humeda_estadia_index') }}',
+          ajax: 'datatables-marina',
           autoWidth: false,
           order: [[0, 'desc']],
           columns: [

@@ -50,18 +50,31 @@ class MarinaHumedaCotizacionController extends Controller
      *
      * @return JsonResponse|Response
      */
-    public function indexEstadiaAction(Request $request, DataTablesInterface $dataTables)
+    public function indexEstadiaAction()
     {
-        if ($request->isXmlHttpRequest()) {
-            try {
-                $results = $dataTables->handle($request, 'cotizacionEstadia');
-                return $this->json($results);
-            } catch (HttpException $e) {
-                return $this->json($e->getMessage(), $e->getStatusCode());
-            }
-        }
-
         return $this->render('marinahumeda/cotizacion/estadia/index.html.twig', ['title' => 'Cotizaciones de Estadias']);
+    }
+
+    /**
+     * Enlista todas las cotizaciones estadias
+     *
+     * @Route("/datatables-marina")
+     * @Method("GET")
+     *
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return JsonResponse|Response
+     */
+    public function indexEstadiaDataAction(Request $request, DataTablesInterface $dataTables)
+    {
+        try {
+            $results = $dataTables->handle($request, 'cotizacionEstadia');
+
+            return $this->json($results);
+        } catch (HttpException $e) {
+            return $this->json($e->getMessage(), $e->getStatusCode());
+        }
     }
 
     /**
