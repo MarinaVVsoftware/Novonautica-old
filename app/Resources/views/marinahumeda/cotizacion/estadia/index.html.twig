@@ -23,8 +23,8 @@
                             <thead>
                             <tr>
                                 <th>Folio</th>
-                                <th class="with-choices">Cliente</th>
-                                <th class="with-choices">Barco</th>
+                                <th>Cliente</th>
+                                <th>Barco</th>
                                 <th>Fecha llegada</th>
                                 <th>Fecha salida</th>
                                 <th>Slip</th>
@@ -59,7 +59,7 @@
 
         const $tabla = $('.table-novo').DataTable({
           ...datatableSettings,
-          ajax: '{{ path('marina-humeda_estadia_index') }}',
+          ajax: 'datatables-marina',
           autoWidth: false,
           order: [[0, 'desc']],
           columns: [
