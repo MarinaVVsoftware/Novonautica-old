@@ -42,7 +42,7 @@ class MarinaHumedaCotizacionController extends Controller
     /**
      * Enlista todas las cotizaciones estadias
      *
-     * @Route("/estadia", name="marina-humeda_estadia_index")
+     * @Route("/estadia/", name="marina-humeda_estadia_index")
      * @Method("GET")
      *
      * @param Request $request
@@ -58,7 +58,7 @@ class MarinaHumedaCotizacionController extends Controller
     /**
      * Enlista todas las cotizaciones estadias
      *
-     * @Route("/datatables-marina")
+     * @Route("/estadia/datatables-marina")
      * @Method("GET")
      *
      * @param Request $request
