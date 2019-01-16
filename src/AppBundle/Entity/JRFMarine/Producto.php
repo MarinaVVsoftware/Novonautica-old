@@ -19,6 +19,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class Producto
 {
+    const DIVISA_MXN = 1;
+    const DIVISA_USD = 2;
+
     /**
      * @var int
      *
@@ -41,6 +44,18 @@ class Producto
      * @ORM\Column(name="precio", type="bigint")
      */
     private $precio;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="divisa", type="smallint")
+     */
+    private $divisa;
+
+    private static $divisaList = [
+      Producto::DIVISA_MXN => 'MXN',
+      Producto::DIVISA_USD => 'USD',
+    ];
 
     /**
      * @var string
@@ -399,4 +414,36 @@ class Producto
     {
         return $this->subcategoria;
     }
+
+    /**
+     * @param int $divisa
+     */
+    public function setDivisa($divisa)
+    {
+        $this->divisa = $divisa;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDivisa()
+    {
+        if (null === $this->divisa) { return null; }
+        return $this->divisa;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDivisaNombre()
+    {
+        if (null === $this->divisa || 0 === $this->divisa) { return null; }
+        return self::$divisaList[$this->divisa];
+    }
+
+    public static function getDivisaList()
+    {
+        return self::$divisaList;
+    }
+
 }

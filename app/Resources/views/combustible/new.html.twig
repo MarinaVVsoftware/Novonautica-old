@@ -427,26 +427,36 @@
                 url: url,
                 dataType: 'json',
                 success: function (barco) {
-                    var cliente = barco.cliente;
+                    let barcoModeloAux = barco.modelo?barco.modelo:'';
+                    let barcoEsloraAux = barco.eslora?barco.eslora:0;
+                    let mangaAux = barco.manga?barco.manga:'';
+                    let nombreCapitanAux = barco.nombreCapitan?barco.nombreCapitan:'';
+                    let telefonoCapitanAux = barco.telefonoCapitan?barco.telefonoCapitan:'';
+                    let correoCapitanAux = barco.correoCapitan?barco.correoCapitan:'';
+                    let cliente = barco.cliente;
+                    let clienteNombreAux = cliente.nombre?cliente.nombre:'';
+                    let clienteCorreoAux = cliente.correo?cliente.correo:'';
+                    let clienteTelefonoAux = cliente.telefono?cliente.telefono:'';
+                    let clienteDireccionAux = cliente.direccion?cliente.direccion:'';
                     var htmlBarco = "<label>Modelo</label>" +
-                        "<div class='info-input'>" + barco.modelo + "</div>" +
+                        "<div class='info-input'>" + barcoModeloAux + "</div>" +
                         "<label>Eslora</label>" +
-                        "<div id='eslora' class='info-input' data-valor='" + barco.eslora + "'>" + barco.eslora + "</div>" +
-                        "<label>Manga</label>" + "<div class='info-input'>" + barco.manga + "</div>" +
+                        "<div id='eslora' class='info-input' data-valor='" + barcoEsloraAux + "'>" + barcoEsloraAux + "</div>" +
+                        "<label>Manga</label>" + "<div class='info-input'>" + mangaAux + "</div>" +
                         "<label>Nombre del capitán</label>" +
-                        "<div class='info-input'>" + barco.nombreCapitan + "</div>" +
+                        "<div class='info-input'>" + nombreCapitanAux + "</div>" +
                         "<label>Teléfono del capitán</label>" +
-                        "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
+                        "<div class='info-input'>" + telefonoCapitanAux + "</div>" +
                         "<label>Correo del capitán</label>" +
-                        "<div class='info-input'>" + barco.correoCapitan + "</div>";
+                        "<div class='info-input'>" + correoCapitanAux + "</div>";
                     var htmlCliente = "<label>Cliente</label>" +
-                        "<div class='info-input'>" + cliente.nombre + "</div>" +
+                        "<div class='info-input'>" + clienteNombreAux + "</div>" +
                         "<label>Correo electrónico</label>" +
-                        "<div class='info-input'>" + cliente.correo + "</div>" +
+                        "<div class='info-input'>" + clienteCorreoAux + "</div>" +
                         "<label>Número de teléfono</label>" +
-                        "<div class='info-input'>" + cliente.telefono + "</div>" +
+                        "<div class='info-input'>" + clienteTelefonoAux + "</div>" +
                         "<label>Dirección</label>" +
-                        "<div class='info-input'>" + cliente.direccion + "</div>";
+                        "<div class='info-input'>" + clienteDireccionAux + "</div>";
                     $("#info-barco").append(htmlBarco);
                     $("#info-cliente").append(htmlCliente);
                     $('#loading').hide();

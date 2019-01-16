@@ -11,6 +11,7 @@ use AppBundle\Entity\JRFMarine\Producto;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -49,10 +50,16 @@ class ProductoType extends AbstractType
             MoneyType::class,
             [
                 'divisor' => 100,
-                'currency' => 'MXN',
+                'currency' => 'USD',
             ]
         );
-
+        $builder->add(
+            'divisa',
+            ChoiceType::class,
+            [
+                'choices' => array_flip(Producto::getDivisaList())
+            ]
+        );
         $builder->add(
             'codigoBarras',
             TextType::class,

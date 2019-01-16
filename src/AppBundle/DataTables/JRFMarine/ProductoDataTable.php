@@ -91,7 +91,7 @@ class ProductoDataTable extends AbstractDataTableHandler
 
             $results->data[] = [
                 $producto->getNombre(),
-                '$'.number_format(($producto->getPrecio() / 100), 2),
+                '$'.number_format(($producto->getPrecio() / 100), 2).' <small>'.($producto->getDivisaNombre()??'').'</small>',
                 $categoria->getNombre().' / '.$subcategoria->getNombre(),
                 $marca->getNombre(),
                 $producto->getImagen(),
