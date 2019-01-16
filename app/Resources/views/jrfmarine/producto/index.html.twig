@@ -48,6 +48,9 @@
         .percent-input + .input-group-addon {
             border-radius: 0 17px 17px 0 !important;
         }
+        .pr-0{
+            padding-right: 0px;
+        }
     </style>
 {% endblock %}
 
@@ -85,8 +88,14 @@
                             <div class="panel-body" style="min-height: initial">
                                 {{ form_start(form) }}
                                 {{ form_row(form.nombre) }}
-                                {{ form_row(form.precio) }}
-
+                                <div class="row">
+                                    <div class="col-sm-8 pr-0">
+                                        {{ form_row(form.precio) }}
+                                    </div>
+                                    <div class="col-sm-4">
+                                        {{ form_row(form.divisa) }}
+                                    </div>
+                                </div>
                                 {{ form_row(form.marca) }}
                                 {{ form_row(form.categoria) }}
                                 {{ form_row(form.subcategoria) }}
