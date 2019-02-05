@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form\Contabilidad;
 
-use AppBundle\Controller\Contabilidad\FacturacionController;
 use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Cliente\RazonSocial;
 use AppBundle\Entity\Contabilidad\Facturacion;
