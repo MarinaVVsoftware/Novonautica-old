@@ -23,7 +23,7 @@
                     {{ form_start(form) }}
                     <div class="row">
                         <div class="col-sm-8">
-                            {{ form_widget(form) }}
+                            {{ form_rest(form) }}
                         </div>
                     </div>
                     <div class="row espacio-linea-arriba2">
@@ -46,10 +46,20 @@
                     {{ form_end(form) }}
 
                 </div>
-                <div class="panel-footer">
-
-                </div>
             </div>
         </section>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      const baseUrl = '{{ app.request.baseUrl }}';
+
+      $('#appbundle_marinahumedatarifa_claveUnidad')
+          .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveunidad'}});
+      $('#appbundle_marinahumedatarifa_claveProdServ')
+          .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveprodserv'}});
+    </script>
+{% endblock %}
+

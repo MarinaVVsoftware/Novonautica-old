@@ -38,11 +38,8 @@ class ProductoType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public
-    function buildForm(
-        FormBuilderInterface $builder,
-        array $options
-    ) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder->add(
             'nombre',
             TextType::class,
@@ -178,10 +175,8 @@ class ProductoType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public
-    function configureOptions(
-        OptionsResolver $resolver
-    ) {
+    public function configureOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefaults([
             'data_class' => Producto::class,
 
@@ -196,10 +191,8 @@ class ProductoType extends AbstractType
         return 'appbundle_tienda_producto';
     }
 
-    private function createClaveUnidadField(
-        FormInterface $form,
-        ClaveUnidad $claveUnidad = null
-    ) {
+    private function createClaveUnidadField(FormInterface $form, ClaveUnidad $claveUnidad = null)
+    {
         $clavesUnidades = null === $claveUnidad ? [] : [$claveUnidad];
 
         $form->add(
@@ -219,10 +212,8 @@ class ProductoType extends AbstractType
         );
     }
 
-    private function createProdServField(
-        FormInterface $form,
-        ClaveProdServ $claveProdServ = null
-    ) {
+    private function createProdServField(FormInterface $form, ClaveProdServ $claveProdServ = null)
+    {
         $claveProdServs = null === $claveProdServ ? [] : [$claveProdServ];
 
         $form->add(
