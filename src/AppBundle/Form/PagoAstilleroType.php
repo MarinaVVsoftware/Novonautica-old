@@ -14,14 +14,34 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class PagoAstilleroType extends AbstractType
 {
+    /**
+     * @var Security
+     */
+    private $security;
+
+    public function __construct(
+        Security $security
+    ) {
+        $this->security = $security;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $dolarAttributes = [
+            'class' => 'esdecimal'
+        ];
+
+        if (!in_array('ROLE_ADMIN', $this->security->getUser()->getRoles())) {
+            $dolarAttributes['readonly'] = 'readonly';
+        }
+
         $builder
             ->add('metodopago',ChoiceType::class,[
                 'choices'  => [
@@ -57,7 +77,7 @@ class PagoAstilleroType extends AbstractType
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
-                'attr' => ['class' => 'esdecimal']
+                'attr' => $dolarAttributes,
             ]);
     }
 

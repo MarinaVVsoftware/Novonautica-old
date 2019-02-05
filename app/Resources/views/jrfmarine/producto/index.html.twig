@@ -48,7 +48,8 @@
         .percent-input + .input-group-addon {
             border-radius: 0 17px 17px 0 !important;
         }
-        .pr-0{
+
+        .pr-0 {
             padding-right: 0px;
         }
     </style>
@@ -174,9 +175,9 @@
         const categoriaSelect = document.getElementById('appbundle_jrfmarine_producto_categoria');
         const subcategoriaSelect = document.getElementById('appbundle_jrfmarine_producto_subcategoria');
 
-        $('#appbundle_jrfmarine_producto_claveProdServ')
-            .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveunidad'}});
         $('#appbundle_jrfmarine_producto_claveUnidad')
+            .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveunidad'}});
+        $('#appbundle_jrfmarine_producto_claveProdServ')
             .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveprodserv'}});
 
         $('.table-novo').DataTable({

@@ -19,7 +19,6 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class MarinaHumedaRegistraPagoType extends AbstractType
 {
-
     /**
      * {@inheritdoc}
      */
@@ -36,6 +35,7 @@ class MarinaHumedaRegistraPagoType extends AbstractType
             ])
         ;
     }
+
     /**
      * {@inheritdoc}
      */

@@ -14,7 +14,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -43,11 +42,11 @@ class PagoType extends AbstractType
                 'html5' => false,
                 'attr' => ['class' => 'datepicker input-calendario', 'readonly' => true],
                 'format' => 'yyyy-MM-dd',
-                'empty_data' => new \DateTime()
+                'empty_data' => new \DateTime(),
             ])
             ->add('forma', ChoiceType::class, [
                 'label' => 'Forma de pago',
-                'choices' => array_flip(Pago::getFormaList())
+                'choices' => array_flip(Pago::getFormaList()),
             ]);
     }
 
@@ -57,7 +56,7 @@ class PagoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Astillero\Contratista\Pago'
+            'data_class' => 'AppBundle\Entity\Astillero\Contratista\Pago',
         ));
     }
 
