@@ -29,7 +29,8 @@ class ProveedorType extends AbstractType
             ])
             ->add('correo')
             ->add('telefono',TextType::class,[
-                'label' => 'Teléfono'
+                'label' => 'Teléfono',
+                'required' => false,
             ])
             ->add('porcentaje',TextType::class,[
                 'attr' => ['class'=>'esdecimal']
@@ -69,7 +70,9 @@ class ProveedorType extends AbstractType
                 'placeholder' => 'Seleccionar...',
                 'constraints' => [new NotNull(['message' => 'Por favor selecciona una empresa'])]
             ]);
-    }/**
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)

@@ -101,12 +101,8 @@ class Proveedor implements UserInterface, \Serializable
 
     /**
      * @var string
-     * @Assert\Length(
-     *      min = 10,
-     *      minMessage = "Error, número de teléfono no válido"
-     * )
      *
-     * @ORM\Column(name="telefono", type="string", length=255)
+     * @ORM\Column(name="telefono", type="string", length=255, nullable=true)
      */
     private $telefono;
 
