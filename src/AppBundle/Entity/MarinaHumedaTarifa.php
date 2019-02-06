@@ -2,8 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
-use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -50,20 +48,6 @@ class MarinaHumedaTarifa
      * @ORM\Column(name="descripcion", type="string", length=255, nullable=true)
      */
     private $descripcion;
-
-    /**
-     * @var ClaveProdServ
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ")
-     */
-    private $claveProdServ;
-
-    /**
-     * @var ClaveUnidad
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
-     */
-    private $claveUnidad;
 
     public function __toString()
     {
@@ -174,45 +158,5 @@ class MarinaHumedaTarifa
     public function getDescripcion()
     {
         return $this->descripcion;
-    }
-
-    /**
-     * Set claveProdServ.
-     *
-     * @param ClaveProdServ|null $claveProdServ
-     */
-    public function setClaveProdServ(ClaveProdServ $claveProdServ = null)
-    {
-        $this->claveProdServ = $claveProdServ;
-    }
-
-    /**
-     * Get claveProdServ.
-     *
-     * @return ClaveProdServ|null
-     */
-    public function getClaveProdServ()
-    {
-        return $this->claveProdServ;
-    }
-
-    /**
-     * Set claveUnidad.
-     *
-     * @param ClaveUnidad|null $claveUnidad
-     */
-    public function setClaveUnidad(ClaveUnidad $claveUnidad = null)
-    {
-        $this->claveUnidad = $claveUnidad;
-    }
-
-    /**
-     * Get claveUnidad.
-     *
-     * @return ClaveUnidad|null
-     */
-    public function getClaveUnidad()
-    {
-        return $this->claveUnidad;
     }
 }

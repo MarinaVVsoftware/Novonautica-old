@@ -20,6 +20,8 @@ class MarinaHumedaCotizaServiciosRepository extends \Doctrine\ORM\EntityReposito
             'concepto.cantidad AS conceptoCantidad, ' .
             'concepto.total AS conceptoImporte, '.
             'cotizacion.dolar AS conceptoDolar, '.
+            'cps.id AS cpsId, cps.descripcion as cpsDescripcion, '.
+            'cu.id AS cuId, cu.nombre AS cuDescripcion, '.
             '(CASE '.
             'WHEN concepto.tipo = 1 THEN \'Estadia\' '.
             'WHEN concepto.tipo = 2 THEN \'Electricidad\' '.
@@ -27,6 +29,9 @@ class MarinaHumedaCotizaServiciosRepository extends \Doctrine\ORM\EntityReposito
             'END) AS conceptoDescripcion '.
             'FROM AppBundle:MarinaHumedaCotizaServicios concepto '.
             'LEFT JOIN concepto.marinahumedacotizacion cotizacion '.
+            'LEFT JOIN AppBundle:Marina\Tarifa\Tipo tipo WITH tipo.tipo = concepto.tipo '.
+            'LEFT JOIN tipo.claveProdServ cps '.
+            'LEFT JOIN tipo.claveUnidad cu '.
             'WHERE IDENTITY(concepto.marinahumedacotizacion) = :id ')
             ->setParameter('id', $id)
             ->getArrayResult();
