@@ -49,15 +49,3 @@
     {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-      const baseUrl = '{{ app.request.baseUrl }}';
-
-      $('#appbundle_marinahumedatarifa_claveUnidad')
-          .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveunidad'}});
-      $('#appbundle_marinahumedatarifa_claveProdServ')
-          .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveprodserv'}});
-    </script>
-{% endblock %}
-
