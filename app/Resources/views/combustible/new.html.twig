@@ -472,18 +472,10 @@
                 url: urlTipo,
                 dataType: 'json',
                 success: function (tipo) {
-                  if (tipo.existencia <= 0) {
-                    throwAlert(`El combustible "${tipo.nombre}" no tiene más stock en el inventario`, 'danger');
-
-                    return;
-                  }
-
                     document.getElementById('combustible_titulo_mxn').innerHTML = 'Abastecimiento de combustible ' + tipo.nombre;
                     precio_venta.value = (tipo.precio / 100);
                     cuotaIesps.value = tipo.cuotaIesps;
                     combustibleCalculaTotales();
-
-                  throwAlert(`El combustible "${tipo.nombre}" tiene ${tipo.existencia} de existencía${tipo.existencia > 1 ? 's' : ''} en el inventario`, 'success');
                 }
             }).always(function () {
                 $('#loading').hide();
