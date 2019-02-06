@@ -1,0 +1,60 @@
+{% extends 'estructura/plantilla.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block appbundle_marina_tarifa_tipo_row %}
+    <div class="row">
+        <div class="col-sm-4">
+            {{ form_row(form.tipo) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_row(form.claveUnidad) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_row(form.claveProdServ) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% form_theme form.tipos _self %}
+
+{% block contwrapper %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-novo">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            Listado de tarifas
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        {{ form_start(form) }}
+                        {{ form_rest(form) }}
+                        <input type="submit" value="Guardar" class="btn btn-azul">
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+      (function ($) {
+        const baseUrl = '{{ app.request.baseUrl }}';
+
+        $('.sat-cu')
+            .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveunidad'}});
+        $('.sat-cps')
+            .select2({ajax: {url: baseUrl + '/contabilidad/claves-sat/select2/claveprodserv'}});
+
+      })(jQuery);
+    </script>
+{% endblock %}
