@@ -1,9 +1,5 @@
 {% extends 'estructura/plantilla.twig' %}
-
-{% block title %}
-    Novonautiva | Nueva Tarifa Marina Humeda
-{% endblock %}
-
+{% import 'estructura/modalborrar.twig' as modal %}
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -11,7 +7,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="panel-title">Nueva Tarifa</h3>
+                            <h3 class="panel-title">{{ title }}</h3>
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right" href="{{ path('marinahumeda-tarifas_index') }}">Regresar</a>
@@ -22,8 +18,32 @@
                     {% form_theme form 'estructura/temaerror.html.twig' %}
                     {{ form_start(form) }}
                     <div class="row">
+                        <div class="col-sm-5">
+                            {{ form_row(form.tipo) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            {{ form_row(form.condicion) }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_row(form.piesA) }}
+                        </div>
+                        <div id="columnPiesAux"  class="{{ marinaHumedaTarifa.condicion == 5 ? '' : 'hidden' }}">
+                            <div class="col-sm-1 text-center pt-2">
+                                y
+                            </div>
+                            <div class="col-sm-2">
+                                {{ form_row(form.piesB) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            {{ form_row(form.costo) }}
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-8">
-                            {{ form_rest(form) }}
+                            {{ form_row(form.descripcion) }}
                         </div>
                     </div>
                     <div class="row espacio-linea-arriba2">
@@ -32,21 +52,31 @@
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 Guardar
                             </button>
+                            {{ form_end(form) }}
+                            {% if delete_form is defined %}
+                                {{ delete_form is defined ? modal.deleteButton('Tarifa') : '' }}
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-8">
-                            <a href="{{ path('marinahumeda-tarifas_index') }}" class="btn btn-naranja pull-right">
-                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                Cancelar
-                            </a>
-                        </div>
-                    </div>
-
-                    {{ form_end(form) }}
-
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block modals %}
+    {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        const condicion = document.getElementById('appbundle_marinahumedatarifa_condicion');
+        const piesAux = document.getElementById('columnPiesAux');
+        const piesB = document.getElementById('appbundle_marinahumedatarifa_piesB');
+        condicion.addEventListener('change',() => {
+            Number(condicion.value) === 5 ? piesAux.classList.remove('hidden') : !piesAux.classList.contains('hidden') ? (piesAux.classList.add('hidden'),piesB.value = 0) :'';
+        });
+
+    </script>
 {% endblock %}

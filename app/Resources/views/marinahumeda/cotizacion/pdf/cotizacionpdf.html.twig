@@ -114,10 +114,10 @@
                     <th>Servicio</th>
                     <th>Prec. Unid.</th>
                     <th>Sub-Total</th>
-                    <th>IVA</th>
-                    {% if marinaHumedaCotizacion.descuento > 0 %}
+                    {% if marinaHumedaCotizacion.descuento > 0 or marinaHumedaCotizacion.descuentoElectricidad > 0 %}
                         <th>Descuento</th>
                     {% endif %}
+                    <th>IVA</th>
                     <th>Total</th>
                 </tr>
                 </thead>
@@ -132,20 +132,22 @@
                                     Días Estadia
                                 {% elseif mhservicio.tipo == 2 %}
                                     Conexión a electricidad
-                                {% elseif mhservicio.tipo == 3 %}
-                                    Abastecimiento de Gasolina Magna
-                                {% elseif mhservicio.tipo == 4 %}
-                                    Abastecimiento de Gasolina Premium
-                                {% elseif mhservicio.tipo == 5 %}
-                                    Abastecimiento de Diesel
                                 {% endif %}
                             </td>
                             <td>$ {{ (mhservicio.precio/100)|number_format(2) }}</td>
                             <td>$ {{ (mhservicio.subtotal/100)|number_format(2) }}</td>
-                            <td>$ {{ (mhservicio.iva/100)|number_format(2) }}</td>
-                            {% if marinaHumedaCotizacion.descuento > 0 %}
-                                <td>$ {{ (mhservicio.descuento/100)|number_format(2) }}</td>
+                            {% if marinaHumedaCotizacion.descuento > 0 or marinaHumedaCotizacion.descuentoElectricidad > 0 %}
+                                <td>
+                                    {% if mhservicio.tipo == 1 and marinaHumedaCotizacion.descuento > 0 %}
+                                        $ {{ (mhservicio.descuento/100)|number_format(2) }}
+                                        ({{ marinaHumedaCotizacion.descuento }}%)
+                                    {% elseif mhservicio.tipo == 2 and marinaHumedaCotizacion.descuentoElectricidad > 0 %}
+                                        $ {{ (mhservicio.descuento/100)|number_format(2) }}
+                                        ({{ marinaHumedaCotizacion.descuentoElectricidad }}%)
+                                    {% endif %}
+                                </td>
                             {% endif %}
+                            <td>$ {{ (mhservicio.iva/100)|number_format(2) }}</td>
                             <td>$ {{ (mhservicio.total/100)|number_format(2) }}</td>
                         </tr>
                     {% endif %}
@@ -162,15 +164,7 @@
             <p> ${{ (marinaHumedaCotizacion.subtotal/100)|number_format(2) }} USD</p>
         </div>
     </div>
-    <div class="row text-right">
-        <div class="col-xs-3 col-xs-offset-6">
-            <p><strong>{{ marinaHumedaCotizacion.iva }}% IVA:</strong></p>
-        </div>
-        <div class="col-xs-3">
-            <p>${{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }} USD</p>
-        </div>
-    </div>
-    {% if marinaHumedaCotizacion.descuento > 0 %}
+    {% if marinaHumedaCotizacion.descuento > 0 or marinaHumedaCotizacion.descuentoElectricidad > 0 %}
         <div class="row text-right">
             <div class="col-xs-3 col-xs-offset-6">
                 <p><strong>Descuento:</strong></p>
@@ -180,6 +174,14 @@
             </div>
         </div>
     {% endif %}
+    <div class="row text-right">
+        <div class="col-xs-3 col-xs-offset-6">
+            <p><strong>IVA {{ marinaHumedaCotizacion.iva }}%:</strong></p>
+        </div>
+        <div class="col-xs-3">
+            <p>${{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }} USD</p>
+        </div>
+    </div>
     {% if marinaHumedaCotizacion.moratoriaTotal > 0 %}
     <div class="row text-right">
         <div class="col-xs-3 col-xs-offset-6">
@@ -217,10 +219,10 @@
                     <th>Servicio</th>
                     <th>Prec. Unid.</th>
                     <th>Sub-Total</th>
-                    <th>IVA</th>
-                    {% if marinaHumedaCotizacion.descuento > 0 %}
+                    {% if marinaHumedaCotizacion.descuento > 0 or marinaHumedaCotizacion.descuentoElectricidad %}
                         <th>Descuento</th>
                     {% endif %}
+                    <th>IVA</th>
                     <th>Total</th>
                 </tr>
                 </thead>
@@ -235,23 +237,24 @@
                                     Días Estadia
                                 {% elseif mhservicio.tipo == 2 %}
                                     Conexión a electricidad
-                                {% elseif mhservicio.tipo == 3 %}
-                                    Abastecimiento de Gasolina Magna
-                                {% elseif mhservicio.tipo == 4 %}
-                                    Abastecimiento de Gasolina Premium
-                                {% elseif mhservicio.tipo == 5 %}
-                                    Abastecimiento de Diesel
                                 {% endif %}
                             </td>
                             <td>$ {{ ((mhservicio.precio * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>
                             <td>
-                                $ {{ ((mhservicio.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>
-                            <td>$ {{ ((mhservicio.iva * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>
-                            {% if marinaHumedaCotizacion.descuento > 0 %}
+                                $ {{ ((mhservicio.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
+                            </td>
+                            {% if marinaHumedaCotizacion.descuento > 0 or marinaHumedaCotizacion.descuentoElectricidad > 0%}
                                 <td>
-                                    $ {{ ((mhservicio.descuento * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
+                                    {% if mhservicio.tipo == 1 and marinaHumedaCotizacion.descuento > 0 %}
+                                        $ {{ ((mhservicio.descuento * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
+                                        ({{ marinaHumedaCotizacion.descuento }}%)
+                                    {% elseif mhservicio.tipo == 2 and marinaHumedaCotizacion.descuentoElectricidad > 0 %}
+                                        $ {{ ((mhservicio.descuento * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
+                                        ({{ marinaHumedaCotizacion.descuentoElectricidad }}%)
+                                    {% endif %}
                                 </td>
                             {% endif %}
+                            <td>$ {{ ((mhservicio.iva * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>
                             <td>$ {{ ((mhservicio.total * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>
                         </tr>
                     {% endif %}
@@ -268,15 +271,7 @@
             <p> ${{ ((marinaHumedaCotizacion.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }} MXN</p>
         </div>
     </div>
-    <div class="row text-right">
-        <div class="col-xs-3 col-xs-offset-6">
-            <p><strong>IVA:</strong></p>
-        </div>
-        <div class="col-xs-3">
-            <p> ${{ ((marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }} MXN</p>
-        </div>
-    </div>
-    {% if marinaHumedaCotizacion.descuento > 0 %}
+    {% if marinaHumedaCotizacion.descuento > 0 or marinaHumedaCotizacion.descuentoElectricidad > 0 %}
         <div class="row text-right">
             <div class="col-xs-3 col-xs-offset-6">
                 <p><strong>Descuento:</strong></p>
@@ -287,6 +282,14 @@
             </div>
         </div>
     {% endif %}
+    <div class="row text-right">
+        <div class="col-xs-3 col-xs-offset-6">
+            <p><strong>IVA {{ marinaHumedaCotizacion.iva }}%:</strong></p>
+        </div>
+        <div class="col-xs-3">
+            <p> ${{ ((marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }} MXN</p>
+        </div>
+    </div>
     {% if marinaHumedaCotizacion.moratoriaTotal > 0 %}
         <div class="row text-right">
             <div class="col-xs-3 col-xs-offset-6">

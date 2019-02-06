@@ -52,15 +52,30 @@ class MarinaHumedaCotizacionType extends AbstractType
             ])
             ->add('diasEstadia',TextType::class,[
                 'label'=>'Días Estadia',
-                'attr' => ['class' => 'esnumero'],
+                'attr' => ['class' => 'esnumero','readonly' => true],
             ])
             ->add('descuento', NumberType::class, [
-                'empty_data' => 0,
+                'label' => 'Descuento estadía %',
+
+                'attr' => [
+                    'class' => 'esdecimal limite100',
+                    'autocomplete' => 'off',
+                    'max' => 100,
+                    'min' => 0,
+//                    'readonly' => true
+                    ],
+                'required' => false
+            ])
+            ->add('descuentoElectricidad', NumberType::class, [
+                'label' => 'Descuento electricidad %',
+
                 'attr' => ['class' => 'esdecimal limite100',
                     'autocomplete' => 'off',
                     'max' => 100,
-                    'min' => 0
-                    ]
+                    'min' => 0,
+//                    'readonly' => true
+                ],
+                'required' => false,
             ])
             ->add('dolar', MoneyType::class, [
                 'required'=>false,
@@ -164,6 +179,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('fechaSalida')
                     ->remove('diasEstadia')
                     ->remove('descuento')
+                    ->remove('descuentoElectricidad')
                     ->remove('dolar')
                     ->remove('mensaje')
                     ->remove('mhcservicios')
@@ -181,6 +197,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('fechaSalida')
                     ->remove('diasEstadia')
                     ->remove('descuento')
+                    ->remove('descuentoElectricidad')
                     ->remove('dolar')
                     ->remove('mensaje')
                     ->remove('mhcservicios')

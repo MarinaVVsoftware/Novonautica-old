@@ -42,8 +42,9 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
         $qb = $mhcRepo->createQueryBuilder('mhce');
         $results->recordsTotal = $qb->select('COUNT(mhce.id)')
             ->leftJoin('mhce.mhcservicios', 'servicios')
-            ->where($qb->expr()->eq('servicios.tipo', 1))
-            ->orWhere($qb->expr()->eq('servicios.tipo', 2))
+            ->where($qb->expr()->eq('servicios.tipo',1))
+            ->orWhere($qb->expr()->eq('servicios.tipo',2))
+            ->andWhere($qb->expr()->eq('mhce.isDeleted',0))
             ->getQuery()
             ->getSingleScalarResult();
 
@@ -153,10 +154,7 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
                 $cotizacion->getValidanovo(),
                 $cotizacion->getValidacliente(),
                 $cotizacion->getEstatuspago(),
-                [
-                    'id' => $cotizacion->getId(),
-                    'estatus' => $cotizacion->getEstatus(),
-                ],
+                ['id' => $cotizacion->getId(), 'estatus' => $cotizacion->getEstatus(),'borrado' => $cotizacion->isDeleted()]
             ];
         }
 

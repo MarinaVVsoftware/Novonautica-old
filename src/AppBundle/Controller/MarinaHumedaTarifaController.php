@@ -3,9 +3,14 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\MarinaHumedaTarifa;
+use DataTables\DataTablesInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Marinahumedatarifa controller.
@@ -19,19 +24,22 @@ class MarinaHumedaTarifaController extends Controller
      *
      * @Route("/", name="marinahumeda-tarifas_index")
      * @Method("GET")
+     * @param Request $request
+     * @param DataTablesInterface $dataTables
+     *
+     * @return JsonResponse|Response
      */
-    public function indexAction()
+    public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        //$marinaHumedaTarifas = $em->getRepository('AppBundle:MarinaHumedaTarifa')->findAll();
-        $mhtRepo = $em->getRepository('AppBundle:MarinaHumedaTarifa');
-        $marinaHumedaTarifas = $mhtRepo->ordenaPorTipoCosto();
-
-        return $this->render('marinahumeda/tarifa/index.html.twig', [
-            'title' => 'Tarifas',
-            'marinaHumedaTarifas' => $marinaHumedaTarifas
-        ]);
+        if ($request->isXmlHttpRequest()) {
+            try {
+                $results = $dataTables->handle($request, 'marinaTarifa');
+                return $this->json($results);
+            } catch (HttpException $e) {
+                return $this->json($e->getMessage(), $e->getStatusCode());
+            }
+        }
+        return $this->render('marinahumeda/tarifa/index.html.twig', ['title' => 'Tarifas']);
     }
 
     /**
@@ -96,10 +104,10 @@ class MarinaHumedaTarifaController extends Controller
             return $this->redirectToRoute('marinahumeda-tarifas_index');
         }
 
-        return $this->render('marinahumeda/tarifa/edit.html.twig', [
+        return $this->render('marinahumeda/tarifa/new.html.twig', [
             'title' => 'Editar tarifa',
             'marinaHumedaTarifa' => $marinaHumedaTarifa,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView()
         ]);
     }

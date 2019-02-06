@@ -140,7 +140,6 @@
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
                                 <div class="col-sm-3">
-
                                     <div class="input-daterange" id="rangoFehas">
                                         <div class="row">
                                             <div class="col-sm-12">
@@ -155,28 +154,30 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <label>Descuento(%)</label>
-                                    {{ form_widget(form.descuento) }}
                                     <label>Dolar</label>
                                     {{ form_widget(form.dolar) }}
-
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-9">
                                     <div class="row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             <label>Días Estadía:</label>
                                             {{ form_widget(form.diasEstadia) }}
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-5">
                                             <label>Precio por día:</label>
                                             {{ form_widget(form.mhcservicios.0.precio,{'selected':marinaHumedaCotizacion.mhcservicios.0.precio}) }}
-
+                                        </div>
+                                        <div class="col-sm-3">
+                                            {{ form_row(form.descuento) }}
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6 col-sm-offset-6">
+                                        <div class="col-sm-5 col-sm-offset-4">
                                             <label>Precio electricidad:</label>
                                             {{ form_widget(form.mhcservicios.children.1.precioAux) }}
+                                        </div>
+                                        <div class="col-sm-3">
+                                            {{ form_row(form.descuentoElectricidad) }}
                                         </div>
                                     </div>
                                 </div>
@@ -184,7 +185,7 @@
                         </div>
                         <div role="tabpanel" class="tab-pane" id="total">
                             <div class="row">
-                                <div class="col-sm-9 text-right">
+                                <div class="col-sm-12 text-right">
                                     <span>Tipo de cambio:</span>
                                     <div id="" class="valdolar">{{ (marinaHumedaCotizacion.dolar/100) }}
                                         MXN
@@ -192,13 +193,13 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-9">
+                                <div class="col-sm-12">
                                     <small>Precios en USD</small>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-9">
+                                <div class="col-sm-12">
                                     <table id="mh_nuevacotizacion" class="table text-center">
                                         <thead>
                                         <tr>
@@ -259,19 +260,19 @@
 
                             </div>
                             <div class="row">
-                                <div class="col-sm-9">
+                                <div class="col-sm-12">
                                     <div id="valiva" class="" data-valor="{{ marinaHumedaCotizacion.iva }}">
                                         <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
+                                <div class="col-sm-4 col-sm-offset-8">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
                                         $ <span id="gransubtot">{{ (marinaHumedaCotizacion.subtotal/100)|number_format(2) }}</span>
@@ -280,12 +281,12 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
+                                <div class="col-sm-4 col-sm-offset-8">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
                                         $ <span id="graniva">{{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }}</span>
@@ -294,12 +295,12 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
+                                <div class="col-sm-4 col-sm-offset-8">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">Descuento:</p>
                                     <p>
                                         $ <span id="grandecuento">{{ (marinaHumedaCotizacion.descuentototal/100)|number_format(2) }}</span>
@@ -308,12 +309,12 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
+                                <div class="col-sm-4 col-sm-offset-8">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
                                         $ <span id="grantot">{{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</span>
@@ -322,14 +323,14 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
+                                <div class="col-sm-4 col-sm-offset-8">
                                     <hr>
                                 </div>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="totalmxn">
                             <div class="row">
-                                <div class="col-sm-9 text-right">
+                                <div class="col-sm-12 text-right">
                                     <span>Tipo de cambio:</span>
                                     <div id="" class="valdolar">{{ (marinaHumedaCotizacion.dolar/100)|number_format(2)}}
                                         MXN
@@ -337,13 +338,13 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-9">
+                                <div class="col-sm-12">
                                     <small>Precios en MXN</small>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-9">
+                                <div class="col-sm-12">
                                     <table id="" class="table text-center">
                                         <thead>
                                         <tr>
@@ -399,19 +400,19 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-9">
+                                <div class="col-sm-12">
                                     <div id="" class="">
                                         <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
+                                <div class="col-sm-4 col-sm-offset-8">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
                                         $ <span id="gransubtot_mxn">{{ ((marinaHumedaCotizacion.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
@@ -420,12 +421,12 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
+                                <div class="col-sm-4 col-sm-offset-8">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">I.V.A:</p>
                                     <p>
                                         $ <span id="graniva_mxn">{{ ((marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
@@ -434,12 +435,12 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
+                                <div class="col-sm-4 col-sm-offset-8">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">Descuento:</p>
                                     <p>
                                         $ <span id="grandecuento_mxn">{{ ((marinaHumedaCotizacion.descuentototal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
@@ -448,12 +449,12 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
+                                <div class="col-sm-4 col-sm-offset-8">
                                     <hr>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-5 col-sm-offset-4 text-right tipo-letra1">
+                                <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
                                         $ <span id="grantot_mxn">{{ ((marinaHumedaCotizacion.total * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
@@ -462,7 +463,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-5">
+                                <div class="col-sm-4 col-sm-offset-8">
                                     <hr>
                                 </div>
                             </div>

@@ -12,7 +12,6 @@ use AppBundle\Validator\Constraints as NovoAssert;
  * @ORM\Table(name="marina_humeda_cotiza_servicios")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MarinaHumedaCotizaServiciosRepository")
  * @ORM\EntityListeners({"AppBundle\Entity\Marina\CotizaServiciosListener"})
- * @NovoAssert\ProductHaveStock
  */
 class MarinaHumedaCotizaServicios
 {
@@ -26,7 +25,7 @@ class MarinaHumedaCotizaServicios
     private $id;
 
     /**
-     * Tipo de servicio 1=Estadia, 2=Electricidad, 3=Gasolina Magna, 4=Gasolina Premium, 5=Diesel
+     * Tipo de servicio 1=Estadia, 2=Electricidad
      *
      * @var int
      *
@@ -55,6 +54,8 @@ class MarinaHumedaCotizaServicios
     private $precio;
 
     private $precioaux;
+
+    private $precioOtro;
 
     /**
      * @var int
@@ -217,6 +218,30 @@ class MarinaHumedaCotizaServicios
     public function getPrecioAux()
     {
         return $this->precioaux;
+    }
+
+    /**
+     * Set precioOtro
+     *
+     * @param int $precioOtro
+     *
+     * @return MarinaHumedaCotizaServicios
+     */
+    public function setPrecioOtro($precioOtro)
+    {
+        $this->precioOtro = $precioOtro;
+
+        return $this;
+    }
+
+    /**
+     * Get precioOtro
+     *
+     * @return int
+     */
+    public function getPrecioOtro()
+    {
+        return $this->precioOtro;
     }
 
     /**

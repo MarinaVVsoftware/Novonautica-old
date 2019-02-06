@@ -61,6 +61,13 @@ class MarinaHumedaCotizacion
     /**
      * @var float
      *
+     * @ORM\Column(name="descuento_electricidad", type="float", nullable=true)
+     */
+    private $descuentoElectricidad;
+
+    /**
+     * @var float
+     *
      * @Groups({"facturacion"})
      *
      * @ORM\Column(name="dolar", type="float", nullable=true)
@@ -209,6 +216,13 @@ class MarinaHumedaCotizacion
      * @ORM\Column(name="estatus", type="boolean")
      */
     private $estatus;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_deleted", type="boolean")
+     */
+    private $isDeleted;
 
     /**
      * @var int
@@ -362,6 +376,7 @@ class MarinaHumedaCotizacion
         $this->registroValidaCliente = null;
         $this->registroPagoCompletado = null;
         $this->fecharegistro = new \DateTime();
+        $this->isDeleted = false;
     }
 
     public function __toString()
@@ -1391,5 +1406,53 @@ class MarinaHumedaCotizacion
     public function setFactura(Facturacion $factura = null)
     {
         $this->factura = $factura;
+    }
+
+    /**
+     * Set descuentoElectricidad.
+     *
+     * @param float|null $descuentoElectricidad
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setDescuentoElectricidad($descuentoElectricidad = null)
+    {
+        $this->descuentoElectricidad = $descuentoElectricidad;
+
+        return $this;
+    }
+
+    /**
+     * Get descuentoElectricidad.
+     *
+     * @return float|null
+     */
+    public function getDescuentoElectricidad()
+    {
+        return $this->descuentoElectricidad;
+    }
+
+    /**
+     * Set isDeleted.
+     *
+     * @param bool $isDeleted
+     *
+     * @return MarinaHumedaCotizacion
+     */
+    public function setIsDeleted($isDeleted)
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get isDeleted.
+     *
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return $this->isDeleted;
     }
 }

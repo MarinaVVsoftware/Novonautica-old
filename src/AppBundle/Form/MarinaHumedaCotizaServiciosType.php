@@ -11,6 +11,7 @@ namespace AppBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -24,39 +25,23 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder
-            ->add('precio', EntityType::class, [
-                'class' => 'AppBundle:MarinaHumedaTarifa',
-                'label' => 'Precio',
-                'placeholder' => 'Seleccionar...',
-                'choice_value' => 'costo',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('t')
-                        ->select('t')
-                        ->andWhere('t.tipo = 1')->orderBy('t.costo');
-                }
-            ])
-            ->add('precioAux', EntityType::class, [
-                'class' => 'AppBundle:MarinaHumedaTarifa',
-                'label' => 'Precio',
-                'placeholder' => 'Seleccionar...',
-                'choice_value' => 'costo',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('t')
-                        ->select('t')
-                        ->andWhere('t.tipo = 2')->orderBy('t.costo');
-                }
-            ]);
+        $builder->add('precioOtro', MoneyType::class, [
+            'attr' => ['class' => 'esdecimal'], //, 'readonly' => true
+            'label' => 'Otro precio (USD)',
+            'currency' => 'USD',
+            'divisor' => 100,
+            'grouping' => true,
+
+            'required' => false,
+        ]);
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {
-
                 $data = $event->getData();
-
                 $costo = $data->getPrecio();
-
                 $form = $event->getForm();
+
                 $form
                     ->add('precio', EntityType::class, [
                         'class' => 'AppBundle:MarinaHumedaTarifa',
@@ -70,7 +55,16 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
                                 ->andWhere('t.tipo = 1')->orderBy('t.costo');
                         },
                         'choice_attr' => function ($objeto) use ($costo) {
-                            return $objeto->getCosto() === $costo ? ['selected' => 'selected'] : [''];
+                            return $objeto->getCosto() === $costo
+                                ? ['selected' => 'selected',
+                                    'class' => 'hide',
+                                    'data-pies_a' => $objeto->getPiesA(),
+                                    'data-pies_b' => $objeto->getPiesB(),
+                                    'data-condicion' => $objeto->getCondicion()]
+                                : ['class' => 'hide',
+                                    'data-pies_a' => $objeto->getPiesA(),
+                                    'data-pies_b' => $objeto->getPiesB(),
+                                    'data-condicion' => $objeto->getCondicion()];
                         }
                     ])
                     ->add('precioAux', EntityType::class, [
@@ -85,9 +79,18 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
                                 ->andWhere('t.tipo = 2')->orderBy('t.costo');
                         },
                         'choice_attr' => function ($objeto) use ($costo) {
-                            return $objeto->getCosto() === $costo ? ['selected' => 'selected'] : [''];
+                            return $objeto->getCosto() === $costo
+                                ? ['selected' => 'selected',
+                                    'class' => 'hide',
+                                    'data-pies_a' => $objeto->getPiesA(),
+                                    'data-pies_b' => $objeto->getPiesB(),
+                                    'data-condicion' => $objeto->getCondicion()]
+                                : ['class' => 'hide',
+                                    'data-pies_a' => $objeto->getPiesA(),
+                                    'data-pies_b' => $objeto->getPiesB(),
+                                    'data-condicion' => $objeto->getCondicion()];
                         }
-                    ]);;
+                    ]);
             }
         );
     }
