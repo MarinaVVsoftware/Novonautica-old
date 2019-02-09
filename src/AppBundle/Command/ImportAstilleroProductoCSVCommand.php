@@ -1,15 +1,16 @@
 <?php
 /**
  * User: inrumi
- * Date: 8/23/18
- * Time: 13:52
+ * Date: 7/23/18
+ * Time: 15:21
  */
 
 namespace AppBundle\Command;
 
 
-use AppBundle\Entity\Tienda\Inventario\Registro;
-use AppBundle\Entity\Tienda\Producto;
+use AppBundle\Entity\Astillero\Producto;
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
+use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Reader;
 use Symfony\Component\Console\Command\Command;
@@ -18,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ImportInventarioCSVCommand extends Command
+class ImportAstilleroProductoCSVCommand extends Command
 {
     /**
      * @var EntityManagerInterface
@@ -34,8 +35,8 @@ class ImportInventarioCSVCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('csv:import:tienda-inventario')
-            ->setDescription('Importa un archivo CSV para el primer inventario de tienda')
+            ->setName('csv:import:astillero-producto')
+            ->setDescription('Importa un archivo CSV para productos de una tienda')
             ->addOption(
                 'file',
                 null,
@@ -54,41 +55,37 @@ class ImportInventarioCSVCommand extends Command
             throw new \RuntimeException('Debes introducir la ubicación del csv.');
         }
 
-        $io->title('Importando el archivo...');
-
-        if (!ini_get("auto_detect_line_endings")) {
-            ini_set("auto_detect_line_endings", '1');
-        }
+        $io->title('Intentando importar el archivo...');
 
         $reader = Reader::createFromPath($file, 'r');
+        $reader->setHeaderOffset(0);
 
         $head = $reader->getHeader();
         $records = $reader->getRecords();
 
-        $registro = new Registro();
-        $registro->setFecha(new \DateTime());
-        $registro->setReferencia('Primera carga de inventario');
-        $registro->setTipo(Registro::TIPO_ENTRADA);
-        $registro->setTotal(0);
-
         $io->progressStart(iterator_count($records));
 
         foreach ($records as $record) {
-            $producto = $this->em
-                ->getRepository(Producto::class)
+            $claveUnidad = $this->em->getRepository(ClaveUnidad::class)
                 ->findOneBy([
-                    'nombre' => $record[1]
+                    'claveUnidad' => $record['CLAVE UNIDAD'],
+                ]);
+            $claveProdServ = $this->em->getRepository(ClaveProdServ::class)
+                ->findOneBy([
+                    'claveProdServ' => $record['CLAVE PRODUCTO'],
                 ]);
 
-            if ($producto) {
-                $entrada = new Registro\Entrada();
-                $entrada->setCantidad($record[3]);
-                $entrada->setImporte(0);
-                $entrada->setRegistro($registro);
-                $entrada->setProducto($producto);
+            $producto = new Producto();
 
-                $this->em->persist($entrada);
-            }
+            $producto->setIdentificador($record['CODIGO']);
+            $producto->setClaveUnidad($claveUnidad);
+            $producto->setClaveProdServ($claveProdServ);
+            $producto->setNombre($record['NOMBRE']);
+            $producto->setUnidad($record['UNIDAD']);
+            $producto->setPrecio($record['PRECIO']);
+            $producto->setExistencia($record['EXISTENCIAS']);
+
+            $this->em->persist($producto);
 
             $io->progressAdvance();
         }

@@ -69,26 +69,30 @@ class ImportTiendaProductoCSVCommand extends Command
         foreach ($records as $record) {
             $claveProdServ = $this->em->getRepository(ClaveProdServ::class)
                 ->findOneBy([
-                    'claveProdServ' => $record['clave_prod_serv'],
+                    'claveProdServ' => $record['CLAVE UNIDAD'],
                 ]);
             $claveUnidad = $this->em->getRepository(ClaveUnidad::class)
                 ->findOneBy([
-                    'claveUnidad' => $record['clave_unidad'],
+                    'claveUnidad' => $record['CLAVE PRODUCTO'],
                 ]);
-            $categoria = $this->em->getRepository(Categoria::class)
-                ->findOneBy([
-                    'nombre' => $record['categoria']
-                ]);
+//            $categoria = $this->em->getRepository(Categoria::class)
+//                ->findOneBy([
+//                    'nombre' => $record['categoria']
+//                ]);
 
             $producto = new Producto();
 
-            $producto->setNombre($record['producto']);
-            $producto->setPrecio($record['precio']);
-            $producto->setPreciocolaborador($record['precio_empleado']);
-            $producto->setCodigoBarras($record['codigo_barras']);
+            $producto->setCodigoBarras($record['CODIGO']);
+            $producto->setNombre($record['NOMBRE']);
+
+            $producto->setPrecio($record['PRECIO']);
+            $producto->setPreciocolaborador($record['PRECIO COLABORADOR']);
             $producto->setClaveProdServ($claveProdServ);
             $producto->setClaveUnidad($claveUnidad);
-            $producto->setCategoria($categoria);
+            $producto->setExistencia($record['EXISTENCIAS']);
+            $producto->setIESPS(0);
+            $producto->setIVA(0);
+
             $this->em->persist($producto);
 
             $io->progressAdvance();

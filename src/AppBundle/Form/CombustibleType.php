@@ -9,6 +9,7 @@
 namespace AppBundle\Form;
 
 
+use AppBundle\Entity\Combustible\TipoPago;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -28,129 +29,159 @@ class CombustibleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dolar',MoneyType::class,[
-                'required'=>false,
-                'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
+            ->add('dolar', MoneyType::class, [
+                'required' => false,
+                'attr' => ['class' => 'esdecimal', 'autocomplete' => 'off'],
                 'currency' => 'MXN',
                 'divisor' => 100,
                 'grouping' => true,
-                'empty_data' => 0
+                'empty_data' => 0,
             ])
-            ->add('iva',TextType::class,[
-                'attr' => ['class' => 'esdecimal calcular-costos','autocomplete' => 'off'],
-                'label' => '% IVA'
+            ->add('iva', TextType::class, [
+                'attr' => ['class' => 'esdecimal calcular-costos', 'autocomplete' => 'off'],
+                'label' => '% IVA',
             ])
-            ->add('cuotaIesps', TextType::class,[
-                'attr' => ['class' => 'esdecimal calcular-costos','autocomplete' => 'off'],
-                'label' => 'Cuota IESPS'
+            ->add('cuotaIesps', TextType::class, [
+                'attr' => ['class' => 'esdecimal calcular-costos', 'autocomplete' => 'off'],
+                'label' => 'Cuota IESPS',
             ])
-            ->add('cantidad',TextType::class,[
-                'attr' => ['class' => 'esdecimal calcular-costos','autocomplete' => 'off'],
-                'label' => 'Litros'
+            ->add('cantidad', TextType::class, [
+                'attr' => ['class' => 'esdecimal calcular-costos', 'autocomplete' => 'off'],
+                'label' => 'Litros',
             ])
-            ->add('precioVenta',MoneyType::class,[
-                'attr' => ['class' => 'esdecimal calcular-costos','autocomplete' => 'off'],
+            ->add('precioVenta', MoneyType::class, [
+                'attr' => ['class' => 'esdecimal calcular-costos', 'autocomplete' => 'off'],
                 'divisor' => 100,
                 'currency' => 'MXN',
                 'empty_data' => 0,
 
-                'grouping' => true
+                'grouping' => true,
             ])
-            ->add('precioSinIesps',MoneyType::class,[
+            ->add('precioSinIesps', MoneyType::class, [
                 'attr' => ['readonly' => true],
                 'divisor' => 100,
                 'currency' => 'MXN',
                 'empty_data' => 0,
                 'label_attr' => ['class' => 'letra-azul tipo-letra2'],
                 'label' => 'Precio sin IESPS:',
-                'grouping' => true
+                'grouping' => true,
             ])
-            ->add('precioSinIvaIesps',MoneyType::class,[
+            ->add('precioSinIvaIesps', MoneyType::class, [
                 'attr' => ['readonly' => true],
                 'divisor' => 100,
                 'currency' => 'MXN',
                 'empty_data' => 0,
                 'label_attr' => ['class' => 'letra-azul tipo-letra2'],
                 'label' => 'Precio sin IVA/IESPS:',
-                'grouping' => true
+                'grouping' => true,
             ])
-            ->add('subtotal', MoneyType::class,[
+            ->add('subtotal', MoneyType::class, [
                 'attr' => ['readonly' => true],
                 'divisor' => 100,
                 'currency' => 'MXN',
                 'empty_data' => 0,
                 'label_attr' => ['class' => 'letra-azul tipo-letra2'],
                 'label' => 'Subtotal:',
-                'grouping' => true
+                'grouping' => true,
             ])
-            ->add('ivaTotal', MoneyType::class,[
+            ->add('ivaTotal', MoneyType::class, [
                 'attr' => ['readonly' => true],
                 'divisor' => 100,
                 'currency' => 'MXN',
                 'empty_data' => 0,
                 'label_attr' => ['class' => 'letra-azul tipo-letra2'],
                 'label' => 'IVA:',
-                'grouping' => true
+                'grouping' => true,
             ])
-            ->add('iespsTotal', MoneyType::class,[
+            ->add('iespsTotal', MoneyType::class, [
                 'attr' => ['readonly' => true],
                 'divisor' => 100,
                 'currency' => 'MXN',
                 'empty_data' => 0,
                 'label_attr' => ['class' => 'letra-azul tipo-letra2'],
                 'label' => 'IESPS:',
-                'grouping' => true
+                'grouping' => true,
             ])
-            ->add('totalSinIesps', MoneyType::class,[
+            ->add('totalSinIesps', MoneyType::class, [
                 'attr' => ['readonly' => true],
                 'divisor' => 100,
                 'currency' => 'MXN',
                 'empty_data' => 0,
                 'label_attr' => ['class' => 'letra-azul tipo-letra2'],
                 'label' => 'Total sin IESPS:',
-                'grouping' => true
+                'grouping' => true,
             ])
-            ->add('totalSinIvaIesps', MoneyType::class,[
+            ->add('totalSinIvaIesps', MoneyType::class, [
                 'attr' => ['readonly' => true],
                 'divisor' => 100,
                 'currency' => 'MXN',
                 'empty_data' => 0,
                 'label_attr' => ['class' => 'letra-azul tipo-letra2'],
                 'label' => 'Total sin IVA/IESPS:',
-                'grouping' => true
+                'grouping' => true,
             ])
-            ->add('total', MoneyType::class,[
+            ->add('total', MoneyType::class, [
                 'attr' => ['readonly' => true],
                 'divisor' => 100,
                 'currency' => 'MXN',
                 'empty_data' => 0,
                 'label_attr' => ['class' => 'letra-azul tipo-letra2'],
                 'label' => 'Total:',
-                'grouping' => true
+                'grouping' => true,
             ])
-            ->add('tipo',EntityType::class,[
+            ->add('tipo', EntityType::class, [
                 'class' => 'AppBundle\Entity\Combustible\Catalogo',
                 'placeholder' => 'Seleccionar...',
-                'attr' => ['class' => 'selecttipocombustible']
+                'attr' => ['class' => 'selecttipocombustible'],
             ])
-            ->add('barco',EntityType::class,[
+            ->add('barco', EntityType::class, [
                 'class' => 'AppBundle\Entity\Barco',
                 'placeholder' => 'Seleccionar...',
-                'attr' => ['class' => 'select-buscador selectbarcobuscar']
+                'attr' => ['class' => 'select-buscador selectbarcobuscar'],
             ])
-            ->add('mensaje',TextareaType::class,[
+            ->add('mensaje', TextareaType::class, [
                 'label' => 'Mensaje en el correo:',
                 'attr' => ['rows' => 7, 'class' => 'editorwy'],
-                'required' => false
+                'required' => false,
             ])
             ->add('notificarCliente', CheckboxType::class, [
                 'label' => '¿Notificar al cliente?',
-                'required' => false
+                'required' => false,
             ]);
+
+        $builder->add(
+            'comisionTipoPago',
+            EntityType::class,
+            [
+                'label'         => 'Tipo de pago',
+                'class'         => TipoPago::class,
+                'choice_value'  => 'porcentaje',
+                'choice_label'  => 'nombre',
+                'placeholder'   => 'Sin comisión'
+            ]
+        );
+
+        $builder->add(
+            'comisionTipoPagoUnmapped',
+            MoneyType::class,
+            [
+                'label'          => 'Comisión de tipo de pago',
+                'attr'           => [
+                    'readonly' => true,
+                    'value'    => '0.00'
+                ],
+                'divisor'        => 100,
+                'currency'       => 'MXN',
+                'label_attr'     => ['class' => 'letra-azul tipo-letra2'],
+                'grouping'       => true,
+                'mapped'         => false,
+            ]
+        );
+
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $cotizacion = $event->getData();
             $form = $event->getForm();
-            if($cotizacion->getFolio()){ // si es una cotizacion rechazada
+            if ($cotizacion->getFolio()) { // si es una cotizacion rechazada
                 $form->remove('barco');
             }
         });
@@ -164,7 +195,7 @@ class CombustibleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Combustible'
+            'data_class' => 'AppBundle\Entity\Combustible',
         ));
     }
 
