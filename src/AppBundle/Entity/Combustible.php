@@ -79,6 +79,13 @@ class Combustible
     /**
      * @var int
      *
+     * @ORM\Column(name="comision_tipo_pago", type="integer")
+     */
+    private $comisionTipoPago;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="precio_sin_iesps", type="bigint")
      */
     private $precioSinIesps;
@@ -680,6 +687,22 @@ class Combustible
     public function getPrecioVenta()
     {
         return $this->precioVenta;
+    }
+
+    /**
+     * @param int $comisionTipoPago
+     */
+    public function setComisionTipoPago(?int $comisionTipoPago): void
+    {
+        $this->comisionTipoPago = $comisionTipoPago;
+    }
+
+    /**
+     * @return int
+     */
+    public function getComisionTipoPago(): ?int
+    {
+        return $this->comisionTipoPago;
     }
 
     /**

@@ -80,7 +80,7 @@ class TiendaProductoDataTable extends AbstractDataTableHandler
         foreach ($productos as $producto) {
             $results->data[] = [
                 $producto->getNombre(),
-                $producto->getCategoria()->getNombre(),
+                $producto->getCategoria() ? $producto->getCategoria()->getNombre() : 'Sin categoría',
                 "$".number_format($producto->getPrecio() / 100, 2)." MXN",
                 "$".number_format($producto->getPreciocolaborador() / 100, 2)." MXN",
                 $producto->getImagen(),

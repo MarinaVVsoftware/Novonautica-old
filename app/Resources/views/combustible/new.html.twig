@@ -109,30 +109,34 @@
                         </div>
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
-                                <div class="col-sm-5">
+                                <div class="col-sm-6">
                                     {{ form_row(form.cantidad) }}
                                 </div>
-                                <div class="col-sm-5">
+                                <div class="col-sm-6">
                                     {{ form_row(form.tipo) }}
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-5">
+                                <div class="col-sm-6">
                                     {{ form_row(form.precioVenta) }}
                                 </div>
-                                <div class="col-sm-5">
+                                <div class="col-sm-6">
                                     {{ form_row(form.dolar) }}
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-5">
+                                <div class="col-sm-6">
                                     {{ form_row(form.iva) }}
                                 </div>
-                                <div class="col-sm-5">
+                                <div class="col-sm-6">
                                     {{ form_row(form.cuotaIesps) }}
                                 </div>
                             </div>
-
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {{ form_row(form.comisionTipoPago) }}
+                                </div>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane input-combustible" id="totalmxn">
                             <div class="row">
@@ -316,6 +320,28 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-3">
+                                    {{ form_label(form.comisionTipoPagoUnmapped) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.comisionTipoPagoUnmapped) }}
+                                </div>
+                                <div class="col-sm-4">
+                                    $ <span id="combustible_comisionTipoPagoUnmappedUsd">0</span> <small>USD</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-4">
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
                                     {{ form_label(form.ivaTotal) }}
                                 </div>
                                 <div class="col-sm-4">
@@ -392,11 +418,19 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
+        const tipoPagoSelect = document.getElementById('appbundle_combustible_comisionTipoPago');
+        const comisionTipoPago = document.getElementById('appbundle_combustible_comisionTipoPagoUnmapped');
         let cantidad = document.getElementById('appbundle_combustible_cantidad');
         let precio_venta = document.getElementById('appbundle_combustible_precioVenta');
         let cuotaIesps = document.getElementById('appbundle_combustible_cuotaIesps');
         let dolar_combustible = document.getElementById('appbundle_combustible_dolar');
         let iva = document.getElementById('appbundle_combustible_iva');
+
+        tipoPagoSelect.addEventListener('change', function () {
+          if (!this.value) return;
+
+
+        });
 
         seleccionaBarco(document.getElementById('appbundle_combustible_barco').value);
         seleccionaCombustible(document.getElementById('appbundle_combustible_tipo').value);
@@ -417,6 +451,8 @@
             combustibleCalculaTotalesUSD();
         });
         function seleccionaBarco(id) {
+          if (!id) return;
+
             $('#loading').show();
             $("#info-barco").empty();
             $("#info-cliente").empty();
@@ -464,6 +500,7 @@
             });
         }
         function seleccionaCombustible(id) {
+          if (!id) return;
             $('#loading').show();
             var urlTipo = "{{ path('json_tipo_combustible',{'id':'idtipo'}) }}";
             urlTipo = urlTipo.replace('idtipo', id);
@@ -472,18 +509,10 @@
                 url: urlTipo,
                 dataType: 'json',
                 success: function (tipo) {
-                  if (tipo.existencia <= 0) {
-                    throwAlert(`El combustible "${tipo.nombre}" no tiene más stock en el inventario`, 'danger');
-
-                    return;
-                  }
-
                     document.getElementById('combustible_titulo_mxn').innerHTML = 'Abastecimiento de combustible ' + tipo.nombre;
                     precio_venta.value = (tipo.precio / 100);
                     cuotaIesps.value = tipo.cuotaIesps;
                     combustibleCalculaTotales();
-
-                  throwAlert(`El combustible "${tipo.nombre}" tiene ${tipo.existencia} de existencía${tipo.existencia > 1 ? 's' : ''} en el inventario`, 'success');
                 }
             }).always(function () {
                 $('#loading').hide();

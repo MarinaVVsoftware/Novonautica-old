@@ -78,7 +78,7 @@ class ProductoController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getUsuariosDataAction(Request $request, DataTablesInterface $dataTables)
+    public function getTiendaProductoDataAction(Request $request, DataTablesInterface $dataTables)
     {
         try {
             $results = $dataTables->handle($request, 'tienda_producto');
