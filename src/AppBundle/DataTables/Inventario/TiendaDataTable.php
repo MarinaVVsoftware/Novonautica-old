@@ -91,7 +91,7 @@ class TiendaDataTable extends AbstractDataTableHandler
 
         foreach ($productos as $producto) {
             $results->data[] = [
-                $producto->getCategoria()->getNombre(),
+                $producto->getCategoria() ? $producto->getCategoria()->getNombre() : 'Sin categoría',
                 $producto->getNombre(),
                 $producto->getClaveProdServ()?$producto->getClaveProdServ()->getClaveProdServ():'',
                 $producto->getClaveUnidad()?$producto->getClaveUnidad()->getClaveUnidad():'',
