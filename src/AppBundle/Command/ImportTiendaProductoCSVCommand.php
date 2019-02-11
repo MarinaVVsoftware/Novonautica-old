@@ -85,8 +85,8 @@ class ImportTiendaProductoCSVCommand extends Command
             $producto->setCodigoBarras($record['CODIGO']);
             $producto->setNombre($record['NOMBRE']);
 
-            $producto->setPrecio($record['PRECIO']);
-            $producto->setPreciocolaborador($record['PRECIO COLABORADOR']);
+            $producto->setPrecio($record['PRECIO'] * 100);
+            $producto->setPreciocolaborador($record['PRECIO COLABORADOR'] * 100);
             $producto->setClaveProdServ($claveProdServ);
             $producto->setClaveUnidad($claveUnidad);
             $producto->setExistencia($record['EXISTENCIAS']);
