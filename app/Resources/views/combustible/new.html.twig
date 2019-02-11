@@ -320,13 +320,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-3">
-                                    {{ form_label(form.comisionTipoPagoUnmapped) }}
+                                    {{ form_label(form.comisionTipoPagoValue) }}
                                 </div>
                                 <div class="col-sm-4">
-                                    {{ form_widget(form.comisionTipoPagoUnmapped) }}
+                                    {{ form_widget(form.comisionTipoPagoValue) }}
+                                    {{ form_errors(form.comisionTipoPagoValue) }}
                                 </div>
                                 <div class="col-sm-4">
-                                    $ <span id="combustible_comisionTipoPagoUnmappedUsd">0</span> <small>USD</small>
+                                    $ <span id="combustible_comisionTipoPagoValueUsd">0</span> <small>USD</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -419,17 +420,26 @@
     {{ parent() }}
     <script type="text/javascript">
         const tipoPagoSelect = document.getElementById('appbundle_combustible_comisionTipoPago');
-        const comisionTipoPago = document.getElementById('appbundle_combustible_comisionTipoPagoUnmapped');
         let cantidad = document.getElementById('appbundle_combustible_cantidad');
         let precio_venta = document.getElementById('appbundle_combustible_precioVenta');
         let cuotaIesps = document.getElementById('appbundle_combustible_cuotaIesps');
         let dolar_combustible = document.getElementById('appbundle_combustible_dolar');
         let iva = document.getElementById('appbundle_combustible_iva');
 
+        const appbundle_combustible_comisionTipoPagoValue = document.getElementById('appbundle_combustible_comisionTipoPagoValue');
+        const appbundle_combustible_precioSinIesps = document.getElementById('appbundle_combustible_precioSinIesps');
+        const appbundle_combustible_precioSinIvaIesps = document.getElementById('appbundle_combustible_precioSinIvaIesps');
+        const combustible_cantidad_mxn = document.getElementById('combustible_cantidad_mxn');
+        const appbundle_combustible_iespsTotal = document.getElementById('appbundle_combustible_iespsTotal');
+        const appbundle_combustible_totalSinIesps = document.getElementById('appbundle_combustible_totalSinIesps');
+        const tasa_iva_mxn = document.getElementById('tasa_iva_mxn');
+        const appbundle_combustible_totalSinIvaIesps = document.getElementById('appbundle_combustible_totalSinIvaIesps');
+        const appbundle_combustible_subtotal = document.getElementById('appbundle_combustible_subtotal');
+        const appbundle_combustible_ivaTotal = document.getElementById('appbundle_combustible_ivaTotal');
+        const appbundle_combustible_total = document.getElementById('appbundle_combustible_total');
+
         tipoPagoSelect.addEventListener('change', function () {
-          if (!this.value) return;
-
-
+          combustibleCalculaTotales();
         });
 
         seleccionaBarco(document.getElementById('appbundle_combustible_barco').value);
@@ -450,6 +460,7 @@
             document.getElementById('valdolar').innerHTML = Number(input.target.value).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
             combustibleCalculaTotalesUSD();
         });
+
         function seleccionaBarco(id) {
           if (!id) return;
 
@@ -528,30 +539,36 @@
             let total_sin_iva_iesps = total_sin_iesps / tasa_iva;
             let subtotal = total_sin_iva_iesps + iespstot;
             let ivatot = total_sin_iva_iesps * (Number(iva.value) / 100);
+            const comisionTipoPago = tipoPagoSelect.value ? (subtotal * (Number(tipoPagoSelect.value) / 100)) : 0;
 
-            document.getElementById('appbundle_combustible_precioSinIesps').value = precio_sin_iesps.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('appbundle_combustible_precioSinIvaIesps').value = precio_sin_iva_iesps.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('combustible_cantidad_mxn').innerHTML = cantidad.value;
-            document.getElementById('appbundle_combustible_iespsTotal').value = iespstot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('appbundle_combustible_totalSinIesps').value = total_sin_iesps.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('tasa_iva_mxn').innerHTML = tasa_iva.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('appbundle_combustible_totalSinIvaIesps').value = total_sin_iva_iesps.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('appbundle_combustible_subtotal').value = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('appbundle_combustible_ivaTotal').value = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            document.getElementById('appbundle_combustible_total').value = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            total = total + comisionTipoPago;
+
+            appbundle_combustible_comisionTipoPagoValue.value = comisionTipoPago.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            appbundle_combustible_precioSinIesps.value = precio_sin_iesps.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            appbundle_combustible_precioSinIvaIesps.value = precio_sin_iva_iesps.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            combustible_cantidad_mxn.innerHTML = cantidad.value;
+            appbundle_combustible_iespsTotal.value = iespstot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            appbundle_combustible_totalSinIesps.value = total_sin_iesps.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            tasa_iva_mxn.innerHTML = tasa_iva.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            appbundle_combustible_totalSinIvaIesps.value = total_sin_iva_iesps.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            appbundle_combustible_subtotal.value = subtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            appbundle_combustible_ivaTotal.value = ivatot.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            appbundle_combustible_total.value = total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
             combustibleCalculaTotalesUSD();
         }
         function combustibleCalculaTotalesUSD() {
             let dolar = Number(dolar_combustible.value);
-            let precio_sin_iesps_usd = Number((document.getElementById('appbundle_combustible_precioSinIesps').value).replace(/,/g, '')) / dolar;
-            let precio_sin_iva_iesps_usd = Number((document.getElementById('appbundle_combustible_precioSinIvaIesps').value).replace(/,/g, '')) / dolar;
-            let iesps_total_usd = Number((document.getElementById('appbundle_combustible_iespsTotal').value).replace(/,/g, '')) / dolar;
-            let total_sin_iesps_usd = Number((document.getElementById('appbundle_combustible_totalSinIesps').value).replace(/,/g, '')) / dolar;
-            let total_sin_iva_iesps_usd = Number((document.getElementById('appbundle_combustible_totalSinIvaIesps').value).replace(/,/g, '')) / dolar;
-            let subtotal_usd = Number((document.getElementById('appbundle_combustible_subtotal').value).replace(/,/g, '')) / dolar;
-            let iva_total_usd = Number((document.getElementById('appbundle_combustible_ivaTotal').value).replace(/,/g, '')) / dolar;
-            let total_usd = Number((document.getElementById('appbundle_combustible_total').value).replace(/,/g, '')) / dolar;
+            let precio_sin_iesps_usd = Number((appbundle_combustible_precioSinIesps.value).replace(/,/g, '')) / dolar;
+            let precio_sin_iva_iesps_usd = Number((appbundle_combustible_precioSinIvaIesps.value).replace(/,/g, '')) / dolar;
+            let iesps_total_usd = Number((appbundle_combustible_iespsTotal.value).replace(/,/g, '')) / dolar;
+            let total_sin_iesps_usd = Number((appbundle_combustible_totalSinIesps.value).replace(/,/g, '')) / dolar;
+            let total_sin_iva_iesps_usd = Number((appbundle_combustible_totalSinIvaIesps.value).replace(/,/g, '')) / dolar;
+            let subtotal_usd = Number((appbundle_combustible_subtotal.value).replace(/,/g, '')) / dolar;
+            let iva_total_usd = Number((appbundle_combustible_ivaTotal.value).replace(/,/g, '')) / dolar;
+            let total_usd = Number((appbundle_combustible_total.value).replace(/,/g, '')) / dolar;
+            const comisionTipoPago = Number((appbundle_combustible_comisionTipoPagoValue.value).replace(/,/g, '')) / dolar;
 
+            document.getElementById('combustible_comisionTipoPagoValueUsd').innerHTML = comisionTipoPago.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');;
             document.getElementById('combustible_precioSinIespsUsd').innerHTML = precio_sin_iesps_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
             document.getElementById('combustible_precioSinIvaIespsUsd').innerHTML = precio_sin_iva_iesps_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
             document.getElementById('combustible_iespsTotalUsd').innerHTML = iesps_total_usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');

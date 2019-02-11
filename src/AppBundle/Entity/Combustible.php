@@ -2,11 +2,11 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Combustible\TipoPago;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints as NovoAssert;
 
 /**
  * Combustible
@@ -14,7 +14,6 @@ use AppBundle\Validator\Constraints as NovoAssert;
  * @ORM\Table(name="combustible")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CombustibleRepository")
  * @ORM\EntityListeners({"CombustibleListener"})
- * @NovoAssert\ProductHaveStock
  */
 class Combustible
 {
@@ -79,9 +78,16 @@ class Combustible
     /**
      * @var int
      *
-     * @ORM\Column(name="comision_tipo_pago", type="integer")
+     * @ORM\Column(name="comision_tipo_pago", type="smallint", nullable=true)
      */
     private $comisionTipoPago;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="comision_tipo_pago_value", type="bigint")
+     */
+    private $comisionTipoPagoValue;
 
     /**
      * @var int
@@ -322,6 +328,8 @@ class Combustible
         $this->notificarCliente = true;
         $this->validanovo = 0;
         $this->validacliente = 0;
+        $this->comisionTipoPago = 0;
+        $this->comisionTipoPagoValue = 0;
         $this->estatus = true;
         $this->pagos = new ArrayCollection();
         $this->cotizacionnotas = new ArrayCollection();
@@ -690,11 +698,11 @@ class Combustible
     }
 
     /**
-     * @param int $comisionTipoPago
+     * @param int|TipoPago $comisionTipoPago
      */
-    public function setComisionTipoPago(?int $comisionTipoPago): void
+    public function setComisionTipoPago($comisionTipoPago = null): void
     {
-        $this->comisionTipoPago = $comisionTipoPago;
+        $this->comisionTipoPago = $comisionTipoPago instanceof TipoPago ? $comisionTipoPago->getPorcentaje() : $comisionTipoPago;
     }
 
     /**
@@ -703,6 +711,22 @@ class Combustible
     public function getComisionTipoPago(): ?int
     {
         return $this->comisionTipoPago;
+    }
+
+    /**
+     * @param int $comisionTipoPagoValue
+     */
+    public function setComisionTipoPagoValue(?int $comisionTipoPagoValue): void
+    {
+        $this->comisionTipoPagoValue = $comisionTipoPagoValue;
+    }
+
+    /**
+     * @return int
+     */
+    public function getComisionTipoPagoValue(): ?int
+    {
+        return $this->comisionTipoPagoValue;
     }
 
     /**

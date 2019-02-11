@@ -157,24 +157,23 @@ class CombustibleType extends AbstractType
                 'class'         => TipoPago::class,
                 'choice_value'  => 'porcentaje',
                 'choice_label'  => 'nombre',
-                'placeholder'   => 'Sin comisión'
+                'placeholder'   => 'Sin comisión',
+                'required'      => false,
             ]
         );
 
         $builder->add(
-            'comisionTipoPagoUnmapped',
+            'comisionTipoPagoValue',
             MoneyType::class,
             [
                 'label'          => 'Comisión de tipo de pago',
                 'attr'           => [
                     'readonly' => true,
-                    'value'    => '0.00'
                 ],
                 'divisor'        => 100,
                 'currency'       => 'MXN',
                 'label_attr'     => ['class' => 'letra-azul tipo-letra2'],
                 'grouping'       => true,
-                'mapped'         => false,
             ]
         );
 
