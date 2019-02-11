@@ -82,7 +82,7 @@ class ImportAstilleroProductoCSVCommand extends Command
             $producto->setClaveProdServ($claveProdServ);
             $producto->setNombre($record['NOMBRE']);
             $producto->setUnidad($record['UNIDAD']);
-            $producto->setPrecio($record['PRECIO']);
+            $producto->setPrecio($record['PRECIO'] * 100);
             $producto->setExistencia($record['EXISTENCIAS']);
 
             $this->em->persist($producto);
