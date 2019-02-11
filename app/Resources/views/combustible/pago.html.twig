@@ -82,7 +82,6 @@
                                             <th>Pago</th>
                                             <th>Fecha de pago</th>
                                             <th>Valor del dolar</th>
-                                            <th>Factura</th>
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -94,7 +93,6 @@
                                      {% endfilter %}
                                      ">
                                         {% for i, pagoField in form.pagos %}
-                                            {% set factura = combustible.pagos[i].factura %}
                                             {% form_theme pagoField 'marinahumeda/cotizacion/pago/coleccion-pago.twig' %}
                                             <tr class="pago-agregado">
                                                 <td>{{ form_widget(pagoField.metodopago) }}</td>
@@ -102,17 +100,6 @@
                                                 <td>{{ form_widget(pagoField.cantidad) }} </td>
                                                 <td>{{ form_widget(pagoField.fecharealpago) }} </td>
                                                 <td>{{ form_widget(pagoField.dolar) }}</td>
-                                                <td style="vertical-align: middle">
-                                                    {% if combustible.pagos[i].factura %}
-                                                        <a href="{{ path('contabilidad_factura_pdf', { 'id': factura.id }) }}"
-                                                           target="_blank"
-                                                           class="remove-motor btn btn-xs btn-azul"
-                                                           style="margin: 5px;"
-                                                        >
-                                                            PDF
-                                                        </a>
-                                                    {% endif %}
-                                                </td>
                                                 <td style="vertical-align: middle">
                                                     <a href="#" class="remove-pago btn btn-xs btn-naranja">
                                                         <i class="fa fa-times" aria-hidden="true"></i>
@@ -147,4 +134,36 @@
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function () {
+          // noinspection JSAnnotator
+          const comisionPorTipoPagoValue = {{ combustible.comisionTipoPagoValue }};
+
+          if (!comisionPorTipoPagoValue) return;
+
+          const paymentList = document.querySelector('.lista-pagos');
+          const paymentAdd = document.querySelector('.add-another-pago');
+          const paymentTypeDetection = function () {
+            paymentList.childNodes.forEach(function (row) {
+              if (!row.cells) return;
+              const paymentTypeSelect = row.cells[0].querySelector('select');
+              paymentTypeSelect.childNodes[1].disabled = true;
+              paymentTypeSelect.childNodes[2].disabled = true;
+            });
+          };
+
+          paymentTypeDetection();
+
+          paymentAdd.addEventListener('click', function (event) {
+            event.preventDefault();
+            paymentTypeDetection();
+          });
+
+
+        })();
+    </script>
 {% endblock %}

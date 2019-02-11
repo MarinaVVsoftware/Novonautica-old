@@ -107,6 +107,7 @@
                     <th>Litros</th>
                     <th>Sub-Total</th>
                     <th>IVA</th>
+                    <th>Comisión por tipo de pago</th>
                     <th>Total</th>
                 </tr>
                 </thead>
@@ -116,6 +117,7 @@
                     <td>{{ combustible.cantidad }}</td>
                     <td>$ {{ (combustible.subtotal/100)|number_format(2) }}</td>
                     <td>$ {{ (combustible.ivaTotal/100)|number_format(2) }}</td>
+                    <td>$ {{ (combustible.comisionTipoPagoValue/100)|number_format(2) }}</td>
                     <td>$ {{ (combustible.total/100)|number_format(2) }}</td>
                 </tr>
                 </tbody>
@@ -139,6 +141,7 @@
                     <th>Litros</th>
                     <th>Sub-Total</th>
                     <th>IVA</th>
+                    <th>Comisión por tipo de pago</th>
                     <th>Total</th>
                 </tr>
                 </thead>
@@ -148,6 +151,7 @@
                     <td>{{ combustible.cantidad }}</td>
                     <td>$ {{ (combustible.subtotal/combustible.dolar)|number_format(2) }}</td>
                     <td>$ {{ (combustible.ivaTotal/combustible.dolar)|number_format(2) }}</td>
+                    <td>$ {{ (combustible.comisionTipoPagoValue/combustible.dolar)|number_format(2) }}</td>
                     <td>$ {{ (combustible.total/combustible.dolar)|number_format(2) }}</td>
                 </tr>
                 </tbody>

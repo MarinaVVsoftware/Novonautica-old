@@ -133,7 +133,6 @@ class CombustibleController extends Controller
             ]);
             $this->enviaCorreoNotificacion($mailer, $notificables, $combustible);
             return $this->redirectToRoute('combustible_show', ['id' => $combustible->getId()]);
-
         }
 
         return $this->render('combustible/new.html.twig', [

@@ -315,6 +315,25 @@
                              <div class="col-sm-3">
                                  <hr>
                              </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">Porcentaje de comisión por tipo de pago</label>
+                             </div>
+                             <div class="col-sm-8">
+                                 <span class="pl-1">{{ (combustible.comisionTipoPago) }} %</span>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
                              <div class="col-sm-8">
                                  <hr>
                              </div>
@@ -350,6 +369,28 @@
                              </div>
                              <div class="col-sm-4">
                                  $ {{ (combustible.subtotal/combustible.dolar)|number_format(2) }} <small>USD</small>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                             <div class="col-sm-4">
+                                 <hr>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-sm-3">
+                                 <label class="letra-azul tipo-letra2">Comisión por tipo de pago:</label>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.comisionTipoPagoValue / 100)|number_format(2) }} <small>MXN</small>
+                             </div>
+                             <div class="col-sm-4">
+                                 $ {{ (combustible.comisionTipoPagoValue / combustible.dolar)|number_format(2) }} <small>USD</small>
                              </div>
                          </div>
                          <div class="row">
