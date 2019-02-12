@@ -9,10 +9,8 @@ function elimina_ampersand($texto)
 	// Si se encontraron incidencias
 	if($rr !== false)
 	{
-		//var_dump($matches);
 		foreach($matches as $match)
 		{
-			//var_dump($match);
 			$pos = $match[1];
 			$aux = '';
 			for($i = 0; $i < strlen($texto); $i++)
@@ -79,65 +77,6 @@ function mf_default(&$datos)
 			$datos['pass'] = '12345678a';
 		}
 	}*/
-	
-	global $__mf_constantes__;
-
-    // Se verifica la version
-    switch ($__mf_constantes__['__MF_VERSION_CFDI__'])
-	{
-		case '3.2':
-			// Complemento Nomina
-			if($datos['modonomina'] == 'SI')
-			{
-				$datos['complemento'] = 'nomina12';
-				
-				$nomina = $datos['nomina'];
-				
-				$datos['nomina12'] = $nomina['datos'];
-				unset($nomina['datos']);
-				unset($datos['nomina']);
-				$datos['nomina12'] = array_merge($datos['nomina12'], $nomina);
-				
-				if(isset($datos['nomina12']['emisor']))
-				{
-					$datos['nomina12']['Emisor'] = $datos['nomina12']['emisor'];
-					unset($datos['nomina12']['emisor']);
-				}
-				
-				if(isset($datos['nomina12']['receptor']))
-				{
-					$datos['nomina12']['Receptor'] = $datos['nomina12']['receptor'];
-					unset($datos['nomina12']['receptor']);
-				}
-				
-				if(isset($datos['nomina12']['percepciones']))
-				{
-					$datos['nomina12']['Percepciones'] = $datos['nomina12']['percepciones'];
-					unset($datos['nomina12']['percepciones']);
-				}
-				
-				if(isset($datos['nomina12']['deducciones']))
-				{
-					$datos['nomina12']['Deducciones'] = $datos['nomina12']['deducciones'];
-					unset($datos['nomina12']['deducciones']);
-				}
-				
-				if(isset($datos['nomina12']['otrospagos']))
-				{
-					$datos['nomina12']['OtrosPagos'] = $datos['nomina12']['otrospagos'];
-					unset($datos['nomina12']['otrospagos']);
-				}
-				
-				if(isset($datos['nomina12']['deducciones']))
-				{
-					$datos['nomina12']['Incapacidades'] = $datos['nomina12']['deducciones'];
-					unset($datos['nomina12']['deducciones']);
-				}
-			}
-			break;
-		case '3.3':
-			break;
-	}
 	
     return $datos;
 }

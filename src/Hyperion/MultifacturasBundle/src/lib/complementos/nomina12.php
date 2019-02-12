@@ -7,6 +7,7 @@ function mf_ini_complemento_nomina12(&$datos)
     // Lista de alias para Nomina v1.2
     //$alias_nomina12['nomina12']['Receptor']['Antiguedad'] = 'Antig�edad';
     $alias_nomina12['nomina12']['Receptor']['Antiguedad'] = utf8_decode('Antigüedad');
+	$alias_nomina12['nomina12']['SeparacionIndemnizacion']['NumAnosServicio'] = utf8_decode('NumAñosServicio');
     mf_agrega_alias($alias_nomina12);
 }
 

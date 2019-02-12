@@ -1,0 +1,145 @@
+*{
+/*    
+    font-family: monospace !important; 
+fantasy sans-serif
+*/
+    font-family: Verdana;
+
+    font-size: 12px !important;
+    font-weight: bold !important;
+}
+
+.factura_cuadro{
+    margin: 3px !important;
+    padding: 3px !important;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.factura_cuadro_linea{
+    margin: 3px !important;
+    padding: 3px !important;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    
+    
+}
+
+.factura_emisor{
+    text-transform: uppercase !important;
+    min-height: 80px;
+}
+
+.factura_expedidoen{
+    text-transform: uppercase !important;
+}
+.factura_receptor{
+    text-transform: uppercase !important;
+    min-height: 80px;
+}
+.factura_datosgenerales{
+    text-transform: uppercase !important;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: right;
+}
+.factura_sellos{
+    word-wrap:break-word;
+     
+}
+.factura_titulo_empresa{
+    text-transform: uppercase !important;
+    font-weight: bold;
+    font-size: 14px !important;
+}
+
+.factura_titulo_ch{
+    text-transform: uppercase !important;
+    font-weight: bold;
+    font-size: 13px !important;    
+    
+}
+
+.factura_cbb{
+    display: inline-block;
+    width: auto;
+    display: inline-block;
+    background-color: red;
+    
+}
+.factura_sellos_txt{
+    display: inline-block;    
+   word-wrap:break-word;
+   font-size: 8px !important;
+}
+
+.factura_sellos_txt b{
+    display: inline-block;    
+   word-wrap:break-word;
+   font-size: 9px !important;
+   text-transform: uppercase;
+}
+
+
+.factura_totales{
+    text-align: right !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+}
+
+.factura_detalles{
+    min-height: 100px;
+}
+
+.factura_detalles_renglon1{
+    font-weight: bold;
+    font-style: normal;
+}
+.factura_detalles_renglon2{
+    font-weight: bold;
+    font-style: italic;
+}
+.factura_detalles_cabecera{
+    background-color: black;
+    color: white;
+    font-weight: bolder;
+}
+
+.factura_titulo_serie_folio{
+    font-weight: bold !important;
+    font-size: 24px !important;
+}
+
+.factura_cancelada{
+    position: relative;
+    top : -30px;
+    margin: 10px;
+    margin-left: 100px;
+    padding: 5px;
+    text-align: center;
+    width: 350px;
+    font-size: 18px;
+    border-style: double;
+    border-width: 3px;
+
+    -moz-transform:rotate(-3deg);
+    -webkit-transform:rotate(-3deg); 
+    -ms-transform:rotate(-3deg);
+           
+    
+}
+
+.nota{
+/*    position: relative;*/
+    top : 0px;
+    margin: 10px;
+    margin-left: 100px;
+    padding: 10px;
+    text-align: justify;
+    width: 450px;
+    font-size: 18px;
+    border-style:dotted;
+    border-width: 3px;
+    
+}

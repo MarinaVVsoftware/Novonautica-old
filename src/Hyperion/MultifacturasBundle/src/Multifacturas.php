@@ -201,14 +201,14 @@ class Multifacturas
         $datos['pagos10']['Pagos'][0]['FormaDePagoP'] = $pago->getFormaPagoPagos();
         $datos['pagos10']['Pagos'][0]['MonedaP'] = $pago->getMonedaPagos();
         $datos['pagos10']['Pagos'][0]['Monto'] = $pago->getMontoPagos();
-        $datos['pagos10']['Pagos'][0]['TipoCambioP']= $pago->getTipoCambioPagos();
+        $datos['pagos10']['Pagos'][0]['TipoCambioP'] = $pago->getTipoCambioPagos();
 
-        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaOrd']= $cuentaOrdenante->getBanco()->getRFC();
-        $datos['pagos10']['Pagos'][0]['NomBancoOrdExt']= $cuentaOrdenante->getBanco()->getRazonSocial();
-        $datos['pagos10']['Pagos'][0]['CtaOrdenante']= $cuentaOrdenante->getNumeroCuenta();
+        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaOrd'] = $cuentaOrdenante->getBanco()->getRFC();
+        $datos['pagos10']['Pagos'][0]['NomBancoOrdExt'] = $cuentaOrdenante->getBanco()->getRazonSocial();
+        $datos['pagos10']['Pagos'][0]['CtaOrdenante'] = $cuentaOrdenante->getNumeroCuenta();
 
-        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaBen']= $cuentaBeneficiario->getRfc();
-        $datos['pagos10']['Pagos'][0]['CtaBeneficiario']= $cuentaBeneficiario->getNumCuenta();
+        $datos['pagos10']['Pagos'][0]['RfcEmisorCtaBen'] = $cuentaBeneficiario->getRfc();
+        $datos['pagos10']['Pagos'][0]['CtaBeneficiario'] = $cuentaBeneficiario->getNumCuenta();
 
 //        $datos['pagos10']['Pagos'][0]['NumOperacion']= '0.0';
 //        $datos['pagos10']['Pagos'][0]['TipoCadPago']= '0.0';
@@ -254,13 +254,17 @@ class Multifacturas
         $datos['PAC']['usuario'] = $emisor->getUsuarioPAC();
         $datos['PAC']['pass'] = $emisor->getPasswordPAC();
 
-        $datos['cancelar'] = 'SI';
-        $datos['cfdi'] = $factura->getXmlArchivo();
-        $datos['conf']['cer'] = $this->directory.'/certificados/'.$emisor->getCer();
-        $datos['conf']['key'] = $this->directory.'/certificados/'.$emisor->getKey();
-        $datos['conf']['pass'] = $emisor->getPassword();
+        $datos['modulo'] = 'cancelacion2018';
+        $datos['accion'] = 'cancelar';
+        $datos['uuid'] = $factura->getUuidFiscal();
+        $datos['xml'] = $factura->getXmlArchivo();
 
-        return cfdi_cancelar($datos);
+        $datos['rfc'] = $emisor->getRfc();
+        $datos['password'] = $emisor->getPassword();
+        $datos['b64Cer'] = $this->directory.'/certificados/'.$emisor->getCer();
+        $datos['b64Key'] = $this->directory.'/certificados/'.$emisor->getKey();
+
+        return mf_ejecuta_modulo($datos);
     }
 
 
@@ -280,12 +284,16 @@ class Multifacturas
         $datos['PAC']['usuario'] = $emisor->getUsuarioPAC();
         $datos['PAC']['pass'] = $emisor->getPasswordPAC();
 
-        $datos['cancelar'] = 'SI';
-        $datos['cfdi'] = $pago->getXmlArchivo();
-        $datos['conf']['cer'] = $this->directory.'/certificados/'.$emisor->getCer();
-        $datos['conf']['key'] = $this->directory.'/certificados/'.$emisor->getKey();
-        $datos['conf']['pass'] = $emisor->getPassword();
+        $datos['modulo'] = 'cancelacion2018';
+        $datos['accion'] = 'cancelar';
+        $datos['uuid'] = $factura->getUuidFiscal();
+        $datos['xml'] = $factura->getXmlArchivo();
 
-        return cfdi_cancelar($datos);
+        $datos['rfc'] = $emisor->getRfc();
+        $datos['password'] = $emisor->getPassword();
+        $datos['b64Cer'] = $this->directory.'/certificados/'.$emisor->getCer();
+        $datos['b64Key'] = $this->directory.'/certificados/'.$emisor->getKey();
+
+        return mf_ejecuta_modulo($datos);
     }
 }
