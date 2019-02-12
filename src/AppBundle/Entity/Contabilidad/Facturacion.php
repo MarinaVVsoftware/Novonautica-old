@@ -252,9 +252,6 @@ class Facturacion
      * DATOS DE ENTIDAD
      *-----------------------------------------------------------------------------------------------*/
 
-    // private $cotizacion Se requiere un input de cotizaciones para sacar los pagos?
-    // private $cuerpoCorreo;
-
     /**
      * @var int $estatus
      *

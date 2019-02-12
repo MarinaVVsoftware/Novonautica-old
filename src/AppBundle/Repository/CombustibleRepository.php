@@ -34,6 +34,7 @@ class CombustibleRepository extends \Doctrine\ORM\EntityRepository
             'FROM AppBundle:Combustible cotizaciones '.
             'LEFT JOIN cotizaciones.barco barco '.
             'WHERE IDENTITY(cotizaciones.cliente) = :client '.
+            'AND cotizaciones.factura IS NULL '.
             'AND cotizaciones.fecha BETWEEN :inicio AND :fin')
             ->setParameter('inicio', $inicio)
             ->setParameter('fin', $fin)
