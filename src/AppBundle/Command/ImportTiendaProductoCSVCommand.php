@@ -75,26 +75,25 @@ class ImportTiendaProductoCSVCommand extends Command
                 ->findOneBy([
                     'claveUnidad' => $record['CLAVE PRODUCTO'],
                 ]);
-//            $categoria = $this->em->getRepository(Categoria::class)
-//                ->findOneBy([
-//                    'nombre' => $record['categoria']
-//                ]);
+            $categoria = $this->em->getRepository(Categoria::class)
+                ->findOneBy([
+                    'nombre' => $record['PROVEEDOR']
+                ]);
 
             $producto = new Producto();
 
             $producto->setCodigoBarras($record['CODIGO']);
             $producto->setNombre($record['NOMBRE']);
-
             $producto->setPrecio($record['PRECIO'] * 100);
             $producto->setPreciocolaborador($record['PRECIO COLABORADOR'] * 100);
             $producto->setClaveProdServ($claveProdServ);
             $producto->setClaveUnidad($claveUnidad);
+            $producto->setCategoria($categoria);
             $producto->setExistencia($record['EXISTENCIAS']);
             $producto->setIESPS(0);
             $producto->setIVA(0);
 
             $this->em->persist($producto);
-
             $io->progressAdvance();
         }
 

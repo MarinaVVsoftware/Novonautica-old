@@ -66,9 +66,11 @@ class ImportAstilleroProductoCSVCommand extends Command
         $io->progressStart(iterator_count($records));
 
         foreach ($records as $record) {
+            $claveUnidadCode = explode('-', $record['CLAVE UNIDAD'])[0];
+
             $claveUnidad = $this->em->getRepository(ClaveUnidad::class)
                 ->findOneBy([
-                    'claveUnidad' => $record['CLAVE UNIDAD'],
+                    'claveUnidad' => $claveUnidadCode,
                 ]);
             $claveProdServ = $this->em->getRepository(ClaveProdServ::class)
                 ->findOneBy([
@@ -82,11 +84,10 @@ class ImportAstilleroProductoCSVCommand extends Command
             $producto->setClaveProdServ($claveProdServ);
             $producto->setNombre($record['NOMBRE']);
             $producto->setUnidad($record['UNIDAD']);
-            $producto->setPrecio($record['PRECIO'] * 100);
+            $producto->setPrecio((int)($record['PRECIO'] * 100));
             $producto->setExistencia($record['EXISTENCIAS']);
 
             $this->em->persist($producto);
-
             $io->progressAdvance();
         }
 
