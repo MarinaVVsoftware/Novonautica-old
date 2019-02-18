@@ -1,0 +1,1 @@
+function decimalAdjust(c,a,b){if("undefined"===typeof b||0===+b)return Math[c](a);a=+a;b=+b;if(isNaN(a)||"number"!==typeof b||0!==b%1)return NaN;a=a.toString().split("e");a=Math[c](+(a[0]+"e"+(a[1]?+a[1]-b:-b)));a=a.toString().split("e");return+(a[0]+"e"+(a[1]?+a[1]+b:b))}Math.round10||(Math.round10=function(c,a){return decimalAdjust("round",c,a)});

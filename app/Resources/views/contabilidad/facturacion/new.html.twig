@@ -408,6 +408,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('js/reliableRounding.js') }}"></script>
     <script src="{{ asset('js/cleave.min.js') }}"></script>
     <script src="{{ asset('js/auto-complete.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
@@ -433,6 +434,8 @@
                 this.elementListener(element);
               });
 
+          this.elementList = [];
+
           this.elementCounter = this.prototypeHolder.childElementCount;
 
           this.addButton
@@ -453,6 +456,7 @@
 
           this.appendRemoveButton(element);
           this.elementListener(element, event);
+          this.elementList.push(element);
           this.prototypeHolder.appendChild(element);
 
           return this.prototypeHolder.children[this.prototypeHolder.children.length - 1];
@@ -547,15 +551,41 @@
         getFolio();
 
         function elementListener(element) {
-          new Cleave(element.cells[5].firstElementChild, {numeral: true});
-          new Cleave(element.cells[6].firstElementChild, {numeral: true});
-          new Cleave(element.cells[7].firstElementChild, {numeral: true});
-          new Cleave(element.cells[11].firstElementChild, {numeral: true});
+          /**
+           * Elementos
+           */
+          element.connectedNodes = {};
 
-          element.cells[12].firstElementChild.addEventListener('click', computeConceptos);
+          element.connectedNodes.cantidadInput = element.cells[0].firstElementChild;
+          element.connectedNodes.unidadInput = element.cells[1].firstElementChild;
+          element.connectedNodes.claveProdServSelect2 = $(element.cells[2].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveprodserv'}});
+          element.connectedNodes.claveUnidadSelect2 = $(element.cells[3].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveunidad'}});
+          element.connectedNodes.valorUnitarioInput = new Cleave(element.cells[5].firstElementChild, {numeral: true});
+          element.connectedNodes.importeInput = new Cleave(element.cells[6].firstElementChild, {numeral: true});
+          element.connectedNodes.baseInput = new Cleave(element.cells[7].firstElementChild, {numeral: true});
+          element.connectedNodes.valorFactorInput = element.cells[10].firstElementChild;
+          element.connectedNodes.impuestoImporteInput = new Cleave(element.cells[11].firstElementChild, {numeral: true});
+          element.connectedNodes.conceptoIdHiddenInput = element.cells[12].children[0];
+          element.connectedNodes.cantidadHiddenInput = element.cells[12].children[1];
+          element.connectedNodes.deleteButton = element.cells[12].children[2];
+          element.connectedNodes.descripcionInput = element.cells[4].firstElementChild;
 
-          const $cpsSelect2 = $(element.cells[2].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveprodserv'}});
-          const $cuSelect2 = $(element.cells[3].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveunidad'}});
+          console.log(element.connectedNodes.deleteButton); // No esta calculando conceptos al eliminar
+          /**
+           * Funciones
+           */
+          const computeConcepto = function (event) {
+            const cantidad = Number(element.connectedNodes.cantidadInput.value);
+            const valorUnitario = Number(element.connectedNodes.valorUnitarioInput.getRawValue());
+            const importeAndBase = Math.round10(cantidad * valorUnitario, -2);
+            const valorFactor = Math.round10(importeAndBase * Number(element.connectedNodes.valorFactorInput.value), -2);
+
+            element.connectedNodes.importeInput.setRawValue(importeAndBase);
+            element.connectedNodes.baseInput.setRawValue(importeAndBase);
+            element.connectedNodes.impuestoImporteInput.setRawValue(valorFactor);
+
+            computeConceptos();
+          };
 
           new autoComplete({
             selector: element.cells[4].firstElementChild,
@@ -575,13 +605,28 @@
             },
             onSelect(event, term, item) {
               const claves = item.dataset;
-              $cpsSelect2.append(new Option(claves.cpsText, claves.cpsId, true, true)).trigger('select');
-              $cuSelect2.append(new Option(claves.cuText, claves.cuId, true, true)).trigger('select');
+              element.connectedNodes.claveProdServSelect2
+                  .append(new Option(claves.cpsText, claves.cpsId, true, true)).trigger('select');
+              element.connectedNodes.claveUnidadSelect2
+                  .append(new Option(claves.cuText, claves.cuId, true, true)).trigger('select');
             }
           });
+
+          /**
+           * LISTENERS
+           */
+          element.connectedNodes.deleteButton.addEventListener('click', computeConceptos);
+
+          // Lectura de cantidad y valor unitario para calculo de importe/base
+          element.connectedNodes.valorUnitarioInput.element.addEventListener('input', computeConcepto);
+          element.connectedNodes.cantidadInput.addEventListener('input', computeConcepto);
+
+          return element;
         }
 
-        // Eventlisteners
+        /**
+         * LISTENERS
+         */
 
         metodoPagoSelect.addEventListener('change', function () {
           if (this.value === 'PUE') {
@@ -619,7 +664,14 @@
           getCotizaciones(emisorSelect.value, $clienteSelect2.val());
         });
 
+        /**
+         * Al seleccionar una cotizacion, se buscan todos los conceptos de esta y se agrega una fila con los datos
+         * que cada concepto incluya
+         */
         cotizacionSelect.addEventListener('change', function () {
+          // La tabla se tiene que limpiar cada vez que cambie el select de cotizaciones cambie de valor
+          conceptoTable.clear();
+
           if (!this.value) return;
 
           loadingState.style.display = 'block';
@@ -631,38 +683,39 @@
                 m: moment($dateInputPicker.datepicker('getDate')).format('YYYY-MM-DD')
               }
           ).done(({results}) => {
-            conceptoTable.clear();
-            if (!results.length) return;
+            if (!results.length) {
+              throwAlert('Este cotización no tiene conceptos, por favor verifica que la cotización se haya generado correctamente', 'danger');
+              return;
+            }
 
             for (const result of results) {
-              const conceptoImporte = Number(result.conceptoImporte / 1.16);
+              const conceptoImporte = (Number(result.conceptoImporte) / 1.16);
               const conceptoValorUnitario = (conceptoImporte / result.conceptoCantidad);
               const conceptoIVA = (conceptoImporte * .16);
 
-              let element = conceptoTable.addElement();
+              const element = conceptoTable.addElement();
+              const connectedNodes = element.connectedNodes;
 
-              let cantidadInput = element.cells[0].firstElementChild;
+              connectedNodes.cantidadInput.setAttribute('readonly', 'readonly');
+              connectedNodes.cantidadInput.value = result.conceptoCantidad;
 
-              cantidadInput.setAttribute('readonly', 'readonly');
-              cantidadInput.value = result.conceptoCantidad;
-
-              element.cells[1].firstElementChild.value = result.conceptoUnidad || result.cuDescripcion || 'NA';
-              element.cells[4].firstElementChild.value = result.conceptoDescripcion;
-              element.cells[5].firstElementChild.value = moneyFormat(conceptoValorUnitario / 100);
-              element.cells[6].firstElementChild.value = moneyFormat(conceptoImporte / 100);
-              element.cells[7].firstElementChild.value = element.cells[6].firstElementChild.value;
-              element.cells[11].firstElementChild.value = moneyFormat(conceptoIVA / 100);
-              element.cells[12].children[0].value = result.productoId || 0;
-              element.cells[12].children[1].value = result.conceptoCantidad;
+              connectedNodes.unidadInput.value = result.conceptoUnidad || result.cuDescripcion || 'NA';
+              connectedNodes.descripcionInput.value = result.conceptoDescripcion;
+              connectedNodes.valorUnitarioInput.setRawValue(conceptoValorUnitario / 100);
+              connectedNodes.importeInput.setRawValue(conceptoImporte / 100);
+              connectedNodes.baseInput.setRawValue(conceptoImporte / 100);
+              connectedNodes.impuestoImporteInput.setRawValue(conceptoIVA / 100);
+              connectedNodes.conceptoIdHiddenInput = result.productoId || 0;
+              connectedNodes.cantidadHiddenInput = result.conceptoCantidad;
 
               if (result.cpsId && result.cpsDescripcion) {
-                $(element.cells[2].firstElementChild)
+                element.connectedNodes.claveProdServSelect2
                     .append(new Option(result.cpsDescripcion, result.cpsId, true, true))
                     .trigger('change');
               }
 
               if (result.cuId && result.cuDescripcion) {
-                $(element.cells[3].firstElementChild)
+                element.connectedNodes.claveUnidadSelect2
                     .append(new Option(result.cuDescripcion, result.cuId, true, true))
                     .trigger('change');
               }
@@ -730,30 +783,22 @@
         }
 
         function computeConceptos() {
-          let totalValue;
+          let totalValue = 0;
           let subtotalValue = 0;
           let impuestosValue = 0;
 
-          for (const concepto of conceptoTable.prototypeHolder.children) {
-            subtotalValue += Number(moneyRawValue(concepto.cells[6].firstElementChild.value));
-            impuestosValue += Number(moneyRawValue(concepto.cells[11].firstElementChild.value));
+          for (const element of conceptoTable.elementList) {
+            subtotalValue += Number(element.connectedNodes.importeInput.getRawValue());
+            impuestosValue += Number(element.connectedNodes.impuestoImporteInput.getRawValue());
             totalValue = subtotalValue + impuestosValue;
           }
 
-          subtotalInput.element.value = moneyFormat(subtotalValue);
-          totalInput.element.value = moneyFormat(totalValue);
-          totalImporteImpuestosInput.element.value = totalImpuestosInput.element.value = moneyFormat(impuestosValue);
-        }
+          subtotalInput.setRawValue(subtotalValue);
+          totalInput.setRawValue(totalValue);
 
-        function moneyFormat(value, point) {
-          const fixedPoint = point || 2;
-          return value.toFixed(fixedPoint).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          totalImpuestosInput.setRawValue(impuestosValue);
+          totalImporteImpuestosInput.setRawValue(impuestosValue);
         }
-
-        function moneyRawValue(value) {
-          return value.replace(/,/g, '');
-        }
-
       })(jQuery)
     </script>
 {% endblock %}

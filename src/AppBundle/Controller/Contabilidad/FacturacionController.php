@@ -175,6 +175,7 @@ class FacturacionController extends Controller
                 $conceptos = $form->get('conceptos')->all();
 
                 foreach ($conceptos as $concepto) {
+                    // Se asigna la variable $productoId y verificamos que exista
                     if ($productoId = $concepto->get('producto')->getData()) {
                         $producto = $astilleroProductoRepository->find($productoId);
 
@@ -204,9 +205,9 @@ class FacturacionController extends Controller
         return $this->render(
             'contabilidad/facturacion/new.html.twig',
             [
-            'form' => $form->createView(),
-            'factura' => $factura,
-        ]
+                'form' => $form->createView(),
+                'factura' => $factura,
+            ]
         );
     }
 
