@@ -2,19 +2,19 @@
 
 namespace AppBundle\Form\Contabilidad\Catalogo;
 
-use AppBundle\Entity\Contabilidad\Catalogo\Servicio;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad;
 use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 class ServicioType extends AbstractType
@@ -23,10 +23,17 @@ class ServicioType extends AbstractType
      * @var EntityManagerInterface
      */
     private $entityManager;
+    /**
+     * @var Security
+     */
+    private $security;
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        Security $security
+    ) {
         $this->entityManager = $entityManager;
+        $this->security = $security;
     }
 
     /**
@@ -43,6 +50,23 @@ class ServicioType extends AbstractType
             [
                 'label' => 'Empresa',
                 'class' => Emisor::class,
+                'query_builder' => function (EntityRepository $er) {
+                    $query = $er->createQueryBuilder('e');
+                    $views = [];
+
+                    foreach ($this->security->getUser()->getRoles() as $role) {
+                        if (strpos($role, 'ROLE_ADMIN') === 0) {
+                            return $query;
+                        }
+
+                        if (strpos($role, 'VIEW_EGRESO') === 0) {
+                            $views[] = explode('_', $role)[3];
+                        }
+                    }
+
+                    return $query->where($query->expr()->in('e.id', $views));
+                },
+                'constraints' => [new NotNull(['message' => 'Por favor selecciona una empresa'])],
             ]
         );
 
