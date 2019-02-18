@@ -7,6 +7,38 @@
         .list-unstyled li {
             margin-bottom: .5rem;
         }
+
+        :root hr {
+            margin-top: 10px !important;
+            margin-bottom: 10px !important;
+            border-top: 1px solid #eee !important;
+        }
+
+        dl {
+            margin-bottom: 0;
+        }
+
+        dl.dl-horizontal dt {
+            text-align: left;
+            width: 110px;
+        }
+
+        dl.dl-horizontal dd {
+            text-align: right;
+            margin-left: 110px;
+        }
+
+        table.dataTable thead .sorting:nth-child(6):after,
+        table.dataTable thead .sorting_desc:nth-child(6):after,
+        table.dataTable thead .sorting_asc:nth-child(6):after,
+        table.dataTable thead .sorting:nth-child(7):after,
+        table.dataTable thead .sorting_desc:nth-child(7):after,
+        table.dataTable thead .sorting_asc:nth-child(7):after,
+        table.dataTable thead .sorting:nth-child(8):after,
+        table.dataTable thead .sorting_desc:nth-child(8):after,
+        table.dataTable thead .sorting_asc:nth-child(8):after {
+            content: '';
+        }
     </style>
 {% endblock %}
 
@@ -18,30 +50,21 @@
                     <h3 class="panel-title">Cotizaciones Estadias</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="panel-body">
-                        <table class="table table-novo" width="100%" style="width: 100%">
-                            <thead>
-                            <tr>
-                                <th>Folio</th>
-                                <th>Cliente</th>
-                                <th>Barco</th>
-                                <th>Fecha llegada</th>
-                                <th>Fecha salida</th>
-                                <th>Slip</th>
-                                <th>Días de estadía</th>
-                                <th>Subtotal</th>
-                                <th>Descuento Total</th>
-                                <th>Iva Total</th>
-                                <th>Interes Moratorio</th>
-                                <th>Total</th>
-                                <th class="with-options">Validación</th>
-                                <th class="with-options">Aceptación</th>
-                                <th class="with-options">Pago</th>
-                                <th class="no-sort"></th>
-                            </tr>
-                            </thead>
-                        </table>
-                    </div>
+                    <table class="table table-novo" width="100%" style="width: 100%">
+                        <thead>
+                        <tr>
+                            <th>Folio</th>
+                            <th width="15%">Cliente <br> Embarcación</th>
+                            <th width="10%">Llegada <br> Salida <br> Días de estadía</th>
+                            <th>Slip <br> Feets</th>
+                            <th>Totales</th>
+                            <th class="with-options" width="10%" style="padding-right: 0">Validación</th>
+                            <th class="with-options" width="10%" style="padding-right: 0">Aceptación</th>
+                            <th class="with-options" width="10%" style="padding-right: 0">Pago</th>
+                            <th class="no-sort"></th>
+                        </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </section>
@@ -68,29 +91,45 @@
             {responsivePriority: 1},
             {responsivePriority: 2},
             {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
             {responsivePriority: 1},
             {responsivePriority: 1},
             {responsivePriority: 1},
             {responsivePriority: 0},
           ],
-          createdRow: function (row, data) {
-            for (let i of [12, 13, 14]) {
-              if (!data[i]) row.children[i].innerHTML = pendiente;
-              if (data[i] === 1) row.children[i].innerHTML = rechazado;
-              if (data[i] === 2) row.children[i].innerHTML = aceptado;
+          createdRow: function (row, cotizacion) {
+            for (let i of [5, 6, 7]) {
+              if (!cotizacion[i]) row.cells[i].innerHTML = pendiente;
+              if (cotizacion[i] === 1) row.cells[i].innerHTML = rechazado;
+              if (cotizacion[i] === 2) row.cells[i].innerHTML = aceptado;
             }
-            row.lastElementChild.innerHTML = writeLastChild(data[12], data[13], data[14], data[15]);
+
+            row.cells[1].innerHTML = `
+                <dl class="dl-horizontal">
+                    <dt>Cliente: </dt> <dd>${cotizacion[1].cliente}</dd>
+                    <dt>Embarcación: </dt> <dd>${cotizacion[1].embarcacion}</dd>
+                </dl>`;
+
+            row.cells[2].innerHTML = `
+                <dl class="dl-horizontal">
+                    <dt>Llegada: </dt> <dd>${cotizacion[2].llegada}</dd>
+                    <dt>Salida: </dt> <dd>${cotizacion[2].salida}</dd>
+                    <dt>Días: </dt> <dd>${cotizacion[2].dias}</dd>
+                </dl>`;
+            row.cells[4].innerHTML = `
+                <dl class="dl-horizontal">
+                <dt>Descuento:</dt> <dd>${cotizacion[4].descuento}</dd>
+                <dt>Interés moratorio:</dt> <dd>${cotizacion[4].interesMoratorio}</dd>
+                <dt>IVA:</dt> <dd>${cotizacion[4].iva}</dd>
+                <dt>Subtotal:</dt> <dd>${cotizacion[4].subtotal}</dd>
+                <dt>Total:</dt> <dd>${cotizacion[4].total}</dd>
+                </dl>
+            `;
+
+            row.lastElementChild.innerHTML = writeLastChild(cotizacion[5], cotizacion[6], cotizacion[7], cotizacion[8]);
           }
         });
 
-        $tabla.columns('.with-options').every(function () {
+        $tabla.columns('.with-options').every(function (i) {
           const column = this;
           const columnHeader = column.header();
           const select = document.createElement('select');
@@ -105,9 +144,18 @@
             column.search(val, true, true).draw();
           });
 
-          select.add(new Option('Aceptada', '2'));
-          select.add(new Option('Rechazada', '1'));
-          select.add(new Option('Pendiente', null));
+          console.log([columnHeader]);
+
+          if (i === 7) {
+            select.add(new Option('Pagada', '2'));
+            select.add(new Option('Pagando', '1'));
+            select.add(new Option('Sin pagos', null));
+          } else {
+            select.add(new Option('Aceptada', '2'));
+            select.add(new Option('Rechazada', '1'));
+            select.add(new Option('Pendiente', null));
+          }
+
         });
 
         function writeLastChild(validacion, aceptacion, pago, item) {

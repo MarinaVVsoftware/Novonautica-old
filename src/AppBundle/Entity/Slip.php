@@ -63,7 +63,7 @@ class Slip
 
     public function __toString()
     {
-        return 'Num: '.$this->num.' - '.$this->pies.' fts';
+        return 'Num: '.$this->num.' - '.$this->pies.' pies';
     }
     /**
      * Get id
