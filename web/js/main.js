@@ -1488,7 +1488,7 @@ const datatablesSettings = {
     zeroRecords: 'No hay registros',
     info: 'Mostrando la pagina _PAGE_ de _PAGES_',
     infoEmpty: 'No hay registros disponibles',
-    infoFiltered: '(filtados de _MAX_ total de registros)',
+    infoFiltered: '(filtrados de _MAX_ total de registros)',
     processing: 'Procesando...',
     loadingRecords: 'Cargando registros...',
     search: 'Buscar',

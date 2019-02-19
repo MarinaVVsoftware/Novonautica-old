@@ -21,6 +21,20 @@
             background-color: hsl(225, 23%, 21%);
             border: 1px solid #292f41;
         }
+
+        dl {
+            margin-bottom: 0;
+        }
+
+        dl.dl-horizontal dt {
+            text-align: left;
+            width: 110px;
+        }
+
+        dl.dl-horizontal dd {
+            text-align: right;
+            margin-left: 110px;
+        }
     </style>
 {% endblock %}
 
@@ -35,21 +49,20 @@
                     <table class="table-novo table table-condensed text-center">
                         <thead>
                         <tr>
-                            <th>Folio</th>
-                            <th>Slip</th>
-                            <th>Embarcación</th>
+                            <th>Información <br> de la cotización</th>
+                            <th>Información <br> del pago</th>
                             <th>Amarre</th>
-                            <th>Servicio</th>
-                            <th>Pago subtotal</th>
-                            <th>Pago IVA</th>
-                            <th>Total</th>
-                            <th>Total de días</th>
+                            <th>Electricidad</th>
+                            <th>Cantidad <br> pagada</th>
+                            <th>Subtotal <br> acumulado de pagos</th>
+                            <th>IVA <br> acumulado de pagos</th>
+                            <th>Total <br> acumulado de pagos</th>
+                            <th width="20%">Total de días</th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
-                            <th colspan="3" class="text-right">Totales:</th>
-                            <th></th>
+                            <th colspan="4" class="text-right" valign="middle" style="vertical-align: middle">Totales:</th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -73,33 +86,33 @@
     <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
-    <script type="text/javascript"
-            src="{{ asset('bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/daterangepicker.js') }}"></script>
     <script type="text/javascript">
       (function ($, datatableSettings) {
         let searchData = {
-          month: moment().startOf('month'),
+          start: moment().startOf('month'),
+          end: moment().endOf('month'),
         };
 
         const $table = $('.table-novo').DataTable({
           ...datatableSettings,
+          paginate: false,
+          info: false,
           ajax: {
             url: 'ingresos-data',
             data: function (d) {
               d.dates = {
-                month: searchData.month.format('YYYY-MM-DD'),
+                start: searchData.start.format('YYYY-MM-DD'),
+                end: searchData.end.format('YYYY-MM-DD'),
               };
             },
           },
-          order: [[7, 'desc']],
+          order: [[1, 'desc']],
           dom:
-              "<'row'<'col-sm-3'l><'col-sm-3'<'#dates'>><'col-sm-3'B><'col-sm-3'f>>" +
+              "<'row'<'col-sm-3'<'#dates'>><'col-sm-3'B><'col-sm-3'f>>" +
               "<'row'<'col-sm-12'tr>>" +
               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-          lengthMenu: [
-            [10, 25, 50, -1],
-            ['10', '25', '50', 'Todos']
-          ],
           buttons: {
             buttons: [
               {
@@ -110,72 +123,111 @@
               }
             ]
           },
-          footerCallback(row, data) {
-            const totals = data.reduce((a, b) => {
-              a.amarre = a.amarre + moneyRawValue(b[3]);
-              a.servicio = a.servicio + moneyRawValue(b[4]);
-              a.subtotal = a.subtotal + moneyRawValue(b[5]);
-              a.iva = a.iva + moneyRawValue(b[6]);
-              a.acumulado = a.acumulado + moneyRawValue(b[7]);
+          createdRow(row, cotizacion) {
+            row.cells[0].addEventListener('click', function () {
+              window.open('../../marina/cotizacion/' + cotizacion[0].id, '_blank');
+            });
+
+            row.cells[0].innerHTML = `
+                <dl class="dl-horizontal">
+                    <dt>Folio</dt>
+                    <dd>${cotizacion[0].folio}</dd>
+                    <dt>Fecha</dt>
+                    <dd>${cotizacion[0].fecha}</dd>
+                    <dt>Cliente</dt>
+                    <dd>${cotizacion[0].nombre}</dd>
+                    <dt>Embarcacion</dt>
+                    <dd>${cotizacion[0].embarcacion}</dd>
+                </dl>
+            `;
+            row.cells[1].innerHTML = `
+                <dl class="dl-horizontal">
+                    <dt title="Metodo de pago">Metodo de pago</dt>
+                    <dd>${cotizacion[1].metodoPago}</dd>
+                    <dt>Banco</dt>
+                    <dd>${cotizacion[1].banco || 'Sin registro'}</dd>
+                    <dt>Titular</dt>
+                    <dd>${cotizacion[1].titular || 'Sin registro'}</dd>
+                    <dt>Cuenta</dt>
+                    <dd>${cotizacion[1].cuenta || 'Sin registro'}</dd>
+                    <dt>Seguimiento</dt>
+                    <dd>${cotizacion[1].seguimiento || 'Sin registro'}</dd>
+                    <dt>Fecha</dt>
+                    <dd>${cotizacion[1].fecha}</dd>
+                </dl>
+            `;
+            row.cells[2].innerHTML = `$ ${cotizacion[2]} USD`;
+            row.cells[3].innerHTML = `$ ${cotizacion[3]} USD`;
+            row.cells[4].innerHTML = `$ ${cotizacion[4]} USD`;
+            row.cells[5].innerHTML = `$ ${cotizacion[5]} USD`;
+            row.cells[6].innerHTML = `$ ${cotizacion[6]} USD`;
+            row.cells[7].innerHTML = `$ ${cotizacion[7]} USD`;
+          },
+          footerCallback(row, cotizacion) {
+            const totals = cotizacion.reduce((a, b) => {
+              a.amarre = a.amarre + Number(b[2]);
+              a.electricidad = a.electricidad + Number(b[3]);
+              a.monto = a.monto + Number(b[4]);
+              a.subtotal = a.subtotal + Number(b[5]);
+              a.iva = a.iva + Number(b[6]);
+              a.acumulado = a.acumulado + Number(b[7]);
               return a;
             }, {
               amarre: 0,
-              servicio: 0,
+              electricidad: 0,
+              monto: 0,
               subtotal: 0,
               iva: 0,
               acumulado: 0,
             });
 
-            const totalCobrado = (totals.amarre + totals.servicio);
+            const totalCobrado = (totals.amarre + totals.electricidad);
             const saldosTransferibles = (totalCobrado - totals.acumulado);
             const porcentajeDeCobranza = ((totals.acumulado / totalCobrado) * 100);
 
-            row.cells[1].innerHTML = moneyFormat(totals.amarre);
-            row.cells[2].innerHTML = moneyFormat(totals.servicio);
-            row.cells[3].innerHTML = moneyFormat(totals.subtotal);
-            row.cells[4].innerHTML = moneyFormat(totals.iva);
-            row.cells[5].innerHTML = moneyFormat(totals.acumulado);
-
-            row.cells[6].style.textAlign = 'left';
-            row.cells[6].innerHTML = `
-                <strong>Total cobrado: </strong> ${moneyFormat(totalCobrado)}
-                <br>
-                <strong>Saldos transferibles:</strong> ${moneyFormat(saldosTransferibles)}
-                <br>
-                <strong>Porcentaje de cobranza: </strong> % ${porcentajeDeCobranza.toFixed(0)}
+            row.cells[1].innerHTML = moneyFormat(totals.monto);
+            row.cells[2].innerHTML = moneyFormat(totals.subtotal);
+            row.cells[3].innerHTML = moneyFormat(totals.iva);
+            row.cells[4].innerHTML = moneyFormat(totals.acumulado);
+            row.cells[5].innerHTML = `
+                <dl class="dl-horizontal">
+                    <dt>Total cobrado:</dt>
+                    <dd>${moneyFormat(totalCobrado)}</dd>
+                    <dt>Saldos transferibles:</dt>
+                    <dd>${moneyFormat(saldosTransferibles)}</dd>
+                    <dt>Porcentaje de cobranza:</dt>
+                    <dd>${porcentajeDeCobranza.toFixed(2)}%</dd>
+                </dl>
             `;
 
             function moneyFormat(value) {
               if (typeof value === 'string') {
                 value = Number(value);
               }
-              return '$ ' + value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+              return '$ ' + value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' USD';
             }
 
-            function moneyRawValue(value) {
-              return Number(value.replace(/[$,]/g, ''));
-            }
           }
         });
 
         $('#dates')
             .html(`
-              <div class="dataTables_filter">
+              <div class="dataTables_filter" style="text-align: inherit;">
                 <label for="date-range">Fecha
-                <input type="text" class="form-control" id="date-range" readonly>
+                <input type="text" class="form-control" id="date-range" style="width: 100%;" readonly>
                 </label>
               </div>
             `)
             .find('#date-range')
-            .datepicker({
-              format: 'MM yyyy',
-              viewMode: 'months',
-              minViewMode: 'months',
-              language: 'es'
+            .daterangepicker({
+              startDate: moment().startOf('Month'),
+              endDate: moment().endOf('Month'),
+              autoApply: true
             })
-            .datepicker('setDate', new Date())
-            .on('changeDate', function (event) {
-              searchData.month = moment(event.date);
+            .on('apply.daterangepicker', function (event, picker) {
+              searchData.start = picker.startDate;
+              searchData.end = picker.endDate;
+
               $table.ajax.reload();
             });
 

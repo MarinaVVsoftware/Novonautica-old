@@ -7,10 +7,12 @@ use AppBundle\Entity\CotizacionNota;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Entity\MonederoMovimiento;
+use AppBundle\Entity\Pago;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Form\CotizacionNotaType;
 use AppBundle\Form\Marina\CotizacionMoratoriaType;
 use AppBundle\Form\MarinaHumedaCotizacionType;
+use AppBundle\Form\MarinaHumedaRegistraPagoType;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -541,29 +543,38 @@ class MarinaHumedaCotizacionController extends Controller
                 $pesos = ($pago->getCantidad() * $pago->getDolar()) / 100;
                 $pago->setCantidad($pesos);
             }
+
             $listaPagos->add($pago);
         }
 
-        $form = $this->createForm('AppBundle\Form\MarinaHumedaRegistraPagoType', $marinaHumedaCotizacion);
+        $form = $this->createForm(MarinaHumedaRegistraPagoType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             if ($marinaHumedaCotizacion->getFoliorecotiza()) {
                 $folioCotizacion = $marinaHumedaCotizacion->getFolio() . '-' . $marinaHumedaCotizacion->getFoliorecotiza();
             } else {
                 $folioCotizacion = $marinaHumedaCotizacion->getFolio();
             }
+
             $total = $marinaHumedaCotizacion->getTotal();
             $monedero = $marinaHumedaCotizacion->getCliente()->getMonederomarinahumeda();
             $em = $this->getDoctrine()->getManager();
             $monederoDevuelto = 0;
+
             foreach ($listaPagos as $pago) {
+
                 if (false === $marinaHumedaCotizacion->getPagos()->contains($pago)) {
+
                     if ($pago->getMetodopago() === 'Monedero') {
-                        $monederoDevuelto += $pago->getCantidad();
-                        $notaMonedero = 'Devolución de pago de cotización. Folio: ' . $folioCotizacion;
-                        $fechaHoraActual = new \DateTime('now');
+
+                        $monederoDevuelto +=  $pago->getCantidad();
+
+                        $notaMonedero = 'Devolución de pago de cotización. Folio: '.$folioCotizacion;
+                        $fechaHoraActual = new \DateTime();
                         $monederoMovimiento = new MonederoMovimiento();
+
                         $monederoMovimiento
                             ->setCliente($marinaHumedaCotizacion->getCliente())
                             ->setFecha($fechaHoraActual)
@@ -572,31 +583,43 @@ class MarinaHumedaCotizacionController extends Controller
                             ->setResultante($marinaHumedaCotizacion->getCliente()->getMonederomarinahumeda() + $monederoDevuelto)
                             ->setTipo(1)
                             ->setDescripcion($notaMonedero);
+
                         $em->persist($monederoMovimiento);
                     }
+
                     $pago->getMhcotizacion()->removePago($pago);
                     $em->persist($pago);
                     $em->remove($pago);
                 }
             }
+
             // Conversion de la vista (MXN) a la DB (USD)
             foreach ($marinaHumedaCotizacion->getPagos() as $pago) {
+
                 if ($pago->getDivisa() == 'MXN') {
                     $unpago = ($pago->getCantidad() / $pago->getDolar()) * 100;
                     $pago->setCantidad($unpago);
                 } else {
                     $unpago = $pago->getCantidad();
                 }
+
                 $totPagado += $unpago;
+
                 if ($pago->getMetodopago() == 'Monedero' && $pago->getId() == null) {
                     $totPagadoMonedero += $unpago;
                     $monederotot = $monedero - $totPagadoMonedero;
-                    if ($marinaHumedaCotizacion->getMHCservicios()->first()->getTipo() == 1 || $marinaHumedaCotizacion->getMHCservicios()->first()->getTipo() == 2) {
+
+                    if (
+                        $marinaHumedaCotizacion->getMHCservicios()->first()->getTipo() == 1 ||
+                        $marinaHumedaCotizacion->getMHCservicios()->first()->getTipo() == 2
+                    ) {
                         $notaMonedero = 'Pago de servicio de estadía y electricidad. Folio cotización: ' . $folioCotizacion;
                     } else {
                         $notaMonedero = 'Pago de servicio de gasolina. Folio cotización: ' . $folioCotizacion;
                     }
-                    $fechaHoraActual = new \DateTime('now');
+
+                    $fechaHoraActual = new \DateTime();
+
                     $monederoMovimiento = new MonederoMovimiento();
                     $monederoMovimiento
                         ->setCliente($marinaHumedaCotizacion->getCliente())
@@ -606,6 +629,7 @@ class MarinaHumedaCotizacionController extends Controller
                         ->setResultante($monederotot)
                         ->setTipo(1)
                         ->setDescripcion($notaMonedero);
+
                     $em->persist($monederoMovimiento);
                 }
             }
@@ -632,15 +656,21 @@ class MarinaHumedaCotizacionController extends Controller
                     $em->persist($marinaHumedaCotizacion);
                     $em->flush();
 
-                    return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
+                    return $this->redirectToRoute(
+                        'marina-humeda_show',
+                        ['id' => $marinaHumedaCotizacion->getId()]
+                    );
                 }
             }
         }
 
-        return $this->render('marinahumeda/cotizacion/pago/edit.html.twig', [
-            'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
-            'form' => $form->createView(),
-        ]);
+        return $this->render(
+            'marinahumeda/cotizacion/pago/edit.html.twig',
+            [
+                'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
+                'form' => $form->createView(),
+            ]
+        );
     }
 
     /**
