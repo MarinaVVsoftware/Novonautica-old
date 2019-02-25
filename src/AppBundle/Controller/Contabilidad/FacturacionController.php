@@ -347,7 +347,7 @@ class FacturacionController extends Controller
             case 3:
                 $marinaRepository = $manager->getRepository(MarinaHumedaCotizaServicios::class);
                 $conceptos = array_map(function ($concepto) {
-                    $concepto['conceptoImporte'] = (int)(($concepto['conceptoImporte'] / 100) * ($concepto['conceptoDolar'] / 100) * 100);
+                    $concepto['conceptoImporte'] = (int)(($concepto['conceptoImporte']) * ($concepto['conceptoDolar']) / 100);
 
                     return $concepto;
                 }, $marinaRepository->getOneWithCatalogo($cotizacion));
@@ -465,7 +465,7 @@ class FacturacionController extends Controller
         $cotizacionRepository = FacturacionHelper::getCotizacionRepository($em, $factura->getEmisor()->getId());
         $cotizacion = $cotizacionRepository->findOneBy(['factura' => $factura->getId()]);
 
-        if ($this->kernel->getEnvironment() === 'dev') {
+        if ($this->kernel->getEnvironment() === 'dev' || true) {
             $factura->setIsCancelada(true);
             $cotizacion->setFactura(null);
 
@@ -486,7 +486,7 @@ class FacturacionController extends Controller
 
         $factura->setIsCancelada(true);
         $cotizacion->setFactura(null);
-        
+
         $em->flush();
 
         return $this->redirectToRoute('contabilidad_facturacion_index');
@@ -494,20 +494,12 @@ class FacturacionController extends Controller
 
     /**
      * @Route("/{id}")
-     * @param int $id
+     * @param Facturacion $factura
      *
      * @return Response
      */
-    public function showAction($id)
+    public function showAction(Facturacion $factura)
     {
-        $facturacionRepository = $this->getDoctrine()->getRepository(Facturacion::class);
-
-        try {
-            $factura = $facturacionRepository->getFactura($id);
-        } catch (NonUniqueResultException $e) {
-            throw new NotFoundHttpException($e->getMessage());
-        }
-
         return $this->render(
             'contabilidad/facturacion/show.html.twig',
             [

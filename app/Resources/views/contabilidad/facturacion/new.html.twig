@@ -570,7 +570,6 @@
           element.connectedNodes.deleteButton = element.cells[12].children[2];
           element.connectedNodes.descripcionInput = element.cells[4].firstElementChild;
 
-          console.log(element.connectedNodes.deleteButton); // No esta calculando conceptos al eliminar
           /**
            * Funciones
            */
@@ -671,6 +670,7 @@
         cotizacionSelect.addEventListener('change', function () {
           // La tabla se tiene que limpiar cada vez que cambie el select de cotizaciones cambie de valor
           conceptoTable.clear();
+          computeConceptos();
 
           if (!this.value) return;
 
@@ -792,6 +792,10 @@
             impuestosValue += Number(element.connectedNodes.impuestoImporteInput.getRawValue());
             totalValue = subtotalValue + impuestosValue;
           }
+
+          subtotalValue = Math.round10(subtotalValue, -2);
+          totalValue = Math.round10(totalValue, -2);
+          impuestosValue = Math.round10(impuestosValue, -2);
 
           subtotalInput.setRawValue(subtotalValue);
           totalInput.setRawValue(totalValue);
