@@ -73,10 +73,20 @@ class OrdenDeTrabajoDataTable extends AbstractDataTableHandler
             /** @var OrdenDeTrabajo $odt */
             $odt = $odts[$index];
 
+            $listaRazonSocial='';
+            if($odt->getAstilleroCotizacion()->getRequerirFactura()){
+                foreach ($odt->getAstilleroCotizacion()->getCliente()->getRazonesSociales() as $razonSocial){
+                    $listaRazonSocial.='<li>'.$razonSocial->getRazonSocial().'</li>';
+                }
+            }else{
+                $listaRazonSocial = 'Público en general';
+            }
+
             $results->data[] = [
                 $odt->getAstilleroCotizacion()->getFoliorecotiza() == 0 ? $odt->getAstilleroCotizacion()->getFolio() : $odt->getAstilleroCotizacion()->getFolio().'-'.$odt->getAstilleroCotizacion()->getFoliorecotiza(),
                 $odt->getAstilleroCotizacion()->getBarco()->getNombre(),
                 $odt->getAstilleroCotizacion()->getCliente()->getNombre(),
+                $listaRazonSocial,
                 $odt->getAstilleroCotizacion()->getFechaLlegada() ? $odt->getAstilleroCotizacion()->getFechaLlegada()->format('d/m/Y'):'',
                 $odt->getAstilleroCotizacion()->getFechaSalida() ? $odt->getAstilleroCotizacion()->getFechaSalida()->format('d/m/Y'):'',
                 '$' . number_format($odt->getPrecioTotal() / 100, 2).' MXN',
