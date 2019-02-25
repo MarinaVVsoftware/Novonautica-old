@@ -96,7 +96,7 @@ class CombustibleValidarType extends AbstractType
     {
         $existencia = $cotizacion->getTipo()->getExistencia();
 
-        if ($existencia <= 0) {
+        if ($cotizacion->getValidanovo() === 2 && $existencia <= 0) {
             $context
                 ->buildViolation('No hay suficiente inventario, Existencia actual: '.$existencia)
                 ->atPath('validanovo')
