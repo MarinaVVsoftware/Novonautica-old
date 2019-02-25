@@ -347,7 +347,7 @@ class FacturacionController extends Controller
             case 3:
                 $marinaRepository = $manager->getRepository(MarinaHumedaCotizaServicios::class);
                 $conceptos = array_map(function ($concepto) {
-                    $concepto['conceptoImporte'] = (int)(($concepto['conceptoImporte'] / 100) * ($concepto['conceptoDolar'] / 100) * 100);
+                    $concepto['conceptoImporte'] = (int)(($concepto['conceptoImporte']) * ($concepto['conceptoDolar']) / 100);
 
                     return $concepto;
                 }, $marinaRepository->getOneWithCatalogo($cotizacion));
