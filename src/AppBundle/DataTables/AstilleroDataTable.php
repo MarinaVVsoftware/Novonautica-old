@@ -155,7 +155,8 @@ class AstilleroDataTable extends AbstractDataTableHandler
                     $cotizacion->getEstatuspago(),
                     ['id' => $cotizacion->getId(),
                         'estatus' => $cotizacion->getEstatus(),
-                        'borrador' => $cotizacion->getBorrador()
+                        'borrador' => $cotizacion->getBorrador(),
+                        'requierefactura' => $cotizacion->getRequerirFactura()
                     ]
                 ];
         }

@@ -83,6 +83,10 @@ class AstilleroCotizacionType extends AbstractType
                 'label' => '¿Notificar al cliente?',
                 'required' => false,
             ])
+            ->add('requerirFactura', CheckboxType::class, [
+                'label' => '¿Requiere factura?',
+                'required' => false,
+            ])
             ->add('guardareditable', SubmitType::class, [
                 'label' => 'Guardar y editar después',
                 'attr' => ['class' => 'btn btn-azul inline-block'],

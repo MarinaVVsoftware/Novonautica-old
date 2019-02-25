@@ -286,3 +286,24 @@
 .sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu > li:hover > a > .pull-right-container {
     left: 210px !important;
 }
+
+.lista-verde {
+    background-color: #009933;
+    border-radius: 3px;
+    font-size: 12px;
+    margin: 0;
+    cursor: default;
+    white-space: nowrap;
+    vertical-align: middle;
+    padding: 3px 5px;
+}
+.lista-azul {
+    background-color: #0097f6;
+    border-radius: 3px;
+    font-size: 12px;
+    margin: 0;
+    cursor: default;
+    white-space: nowrap;
+    vertical-align: middle;
+    padding: 3px 5px;
+}

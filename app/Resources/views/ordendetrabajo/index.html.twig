@@ -63,7 +63,7 @@
           createdRow: function (row, data) {
             let actionsCell = row.cells[10];
             actionsCell.innerHTML = `
-            <ul class="unstyled-list list-inline">
+            <ul class="unstyled-list list-inline text-center">
                 <li>
                 <a href="${data[10]}">
                     <i class="fa fa-eye" aria-hidden="true"></i>
@@ -74,8 +74,10 @@
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                 </a>
                 </li>
-            </ul>
-            `
+              <li style="display: block; margin-top: 10px;">${data[11] === true ? ' <p class="lista-verde">Requiere factura</p>' :
+              '<p class="lista-azul">No requiere factura</p>'}</li>
+             </ul>
+`
           },
         });
       })(jQuery, datatablesSettings);
