@@ -486,7 +486,7 @@ class FacturacionController extends Controller
 
         $factura->setIsCancelada(true);
         $cotizacion->setFactura(null);
-        
+
         $em->flush();
 
         return $this->redirectToRoute('contabilidad_facturacion_index');
@@ -494,20 +494,12 @@ class FacturacionController extends Controller
 
     /**
      * @Route("/{id}")
-     * @param int $id
+     * @param Facturacion $factura
      *
      * @return Response
      */
-    public function showAction($id)
+    public function showAction(Facturacion $factura)
     {
-        $facturacionRepository = $this->getDoctrine()->getRepository(Facturacion::class);
-
-        try {
-            $factura = $facturacionRepository->getFactura($id);
-        } catch (NonUniqueResultException $e) {
-            throw new NotFoundHttpException($e->getMessage());
-        }
-
         return $this->render(
             'contabilidad/facturacion/show.html.twig',
             [
