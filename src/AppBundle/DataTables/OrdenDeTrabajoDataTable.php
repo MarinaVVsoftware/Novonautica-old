@@ -84,7 +84,8 @@ class OrdenDeTrabajoDataTable extends AbstractDataTableHandler
                 '$' . number_format($odt->getPreciovvTotal() / 100, 2).' MXN',
                 '$' . number_format($odt->getIvaTotal() / 100, 2).' MXN',
                 '$' . number_format($odt->getGranTotal() / 100, 2).' MXN',
-                $odt->getId()
+                $odt->getId(),
+                $odt->getAstilleroCotizacion()->getRequerirFactura()
             ];
         }
 

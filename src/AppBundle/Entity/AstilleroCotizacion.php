@@ -314,6 +314,13 @@ class AstilleroCotizacion
     private $notificarCliente;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="requerir_factura", type="boolean")
+     */
+    private $requerirFactura;
+
+    /**
      * @var \DateTimeImmutable
      *
      * @ORM\Column(name="registro_pago_completado", type="datetime_immutable", nullable=true)
@@ -1257,5 +1264,23 @@ class AstilleroCotizacion
     public function setFactura(Facturacion $factura = null)
     {
         $this->factura = $factura;
+    }
+
+    /**
+     * @param $requerirFactura
+     * @return AstilleroCotizacion
+     */
+    public function setRequerirFactura($requerirFactura)
+    {
+        $this->requerirFactura = $requerirFactura;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getRequerirFactura()
+    {
+        return $this->requerirFactura;
     }
 }

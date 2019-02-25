@@ -130,7 +130,8 @@
           });
 
         function writeLastChild(validacion, aceptacion, pago, item) {
-          const btnClass = 'btn btn-xs btn-block btn-';
+            console.log(item.requierefactura);
+            const btnClass = 'btn btn-xs btn-block btn-';
           return `
           <td>
             <ul class="list-unstyled">
@@ -149,7 +150,8 @@
                         ${item.borrador == 1 ? `<li><a class="${btnClass}azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/editar' }}">Editar</a></li>` : ''}
                         ${aceptacion == 2 ? `<li><a class="${btnClass}gris" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/adicionales' }}">Adicionales</a></li>` : ''}
               {% endif %}
-
+              <li>${item.requierefactura === true ? `<p class="lista-verde">Requiere factura</p>` :
+              `<p class="lista-azul">No requiere factura</p>`}</li>
             </ul>
           </td>
         `;
