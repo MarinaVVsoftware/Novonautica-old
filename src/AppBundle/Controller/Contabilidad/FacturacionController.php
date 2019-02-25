@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -52,14 +53,21 @@ class FacturacionController extends Controller
      */
     private $multifacturas;
 
+    /**
+     * @var KernelInterface
+     */
+    private $kernel;
+
     public function __construct(
         Pdf $pdf,
         \Swift_Mailer $mailer,
-        Multifacturas $multifacturas
+        Multifacturas $multifacturas,
+        KernelInterface $kernel
     ) {
         $this->pdf = $pdf;
         $this->mailer = $mailer;
         $this->multifacturas = $multifacturas;
+        $this->kernel = $kernel;
     }
 
     /**
@@ -220,11 +228,16 @@ class FacturacionController extends Controller
         $form = $this->createForm(PreviewType::class, $factura);
         $form->handleRequest($request);
 
+        // Checar si existen las imagenes para reenderizar
+        $webDirectory = $this->kernel->getRootDir().'/../web/uploads/facturacion/emisor/logos/';
+        $logoExists = file_exists($webDirectory.$factura->getEmisor()->getLogo());
+
         $preview = $this->renderView(
             'contabilidad/facturacion/pdf/preview.html.twig',
             [
                 'factura' => $factura,
                 'num_letras' => (new NumberToLetter())->toWord(($factura->getTotal() / 100), $factura->getMoneda()),
+                'logoExists' => $logoExists,
             ]
         );
 
@@ -395,11 +408,16 @@ class FacturacionController extends Controller
      */
     public function getFacturaPDFAction(Facturacion $factura)
     {
+        // Checar si existen las imagenes para reenderizar
+        $webDirectory = $this->kernel->getRootDir().'/../web/uploads/facturacion/emisor/logos/';
+        $logoExists = file_exists($webDirectory.$factura->getEmisor()->getLogo());
+
         $html = $this->renderView(
             'contabilidad/facturacion/pdf/factura.html.twig',
             [
                 'factura' => $factura,
                 'numLetras' => (new NumberToLetter())->toWord(($factura->getTotal() / 100), $factura->getMoneda()),
+                'logoExists' => $logoExists,
             ]
         );
 
@@ -443,16 +461,33 @@ class FacturacionController extends Controller
     {
         $this->denyAccessUnlessGranted('CONTABILIDAD_CANCEL', $factura);
 
+        $em = $this->getDoctrine()->getManager();
+        $cotizacionRepository = FacturacionHelper::getCotizacionRepository($em, $factura->getEmisor()->getId());
+        $cotizacion = $cotizacionRepository->findOneBy(['factura' => $factura->getId()]);
+
+        if ($this->kernel->getEnvironment() === 'dev') {
+            $factura->setIsCancelada(true);
+            $cotizacion->setFactura(null);
+
+            $em->flush();
+
+            return $this->redirectToRoute('contabilidad_facturacion_index');
+        }
+
         $timbrado = $this->multifacturas->cancela($factura);
 
         if ($timbrado['codigo_mf_numero']) {
             $this->addFlash('danger', $timbrado['codigo_mf_texto']);
-        } else {
-            $this->addFlash('danger', $timbrado['codigo_mf_texto']);
 
-            $factura->setIsCancelada(true);
-            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('contabilidad_facturacion_index');
         }
+
+        $this->addFlash('danger', $timbrado['codigo_mf_texto']);
+
+        $factura->setIsCancelada(true);
+        $cotizacion->setFactura(null);
+        
+        $em->flush();
 
         return $this->redirectToRoute('contabilidad_facturacion_index');
     }

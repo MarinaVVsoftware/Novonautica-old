@@ -24,10 +24,17 @@
 <div class="container-fluid">
     <div id="header" class="row">
         <div class="col-xs-4 text-center">
-            <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('uploads/facturacion/emisor/logos/') ~ factura.emisor.logo }}"
-                 alt="" class="img-responsive center-block"
-                 style="max-height: 150px;"
-            >
+            {% if logoExists %}
+                <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('uploads/facturacion/emisor/logos/') ~ factura.emisor.logo }}"
+                     alt="" class="img-responsive center-block"
+                     style="max-height: 150px;"
+                >
+            {% else %}
+                <img src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('img/image-not-found.jpg') }}"
+                     alt="" class="img-responsive center-block"
+                     style="max-height: 150px;"
+                >
+            {% endif %}
         </div>
         <div class="col-xs-4">
             <h4 style="font-weight: bold;margin-top: 0">{{ factura.emisor.nombre }}</h4>
