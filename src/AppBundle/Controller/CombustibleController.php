@@ -6,6 +6,7 @@ use AppBundle\Entity\Correo;
 use AppBundle\Entity\Combustible;
 use AppBundle\Entity\CotizacionNota;
 use AppBundle\Form\CombustibleType;
+use AppBundle\Form\CombustibleValidarType;
 use AppBundle\Form\CotizacionNotaType;
 use DataTables\DataTablesInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -300,6 +301,7 @@ class CombustibleController extends Controller
     public function validaAction(Request $request, Combustible $combustible, \Swift_Mailer $mailer)
     {
         $this->denyAccessUnlessGranted('COMBUSTIBLE_COTIZACION_VALIDATE', $combustible);
+
         if ($combustible->getEstatus() == 0 ||
             $combustible->getValidanovo() == 1 ||
             $combustible->getValidacliente() == 1 ||
@@ -307,24 +309,28 @@ class CombustibleController extends Controller
         ) {
             throw new NotFoundHttpException();
         }
+
         $folio = $combustible->getFolioCompleto();
-        $editForm = $this->createForm('AppBundle\Form\CombustibleValidarType', $combustible);
+
+        $editForm = $this->createForm(CombustibleValidarType::class, $combustible);
         $editForm->handleRequest($request);
+
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $combustible->setNombrevalidanovo($this->getUser()->getNombre());
+
             if ($combustible->getValidanovo() === 2) {
                 // Activa un token para que valide el cliente
-                $token = $combustible->getFolio() . bin2hex(random_bytes(16));
+                $token = $combustible->getFolio().bin2hex(random_bytes(16));
                 $combustible->setToken($token);
                 // Se envia un correo si se solicito notificar al cliente
-                if($combustible->isNotificarCliente()){
-                    $this->enviaCorreoCotizacion($mailer,$combustible);
+                if ($combustible->isNotificarCliente()) {
+                    $this->enviaCorreoCotizacion($mailer, $combustible);
                 }
                 // Buscar correos a notificar
                 $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                     'evento' => Correo\Notificacion::EVENTO_VALIDAR,
-                    'tipo' => Correo\Notificacion::TIPO_COMBUSTIBLE
+                    'tipo' => Correo\Notificacion::TIPO_COMBUSTIBLE,
                 ]);
                 $this->enviaCorreoNotificacion($mailer, $notificables, $combustible);
 
@@ -336,6 +342,7 @@ class CombustibleController extends Controller
                     ->setRegistroValidaNovo(new \DateTimeImmutable())
                     ->setLimiteValidaCliente((new \DateTime('now'))->modify('+ '.$diasCombustible.' day'));
             }
+
             if ($combustible->getValidacliente() === 2) {
                 // Guardar la fecha en la que se valido la cotizacion por el cliente
                 $combustible->setRegistroValidaCliente(new \DateTimeImmutable());
@@ -344,22 +351,32 @@ class CombustibleController extends Controller
                 // Buscar correos a notificar
                 $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
                     'evento' => Correo\Notificacion::EVENTO_ACEPTAR,
-                    'tipo' => Correo\Notificacion::TIPO_COMBUSTIBLE
+                    'tipo' => Correo\Notificacion::TIPO_COMBUSTIBLE,
                 ]);
 
                 $this->enviaCorreoNotificacion($mailer, $notificables, $combustible);
             }
+
             $combustible->setRegistroValidaNovo(new \DateTimeImmutable());
+
             $em->persist($combustible);
             $em->flush();
-            return $this->redirectToRoute('combustible_show', ['id' => $combustible->getId()]);
+
+            return $this->redirectToRoute(
+                'combustible_show',
+                ['id' => $combustible->getId()]
+            );
         }
-        return $this->render('combustible/validar.html.twig', [
-            'title' => 'Cotización Combustible Validación',
-            'combustible' => $combustible,
-            'edit_form' => $editForm->createView(),
-            'folio' => $folio
-        ]);
+
+        return $this->render(
+            'combustible/validar.html.twig',
+            [
+                'title' => 'Cotización Combustible Validación',
+                'combustible' => $combustible,
+                'edit_form' => $editForm->createView(),
+                'folio' => $folio,
+            ]
+        );
     }
 
     /**

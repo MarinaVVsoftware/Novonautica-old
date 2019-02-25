@@ -1,4 +1,13 @@
 {% extends 'estructura/plantilla.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .help-block {
+            color: #B0413E;
+        }
+    </style>
+{% endblock stylesheets %}
+
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
@@ -68,7 +77,8 @@
                                 <div class="col-sm-12 text-right">
                                     <span>Tipo de cambio:</span>
                                     <div>
-                                        $ <span id="valdolar">{{ (combustible.dolar/100)|number_format(2) }}</span> <small>MXN</small>
+                                        $ <span id="valdolar">{{ (combustible.dolar/100)|number_format(2) }}</span>
+                                        <small>MXN</small>
                                     </div>
                                 </div>
                             </div>
@@ -84,10 +94,12 @@
                                     <label class="letra-azul tipo-letra2">Precio venta:</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.precioVenta/100)|number_format(2) }} <small>MXN</small>
+                                    $ {{ (combustible.precioVenta/100)|number_format(2) }}
+                                    <small>MXN</small>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.precioVenta/combustible.dolar)|number_format(2) }} <small>USD</small>
+                                    $ {{ (combustible.precioVenta/combustible.dolar)|number_format(2) }}
+                                    <small>USD</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -125,10 +137,12 @@
                                     <label class="letra-azul tipo-letra2">Precio sin IESPS:</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.precioSinIesps/100)|number_format(2) }} <small>MXN</small>
+                                    $ {{ (combustible.precioSinIesps/100)|number_format(2) }}
+                                    <small>MXN</small>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.precioSinIesps/combustible.dolar)|number_format(2) }} <small>USD</small>
+                                    $ {{ (combustible.precioSinIesps/combustible.dolar)|number_format(2) }}
+                                    <small>USD</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -147,10 +161,12 @@
                                     <label class="letra-azul tipo-letra2">Precio sin IVA/IESPS:</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.precioSinIvaIesps/100)|number_format(2) }} <small>MXN</small>
+                                    $ {{ (combustible.precioSinIvaIesps/100)|number_format(2) }}
+                                    <small>MXN</small>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.precioSinIvaIesps/combustible.dolar)|number_format(2) }} <small>USD</small>
+                                    $ {{ (combustible.precioSinIvaIesps/combustible.dolar)|number_format(2) }}
+                                    <small>USD</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -185,10 +201,12 @@
                                     <label class="letra-azul tipo-letra2">IESPS:</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.iespsTotal/100)|number_format(2) }} <small>MXN</small>
+                                    $ {{ (combustible.iespsTotal/100)|number_format(2) }}
+                                    <small>MXN</small>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.iespsTotal/combustible.dolar)|number_format(2) }} <small>USD</small>
+                                    $ {{ (combustible.iespsTotal/combustible.dolar)|number_format(2) }}
+                                    <small>USD</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -207,10 +225,12 @@
                                     <label class="letra-azul tipo-letra2">Total sin IESPS:</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.totalSinIesps/100)|number_format(2) }} <small>MXN</small>
+                                    $ {{ (combustible.totalSinIesps/100)|number_format(2) }}
+                                    <small>MXN</small>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.totalSinIesps/combustible.dolar)|number_format(2) }} <small>USD</small>
+                                    $ {{ (combustible.totalSinIesps/combustible.dolar)|number_format(2) }}
+                                    <small>USD</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -245,10 +265,12 @@
                                     <label class="letra-azul tipo-letra2">Total sin IVA/IESPS:</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.totalSinIvaIesps/100)|number_format(2) }} <small>MXN</small>
+                                    $ {{ (combustible.totalSinIvaIesps/100)|number_format(2) }}
+                                    <small>MXN</small>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.totalSinIvaIesps/combustible.dolar)|number_format(2) }} <small>USD</small>
+                                    $ {{ (combustible.totalSinIvaIesps/combustible.dolar)|number_format(2) }}
+                                    <small>USD</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -267,10 +289,12 @@
                                     <label class="letra-azul tipo-letra2">Subtotal:</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.subtotal/100)|number_format(2) }} <small>MXN</small>
+                                    $ {{ (combustible.subtotal/100)|number_format(2) }}
+                                    <small>MXN</small>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.subtotal/combustible.dolar)|number_format(2) }} <small>USD</small>
+                                    $ {{ (combustible.subtotal/combustible.dolar)|number_format(2) }}
+                                    <small>USD</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -289,10 +313,12 @@
                                     <label class="letra-azul tipo-letra2">IVA:</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.ivaTotal/100)|number_format(2) }} <small>MXN</small>
+                                    $ {{ (combustible.ivaTotal/100)|number_format(2) }}
+                                    <small>MXN</small>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.ivaTotal/combustible.dolar)|number_format(2) }} <small>USD</small>
+                                    $ {{ (combustible.ivaTotal/combustible.dolar)|number_format(2) }}
+                                    <small>USD</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -311,10 +337,12 @@
                                     <label class="letra-azul tipo-letra2">Total:</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.total/100)|number_format(2) }} <small>MXN</small>
+                                    $ {{ (combustible.total/100)|number_format(2) }}
+                                    <small>MXN</small>
                                 </div>
                                 <div class="col-sm-4">
-                                    $ {{ (combustible.total/combustible.dolar)|number_format(2) }} <small>USD</small>
+                                    $ {{ (combustible.total/combustible.dolar)|number_format(2) }}
+                                    <small>USD</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -333,6 +361,7 @@
                             {% if edit_form.validanovo is defined %}
                                 <div class="row">
                                     <div class="col-sm-12 espacio-linea">
+                                        {{ form_errors(edit_form.validanovo) }}
                                         <label>Indique su respuesta</label>
                                     </div>
                                 </div>
