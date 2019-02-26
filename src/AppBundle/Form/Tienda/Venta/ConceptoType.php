@@ -48,7 +48,7 @@ class ConceptoType extends AbstractType
         $discountAttributes = ['class' => 'discount-input'];
 
         if (!$this->security->isGranted('ROLE_ADMIN_POV')) {
-            $discountAttributes['disabled'] = 'disabled';
+            $discountAttributes['readonly'] = 'readonly';
         }
 
         $builder->addEventSubscriber(new ProductoFieldListener($this->entityManager));
