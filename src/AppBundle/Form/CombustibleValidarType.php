@@ -33,37 +33,37 @@ class CombustibleValidarType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'choice_attr' => function ($val, $key, $index) {
-                    return ['class' => 'opcion' . strtolower($key)];
+                    return ['class' => 'opcion'.strtolower($key)];
                 },
             ])
             ->add('notasnovo', TextareaType::class, [
                 'label' => 'Observaciones',
                 'attr' => ['rows' => 7],
-                'required' => false
+                'required' => false,
             ])
             ->add('validacliente', ChoiceType::class, [
                 'choices' => ['Aceptar' => 2, 'Rechazar' => 1],
                 'expanded' => true,
                 'multiple' => false,
                 'choice_attr' => function ($val, $key, $index) {
-                    return ['class' => 'opcion' . strtolower($key)];
+                    return ['class' => 'opcion'.strtolower($key)];
                 },
             ])
             ->add('notascliente', TextareaType::class, [
                 'label' => 'Observaciones',
                 'attr' => ['rows' => 7],
-                'required' => false
+                'required' => false,
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $cotizacion = $event->getData();
             $form = $event->getForm();
 
-            if($cotizacion->getValidanovo() === 2){ //aceptar como cliente
+            if ($cotizacion->getValidanovo() === 2) { //aceptar como cliente
                 $form
                     ->remove('validanovo')
                     ->remove('notasnovo');
-            }else{ //validar como alguien de Novo
+            } else { //validar como alguien de Novo
                 $form
                     ->remove('validacliente')
                     ->remove('notascliente');
@@ -79,8 +79,8 @@ class CombustibleValidarType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Combustible::class,
             'constraints' => [
-                new Callback([$this, 'combustibleHaveStock'])
-            ]
+                new Callback([$this, 'combustibleHaveStock']),
+            ],
         ]);
     }
 
@@ -96,9 +96,13 @@ class CombustibleValidarType extends AbstractType
     {
         $existencia = $cotizacion->getTipo()->getExistencia();
 
-        if ($cotizacion->getValidanovo() === 2 && $existencia <= 0) {
+        if (
+            $cotizacion->getValidanovo() === 2 &&
+            $cotizacion->getValidacliente() === 0 &&
+            $existencia < $cotizacion->getCantidad()
+        ) {
             $context
-                ->buildViolation('No hay suficiente inventario, Existencia actual: '.$existencia)
+                ->buildViolation('No hay suficiente inventario; Existencia actual: '.$existencia.'; Cantidad solicitada: '.$cotizacion->getCantidad())
                 ->atPath('validanovo')
                 ->addViolation();
         }
