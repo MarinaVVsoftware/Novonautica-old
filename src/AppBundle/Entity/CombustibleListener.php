@@ -21,6 +21,10 @@ class CombustibleListener
             return;
         }
 
+        if ($combustible->getValidacliente() !== 0) {
+            return;
+        }
+
         $producto = $combustible->getTipo();
         $cantidadInicial = $producto->getExistencia();
         $cantidadRemover = $combustible->getCantidad();
