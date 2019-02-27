@@ -16,7 +16,7 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb
             ->select('ac')
-            ->where($qb->expr()->eq('ac.validacliente',2))
+            ->where($qb->expr()->eq('ac.validacliente', 2))
             ->getQuery()
             ->getResult();
     }
@@ -108,7 +108,7 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
     public function getWorkedBoatsByDaterange(\DateTime $start, \DateTime $end)
     {
         return $this->createQueryBuilder('ac')
-            ->select('ac.fechaLlegada AS fecha' ,'COUNT(ac.id) AS total')
+            ->select('ac.fechaLlegada AS fecha', 'COUNT(ac.id) AS total')
             ->where('ac.fechaLlegada BETWEEN :start AND :end')
             ->andWhere('ac.validacliente = 2')
             ->setParameters([
@@ -153,11 +153,12 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->getArrayResult();
     }
 
-    function esMoneda($valor){
-        return '$'.number_format($valor/100,2);
+    function esMoneda($valor)
+    {
+        return '$'.number_format($valor / 100, 2);
     }
 
-    public function obtenIngresosTodos($idbarco,$inicio,$fin)
+    public function obtenIngresosTodos($idbarco, $inicio, $fin)
     {
         $resultado = [];
         $granVarada = 0;
@@ -198,9 +199,15 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
         $condicion_barco = '';
         $condicion_inicio = '';
         $condicion_fin = '';
-        if($idbarco !== '0'){$condicion_barco = ' AND Barco.id = :idBarco ';}
-        if($inicio){$condicion_inicio = ' AND AstilleroCotizacion.fechaLlegada >= :fechaIni ';}
-        if($fin){$condicion_fin = ' AND AstilleroCotizacion.fechaLlegada <= :fechaFin ';}
+        if ($idbarco !== '0') {
+            $condicion_barco = ' AND Barco.id = :idBarco ';
+        }
+        if ($inicio) {
+            $condicion_inicio = ' AND AstilleroCotizacion.fechaLlegada >= :fechaIni ';
+        }
+        if ($fin) {
+            $condicion_fin = ' AND AstilleroCotizacion.fechaLlegada <= :fechaFin ';
+        }
         $qry = 'SELECT 
                       AstilleroCotizacion.id as idCotizacion,
                       AstilleroCotizacion.fechaLlegada as fecha,
@@ -226,23 +233,29 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
                       LEFT JOIN acs.astillerocotizacion AstilleroCotizacion
                       LEFT JOIN AstilleroCotizacion.barco Barco
                       WHERE AstilleroCotizacion.validacliente = 2  
-                      AND acs.estatus = 1 ' .$condicion_barco.$condicion_inicio.$condicion_fin.
-                    ' ORDER BY fecha,folio,foliorecotiza ASC';
+                      AND acs.estatus = 1 '.$condicion_barco.$condicion_inicio.$condicion_fin.
+            ' ORDER BY fecha,folio,foliorecotiza ASC';
         $servicios = $this->getEntityManager()->createQuery($qry);
-        if($idbarco !== '0'){$servicios->setParameter('idBarco',$idbarco);}
-        if($inicio){$servicios->setParameter('fechaIni',$inicio);}
-        if($fin){$servicios->setParameter('fechaFin',$fin);}
+        if ($idbarco !== '0') {
+            $servicios->setParameter('idBarco', $idbarco);
+        }
+        if ($inicio) {
+            $servicios->setParameter('fechaIni', $inicio);
+        }
+        if ($fin) {
+            $servicios->setParameter('fechaFin', $fin);
+        }
         $servicios->getArrayResult();
         $c = 1;
-        if($servicios){
-            foreach ($servicios->getArrayResult() as $servicio){
-                if($c === 1){
+        if ($servicios) {
+            foreach ($servicios->getArrayResult() as $servicio) {
+                if ($c === 1) {
                     $auxIdCotizacion = $servicio['idCotizacion'];
-                    $folio = $servicio['foliorecotiza']?$servicio['folio'].'-'.$servicio['foliorecotiza']:$servicio['folio'];
+                    $folio = $servicio['foliorecotiza'] ? $servicio['folio'].'-'.$servicio['foliorecotiza'] : $servicio['folio'];
                     $fecha = $servicio['fecha'];
                     $barco = $servicio['barco'];
                 }
-                if($auxIdCotizacion !== $servicio['idCotizacion']){
+                if ($auxIdCotizacion !== $servicio['idCotizacion']) {
                     array_push($resultado, [
                         'anio' => $fecha->format('Y'),
                         'mes' => $fecha->format('m'),
@@ -265,25 +278,25 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
                         'nomServicios' => $nomServicios,
                         'subtotal' => $this->esMoneda($subtotal),
                         'iva' => $this->esMoneda($iva),
-                        'total' => $this->esMoneda($total)
+                        'total' => $this->esMoneda($total),
                     ]);
                     // --- variables gran total --
-                    $granVarada+=$varada;
-                    $granEstadia+=$estadia;
-                    $granRampa+=$rampa;
-                    $granKarcher+=$karcher;
-                    $granExplanada+=$explanada;
-                    $granElectricidad+=$electricidad;
-                    $granLimpieza+=$limpieza;
-                    $granInspeccionar+=$inspeccionar;
-                    $granDiasAdicionales+=$diasAdicionales;
-                    $granSubTotServiciosBasicos+=$subTotServiciosBasicos;
-                    $granSubTotServicios+=$subTotServicios;
-                    $granSubTotOtros+=$subTotOtros;
-                    $granSubTotProductos+=$subTotProductos;
-                    $granSubtotal+=$subtotal;
-                    $granIva+=$iva;
-                    $granTotal+=$total;
+                    $granVarada += $varada;
+                    $granEstadia += $estadia;
+                    $granRampa += $rampa;
+                    $granKarcher += $karcher;
+                    $granExplanada += $explanada;
+                    $granElectricidad += $electricidad;
+                    $granLimpieza += $limpieza;
+                    $granInspeccionar += $inspeccionar;
+                    $granDiasAdicionales += $diasAdicionales;
+                    $granSubTotServiciosBasicos += $subTotServiciosBasicos;
+                    $granSubTotServicios += $subTotServicios;
+                    $granSubTotOtros += $subTotOtros;
+                    $granSubTotProductos += $subTotProductos;
+                    $granSubtotal += $subtotal;
+                    $granIva += $iva;
+                    $granTotal += $total;
                     // ---------------------------
                     //--- Reiniciar variables ----
                     $subTotProductos = 0;
@@ -304,7 +317,7 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
                     $total = 0;
                     $nomServicios = '';
                     $auxIdCotizacion = $servicio['idCotizacion'];
-                    $folio = $servicio['foliorecotiza']?$servicio['folio'].'-'.$servicio['foliorecotiza']:$servicio['folio'];
+                    $folio = $servicio['foliorecotiza'] ? $servicio['folio'].'-'.$servicio['foliorecotiza'] : $servicio['folio'];
                     $fecha = $servicio['fecha'];
                     $barco = $servicio['barco'];
                     //---------------------------
@@ -317,20 +330,38 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
                 }
                 if ($servicio['servicio']) {
                     $subTotServicios += $servicio['subtotal'];
-                    $nomServicios .= $servicio['servicio'] . '. ';
+                    $nomServicios .= $servicio['servicio'].'. ';
                 }
                 if ($servicio['servicioBasico']) {
                     $subTotServiciosBasicos += $servicio['subtotal'];
                     switch ($servicio['idServicioBasico']) {
-                        case 1:$varada = $servicio['subtotal'];break;
-                        case 2:$estadia = $servicio['subtotal'];break;
-                        case 3:$rampa = $servicio['subtotal'];break;
-                        case 4:$karcher = $servicio['subtotal'];break;
-                        case 5:$explanada = $servicio['subtotal'];break;
-                        case 6:$electricidad = $servicio['subtotal'];break;
-                        case 7:$limpieza = $servicio['subtotal'];break;
-                        case 8:$inspeccionar = $servicio['subtotal'];break;
-                        case 9:$diasAdicionales = $servicio['subtotal'];break;
+                        case 1:
+                            $varada = $servicio['subtotal'];
+                            break;
+                        case 2:
+                            $estadia = $servicio['subtotal'];
+                            break;
+                        case 3:
+                            $rampa = $servicio['subtotal'];
+                            break;
+                        case 4:
+                            $karcher = $servicio['subtotal'];
+                            break;
+                        case 5:
+                            $explanada = $servicio['subtotal'];
+                            break;
+                        case 6:
+                            $electricidad = $servicio['subtotal'];
+                            break;
+                        case 7:
+                            $limpieza = $servicio['subtotal'];
+                            break;
+                        case 8:
+                            $inspeccionar = $servicio['subtotal'];
+                            break;
+                        case 9:
+                            $diasAdicionales = $servicio['subtotal'];
+                            break;
                     }
                 }
                 $subtotal += $servicio['subtotal'];
@@ -339,11 +370,11 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
                 $c++;
             }
             array_push($resultado, [
-                'anio' => isset($fecha)?$fecha->format('Y'):'',
-                'mes' => isset($fecha)?$fecha->format('m'):'',
-                'dia' => isset($fecha)?$fecha->format('d/m/Y'):'',
-                'folio' => isset($folio)?$folio:'',
-                'embarcacion' => isset($barco)?$barco:'',
+                'anio' => isset($fecha) ? $fecha->format('Y') : '',
+                'mes' => isset($fecha) ? $fecha->format('m') : '',
+                'dia' => isset($fecha) ? $fecha->format('d/m/Y') : '',
+                'folio' => isset($folio) ? $folio : '',
+                'embarcacion' => isset($barco) ? $barco : '',
                 'varada' => $this->esMoneda($varada),
                 'estadia' => $this->esMoneda($estadia),
                 'rampa' => $this->esMoneda($rampa),
@@ -360,29 +391,29 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
                 'nomServicios' => $nomServicios,
                 'subtotal' => $this->esMoneda($subtotal),
                 'iva' => $this->esMoneda($iva),
-                'total' => $this->esMoneda($total)
+                'total' => $this->esMoneda($total),
             ]);
         }
 
         // --- variables gran total --
-        $granVarada+=$varada;
-        $granEstadia+=$estadia;
-        $granRampa+=$rampa;
-        $granKarcher+=$karcher;
-        $granExplanada+=$explanada;
-        $granElectricidad+=$electricidad;
-        $granLimpieza+=$limpieza;
-        $granInspeccionar+=$inspeccionar;
-        $granDiasAdicionales+=$diasAdicionales;
-        $granSubTotServiciosBasicos+=$subTotServiciosBasicos;
-        $granSubTotServicios+=$subTotServicios;
-        $granSubTotOtros+=$subTotOtros;
-        $granSubTotProductos+=$subTotProductos;
-        $granSubtotal+=$subtotal;
-        $granIva+=$iva;
-        $granTotal+=$total;
+        $granVarada += $varada;
+        $granEstadia += $estadia;
+        $granRampa += $rampa;
+        $granKarcher += $karcher;
+        $granExplanada += $explanada;
+        $granElectricidad += $electricidad;
+        $granLimpieza += $limpieza;
+        $granInspeccionar += $inspeccionar;
+        $granDiasAdicionales += $diasAdicionales;
+        $granSubTotServiciosBasicos += $subTotServiciosBasicos;
+        $granSubTotServicios += $subTotServicios;
+        $granSubTotOtros += $subTotOtros;
+        $granSubTotProductos += $subTotProductos;
+        $granSubtotal += $subtotal;
+        $granIva += $iva;
+        $granTotal += $total;
         // ---------------------------
-        array_push($resultado,[
+        array_push($resultado, [
             'anio' => '',
             'mes' => '',
             'dia' => '',
@@ -404,14 +435,16 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
             'nomServicios' => '',
             'subtotal' => $this->esMoneda($granSubtotal),
             'iva' => $this->esMoneda($granIva),
-            'total' => $this->esMoneda($granTotal)
+            'total' => $this->esMoneda($granTotal),
         ]);
+
         return $resultado;
     }
 
     public function getCotizacionesFromCliente($client, $inicio, $fin)
     {
-        $manager = $this->getEntityManager();
+        /*$manager = $this->getEntityManager();
+
         $cotizaciones = $manager->createQuery(
             'SELECT cotizaciones.id, '.
             '(CASE '.
@@ -429,7 +462,49 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter('fin', $fin)
             ->setParameter('client', $client);
 
-        return $cotizaciones->getArrayResult();
+        // FIXME Se espera que el cliente tenga el id 413, hasta ahora este valor tiene que quedarse fijo
+        if ($client === '413') {
+            $cotizaciones[] = [
+                'id' => 'ALL',
+                'text' => 'Todas las ventas'
+            ];
+        }*/
+
+        $queryBuilder = $this->createQueryBuilder('cotizaciones');
+
+        $cotizacionQuery = $queryBuilder
+            ->select(
+                'cotizaciones.id',
+                '(CASE '.
+                'WHEN cotizaciones.foliorecotiza > 0 '.
+                'THEN CONCAT(cotizaciones.folio, \'-\', cotizaciones.foliorecotiza, \' \', barco.nombre) '.
+                'ELSE CONCAT(cotizaciones.folio, \' \', barco.nombre) '.
+                'END) AS text'
+            )
+            ->leftJoin('cotizaciones.barco', 'barco')
+            ->leftJoin('cotizaciones.cliente', 'cliente')
+            ->leftJoin('cliente.razonesSociales', 'razonesSociales')
+            ->andWhere(
+                'cotizaciones.factura IS NULL',
+                'cotizaciones.validacliente = 2',
+                'cotizaciones.fecharegistro BETWEEN :inicio AND :fin'
+            )
+            ->setParameter('inicio', $inicio)
+            ->setParameter('fin', $fin);
+
+        // FIXME Se espera que el cliente tenga el id 413, hasta ahora este valor tiene que quedarse fijo
+        if ($client === '413') {
+            $cotizacionQuery->andWhere(
+                '(cotizaciones.requerirFactura = 0 OR razonesSociales.id IS NULL)'
+            );
+
+            return $cotizacionQuery->getQuery()->getArrayResult();
+        }
+
+        $cotizacionQuery->andWhere('IDENTITY(cotizaciones.cliente) = :client');
+        $cotizacionQuery->setParameter('client', $client);
+
+        return $cotizacionQuery->getQuery()->getArrayResult();
     }
 
     public function getFullCotizacionesFromCliente($client, $inicio, $fin, $cotizacionId = null)
