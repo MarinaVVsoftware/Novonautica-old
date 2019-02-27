@@ -102,6 +102,10 @@
               if (cotizacion[i] === 1) row.cells[i].innerHTML = rechazado;
               if (cotizacion[i] === 2) row.cells[i].innerHTML = aceptado;
             }
+            row.cells[0].innerHTML = `
+                <p>${cotizacion[0].folio}</p>
+                <p>${cotizacion[0].fecharegistro}</p>
+            `;
 
             row.cells[1].innerHTML = `
                 <dl class="dl-horizontal">

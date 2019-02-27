@@ -176,7 +176,6 @@ class MarinaHumedaCotizacionController extends Controller
 
             //-------------------------------------------------
 
-            $fechaHoraActual = new \DateTime('now');
             $foliobase = $sistema[0]['folioMarina'];
             $folionuevo = $foliobase + 1;
 
@@ -189,7 +188,6 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setValidanovo(0)
                 ->setValidacliente(0)
                 ->setEstatus(1)
-                ->setFecharegistro($fechaHoraActual)
                 ->setFolio($folionuevo)
                 ->setFoliorecotiza(0);
             $this->getDoctrine()
@@ -753,7 +751,6 @@ class MarinaHumedaCotizacionController extends Controller
             $granTotal += $total;
 
             //-------------------------------------------------
-            $fechaHoraActual = new \DateTime('now');
             $foliobase = $qb->getFolioMarina();
             $folionuevo = $foliobase + 1;
 
@@ -769,7 +766,6 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setValidanovo(0)
                 ->setValidacliente(0)
                 ->setEstatus(1)
-                ->setFecharegistro($fechaHoraActual)
                 ->setFolio($folionuevo)
                 ->setFoliorecotiza(0);
             $folioactualiza = $this->getDoctrine()
@@ -934,7 +930,6 @@ class MarinaHumedaCotizacionController extends Controller
             $granTotal += $total;
 
             //-------------------------------------------------
-            $fechaHoraActual = new \DateTime('now');
             $marinaHumedaCotizacion
                 ->setCliente($cliente)
                 ->setBarco($barco)
@@ -946,8 +941,7 @@ class MarinaHumedaCotizacionController extends Controller
                 ->setTotal($granTotal)
                 ->setValidanovo(0)
                 ->setValidacliente(0)
-                ->setEstatus(1)
-                ->setFecharegistro($fechaHoraActual);
+                ->setEstatus(1);
             $marinaHumedaCotizacionAnterior
                 ->setEstatus(0);
             $em->persist($marinaHumedaCotizacion);
