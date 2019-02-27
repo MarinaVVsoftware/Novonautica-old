@@ -199,7 +199,7 @@ class MarinaHumedaCotizacion
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecharegistro", type="datetime", nullable=true)
+     * @ORM\Column(name="fecharegistro", type="datetime")
      */
     private $fecharegistro;
 
@@ -361,6 +361,7 @@ class MarinaHumedaCotizacion
         $this->registroValidaNovo = null;
         $this->registroValidaCliente = null;
         $this->registroPagoCompletado = null;
+        $this->fecharegistro = new \DateTime();
     }
 
     public function __toString()
