@@ -128,13 +128,32 @@ class MarinaHumedaCotizacionType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($formModifier) {
             $cotizacion = $event->getData();
             $form = $event->getForm();
-
             if ($cotizacion->getId() == null) { //cotización nueva
                 $form
                     ->remove('validanovo')
                     ->remove('validacliente')
                     ->remove('notasnovo')
                     ->remove('notascliente');
+
+                if($cotizacion->getFechaLlegada()){
+                    $form->add('fechaLlegada', DateType::class, [
+                        'label' => 'Fecha llegada',
+                        'widget' => 'single_text',
+                        'html5' => false,
+                        'attr' => ['class' => 'datepicker input-calendario', 'readonly' => true],
+                        'format' => 'yyyy-MM-dd',
+                    ]);
+                }
+                if($cotizacion->getFechaSalida()){
+                    $form->add('fechaSalida', DateType::class, [
+                        'label' => 'Fecha Salida',
+                        'widget' => 'single_text',
+                        'html5' => false,
+                        'attr' => ['class' => 'datepicker input-calendario', 'readonly' => true],
+                        'format' => 'yyyy-MM-dd',
+                    ]);
+                }
+
                 $formModifier($event->getForm(), $cotizacion->getCliente());
             }
             // para validar por el cliente

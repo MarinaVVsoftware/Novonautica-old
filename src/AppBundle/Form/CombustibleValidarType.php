@@ -9,6 +9,7 @@
 namespace AppBundle\Form;
 
 
+use AppBundle\Entity\Combustible;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -16,6 +17,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class CombustibleValidarType extends AbstractType
 {
@@ -30,37 +33,37 @@ class CombustibleValidarType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'choice_attr' => function ($val, $key, $index) {
-                    return ['class' => 'opcion' . strtolower($key)];
+                    return ['class' => 'opcion'.strtolower($key)];
                 },
             ])
             ->add('notasnovo', TextareaType::class, [
                 'label' => 'Observaciones',
                 'attr' => ['rows' => 7],
-                'required' => false
+                'required' => false,
             ])
             ->add('validacliente', ChoiceType::class, [
                 'choices' => ['Aceptar' => 2, 'Rechazar' => 1],
                 'expanded' => true,
                 'multiple' => false,
                 'choice_attr' => function ($val, $key, $index) {
-                    return ['class' => 'opcion' . strtolower($key)];
+                    return ['class' => 'opcion'.strtolower($key)];
                 },
             ])
             ->add('notascliente', TextareaType::class, [
                 'label' => 'Observaciones',
                 'attr' => ['rows' => 7],
-                'required' => false
+                'required' => false,
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $cotizacion = $event->getData();
             $form = $event->getForm();
 
-            if($cotizacion->getValidanovo() === 2){ //aceptar como cliente
+            if ($cotizacion->getValidanovo() === 2) { //aceptar como cliente
                 $form
                     ->remove('validanovo')
                     ->remove('notasnovo');
-            }else{ //validar como alguien de Novo
+            } else { //validar como alguien de Novo
                 $form
                     ->remove('validacliente')
                     ->remove('notascliente');
@@ -73,9 +76,12 @@ class CombustibleValidarType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Combustible'
-        ));
+        $resolver->setDefaults([
+            'data_class' => Combustible::class,
+            'constraints' => [
+                new Callback([$this, 'combustibleHaveStock']),
+            ],
+        ]);
     }
 
     /**
@@ -84,5 +90,21 @@ class CombustibleValidarType extends AbstractType
     public function getBlockPrefix()
     {
         return 'appbundle_combustible';
+    }
+
+    public function combustibleHaveStock(Combustible $cotizacion, ExecutionContextInterface $context)
+    {
+        $existencia = $cotizacion->getTipo()->getExistencia();
+
+        if (
+            $cotizacion->getValidanovo() === 2 &&
+            $cotizacion->getValidacliente() === 0 &&
+            $existencia < $cotizacion->getCantidad()
+        ) {
+            $context
+                ->buildViolation('No hay suficiente inventario; Existencia actual: '.$existencia.'; Cantidad solicitada: '.$cotizacion->getCantidad())
+                ->atPath('validanovo')
+                ->addViolation();
+        }
     }
 }

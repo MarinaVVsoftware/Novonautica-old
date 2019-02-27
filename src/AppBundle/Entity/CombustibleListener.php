@@ -13,14 +13,21 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class CombustibleListener
 {
-    public function postPersist(Combustible $combustible, LifecycleEventArgs $eventArgs)
+    public function postUpdate(Combustible $combustible, LifecycleEventArgs $eventArgs)
     {
         $em = $eventArgs->getEntityManager();
+
+        if ($combustible->getValidanovo() !== 2) {
+            return;
+        }
+
+        if ($combustible->getValidacliente() !== 0) {
+            return;
+        }
 
         $producto = $combustible->getTipo();
         $cantidadInicial = $producto->getExistencia();
         $cantidadRemover = $combustible->getCantidad();
-
         $producto->setExistencia($cantidadInicial - $cantidadRemover);
 
         $em->persist($producto);

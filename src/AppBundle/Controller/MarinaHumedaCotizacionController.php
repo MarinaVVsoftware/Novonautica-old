@@ -705,13 +705,8 @@ class MarinaHumedaCotizacionController extends Controller
             $granTotal = 0;
             $descuento = $marinaHumedaCotizacion->getDescuento();
             $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
-
-            $llegada = $marinaHumedaCotizacion->getFechaLlegada();
-            $salida = $marinaHumedaCotizacion->getFechaSalida();
-
-            $diferenciaDias = date_diff($llegada, $salida);
-
-            $cantidad = ($diferenciaDias->days);
+            $cantidad = $marinaHumedaCotizacion->getDiasEstadia();
+            
             // Días Estadía
             $precio = $marinaDiasEstadia->getPrecio()->getCosto();
 
@@ -893,12 +888,7 @@ class MarinaHumedaCotizacionController extends Controller
             $descuento = $marinaHumedaCotizacion->getDescuento();
             $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
 
-            $llegada = $marinaHumedaCotizacion->getFechaLlegada();
-            $salida = $marinaHumedaCotizacion->getFechaSalida();
-
-            $diferenciaDias = date_diff($llegada, $salida);
-
-            $cantidad = ($diferenciaDias->days);
+            $cantidad = $marinaHumedaCotizacion->getDiasEstadia();
             // Días Estadía
             $precio = $marinaDiasEstadia->getPrecio()->getCosto();
 

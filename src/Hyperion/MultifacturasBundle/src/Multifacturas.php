@@ -27,7 +27,7 @@ class Multifacturas
         $this->kernel = $kernel;
         $this->directory = $kernel->getRootDir().'/../src/Hyperion/MultifacturasBundle/src';
         $this->webDirectory = $kernel->getRootDir().'/../web';
-        $this->environment = $kernel->getEnvironment() === 'PROD' ? 'SI' : 'NO';
+        $this->environment = $kernel->getEnvironment() === 'PROD' ? 'NO' : 'NO';
         $this->version = '3.3';
     }
 
@@ -250,17 +250,20 @@ class Multifacturas
 
         $emisor = $factura->getEmisor();
 
-        $datos['PAC']['produccion'] = $this->environment;
         $datos['PAC']['usuario'] = $emisor->getUsuarioPAC();
         $datos['PAC']['pass'] = $emisor->getPasswordPAC();
 
         $datos['modulo'] = 'cancelacion2018';
         $datos['accion'] = 'cancelar';
+
+        $datos['produccion'] = $this->environment;
+
         $datos['uuid'] = $factura->getUuidFiscal();
         $datos['xml'] = $factura->getXmlArchivo();
 
         $datos['rfc'] = $emisor->getRfc();
         $datos['password'] = $emisor->getPassword();
+
         $datos['b64Cer'] = $this->directory.'/certificados/'.$emisor->getCer();
         $datos['b64Key'] = $this->directory.'/certificados/'.$emisor->getKey();
 
@@ -280,17 +283,20 @@ class Multifacturas
         $factura = $pago->getFactura();
         $emisor = $factura->getEmisor();
 
-        $datos['PAC']['produccion'] = $this->environment;
         $datos['PAC']['usuario'] = $emisor->getUsuarioPAC();
         $datos['PAC']['pass'] = $emisor->getPasswordPAC();
 
         $datos['modulo'] = 'cancelacion2018';
         $datos['accion'] = 'cancelar';
+
+        $datos['produccion'] = $this->environment;
+
         $datos['uuid'] = $factura->getUuidFiscal();
         $datos['xml'] = $factura->getXmlArchivo();
 
         $datos['rfc'] = $emisor->getRfc();
         $datos['password'] = $emisor->getPassword();
+
         $datos['b64Cer'] = $this->directory.'/certificados/'.$emisor->getCer();
         $datos['b64Key'] = $this->directory.'/certificados/'.$emisor->getKey();
 
