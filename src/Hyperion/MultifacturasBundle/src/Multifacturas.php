@@ -27,7 +27,7 @@ class Multifacturas
         $this->kernel = $kernel;
         $this->directory = $kernel->getRootDir().'/../src/Hyperion/MultifacturasBundle/src';
         $this->webDirectory = $kernel->getRootDir().'/../web';
-        $this->environment = $kernel->getEnvironment() === 'PROD' ? 'NO' : 'NO';
+        $this->environment = $kernel->getEnvironment() === 'PROD' ? 'SI' : 'NO';
         $this->version = '3.3';
     }
 

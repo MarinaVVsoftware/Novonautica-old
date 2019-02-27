@@ -465,7 +465,7 @@ class FacturacionController extends Controller
         $cotizacionRepository = FacturacionHelper::getCotizacionRepository($em, $factura->getEmisor()->getId());
         $cotizacion = $cotizacionRepository->findOneBy(['factura' => $factura->getId()]);
 
-        if ($this->kernel->getEnvironment() === 'dev' || true) {
+        if ($this->kernel->getEnvironment() === 'dev') {
             $factura->setIsCancelada(true);
             $cotizacion->setFactura(null);
 
