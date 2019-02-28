@@ -66,7 +66,8 @@ class ProductoType extends AbstractType
                         return $er->createQueryBuilder('proveedor')
                             ->where('proveedor.proveedorcontratista = 0')
                             ->andWhere('proveedor.empresa = 5');
-                    }
+                    },
+                    'choice_label' => 'razonsocial',
                 ],
                 'allow_add' => true,
                 'allow_delete' => true,
