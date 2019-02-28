@@ -441,35 +441,18 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
         return $resultado;
     }
 
+    /**
+     * Cuando se busca por el cliente "Publico en general ID: 413" la busqueda se expande a todas las cotizaciones
+     * donde estas se solicito que no requerian factura o donde el cliente no tiene datos de facturacion.
+     *
+     * @param $client
+     * @param $inicio
+     * @param $fin
+     *
+     * @return array
+     */
     public function getCotizacionesFromCliente($client, $inicio, $fin)
     {
-        /*$manager = $this->getEntityManager();
-
-        $cotizaciones = $manager->createQuery(
-            'SELECT cotizaciones.id, '.
-            '(CASE '.
-            'WHEN cotizaciones.foliorecotiza > 0 '.
-            'THEN CONCAT(cotizaciones.folio, \'-\', cotizaciones.foliorecotiza, \' \', barco.nombre) '.
-            'ELSE CONCAT(cotizaciones.folio, \' \', barco.nombre) '.
-            'END) AS text '.
-            'FROM AppBundle:AstilleroCotizacion cotizaciones '.
-            'LEFT JOIN cotizaciones.barco barco '.
-            'WHERE IDENTITY(cotizaciones.cliente) = :client '.
-            'AND cotizaciones.factura IS NULL '.
-            'AND cotizaciones.validacliente = 2'.
-            'AND cotizaciones.fecharegistro BETWEEN :inicio AND :fin')
-            ->setParameter('inicio', $inicio)
-            ->setParameter('fin', $fin)
-            ->setParameter('client', $client);
-
-        // FIXME Se espera que el cliente tenga el id 413, hasta ahora este valor tiene que quedarse fijo
-        if ($client === '413') {
-            $cotizaciones[] = [
-                'id' => 'ALL',
-                'text' => 'Todas las ventas'
-            ];
-        }*/
-
         $queryBuilder = $this->createQueryBuilder('cotizaciones');
 
         $cotizacionQuery = $queryBuilder
@@ -479,7 +462,10 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
                 'WHEN cotizaciones.foliorecotiza > 0 '.
                 'THEN CONCAT(cotizaciones.folio, \'-\', cotizaciones.foliorecotiza, \' \', barco.nombre) '.
                 'ELSE CONCAT(cotizaciones.folio, \' \', barco.nombre) '.
-                'END) AS text'
+                'END) AS text',
+                'cotizaciones.requerirFactura',
+                'cliente.id AS cliente_id',
+                'cliente.nombre AS cliente_nombre'
             )
             ->leftJoin('cotizaciones.barco', 'barco')
             ->leftJoin('cotizaciones.cliente', 'cliente')
