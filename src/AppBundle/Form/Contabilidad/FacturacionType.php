@@ -230,6 +230,7 @@ class FacturacionType extends AbstractType
                 'html5' => false,
                 'widget' => 'single_text',
                 'format' => 'MMMM yyyy',
+                'attr' => ['autocomplete' => 'off']
             ]
         );
 
