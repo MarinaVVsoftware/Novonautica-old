@@ -434,8 +434,6 @@
                 this.elementListener(element);
               });
 
-          this.elementList = [];
-
           this.elementCounter = this.prototypeHolder.childElementCount;
 
           this.addButton
@@ -456,7 +454,6 @@
 
           this.appendRemoveButton(element);
           this.elementListener(element, event);
-          this.elementList.push(element);
           this.prototypeHolder.appendChild(element);
 
           return this.prototypeHolder.children[this.prototypeHolder.children.length - 1];
@@ -626,7 +623,6 @@
         /**
          * LISTENERS
          */
-
         metodoPagoSelect.addEventListener('change', function () {
           if (this.value === 'PUE') {
             formaPagoSelect.value = '01';
@@ -670,7 +666,6 @@
         cotizacionSelect.addEventListener('change', function () {
           // La tabla se tiene que limpiar cada vez que cambie el select de cotizaciones cambie de valor
           conceptoTable.clear();
-          computeConceptos();
 
           if (!this.value) return;
 
@@ -722,8 +717,9 @@
 
             }
 
-            computeConceptos();
           }).always(() => {
+            computeConceptos();
+
             loadingState.style.display = 'none';
             const selectedOption = cotizacionSelect.options[cotizacionSelect.selectedIndex];
 
@@ -755,6 +751,7 @@
           cotizacionSelect.innerHTML = '';
           document.getElementById('errors').innerHTML = '';
           conceptoTable.clear();
+          computeConceptos();
 
           if (clienteSelect.value) {
             getCotizaciones(emisorSelect.value, clienteSelect.value);
@@ -814,7 +811,7 @@
           let subtotalValue = 0;
           let impuestosValue = 0;
 
-          for (const element of conceptoTable.elementList) {
+          for (const element of conceptoTable.prototypeHolder.rows) {
             subtotalValue += Number(element.connectedNodes.importeInput.getRawValue());
             impuestosValue += Number(element.connectedNodes.impuestoImporteInput.getRawValue());
             totalValue = subtotalValue + impuestosValue;

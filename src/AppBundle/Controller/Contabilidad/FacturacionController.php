@@ -16,18 +16,17 @@ use AppBundle\Extra\NumberToLetter;
 use AppBundle\Form\Contabilidad\FacturacionType;
 use AppBundle\Form\Contabilidad\PreviewType;
 use DataTables\DataTablesInterface;
-use Doctrine\ORM\NonUniqueResultException;
 use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -153,10 +152,13 @@ class FacturacionController extends Controller
                     'No se pudo sellar la factura, razón: '.$sello['codigo_mf_texto']
                 );
 
-                return $this->render('contabilidad/facturacion/new.html.twig', [
-                    'factura' => $factura,
-                    'form' => $form->createView(),
-                ]);
+                return $this->render(
+                    'contabilidad/facturacion/new.html.twig',
+                    [
+                        'form' => $form->createView(),
+                        'factura' => $factura,
+                    ]
+                );
             }
 
             // Buscar las cotizaciones

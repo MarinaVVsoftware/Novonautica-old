@@ -2,11 +2,19 @@
 
 namespace AppBundle\Entity\Contabilidad;
 
+use AppBundle\Entity\AstilleroCotizacion;
 use AppBundle\Entity\Cliente;
 use AppBundle\Entity\Cliente\RazonSocial;
+use AppBundle\Entity\Combustible;
 use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto;
+use AppBundle\Entity\MarinaHumedaCotizacion;
+use AppBundle\Entity\Tienda\Venta;
+use AppBundle\Extra\FacturacionHelper;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,6 +33,11 @@ class Facturacion
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var ObjectManager
+     */
+    private $entityManager;
 
     /*------------------------------------------------------------------------------------------------
      * DATOS DE FACTURA
@@ -251,7 +264,6 @@ class Facturacion
     /*------------------------------------------------------------------------------------------------
      * DATOS DE ENTIDAD
      *-----------------------------------------------------------------------------------------------*/
-
     /**
      * @var int $estatus
      *
@@ -260,7 +272,9 @@ class Facturacion
     private $isCancelada;
 
     /**
-     * @var int
+     * @var int $isPagada Se refiere a los complementos de pago de una factura, cuando todos los complementos de pago
+     * completan el total del valor facturado, entonces la factura esta pagada, si la factura
+     * no tiene complementos de pago, entonces esta pagada
      *
      * @ORM\Column(name="pagada", type="smallint")
      */
@@ -272,6 +286,26 @@ class Facturacion
     /*------------------------------------------------------------------------------------------------
      * ENTIDADES RELACIONADAS
      *-----------------------------------------------------------------------------------------------*/
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\MarinaHumedaCotizacion", mappedBy="factura")
+     */
+    private $cotizacionMarina;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\AstilleroCotizacion", mappedBy="factura")
+     */
+    private $cotizacionAstillero;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Combustible", mappedBy="factura")
+     */
+    private $cotizacionCombustible;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Tienda\Venta", mappedBy="factura")
+     */
+    private $cotizacionTienda;
 
     /**
      * @var Emisor
@@ -1067,6 +1101,94 @@ class Facturacion
     public function isPagada()
     {
         return $this->isPagada;
+    }
+
+    /**
+     * @return MarinaHumedaCotizacion|AstilleroCotizacion|Combustible|Venta|null
+     */
+    public function getCotizacion()
+    {
+        if (null !== $this->cotizacionMarina) {
+            return $this->cotizacionMarina;
+        }
+
+        if (null !== $this->cotizacionAstillero) {
+            return $this->cotizacionAstillero;
+        }
+
+        if (null !== $this->cotizacionCombustible) {
+            return $this->cotizacionCombustible;
+        }
+
+        if (null !== $this->cotizacionTienda) {
+            return $this->cotizacionTienda;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param MarinaHumedaCotizacion|null $cotizacionMarina
+     */
+    public function setCotizacionMarina(MarinaHumedaCotizacion $cotizacionMarina = null)
+    {
+        $this->cotizacionMarina = $cotizacionMarina;
+    }
+
+    /**
+     * @return MarinaHumedaCotizacion|null
+     */
+    public function getCotizacionMarina()
+    {
+        return $this->cotizacionMarina;
+    }
+
+    /**
+     * @param AstilleroCotizacion|null $astilleroCotizacion
+     */
+    public function setCotizacionAstillero(AstilleroCotizacion $astilleroCotizacion = null)
+    {
+        $this->cotizacionAstillero = $astilleroCotizacion;
+    }
+
+    /**
+     * @return AstilleroCotizacion|null
+     */
+    public function getCotizacionAstillero()
+    {
+        return $this->cotizacionAstillero;
+    }
+
+    /**
+     * @param Combustible|null $combustible
+     */
+    public function setCotizacionCombustible(Combustible $combustible = null)
+    {
+        $this->cotizacionCombustible = $combustible;
+    }
+
+    /**
+     * @return Combustible|null
+     */
+    public function getCotizacionCombustible()
+    {
+        return $this->cotizacionCombustible;
+    }
+
+    /**
+     * @param Venta|null $venta
+     */
+    public function setCotizacionVenta(Venta $venta = null)
+    {
+        $this->cotizacionTienda = $venta;
+    }
+
+    /**
+     * @return Venta|null
+     */
+    public function getCotizacionVenta()
+    {
+        return $this->cotizacionTienda;
     }
 
     /**

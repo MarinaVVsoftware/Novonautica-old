@@ -11,7 +11,6 @@ namespace AppBundle\DataTables;
 
 use AppBundle\Entity\Contabilidad\Facturacion;
 use DataTables\AbstractDataTableHandler;
-use DataTables\DataTableException;
 use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -44,9 +43,13 @@ class FacturacionDataTable extends AbstractDataTableHandler
         $results->recordsTotal = $query->select('COUNT(fa.id)')->getQuery()->getSingleScalarResult();
 
         $query = $facturasRepo->createQueryBuilder('fa')
-            ->select('fa', 'emi', 'rec')
+            ->select('fa', 'emi', 'rec', 'cm', 'ca', 'cc', 'ct')
             ->leftJoin('fa.emisor', 'emi')
-            ->leftJoin('fa.receptor', 'rec');
+            ->leftJoin('fa.receptor', 'rec')
+            ->leftJoin('fa.cotizacionMarina', 'cm')
+            ->leftJoin('fa.cotizacionAstillero', 'ca')
+            ->leftJoin('fa.cotizacionCombustible', 'cc')
+            ->leftJoin('fa.cotizacionTienda', 'ct');
 
         if ($request->search->value) {
             $query
@@ -66,9 +69,47 @@ class FacturacionDataTable extends AbstractDataTableHandler
             $query->setParameter('end', $request->customData['dates']['end']);
         }
 
+        if ($request->columns[5]->search->value !== '' && $request->columns[5]->search->value >= 0) {
+
+            if ($request->columns[5]->search->value == 3) {
+                $query->andWhere('fa.metodoPago = \'PUE\'');
+            } else {
+                $query->andWhere('fa.isPagada = :pagada AND fa.metodoPago != \'PUE\'')
+                    ->setParameter('pagada', $request->columns[5]->search->value);
+            }
+        }
+
         if ($request->columns[6]->search->value !== '' && $request->columns[6]->search->value >= 0) {
-            $query->andWhere('fa.isPagada = :pagada')
-                ->setParameter('pagada', $request->columns[6]->search->value);
+            $estatus = $request->columns[6]->search->value;
+
+            if ($estatus == 0) {
+                $query->andWhere(
+                    $query->expr()->orX(
+                        '(cm.estatuspago IS NULL AND cm.id IS NOT NULL)',
+                        '(ca.estatuspago IS NULL AND ca.id IS NOT NULL)',
+                        '(cc.estatuspago IS NULL AND cc.id IS NOT NULL)'
+                    )
+                );
+            }
+
+            if ($estatus == 1 || $estatus == 2) {
+                $query->andWhere(
+                    $query->expr()->orX(
+                        'cm.estatuspago = :estatus',
+                        'ca.estatuspago = :estatus',
+                        'cc.estatuspago = :estatus'
+                    )
+                )
+                    ->setParameter('estatus', $estatus);
+            }
+
+            if ($estatus == 3) {
+                $query->andWhere(
+                    'cm.factura IS NULL',
+                    'ca.factura IS NULL',
+                    'cc.factura IS NULL'
+                );
+            }
         }
 
         foreach ($request->order as $order) {
@@ -103,24 +144,39 @@ class FacturacionDataTable extends AbstractDataTableHandler
             }
 
             $factura = $facturas[$index];
+            $cotizacion = $factura->getCotizacion();
+
             $emisor = $factura->getEmisor();
             $receptor = $factura->getReceptor();
             $nombreXML = explode('/', $factura->getXmlArchivo());
             $nombreXML = end($nombreXML);
 
+            $fecha = new \DateTime($factura->getFechaTimbrado());
+
             $results->data[] = [
+                $fecha->format('d/m/Y'),
                 $factura->getFolio(),
-                $emisor->getRfc().' / '.$emisor->getNombre(),
-                $receptor->getRfc().' / '.$receptor->getRazonSocial(),
-                $factura->getMetodoPago(),
-                '$'.number_format($factura->getTotal() / 100, 2).' '.$factura->getMoneda(),
-                $factura->getFechaTimbrado(),
+                [
+                    'id' => $emisor->getId(),
+                    'rfc' => $emisor->getRfc(),
+                    'razonSocial' => $emisor->getNombre(),
+                ],
+                [
+                    'rfc' => $receptor->getRfc(),
+                    'razonSocial' => $receptor->getRazonSocial(),
+                ],
+                [
+                    'metodo' => $factura->getMetodoPago(),
+                    'monto' => '$'.number_format($factura->getTotal() / 100, 2).' '.$factura->getMoneda(),
+                ],
                 $factura->isPagada(),
+                [
+                    'id' => $cotizacion ? $cotizacion->getId() : null,
+                    'pagada' => $cotizacion ? $cotizacion->getEstatuspago() : null,
+                ],
                 [
                     'xml' => $nombreXML,
                     'pdf' => $factura->getId(),
-                ],
-                [
                     'id' => $factura->getId(),
                     'status' => $factura->isCancelada(),
                     'metodoPago' => $factura->getMetodoPago(),

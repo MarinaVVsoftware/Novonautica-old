@@ -349,7 +349,7 @@ class AstilleroCotizacion
     /**
      * @var Facturacion
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="cotizacionAstillero")
      */
     private $factura;
 
