@@ -683,11 +683,11 @@ class AstilleroCotizacionController extends Controller
                     : $astilleroCotizacion->getFolio();
 
                 $attachment = new Swift_Attachment($this->displayMarinaPDFAction($astilleroCotizacion, 1),
-                    'cotizacionUSD_' . $folio . '.pdf',
+                    'cotizacionMXN_' . $folio . '.pdf',
                     'application/pdf'
                 );
                 $attachmentMXN = new Swift_Attachment($this->displayMarinaPDFAction($astilleroCotizacion, 2),
-                    'cotizacionMXN_' . $folio . '.pdf',
+                    'cotizacionUSD_' . $folio . '.pdf',
                     'application/pdf'
                 );
 
@@ -1141,11 +1141,11 @@ class AstilleroCotizacionController extends Controller
             : $astilleroCotizacion->getFolio();
 
         $attachment = new Swift_Attachment($this->displayMarinaPDFAction($astilleroCotizacion, 1),
-            'cotizacionUSD_' . $folio . '.pdf',
+            'cotizacionMXN_' . $folio . '.pdf',
             'application/pdf'
         );
         $attachmentMXN = new Swift_Attachment($this->displayMarinaPDFAction($astilleroCotizacion, 2),
-            'cotizacionMXN_' . $folio . '.pdf',
+            'cotizacionUSD_' . $folio . '.pdf',
             'application/pdf'
         );
 

@@ -308,7 +308,7 @@ class Combustible
     /**
      * @var Facturacion
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="cotizacionCombustible")
      */
     private $factura;
 

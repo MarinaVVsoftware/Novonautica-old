@@ -93,7 +93,7 @@ class Venta
     /**
      * @var Facturacion
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="cotizacionTienda")
      */
     private $factura;
 
@@ -260,5 +260,12 @@ class Venta
     public function setFactura(Facturacion $factura = null)
     {
         $this->factura = $factura;
+    }
+
+    /** HELPER METHOS */
+
+    public function getEstatuspago()
+    {
+        return 2;
     }
 }
