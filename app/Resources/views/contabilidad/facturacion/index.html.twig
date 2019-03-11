@@ -73,7 +73,7 @@
                                     <th width="10%">Emisor</th>
                                     <th width="10%">Receptor</th>
                                     <th>Información <br> de factura</th>
-                                    <th class="with-options">Complementos de pago</th>
+                                    {#<th class="with-options">Complementos de pago</th>#}
                                     <th class="with-options">Estatus de cotización</th>
                                     <th width="10%" class="no-sort"></th>
                                 </tr>
@@ -147,7 +147,7 @@
               };
             },
           },
-          order: [[7, 'desc']],
+          order: [[0, 'desc']],
           dom:
               "<'row'<'col-sm-6'<'#dates'>><'col-sm-3'B><'col-sm-3'f>>" +
               "<'row'<'col-sm-12'tr>>" +
@@ -215,7 +215,7 @@
                 `;
               }
             },
-            {responsivePriority: 0},
+            // {responsivePriority: 0},
             {responsivePriority: 0},
             {responsivePriority: 0},
           ],
@@ -251,43 +251,43 @@
                 </dl>
             `;
 
-            row.children[5].classList.add('text-center');
+            /*row.children[5].classList.add('text-center');
             if (data[5] === 0) row.children[5].innerHTML = 'Pendientes';
             if (data[5] === 1) row.children[5].innerHTML = 'Completados';
             if (data[5] === 2) row.children[5].innerHTML = 'Pendientes';
-            if (data[4].metodo === 'PUE') row.children[5].innerHTML = `Sin complemento <br> de pagos`;
+            if (data[4].metodo === 'PUE') row.children[5].innerHTML = `Sin complemento <br> de pagos`;*/
 
-            row.children[6].classList.add('text-center');
-            if (data[6].pagada === 0 || null === data[6].pagada) row.children[6].innerHTML = 'Sin pagar';
-            if (data[6].pagada === 1) row.children[6].innerHTML = 'Pagos incompletos';
-            if (data[6].pagada === 2) row.children[6].innerHTML = 'Pagada';
-            if (data[6].pagada === null && data[6].id === null) row.children[6].innerHTML = 'Cancelada';
+            row.children[5].classList.add('text-center');
+            if (data[5].pagada === 0 || null === data[5].pagada) row.children[5].innerHTML = 'No pagado';
+            if (data[5].pagada === 1) row.children[5].innerHTML = 'Pago parcial';
+            if (data[5].pagada === 2) row.children[5].innerHTML = 'Pagado';
+            if (data[5].pagada === null && data[5].id === null) row.children[5].innerHTML = 'Cancelada';
 
-            if (data[6].id) {
+            if (data[5].id) {
               actionsInner += `
-                <li><a href="${getCotizacionUrl(data[2].id) + data[6]['id']}" target="_blank">Cotización</a></li>
+                <li><a href="${getCotizacionUrl(data[2].id) + data[5]['id']}" target="_blank">Cotización</a></li>
               `;
             }
 
             actionsInner += `
-                <li><a href="${url}${data[7]['id']}">Detalle</a></li>
-                <li><a href="${url}${data[7]['id']}/reenviar">Reenviar</a></li>
+                <li><a href="${url}${data[6]['id']}">Detalle</a></li>
+                <li><a href="${url}${data[6]['id']}/reenviar">Reenviar</a></li>
             `;
 
             actionsInner += `
-                <li><a href="${xmlRoute}${data[7]['xml']}" target="_blank">Ver XML</a></li>
-                <li><a href="${url}${data[7]['pdf']}/pdf" target="_blank">Ver PDF</a></li>
+                <li><a href="${xmlRoute}${data[6]['xml']}" target="_blank">Ver XML</a></li>
+                <li><a href="${url}${data[6]['pdf']}/pdf" target="_blank">Ver PDF</a></li>
             `;
 
-            if (data[7]['metodoPago'] === 'PPD') {
-              actionsInner += `<li><a href="pagos/${data[7].id}/new">Registrar pago</a></li>`;
-              actionsInner += `<li><a href="pagos/${data[7].id}">Listado de pagos</a></li>`;
+            if (data[6]['metodoPago'] === 'PPD') {
+              actionsInner += `<li><a href="pagos/${data[6].id}/new">Registrar pago</a></li>`;
+              actionsInner += `<li><a href="pagos/${data[6].id}">Listado de pagos</a></li>`;
             }
 
-            if (!data[7]['status']) {
+            if (!data[6]['status']) {
               actionsInner += `
                 {% if is_granted(expression('has_role("CONTABILIDAD_CANCEL") or (user.isAdmin())')) %}
-                <li><a href="#" data-url="${url}${data[7]['id']}/cancelar"
+                <li><a href="#" data-url="${url}${data[6]['id']}/cancelar"
                  class="text-danger"
                  data-toggle="modal"
                  data-target=".ventanaborrar"">Cancelar
@@ -296,7 +296,7 @@
               `;
             }
 
-            row.cells[7].innerHTML = `
+            row.cells[6].innerHTML = `
                 <div class="dropdown">
                   <button class="btn btn-azul btn-xs btn-block dropdown-toggle" type="button" data-toggle="dropdown">
                     Acciones
@@ -325,19 +325,19 @@
             column.search(val, true, true).draw();
           });
 
-          if (column.selector.cols === 5) {
+          /*if (column.selector.cols === 5) {
             select.add(new Option('Pendientes', '2'));
             select.add(new Option('Completados', '1'));
             select.add(new Option('Sin complementos', '3'));
             select.add(new Option('Todos', ''));
-          }
+          }*/
 
-          if (column.selector.cols === 6) {
-            select.add(new Option('Sin pagar', '0'));
-            select.add(new Option('Pendiente', '1'));
-            select.add(new Option('Pagada', '2'));
-            select.add(new Option('Cancelada', '3'));
+          if (column.selector.cols === 5) {
             select.add(new Option('Todos', ''));
+            select.add(new Option('Pagado', '2'));
+            select.add(new Option('No pagado', '0'));
+            select.add(new Option('Pago parcial', '1'));
+            select.add(new Option('Cancelada', '3'));
           }
 
         });

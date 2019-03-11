@@ -69,7 +69,7 @@ class FacturacionDataTable extends AbstractDataTableHandler
             $query->setParameter('end', $request->customData['dates']['end']);
         }
 
-        if ($request->columns[5]->search->value !== '' && $request->columns[5]->search->value >= 0) {
+        /*if ($request->columns[5]->search->value !== '' && $request->columns[5]->search->value >= 0) {
 
             if ($request->columns[5]->search->value == 3) {
                 $query->andWhere('fa.metodoPago = \'PUE\'');
@@ -77,7 +77,7 @@ class FacturacionDataTable extends AbstractDataTableHandler
                 $query->andWhere('fa.isPagada = :pagada AND fa.metodoPago != \'PUE\'')
                     ->setParameter('pagada', $request->columns[5]->search->value);
             }
-        }
+        }*/
 
         if ($request->columns[6]->search->value !== '' && $request->columns[6]->search->value >= 0) {
             $estatus = $request->columns[6]->search->value;
@@ -114,21 +114,19 @@ class FacturacionDataTable extends AbstractDataTableHandler
 
         foreach ($request->order as $order) {
             if ($order->column === 0) {
-                $query->addOrderBy('fa.folio', $order->dir);
+                $query->addOrderBy('fa.fecha', $order->dir);
             } elseif ($order->column === 1) {
-                $query->addOrderBy('emi.rfc', $order->dir);
+                $query->addOrderBy('fa.folio', $order->dir);
             } elseif ($order->column === 2) {
-                $query->addOrderBy('fa.rfc', $order->dir);
+                $query->addOrderBy('emi.nombre', $order->dir);
             } elseif ($order->column === 3) {
-                $query->addOrderBy('fa.metodoPago', $order->dir);
+                $query->addOrderBy('rec.razonSocial', $order->dir);
             } elseif ($order->column === 4) {
                 $query->addOrderBy('fa.total', $order->dir);
             } elseif ($order->column === 5) {
-                $query->addOrderBy('fa.fechaTimbrado', $order->dir);
-            } elseif ($order->column === 6) {
-                $query->addOrderBy('fa.isPagada', $order->dir);
-            } elseif ($order->column === 7) {
-                $query->addOrderBy('fa.id', $order->dir);
+                $query->addOrderBy('cm.estatuspago', $order->dir);
+                $query->addOrderBy('ca.estatuspago', $order->dir);
+                $query->addOrderBy('cc.estatuspago', $order->dir);
             }
         }
 
@@ -169,7 +167,7 @@ class FacturacionDataTable extends AbstractDataTableHandler
                     'metodo' => $factura->getMetodoPago(),
                     'monto' => '$'.number_format($factura->getTotal() / 100, 2).' '.$factura->getMoneda(),
                 ],
-                $factura->isPagada(),
+//                $factura->isPagada(),
                 [
                     'id' => $cotizacion ? $cotizacion->getId() : null,
                     'pagada' => $cotizacion ? $cotizacion->getEstatuspago() : null,
