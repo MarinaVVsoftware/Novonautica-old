@@ -10,11 +10,8 @@ use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\Tienda\Venta;
-use AppBundle\Extra\FacturacionHelper;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,11 +30,6 @@ class Facturacion
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var ObjectManager
-     */
-    private $entityManager;
 
     /*------------------------------------------------------------------------------------------------
      * DATOS DE FACTURA
@@ -279,6 +271,11 @@ class Facturacion
      * @ORM\Column(name="pagada", type="smallint")
      */
     private $isPagada;
+
+    /**
+     * @var int este valor no esta mapeado, solo sirve para ver las cotizaciones en la vista
+     */
+    private $cotizaciones;
 
     /*------------------------------------------------------------------------------------------------*/
 
@@ -1101,6 +1098,22 @@ class Facturacion
     public function isPagada()
     {
         return $this->isPagada;
+    }
+
+    /**
+     * @param int $cotizaciones
+     */
+    public function setCotizaciones($cotizaciones)
+    {
+        $this->cotizaciones = $cotizaciones;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCotizaciones()
+    {
+        return $this->cotizaciones;
     }
 
     /**

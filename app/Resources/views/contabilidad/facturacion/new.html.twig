@@ -188,7 +188,9 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 Nueva factura
-                                <span id="factura-folio" class="pull-right">Folio: {{ form.folio.vars.value }}</span>
+                                <span id="factura-folio" class="pull-right" title="Seleccione un emisor">
+                                    Folio: {{ form.folio.vars.value ? form.folio.vars.value : '####' }}
+                                </span>
                             </h4>
                         </div>
                         <div class="panel-body" style="min-height: initial">
@@ -545,7 +547,7 @@
 
         document.addEventListener('keydown', (e) => e.keyCode === 13 ? event.preventDefault() : '');
 
-        getFolio();
+        // getFolio();
 
         function elementListener(element) {
           /**

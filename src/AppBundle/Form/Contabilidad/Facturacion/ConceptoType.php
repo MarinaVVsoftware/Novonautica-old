@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Range;
 
@@ -195,7 +196,7 @@ class ConceptoType extends AbstractType
                 'choices' => $claves,
                 'choice_label' => 'descripcion',
                 'constraints' => [
-                    new NotNull(['message' => 'Por favor selecciona una clave']),
+                    new NotBlank(['message' => 'Por favor selecciona una clave']),
                 ],
             ]
         );
@@ -216,7 +217,7 @@ class ConceptoType extends AbstractType
                 'choices' => $claves,
                 'choice_label' => 'nombre',
                 'constraints' => [
-                    new NotNull(['message' => 'Por favor selecciona una clave']),
+                    new NotBlank(['message' => 'Por favor selecciona una clave']),
                 ],
             ]
         );

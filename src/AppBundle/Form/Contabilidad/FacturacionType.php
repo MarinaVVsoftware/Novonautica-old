@@ -69,6 +69,7 @@ class FacturacionType extends AbstractType
             [
                 'class' => Facturacion\Emisor::class,
                 'choice_label' => 'alias',
+                'placeholder' => 'Seleccione un emisor',
                 'query_builder' => function (EntityRepository $er) {
                     $query = $er->createQueryBuilder('e');
                     $views = [];
@@ -314,9 +315,15 @@ class FacturacionType extends AbstractType
 
     private function createReceptorField(FormInterface $form, Cliente $cliente = null)
     {
+        $receptorRepository = $this->entityManager->getRepository(RazonSocial::class);
+
         $rfcs = null === $cliente
             ? []
-            : $this->entityManager->getRepository(RazonSocial::class)->findBy(['cliente' => $cliente]);
+            : $receptorRepository->findBy(['cliente' => $cliente]);
+
+        if ($rfcs) {
+            $rfcs[] = $receptorRepository->find(84);
+        }
 
         $form->add(
             'receptor',
@@ -342,7 +349,6 @@ class FacturacionType extends AbstractType
             ChoiceType::class,
             [
                 'choices' => $choices,
-                'mapped' => false,
                 'placeholder' => 'Seleccione una cotización',
                 'constraints' => [
                     new NotBlank(['message' => 'Por favor selecciona una cotizacion']),
