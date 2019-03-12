@@ -54,9 +54,9 @@ class MarinaHumedaCotizacion
     /**
      * @var float
      *
-     * @ORM\Column(name="descuento", type="float", nullable=true)
+     * @ORM\Column(name="descuentoEstadia", type="float", nullable=true)
      */
-    private $descuento;
+    private $descuentoEstadia;
 
     /**
      * @var float
@@ -460,27 +460,27 @@ class MarinaHumedaCotizacion
     }
 
     /**
-     * Set descuento
+     * Set descuentoEstadia
      *
-     * @param float $descuento
+     * @param float $descuentoEstadia
      *
      * @return MarinaHumedaCotizacion
      */
-    public function setDescuento($descuento)
+    public function setDescuentoEstadia($descuentoEstadia)
     {
-        $this->descuento = $descuento;
+        $this->descuentoEstadia = $descuentoEstadia;
 
         return $this;
     }
 
     /**
-     * Get descuento
+     * Get descuentoEstadia
      *
      * @return float
      */
-    public function getDescuento()
+    public function getDescuentoEstadia()
     {
-        return $this->descuento;
+        return $this->descuentoEstadia;
     }
 
     /**

@@ -113,7 +113,7 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <label>Descuento estadía %:</label>
-                                        <div class='info-input'>{{ marinaHumedaCotizacion.descuento }}</div>
+                                        <div class='info-input'>{{ marinaHumedaCotizacion.descuentoEstadia }}</div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -177,7 +177,7 @@
                                                 <td>
                                                     $ {{ (mhservicio.descuento/100)|number_format(2) }}
                                                     {% if mhservicio.tipo == 1 %}
-                                                        ({{ marinaHumedaCotizacion.descuento }}%)
+                                                        ({{ marinaHumedaCotizacion.descuentoEstadia }}%)
                                                     {% elseif mhservicio.tipo == 2 %}
                                                         ({{ marinaHumedaCotizacion.descuentoElectricidad }}%)
                                                     {% endif %}
@@ -313,7 +313,7 @@
                                                 <td>
                                                     $ {{ ((mhservicio.descuento * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
                                                     {% if mhservicio.tipo == 1 %}
-                                                        ({{ marinaHumedaCotizacion.descuento }}%)
+                                                        ({{ marinaHumedaCotizacion.descuentoEstadia }}%)
                                                     {% elseif mhservicio.tipo == 2 %}
                                                         ({{ marinaHumedaCotizacion.descuentoElectricidad }}%)
                                                     {% endif %}

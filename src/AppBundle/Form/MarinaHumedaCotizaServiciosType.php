@@ -26,12 +26,11 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
     {
 
         $builder->add('precioOtro', MoneyType::class, [
-            'attr' => ['class' => 'esdecimal'], //, 'readonly' => true
+            'attr' => ['class' => 'esdecimal', 'readonly' => true],
             'label' => 'Otro precio (USD)',
             'currency' => 'USD',
             'divisor' => 100,
             'grouping' => true,
-
             'required' => false,
         ]);
 

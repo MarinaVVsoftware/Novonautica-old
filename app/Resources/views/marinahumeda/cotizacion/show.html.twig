@@ -39,11 +39,11 @@
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-contorno-azul pull-right"
-                               href="{% if marinaHumedaCotizacion.mhcservicios[0].tipo == 1 or marinaHumedaCotizacion.mhcservicios[0].tipo == 2 %}
-                                                                                        {{ path('marina-humeda_estadia_index') }}
-                                                                                    {% else %}
-                                                                                         {{ path('combustible_index') }}
-                                                                                     {% endif %}">Regresar</a>
+                               href="{% if marinaHumedaCotizacion.deleted %}
+                                           {{ path('marina-humeda_estadia_papelera') }}
+                                     {% else %}
+                                           {{ path('marina-humeda_estadia_index') }}
+                                     {% endif %}">Regresar</a>
                         </div>
                     </div>
                 </div>
@@ -106,6 +106,7 @@
                                             <th>Cliente</th>
                                             <td>{{ marinaHumedaCotizacion.cliente }}</td>
                                         </tr>
+                                        </tr>
                                         <tr>
                                             <th>Correo</th>
                                             <td>{{ marinaHumedaCotizacion.cliente.correo }}</td>
@@ -145,8 +146,20 @@
                                         <tr>
                                             <th>Descuentos %</th>
                                             <td>
-                                                Estadia: {{ marinaHumedaCotizacion.descuento }}% <br />
-                                                Electricidad: {{ marinaHumedaCotizacion.descuentoElectricidad }}%
+                                                Estadia:
+                                                {% if marinaHumedaCotizacion.descuentoEstadia  %}
+                                                    {{ marinaHumedaCotizacion.descuentoEstadia }}
+                                                {% else %}
+                                                    0
+                                                {% endif %}
+                                                % <br />
+                                                Electricidad:
+                                                {% if marinaHumedaCotizacion.descuentoElectricidad %}
+                                                    {{ marinaHumedaCotizacion.descuentoElectricidad }}
+                                                {% else %}
+                                                    0
+                                                {% endif %}
+                                                %
                                             </td>
                                         </tr>
                                         {% if marinaHumedaCotizacion.porcentajeMoratorio > 0 %}
@@ -202,6 +215,10 @@
                                                 </td>
                                             </tr>
                                         {% endif %}
+                                        <tr>
+                                            <th>Creado por</th>
+                                            <td>{{ marinaHumedaCotizacion.creador }}</td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -270,7 +287,7 @@
                                                     <td>
                                                         $ {{ (mhservicio.descuento/100)|number_format(2) }}
                                                         {% if mhservicio.tipo == 1 %}
-                                                            ({{ marinaHumedaCotizacion.descuento }}%)
+                                                            ({{ marinaHumedaCotizacion.descuentoEstadia }}%)
                                                         {% elseif mhservicio.tipo == 2 %}
                                                             ({{ marinaHumedaCotizacion.descuentoElectricidad }}%)
                                                         {% endif %}
@@ -422,7 +439,7 @@
                                                     <td>
                                                         $ {{ ((mhservicio.descuento/100)* (marinaHumedaCotizacion.dolar/100))|number_format(2) }}
                                                         {% if mhservicio.tipo == 1 %}
-                                                            ({{ marinaHumedaCotizacion.descuento }}%)
+                                                            ({{ marinaHumedaCotizacion.descuentoEstadia }}%)
                                                         {% elseif mhservicio.tipo == 2 %}
                                                             ({{ marinaHumedaCotizacion.descuentoElectricidad }}%)
                                                         {% endif %}

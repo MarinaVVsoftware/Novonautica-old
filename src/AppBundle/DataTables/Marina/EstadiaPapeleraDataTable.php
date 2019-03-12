@@ -150,20 +150,25 @@ class EstadiaPapeleraDataTable extends AbstractDataTableHandler
                 }
             });
 
-
             $results->data[] = [
-                !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza(),
-                $cotizacion->getCliente()->getNombre(),
-                $cotizacion->getBarco()->getNombre(),
-                $cotizacion->getFechaLlegada() ? $cotizacion->getFechaLlegada()->format('d/m/Y') : '',
-                $cotizacion->getFechaSalida() ? $cotizacion->getFechaSalida()->format('d/m/Y') : '',
+                !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio().'-'.$cotizacion->getFoliorecotiza(),
+                [
+                    'cliente' => $cotizacion->getCliente()->getNombre(),
+                    'embarcacion' => $cotizacion->getBarco()->getNombre(),
+                ],
+                [
+                    'llegada' => $cotizacion->getFechaLlegada() ? $cotizacion->getFechaLlegada()->format('d/m/Y') : '',
+                    'salida' => $cotizacion->getFechaSalida() ? $cotizacion->getFechaSalida()->format('d/m/Y') : '',
+                    'dias' => $servicioEstadia ? $servicioEstadia->first()->getCantidad() : 0,
+                ],
                 $cotizacion->getSlip() ? $cotizacion->getSlip()->__toString() : 'Sin asignar',
-                $servicioEstadia ? $servicioEstadia->first()->getCantidad() : '',
-                '$' . number_format($cotizacion->getSubtotal() / 100, 2),
-                '$' . number_format($cotizacion->getDescuentototal() / 100, 2),
-                '$' . number_format($cotizacion->getIvatotal() / 100, 2),
-                '$' . number_format($cotizacion->getMoratoriaTotal() / 100, 2),
-                '$' . number_format($cotizacion->getTotal() / 100, 2),
+                [
+                    'subtotal' => '$'.number_format($cotizacion->getSubtotal() / 100, 2).' USD',
+                    'descuento' => '$'.number_format($cotizacion->getDescuentototal() / 100, 2).' USD',
+                    'iva' => '$'.number_format($cotizacion->getIvatotal() / 100, 2).' USD',
+                    'interesMoratorio' => '$'.number_format($cotizacion->getMoratoriaTotal() / 100, 2).' USD',
+                    'total' => '$'.number_format($cotizacion->getTotal() / 100, 2).' USD',
+                ],
                 $cotizacion->getValidanovo(),
                 $cotizacion->getValidacliente(),
                 $cotizacion->getEstatuspago(),

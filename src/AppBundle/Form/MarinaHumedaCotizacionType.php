@@ -18,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormInterface;
 use AppBundle\Entity\Cliente;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class MarinaHumedaCotizacionType extends AbstractType
 {
@@ -54,15 +55,14 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'label'=>'Días Estadia',
                 'attr' => ['class' => 'esnumero','readonly' => true],
             ])
-            ->add('descuento', NumberType::class, [
+            ->add('descuentoEstadia', NumberType::class, [
                 'label' => 'Descuento estadía %',
-
                 'attr' => [
                     'class' => 'esdecimal limite100',
                     'autocomplete' => 'off',
                     'max' => 100,
                     'min' => 0,
-//                    'readonly' => true
+                    'readonly' => true
                     ],
                 'required' => false
             ])
@@ -73,7 +73,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                     'autocomplete' => 'off',
                     'max' => 100,
                     'min' => 0,
-//                    'readonly' => true
+                    'readonly' => true
                 ],
                 'required' => false,
             ])
@@ -123,8 +123,28 @@ class MarinaHumedaCotizacionType extends AbstractType
             ->add('notificarCliente', CheckboxType::class, [
                 'label' => '¿Notificar al cliente?',
                 'required' => false
-            ])
-        ;
+            ]);
+
+        $builder->add(
+            'pincode',
+            TextType::class,
+            [
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'minlength' => 8,
+                    'maxlength' => 8,
+                ],
+                'constraints' => [
+//                    new Assert\Callback([$this, 'validatePincode']),
+                    new Assert\Length([
+                        'min' => 8,
+                        'max' => 8,
+                        'exactMessage' => 'Un Pincode es de exactamente 8 digitos',
+                    ])
+                ],
+            ]
+        );
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();
@@ -178,7 +198,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('fechaLlegada')
                     ->remove('fechaSalida')
                     ->remove('diasEstadia')
-                    ->remove('descuento')
+                    ->remove('descuentoEstadia')
                     ->remove('descuentoElectricidad')
                     ->remove('dolar')
                     ->remove('mensaje')
@@ -186,17 +206,17 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('validanovo')
                     ->remove('notasnovo')
                     ->remove('slip')
-                    ->remove('notificarCliente');
+                    ->remove('notificarCliente')
+                    ->remove('pincode');
             }
             //para validar por novo
             else {
                 $form
                     ->remove('cliente')
-//                    ->remove('barco')
                     ->remove('fechaLlegada')
                     ->remove('fechaSalida')
                     ->remove('diasEstadia')
-                    ->remove('descuento')
+                    ->remove('descuentoEstadia')
                     ->remove('descuentoElectricidad')
                     ->remove('dolar')
                     ->remove('mensaje')
@@ -204,7 +224,8 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('validacliente')
                     ->remove('notascliente')
                     ->remove('notificarCliente')
-                    ->remove('slip');
+                    ->remove('slip')
+                    ->remove('pincode');
             }
         });
 

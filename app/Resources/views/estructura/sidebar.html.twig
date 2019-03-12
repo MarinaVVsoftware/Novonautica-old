@@ -404,6 +404,13 @@
                                 <i class="fa fa-circle-o"></i> Egresos
                             </a>
                         </li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="{{ path.check('reporte_pincodes') }}">
+                                <a href="{{ path('reporte_pincodes') }}">
+                                    <i class="fa fa-circle-o"></i> Pincodes
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </li>
             {% endif %}
@@ -881,7 +888,8 @@
             <!-- END AJUSTES -->
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="admin-buttons">
-                    <a href="#" id="pincode-generator" class="btn" style="text-align: inherit">
+                    <a id="pincode-button-modal" href="#" class="btn" style="text-align: inherit"
+                       data-toggle="modal" data-target="#pinCodeModal">
                         <i class="fa fa-id-badge" aria-hidden="true"></i>
                         <span>Generar PINCODE</span>
                     </a>

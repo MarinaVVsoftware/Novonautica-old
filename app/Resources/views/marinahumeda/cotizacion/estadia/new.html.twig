@@ -179,7 +179,7 @@
                                             {{ form_row(form.mhcservicios.children.0.precioOtro) }}
                                         </div>
                                         <div id="estadia-descuento" class="col-sm-3">
-                                            {{ form_row(form.descuento) }}
+                                            {{ form_row(form.descuentoEstadia) }}
                                         </div>
                                     </div>
                                     <div class="row">
@@ -194,8 +194,23 @@
                                             {{ form_row(form.descuentoElectricidad) }}
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 text-right pt-1">
+                                            <button class="btn btn-azul" type="button"
+                                                    data-toggle="collapse"
+                                                    data-target="#collapsePincode"
+                                                    aria-expanded="false"
+                                                    aria-controls="collapsePincode">
+                                                Usar PINCODE
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="collapse" id="collapsePincode">
+                                                {{ form_row(form.pincode) }}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="totalusd">
@@ -485,12 +500,16 @@
 
         const preciosEstadia = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio');
         const preciosElectricidad = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioAux');
+        const pincodeInput = document.getElementById('appbundle_marinahumedacotizacion_pincode');
+        const estadiaOtroPrecioInput = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precioOtro');
+        const electricidadOtroPrecioInput = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioOtro');
+        const descuentoEstadiaInput = document.getElementById('appbundle_marinahumedacotizacion_descuentoEstadia');
+        const descuentoElectricidadInput = document.getElementById('appbundle_marinahumedacotizacion_descuentoElectricidad');
 
         if($("input[type=radio]:checked").val()){
           buscaDatosCliente($('#appbundle_marinahumedacotizacion_cliente').val());
           buscaDatosBarco($("input[type=radio]:checked").val());
         }
-
 
         $('.selectclientebuscar').change(function () {
           $('#loading').show();
@@ -516,6 +535,15 @@
             }
           } else {
             x++;
+          }
+        });
+
+        pincodeInput.addEventListener('keyup',() => {
+          if(pincodeInput.value.replace(/\s/g, "").length === 8){
+            estadiaOtroPrecioInput.readOnly = false;
+            electricidadOtroPrecioInput.readOnly = false;
+            descuentoEstadiaInput.readOnly = false;
+            descuentoElectricidadInput.readOnly = false;
           }
         });
 
@@ -576,7 +604,6 @@
               $("#e_eslora_mxn").html(barco.eslora);
 
               recalculaCantidadYprecio();
-
               filtraSelectPrecios(preciosEstadia,Number(barco.eslora));
               filtraSelectPrecios(preciosElectricidad,Number(barco.eslora));
             },
@@ -594,7 +621,7 @@
               let x = false;
               switch (condicion){
                 case 0:
-                  x = true;
+                  x = false;
                   break;
                 case 1:
                   x = eslora <= piesA;

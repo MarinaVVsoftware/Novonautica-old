@@ -25,9 +25,10 @@
         <br>
         <strong>Evento: </strong> {{ evento }}
         <br>
-        <strong>Creada por: </strong> {{ cotizacion.creador.nombre }}
-        <br>
-
+        {% if cotizacion.creador %}
+            <strong>Creada por: </strong> {{ cotizacion.creador.nombre }}
+            <br>
+        {% endif %}
         {% if cotizacion.validanovo == 2 %}
             <strong>Validada por: </strong> {{ cotizacion.nombrevalidanovo }}
             <br>
