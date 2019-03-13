@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Contabilidad\Facturacion;
 
 use AppBundle\Entity\Contabilidad\Facturacion;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Concepto
@@ -111,12 +112,16 @@ class Concepto
     /**
      * @var Facturacion\Concepto\ClaveProdServ
      *
+     * @Assert\NotBlank(message="Por favor selecciona una clave")
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveProdServ")
      */
     private $claveProdServ;
 
     /**
      * @var Facturacion\Concepto\ClaveUnidad
+     *
+     * @Assert\NotBlank(message="Por favor selecciona una clave")
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto\ClaveUnidad")
      */

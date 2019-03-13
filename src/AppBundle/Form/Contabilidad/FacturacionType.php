@@ -7,8 +7,10 @@ use AppBundle\Entity\Cliente\RazonSocial;
 use AppBundle\Entity\Contabilidad\Facturacion;
 use AppBundle\Extra\FacturacionHelper;
 use AppBundle\Form\Contabilidad\Facturacion\ConceptoType;
+use AppBundle\Validator\Constraints\FacturaEstaTimbrada;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -23,9 +25,13 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\GroupSequence;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Valid;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class FacturacionType extends AbstractType
 {
@@ -39,12 +45,19 @@ class FacturacionType extends AbstractType
      */
     private $security;
 
+    /**
+     * @var Multifacturas
+     */
+    private $multifacturas;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        Security $security
+        Security $security,
+        Multifacturas $multifacturas
     ) {
         $this->entityManager = $entityManager;
         $this->security = $security;
+        $this->multifacturas = $multifacturas;
     }
 
     /**
@@ -56,6 +69,8 @@ class FacturacionType extends AbstractType
             'currency' => 'MXN',
             'divisor' => 100,
             'grouping' => true,
+            'constraints' => new NotBlank(['message' => 'Este campo no puede estar vacio']
+            )
         ];
 
         $builder->add(
@@ -89,7 +104,9 @@ class FacturacionType extends AbstractType
                     );
                 },
                 'constraints' => [
-                    new NotNull(['message' => 'Por favor selecciona un emisor']),
+                    new NotNull(
+                        ['message' => 'Por favor selecciona un emisor']
+                    ),
                 ],
             ]
         );
@@ -117,6 +134,7 @@ class FacturacionType extends AbstractType
             TextType::class,
             [
                 'label' => 'Lugar de expedición',
+                'constraints' => new NotBlank(['message' => 'Este campo no puede estar vacio'])
             ]
         );
 
@@ -177,6 +195,7 @@ class FacturacionType extends AbstractType
             TextType::class,
             [
                 'label' => 'Valor de factor',
+                'constraints' => new NotBlank(['message' => 'Este campo no puede estar vacio'])
             ]
         );
 
@@ -212,10 +231,13 @@ class FacturacionType extends AbstractType
                 'prototype_data' => new Facturacion\Concepto(),
                 'by_reference' => false,
                 'constraints' => [
-                    new Count([
-                        'min' => 1,
-                        'minMessage' => 'Debes agregar al menos un concepto',
-                    ]),
+//                    new Valid(),
+                    new Count(
+                        [
+                            'min' => 1,
+                            'minMessage' => 'Debes agregar al menos un concepto',
+                        ]
+                    ),
                 ],
             ]
         );
@@ -231,7 +253,7 @@ class FacturacionType extends AbstractType
                 'html5' => false,
                 'widget' => 'single_text',
                 'format' => 'MMMM yyyy',
-                'attr' => ['autocomplete' => 'off']
+                'attr' => ['autocomplete' => 'off'],
             ]
         );
 
@@ -259,7 +281,8 @@ class FacturacionType extends AbstractType
                     : null;
 
                 $cotizaciones = array_key_exists('cotizaciones', $data)
-                    ? FacturacionHelper::getCotizaciones($this->entityManager, $data['emisor'], $data['cliente'], $fecha->format('Y-m-d'))
+                    ? FacturacionHelper::getCotizaciones($this->entityManager, $data['emisor'], $data['cliente'],
+                        $fecha->format('Y-m-d'))
                     : [];
 
                 $cotizacionesChoices = [];
@@ -281,6 +304,9 @@ class FacturacionType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Facturacion::class,
+            'constraints' => [
+                new FacturaEstaTimbrada(['groups' => 'Timbrado']),
+            ],
         ]);
     }
 
@@ -306,7 +332,6 @@ class FacturacionType extends AbstractType
                 'required' => true,
                 'attr' => ['required' => 'required'],
                 'constraints' => [
-                    new NotNull(['message' => 'Por favor selecciona un cliente']),
                     new NotBlank(['message' => 'Por favor selecciona un cliente']),
                 ],
             ]
@@ -335,7 +360,6 @@ class FacturacionType extends AbstractType
                 'required' => true,
                 'attr' => ['required' => 'required'],
                 'constraints' => [
-                    new NotNull(['message' => 'Por favor selecciona un RFC receptor']),
                     new NotBlank(['message' => 'Por favor selecciona un cliente']),
                 ],
             ]

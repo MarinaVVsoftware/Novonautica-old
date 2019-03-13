@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Range;
@@ -47,6 +48,7 @@ class ConceptoType extends AbstractType
             'currency' => 'MXN',
             'divisor' => 100,
             'grouping' => true,
+            'constraints' => new NotBlank(['message' => 'Este campo no puede estar vacio']),
         ];
 
         $builder->add(
@@ -70,6 +72,7 @@ class ConceptoType extends AbstractType
             TextType::class,
             [
                 'label' => false,
+                'constraints' => new NotBlank(['message' => 'Este campo no puede estar vacio']),
             ]
         );
 
@@ -78,6 +81,7 @@ class ConceptoType extends AbstractType
             TextType::class,
             [
                 'label' => false,
+                'constraints' => new NotBlank(['message' => 'Este campo no puede estar vacio']),
             ]
         );
 
@@ -104,10 +108,11 @@ class ConceptoType extends AbstractType
             TextType::class,
             [
                 'label' => false,
+                'constraints' => new NotBlank(['message' => 'Este campo no puede estar vacio']),
             ]
         );
 
-        $builder->add('valorunitario',MoneyType::class, $moneyOptions);
+        $builder->add('valorunitario', MoneyType::class, $moneyOptions);
         $builder->add('importe', MoneyType::class, $moneyOptions);
         $builder->add('base', MoneyType::class, $moneyOptions);
         $builder->add('impuestoImporte', MoneyType::class, $moneyOptions);
@@ -195,9 +200,8 @@ class ConceptoType extends AbstractType
                 'class' => Facturacion\Concepto\ClaveProdServ::class,
                 'choices' => $claves,
                 'choice_label' => 'descripcion',
-                'constraints' => [
-                    new NotBlank(['message' => 'Por favor selecciona una clave']),
-                ],
+                'required' => true,
+                'placeholder' => 'Seleccione una opción',
             ]
         );
     }
@@ -216,9 +220,8 @@ class ConceptoType extends AbstractType
                 'class' => Facturacion\Concepto\ClaveUnidad::class,
                 'choices' => $claves,
                 'choice_label' => 'nombre',
-                'constraints' => [
-                    new NotBlank(['message' => 'Por favor selecciona una clave']),
-                ],
+                'required' => true,
+                'placeholder' => 'Seleccione una opción',
             ]
         );
     }

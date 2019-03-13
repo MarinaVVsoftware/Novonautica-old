@@ -10,15 +10,19 @@ use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\Tienda\Venta;
+use AppBundle\Validator\Constraints\FacturaEstaTimbrada;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Facturacion
  *
  * @ORM\Table(name="contabilidad_facturacion")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Contabilidad\FacturacionRepository")
+ *
+ * @FacturaEstaTimbrada(groups={"Timbrado"})
+ * @Assert\GroupSequence({"Facturacion", "Timbrado"})
  */
 class Facturacion
 {
@@ -327,6 +331,8 @@ class Facturacion
 
     /**
      * @var Concepto
+     *
+     * @Assert\Valid()
      *
      * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto",

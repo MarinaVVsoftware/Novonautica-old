@@ -163,7 +163,7 @@
                   columns: [0, 1, 2, 3, 4, 5],
                   format: {
                     header(title, column) {
-                      return column === 5 ? 'Complementos de pago' : title.replace('<br>', '')
+                      return column === 5 ? 'Estado de cotización' : title.replace('<br>', '')
                     },
                     body(data, row, column, node) {
                       return node.innerText;
@@ -220,6 +220,7 @@
             {responsivePriority: 0},
           ],
           createdRow: function (row, data) {
+            console.log(data);
             let url = '{{ app.request.requestUri }}';
             let xmlRoute = '{{ asset('timbrados/') }}';
             let actionsInner = '';
