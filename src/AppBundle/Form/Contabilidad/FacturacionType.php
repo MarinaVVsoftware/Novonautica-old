@@ -10,7 +10,6 @@ use AppBundle\Form\Contabilidad\Facturacion\ConceptoType;
 use AppBundle\Validator\Constraints\FacturaEstaTimbrada;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -25,13 +24,9 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Count;
-use Symfony\Component\Validator\Constraints\GroupSequence;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Constraints\Valid;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class FacturacionType extends AbstractType
 {
@@ -45,19 +40,12 @@ class FacturacionType extends AbstractType
      */
     private $security;
 
-    /**
-     * @var Multifacturas
-     */
-    private $multifacturas;
-
     public function __construct(
         EntityManagerInterface $entityManager,
-        Security $security,
-        Multifacturas $multifacturas
+        Security $security
     ) {
         $this->entityManager = $entityManager;
         $this->security = $security;
-        $this->multifacturas = $multifacturas;
     }
 
     /**
@@ -231,7 +219,6 @@ class FacturacionType extends AbstractType
                 'prototype_data' => new Facturacion\Concepto(),
                 'by_reference' => false,
                 'constraints' => [
-//                    new Valid(),
                     new Count(
                         [
                             'min' => 1,
