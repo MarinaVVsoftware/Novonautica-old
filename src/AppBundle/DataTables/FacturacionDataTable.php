@@ -10,9 +10,11 @@ namespace AppBundle\DataTables;
 
 
 use AppBundle\Entity\Contabilidad\Facturacion;
+use AppBundle\Entity\Tienda\Venta;
 use DataTables\AbstractDataTableHandler;
 use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 class FacturacionDataTable extends AbstractDataTableHandler
@@ -49,7 +51,7 @@ class FacturacionDataTable extends AbstractDataTableHandler
             ->leftJoin('fa.cotizacionMarina', 'cm')
             ->leftJoin('fa.cotizacionAstillero', 'ca')
             ->leftJoin('fa.cotizacionCombustible', 'cc')
-            ->leftJoin('fa.cotizacionTienda', 'ct');
+            ->leftJoin('fa.cotizacionesTienda', 'ct');
 
         if ($request->search->value) {
             $query
@@ -142,7 +144,20 @@ class FacturacionDataTable extends AbstractDataTableHandler
             }
 
             $factura = $facturas[$index];
-            $cotizacion = $factura->getCotizacion();
+            $cotizacionesIds = [];
+
+            if ($factura->getCotizacion() instanceof Collection) {
+                $cotizacionesIds = $factura
+                    ->getCotizacion()
+                    ->map(function (Venta $venta) {
+                       return $venta->getId();
+                    })
+                    ->getValues();
+                $cotizacionesStatuses = 2;
+            } else {
+                $cotizacionesIds[] = $factura->getCotizacion()->getId();
+                $cotizacionesStatuses = $factura->getCotizacion()->getEstatuspago();
+            }
 
             $emisor = $factura->getEmisor();
             $receptor = $factura->getReceptor();
@@ -169,8 +184,8 @@ class FacturacionDataTable extends AbstractDataTableHandler
                 ],
 //                $factura->isPagada(),
                 [
-                    'id' => $cotizacion ? $cotizacion->getId() : null,
-                    'pagada' => $cotizacion ? $cotizacion->getEstatuspago() : null,
+                    'id' => $cotizacionesIds,
+                    'pagada' => $cotizacionesStatuses,
                 ],
                 [
                     'xml' => $nombreXML,

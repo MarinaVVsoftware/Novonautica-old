@@ -10,18 +10,20 @@ use AppBundle\Entity\Contabilidad\Facturacion\Emisor;
 use AppBundle\Entity\Contabilidad\Facturacion\Concepto;
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\Tienda\Venta;
-use AppBundle\Extra\FacturacionHelper;
+use AppBundle\Validator\Constraints\FacturaEstaTimbrada;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
+use FontLib\TrueType\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Facturacion
  *
  * @ORM\Table(name="contabilidad_facturacion")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Contabilidad\FacturacionRepository")
+ *
+ * @FacturaEstaTimbrada(groups={"Timbrado"})
+ * @Assert\GroupSequence({"Facturacion", "Timbrado"})
  */
 class Facturacion
 {
@@ -33,11 +35,6 @@ class Facturacion
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var ObjectManager
-     */
-    private $entityManager;
 
     /*------------------------------------------------------------------------------------------------
      * DATOS DE FACTURA
@@ -280,6 +277,11 @@ class Facturacion
      */
     private $isPagada;
 
+    /**
+     * @var int este valor no esta mapeado, solo sirve para ver las cotizaciones en la vista
+     */
+    private $cotizaciones;
+
     /*------------------------------------------------------------------------------------------------*/
 
 
@@ -303,9 +305,9 @@ class Facturacion
     private $cotizacionCombustible;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Tienda\Venta", mappedBy="factura")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tienda\Venta", mappedBy="factura", fetch="EXTRA_LAZY")
      */
-    private $cotizacionTienda;
+    private $cotizacionesTienda;
 
     /**
      * @var Emisor
@@ -330,6 +332,8 @@ class Facturacion
 
     /**
      * @var Concepto
+     *
+     * @Assert\Valid()
      *
      * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Contabilidad\Facturacion\Concepto",
@@ -468,6 +472,7 @@ class Facturacion
         $this->isCancelada = false;
         $this->isPagada = 0;
         $this->conceptos = new ArrayCollection();
+        $this->cotizacionesTienda = new ArrayCollection();
     }
 
     /**
@@ -1104,7 +1109,22 @@ class Facturacion
     }
 
     /**
-     * @return MarinaHumedaCotizacion|AstilleroCotizacion|Combustible|Venta|null
+     * @param int $cotizaciones
+     */
+    public function setCotizaciones($cotizaciones)
+    {
+        $this->cotizaciones = $cotizaciones;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCotizaciones()
+    {
+        return $this->cotizaciones;
+    }
+
+    /**
      */
     public function getCotizacion()
     {
@@ -1120,8 +1140,8 @@ class Facturacion
             return $this->cotizacionCombustible;
         }
 
-        if (null !== $this->cotizacionTienda) {
-            return $this->cotizacionTienda;
+        if (null !== $this->cotizacionesTienda) {
+            return $this->cotizacionesTienda;
         }
 
         return null;
@@ -1178,17 +1198,30 @@ class Facturacion
     /**
      * @param Venta|null $venta
      */
-    public function setCotizacionVenta(Venta $venta = null)
+    public function addCotizacionesTienda(Venta $venta)
     {
-        $this->cotizacionTienda = $venta;
+        $venta->setFactura($this);
+        $this->cotizacionesTienda->add($venta);
     }
 
     /**
-     * @return Venta|null
+     * Remove cotizacion de tienda.
+     *
+     * @param Venta $venta
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function getCotizacionVenta()
+    public function removeCotizacionesTienda(Venta $venta)
     {
-        return $this->cotizacionTienda;
+        return $this->cotizacionesTienda->removeElement($venta);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCotizacionesTienda()
+    {
+        return $this->cotizacionesTienda;
     }
 
     /**

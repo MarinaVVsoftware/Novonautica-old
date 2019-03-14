@@ -188,7 +188,9 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 Nueva factura
-                                <span id="factura-folio" class="pull-right">Folio: {{ form.folio.vars.value }}</span>
+                                <span id="factura-folio" class="pull-right" title="Seleccione un emisor">
+                                    Folio: {{ form.folio.vars.value ? form.folio.vars.value : '####' }}
+                                </span>
                             </h4>
                         </div>
                         <div class="panel-body" style="min-height: initial">
@@ -545,7 +547,9 @@
 
         document.addEventListener('keydown', (e) => e.keyCode === 13 ? event.preventDefault() : '');
 
-        getFolio();
+        if (emisorSelect.value && !conceptoTable.prototypeHolder.childElementCount) {
+          getFolio();
+        }
 
         function elementListener(element) {
           /**
@@ -555,8 +559,8 @@
 
           element.connectedNodes.cantidadInput = element.cells[0].firstElementChild;
           element.connectedNodes.unidadInput = element.cells[1].firstElementChild;
-          element.connectedNodes.claveProdServSelect2 = $(element.cells[2].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveprodserv'}});
-          element.connectedNodes.claveUnidadSelect2 = $(element.cells[3].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveunidad'}});
+          element.connectedNodes.claveProdServSelect2 = $(element.cells[2].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveprodserv', delay: 360}});
+          element.connectedNodes.claveUnidadSelect2 = $(element.cells[3].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveunidad', delay: 360}});
           element.connectedNodes.valorUnitarioInput = new Cleave(element.cells[5].firstElementChild, {numeral: true});
           element.connectedNodes.importeInput = new Cleave(element.cells[6].firstElementChild, {numeral: true});
           element.connectedNodes.baseInput = new Cleave(element.cells[7].firstElementChild, {numeral: true});
@@ -657,6 +661,7 @@
 
         $dateInputPicker.on('changeDate', function () {
           getCotizaciones(emisorSelect.value, $clienteSelect2.val());
+          conceptoTable.clear();
         });
 
         /**
@@ -666,6 +671,7 @@
         cotizacionSelect.addEventListener('change', function () {
           // La tabla se tiene que limpiar cada vez que cambie el select de cotizaciones cambie de valor
           conceptoTable.clear();
+          computeConceptos();
 
           if (!this.value) return;
 

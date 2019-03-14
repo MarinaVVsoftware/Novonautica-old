@@ -43,7 +43,7 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     port: '%mailer_port%'
-#    disable_delivery: true
+    disable_delivery: true
 
 knp_snappy:
     pdf:

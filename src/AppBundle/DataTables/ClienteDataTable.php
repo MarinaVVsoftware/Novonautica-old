@@ -42,7 +42,10 @@ class ClienteDataTable extends AbstractDataTableHandler
         $results = new DataTableResults();
 
         $qb = $clienteRepo->createQueryBuilder('cl');
-        $results->recordsTotal = $qb->select('COUNT(cl.id)')->getQuery()->getSingleScalarResult();
+        $results->recordsTotal = $qb
+            ->select('COUNT(cl.id)')
+            ->where('cl.id != 413')
+            ->getQuery()->getSingleScalarResult();
 
         $q = $qb
             ->select('cl', 'ba')
@@ -75,6 +78,8 @@ class ClienteDataTable extends AbstractDataTableHandler
                 $q->addOrderBy('cl.id', $order->dir);
             }
         }
+
+        $q->andWhere('cl.id != 413');
 
         $clientes = $q->getQuery()->getResult();
 
