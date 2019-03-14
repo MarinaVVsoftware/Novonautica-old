@@ -495,22 +495,29 @@ class AstilleroCotizacionRepository extends \Doctrine\ORM\EntityRepository
 
     public function getFullCotizacionesFromCliente($client, $inicio, $fin, $cotizacionId = null)
     {
-        $qb = $this->createQueryBuilder('cotizaciones')
-            ->select('cotizaciones', 'conceptos')
-            ->leftJoin('cotizaciones.acservicios', 'conceptos')
-            ->where('IDENTITY(cotizaciones.cliente) = :client')
-            ->andWhere('cotizaciones.fecharegistro BETWEEN :inicio AND :fin')
-            ->andWhere('cotizaciones.factura IS NULL')
-            ->andWhere('cotizaciones.validacliente = 2')
+        $queryBuilder = $this->createQueryBuilder('cotizaciones');
+
+        $queryBuilder
+            ->andWhere(
+                'cotizaciones.fecharegistro BETWEEN :inicio AND :fin',
+                'cotizaciones.factura IS NULL',
+                'cotizaciones.validacliente = 2'
+            )
             ->setParameter('inicio', $inicio)
-            ->setParameter('fin', $fin)
-            ->setParameter('client', $client);
+            ->setParameter('fin', $fin);
 
         if ($cotizacionId) {
-            $qb->andWhere('cotizaciones.id IN (:cotizacionId)');
-            $qb->setParameter('cotizacionId', $cotizacionId);
+            $queryBuilder->andWhere('cotizaciones.id IN (:cotizacionId)');
+            $queryBuilder->setParameter('cotizacionId', $cotizacionId);
         }
 
-        return $qb->getQuery()->getResult();
+        if ($client === 413) {
+            return $queryBuilder->getQuery()->getResult();
+        }
+
+        $queryBuilder->andWhere('IDENTITY(cotizaciones.cliente) = :client');
+        $queryBuilder->setParameter('client', $client);
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

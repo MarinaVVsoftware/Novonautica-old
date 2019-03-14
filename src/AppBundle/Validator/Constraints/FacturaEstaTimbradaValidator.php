@@ -50,7 +50,6 @@ class FacturaEstaTimbradaValidator extends ConstraintValidator
             $this->context
                 ->buildViolation($constraint->message)
                 ->setParameter('{{ error }}', $sello['codigo_mf_texto'])
-                ->setParameter('{{ error }}', 'sad')
                 ->addViolation();
         }
     }
