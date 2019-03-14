@@ -93,7 +93,7 @@ class Venta
     /**
      * @var Facturacion
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="cotizacionTienda")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contabilidad\Facturacion", inversedBy="cotizacionesTienda")
      */
     private $factura;
 

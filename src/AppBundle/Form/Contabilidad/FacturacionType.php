@@ -333,9 +333,7 @@ class FacturacionType extends AbstractType
             ? []
             : $receptorRepository->findBy(['cliente' => $cliente]);
 
-        if ($rfcs) {
-            $rfcs[] = $receptorRepository->find(84);
-        }
+        $rfcs[] = $receptorRepository->find(84);
 
         $form->add(
             'receptor',

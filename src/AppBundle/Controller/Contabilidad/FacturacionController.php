@@ -144,27 +144,6 @@ class FacturacionController extends Controller
                 $facturacionRepository->getFolioByEmpresa($factura->getEmisor()->getId())
             );
 
-            /*
-             * Comentando esto ya que la validacion y proceso de factura se hace en el constraint
-             * que se encuentra en FacturacionType
-             *
-            $sello = $this->multifacturas->procesa($factura);
-
-            if (key_exists('codigo_mf_numero', $sello)) {
-                $this->addFlash(
-                    'danger',
-                    'No se pudo sellar la factura, razón: '.$sello['codigo_mf_texto']
-                );
-
-                return $this->render(
-                    'contabilidad/facturacion/new.html.twig',
-                    [
-                        'form' => $form->createView(),
-                        'factura' => $factura,
-                    ]
-                );
-            }*/
-
             // Buscar las cotizaciones a las que se les asignara una factura
             // Puede ser una o muchas dependiendo si el emisor es V&V Store y este quiere facturar todas las ventas
             $cotizacionRepository = FacturacionHelper::getCotizacionRepository($em, $factura->getEmisor()->getId());
