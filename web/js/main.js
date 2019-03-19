@@ -84,63 +84,48 @@ $(document).ready(function () {
     window.location.href = direc;
   });
 
-
-//---- seleccionar choice al recotizar------
-  var diasestadiaprecio = $('#de_precio').data('valor');
-  var electricidadprecio = $('#e_precio').data('valor');
-  $("#appbundle_marinahumedacotizacion_mhcservicios_0_precio>option").each(function () {
-    if ($(this).val() == diasestadiaprecio) {
-      $(this).attr("selected", "selected");
+  $(".esnumero").keypress(function () {
+    return isNumberKey(event);
+  });
+  $(".esdecimal").keypress(function () {
+    return esNumeroDecimal(event, this);
+  });
+  $("#appbundle_marinahumedacotizacion_validanovo_0").click(function () {
+    $('#notarechazado').hide();
+  });
+  $("#appbundle_marinahumedacotizacion_validanovo_1").click(function () {
+    $('#notarechazado').show();
+  });
+  $("#appbundle_marinahumedacotizacion_validacliente_0").click(function () {
+    $('#notarechazado').hide();
+  });
+  $("#appbundle_marinahumedacotizacion_validacliente_1").click(function () {
+    $('#notarechazado').show();
+  });
+  $("#appbundle_astillerocotizacion_validanovo_0").click(function () {
+    $('#notarechazado').hide();
+  });
+  $("#appbundle_astillerocotizacion_validanovo_1").click(function () {
+    $('#notarechazado').show();
+  });
+  $("#appbundle_astillerocotizacion_validacliente_0").click(function () {
+    $('#notarechazado').hide();
+  });
+  $("#appbundle_astillerocotizacion_validacliente_1").click(function () {
+    $('#notarechazado').show();
+  });
+  $('.opcionrechazar').click(function () {
+    $('#notarechazado').show();
+  });
+  $('.opcionaceptar').click(function () {
+    $('#notarechazado').hide();
+  });
+  $('.limite100').on('input', function () {
+    var value = $(this).val();
+    if ((value !== '') && (value.indexOf('.') === -1)) {
+      $(this).val(Math.max(Math.min(value, 100), 0));
     }
   });
-  $("#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux>option").each(function () {
-    if ($(this).val() == electricidadprecio) {
-      $(this).attr("selected", "selected");
-    }
-  });
-//-- fin seleccionar choice al recotizar----
-    $(".esnumero").keypress(function () {
-        return isNumberKey(event);
-    });
-    $(".esdecimal").keypress(function () {
-        return esNumeroDecimal(event, this);
-    });
-    $("#appbundle_marinahumedacotizacion_validanovo_0").click(function () {
-        $('#notarechazado').hide();
-    });
-    $("#appbundle_marinahumedacotizacion_validanovo_1").click(function () {
-        $('#notarechazado').show();
-    });
-    $("#appbundle_marinahumedacotizacion_validacliente_0").click(function () {
-        $('#notarechazado').hide();
-    });
-    $("#appbundle_marinahumedacotizacion_validacliente_1").click(function () {
-        $('#notarechazado').show();
-    });
-    $("#appbundle_astillerocotizacion_validanovo_0").click(function () {
-        $('#notarechazado').hide();
-    });
-    $("#appbundle_astillerocotizacion_validanovo_1").click(function () {
-        $('#notarechazado').show();
-    });
-    $("#appbundle_astillerocotizacion_validacliente_0").click(function () {
-        $('#notarechazado').hide();
-    });
-    $("#appbundle_astillerocotizacion_validacliente_1").click(function () {
-        $('#notarechazado').show();
-    });
-    $('.opcionrechazar').click(function () {
-        $('#notarechazado').show();
-    });
-    $('.opcionaceptar').click(function () {
-        $('#notarechazado').hide();
-    });
-    $('.limite100').on('input', function () {
-        var value = $(this).val();
-            if ((value !== '') && (value.indexOf('.') === -1)) {
-                $(this).val(Math.max(Math.min(value, 100), 0));
-            }
-    });
 });
 
 function isNumberKey(evt) {

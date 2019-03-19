@@ -58,6 +58,14 @@ class MarinaHumedaCotizaServicios
     private $precioOtro;
 
     /**
+     * Usado para reconocer si un precio viene del input otro precio
+     * @var boolean
+     *
+     * @ORM\Column(name="is_precio_otro", type="boolean", nullable=true)
+     */
+    private $isPrecioOtro;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="subtotal", type="bigint", nullable=true)
@@ -438,5 +446,29 @@ class MarinaHumedaCotizaServicios
     public function getProducto()
     {
         return $this->marinahumedaservicio;
+    }
+
+    /**
+     * Set isPrecioOtro.
+     *
+     * @param bool|null $isPrecioOtro
+     *
+     * @return MarinaHumedaCotizaServicios
+     */
+    public function setIsPrecioOtro($isPrecioOtro = null)
+    {
+        $this->isPrecioOtro = $isPrecioOtro;
+
+        return $this;
+    }
+
+    /**
+     * Get isPrecioOtro.
+     *
+     * @return bool|null
+     */
+    public function getIsPrecioOtro()
+    {
+        return $this->isPrecioOtro;
     }
 }

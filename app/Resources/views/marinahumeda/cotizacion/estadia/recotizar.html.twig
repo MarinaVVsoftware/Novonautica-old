@@ -171,9 +171,6 @@
                                     <label>Dolar</label>
                                     {{ form_widget(form.dolar) }}
                                 </div>
-
-
-
                                 <div class="col-sm-9">
                                     <div class="row">
                                         <div class="col-sm-6">
@@ -551,9 +548,9 @@
       const eslora = document.getElementById('barcopies');
 
 
-      //filtraSelectPrecios(preciosEstadia, Number(eslora.dataset.valor));
-      //filtraSelectPrecios(preciosElectricidad, Number(eslora.dataset.valor));
-      //recalculaCantidadYprecio();
+      filtraSelectPrecios(preciosEstadia, Number(eslora.dataset.valor));
+      filtraSelectPrecios(preciosElectricidad, Number(eslora.dataset.valor));
+      recalculaCantidadYprecio();
 
       pincodeInput.addEventListener('keyup',() => {
         if(pincodeInput.value.replace(/\s/g, "").length === 8){

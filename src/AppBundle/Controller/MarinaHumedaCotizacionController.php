@@ -162,14 +162,23 @@ class MarinaHumedaCotizacionController extends Controller
                 );
 
             if ($compruebaPincode) {
-                $precioEstadia =
-                    $marinaDiasEstadia->getPrecio() ?
-                        $marinaDiasEstadia->getPrecio()->getCosto() :
-                        $marinaDiasEstadia->getPrecioOtro();
-                $precioElectricidad =
-                    $marinaElectricidad->getPrecioAux() ?
-                        $marinaElectricidad->getPrecioAux()->getCosto() :
-                        $marinaElectricidad->getPrecioOtro();
+
+                if ($marinaDiasEstadia->getPrecio()) {
+                    $precioEstadia = $marinaDiasEstadia->getPrecio()->getCosto();
+                    $marinaDiasEstadia->setIsPrecioOtro(false);
+                } else {
+                    $precioEstadia = $marinaDiasEstadia->getPrecioOtro();
+                    $marinaDiasEstadia->setIsPrecioOtro(true);
+                }
+
+                if ($marinaElectricidad->getPrecioAux()) {
+                    $precioElectricidad = $marinaElectricidad->getPrecioAux()->getCosto();
+                    $marinaElectricidad->setIsPrecioOtro(false);
+                } else {
+                    $precioElectricidad = $marinaElectricidad->getPrecioOtro();
+                    $marinaElectricidad->setIsPrecioOtro(true);
+                }
+
                 if (!$precioEstadia) {
                     $this->addFlash('danger', 'Precio no seleccionado para días estadia');
                 } elseif (!$precioElectricidad) {
@@ -744,133 +753,166 @@ class MarinaHumedaCotizacionController extends Controller
         $cliente = $marinaHumedaCotizacionAnterior->getCliente();
         $barco = $marinaHumedaCotizacionAnterior->getBarco();
 
-        $marinaHumedaCotizacion
-            ->setCliente($cliente)
-            ->setBarco($barco)
-            ->setFechaLlegada($marinaHumedaCotizacionAnterior->getFechaLlegada())
-            ->setFechaSalida($marinaHumedaCotizacionAnterior->getFechaSalida())
-            ->setSlip(null)
-            ->setDescuento($marinaHumedaCotizacionAnterior->getDescuento())
-            ->setDolar($dolar)
-            ->setIva($iva)
-            ->setSubtotal($marinaHumedaCotizacionAnterior->getSubtotal())
-            ->setIvatotal($marinaHumedaCotizacionAnterior->getIvatotal())
-            ->setDescuentototal($marinaHumedaCotizacionAnterior->getDescuentototal())
-            ->setTotal($marinaHumedaCotizacionAnterior->getTotal())
-            ->setValidanovo(0)
-            ->setValidacliente(0)
-            ->setMensaje($marinaHumedaCotizacionAnterior->getMensaje());
+        $marinaHumedaCotizacion->setCliente($cliente);
+        $marinaHumedaCotizacion->setBarco($barco);
+        $marinaHumedaCotizacion->setFechaLlegada($marinaHumedaCotizacionAnterior->getFechaLlegada());
+        $marinaHumedaCotizacion->setFechaSalida($marinaHumedaCotizacionAnterior->getFechaSalida());
+        $marinaHumedaCotizacion->setSlip(null);
+        $marinaHumedaCotizacion->setDescuentoEstadia($marinaHumedaCotizacionAnterior->getDescuentoEstadia());
+        $marinaHumedaCotizacion->setDescuentoElectricidad($marinaHumedaCotizacionAnterior->getDescuentoElectricidad());
+        $marinaHumedaCotizacion->setDolar($dolar);
+        $marinaHumedaCotizacion->setIva($iva);
+        $marinaHumedaCotizacion->setSubtotal($marinaHumedaCotizacionAnterior->getSubtotal());
+        $marinaHumedaCotizacion->setIvatotal($marinaHumedaCotizacionAnterior->getIvatotal());
+        $marinaHumedaCotizacion->setDescuentototal($marinaHumedaCotizacionAnterior->getDescuentototal());
+        $marinaHumedaCotizacion->setTotal($marinaHumedaCotizacionAnterior->getTotal());
+        $marinaHumedaCotizacion->setValidanovo(0);
+        $marinaHumedaCotizacion->setValidacliente(0);
+        $marinaHumedaCotizacion->setMensaje($marinaHumedaCotizacionAnterior->getMensaje());
+        $marinaHumedaCotizacion->setDiasEstadia($marinaHumedaCotizacionAnterior->getDiasEstadia());
+
         $servicios = $marinaHumedaCotizacionAnterior->getMHCservicios();
         $marinaDiasEstadia = new MarinaHumedaCotizaServicios();
-        $marinaDiasEstadia
-            ->setTipo($servicios[0]->getTipo())
-            ->setCantidad($servicios[0]->getCantidad())
-            ->setPrecio($servicios[0]->getPrecio())
-            ->setSubtotal($servicios[0]->getSubtotal())
-            ->setIva($servicios[0]->getIva())
-            ->setDescuento($servicios[0]->getDescuento())
-            ->setTotal($servicios[0]->getTotal())
-            ->setEstatus($servicios[0]->getEstatus());
+        $marinaDiasEstadia->setTipo($servicios[0]->getTipo());
+        $marinaDiasEstadia->setCantidad($servicios[0]->getCantidad());
+        $marinaDiasEstadia->setSubtotal($servicios[0]->getSubtotal());
+        $marinaDiasEstadia->setIva($servicios[0]->getIva());
+        $marinaDiasEstadia->setDescuento($servicios[0]->getDescuento());
+        $marinaDiasEstadia->setTotal($servicios[0]->getTotal());
+        $marinaDiasEstadia->setEstatus($servicios[0]->getEstatus());
+        $servicios[0]->getIsPrecioOtro() ?
+            $marinaDiasEstadia->setPrecioOtro($servicios[0]->getPrecio()) :
+            $marinaDiasEstadia->setPrecio($servicios[0]->getPrecio());
+
         $marinaElectricidad = new MarinaHumedaCotizaServicios();
-        $marinaElectricidad
-            ->setTipo($servicios[1]->getTipo())
-            ->setCantidad($servicios[1]->getCantidad())
-            ->setPrecio($servicios[1]->getPrecio())
-            ->setSubtotal($servicios[1]->getSubtotal())
-            ->setIva($servicios[1]->getIva())
-            ->setDescuento($servicios[1]->getDescuento())
-            ->setTotal($servicios[1]->getTotal())
-            ->setEstatus($servicios[1]->getEstatus());
-        $marinaHumedaCotizacion
-            ->addMarinaHumedaCotizaServicios($marinaDiasEstadia)
-            ->addMarinaHumedaCotizaServicios($marinaElectricidad);
-        $marinaHumedaCotizacion
-            ->setDiasEstadia($marinaHumedaCotizacionAnterior->getDiasEstadia());
+        $marinaElectricidad->setTipo($servicios[1]->getTipo());
+        $marinaElectricidad->setCantidad($servicios[1]->getCantidad());
+        $marinaElectricidad->setSubtotal($servicios[1]->getSubtotal());
+        $marinaElectricidad->setIva($servicios[1]->getIva());
+        $marinaElectricidad->setDescuento($servicios[1]->getDescuento());
+        $marinaElectricidad->setTotal($servicios[1]->getTotal());
+        $marinaElectricidad->setEstatus($servicios[1]->getEstatus());
+        $servicios[1]->getIsPrecioOtro() ?
+            $marinaElectricidad->setPrecioOtro($servicios[1]->getPrecio()) :
+            $marinaElectricidad->setPrecio($servicios[1]->getPrecio());
+
+        $marinaHumedaCotizacion->addMarinaHumedaCotizaServicios($marinaDiasEstadia);
+        $marinaHumedaCotizacion->addMarinaHumedaCotizaServicios($marinaElectricidad);
 
         $form = $this->createForm(MarinaHumedaCotizacionType::class, $marinaHumedaCotizacion);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $granSubtotal = 0;
-            $granIva = 0;
-            $granDescuento = 0;
-            $granTotal = 0;
-            $descuento = $marinaHumedaCotizacion->getDescuento();
-            $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
-            $cantidad = $marinaHumedaCotizacion->getDiasEstadia();
+            $pincodeEnBase =
+                $this->getDoctrine()->getRepository('AppBundle:Pincode')
+                    ->findOneBy(['pin' => $form['pincode']->getData()]);
+            $compruebaPincode =
+                $this->compruebaUsoPincode(
+                    $marinaHumedaCotizacion,
+                    $marinaDiasEstadia->getPrecioOtro(),
+                    $marinaElectricidad->getPrecioOtro(),
+                    $pincodeEnBase
+                );
+            if($compruebaPincode){
+                if ($marinaDiasEstadia->getPrecio()) {
+                    $precioEstadia = $marinaDiasEstadia->getPrecio()->getCosto();
+                    $marinaDiasEstadia->setIsPrecioOtro(false);
+                } else {
+                    $precioEstadia = $marinaDiasEstadia->getPrecioOtro();
+                    $marinaDiasEstadia->setIsPrecioOtro(true);
+                }
+                if ($marinaElectricidad->getPrecioAux()) {
+                    $precioElectricidad = $marinaElectricidad->getPrecioAux()->getCosto();
+                    $marinaElectricidad->setIsPrecioOtro(false);
+                } else {
+                    $precioElectricidad = $marinaElectricidad->getPrecioOtro();
+                    $marinaElectricidad->setIsPrecioOtro(true);
+                }
+                if (!$precioEstadia) {
+                    $this->addFlash('danger', 'Precio no seleccionado para días estadia');
+                } elseif (!$precioElectricidad) {
+                    $this->addFlash('danger', 'Precio no seleccionado para electricidad');
+                } else {
+                    $granSubtotal = 0;
+                    $granIva = 0;
+                    $granDescuento = 0;
+                    $granTotal = 0;
+                    $descuentoEstadia = $marinaHumedaCotizacion->getDescuentoEstadia();
+                    $descuentoElectricidad = $marinaHumedaCotizacion->getDescuentoElectricidad();
+                    $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
+                    $cantidadDias = $marinaHumedaCotizacion->getDiasEstadia();
 
-            // Días Estadía
-            $precio = $marinaDiasEstadia->getPrecio()->getCosto();
+                    // Días Estadía
+                    $subTotal = $cantidadDias * $precioEstadia * $eslora;
+                    $descuentoTot = ($subTotal * $descuentoEstadia) / 100;
+                    $subTotal_descuento = $subTotal - $descuentoTot;
+                    $ivaTot = ($subTotal_descuento * $iva) / 100;
+                    $total = $subTotal_descuento + $ivaTot;
 
-            $subTotal = $cantidad * $precio * $eslora;
-            $descuentoTot = ($subTotal * $descuento) / 100;
-            $ivaTot = ($subTotal * $iva) / 100;
-            $total = $subTotal - $descuentoTot + $ivaTot;
+                    $marinaDiasEstadia->setEstatus(1);
+                    $marinaDiasEstadia->setCantidad($cantidadDias);
+                    $marinaDiasEstadia->setPrecio($precioEstadia);
+                    $marinaDiasEstadia->setSubtotal($subTotal);
+                    $marinaDiasEstadia->setDescuento($descuentoTot);
+                    $marinaDiasEstadia->setIva($ivaTot);
+                    $marinaDiasEstadia->setTotal($total);
+                    $granSubtotal += $subTotal;
+                    $granIva += $ivaTot;
+                    $granDescuento += $descuentoTot;
+                    $granTotal += $total;
 
-            $marinaDiasEstadia
-                ->setEstatus(1)
-                ->setCantidad($cantidad)
-                ->setPrecio($precio)
-                ->setSubtotal($subTotal)
-                ->setDescuento($descuentoTot)
-                ->setIva($ivaTot)
-                ->setTotal($total);
+                    // Conexión a electricidad
+                    $subTotal = $cantidadDias * $precioElectricidad * $eslora;
+                    $descuentoTot = ($subTotal * $descuentoElectricidad) / 100;
+                    $subTotal_descuento = $subTotal - $descuentoTot;
+                    $ivaTot = ($subTotal_descuento * $iva) / 100;
+                    $total = $subTotal_descuento + $ivaTot;
 
-            $granSubtotal += $subTotal;
-            $granIva += $ivaTot;
-            $granDescuento += $descuentoTot;
-            $granTotal += $total;
+                    $marinaElectricidad->setEstatus(1);
+                    $marinaElectricidad->setCantidad($cantidadDias);
+                    $marinaElectricidad->setPrecio($precioElectricidad);
+                    $marinaElectricidad->setSubtotal($subTotal);
+                    $marinaElectricidad->setDescuento($descuentoTot);
+                    $marinaElectricidad->setIva($ivaTot);
+                    $marinaElectricidad->setTotal($total);
+                    $granSubtotal += $subTotal;
+                    $granIva += $ivaTot;
+                    $granDescuento += $descuentoTot;
+                    $granTotal += $total;
 
-            // Conexión a electricidad
-            //$cantidad = $marinaElectricidad->getCantidad();
-            $precio = $marinaElectricidad->getPrecioAux()->getCosto();
+                    //-------------------------------------------------
 
-            $subTotal = $cantidad * $precio * $eslora;
-            $descuentoTot = ($subTotal * $descuento) / 100;
-            $ivaTot = ($subTotal * $iva) / 100;
-            $total = $subTotal - $descuentoTot + $ivaTot;
+                    $marinaHumedaCotizacion->setCliente($cliente);
+                    $marinaHumedaCotizacion->setBarco($barco);
+                    $marinaHumedaCotizacion->setIva($iva);
+                    $marinaHumedaCotizacion->setSubtotal($granSubtotal);
+                    $marinaHumedaCotizacion->setIvatotal($granIva);
+                    $marinaHumedaCotizacion->setDescuentototal($granDescuento);
+                    $marinaHumedaCotizacion->setTotal($granTotal);
+                    $marinaHumedaCotizacion->setValidanovo(0);
+                    $marinaHumedaCotizacion->setValidacliente(0);
+                    $marinaHumedaCotizacion->setEstatus(1);
+                    $marinaHumedaCotizacion->setFecharegistro(new \DateTime());
+                    $marinaHumedaCotizacion->setFolio($qb->getFolioMarina() + 1);
+                    $marinaHumedaCotizacion->setFoliorecotiza(0);
 
-            $marinaElectricidad
-                ->setEstatus(1)
-                ->setCantidad($cantidad)
-                ->setPrecio($precio)
-                ->setSubtotal($subTotal)
-                ->setDescuento($descuentoTot)
-                ->setIva($ivaTot)
-                ->setTotal($total);
+                    $this->getDoctrine()->getRepository(ValorSistema::class)->find(1)
+                        ->setFolioMarina($qb->getFolioMarina() + 1);
 
-            $granSubtotal += $subTotal;
-            $granIva += $ivaTot;
-            $granDescuento += $descuentoTot;
-            $granTotal += $total;
+                    //actualizar datos PINCODE
+                    $pincodeEnBase->setUsedAt(new \DateTime());
+                    $pincodeEnBase->setUsedBy($this->getUser());
+                    $pincodeEnBase->setStatus(false);
 
-            //-------------------------------------------------
-            $foliobase = $qb->getFolioMarina();
-            $folionuevo = $foliobase + 1;
+                    $em->persist($pincodeEnBase);
+                    $em->persist($marinaHumedaCotizacion);
+                    $em->flush();
 
-            $marinaHumedaCotizacion
-                ->setCliente($cliente)
-                ->setBarco($barco)
-                ->setDolar($dolar)
-                ->setIva($iva)
-                ->setSubtotal($granSubtotal)
-                ->setIvatotal($granIva)
-                ->setDescuentototal($granDescuento)
-                ->setTotal($granTotal)
-                ->setValidanovo(0)
-                ->setValidacliente(0)
-                ->setEstatus(1)
-                ->setFolio($folionuevo)
-                ->setFoliorecotiza(0);
-            $folioactualiza = $this->getDoctrine()
-                ->getRepository(ValorSistema::class)
-                ->find(1)
-                ->setFolioMarina($folionuevo);
-
-            $em->persist($marinaHumedaCotizacion);
-            $em->flush();
-
-            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
-
+                    return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
+                }
+            }else{
+                $this->addFlash('danger', 'PINCODE inválido para precios agregados o descuentos.');
+            }
         }
         return $this->render('marinahumeda/cotizacion/estadia/recotizar.html.twig', [
             'title' => 'Renovación',
@@ -930,18 +972,19 @@ class MarinaHumedaCotizacionController extends Controller
         $marinaHumedaCotizacion->setMensaje($marinaHumedaCotizacionAnterior->getMensaje());
         $marinaHumedaCotizacion->setDiasEstadia($marinaHumedaCotizacionAnterior->getDiasEstadia());
 
-
         $servicios = $marinaHumedaCotizacionAnterior->getMHCservicios();
 
         $marinaDiasEstadia = new MarinaHumedaCotizaServicios();
         $marinaDiasEstadia->setTipo($servicios[0]->getTipo());
         $marinaDiasEstadia->setCantidad($servicios[0]->getCantidad());
-        $marinaDiasEstadia->setPrecio($servicios[0]->getPrecio());
         $marinaDiasEstadia->setSubtotal($servicios[0]->getSubtotal());
         $marinaDiasEstadia->setIva($servicios[0]->getIva());
         $marinaDiasEstadia->setDescuento($servicios[0]->getDescuento());
         $marinaDiasEstadia->setTotal($servicios[0]->getTotal());
         $marinaDiasEstadia->setEstatus($servicios[0]->getEstatus());
+        $servicios[0]->getIsPrecioOtro() ?
+            $marinaDiasEstadia->setPrecioOtro($servicios[0]->getPrecio()) :
+            $marinaDiasEstadia->setPrecio($servicios[0]->getPrecio());
 
         $marinaElectricidad = new MarinaHumedaCotizaServicios();
         $marinaElectricidad->setTipo($servicios[1]->getTipo());
@@ -952,6 +995,9 @@ class MarinaHumedaCotizacionController extends Controller
         $marinaElectricidad->setDescuento($servicios[1]->getDescuento());
         $marinaElectricidad->setTotal($servicios[1]->getTotal());
         $marinaElectricidad->setEstatus($servicios[1]->getEstatus());
+        $servicios[1]->getIsPrecioOtro() ?
+            $marinaElectricidad->setPrecioOtro($servicios[1]->getPrecio()) :
+            $marinaElectricidad->setPrecio($servicios[1]->getPrecio());
 
         $marinaHumedaCotizacion->addMarinaHumedaCotizaServicios($marinaDiasEstadia);
         $marinaHumedaCotizacion->addMarinaHumedaCotizaServicios($marinaElectricidad);
@@ -975,15 +1021,21 @@ class MarinaHumedaCotizacionController extends Controller
                 );
 
             if($compruebaPincode){
-                dump('procesar');
-                $precioEstadia =
-                    $marinaDiasEstadia->getPrecio() ?
-                        $marinaDiasEstadia->getPrecio()->getCosto() :
-                        $marinaDiasEstadia->getPrecioOtro();
-                $precioElectricidad =
-                    $marinaElectricidad->getPrecioAux() ?
-                        $marinaElectricidad->getPrecioAux()->getCosto() :
-                        $marinaElectricidad->getPrecioOtro();
+                if ($marinaDiasEstadia->getPrecio()) {
+                    $precioEstadia = $marinaDiasEstadia->getPrecio()->getCosto();
+                    $marinaDiasEstadia->setIsPrecioOtro(false);
+                } else {
+                    $precioEstadia = $marinaDiasEstadia->getPrecioOtro();
+                    $marinaDiasEstadia->setIsPrecioOtro(true);
+                }
+                if ($marinaElectricidad->getPrecioAux()) {
+                    $precioElectricidad = $marinaElectricidad->getPrecioAux()->getCosto();
+                    $marinaElectricidad->setIsPrecioOtro(false);
+                } else {
+                    $precioElectricidad = $marinaElectricidad->getPrecioOtro();
+                    $marinaElectricidad->setIsPrecioOtro(true);
+                }
+
                 if (!$precioEstadia) {
                     $this->addFlash('danger', 'Precio no seleccionado para días estadia');
                 } elseif (!$precioElectricidad) {
@@ -1057,13 +1109,12 @@ class MarinaHumedaCotizacionController extends Controller
                     $pincodeEnBase->setUsedBy($this->getUser());
                     $pincodeEnBase->setStatus(false);
 
+                    $em->persist($pincodeEnBase);
+                    $em->persist($marinaHumedaCotizacion);
+                    $em->persist($marinaHumedaCotizacionAnterior);
+                    $em->flush();
 
-//            $em->persist($pincodeEnBase);
-//            $em->persist($marinaHumedaCotizacion);
-//            $em->persist($marinaHumedaCotizacionAnterior);
-//            $em->flush();
-//
-//            return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
+                    return $this->redirectToRoute('marina-humeda_show', ['id' => $marinaHumedaCotizacion->getId()]);
                 }
             }else{
                 $this->addFlash('danger', 'PINCODE inválido para precios agregados o descuentos.');
