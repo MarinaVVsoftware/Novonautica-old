@@ -261,6 +261,14 @@ class Facturacion
     /*------------------------------------------------------------------------------------------------
      * DATOS DE ENTIDAD
      *-----------------------------------------------------------------------------------------------*/
+
+    /**
+     * Agregando este campo no mapeado en la DB para poder evitar el timbrado en FacturaEstaTimbradaValidator
+     *
+     * @var bool $isPreview
+     */
+    public $isPreview = false;
+
     /**
      * @var int $estatus
      *

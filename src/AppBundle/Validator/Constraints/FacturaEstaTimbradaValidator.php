@@ -44,6 +44,10 @@ class FacturaEstaTimbradaValidator extends ConstraintValidator
             return;
         }
 
+        if ($factura->isPreview) {
+            return;
+        }
+
         $sello = $this->multifacturas->procesa($factura);
 
         if (key_exists('codigo_mf_numero', $sello)) {
