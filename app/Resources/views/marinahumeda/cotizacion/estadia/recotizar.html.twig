@@ -252,8 +252,8 @@
                                             <td id="de_cantidad">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</td>
                                             <td id="de_eslora" data-valor="{{ marinaHumedaCotizacion.barco.eslora }}">{{ marinaHumedaCotizacion.barco.eslora }}</td>
                                             <td>Días estancia</td>
-                                            <td id="de_precio" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.precio/100 }}">
-                                                $ {{ (marinaHumedaCotizacion.mhcservicios.0.precio/100)|number_format(2) }}
+                                            <td id="de_precio" data-valor="">
+
                                             </td>
                                             <td id="de_subtotal" data-valor="{{ marinaHumedaCotizacion.mhcservicios.0.subtotal/100 }}">
                                                 $ {{ (marinaHumedaCotizacion.mhcservicios.0.subtotal/100)|number_format(2) }}
@@ -272,8 +272,8 @@
                                             <td id="e_cantidad">{{ marinaHumedaCotizacion.mhcservicios.1.cantidad }}</td>
                                             <td id="e_eslora" data-valor="{{ marinaHumedaCotizacion.barco.eslora }}">{{ marinaHumedaCotizacion.barco.eslora }}</td>
                                             <td>Conexión a electricidad</td>
-                                            <td id="e_precio" data-valor="{{ marinaHumedaCotizacion.mhcservicios.1.precio/100 }}">
-                                                $ {{ (marinaHumedaCotizacion.mhcservicios.1.precio/100)|number_format(2) }}
+                                            <td id="e_precio" data-valor="">
+
                                             </td>
                                             <td id="e_subtotal" data-valor="{{ marinaHumedaCotizacion.mhcservicios.1.subtotal/100 }}">
                                                 $ {{ (marinaHumedaCotizacion.mhcservicios.1.subtotal/100)|number_format(2) }}
@@ -397,7 +397,7 @@
                                             <td id="de_cantidad_mxn">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</td>
                                             <td id="de_eslora_mxn">{{ marinaHumedaCotizacion.barco.eslora }}</td>
                                             <td>Días estancia</td>
-                                            <td id="de_precio_mxn">$ {{ ((marinaHumedaCotizacion.mhcservicios.0.precio * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>
+                                            <td id="de_precio_mxn"></td>
                                             <td id="de_subtotal_mxn" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.0.subtotal * marinaHumedaCotizacion.dolar)/10000 }}">
                                                 $ {{ ((marinaHumedaCotizacion.mhcservicios.0.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
                                             </td>
@@ -415,7 +415,7 @@
                                             <td id="e_cantidad_mxn">{{ marinaHumedaCotizacion.mhcservicios.1.cantidad }}</td>
                                             <td id="e_eslora_mxn">{{ marinaHumedaCotizacion.barco.eslora }}</td>
                                             <td>Conexión a electricidad</td>
-                                            <td id="e_precio_mxn">$ {{ ((marinaHumedaCotizacion.mhcservicios.1.precio * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</td>
+                                            <td id="e_precio_mxn"></td>
                                             <td id="e_subtotal_mxn" data-valor="{{ (marinaHumedaCotizacion.mhcservicios.1.subtotal * marinaHumedaCotizacion.dolar)/10000 }}">
                                                 $ {{ ((marinaHumedaCotizacion.mhcservicios.1.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}
                                             </td>

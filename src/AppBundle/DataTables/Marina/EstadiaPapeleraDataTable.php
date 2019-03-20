@@ -151,7 +151,10 @@ class EstadiaPapeleraDataTable extends AbstractDataTableHandler
             });
 
             $results->data[] = [
-                !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio().'-'.$cotizacion->getFoliorecotiza(),
+                [
+                    'folio' => !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza(),
+                    'fecharegistro' => $cotizacion->getFecharegistro()->format('d/m/Y'),
+                ],
                 [
                     'cliente' => $cotizacion->getCliente()->getNombre(),
                     'embarcacion' => $cotizacion->getBarco()->getNombre(),
