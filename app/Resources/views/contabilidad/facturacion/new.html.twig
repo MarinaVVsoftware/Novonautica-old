@@ -743,6 +743,11 @@
         });
 
         previewButton.addEventListener('click', function () {
+          if (!emisorSelect.value) {
+            throwAlert('Debe seleccionar un emisor de la lista.', 'warning');
+            return;
+          }
+
           facturaForm.setAttribute('action', 'preview');
           facturaForm.setAttribute('target', '_blank');
           facturaForm.submit();

@@ -212,6 +212,8 @@ class FacturacionController extends Controller
     public function previewAction(Request $request)
     {
         $factura = new Facturacion();
+        $factura->isPreview = true;
+
         $form = $this->createForm(PreviewType::class, $factura);
         $form->handleRequest($request);
 
