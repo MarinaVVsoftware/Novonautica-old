@@ -188,7 +188,9 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 Nueva factura
-                                <span id="factura-folio" class="pull-right">Folio: {{ form.folio.vars.value }}</span>
+                                <span id="factura-folio" class="pull-right" title="Seleccione un emisor">
+                                    Folio: {{ form.folio.vars.value ? form.folio.vars.value : '####' }}
+                                </span>
                             </h4>
                         </div>
                         <div class="panel-body" style="min-height: initial">
@@ -434,8 +436,6 @@
                 this.elementListener(element);
               });
 
-          this.elementList = [];
-
           this.elementCounter = this.prototypeHolder.childElementCount;
 
           this.addButton
@@ -456,7 +456,6 @@
 
           this.appendRemoveButton(element);
           this.elementListener(element, event);
-          this.elementList.push(element);
           this.prototypeHolder.appendChild(element);
 
           return this.prototypeHolder.children[this.prototypeHolder.children.length - 1];
@@ -548,7 +547,9 @@
 
         document.addEventListener('keydown', (e) => e.keyCode === 13 ? event.preventDefault() : '');
 
-        getFolio();
+        if (emisorSelect.value && !conceptoTable.prototypeHolder.childElementCount) {
+          getFolio();
+        }
 
         function elementListener(element) {
           /**
@@ -558,8 +559,8 @@
 
           element.connectedNodes.cantidadInput = element.cells[0].firstElementChild;
           element.connectedNodes.unidadInput = element.cells[1].firstElementChild;
-          element.connectedNodes.claveProdServSelect2 = $(element.cells[2].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveprodserv'}});
-          element.connectedNodes.claveUnidadSelect2 = $(element.cells[3].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveunidad'}});
+          element.connectedNodes.claveProdServSelect2 = $(element.cells[2].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveprodserv', delay: 360}});
+          element.connectedNodes.claveUnidadSelect2 = $(element.cells[3].firstElementChild).select2({ajax: {url: '../claves-sat/select2/claveunidad', delay: 360}});
           element.connectedNodes.valorUnitarioInput = new Cleave(element.cells[5].firstElementChild, {numeral: true});
           element.connectedNodes.importeInput = new Cleave(element.cells[6].firstElementChild, {numeral: true});
           element.connectedNodes.baseInput = new Cleave(element.cells[7].firstElementChild, {numeral: true});
@@ -626,7 +627,6 @@
         /**
          * LISTENERS
          */
-
         metodoPagoSelect.addEventListener('change', function () {
           if (this.value === 'PUE') {
             formaPagoSelect.value = '01';
@@ -661,6 +661,7 @@
 
         $dateInputPicker.on('changeDate', function () {
           getCotizaciones(emisorSelect.value, $clienteSelect2.val());
+          conceptoTable.clear();
         });
 
         /**
@@ -722,13 +723,31 @@
 
             }
 
-            computeConceptos();
           }).always(() => {
-            loadingState.style.display = 'none'
+            computeConceptos();
+
+            loadingState.style.display = 'none';
+            const selectedOption = cotizacionSelect.options[cotizacionSelect.selectedIndex];
+
+            if (!selectedOption.dataset.requerirFactura) return;
+
+            const clienteNombre = selectedOption.dataset.clienteNombre.substring(0, 20);
+            const clienteId = selectedOption.dataset.clienteId;
+
+            throwAlert(
+                `El cliente <a href="../../cliente/${clienteId}" target="_blank">${clienteNombre}...</a>
+                 de la cotización seleccionada solicito factura pero no ha registrado datos de facturación en el sistema.`,
+                'warning'
+            )
           });
         });
 
         previewButton.addEventListener('click', function () {
+          if (!emisorSelect.value) {
+            throwAlert('Debe seleccionar un emisor de la lista.', 'warning');
+            return;
+          }
+
           facturaForm.setAttribute('action', 'preview');
           facturaForm.setAttribute('target', '_blank');
           facturaForm.submit();
@@ -740,7 +759,12 @@
         // Funciones
 
         function getFolio() {
-          if (clienteSelect.value && !cotizacionSelect.value) {
+          cotizacionSelect.innerHTML = '';
+          document.getElementById('errors').innerHTML = '';
+          conceptoTable.clear();
+          computeConceptos();
+
+          if (clienteSelect.value) {
             getCotizaciones(emisorSelect.value, clienteSelect.value);
           }
 
@@ -759,6 +783,7 @@
         function getCotizaciones(emisor, cliente) {
           loadingState.style.display = 'block';
           cotizacionSelect.innerHTML = '';
+          document.getElementById('errors').innerHTML = '';
 
           $.get('cotizaciones',
               {
@@ -775,7 +800,15 @@
             cotizacionSelect.appendChild(new Option('Seleccione una cotización', ''));
 
             for (const result of results) {
-              cotizacionSelect.appendChild(new Option(result.text, result.id));
+              const option = new Option(result.text, result.id);
+
+              if (result.requerirFactura) {
+                option.dataset.requerirFactura = result.requerirFactura || false;
+                option.dataset.clienteNombre = result.cliente_nombre;
+                option.dataset.clienteId = result.cliente_id;
+              }
+
+              cotizacionSelect.appendChild(option);
             }
           }).always(() => {
             loadingState.style.display = 'none';
@@ -783,11 +816,13 @@
         }
 
         function computeConceptos() {
+          document.getElementById('errors').innerHTML = '';
+
           let totalValue = 0;
           let subtotalValue = 0;
           let impuestosValue = 0;
 
-          for (const element of conceptoTable.elementList) {
+          for (const element of conceptoTable.prototypeHolder.rows) {
             subtotalValue += Number(element.connectedNodes.importeInput.getRawValue());
             impuestosValue += Number(element.connectedNodes.impuestoImporteInput.getRawValue());
             totalValue = subtotalValue + impuestosValue;

@@ -29,9 +29,9 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
         return $qb
             ->select('mhc', 'servicios')
             ->join('mhc.mhcservicios', 'servicios')
-            ->where($qb->expr()->eq('servicios.tipo','3'))
-            ->orWhere($qb->expr()->eq('servicios.tipo','4'))
-            ->orWhere($qb->expr()->eq('servicios.tipo','5'))
+            ->where($qb->expr()->eq('servicios.tipo', '3'))
+            ->orWhere($qb->expr()->eq('servicios.tipo', '4'))
+            ->orWhere($qb->expr()->eq('servicios.tipo', '5'))
             ->getQuery()
             ->getResult();
     }
@@ -39,57 +39,65 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
     public function getAllClientes()
     {
         $qb = $this->createQueryBuilder('mhce');
+
         return $qb
             ->select('cliente.nombre AS nombre')
             ->join('mhce.cliente', 'cliente')
             ->join('mhce.mhcservicios', 'servicios')
-            ->where($qb->expr()->eq('servicios.tipo','1'))
-            ->orWhere($qb->expr()->eq('servicios.tipo','2'))
+            ->where($qb->expr()->eq('servicios.tipo', '1'))
+            ->orWhere($qb->expr()->eq('servicios.tipo', '2'))
             ->distinct()
             ->getQuery()
             ->getResult();
     }
+
     public function getAllClientesCombustible()
     {
         $qb = $this->createQueryBuilder('mhc');
+
         return $qb
             ->select('cliente.nombre AS nombre')
             ->join('mhc.cliente', 'cliente')
             ->join('mhc.mhcservicios', 'servicios')
-            ->where($qb->expr()->eq('servicios.tipo','3'))
-            ->orWhere($qb->expr()->eq('servicios.tipo','4'))
-            ->orWhere($qb->expr()->eq('servicios.tipo','5'))
+            ->where($qb->expr()->eq('servicios.tipo', '3'))
+            ->orWhere($qb->expr()->eq('servicios.tipo', '4'))
+            ->orWhere($qb->expr()->eq('servicios.tipo', '5'))
             ->distinct()
             ->getQuery()
             ->getResult();
     }
+
     public function getAllBarcos()
     {
         $qb = $this->createQueryBuilder('mhce');
+
         return $qb
             ->select('barco.nombre AS nombre')
             ->join('mhce.barco', 'barco')
             ->join('mhce.mhcservicios', 'servicios')
-            ->where($qb->expr()->eq('servicios.tipo','1'))
-            ->orWhere($qb->expr()->eq('servicios.tipo','2'))
+            ->where($qb->expr()->eq('servicios.tipo', '1'))
+            ->orWhere($qb->expr()->eq('servicios.tipo', '2'))
             ->distinct()
             ->getQuery()
             ->getResult();
     }
+
     public function getAllBarcosCombustible()
     {
         $qb = $this->createQueryBuilder('mhc');
+
         return $qb
             ->select('barco.nombre AS nombre')
             ->join('mhc.barco', 'barco')
             ->join('mhc.mhcservicios', 'servicios')
-            ->where($qb->expr()->eq('servicios.tipo','3'))
-            ->orWhere($qb->expr()->eq('servicios.tipo','4'))
-            ->orWhere($qb->expr()->eq('servicios.tipo','5'))
+            ->where($qb->expr()->eq('servicios.tipo', '3'))
+            ->orWhere($qb->expr()->eq('servicios.tipo', '4'))
+            ->orWhere($qb->expr()->eq('servicios.tipo', '5'))
             ->distinct()
             ->getQuery()
             ->getResult();
     }
+
     public function getAllValidas()
     {
         $qb = $this->createQueryBuilder('mhce');
@@ -97,7 +105,7 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
         return $qb
             ->select('mhce.validanovo AS nombre')
             ->join('mhce.mhcservicios', 'servicios')
-            ->where($qb->expr()->neq('servicios.tipo','3'))
+            ->where($qb->expr()->neq('servicios.tipo', '3'))
             ->distinct()
             ->getQuery()
             ->getResult();
@@ -170,7 +178,7 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
     public function getWorkedBoatsByDaterange(\DateTime $start, \DateTime $end)
     {
         return $this->createQueryBuilder('mc')
-            ->select('mc.fechaLlegada AS fecha' ,'COUNT(mc.id) AS total')
+            ->select('mc.fechaLlegada AS fecha', 'COUNT(mc.id) AS total')
             ->where('mc.fechaLlegada BETWEEN :start AND :end')
             ->andWhere('mc.validacliente = 2')
             ->setParameters([
@@ -228,25 +236,34 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
      */
     public function getCotizacionesFromCliente($client, $inicio, $fin)
     {
-        $manager = $this->getEntityManager();
-        $cotizaciones = $manager->createQuery(
-            'SELECT cotizaciones.id, '.
-            '(CASE '.
-            'WHEN cotizaciones.foliorecotiza > 0 '.
-            'THEN CONCAT(cotizaciones.folio, \'-\', cotizaciones.foliorecotiza, \' \', barco.nombre) '.
-            'ELSE CONCAT(cotizaciones.folio, \' \', barco.nombre) '.
-            'END) AS text '.
-            'FROM AppBundle:MarinaHumedaCotizacion cotizaciones '.
-            'LEFT JOIN cotizaciones.barco barco '.
-            'WHERE IDENTITY(cotizaciones.cliente) = :client '.
-            'AND cotizaciones.fecharegistro BETWEEN :inicio AND :fin '.
-            'AND cotizaciones.factura IS NULL '.
-            'AND cotizaciones.validacliente = 2')
+        $queryBuilder = $this->createQueryBuilder('cotizaciones');
+
+        $queryBuilder
+            ->select(
+                'cotizaciones.id',
+                '(CASE WHEN cotizaciones.foliorecotiza > 0 '.
+                'THEN CONCAT(cotizaciones.folio, \'-\', cotizaciones.foliorecotiza, \' \', barco.nombre) '.
+                'ELSE CONCAT(cotizaciones.folio, \' \', barco.nombre) '.
+                'END) AS text'
+            )
+            ->leftJoin('cotizaciones.barco', 'barco')
+            ->andWhere(
+                'cotizaciones.fecharegistro BETWEEN :inicio AND :fin',
+                'cotizaciones.factura IS NULL',
+                'cotizaciones.validacliente = 2'
+            )
             ->setParameter('inicio', $inicio)
-            ->setParameter('fin', $fin)
+            ->setParameter('fin', $fin);
+
+        if ($client === '413') {
+            return $queryBuilder->getQuery()->getArrayResult();
+        }
+
+        $queryBuilder
+            ->andWhere('IDENTITY(cotizaciones.cliente) = :client')
             ->setParameter('client', $client);
 
-        return $cotizaciones->getArrayResult();
+        return $queryBuilder->getQuery()->getArrayResult();
     }
 
     /**
@@ -262,20 +279,31 @@ class MarinaHumedaCotizacionRepository extends \Doctrine\ORM\EntityRepository
      */
     public function getFullCotizacionesFromCliente($client, $inicio, $fin, $cotizacionId = null)
     {
-        $qb = $this->createQueryBuilder('cotizaciones')
-            ->where('IDENTITY(cotizaciones.cliente) = :client')
-            ->andWhere('cotizaciones.fecharegistro BETWEEN :inicio AND :fin')
-            ->andWhere('cotizaciones.factura IS NULL')
-            ->andWhere('cotizaciones.validacliente = 2')
+        $queryBuilder = $this->createQueryBuilder('cotizaciones');
+
+        $queryBuilder
+            ->andWhere(
+                'cotizaciones.fecharegistro BETWEEN :inicio AND :fin',
+                'cotizaciones.factura IS NULL',
+                'cotizaciones.validacliente = 2'
+            )
             ->setParameter('inicio', $inicio)
-            ->setParameter('fin', $fin)
-            ->setParameter('client', $client);
+            ->setParameter('fin', $fin);
 
         if ($cotizacionId) {
-            $qb->andWhere('cotizaciones.id IN (:cotizacionId)');
-            $qb->setParameter('cotizacionId', $cotizacionId);
+            $queryBuilder->andWhere('cotizaciones.id IN (:cotizacionId)');
+            $queryBuilder->setParameter('cotizacionId', $cotizacionId);
         }
 
-        return $qb->getQuery()->getResult();
+        // Si el cliente es PUBLICO EN GENERAL ID 413, entonces debemos ignorar la busqueda por cliente de
+        // las cotizaciones
+        if ($client === 413) {
+            return $queryBuilder->getQuery()->getResult();
+        }
+
+        $queryBuilder->andWhere('IDENTITY(cotizaciones.cliente) = :client');
+        $queryBuilder->setParameter('client', $client);
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

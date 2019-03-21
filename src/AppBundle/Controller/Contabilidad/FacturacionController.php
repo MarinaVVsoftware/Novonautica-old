@@ -16,7 +16,6 @@ use AppBundle\Extra\NumberToLetter;
 use AppBundle\Form\Contabilidad\FacturacionType;
 use AppBundle\Form\Contabilidad\PreviewType;
 use DataTables\DataTablesInterface;
-use Doctrine\ORM\NonUniqueResultException;
 use Hyperion\MultifacturasBundle\src\Multifacturas;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
@@ -27,9 +26,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\GroupSequence;
 
 /**
  * Facturacion controller.
@@ -145,21 +144,8 @@ class FacturacionController extends Controller
                 $facturacionRepository->getFolioByEmpresa($factura->getEmisor()->getId())
             );
 
-            $sello = $this->multifacturas->procesa($factura);
-
-            if (key_exists('codigo_mf_numero', $sello)) {
-                $this->addFlash(
-                    'danger',
-                    'No se pudo sellar la factura, razón: '.$sello['codigo_mf_texto']
-                );
-
-                return $this->render('contabilidad/facturacion/new.html.twig', [
-                    'factura' => $factura,
-                    'form' => $form->createView(),
-                ]);
-            }
-
-            // Buscar las cotizaciones
+            // Buscar las cotizaciones a las que se les asignara una factura
+            // Puede ser una o muchas dependiendo si el emisor es V&V Store y este quiere facturar todas las ventas
             $cotizacionRepository = FacturacionHelper::getCotizacionRepository($em, $factura->getEmisor()->getId());
             $cotizacionFecha = $form->get('fechaFiltro')->getData();
             $cotizacionId = $form->get('cotizaciones')->getData();
@@ -177,6 +163,7 @@ class FacturacionController extends Controller
                 $em->persist($cotizacion);
             }
 
+            // Esto solo debe pasar en astillero por el momento
             // checar si la factura pertenece a astillero y verificar si hay que restar o devolver productos de su inventario
             if ($cotizacionRepository->getClassName() === AstilleroCotizacion::class) {
                 $astilleroProductoRepository = $em->getRepository(Astillero\Producto::class);
@@ -225,6 +212,8 @@ class FacturacionController extends Controller
     public function previewAction(Request $request)
     {
         $factura = new Facturacion();
+        $factura->isPreview = true;
+
         $form = $this->createForm(PreviewType::class, $factura);
         $form->handleRequest($request);
 

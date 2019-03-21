@@ -29,7 +29,8 @@ class RazonSocialRepository extends \Doctrine\ORM\EntityRepository
             ->createQuery(
                 'SELECT rfc.id, rfc.razonSocial AS text '.
                 'FROM AppBundle:Cliente\RazonSocial rfc '.
-                'WHERE IDENTITY(rfc.cliente) = ?1'
+                'WHERE IDENTITY(rfc.cliente) = ?1 OR rfc.id = 84 '.
+                'ORDER BY rfc.razonSocial ASC'
             )
             ->setParameter(1, $cliente)
             ->getArrayResult();

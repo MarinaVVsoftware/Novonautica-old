@@ -21,6 +21,28 @@
             background-color: hsl(225, 23%, 21%);
             border: 1px solid #292f41;
         }
+
+        #dates .dataTables_filter {
+            text-align: initial;
+        }
+
+        #dates .dataTables_filter input {
+            width: 100%;
+        }
+
+        dl {
+            margin-bottom: 0;
+        }
+
+        dl.dl-horizontal dt {
+            text-align: left;
+            width: 110px;
+        }
+
+        dl.dl-horizontal dd {
+            text-align: right;
+            margin-left: 110px;
+        }
     </style>
 {% endblock %}
 
@@ -46,14 +68,13 @@
                             <table class="table table-novo">
                                 <thead>
                                 <tr>
-                                    <th>Folio de factura</th>
-                                    <th>RFC Emisor / Emisor</th>
-                                    <th>RFC Receptor / Receptor</th>
-                                    <th>Método de pago</th>
-                                    <th>Monto facturado</th>
-                                    <th>Fecha</th>
-                                    <th class="with-options">Pago completado</th>
-                                    <th width="10%">Archivos</th>
+                                    <th width="10%">Fecha <br>de facturación</th>
+                                    <th width="5%">Folio</th>
+                                    <th width="10%">Emisor</th>
+                                    <th width="10%">Receptor</th>
+                                    <th>Información <br> de factura</th>
+                                    {#<th class="with-options">Complementos de pago</th>#}
+                                    <th class="with-options">Estatus de cotización</th>
                                     <th width="10%" class="no-sort"></th>
                                 </tr>
                                 </thead>
@@ -126,15 +147,12 @@
               };
             },
           },
-          order: [[7, 'desc']],
+          order: [[0, 'desc']],
           dom:
-              "<'row'<'col-sm-3'l><'col-sm-3'<'#dates'>><'col-sm-3'B><'col-sm-3'f>>" +
+              "<'row'<'col-sm-6'<'#dates'>><'col-sm-3'B><'col-sm-3'f>>" +
               "<'row'<'col-sm-12'tr>>" +
               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-          lengthMenu: [
-            [10, 25, 50, -1],
-            ['10 registros', '25 registros', '50 registros', 'Mostrar todos']
-          ],
+          paginate: false,
           buttons: {
             buttons: [
               {
@@ -142,52 +160,135 @@
                 text: 'XLS',
                 className: 'btn btn-verde btn-sm',
                 exportOptions: {
-                  columns: [0, 1, 2, 3, 4, 5]
-                }
+                  columns: [0, 1, 2, 3, 4, 5],
+                  format: {
+                    header(title, column) {
+                      return column === 5 ? 'Estado de cotización' : title.replace('<br>', '')
+                    },
+                    body(data, row, column, node) {
+                      return node.innerText;
+                    }
+                  }
+                },
               }
             ]
           },
           columns: [
-            {responsivePriority: 1},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
-            {responsivePriority: 1},
-            {responsivePriority: 2},
-            {responsivePriority: 2},
             {responsivePriority: 0},
+            {responsivePriority: 1},
+            {
+              responsivePriority: 2,
+              data(data) {
+                return `
+                <dl>
+                    <dt>RFC: <dt>
+                    <dd>${data[2].rfc}<dd>
+                    <dt>Razón social: <dt>
+                    <dd>${data[2].razonSocial}<dd>
+                </dl>
+              `;
+              }
+            },
+            {
+              responsivePriority: 2,
+              data(data) {
+                return `
+                <dl>
+                    <dt>RFC: <dt>
+                    <dd>${data[3].rfc}<dd>
+                    <dt>Razón social: <dt>
+                    <dd>${data[3].razonSocial}<dd>
+                </dl>
+              `;
+              }
+            },
+            {
+              responsivePriority: 2,
+              data(data) {
+                return `
+                <dl>
+                    <dt>Metodo de pago: <dt>
+                    <dd>${data[4].metodo}<dd>
+                    <dt>Monto facturado: <dt>
+                    <dd>${data[4].monto}<dd>
+                </dl>
+                `;
+              }
+            },
+            // {responsivePriority: 0},
             {responsivePriority: 0},
             {responsivePriority: 0},
           ],
           createdRow: function (row, data) {
-            const aceptado = `<img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">`;
-            const rechazado = `<img src="{{ asset('img/status-desaprovado-icon.svg') }}" class="center-block">`;
-            const pendiente = `<img src="{{ asset('img/status-pendiente-icon.svg') }}" class="center-block">`;
-
             let url = '{{ app.request.requestUri }}';
             let xmlRoute = '{{ asset('timbrados/') }}';
             let actionsInner = '';
 
-            row.cells[7].innerHTML = '';
+            row.cells[2].innerHTML = `
+                <dl class="dl-horizontal">
+                    <dt>RFC: <dt>
+                    <dd>${data[2].rfc}<dd>
+                    <dt>Razón social: <dt>
+                    <dd>${data[2].razonSocial}<dd>
+                </dl>
+            `;
 
-            if (data[6] === 0) row.children[6].innerHTML = rechazado;
-            if (data[6] === 1) row.children[6].innerHTML = aceptado;
-            if (data[6] === 2) row.children[6].innerHTML = pendiente;
+            row.cells[3].innerHTML = `
+                <dl class="dl-horizontal">
+                    <dt>RFC: <dt>
+                    <dd>${data[3].rfc}<dd>
+                    <dt>Razón social: <dt>
+                    <dd>${data[3].razonSocial}<dd>
+                </dl>
+            `;
 
-            if (data[8]['metodoPago'] === 'PPD') {
-              actionsInner += `<li><a href="pagos/${data[8].id}/new">Registrar pago</a></li>`;
+            row.cells[4].innerHTML = `
+                <dl class="dl-horizontal">
+                    <dt>Metodo de pago: <dt>
+                    <dd>${data[4].metodo}<dd>
+                    <dt>Monto facturado: <dt>
+                    <dd>${data[4].monto}<dd>
+                </dl>
+            `;
 
-              row.cells[7].innerHTML += `<a href="pagos/${data[8].id}" class="btn btn-xs btn-azul btn-block">Pagos</a>`;
+            /*row.children[5].classList.add('text-center');
+            if (data[5] === 0) row.children[5].innerHTML = 'Pendientes';
+            if (data[5] === 1) row.children[5].innerHTML = 'Completados';
+            if (data[5] === 2) row.children[5].innerHTML = 'Pendientes';
+            if (data[4].metodo === 'PUE') row.children[5].innerHTML = `Sin complemento <br> de pagos`;*/
+
+            row.children[5].classList.add('text-center');
+            if (data[5].pagada === 0 || null === data[5].pagada) row.children[5].innerHTML = 'No pagado';
+            if (data[5].pagada === 1) row.children[5].innerHTML = 'Pago parcial';
+            if (data[5].pagada === 2) row.children[5].innerHTML = 'Pagado';
+            if (data[5].pagada === null || !data[5].id || !data[5].id.length) row.children[5].innerHTML = 'Cancelada';
+
+            if (data[2].id === 7 && data[5].id.length) {
+              data[5].id.map(id => actionsInner += `<li><a href="${getCotizacionUrl(data[2].id) + id}" target="_blank">Venta ${id}</a></li>`);
+            } else if (data[2].id !== 7 && data[5].id.length) {
+                actionsInner += `<li><a href="${getCotizacionUrl(data[2].id) + data[5].id[0]}" target="_blank">Cotización</a></li>`
             }
 
             actionsInner += `
-            <li><a href="${url}${data[8]['id']}">Detalle</a></li>
-            <li><a href="${url}${data[8]['id']}/reenviar">Reenviar</a></li>
+                <li><a href="${url}${data[6]['id']}">Detalle</a></li>
+                <li><a href="${url}${data[6]['id']}/reenviar">Reenviar</a></li>
             `;
 
-            if (!data[8]['status']) {
+            actionsInner += `
+                <li><a href="${xmlRoute}${data[6]['xml']}" target="_blank">Ver XML</a></li>
+                <li><a href="${url}${data[6]['pdf']}/pdf" target="_blank">Ver PDF</a></li>
+            `;
+
+            if (data[6]['metodoPago'] === 'PPD') {
+              actionsInner += `<li><a href="pagos/${data[6].id}/new">Registrar pago</a></li>`;
+              actionsInner += `<li><a href="pagos/${data[6].id}">Listado de pagos</a></li>`;
+            }
+
+            if (!data[6]['status']) {
               actionsInner += `
                 {% if is_granted(expression('has_role("CONTABILIDAD_CANCEL") or (user.isAdmin())')) %}
-                <li><a href="#" data-url="${url}${data[8]['id']}/cancelar"
+                <li><a href="#" data-url="${url}${data[6]['id']}/cancelar"
+                 class="text-danger"
                  data-toggle="modal"
                  data-target=".ventanaborrar"">Cancelar
                  </a></li>
@@ -195,15 +296,7 @@
               `;
             }
 
-            row.cells[7].innerHTML += `
-                <a href="${xmlRoute}${data[7]['xml']}"
-                 target="_blank" class="btn btn-xs btn-azul btn-block">XML</a>
-                <a href="${url}${data[7]['pdf']}/pdf"
-                 target="_blank" class="remove-motor btn btn-xs btn-azul btn-block">PDF</a>
-            `;
-
-            row.cells[8].style.textAlign = 'center';
-            row.cells[8].innerHTML = `
+            row.cells[6].innerHTML = `
                 <div class="dropdown">
                   <button class="btn btn-azul btn-xs btn-block dropdown-toggle" type="button" data-toggle="dropdown">
                     Acciones
@@ -214,11 +307,6 @@
                   </ul>
                 </div>
             `;
-
-            if (data[8]['status']) {
-             row.cells[8].innerHTML += '<span class="label label-danger">Cancelada</span>';
-            }
-
           },
         });
 
@@ -237,9 +325,21 @@
             column.search(val, true, true).draw();
           });
 
-          select.add(new Option('Pendiente', '2'));
-          select.add(new Option('Pagada', '1'));
-          select.add(new Option('Sin pagos', '0'));
+          /*if (column.selector.cols === 5) {
+            select.add(new Option('Pendientes', '2'));
+            select.add(new Option('Completados', '1'));
+            select.add(new Option('Sin complementos', '3'));
+            select.add(new Option('Todos', ''));
+          }*/
+
+          if (column.selector.cols === 5) {
+            select.add(new Option('Todos', ''));
+            select.add(new Option('Pagado', '2'));
+            select.add(new Option('No pagado', '0'));
+            select.add(new Option('Pago parcial', '1'));
+            select.add(new Option('Cancelada', '3'));
+          }
+
         });
 
         $('#dates')
@@ -281,6 +381,13 @@
           let url = $(e.relatedTarget).data('url');
           $(this).find('.confirm-cancel').attr('href', url);
         });
+
+        function getCotizacionUrl(emisorId) {
+          if (emisorId === 3) return '../../marina/cotizacion/';
+          if (emisorId === 4) return '../../combustible/';
+          if (emisorId === 5) return '../../astillero/';
+          if (emisorId === 7) return '../../tienda/venta/';
+        }
 
       })(jQuery, datatablesSettings);
     </script>

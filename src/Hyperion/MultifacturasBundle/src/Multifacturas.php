@@ -58,7 +58,7 @@ class Multifacturas
         $datos['conf']['pass'] = $emisor->getPassword();
 
         // Datos de facturacion
-        $datos['factura']['descuento'] = '0.00';
+//        $datos['factura']['descuento'] = '0.00';
         $datos['factura']['moneda'] = $factura->getMoneda();
         $datos['factura']['serie'] = $factura->getSerie();
         $datos['factura']['tipocambio'] = ($factura->getTipoCambio() / 100);

@@ -89,7 +89,7 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
 
         foreach ($request->order as $order) {
             if ($order->column === 0) {
-                $q->addOrderBy('mhce.folio', $order->dir);
+                $q->addOrderBy('mhce.fecharegistro', $order->dir);
             } elseif ($order->column === 1) {
                 $q->addOrderBy('cliente.nombre', $order->dir);
             } elseif ($order->column === 2) {
@@ -129,7 +129,10 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
 
 
             $results->data[] = [
-                !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio().'-'.$cotizacion->getFoliorecotiza(),
+                [
+                'folio' => !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza(),
+                'fecharegistro' => $cotizacion->getFecharegistro()->format('d/m/Y'),
+                ],
                 [
                     'cliente' => $cotizacion->getCliente()->getNombre(),
                     'embarcacion' => $cotizacion->getBarco()->getNombre(),

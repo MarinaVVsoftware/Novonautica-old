@@ -23,24 +23,35 @@ class CombustibleRepository extends \Doctrine\ORM\EntityRepository
      */
     public function getCotizacionesFromCliente($client, $inicio, $fin)
     {
-        $manager = $this->getEntityManager();
-        $cotizaciones = $manager->createQuery(
-            'SELECT cotizaciones.id, '.
-            '(CASE '.
-            'WHEN cotizaciones.foliorecotiza > 0 '.
-            'THEN CONCAT(cotizaciones.folio, \'-\', cotizaciones.foliorecotiza, \' \', barco.nombre) '.
-            'ELSE CONCAT(cotizaciones.folio, \' \', barco.nombre) '.
-            'END) AS text '.
-            'FROM AppBundle:Combustible cotizaciones '.
-            'LEFT JOIN cotizaciones.barco barco '.
-            'WHERE IDENTITY(cotizaciones.cliente) = :client '.
-            'AND cotizaciones.factura IS NULL '.
-            'AND cotizaciones.fecha BETWEEN :inicio AND :fin')
+        $queryBuilder = $this->createQueryBuilder('cotizaciones');
+
+        $queryBuilder
+            ->select(
+                'cotizaciones.id',
+                '(CASE '.
+                'WHEN cotizaciones.foliorecotiza > 0 '.
+                'THEN CONCAT(cotizaciones.folio, \'-\', cotizaciones.foliorecotiza, \' \', barco.nombre) '.
+                'ELSE CONCAT(cotizaciones.folio, \' \', barco.nombre) '.
+                'END) AS text '
+            )
+            ->leftJoin('cotizaciones.barco', 'barco')
+            ->andWhere(
+                'cotizaciones.fecha BETWEEN :inicio AND :fin',
+                'cotizaciones.factura IS NULL',
+                'cotizaciones.validacliente = 2'
+            )
             ->setParameter('inicio', $inicio)
-            ->setParameter('fin', $fin)
+            ->setParameter('fin', $fin);
+
+        if ($client === '413') {
+            return $queryBuilder->getQuery()->getArrayResult();
+        }
+
+        $queryBuilder
+            ->andWhere('IDENTITY(cotizaciones.cliente) = :client')
             ->setParameter('client', $client);
 
-        return $cotizaciones->getArrayResult();
+        return $queryBuilder->getQuery()->getArrayResult();
     }
 
     /**
@@ -57,22 +68,32 @@ class CombustibleRepository extends \Doctrine\ORM\EntityRepository
      */
     public function getFullCotizacionesFromCliente($client, $inicio, $fin, $cotizacionId = null)
     {
-        $qb = $this->createQueryBuilder('cotizaciones')
-            ->select('cotizaciones', 'conceptos')
-            ->leftJoin('cotizaciones.tipo', 'conceptos')
-            ->where('IDENTITY(cotizaciones.cliente) = :client')
-            ->andWhere('cotizaciones.fecha BETWEEN :inicio AND :fin')
-            ->andWhere('cotizaciones.factura IS NULL')
+        $queryBuilder = $this->createQueryBuilder('cotizaciones');
+
+        $queryBuilder
+            ->andWhere(
+                'cotizaciones.fecha BETWEEN :inicio AND :fin',
+                'cotizaciones.factura IS NULL',
+                'cotizaciones.validacliente = 2'
+            )
             ->setParameter('inicio', $inicio)
-            ->setParameter('fin', $fin)
-            ->setParameter('client', $client);
+            ->setParameter('fin', $fin);
 
         if ($cotizacionId) {
-            $qb->andWhere('cotizaciones.id IN (:cotizacionId)');
-            $qb->setParameter('cotizacionId', $cotizacionId);
+            $queryBuilder->andWhere('cotizaciones.id IN (:cotizacionId)');
+            $queryBuilder->setParameter('cotizacionId', $cotizacionId);
         }
 
-        return $qb->getQuery()->getResult();
+        // Si el cliente es PUBLICO EN GENERAL ID 413, entonces debemos ignorar la busqueda por cliente de
+        // las cotizaciones
+        if ($client === 413) {
+            return $queryBuilder->getQuery()->getResult();
+        }
+
+        $queryBuilder->andWhere('IDENTITY(cotizaciones.cliente) = :client');
+        $queryBuilder->setParameter('client', $client);
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function getOneWithCatalogo($id)
