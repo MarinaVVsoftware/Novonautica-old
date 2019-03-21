@@ -79,7 +79,6 @@ class Pincode implements \JsonSerializable
         $this->expiration = new \DateTime('+24 hours');
         $this->status = true;
         $this->createdAt = new \DateTime();
-        $this->description = 'Pincode demo';
     }
 
     /**
