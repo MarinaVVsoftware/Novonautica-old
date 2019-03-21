@@ -261,7 +261,7 @@
             if (data[5].pagada === 0 || null === data[5].pagada) row.children[5].innerHTML = 'No pagado';
             if (data[5].pagada === 1) row.children[5].innerHTML = 'Pago parcial';
             if (data[5].pagada === 2) row.children[5].innerHTML = 'Pagado';
-            if (data[5].pagada === null && data[5].id === null) row.children[5].innerHTML = 'Cancelada';
+            if (data[5].pagada === null || !data[5].id || !data[5].id.length) row.children[5].innerHTML = 'Cancelada';
 
             if (data[2].id === 7 && data[5].id.length) {
               data[5].id.map(id => actionsInner += `<li><a href="${getCotizacionUrl(data[2].id) + id}" target="_blank">Venta ${id}</a></li>`);
