@@ -11,10 +11,12 @@ use AppBundle\Entity\Pincode;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 
-class PincodeController
+class PincodeController extends Controller
 {
     /**
      * @var ServiceEntityRepositoryInterface
@@ -30,11 +32,15 @@ class PincodeController
     /**
      * @Route("/generate-pincode", name="generate-pincode")
      * @Security("is_granted('ROLE_ADMIN')")
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function getPinAction()
+    public function getPinAction(Request $request)
     {
+        $desciption= $request->query->get('description');
         $pinCode = new Pincode($this->generatePin());
-
+        $pinCode->setCreatedBy($this->getUser());
+        $pinCode->setDescription($desciption);
         $this->entityRepository->persist($pinCode);
         $this->entityRepository->flush();
 
@@ -42,7 +48,7 @@ class PincodeController
             [
                 'status' => 'success',
                 'data' => [
-                    'pincode' => $pinCode,
+                    'pincode' => $pinCode
                 ],
             ],
             JsonResponse::HTTP_OK
@@ -63,4 +69,5 @@ class PincodeController
 
         return $pin;
     }
+
 }

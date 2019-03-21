@@ -1,13 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: inrumi
- * Date: 1/15/18
- * Time: 12:22
+ * User: Luiz
+ * Date: 20/02/2019
+ * Time: 01:34 PM
  */
 
-namespace AppBundle\DataTables;
-
+namespace AppBundle\DataTables\Marina;
 
 use AppBundle\Entity\MarinaHumedaCotizacion;
 use DataTables\AbstractDataTableHandler;
@@ -15,9 +14,9 @@ use DataTables\DataTableQuery;
 use DataTables\DataTableResults;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-class MHCEstadiaDataTable extends AbstractDataTableHandler
+class EstadiaPapeleraDataTable extends AbstractDataTableHandler
 {
-    const ID = 'cotizacionEstadia';
+    const ID = 'cotizacionEstadiaPapelera';
     private $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)
@@ -42,9 +41,7 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
         $qb = $mhcRepo->createQueryBuilder('mhce');
         $results->recordsTotal = $qb->select('COUNT(mhce.id)')
             ->leftJoin('mhce.mhcservicios', 'servicios')
-            ->where($qb->expr()->eq('servicios.tipo',1))
-            ->orWhere($qb->expr()->eq('servicios.tipo',2))
-            ->andWhere($qb->expr()->eq('mhce.isDeleted',0))
+            ->where($qb->expr()->eq('mhce.isDeleted',1))
             ->getQuery()
             ->getSingleScalarResult();
 
@@ -53,11 +50,12 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
             ->leftJoin('mhce.barco', 'barco')
             ->leftJoin('mhce.cliente', 'cliente')
             ->leftJoin('mhce.slipmovimiento', 'movimiento')
-            ->leftJoin('mhce.slip', 'slip');
+            ->leftJoin('mhce.slip', 'slip')
+        ;
 
         if ($request->search->value) {
-            $q->andWhere('(LOWER(mhce.folio) LIKE :search OR '.
-                'LOWER(cliente.nombre) LIKE :search OR '.
+            $q->andWhere('(LOWER(mhce.folio) LIKE :search OR ' .
+                'LOWER(cliente.nombre) LIKE :search OR ' .
                 'LOWER(barco.nombre) LIKE :search)'
             )
                 ->setParameter('search', strtolower("%{$request->search->value}%"));
@@ -67,22 +65,31 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
             if ($column->search->value) {
                 $value = $column->search->value === 'null' ? null : strtolower($column->search->value);
 
-                if ($value) {
-                    if ($column->data == 1) {
-                        $q->andWhere('LOWER(cliente.nombre) LIKE :cliente');
-                        $q->setParameter('cliente', "%{$value}%");
+                if ($column->data == 1) {
+                    $q->andWhere('LOWER(cliente.nombre) LIKE :cliente')
+                        ->setParameter('cliente', "%{$value}%");
+                } else if ($column->data == 2) {
+                    $q->andWhere('LOWER(barco.nombre) LIKE :barco')
+                        ->setParameter('barco', "%{$value}%");
+                } else if ($column->data == 12) {
+                    if ($value) {
+                        $q->andWhere('mhce.validanovo = :validacion')
+                            ->setParameter('validacion', $value);
+                    } else {
+                        $q->andWhere('mhce.validanovo = 0');
                     }
-                    elseif ($column->data == 5) {
-                        $q->andWhere('mhce.validanovo = :validacion');
-                        $q->setParameter('validacion', $value);
+                } else if ($column->data == 13) {
+                    if ($value) {
+                        $q->andWhere('mhce.validacliente = :aceptacion')
+                            ->setParameter('aceptacion', $value);
+                    } else {
+                        $q->andWhere('mhce.validacliente = 0');
                     }
-                    elseif ($column->data == 6) {
-                        $q->andWhere('mhce.validacliente = :validacion');
-                        $q->setParameter('validacion', $value);
-                    }
-                    elseif ($column->data == 7) {
-                        $q->andWhere('mhce.estatuspago = :validacion');
-                        $q->setParameter('validacion', $value);
+                } else if ($column->data == 14) {
+                    if ($value) {
+                        $q->andWhere('mhce.estatuspago = :pago')->setParameter('pago', $value);
+                    } else {
+                        $q->andWhere('mhce.estatuspago IS NULL');
                     }
                 }
             }
@@ -90,20 +97,34 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
 
         foreach ($request->order as $order) {
             if ($order->column === 0) {
-                $q->addOrderBy('mhce.fecharegistro', $order->dir);
+                $q->addOrderBy('mhce.folio', $order->dir);
             } elseif ($order->column === 1) {
                 $q->addOrderBy('cliente.nombre', $order->dir);
             } elseif ($order->column === 2) {
-                $q->addOrderBy('mhce.fechaLlegada', $order->dir);
+                $q->addOrderBy('barco.nombre', $order->dir);
             } elseif ($order->column === 3) {
-                $q->addOrderBy('mhce.slip', $order->dir);
+                $q->addOrderBy('mhce.fechaLlegada', $order->dir);
             } elseif ($order->column === 4) {
-                $q->addOrderBy('mhce.total', $order->dir);
+                $q->addOrderBy('mhce.fechaSalida', $order->dir);
             } elseif ($order->column === 5) {
-                $q->addOrderBy('mhce.validanovo', $order->dir);
+                $q->addOrderBy('mhce.slip', $order->dir);
             } elseif ($order->column === 6) {
-                $q->addOrderBy('mhce.validacliente', $order->dir);
+                $q->addOrderBy('mhce.descuento', $order->dir);
             } elseif ($order->column === 7) {
+                $q->addOrderBy('mhce.subtotal', $order->dir);
+            } elseif ($order->column === 8) {
+                $q->addOrderBy('mhce.descuentototal', $order->dir);
+            } elseif ($order->column === 9) {
+                $q->addOrderBy('mhce.ivatotal', $order->dir);
+            } elseif ($order->column === 10) {
+                $q->addOrderBy('mhce.moratoriaTotal', $order->dir);
+            } elseif ($order->column === 11) {
+                $q->addOrderBy('mhce.total', $order->dir);
+            } elseif ($order->column === 12) {
+                $q->addOrderBy('mhce.validanovo', $order->dir);
+            } elseif ($order->column === 13) {
+                $q->addOrderBy('mhce.validacliente', $order->dir);
+            } elseif ($order->column === 14) {
                 $q->addOrderBy('mhce.estatuspago', $order->dir);
             }
         }
@@ -128,11 +149,10 @@ class MHCEstadiaDataTable extends AbstractDataTableHandler
                 }
             });
 
-
             $results->data[] = [
                 [
-                'folio' => !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza(),
-                'fecharegistro' => $cotizacion->getFecharegistro()->format('d/m/Y'),
+                    'folio' => !$cotizacion->getFoliorecotiza() ? $cotizacion->getFolio() : $cotizacion->getFolio() . '-' . $cotizacion->getFoliorecotiza(),
+                    'fecharegistro' => $cotizacion->getFecharegistro()->format('d/m/Y'),
                 ],
                 [
                     'cliente' => $cotizacion->getCliente()->getNombre(),

@@ -68,6 +68,18 @@
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
+            <div class="row">
+                <div class="col-sm-12">
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label }} alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <i class="icon fa fa-warning"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
             <div class="panel panel-novo">
                 <div class="panel-heading">
                     <div class="row">
@@ -138,7 +150,6 @@
                         <div role="tabpanel" class="tab-pane" id="servicios">
                             <div class="row">
                                 <div class="col-sm-3">
-
                                     <div class="input-daterange" id="rangoFehas">
                                         <div class="row">
                                             <div class="col-sm-12">
@@ -153,29 +164,50 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <label>Descuento(%)</label>
-                                    {{ form_widget(form.descuento,{'value':0}) }}
+                                    <label>Días Estadía:</label>
+                                    {{ form_widget(form.diasEstadia) }}
                                     <label>Dolar</label>
                                     {{ form_widget(form.dolar,{'value':(valdolar/100)}) }}
                                 </div>
-
-                                <div class="col-sm-6">
+                                <div class="col-sm-9">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <label>Días Estadía:</label>
-                                            {#<div id="dias_estadia_cantidad" class='info-input' data-valor="0">0</div>#}
-                                            {{ form_widget(form.diasEstadia) }}
-                                        </div>
-
-                                        <div class="col-sm-6">
                                             <label>Precio por día:</label>
-                                            {{ form_widget(form.mhcservicios.children.0.precio, { 'attr': { 'required': 'required' }}) }}
+                                            {{ form_widget(form.mhcservicios.children.0.precio) }}
+                                        </div>
+                                        <div id="estadia-otro-precio" class="col-sm-3">
+                                            {{ form_row(form.mhcservicios.children.0.precioOtro) }}
+                                        </div>
+                                        <div id="estadia-descuento" class="col-sm-3">
+                                            {{ form_row(form.descuentoEstadia) }}
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6 col-sm-offset-6">
+                                        <div class="col-sm-6">
                                             <label>Precio electricidad:</label>
-                                            {{ form_widget(form.mhcservicios.children.1.precioAux, { 'attr': { 'required': 'required' }}) }}
+                                            {{ form_widget(form.mhcservicios.children.1.precioAux) }}
+                                        </div>
+                                        <div id="electricidad-otro-precio" class="col-sm-3">
+                                            {{ form_row(form.mhcservicios.children.1.precioOtro) }}
+                                        </div>
+                                        <div id="electricidad-descuento" class="col-sm-3">
+                                            {{ form_row(form.descuentoElectricidad) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 text-right pt-1">
+                                            <button class="btn btn-azul" type="button"
+                                                    data-toggle="collapse"
+                                                    data-target="#collapsePincode"
+                                                    aria-expanded="false"
+                                                    aria-controls="collapsePincode">
+                                                Usar PINCODE
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="collapse" id="collapsePincode">
+                                                {{ form_row(form.pincode) }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -205,7 +237,7 @@
                                             <th>Prec. Unid.</th>
                                             <th>Sub-Total</th>
                                             <th>Descuento</th>
-                                            <th>IVA</th>
+                                            <th>IVA {{ valiva }} %</th>
                                             <th>Total</th>
                                         </tr>
                                         </thead>
@@ -263,9 +295,9 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
-                                    <p class="letra-azul">I.V.A:</p>
+                                    <p class="letra-azul">Descuento:</p>
                                     <p>
-                                        $ <span id="graniva">00.00</span>
+                                        $ <span id="grandecuento">00.00</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -277,9 +309,9 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
-                                    <p class="letra-azul">Descuento:</p>
+                                    <p class="letra-azul">I.V.A {{ valiva }} %:</p>
                                     <p>
-                                        $ <span id="grandecuento">00.00</span>
+                                        $ <span id="graniva">00.00</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -328,7 +360,7 @@
                                             <th>Prec. Unid.</th>
                                             <th>Sub-Total</th>
                                             <th>Descuento</th>
-                                            <th>IVA</th>
+                                            <th>IVA {{ valiva }} %</th>
                                             <th>Total</th>
                                         </tr>
                                         </thead>
@@ -386,9 +418,9 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
-                                    <p class="letra-azul">I.V.A:</p>
+                                    <p class="letra-azul">Descuento:</p>
                                     <p>
-                                        $ <span id="graniva_mxn">00.00</span>
+                                        $ <span id="grandecuento_mxn">00.00</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -400,9 +432,9 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4 col-sm-offset-8 text-right tipo-letra1">
-                                    <p class="letra-azul">Descuento:</p>
+                                    <p class="letra-azul">I.V.A {{ valiva }} %:</p>
                                     <p>
-                                        $ <span id="grandecuento_mxn">00.00</span>
+                                        $ <span id="graniva_mxn">00.00</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -465,43 +497,39 @@
     {{ parent() }}
     <script type="text/javascript">
       (function ($) {
-        $('.selectclientebuscar').change(function (e) {
+
+        const preciosEstadia = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio');
+        const preciosElectricidad = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioAux');
+        const pincodeInput = document.getElementById('appbundle_marinahumedacotizacion_pincode');
+        const estadiaOtroPrecioInput = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precioOtro');
+        const electricidadOtroPrecioInput = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioOtro');
+        const descuentoEstadiaInput = document.getElementById('appbundle_marinahumedacotizacion_descuentoEstadia');
+        const descuentoElectricidadInput = document.getElementById('appbundle_marinahumedacotizacion_descuentoElectricidad');
+
+        if($("input[type=radio]:checked").val()){
+          buscaDatosCliente($('#appbundle_marinahumedacotizacion_cliente').val());
+          buscaDatosBarco($("input[type=radio]:checked").val());
+        }
+
+        $('.selectclientebuscar').change(function () {
           $('#loading').show();
           $("#info-barco").empty();
           $("#info-cliente").empty();
-
-          var url = "{{ path('ajax_busca_cliente_todo',{'id':'iddelcliente','_format':'json'}) }}";
-          url = url.replace("iddelcliente", $(this).val());
-          $.ajax({
-            method: "GET",
-            url: url,
-            dataType: 'json',
-            success: function (cliente) {
-              //JSON.stringify(cliente);
-              var html = "<label>Correo electrónico</label>" + "<div class='info-input'>" + cliente.correo + "</div>" +
-                  "<label>Número de teléfono</label>" + "<div class='info-input'>" + cliente.telefono + "</div>" +
-                  "<label>Dirección</label>" + "<div class='info-input'>" + cliente.direccion + "</div>";
-                  $("#info-cliente").append(html);
-              $('#loading').hide();
-            },
-            error: function (jqXHR, exception) {
-              if (jqXHR.status === 405) {
-                console.error("METHOD NOT ALLOWED!");
-              }
-              $('#loading').hide();
-            }
-          }).fail(function () {
-            $('#loading').hide();
-          });
+          preciosEstadia.value  = '';
+          preciosElectricidad.value = '';
+          buscaDatosCliente($(this).val());
         });
 
         var x = 1;
         $('.buscabarcomh').click(function () {
-          if (x == 2) {
-            if ($("input[type=radio]:checked").val() != null) {
+          if (x === 2) {
+            const barcoSeleccionado = $("input[type=radio]:checked");
+            if (barcoSeleccionado.val() != null) {
               $('#loading').show();
               $("#info-barco").empty();
-              var idbarco = $("input[type=radio]:checked").val();
+              var idbarco = barcoSeleccionado.val();
+              preciosEstadia.value = '';
+              preciosElectricidad.value = '';
               buscaDatosBarco(idbarco);
               x = 1;
             }
@@ -510,32 +538,116 @@
           }
         });
 
+        pincodeInput.addEventListener('keyup',() => {
+          if(pincodeInput.value.replace(/\s/g, "").length === 8){
+            estadiaOtroPrecioInput.readOnly = false;
+            electricidadOtroPrecioInput.readOnly = false;
+            descuentoEstadiaInput.readOnly = false;
+            descuentoElectricidadInput.readOnly = false;
+          }
+        });
+
+        function buscaDatosCliente(idcliente){
+          var url = "{{ path('ajax_busca_cliente_todo',{'id':'iddelcliente','_format':'json'}) }}";
+          url = url.replace("iddelcliente", idcliente);
+
+          $.ajax({
+            method: "GET",
+            url: url,
+            dataType: 'json',
+            success: function (cliente) {
+              const correo = cliente.correo?cliente.correo:'';
+              const telefono = cliente.telefono?cliente.telefono:'';
+              const direccion = cliente.direccion?cliente.direccion:'';
+
+              var html = "<label>Correo electrónico</label>" + "<div class='info-input'>" + correo + "</div>" +
+                "<label>Número de teléfono</label>" + "<div class='info-input'>" + telefono + "</div>" +
+                "<label>Dirección</label>" + "<div class='info-input'>" + direccion + "</div>";
+              $("#info-cliente").append(html);
+              $('#loading').hide();
+            },
+            error: function (jqXHR, exception) {
+              if (jqXHR.status === 405) { console.error("METHOD NOT ALLOWED!"); }
+              $('#loading').hide();
+            }
+          }).fail(function () {
+            $('#loading').hide();
+          });
+        }
+
         function buscaDatosBarco(idbarco) {
           $.ajax({
             method: "GET",
             url: `{{ app.request.baseUrl }}/ajax/buscabarcotodo/${idbarco}.json`,
             dataType: 'json',
             success: function (barco) {
-              JSON.stringify(barco);
-              var html = "<label>Modelo</label>" + "<div class='info-input'>" + barco.modelo + "</div>" +
-                  "<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>" +
-                  "<label>Manga</label>" + "<div class='info-input'>" + barco.manga + "</div>" +
-                  "<label>Nombre del capitán</label>" + "<div class='info-input'>" + barco.nombreCapitan + "</div>" +
-                  "<label>Teléfono del capitán</label>" + "<div class='info-input'>" + barco.telefonoCapitan + "</div>" +
-                  "<label>Correo del capitán</label>" + "<div class='info-input'>" + barco.correoCapitan + "</div>";
+              const modelo = barco.modelo?barco.modelo:'';
+              const eslora = barco.eslora?barco.eslora:'';
+              const manga = barco.manga?barco.manga:'';
+              const nombreCapitan = barco.nombreCapitan?barco.nombreCapitan:'';
+              const telefonoCapitan = barco.telefonoCapitan?barco.telefonoCapitan:'';
+              const correoCapitan = barco.correoCapitan?barco.correoCapitan:'';
+              var html = "<label>Modelo</label>" + "<div class='info-input'>" + modelo + "</div>" +
+                  "<label>Eslora</label>" + "<div class='info-input'>" + eslora + "</div>" +
+                  "<label>Manga</label>" + "<div class='info-input'>" + manga + "</div>" +
+                  "<label>Nombre del capitán</label>" + "<div class='info-input'>" + nombreCapitan + "</div>" +
+                  "<label>Teléfono del capitán</label>" + "<div class='info-input'>" + telefonoCapitan + "</div>" +
+                  "<label>Correo del capitán</label>" + "<div class='info-input'>" + correoCapitan + "</div>";
+              const diasEstadiaEslora = $("#de_eslora");
+              const electricidadEslora = $("#e_eslora");
               $("#info-barco").append(html);
-              $("#de_eslora").data('valor', barco.eslora);
-              $("#e_eslora").data('valor', barco.eslora);
-              $("#de_eslora").html(barco.eslora);
-              $("#e_eslora").html(barco.eslora);
+              diasEstadiaEslora.data('valor', barco.eslora);
+              electricidadEslora.data('valor', barco.eslora);
+              diasEstadiaEslora.html(barco.eslora);
+              electricidadEslora.html(barco.eslora);
               $("#de_eslora_mxn").html(barco.eslora);
               $("#e_eslora_mxn").html(barco.eslora);
-              recalculaSubtotalesYtotal();
+
+              recalculaCantidadYprecio();
+              filtraSelectPrecios(preciosEstadia,Number(barco.eslora));
+              filtraSelectPrecios(preciosElectricidad,Number(barco.eslora));
             },
             complete: () => {
               $("#loading").hide();
             }
           })
+        }
+
+        function filtraSelectPrecios(listado,eslora){
+          listado.childNodes.forEach((item) =>{
+              let piesA = Number(item.dataset.pies_a);
+              let piesB = Number(item.dataset.pies_b);
+              let condicion = Number(item.dataset.condicion);
+              let x = false;
+              switch (condicion){
+                case 0:
+                  x = false;
+                  break;
+                case 1:
+                  x = eslora <= piesA;
+                  break;
+                case 2:
+                  x = eslora < piesB;
+                  break;
+                case 3:
+                  x = eslora >= piesA;
+                  break;
+                case 4:
+                  x = eslora > piesA;
+                  break;
+                case 5:
+                  if(piesA < piesB){
+                    x = eslora >= piesA && eslora <= piesB;
+                  }else{
+                    x = eslora <= piesA && eslora >= piesB;
+                  }
+                  break;
+                default:
+                  x = true;
+                  break;
+              }
+              !x ? item.classList.add('hide')  : item.classList.remove('hide');
+          });
         }
 
       })(jQuery);

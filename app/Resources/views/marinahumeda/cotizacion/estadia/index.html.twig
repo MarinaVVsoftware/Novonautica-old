@@ -47,7 +47,7 @@
         <section class="content">
             <div class="panel panel-novo">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Cotizaciones Estadias</h3>
+                    <h3 class="panel-title">{{ title }}</h3>
                 </div>
                 <div class="panel-body">
                     <table class="table table-novo" width="100%" style="width: 100%">
@@ -82,7 +82,7 @@
 
         const $tabla = $('.table-novo').DataTable({
           ...datatableSettings,
-          ajax: 'datatables-marina',
+          ajax: "{{ path(papelera ? 'marina-humeda_estadia_papelera' : 'marina-humeda_estadia_index') }}",
           autoWidth: false,
           order: [[0, 'desc']],
           columns: [
@@ -163,7 +163,16 @@
         });
 
         function writeLastChild(validacion, aceptacion, pago, item) {
-          return `
+          if(item.borrado){
+            return `
+                <td>
+                    <ul class="list-unstyled">
+                        <li><a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.requestUri ~ '../../${item.id}' }}">Detalle</a></li>
+                    </ul>
+                </td>
+            `;
+          }else{
+            return `
           <td>
             <ul class="list-unstyled">
               <li><a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.requestUri ~ '../${item.id}' }}">Detalle</a></li>
@@ -186,6 +195,7 @@
             </ul>
           </td>
         `;
+          }
         }
       })(jQuery, datatablesSettings)
 

@@ -12,6 +12,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MarinaHumedaTarifa
 {
+
+    const CONDICION_INDEFINIDO = 0;
+    const CONDICION_MENOR_IGUAL = 1;
+    const CONDICION_MENOR = 2;
+    const CONDICION_MAYOR_IGUAL = 3;
+    const CONDICION_MAYOR = 4;
+    const CONDICION_ENTRE = 5;
+
     /**
      * @var int
      *
@@ -36,11 +44,18 @@ class MarinaHumedaTarifa
     private $costo;
 
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(name="pies", type="integer", nullable=true)
+     * @ORM\Column(name="pies_a", type="float", nullable=true)
      */
-    private $pies;
+    private $piesA;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="pies_b", type="float", nullable=true)
+     */
+    private $piesB;
 
     /**
      * @var string
@@ -49,9 +64,34 @@ class MarinaHumedaTarifa
      */
     private $descripcion;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="condicion", type="smallint")
+     */
+    private $condicion;
+
+    private static $condicionList = [
+      MarinaHumedaTarifa::CONDICION_INDEFINIDO => 'Indefinido',
+      MarinaHumedaTarifa::CONDICION_MENOR_IGUAL => 'Menor o igual que',
+      MarinaHumedaTarifa::CONDICION_MENOR => 'Menor que',
+      MarinaHumedaTarifa::CONDICION_MAYOR_IGUAL => 'Mayor o igual que',
+      MarinaHumedaTarifa::CONDICION_MAYOR => 'Mayor que',
+      MarinaHumedaTarifa::CONDICION_ENTRE => 'Entre'
+    ];
+
     public function __toString()
     {
-        return '$'.($this->costo/100).' - '.$this->descripcion;
+        return '$' . ($this->costo / 100) . ' USD - ' . $this->getCondicionCompleta() . ' - (' . $this->descripcion . ')';
+    }
+
+    public function getCondicionCompleta()
+    {
+        return $this->getCondicionNombre() . ' ' . ($this->condicion === 0
+                ? ''
+                : $this->piesA . ' fts ' . ($this->condicion === 5
+                    ? ' y ' . $this->piesB . ' fts'
+                    : ''));
     }
 
     /**
@@ -113,30 +153,6 @@ class MarinaHumedaTarifa
     }
 
     /**
-     * Set pies
-     *
-     * @param float $pies
-     *
-     * @return MarinaHumedaTarifa
-     */
-    public function setPies($pies)
-    {
-        $this->pies = $pies;
-
-        return $this;
-    }
-
-    /**
-     * Get pies
-     *
-     * @return float
-     */
-    public function getPies()
-    {
-        return $this->pies;
-    }
-
-    /**
      * Set descripcion
      *
      * @param string $descripcion
@@ -158,5 +174,84 @@ class MarinaHumedaTarifa
     public function getDescripcion()
     {
         return $this->descripcion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCondicion()
+    {
+        if (null === $this->condicion) { return null; }
+        return $this->condicion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCondicionNombre()
+    {
+        if (null === $this->condicion) { return null; }
+        return self::$condicionList[$this->condicion];
+    }
+
+    /**
+     * @param int $condicion
+     */
+    public function setCondicion($condicion)
+    {
+        $this->condicion = $condicion;
+    }
+
+    public static function getCondicionList()
+    {
+        return self::$condicionList;
+    }
+
+    /**
+     * Set piesA.
+     *
+     * @param float|null $piesA
+     *
+     * @return MarinaHumedaTarifa
+     */
+    public function setPiesA($piesA = null)
+    {
+        $this->piesA = $piesA;
+
+        return $this;
+    }
+
+    /**
+     * Get piesA.
+     *
+     * @return float|null
+     */
+    public function getPiesA()
+    {
+        return $this->piesA;
+    }
+
+    /**
+     * Set piesB.
+     *
+     * @param float|null $piesB
+     *
+     * @return MarinaHumedaTarifa
+     */
+    public function setPiesB($piesB = null)
+    {
+        $this->piesB = $piesB;
+
+        return $this;
+    }
+
+    /**
+     * Get piesB.
+     *
+     * @return float|null
+     */
+    public function getPiesB()
+    {
+        return $this->piesB;
     }
 }
