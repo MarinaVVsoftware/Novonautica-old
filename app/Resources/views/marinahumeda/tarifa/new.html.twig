@@ -3,6 +3,18 @@
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
+            <div class="row">
+                <div class="col-sm-12">
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label }} alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <i class="icon fa fa-warning"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
             <div class="panel panel-novo">
                 <div class="panel-heading">
                     <div class="row">
@@ -18,36 +30,52 @@
                     {% form_theme form 'estructura/temaerror.html.twig' %}
                     {{ form_start(form) }}
                     <div class="row">
-                        <div class="col-sm-5">
+                        <div class="col-sm-4">
                             {{ form_row(form.tipo) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.costo) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.clasificacion) }}
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-3">
-                            {{ form_row(form.condicion) }}
-                        </div>
-                        <div class="col-sm-2">
-                            {{ form_row(form.piesA) }}
-                        </div>
-                        <div id="columnPiesAux"  class="{{ marinaHumedaTarifa.condicion == 5 ? '' : 'hidden' }}">
-                            <div class="col-sm-1 text-center pt-2">
-                                y
-                            </div>
-                            <div class="col-sm-2">
-                                {{ form_row(form.piesB) }}
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            {{ form_row(form.costo) }}
+                        <div class="col-sm-12">
+                            <label>Rango de esloar</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-8">
+                            {{ form_errors(form.piesA) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <div class="input-group-addon">Entre:</div>
+                                {{ form_widget(form.piesA) }}
+                                <div class="input-group-addon br-tl-0 br-bl-0 br-tr-17 br-br-0">fts</div>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <div class="input-group-addon">y:</div>
+                                {{ form_widget(form.piesB) }}
+                                <div class="input-group-addon br-tl-0 br-bl-0 br-tr-17 br-br-0">fts</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row pt-2">
+                        <div class="col-sm-12">
                             {{ form_row(form.descripcion) }}
                         </div>
                     </div>
                     <div class="row espacio-linea-arriba2">
-                        <div class="col-sm-8">
+                        <div class="col-sm-12">
                             <button type="submit" class="btn btn-azul pull-right">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 Guardar
@@ -66,17 +94,4 @@
 
 {% block modals %}
     {{ delete_form is defined ? modal.deleteModal(delete_form) : '' }}
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">
-        const condicion = document.getElementById('appbundle_marinahumedatarifa_condicion');
-        const piesAux = document.getElementById('columnPiesAux');
-        const piesB = document.getElementById('appbundle_marinahumedatarifa_piesB');
-        condicion.addEventListener('change',() => {
-            Number(condicion.value) === 5 ? piesAux.classList.remove('hidden') : !piesAux.classList.contains('hidden') ? (piesAux.classList.add('hidden'),piesB.value = 0) :'';
-        });
-
-    </script>
 {% endblock %}

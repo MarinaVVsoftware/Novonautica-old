@@ -16,11 +16,12 @@
                             <table class="table table-novo">
                                 <thead>
                                 <tr>
-                                    <th>Tipo</th>
-                                    <th>Condición</th>
+                                    <th>Rango</th>
+                                    <th class="with-options">Tipo</th>
+                                    <th class="with-options">Clasificación</th>
                                     <th>Costo</th>
                                     <th>Descripción</th>
-                                    <th></th>
+                                    <th class="no-sort"></th>
                                 </tr>
                                 </thead>
                             </table>
@@ -46,8 +47,9 @@
             ...datatableSettings,
           ajax: '{{ path('marinahumeda-tarifas_index') }}',
           autoWidth: false,
-          order: [[0, 'asc']],
+          order: [[1, 'asc']],
           columns: [
+          {responsivePriority: 1},
           {responsivePriority: 1},
           {responsivePriority: 1},
           {responsivePriority: 0},
@@ -55,9 +57,35 @@
           {responsivePriority: 0},
           ],
           rowCallback: function (row,data) {
-              row.cells[4].innerHTML = `<a href="${data[4]}/editar" class="btn btn-xs btn-azul btn-block">Editar</a>`;
+              row.cells[5].innerHTML = `<a href="${data[5]}/editar" class="btn btn-xs btn-azul btn-block">Editar</a>`;
           }
       });
+
+        $tabla.columns('.with-options').every(function (i) {
+          const column = this;
+          const columnHeader = column.header();
+          const select = document.createElement('select');
+
+          select.add(new Option(columnHeader.innerHTML, ''));
+          columnHeader.innerHTML = '';
+          columnHeader.appendChild(select);
+
+          select.addEventListener('click', e => e.stopPropagation());
+          select.addEventListener('change', function () {
+            console.log(i);
+            let val = $.fn.dataTable.util.escapeRegex(this.value);
+            column.search(val, true, true).draw();
+          });
+          if(i === 1){
+            select.add(new Option('Amarre', '1'));
+            select.add(new Option('Electricidad', '2'));
+          }
+          if(i === 2){
+            select.add(new Option('General', '0'));
+            select.add(new Option('Especial', '1'));
+          }
+        });
+
       })(jQuery, datatablesSettings)
     </script>
 {% endblock %}
