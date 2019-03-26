@@ -10,6 +10,7 @@ namespace AppBundle\Controller\Marina;
 
 
 use AppBundle\Entity\MarinaHumedaCotizacion;
+use AppBundle\Entity\Pago;
 use DataTables\DataTablesInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -89,6 +90,46 @@ class ReporteController extends AbstractController
     }
 
     /**
+     * @Route("/ingresos-data/{id}")
+     */
+    public function ingresoDetallePagoAction($id)
+    {
+        $pagoRepository = $this->getDoctrine()->getRepository(Pago::class);
+        $pagos = array_map(
+            function (Pago $pago) {
+                $cantidad = $pago->getCantidad();
+
+                if ($pago->getDivisa() === 'MXN') {
+                    $cantidad = round($cantidad * $pago->getDolar() / 100, 2);
+                }
+
+                $data = [
+                    'cantidad' => $cantidad,
+                    'divisa' => $pago->getDivisa(),
+                    'dolar' => $pago->getDolar(),
+                    'fecha' => $pago->getFecharealpago()->format('d/m/y'),
+                    'metodo' => $pago->getMetodopago(),
+                    'cuentaEnvio' => [
+                        'banco' => $pago->getBanco(),
+                        'titular' => $pago->getTitular(),
+                        'numero' => $pago->getNumcuenta(),
+                        'codigoSeguimiento' => $pago->getCodigoseguimiento(),
+                    ],
+                    'cuentaDeposito' => [
+                        'banco' => $pago->getCuentabancaria() ? $pago->getCuentabancaria()->getBanco() : null,
+                        'numero' => $pago->getCuentabancaria() ? $pago->getCuentabancaria()->getClabe() : null,
+                    ]
+                ];
+
+                return $data;
+            },
+            $pagoRepository->findBy(['mhcotizacion' => $id])
+        );
+
+        return $this->json($pagos);
+    }
+
+    /**
      * @Route("/embarcaciones", name="reporte_mar_embarcaciones")
      * @Method("GET")
      *
@@ -146,7 +187,7 @@ class ReporteController extends AbstractController
             ->getOcupationRateByDaterange($start, $end);
 
         foreach ($movimientos as $i => $movimiento) {
-            $ocupacionTotal += (float) $movimiento['porcentajeOcupacion'];
+            $ocupacionTotal += (float)$movimiento['porcentajeOcupacion'];
         }
 
         $response['movimientos'] = $movimientos;
