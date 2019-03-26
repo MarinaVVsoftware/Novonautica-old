@@ -104,6 +104,38 @@ class MarinaDataTable extends AbstractDataTableHandler
                     ->addOrderBy('cotizacion.fecharegistro', $order->dir)
                     ->addOrderBy('cotizacion.folio', $order->dir);
             }
+            if ($order->column == 1) {
+                $query
+                    ->addOrderBy('embarcacion.nombre', $order->dir);
+            }
+            if ($order->column == 2) {
+                $query
+                    ->addOrderBy('servicio.cantidad', $order->dir);
+            }
+            if ($order->column == 3) {
+                $query
+                    ->addOrderBy('servicio.cantidad', $order->dir);
+            }
+            if ($order->column == 4) {
+                $query
+                    ->addOrderBy('cotizacion.subtotal', $order->dir);
+            }
+            if ($order->column == 5) {
+                $query
+                    ->addOrderBy('cotizacion.ivatotal', $order->dir);
+            }
+            if ($order->column == 6) {
+                $query
+                    ->addOrderBy('cotizacion.total', $order->dir);
+            }
+            if ($order->column == 7) {
+                $query
+                    ->addOrderBy('cotizacion.pagado', $order->dir);
+            }
+            if ($order->column == 7) {
+                $query
+                    ->addOrderBy('cotizacion.diasEstadia', $order->dir);
+            }
         }
 
         $queryCount = clone $query;
