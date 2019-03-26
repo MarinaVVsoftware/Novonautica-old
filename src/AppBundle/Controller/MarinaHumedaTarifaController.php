@@ -56,9 +56,9 @@ class MarinaHumedaTarifaController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-//            $em->persist($marinaHumedaTarifa);
-//            $em->flush();
-//            return $this->redirectToRoute('marinahumeda-tarifas_index');
+            $em->persist($marinaHumedaTarifa);
+            $em->flush();
+            return $this->redirectToRoute('marinahumeda-tarifas_index');
 
         }
 
