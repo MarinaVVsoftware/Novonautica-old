@@ -33,7 +33,9 @@ class MarinaHumedaTarifaRepository extends \Doctrine\ORM\EntityRepository
                     $qb->expr()->andX(
                         $qb->expr()->orX(
                             ':a >= t.piesA and :a <= t.piesB',
-                            ':b >= t.piesA and :b <= t.piesB'
+                            ':b >= t.piesA and :b <= t.piesB',
+                            't.piesA >= :a and t.piesA <= :b',
+                            't.piesB >= :a and t.piesB <= :b'
                         ),
                         't.clasificacion = 0',
                         ':tipo = t.tipo',
@@ -47,8 +49,7 @@ class MarinaHumedaTarifaRepository extends \Doctrine\ORM\EntityRepository
                 ->getQuery()
                 ->getSingleScalarResult();
         } catch (NonUniqueResultException $e) {
-            return '0';
+            return '1';
         }
-
     }
 }

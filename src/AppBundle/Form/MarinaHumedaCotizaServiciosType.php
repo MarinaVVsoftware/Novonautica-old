@@ -59,11 +59,13 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
                                     'class' => 'hide',
                                     'data-pies_a' => $objeto->getPiesA(),
                                     'data-pies_b' => $objeto->getPiesB(),
-                                    'data-condicion' => $objeto->getCondicion()]
+                                    'data-clasificacion' => $objeto->getClasificacion()
+                                ]
                                 : ['class' => 'hide',
                                     'data-pies_a' => $objeto->getPiesA(),
                                     'data-pies_b' => $objeto->getPiesB(),
-                                    'data-condicion' => $objeto->getCondicion()];
+                                    'data-clasificacion' => $objeto->getClasificacion()
+                                ];
                         }
                     ])
                     ->add('precioAux', EntityType::class, [
@@ -83,11 +85,13 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
                                     'class' => 'hide',
                                     'data-pies_a' => $objeto->getPiesA(),
                                     'data-pies_b' => $objeto->getPiesB(),
-                                    'data-condicion' => $objeto->getCondicion()]
+                                    'data-clasificacion' => $objeto->getClasificacion()
+                                ]
                                 : ['class' => 'hide',
                                     'data-pies_a' => $objeto->getPiesA(),
                                     'data-pies_b' => $objeto->getPiesB(),
-                                    'data-condicion' => $objeto->getCondicion()];
+                                    'data-clasificacion' => $objeto->getClasificacion()
+                                ];
                         }
                     ]);
             }

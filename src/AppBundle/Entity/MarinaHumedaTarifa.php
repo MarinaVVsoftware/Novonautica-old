@@ -74,7 +74,10 @@ class MarinaHumedaTarifa
 
     public function __toString()
     {
-        return '$' . ($this->costo / 100) . ' USD - Entre '.$this->piesA.' fts y '.$this->piesB.' fts - (' . $this->descripcion . ')';
+        return
+            '$' . ($this->costo / 100)
+            . ' USD - Entre '.$this->piesA.' fts y '.$this->piesB.' fts - '
+            . $this->getClasificacionNombre();
     }
 
 

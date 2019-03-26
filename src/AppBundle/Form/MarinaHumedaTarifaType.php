@@ -112,10 +112,12 @@ class MarinaHumedaTarifaType extends AbstractType
                 (float)$data->getPiesA(),
                 (float)$data->getPiesB()
             );
-
         if ($data->getClasificacion() === 0 && (int)$repetidos >= 1) {
+            $txtError = (int)$repetidos === 1 ?
+                'Error: Conflicto con los rangos de 1 tarifa ya registrada.' :
+                'Error: Conflicto con los rangos de '.$repetidos.' tarifas ya registradas.';
             $context
-                ->buildViolation('Un valor entre el rango dado ya se encuentra registrado.')
+                ->buildViolation($txtError)
                 ->atPath('piesA')
                 ->addViolation();
         }
