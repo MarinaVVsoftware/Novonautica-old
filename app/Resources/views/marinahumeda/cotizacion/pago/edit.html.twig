@@ -32,48 +32,50 @@
 
 {% block appbundle_fulldatapago_widget %}
     {% spaceless %}
-        <td>
-            {{ form_widget(form.cantidad) }}
-            {{ form_errors(form.cantidad) }}
-        </td>
-        <td>
-            {{ form_widget(form.divisa) }}
-            {{ form_errors(form.divisa) }}
-        </td>
-        <td>
-            {{ form_widget(form.dolar ) }}
-            {{ form_errors(form.dolar) }}
-        </td>
-        <td>
-            {{ form_widget(form.fecharealpago) }}
-            {{ form_errors(form.fecharealpago) }}
-        </td>
-        <td>
-            {{ form_widget(form.metodopago) }}
-            {{ form_errors(form.metodopago) }}
-        </td>
-        <td>
-            {{ form_widget(form.cuentabancaria) }}
-            {{ form_errors(form.cuentabancaria) }}
-        </td>
-        <td>
-            {{ form_widget(form.banco) }}
-            {{ form_errors(form.banco) }}
-        </td>
-        <td>
-            {{ form_widget(form.titular) }}
-            {{ form_errors(form.titular) }}
-        </td>
-        <td>
-            {{ form_widget(form.numcuenta) }}
-            {{ form_errors(form.numcuenta) }}
-        </td>
-        <td>
-            {{ form_widget(form.codigoseguimiento) }}
-            {{ form_errors(form.codigoseguimiento) }}
-        </td>
-        <td style="vertical-align: middle">
-        </td>
+        <tr>
+            <td>
+                {{ form_widget(form.cantidad) }}
+                {{ form_errors(form.cantidad) }}
+            </td>
+            <td>
+                {{ form_widget(form.divisa) }}
+                {{ form_errors(form.divisa) }}
+            </td>
+            <td>
+                {{ form_widget(form.dolar ) }}
+                {{ form_errors(form.dolar) }}
+            </td>
+            <td>
+                {{ form_widget(form.fecharealpago) }}
+                {{ form_errors(form.fecharealpago) }}
+            </td>
+            <td>
+                {{ form_widget(form.metodopago) }}
+                {{ form_errors(form.metodopago) }}
+            </td>
+            <td>
+                {{ form_widget(form.cuentabancaria) }}
+                {{ form_errors(form.cuentabancaria) }}
+            </td>
+            <td>
+                {{ form_widget(form.banco) }}
+                {{ form_errors(form.banco) }}
+            </td>
+            <td>
+                {{ form_widget(form.titular) }}
+                {{ form_errors(form.titular) }}
+            </td>
+            <td>
+                {{ form_widget(form.numcuenta) }}
+                {{ form_errors(form.numcuenta) }}
+            </td>
+            <td>
+                {{ form_widget(form.codigoseguimiento) }}
+                {{ form_errors(form.codigoseguimiento) }}
+            </td>
+            <td style="vertical-align: middle">
+            </td>
+        </tr>
     {% endspaceless %}
 {% endblock %}
 
