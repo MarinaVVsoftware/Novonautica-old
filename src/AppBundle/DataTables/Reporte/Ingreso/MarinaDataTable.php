@@ -39,108 +39,137 @@ class MarinaDataTable extends AbstractDataTableHandler
         $repository = $this->doctrine->getRepository(MarinaHumedaCotizacion::class);
         $results = new DataTableResults();
 
-        $inicio = \DateTime::createFromFormat('Y-m-d', $request->customData['dates']['month'])->setTime(0, 0,0);
-        $fin = (clone $inicio)->modify('last day of this month');
+        $inicio = \DateTime::createFromFormat('Y-m-d', $request->customData['dates']['start'])->modify('-1 day');
+        $fin = \DateTime::createFromFormat('Y-m-d', $request->customData['dates']['end']);
 
-        $query = $repository
-            ->createQueryBuilder('mc')
-            ->select('COUNT(mc.id)')
-            ->where(
-                'mc.validacliente = 2 AND '.
-                '(:inicio BETWEEN mc.fechaLlegada AND mc.fechaSalida OR '.
-                ':fin BETWEEN mc.fechaLlegada AND mc.fechaSalida)')
-            ->setParameter('inicio', $inicio)
-            ->setParameter('fin', $fin);
+        $query = $repository->createQueryBuilder('mc');
+        $query->select('COUNT(mc.id)');
 
         $results->recordsTotal = $query->getQuery()->getSingleScalarResult();
 
+        // Ahora mostraremos los dias de la cotizacion en vez de hacer un calculo que se adecue
+        // a el formato de reportes de excel
         $cantidadQuery =
             '(CASE '.
-                'WHEN :inicio < mc.fechaLlegada '.
-                'THEN (CASE '.
-                    'WHEN DATE_DIFF(:fin, :inicio) <> 30 '.
-                        'THEN DATE_DIFF(:fin, mc.fechaLlegada) '.
-                        'ELSE (DATE_DIFF(:fin, mc.fechaLlegada) - 1) ' .
-                    'END) '.
-                'WHEN :fin > mc.fechaSalida '.
-                'THEN (CASE '.
-                    'WHEN DATE_DIFF(:fin, :inicio) <> 30 '.
-                        'THEN DATE_DIFF(:fin, mc.fechaSalida) '.
-                        'ELSE (DATE_DIFF(:fin, mc.fechaSalida) - 1) '.
-                    'END) '.
-                'ELSE 30 ' .
+            'WHEN :inicio <= mc.fechaLlegada '.
+            'THEN (CASE '.
+            'WHEN DATE_DIFF(:fin, :inicio) <> 30 '.
+            'THEN DATE_DIFF(:fin, mc.fechaLlegada)'.
+            'ELSE (DATE_DIFF(:fin, mc.fechaLlegada) - 1) '.
+            'END) '.
+            'WHEN :fin >= mc.fechaSalida '.
+            'THEN (CASE '.
+            'WHEN DATE_DIFF(:fin, :inicio) <> 30 '.
+            'THEN DATE_DIFF(mc.fechaSalida, :inicio) '.
+            'ELSE DATE_DIFF(mc.fechaSalida, :inicio) '.
+            'END) '.
+            'ELSE 30 '.
             'END) AS dias_cantidad';
 
-        $query = $repository
-            ->createQueryBuilder('mc')
-            ->innerJoin('mc.mhcservicios', 's')
-            ->leftJoin('mc.barco', 'b')
-            ->leftJoin('mc.pagos', 'p')
+        $query = $repository->createQueryBuilder('cotizacion');
+
+        $query
             ->select(
-                '(CASE WHEN mc.foliorecotiza <= 0 THEN mc.folio ELSE CONCAT(mc.folio, \'-\', mc.foliorecotiza) END) AS folio',
-                'IDENTITY(mc.slip) AS slip ',
-                'b.nombre AS embarcacion ',
-                'MAX(CASE WHEN s.tipo = 1 THEN s.total ELSE 0 END) AS amarre_usd',
-                'MAX(CASE WHEN s.tipo = 2 THEN s.total ELSE 0 END) AS servicio_usd',
-                '(p.cantidad / 1.16)                                  AS pago_subtotal',
-                '((p.cantidad / 1.16) * 0.16)                         AS pago_iva',
-                'p.cantidad                                           AS pago',
-                $cantidadQuery,
-                'mc.id'
+                'cotizacion',
+                'servicio',
+                'embarcacion',
+                'cliente'
             )
-            ->groupBy('mc.id')
-            ->where(
-                'mc.validacliente = 2 AND '.
-                '(:inicio BETWEEN mc.fechaLlegada AND mc.fechaSalida OR '.
-                ':fin BETWEEN mc.fechaLlegada AND mc.fechaSalida)')
-            ->setParameter('inicio', $inicio)
-            ->setParameter('fin', $fin);
+            ->leftJoin('cotizacion.mhcservicios', 'servicio')
+            ->leftJoin('cotizacion.barco', 'embarcacion')
+            ->leftJoin('cotizacion.cliente', 'cliente')
+            ->andWhere(
+                'cotizacion.fecharegistro BETWEEN :inicio AND :fin',
+                'cotizacion.validacliente = 2'
+            )
+            ->setParameters(
+                [
+                    'inicio' => $inicio,
+                    'fin' => $fin,
+                ]
+            );
 
         if ($request->search->value) {
-            $query->where(
-                '(LOWER(mc.folio) LIKE :search OR '.
-                'LOWER(b.nombre) LIKE :search)'
-            );
-            $query->setParameter('search', strtolower("%{$request->search->value}%"));
+            $query
+                ->andWhere(
+                    '(LOWER(cotizacion.folio) LIKE :search OR '.
+                    'LOWER(embarcacion.nombre) LIKE :search)'
+                )
+                ->setParameter('search', strtolower("%{$request->search->value}%"));
         }
 
         foreach ($request->order as $order) {
             if ($order->column == 0) {
-                $query->addOrderBy('mc.slip', $order->dir);
-            } elseif ($order->column == 1) {
-                $query->addOrderBy('mc.barco', $order->dir);
-            } elseif ($order->column == 2) {
-                $query->addOrderBy('s.cantidad', $order->dir);
-            } elseif ($order->column == 3) {
-                $query->addOrderBy('s.cantidad', $order->dir);
-            } elseif ($order->column == 4) {
-                $query->addOrderBy('mc.id', $order->dir);
+                $query
+                    ->addOrderBy('cotizacion.fecharegistro', $order->dir)
+                    ->addOrderBy('cotizacion.folio', $order->dir);
+            }
+            if ($order->column == 1) {
+                $query
+                    ->addOrderBy('embarcacion.nombre', $order->dir);
+            }
+            if ($order->column == 2) {
+                $query
+                    ->addOrderBy('servicio.cantidad', $order->dir);
+            }
+            if ($order->column == 3) {
+                $query
+                    ->addOrderBy('servicio.cantidad', $order->dir);
+            }
+            if ($order->column == 4) {
+                $query
+                    ->addOrderBy('cotizacion.subtotal', $order->dir);
+            }
+            if ($order->column == 5) {
+                $query
+                    ->addOrderBy('cotizacion.ivatotal', $order->dir);
+            }
+            if ($order->column == 6) {
+                $query
+                    ->addOrderBy('cotizacion.total', $order->dir);
+            }
+            if ($order->column == 7) {
+                $query
+                    ->addOrderBy('cotizacion.pagado', $order->dir);
+            }
+            if ($order->column == 7) {
+                $query
+                    ->addOrderBy('cotizacion.diasEstadia', $order->dir);
             }
         }
 
         $queryCount = clone $query;
-        $results->recordsFiltered = COUNT($queryCount->select('COUNT(mc.id)')->getQuery()->getResult());
+        $results->recordsFiltered = $queryCount->select('COUNT(cotizacion.id)')->getQuery()->getSingleScalarResult();
 
-        if ($request->length > 0) {
-            $query->setMaxResults($request->length);
-        }
+        /** @var MarinaHumedaCotizacion[] $cotizaciones */
+        $cotizaciones = $query->getQuery()->getResult();
 
-        $query->setFirstResult($request->start);
+        foreach ($cotizaciones as $cotizacion) {
+            $cliente = $cotizacion->getCliente();
+            $embarcacion = $cotizacion->getBarco();
+            $servicios = $cotizacion->getMHCservicios();
 
-        /** @var MarinaHumedaCotizacion[] $cotizacions */
-        $cotizacions = $query->getQuery()->getResult();
+            $amarre = $servicios[0];
+            $electricidad = $servicios[1];
 
-        foreach ($cotizacions as $cotizacion) {
+            $valorDolar = $cotizacion->getDolar() / 100;
+
             $results->data[] = [
-                $cotizacion['folio'],
-                $cotizacion['slip'] ?? 'NA',
-                $cotizacion['embarcacion'],
-                '$ '.number_format(($cotizacion['amarre_usd'] / 100), 2),
-                '$ '.number_format(($cotizacion['servicio_usd'] / 100), 2),
-                '$ '.number_format(($cotizacion['pago_subtotal'] / 100), 2),
-                '$ '.number_format(($cotizacion['pago_iva'] / 100), 2),
-                '$ '.number_format(($cotizacion['pago'] / 100), 2),
-                $cotizacion['dias_cantidad'],
+                [
+                    'id' => $cotizacion->getId(),
+                    'folio' => $cotizacion->getFolioString(),
+                ],
+                [
+                    'id' => $cliente->getId(),
+                    'embarcacion' => $embarcacion->getNombre(),
+                ],
+                ($amarre->getTotal() / 100) * $valorDolar,
+                ($electricidad->getTotal() / 100) * $valorDolar,
+                ($cotizacion->getSubtotal() / 100) * $valorDolar,
+                ($cotizacion->getIvatotal() / 100) * $valorDolar,
+                ($cotizacion->getTotal() / 100) * $valorDolar,
+                ($cotizacion->getPagado() / 100) * $valorDolar,
+                $cotizacion->getDiasEstadia(),
             ];
         }
 

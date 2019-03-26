@@ -132,6 +132,7 @@ class Pago
 
     public function __construct()
     {
+        $this->fecharealpago = new \DateTime();
         $this->fechaRegistro = new \DateTimeImmutable();
     }
 

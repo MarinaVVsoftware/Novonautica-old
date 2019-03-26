@@ -21,6 +21,14 @@
             background-color: hsl(225, 23%, 21%);
             border: 1px solid #292f41;
         }
+
+        :root table.table {
+            background-color: transparent;
+        }
+
+        :root table.table .table-child {
+            margin-bottom: 0;
+        }
     </style>
 {% endblock %}
 
@@ -32,32 +40,35 @@
                     <h3 class="panel-title">Resumen mensual de ingresos</h3>
                 </div>
                 <div class="panel-body">
-                    <table class="table-novo table table-condensed text-center">
-                        <thead>
-                        <tr>
-                            <th>Folio</th>
-                            <th>Slip</th>
-                            <th>Embarcación</th>
-                            <th>Amarre</th>
-                            <th>Servicio</th>
-                            <th>Pago subtotal</th>
-                            <th>Pago IVA</th>
-                            <th>Total</th>
-                            <th>Total de días</th>
-                        </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-                            <th colspan="3" class="text-right">Totales:</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        </tfoot>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table-novo table table-condensed text-center">
+                            <thead>
+                            <tr>
+                                <th>Folio</th>
+                                <th>Embarcación</th>
+                                <th class="no-sort">Amarre</th>
+                                <th class="no-sort">Servicio</th>
+                                <th>Subtotal</th>
+                                <th>IVA</th>
+                                <th>Total</th>
+                                <th>Pagado</th>
+                                <th>Total de días</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th colspan="2" class="text-right">Totales:</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
@@ -73,33 +84,79 @@
     <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
-    <script type="text/javascript"
-            src="{{ asset('bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/daterangepicker.js') }}"></script>
     <script type="text/javascript">
       (function ($, datatableSettings) {
         let searchData = {
-          month: moment().startOf('month'),
+          start: moment().startOf('month'),
+          end: moment().endOf('month'),
+        };
+
+        const pagoTable = function (pagos, dataTableRow) {
+          let html = `
+            <table class="table table-condensed table-child">
+              <thead>
+              <tr>
+                  <th>Cantidad</th>
+                  <th>Divisa</th>
+                  <th>Dolar</th>
+                  <th>Fecha</th>
+                  <th>Método de pago</th>
+                  <th>Cuenta de recepción</th>
+                  <th>Banco</th>
+                  <th>Titular</th>
+                  <th>Número de cuenta</th>
+                  <th>Seguimiento</th>
+              </tr>
+              </thead>
+            `;
+          html += '<tbody>';
+
+          for (let pago of pagos) {
+            let cuentaBancaria = pago.cuentaDeposito.banco + ' ' + pago.cuentaDeposito.numero;
+
+            html += `
+                <tr>
+                    <td>${moneyFormat(Number(pago.cantidad) / 100)}</td>
+                    <td>${pago.divisa}</td>
+                    <td>${Number(pago.dolar) / 100}</td>
+                    <td>${pago.fecha}</td>
+                    <td>${pago.metodo}</td>
+                    <td>${pago.cuentaDeposito.banco ? cuentaBancaria : 'Sin definir'}</td>
+                    <td>${pago.cuentaEnvio.banco || 'Sin definir'}</td>
+                    <td>${pago.cuentaEnvio.titular || 'Sin definir'}</td>
+                    <td>${pago.cuentaEnvio.numero || 'Sin definir'}</td>
+                    <td>${pago.cuentaEnvio.codigoSeguimiento || 'Sin definir'}</td>
+                <tr>
+            `
+          }
+
+          html += '</tbody>';
+          html += '</table>';
+
+          dataTableRow.child(html).show();
         };
 
         const $table = $('.table-novo').DataTable({
           ...datatableSettings,
+          responsive: false,
+          paginate: false,
+          info: false,
           ajax: {
             url: 'ingresos-data',
             data: function (d) {
               d.dates = {
-                month: searchData.month.format('YYYY-MM-DD'),
+                start: searchData.start.format('YYYY-MM-DD'),
+                end: searchData.end.format('YYYY-MM-DD'),
               };
             },
           },
-          order: [[7, 'desc']],
+          order: [[0, 'desc']],
           dom:
-              "<'row'<'col-sm-3'l><'col-sm-3'<'#dates'>><'col-sm-3'B><'col-sm-3'f>>" +
+              "<'row'<'col-sm-3 col-xs-5'<'#dates'>><'col-sm-3 col-xs-2'B><'col-sm-3 col-xs-4'f>>" +
               "<'row'<'col-sm-12'tr>>" +
               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-          lengthMenu: [
-            [10, 25, 50, -1],
-            ['10', '25', '50', 'Todos']
-          ],
           buttons: {
             buttons: [
               {
@@ -107,16 +164,66 @@
                 text: 'XLS',
                 footer: true,
                 className: 'btn btn-verde btn-sm',
+                exportOptions: {
+                  format: {
+                    body(data, row, column, node) {
+                      return column === 7 ? node.innerText.replace('Pagos', '') : node.innerText;
+                    },
+                    footer(data, column, node) {
+                      return node.innerText;
+                    }
+                  }
+                }
               }
             ]
           },
+          createdRow(row, cotizacion) {
+            row.cells[0].innerHTML = `
+                <a href="../../marina/cotizacion/${cotizacion[0].id}" title="Cotización" target="_blank">${cotizacion[0].folio}</a>
+            `;
+            row.cells[1].innerHTML = `
+                <a href="../../cliente/${cotizacion[1].id}#cuentas" title="Estado de cuenta de cliente" target="_blank">${cotizacion[1].embarcacion}</a>
+            `;
+
+            row.cells[2].innerHTML = moneyFormat(cotizacion[2]);
+            row.cells[3].innerHTML = moneyFormat(cotizacion[3]);
+            row.cells[4].innerHTML = moneyFormat(cotizacion[4]);
+            row.cells[5].innerHTML = moneyFormat(cotizacion[5]);
+            row.cells[6].innerHTML = moneyFormat(cotizacion[6]);
+            row.cells[7].innerHTML = moneyFormat(cotizacion[7]);
+
+            if (cotizacion[7] > 0) {
+              const pagosButton = document.createElement('button');
+              pagosButton.innerText = 'Pagos';
+              pagosButton.classList.add('btn', 'btn-block', 'btn-xs', 'btn-azul');
+
+              pagosButton.addEventListener('click', function () {
+                const dtRow = $table.row(row);
+
+                if (dtRow.child.isShown()) {
+                  dtRow.child.hide();
+                  row.classList.remove('shown');
+
+                  return;
+                }
+
+                $.ajax('ingresos-data/' + cotizacion[0].id)
+                    .done(pagos => pagoTable(pagos, dtRow))
+                    .fail();
+                row.classList.add('shown');
+              });
+
+              row.cells[7].append(pagosButton);
+            }
+          },
           footerCallback(row, data) {
             const totals = data.reduce((a, b) => {
-              a.amarre = a.amarre + moneyRawValue(b[3]);
-              a.servicio = a.servicio + moneyRawValue(b[4]);
-              a.subtotal = a.subtotal + moneyRawValue(b[5]);
-              a.iva = a.iva + moneyRawValue(b[6]);
-              a.acumulado = a.acumulado + moneyRawValue(b[7]);
+              a.amarre += b[2];
+              a.servicio += b[3];
+              a.subtotal += b[4];
+              a.iva += b[5];
+              a.acumulado += b[6];
+              a.pagado += b[7];
               return a;
             }, {
               amarre: 0,
@@ -124,60 +231,59 @@
               subtotal: 0,
               iva: 0,
               acumulado: 0,
+              pagado: 0,
             });
 
-            const totalCobrado = (totals.amarre + totals.servicio);
-            const saldosTransferibles = (totalCobrado - totals.acumulado);
-            const porcentajeDeCobranza = ((totals.acumulado / totalCobrado) * 100);
+            const saldosTransferibles = totals.acumulado - totals.pagado;
+            const porcentajeDeCobranza = (totals.pagado * 100) / totals.acumulado;
 
             row.cells[1].innerHTML = moneyFormat(totals.amarre);
             row.cells[2].innerHTML = moneyFormat(totals.servicio);
             row.cells[3].innerHTML = moneyFormat(totals.subtotal);
             row.cells[4].innerHTML = moneyFormat(totals.iva);
             row.cells[5].innerHTML = moneyFormat(totals.acumulado);
+            row.cells[6].innerHTML = moneyFormat(totals.pagado);
 
-            row.cells[6].style.textAlign = 'left';
-            row.cells[6].innerHTML = `
-                <strong>Total cobrado: </strong> ${moneyFormat(totalCobrado)}
+            row.cells[7].style.textAlign = 'left';
+            row.cells[7].innerHTML = `
+                <strong>Total por cobrar: </strong> ${moneyFormat(totals.acumulado)}
+                <br>
+                <strong>Total cobrado: </strong> ${moneyFormat(totals.pagado)}
                 <br>
                 <strong>Saldos transferibles:</strong> ${moneyFormat(saldosTransferibles)}
                 <br>
-                <strong>Porcentaje de cobranza: </strong> % ${porcentajeDeCobranza.toFixed(0)}
+                <strong>Porcentaje de cobranza: </strong> % ${porcentajeDeCobranza ? porcentajeDeCobranza.toFixed(0) : 0}
             `;
-
-            function moneyFormat(value) {
-              if (typeof value === 'string') {
-                value = Number(value);
-              }
-              return '$ ' + value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-            }
-
-            function moneyRawValue(value) {
-              return Number(value.replace(/[$,]/g, ''));
-            }
           }
         });
 
         $('#dates')
             .html(`
-              <div class="dataTables_filter">
+              <div class="dataTables_filter" style="text-align: inherit;">
                 <label for="date-range">Fecha
-                <input type="text" class="form-control" id="date-range" readonly>
+                <input type="text" class="form-control" id="date-range" style="width: 100%;" readonly>
                 </label>
               </div>
             `)
             .find('#date-range')
-            .datepicker({
-              format: 'MM yyyy',
-              viewMode: 'months',
-              minViewMode: 'months',
-              language: 'es'
+            .daterangepicker({
+              startDate: moment().startOf('Month'),
+              endDate: moment().endOf('Month'),
+              autoApply: true
             })
-            .datepicker('setDate', new Date())
-            .on('changeDate', function (event) {
-              searchData.month = moment(event.date);
+            .on('apply.daterangepicker', function (event, picker) {
+              searchData.start = picker.startDate;
+              searchData.end = picker.endDate;
+
               $table.ajax.reload();
             });
+
+        function moneyFormat(value) {
+          if (typeof value === 'string') {
+            value = Number(value);
+          }
+          return value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        }
 
       })(jQuery, datatablesSettings);
     </script>

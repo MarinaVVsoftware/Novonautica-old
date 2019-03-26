@@ -501,7 +501,6 @@ form > .btn-borrar:hover, .btn-borrar:hover {
 
 .panel-novo tbody tr:hover {
     /*background: #3e4766;*/
-    cursor: pointer;
 }
 
 .panel-novo tbody td input[type="text"] {
