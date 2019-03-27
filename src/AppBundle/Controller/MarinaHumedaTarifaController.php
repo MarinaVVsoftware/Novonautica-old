@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 /**
  * Marinahumedatarifa controller.
  *
- * @Route("/marina/cotizacion/estadia/tarifas")
+ * @Route("/marina/cotizacion/estadia-tarifas")
  */
 class MarinaHumedaTarifaController extends Controller
 {
@@ -58,8 +58,8 @@ class MarinaHumedaTarifaController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($marinaHumedaTarifa);
             $em->flush();
-
             return $this->redirectToRoute('marinahumeda-tarifas_index');
+
         }
 
         return $this->render('marinahumeda/tarifa/new.html.twig', [

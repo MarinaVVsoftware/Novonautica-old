@@ -51,7 +51,7 @@ class TarifaDataTable extends AbstractDataTableHandler
         if ($request->search->value) {
             $q->andWhere(
                 '( mht.tipo LIKE :search ' .
-                ' OR mht.condicion LIKE :search ' .
+                ' OR mht.clasificacion LIKE :search ' .
                 ' OR mht.piesA LIKE :search ' .
                 ' OR mht.piesB LIKE :search ' .
                 ' OR mht.costo LIKE :search ' .
@@ -61,42 +61,28 @@ class TarifaDataTable extends AbstractDataTableHandler
         }
 
         foreach ($request->columns as $column) {
-            if ($column->search->value) {
-                $value = $column->search->value === 'null' ? null : strtolower($column->search->value);
+            if ($column->search->value || $column->search->value === '0') {
+                $value = $column->search->value === 'null' ? null : $column->search->value;
                 if ($column->data == 1) {
-                    $q->andWhere('mht.tipo LIKE :tipo')
-                        ->setParameter('tipo', "%{$value}%");
+                    $q->andWhere('mht.tipo = :tipo')
+                        ->setParameter('tipo', $value);
                 } else if ($column->data == 2) {
-                    $q->andWhere('mht.condicion LIKE :condicion')
-                        ->setParameter('condicion', "%{$value}%");
-                } else if ($column->data == 3) {
-                    $q->andWhere('mht.piesA LIKE :piesA')
-                        ->setParameter('piesA', "%{$value}%");
-                } else if ($column->data == 4) {
-                    $q->andWhere('mht.piesB LIKE :piesB')
-                        ->setParameter('piesB', "%{$value}%");
-                } else if ($column->data == 5) {
-                    $q->andWhere('mht.costo LIKE :costo')
-                        ->setParameter('costo', "%{$value}%");
-                } else if ($column->data == 6) {
-                    $q->andWhere('mht.descripcion LIKE :descripcion')
-                        ->setParameter('descripcion', "%{$value}%");
+                    $q->andWhere('mht.clasificacion = :clasificacion')
+                        ->setParameter('clasificacion', $value);
                 }
             }
         }
 
         foreach ($request->order as $order) {
             if ($order->column === 0) {
-                $q->addOrderBy('mht.tipo', $order->dir);
-            } elseif ($order->column === 1) {
-                $q->addOrderBy('mht.condicion', $order->dir);
-            } elseif ($order->column === 2) {
                 $q->addOrderBy('mht.piesA', $order->dir);
+            } elseif ($order->column === 1) {
+                $q->addOrderBy('mht.tipo', $order->dir);
+            } elseif ($order->column === 2) {
+                $q->addOrderBy('mht.clasificacion', $order->dir);
             } elseif ($order->column === 3) {
-                $q->addOrderBy('mht.piesB', $order->dir);
-            } elseif ($order->column === 4) {
                 $q->addOrderBy('mht.costo', $order->dir);
-            } elseif ($order->column === 5) {
+            } elseif ($order->column === 4) {
                 $q->addOrderBy('mht.descripcion', $order->dir);
             }
         }
@@ -116,8 +102,9 @@ class TarifaDataTable extends AbstractDataTableHandler
             $tarifa = $tarifas[$index];
 
             $results->data[] = [
+                'Entre '.$tarifa->getPiesA().' y '.$tarifa->getPiesB().' fts',
                 $tarifa->getTipo() === 1 ? 'Amarre' : 'Electricidad',
-                $tarifa->getCondicionCompleta(),
+                $tarifa->getClasificacionNombre(),
                 '$ ' . number_format($tarifa->getCosto() / 100, 2) . ' <small>USD</small>',
                 $tarifa->getDescripcion(),
                 $tarifa->getId()

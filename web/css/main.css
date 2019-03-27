@@ -1251,3 +1251,15 @@ input[type="file"] + label * {
 .wrapper{
     overflow-y: hidden !important;
 }
+.br-tl-0{
+    border-top-left-radius: 0 !important;
+}
+.br-bl-0{
+    border-bottom-left-radius: 0 !important;
+}
+.br-tr-17{
+    border-top-right-radius: 17px !important;
+}
+.br-br-0{
+    border-bottom-right-radius: 17px !important;
+}

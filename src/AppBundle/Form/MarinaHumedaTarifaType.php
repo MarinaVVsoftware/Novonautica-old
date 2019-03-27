@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\MarinaHumedaTarifa;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -12,9 +13,22 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class MarinaHumedaTarifaType extends AbstractType
 {
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -40,15 +54,18 @@ class MarinaHumedaTarifaType extends AbstractType
                 'required' => false,
                 'attr' => ['rows' => '4']
             ])
-            ->add('condicion', ChoiceType::class, [
-                'choices' => array_flip(MarinaHumedaTarifa::getCondicionList())
+            ->add('clasificacion', ChoiceType::class, [
+                'choices' => array_flip(MarinaHumedaTarifa::getClasificacionList()),
+                'label' => 'Clasificación',
+                'multiple' => false,
+                'expanded' => true,
             ]);
 
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event){
            $configuracion = $event->getData()->getId() === null
-               ? ['label' => 'Pies', 'attr' => ['class' => 'esdecimal'],'required' => false,'empty_data' => 0,'data' => 0]
-               : ['label' => 'Pies', 'attr' => ['class' => 'esdecimal'],'required' => false,'empty_data' => 0];
+               ? ['label' => false, 'attr' => ['class' => 'esdecimal'],'required' => false,'empty_data' => 0,'data' => 0]
+               : ['label' => false, 'attr' => ['class' => 'esdecimal'],'required' => false,'empty_data' => 0];
            $event->getForm()
                 ->add('piesA',TextType::class,$configuracion)
                 ->add('piesB', TextType::class,$configuracion);
@@ -61,10 +78,52 @@ class MarinaHumedaTarifaType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\MarinaHumedaTarifa'
-        ));
+        $resolver->setDefaults([
+            'data_class'         => 'AppBundle\Entity\MarinaHumedaTarifa',
+            'constraints'        => [
+                new Callback([
+                    'callback' => [$this, 'correctRangeLimits'],
+                ]),
+                new Callback([
+                    'callback' => [$this, 'uniqueRangeBoatLength'],
+                ]),
+            ]
+
+        ]);
     }
+
+    public function correctRangeLimits($data, ExecutionContextInterface $context)
+    {
+        if((float)$data->getPiesB() <= (float)$data->getPiesA()){
+            $context
+                ->buildViolation('El rango de eslora inicial es mayor o igual que el rango final.')
+                ->atPath('piesA')
+                ->addViolation();
+        }
+    }
+
+    public function uniqueRangeBoatLength($data, ExecutionContextInterface $context)
+    {
+        $repetidos = $this->entityManager
+            ->getRepository('AppBundle:MarinaHumedaTarifa')
+            ->compruebaExistenciaRango(
+                $data->getId(),
+                $data->getTipo(),
+                (float)$data->getPiesA(),
+                (float)$data->getPiesB()
+            );
+        if ($data->getClasificacion() === 0 && (int)$repetidos >= 1) {
+            $txtError = (int)$repetidos === 1 ?
+                'Error: Conflicto con los rangos de 1 tarifa ya registrada.' :
+                'Error: Conflicto con los rangos de '.$repetidos.' tarifas ya registradas.';
+            $context
+                ->buildViolation($txtError)
+                ->atPath('piesA')
+                ->addViolation();
+        }
+    }
+
+
 
     /**
      * {@inheritdoc}

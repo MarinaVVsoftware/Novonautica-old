@@ -613,40 +613,15 @@
           })
         }
 
-        function filtraSelectPrecios(listado,eslora){
-          listado.childNodes.forEach((item) =>{
-              let piesA = Number(item.dataset.pies_a);
-              let piesB = Number(item.dataset.pies_b);
-              let condicion = Number(item.dataset.condicion);
-              let x = false;
-              switch (condicion){
-                case 0:
-                  x = false;
-                  break;
-                case 1:
-                  x = eslora <= piesA;
-                  break;
-                case 2:
-                  x = eslora < piesB;
-                  break;
-                case 3:
-                  x = eslora >= piesA;
-                  break;
-                case 4:
-                  x = eslora > piesA;
-                  break;
-                case 5:
-                  if(piesA < piesB){
-                    x = eslora >= piesA && eslora <= piesB;
-                  }else{
-                    x = eslora <= piesA && eslora >= piesB;
-                  }
-                  break;
-                default:
-                  x = true;
-                  break;
-              }
-              !x ? item.classList.add('hide')  : item.classList.remove('hide');
+        function filtraSelectPrecios(listado, eslora) {
+          listado.childNodes.forEach((item) = > {
+            let piesA = Number(item.dataset.pies_a);
+            let piesB = Number(item.dataset.pies_b);
+            let clasificacion = Number(item.dataset.clasificacion);
+
+            !(eslora >= piesA && eslora <= piesB && clasificacion === 0) ?
+            item.classList.add('hide') :
+            item.classList.remove('hide');
           });
         }
 
