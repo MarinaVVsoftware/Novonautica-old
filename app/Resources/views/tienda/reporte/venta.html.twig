@@ -1,8 +1,10 @@
 {% extends 'estructura/plantilla.twig' %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
 {% endblock %}
+
 {% block contwrapper %}
 <div class="content-wrapper">
     <section class="content">
@@ -12,36 +14,9 @@
                 <small>Divisa: MXN</small>
             </div>
             <div class="panel-body">
-                {{ form_start(form) }}
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="input-daterange" id="rangoFehas">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    {{ form_row(form.inicio) }}
-                                </div>
-                                <div class="col-sm-6">
-                                    {{ form_row(form.fin) }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        {{ form_row(form.producto) }}
-                    </div>
-                    <div class="col-sm-4">
-                        {{ form_row(form.cliente) }}
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        {{ form_row(form.buscar) }}
-                    </div>
-                </div>
-                {{ form_end(form) }}
-                <div class="row">
-                    <div class="col-sm-12">
-                        <table class="table tabla-reporte">
+                        <table class="table table-condensed table-novo">
                             <thead>
                             <tr>
                                 <th>Fecha venta</th>
@@ -62,26 +37,6 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for venta in ventas %}
-                                <tr>
-                                    <td>{{ venta.fecha }}</td>
-                                    <td>{{ venta.cliente }}</td>
-                                    <td>{{ venta.categoria }}</td>
-                                    <td>{{ venta.producto }}</td>
-                                    <td>{{ venta.codigoBarras }}</td>
-                                    <td>{{ venta.claveProducto }}</td>
-                                    <td>{{ venta.descripcionProducto }}</td>
-                                    <td>{{ venta.claveUnidad }}</td>
-                                    <td>{{ venta.descripcionUnidad }}</td>
-                                    <td>{{ venta.cantidad }}</td>
-                                    <td>{{ venta.precio }}</td>
-                                    <td>{{ venta.subtotal }}</td>
-                                    <td>{{ venta.iva }}</td>
-                                    <td>{{ venta.descuento }}</td>
-                                    <td>{{ venta.total }}</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -90,6 +45,7 @@
     </section>
 </div>
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
@@ -98,44 +54,83 @@
     <script type="text/javascript" src="{{ asset('js/pdfmake.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/daterangepicker.js') }}"></script>
     <script type="text/javascript">
-        $('.tabla-reporte').DataTable({
-            responsive: true,
-            language: {
-                lengthMenu: 'Mostrar _MENU_ registros',
-                zeroRecords: 'No hay registros',
-                info: 'Mostrando la pagina _PAGE_ de _PAGES_',
-                infoEmpty: 'No hay registros disponibles',
-                infoFiltered: '(filtados de _MAX_ total de registros)',
-                processing: 'Procesando...',
-                loadingRecords: 'Cargando registros...',
-                search: 'Buscar',
-                paginate: {
-                    first: 'Primera',
-                    last: 'Ultima',
-                    next: 'Siguiente',
-                    previous: 'Anterior'
-                }
+      (function ($, dtSettings) {
+        moment.locale('es');
+
+        const searchData = {
+          start: moment().startOf('month'),
+          end: moment().endOf('month'),
+        };
+
+        const $table = $('.table-novo').DataTable({
+          ...dtSettings,
+          /*
+          ajax: {
+            url: 'facturas-dt',
+            data: function (d) {
+              d.dates = {
+                start: searchData.start.format('YYYY-MM-DD'),
+                end: searchData.end.format('YYYY-MM-DD'),
+              };
             },
-            searchDelay: 500,
-            searching: false,
-            order: [[0, 'desc']],
-            dom:
-                "<'row'<'col-sm-3'l><'col-sm-3'><'col-sm-3'B><'col-sm-3'f>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-            buttons: {
-                buttons: [
-                    {
-                        extend: 'excel',
-                        text: 'XLS',
-                        className: 'btn btn-verde btn-sm',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                        }
-                    }
-                ]
-            },
+          },
+          order: [[0, 'desc']],
+          */
+          dom:
+              "<'row'<'col-sm-6'<'#dates'>><'col-sm-3'B><'col-sm-3'f>>" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+          paginate: false,
+          buttons: {
+            buttons: [
+              {
+                extend: 'excel',
+                text: 'XLS',
+                className: 'btn btn-verde btn-sm',
+              }
+            ]
+          },
         });
+
+        $('#dates')
+            .html(`
+              <div class="dataTables_filter">
+                <label for="date-range">Fecha
+                <input type="text" class="form-control" id="date-range" readonly>
+                </label>
+              </div>
+            `)
+            .find('#date-range')
+            .daterangepicker({
+              startDate: searchData.start,
+              endDate: searchData.end,
+              autoApply: true,
+              ranges: {
+                'Este mes': [moment().startOf('month'), moment().endOf('month')],
+                'Mes pasado': [
+                  moment().subtract(1, 'month').startOf('month'),
+                  moment().subtract(1, 'month').endOf('month')
+                ]
+              },
+              locale: {
+                applyLabel: 'Aplicar',
+                cancelLabel: 'Cancelar',
+                fromLabel: 'Desde',
+                toLabel: 'Hasta',
+                customRangeLabel: 'Definido por usuario',
+              }
+            })
+            .on('apply.daterangepicker', function (e, picker) {
+              searchData.start = picker.startDate;
+              searchData.end = picker.endDate;
+
+              $table.ajax.reload();
+            });
+
+      })(jQuery, datatablesSettings);
     </script>
 {% endblock %}
