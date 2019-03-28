@@ -176,9 +176,15 @@
                                             {{ form_widget(form.mhcservicios.children.0.precio) }}
                                         </div>
                                         <div id="estadia-otro-precio" class="col-sm-3">
+                                            <div class="security-icon">
+                                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                            </div>
                                             {{ form_row(form.mhcservicios.children.0.precioOtro) }}
                                         </div>
                                         <div id="estadia-descuento" class="col-sm-3">
+                                            <div class="security-icon">
+                                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                            </div>
                                             {{ form_row(form.descuentoEstadia) }}
                                         </div>
                                     </div>
@@ -188,14 +194,20 @@
                                             {{ form_widget(form.mhcservicios.children.1.precioAux) }}
                                         </div>
                                         <div id="electricidad-otro-precio" class="col-sm-3">
+                                            <div class="security-icon">
+                                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                            </div>
                                             {{ form_row(form.mhcservicios.children.1.precioOtro) }}
                                         </div>
                                         <div id="electricidad-descuento" class="col-sm-3">
+                                            <div class="security-icon">
+                                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                            </div>
                                             {{ form_row(form.descuentoElectricidad) }}
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6 text-right pt-1">
+                                        <div class="col-sm-6 text-right pt-2">
                                             <button class="btn btn-azul" type="button"
                                                     data-toggle="collapse"
                                                     data-target="#collapsePincode"
@@ -206,7 +218,14 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="collapse" id="collapsePincode">
-                                                {{ form_row(form.pincode) }}
+                                                <div class="row">
+                                                    <div class="col-sm-8">
+                                                        {{ form_row(form.pincode) }}
+                                                    </div>
+                                                    <div class="col-sm-4 pt-2">
+                                                        <button id="btn-verifica-pincode" class="btn btn-azul" type="button">OK</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -505,6 +524,8 @@
         const electricidadOtroPrecioInput = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioOtro');
         const descuentoEstadiaInput = document.getElementById('appbundle_marinahumedacotizacion_descuentoEstadia');
         const descuentoElectricidadInput = document.getElementById('appbundle_marinahumedacotizacion_descuentoElectricidad');
+        const btnVerificaPincode = document.getElementById('btn-verifica-pincode');
+        const securityIcons = document.querySelectorAll('.security-icon');
 
         if($("input[type=radio]:checked").val()){
           buscaDatosCliente($('#appbundle_marinahumedacotizacion_cliente').val());
@@ -538,14 +559,27 @@
           }
         });
 
-        pincodeInput.addEventListener('keyup',() => {
-          if(pincodeInput.value.replace(/\s/g, "").length === 8){
+        // pincodeInput.addEventListener('keyup',() => {
+        //   if(pincodeInput.value.replace(/\s/g, "").length === 8){
+        //     estadiaOtroPrecioInput.readOnly = false;
+        //     electricidadOtroPrecioInput.readOnly = false;
+        //     descuentoEstadiaInput.readOnly = false;
+        //     descuentoElectricidadInput.readOnly = false;
+        //   }
+        // });
+
+        btnVerificaPincode.addEventListener('click', () => {
             estadiaOtroPrecioInput.readOnly = false;
             electricidadOtroPrecioInput.readOnly = false;
             descuentoEstadiaInput.readOnly = false;
             descuentoElectricidadInput.readOnly = false;
-          }
+            securityIcons.forEach((icon) => {
+                icon.innerHTML = '<i class="fa fa-unlock" aria-hidden="true"></i>';
+            });
+            desbloqueaSelectPrecios(preciosEstadia, Number($('#de_eslora').data('valor')));
+            desbloqueaSelectPrecios(preciosElectricidad, Number($('#de_eslora').data('valor')));
         });
+
 
         function buscaDatosCliente(idcliente){
           var url = "{{ path('ajax_busca_cliente_todo',{'id':'iddelcliente','_format':'json'}) }}";
@@ -614,7 +648,7 @@
         }
 
         function filtraSelectPrecios(listado, eslora) {
-          listado.childNodes.forEach((item) = > {
+          listado.childNodes.forEach((item) => {
             let piesA = Number(item.dataset.pies_a);
             let piesB = Number(item.dataset.pies_b);
             let clasificacion = Number(item.dataset.clasificacion);
@@ -625,6 +659,16 @@
           });
         }
 
+        function desbloqueaSelectPrecios(listado, eslora){
+          listado.childNodes.forEach((item) => {
+            let piesA = Number(item.dataset.pies_a);
+            let piesB = Number(item.dataset.pies_b);
+
+            !(eslora >= piesA && eslora <= piesB) ?
+            item.classList.add('hide') :
+            item.classList.remove('hide');
+          });
+        }
       })(jQuery);
     </script>
 {% endblock %}
