@@ -2,9 +2,7 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Entity\MarinaHumedaCotizacion;
-use AppBundle\Entity\Pincode;
-use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -13,7 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -23,8 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormInterface;
 use AppBundle\Entity\Cliente;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 
 class MarinaHumedaCotizacionType extends AbstractType
 {
@@ -85,7 +81,11 @@ class MarinaHumedaCotizacionType extends AbstractType
             ])
             ->add('dolar', MoneyType::class, [
                 'required'=>false,
-                'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
+                'attr' => [
+                    'class' => 'esdecimal',
+                    'autocomplete' => 'off',
+                    'readonly' => true
+                ],
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
@@ -134,29 +134,6 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'data' => '0',
                 'mapped' => false
             ]);
-
-//        $builder->add(
-//            'pincode',
-//            TextType::class,
-//            [
-//                'label' => 'PINCODE',
-//                'required' => false,
-//                'mapped' => false,
-//                'attr' => [
-//                    'minlength' => 8,
-//                    'maxlength' => 8,
-//                    'class' => 'info-input'
-//                ],
-//                'constraints' => [
-////                    new Assert\Callback([$this, 'validatePincode']),
-//                    new Assert\Length([
-//                        'min' => 8,
-//                        'max' => 8,
-//                        'exactMessage' => 'Un Pincode es de exactamente 8 digitos',
-//                    ])
-//                ],
-//            ]
-//        );
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();

@@ -166,12 +166,15 @@
                                     </div>
                                     <label>Días Estadía:</label>
                                     {{ form_widget(form.diasEstadia) }}
+                                    <div class="security-icon">
+                                        <i class="fa fa-lock" aria-hidden="true"></i>
+                                    </div>
                                     <label>Dolar</label>
                                     {{ form_widget(form.dolar,{'value':(valdolar/100)}) }}
                                 </div>
                                 <div class="col-sm-9">
                                     <div class="row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-6 pt-1-5">
                                             <label>Precio por día:</label>
                                             {{ form_widget(form.mhcservicios.children.0.precio) }}
                                         </div>
@@ -189,7 +192,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-6 pt-1-5">
                                             <label>Precio electricidad:</label>
                                             {{ form_widget(form.mhcservicios.children.1.precioAux) }}
                                         </div>
@@ -204,16 +207,6 @@
                                                 <i class="fa fa-lock" aria-hidden="true"></i>
                                             </div>
                                             {{ form_row(form.descuentoElectricidad) }}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-6 text-right pt-2">
-
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="collapse" id="collapsePincode">
-
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -538,6 +531,7 @@
     <script type="text/javascript">
       (function ($) {
 
+        const dolarInput = document.getElementById('appbundle_marinahumedacotizacion_dolar');
         const preciosEstadia = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio');
         const preciosElectricidad = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioAux');
         const pincodeInput = document.getElementById('pincode-input');
@@ -595,7 +589,7 @@
         });
 
         btnVerificaPincode.addEventListener('click', () => {
-          console.log('test');
+          btnVerificaPincode.classList.add('disabled');
           $.ajax({
             method: 'POST',
             url: "{{ path('marina-humeda_ajax-pincode') }}",
@@ -605,13 +599,13 @@
               if(data === 'notfound'){
                 pincodeInput.parentNode.classList.add('has-error');
                 pincodeInput.parentNode.childNodes[5].innerText = 'Error: No existe.';
+                btnVerificaPincode.classList.remove('disabled');
                 return
               }
               if(data){
                 pincodeInput.parentNode.classList.remove('has-error');
                 pincodeInput.parentNode.classList.add('has-success');
                 pincodeInput.parentNode.childNodes[5].innerText = 'Aprobado';
-                btnVerificaPincode.classList.add('disabled');
                 estatusPincodeHide.value = 1;
 
                 desbloqueaInputsPreciosDescuentos();
@@ -621,10 +615,11 @@
                 setTimeout(function(){
                   $('#modalIngresaPincode').modal('hide');
                   pincodeInput.value = '';
-                  }, 3000);
+                  }, 1000);
               }else{
                 pincodeInput.parentNode.classList.add('has-error');
                 pincodeInput.parentNode.childNodes[5].innerText = 'Error: No vigente.';
+                btnVerificaPincode.classList.remove('disabled');
               }
             }
         });
@@ -703,9 +698,15 @@
             let piesB = Number(item.dataset.pies_b);
             let clasificacion = Number(item.dataset.clasificacion);
 
-            !(eslora >= piesA && eslora <= piesB && clasificacion === 0) ?
-            item.classList.add('hide') :
-            item.classList.remove('hide');
+            if(estatusPincodeHide.value === '1'){
+              (eslora >= piesA && eslora <= piesB) ?
+                item.classList.remove('hide') :
+                item.classList.add('hide');
+            }else{
+              !(eslora >= piesA && eslora <= piesB && clasificacion === 0) ?
+                item.classList.add('hide') :
+                item.classList.remove('hide');
+            }
           });
         }
 
@@ -724,6 +725,7 @@
 
         function desbloqueaInputsPreciosDescuentos(){
           if(estatusPincodeHide.value === '1'){
+            dolarInput.readOnly = false;
             estadiaOtroPrecioInput.readOnly = false;
             electricidadOtroPrecioInput.readOnly = false;
             descuentoEstadiaInput.readOnly = false;
