@@ -18,6 +18,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Venta
 {
+    const VENTA_CLIENTE = 0;
+    const VENTA_COLABORADOR = 1;
+
     /**
      * @var int
      *
@@ -64,6 +67,15 @@ class Venta
     private $total;
 
     /**
+     * @var int
+     *
+     * @Assert\NotBlank(message="Este campo no puede estar vacio")
+     *
+     * @ORM\Column(name="tipo_venta", type="smallint")
+     */
+    private $tipoVenta;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime")
@@ -97,8 +109,14 @@ class Venta
      */
     private $factura;
 
+    public static $tiposVenta = [
+        'Cliente' => self::VENTA_CLIENTE,
+        'Colaborador' => self::VENTA_COLABORADOR,
+    ];
+
     public function __construct()
     {
+        $this->tipoVenta = self::VENTA_CLIENTE;
         $this->conceptos = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }
@@ -173,6 +191,27 @@ class Venta
     public function getTotal()
     {
         return $this->total;
+    }
+
+    /**
+     * @param int $tipoVenta
+     */
+    public function setTipoVenta($tipoVenta)
+    {
+        $this->tipoVenta = $tipoVenta;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTipoVenta()
+    {
+        return $this->tipoVenta;
+    }
+
+    public function getTipoVentaName()
+    {
+        return array_flip(self::$tiposVenta)[$this->tipoVenta];
     }
 
     /**

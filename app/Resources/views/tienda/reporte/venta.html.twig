@@ -1,8 +1,27 @@
 {% extends 'estructura/plantilla.twig' %}
+
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        th, td {
+            text-align: center;
+        }
+
+        div.dataTables_wrapper div.dataTables_filter {
+            text-align: initial;
+        }
+
+        .daterangepicker {
+            color: initial;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+            background-color: #292f41;
+            border-color: #2a3041;
+        }
+    </style>
 {% endblock %}
+
 {% block contwrapper %}
 <div class="content-wrapper">
     <section class="content">
@@ -12,76 +31,34 @@
                 <small>Divisa: MXN</small>
             </div>
             <div class="panel-body">
-                {{ form_start(form) }}
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="input-daterange" id="rangoFehas">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    {{ form_row(form.inicio) }}
-                                </div>
-                                <div class="col-sm-6">
-                                    {{ form_row(form.fin) }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        {{ form_row(form.producto) }}
-                    </div>
-                    <div class="col-sm-4">
-                        {{ form_row(form.cliente) }}
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        {{ form_row(form.buscar) }}
-                    </div>
-                </div>
-                {{ form_end(form) }}
-                <div class="row">
-                    <div class="col-sm-12">
-                        <table class="table tabla-reporte">
+                        <table class="table table-condensed table-novo">
                             <thead>
                             <tr>
-                                <th>Fecha venta</th>
-                                <th>Cliente</th>
-                                <th>Categoría</th>
-                                <th>Producto</th>
                                 <th>Código barras</th>
-                                <th>Clave producto</th>
-                                <th>Descripción producto</th>
-                                <th>Clave unidad</th>
-                                <th>Descripción unidad</th>
+                                <th>Producto</th>
+                                <th>Unidad</th>
                                 <th>Cantidad</th>
                                 <th>Precio</th>
-                                <th>Sub-Total</th>
+                                <th>Subtotal</th>
                                 <th>IVA</th>
-                                <th>Descuento</th>
                                 <th>Total</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            {% for venta in ventas %}
+                            <tfoot>
                                 <tr>
-                                    <td>{{ venta.fecha }}</td>
-                                    <td>{{ venta.cliente }}</td>
-                                    <td>{{ venta.categoria }}</td>
-                                    <td>{{ venta.producto }}</td>
-                                    <td>{{ venta.codigoBarras }}</td>
-                                    <td>{{ venta.claveProducto }}</td>
-                                    <td>{{ venta.descripcionProducto }}</td>
-                                    <td>{{ venta.claveUnidad }}</td>
-                                    <td>{{ venta.descripcionUnidad }}</td>
-                                    <td>{{ venta.cantidad }}</td>
-                                    <td>{{ venta.precio }}</td>
-                                    <td>{{ venta.subtotal }}</td>
-                                    <td>{{ venta.iva }}</td>
-                                    <td>{{ venta.descuento }}</td>
-                                    <td>{{ venta.total }}</td>
+                                    <th colspan="2">
+                                        Clasificación: <span id="clasificacion-text">Público</span>
+                                    </th>
+                                    <th colspan="2">Total:</th>
+                                    <th>0.00</th>
+                                    <th>0.00</th>
+                                    <th>0.00</th>
+                                    <th>0.00</th>
                                 </tr>
-                            {% endfor %}
-                            </tbody>
+                            </tfoot>
+                            <tbody>
                         </table>
                     </div>
                 </div>
@@ -90,6 +67,7 @@
     </section>
 </div>
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
@@ -98,44 +76,133 @@
     <script type="text/javascript" src="{{ asset('js/pdfmake.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/daterangepicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/reliableRounding.js') }}"></script>
     <script type="text/javascript">
-        $('.tabla-reporte').DataTable({
-            responsive: true,
-            language: {
-                lengthMenu: 'Mostrar _MENU_ registros',
-                zeroRecords: 'No hay registros',
-                info: 'Mostrando la pagina _PAGE_ de _PAGES_',
-                infoEmpty: 'No hay registros disponibles',
-                infoFiltered: '(filtados de _MAX_ total de registros)',
-                processing: 'Procesando...',
-                loadingRecords: 'Cargando registros...',
-                search: 'Buscar',
-                paginate: {
-                    first: 'Primera',
-                    last: 'Ultima',
-                    next: 'Siguiente',
-                    previous: 'Anterior'
-                }
+      (function ($, dtSettings) {
+        moment.locale('es');
+
+        const clasificacionText = document.getElementById('clasificacion-text');
+        const clasificacionSelect = document.getElementById('clasificacion');
+
+        const searchData = {
+          start: moment().startOf('month'),
+          end: moment().endOf('month'),
+          clasificacion: clasificacionSelect ? clasificacionSelect.value : 0
+        };
+
+        const $table = $('.table-novo').DataTable({
+          ...dtSettings,
+          ajax: {
+            url: 'productos.json',
+            data: function (d) {
+              d.dates = {
+                start: searchData.start.format('YYYY-MM-DD'),
+                end: searchData.end.format('YYYY-MM-DD'),
+              };
+              d.clasificacion = searchData.clasificacion;
             },
-            searchDelay: 500,
-            searching: false,
-            order: [[0, 'desc']],
-            dom:
-                "<'row'<'col-sm-3'l><'col-sm-3'><'col-sm-3'B><'col-sm-3'f>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-            buttons: {
-                buttons: [
-                    {
-                        extend: 'excel',
-                        text: 'XLS',
-                        className: 'btn btn-verde btn-sm',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                        }
-                    }
-                ]
-            },
+          },
+          order: [[0, 'desc']],
+          dom:
+              "<'row'<'col-xs-4'<'#filtro'>><'col-xs-3'<'#dates'>><'col-xs-2'B><'col-xs-3'f>>" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+          paginate: false,
+          info: false,
+          buttons: {
+            buttons: [
+              {
+                extend: 'excel',
+                text: 'XLS',
+                footer: true,
+                className: 'btn btn-verde btn-sm',
+              }
+            ]
+          },
+          createdRow(row, producto) {
+            row.cells[4].innerHTML = Math.round10(producto[4] / 100, -2);
+            row.cells[5].innerHTML = Math.round10(producto[5] / 100, -2);
+            row.cells[6].innerHTML = Math.round10(producto[6] / 100, -2);
+            row.cells[7].innerHTML = Math.round10(producto[7] / 100, -2);
+          },
+          footerCallback(row, producto) {
+            const totales = producto.reduce((a, b) => {
+              a.precio += b[4] / 100;
+              a.subtotal += b[5] / 100;
+              a.iva += b[6] / 100;
+              a.total += b[7] / 100;
+              return a;
+            }, {
+              precio: 0,
+              subtotal: 0,
+              iva: 0,
+              total: 0,
+            });
+
+            row.cells[2].innerHTML = Math.round10(totales.precio, -2);
+            row.cells[3].innerHTML = Math.round10(totales.subtotal, -2);
+            row.cells[4].innerHTML = Math.round10(totales.iva, -2);
+            row.cells[5].innerHTML = Math.round10(totales.total, -2);
+          }
         });
+
+        $('#dates')
+            .html(`
+              <div class="dataTables_filter">
+                <label for="date-range">Fecha
+                <input type="text" class="form-control" id="date-range" readonly>
+                </label>
+              </div>
+            `)
+            .find('#date-range')
+            .daterangepicker({
+              startDate: searchData.start,
+              endDate: searchData.end,
+              autoApply: true,
+              ranges: {
+                'Este mes': [moment().startOf('month'), moment().endOf('month')],
+                'Mes pasado': [
+                  moment().subtract(1, 'month').startOf('month'),
+                  moment().subtract(1, 'month').endOf('month')
+                ]
+              },
+              locale: {
+                applyLabel: 'Aplicar',
+                cancelLabel: 'Cancelar',
+                fromLabel: 'Desde',
+                toLabel: 'Hasta',
+                customRangeLabel: 'Definido por usuario',
+              }
+            })
+            .on('apply.daterangepicker', function (e, picker) {
+              searchData.start = picker.startDate;
+              searchData.end = picker.endDate;
+
+              $table.ajax.reload();
+            });
+
+        $('#filtro')
+            .html(`
+              <div class="dataTables_filter">
+                <label for="clasificacion">Clasificación
+                    <select id="clasificacion" class="form-control">
+                        <option value="0">Todo</option>
+                        <option value="1">Cliente</option>
+                        <option value="2">Colaborador</option>
+                    </select>
+                </label>
+              </div>
+            `)
+            .find('#clasificacion').get(0)
+            .addEventListener('change', function () {
+              searchData.clasificacion = this.value;
+              clasificacionText.innerHTML = this.options[this.selectedIndex].innerHTML;
+              $table.ajax.reload();
+            });
+
+      })(jQuery, datatablesSettings);
     </script>
 {% endblock %}

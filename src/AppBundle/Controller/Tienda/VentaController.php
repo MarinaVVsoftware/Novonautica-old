@@ -52,7 +52,6 @@ class VentaController extends AbstractController
     {
         try {
             $results = $dataTables->handle($request, 'venta');
-
             return $this->json($results);
         } catch (HttpException $e) {
             return $this->json($e->getMessage(), $e->getStatusCode());
