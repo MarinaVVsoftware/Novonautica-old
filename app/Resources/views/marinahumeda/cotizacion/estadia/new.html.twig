@@ -208,24 +208,11 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6 text-right pt-2">
-                                            <button class="btn btn-azul" type="button"
-                                                    data-toggle="collapse"
-                                                    data-target="#collapsePincode"
-                                                    aria-expanded="false"
-                                                    aria-controls="collapsePincode">
-                                                Usar PINCODE
-                                            </button>
+
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="collapse" id="collapsePincode">
-                                                <div class="row">
-                                                    <div class="col-sm-8">
-                                                        {{ form_row(form.pincode) }}
-                                                    </div>
-                                                    <div class="col-sm-4 pt-2">
-                                                        <button id="btn-verifica-pincode" class="btn btn-azul" type="button">OK</button>
-                                                    </div>
-                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -499,6 +486,11 @@
                 <div class="panel-footer">
                     <div class="row">
                         <div class="col-sm-12">
+                            <button class="btn btn-azul" type="button"
+                                    data-toggle="modal"
+                                    data-target="#modalIngresaPincode">
+                                Usar PINCODE
+                            </button>
                             <button type="submit" class="btn btn-azul pull-right">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 Guardar
@@ -507,6 +499,35 @@
                     </div>
                 </div>
                 {{ form_end(form) }}
+            </div>
+            <div class="modal ventanaborrar fade" id="modalIngresaPincode" tabindex="-1" role="dialog" aria-labelledby="pincodeLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="pincodeLabel">Ingresa un Pincode</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <div class="form-group">
+                                        <label class="control-label" for="pincode-input">PINCODE</label>
+                                        <input type="text"
+                                               id="pincode-input"
+                                               name="pincode-input"
+                                               class="esdecimal info-input"
+                                               minlength="8"
+                                               maxlength="8">
+                                        <span class="help-block text-center"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="btn-verifica-pincode" class="btn btn-azul" type="button">OK</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
@@ -519,18 +540,24 @@
 
         const preciosEstadia = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio');
         const preciosElectricidad = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioAux');
-        const pincodeInput = document.getElementById('appbundle_marinahumedacotizacion_pincode');
+        const pincodeInput = document.getElementById('pincode-input');
         const estadiaOtroPrecioInput = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precioOtro');
         const electricidadOtroPrecioInput = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioOtro');
         const descuentoEstadiaInput = document.getElementById('appbundle_marinahumedacotizacion_descuentoEstadia');
         const descuentoElectricidadInput = document.getElementById('appbundle_marinahumedacotizacion_descuentoElectricidad');
         const btnVerificaPincode = document.getElementById('btn-verifica-pincode');
         const securityIcons = document.querySelectorAll('.security-icon');
+        const estatusPincodeHide = document.getElementById('appbundle_marinahumedacotizacion_estatusPincode');
 
         if($("input[type=radio]:checked").val()){
           buscaDatosCliente($('#appbundle_marinahumedacotizacion_cliente').val());
           buscaDatosBarco($("input[type=radio]:checked").val());
+
+          desbloqueaInputsPreciosDescuentos();
+          desbloqueaSelectPrecios();
         }
+
+
 
         $('.selectclientebuscar').change(function () {
           $('#loading').show();
@@ -559,25 +586,48 @@
           }
         });
 
-        // pincodeInput.addEventListener('keyup',() => {
-        //   if(pincodeInput.value.replace(/\s/g, "").length === 8){
-        //     estadiaOtroPrecioInput.readOnly = false;
-        //     electricidadOtroPrecioInput.readOnly = false;
-        //     descuentoEstadiaInput.readOnly = false;
-        //     descuentoElectricidadInput.readOnly = false;
-        //   }
-        // });
+        $('#modalIngresaPincode').on('show.bs.modal', function (e) {
+          pincodeInput.parentNode.classList.remove('has-error');
+          pincodeInput.parentNode.classList.remove('has-success');
+          btnVerificaPincode.classList.remove('disabled');
+          pincodeInput.parentNode.childNodes[5].innerText = '';
+          pincodeInput.value = '';
+        });
 
         btnVerificaPincode.addEventListener('click', () => {
-            estadiaOtroPrecioInput.readOnly = false;
-            electricidadOtroPrecioInput.readOnly = false;
-            descuentoEstadiaInput.readOnly = false;
-            descuentoElectricidadInput.readOnly = false;
-            securityIcons.forEach((icon) => {
-                icon.innerHTML = '<i class="fa fa-unlock" aria-hidden="true"></i>';
-            });
-            desbloqueaSelectPrecios(preciosEstadia, Number($('#de_eslora').data('valor')));
-            desbloqueaSelectPrecios(preciosElectricidad, Number($('#de_eslora').data('valor')));
+          console.log('test');
+          $.ajax({
+            method: 'POST',
+            url: "{{ path('marina-humeda_ajax-pincode') }}",
+            data:{ pincode: pincodeInput.value, iduser: {{ iduser}} },
+            dataType: 'json',
+            success: function (data) {
+              if(data === 'notfound'){
+                pincodeInput.parentNode.classList.add('has-error');
+                pincodeInput.parentNode.childNodes[5].innerText = 'Error: No existe.';
+                return
+              }
+              if(data){
+                pincodeInput.parentNode.classList.remove('has-error');
+                pincodeInput.parentNode.classList.add('has-success');
+                pincodeInput.parentNode.childNodes[5].innerText = 'Aprobado';
+                btnVerificaPincode.classList.add('disabled');
+                estatusPincodeHide.value = 1;
+
+                desbloqueaInputsPreciosDescuentos();
+                desbloqueaSelectPrecios(preciosEstadia, Number($('#de_eslora').data('valor')));
+                desbloqueaSelectPrecios(preciosElectricidad, Number($('#de_eslora').data('valor')));
+
+                setTimeout(function(){
+                  $('#modalIngresaPincode').modal('hide');
+                  pincodeInput.value = '';
+                  }, 3000);
+              }else{
+                pincodeInput.parentNode.classList.add('has-error');
+                pincodeInput.parentNode.childNodes[5].innerText = 'Error: No vigente.';
+              }
+            }
+        });
         });
 
 
@@ -660,15 +710,30 @@
         }
 
         function desbloqueaSelectPrecios(listado, eslora){
-          listado.childNodes.forEach((item) => {
-            let piesA = Number(item.dataset.pies_a);
-            let piesB = Number(item.dataset.pies_b);
+          if(estatusPincodeHide.value === '1' && listado) {
+            listado.childNodes.forEach((item) => {
+                let piesA = Number(item.dataset.pies_a);
+                let piesB = Number(item.dataset.pies_b);
 
-            !(eslora >= piesA && eslora <= piesB) ?
-            item.classList.add('hide') :
-            item.classList.remove('hide');
-          });
+                !(eslora >= piesA && eslora <= piesB) ?
+                item.classList.add('hide') :
+                item.classList.remove('hide');
+            });
+          }
         }
+
+        function desbloqueaInputsPreciosDescuentos(){
+          if(estatusPincodeHide.value === '1'){
+            estadiaOtroPrecioInput.readOnly = false;
+            electricidadOtroPrecioInput.readOnly = false;
+            descuentoEstadiaInput.readOnly = false;
+            descuentoElectricidadInput.readOnly = false;
+            securityIcons.forEach((icon) => {
+              icon.innerHTML = '<i class="fa fa-unlock letra-verde" aria-hidden="true"></i>';
+            });
+          }
+        }
+
       })(jQuery);
     </script>
 {% endblock %}

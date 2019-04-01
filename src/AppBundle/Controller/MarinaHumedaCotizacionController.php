@@ -8,6 +8,7 @@ use AppBundle\Entity\MarinaHumedaCotizacion;
 use AppBundle\Entity\MarinaHumedaCotizaServicios;
 use AppBundle\Entity\MonederoMovimiento;
 use AppBundle\Entity\Pago;
+use AppBundle\Entity\Pincode;
 use AppBundle\Entity\ValorSistema;
 use AppBundle\Form\CotizacionNotaType;
 use AppBundle\Form\Marina\CotizacionMoratoriaType;
@@ -282,6 +283,7 @@ class MarinaHumedaCotizacionController extends Controller
             'marinaHumedaCotizacion' => $marinaHumedaCotizacion,
             'valdolar' => $dolarBase,
             'valiva' => $iva,
+            'iduser' => $this->getUser()->getId(),
             'form' => $form->createView()
         ]);
     }
@@ -1290,6 +1292,45 @@ class MarinaHumedaCotizacionController extends Controller
     }
 
     /**
+     * @Route("/comprueba-pincode.json", name="marina-humeda_ajax-pincode")
+     *
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
+    public function compruebaPincodeAction(Request $request)
+    {
+        $pincode = $this->getDoctrine()->getRepository('AppBundle:Pincode')
+            ->findOneBy(['pin' => $request->get('pincode')]);
+
+        if(!$pincode){
+            return $this->json('notfound');
+        }
+
+        if (//si es 1 entonces sigue vigente
+            ($pincode->getExpiration()->diff(new \DateTime()))->invert
+            &&
+            $pincode->getStatus()
+        ){
+            // Actualizar pincode
+            $em = $this->getDoctrine()->getManager();
+            $pincode->setUsedAt(new \DateTime());
+            $pincode->setUsedBy(
+                $this->getDoctrine()
+                    ->getRepository('AppBundle:Usuario')
+                    ->find($request->get('iduser'))
+            );
+            $pincode->setStatus(false);
+            $em->persist($pincode);
+            $em->flush();
+
+            return $this->json(true);
+        }
+
+        return $this->json(false);
+    }
+
+    /**
      * Deletes a marinaHumedaCotizacion entity.
      *
      * @Route("/{id}", name="marina-humeda_delete")
@@ -1391,6 +1432,7 @@ class MarinaHumedaCotizacionController extends Controller
 
         $mailer->send($message);
     }
+
 
     private function compruebaUsoPincode($mhc, $estadiaOtroPrecio, $electricidadOtroPrecio, $pincode)
     {
