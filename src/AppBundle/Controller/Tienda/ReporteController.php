@@ -8,12 +8,11 @@
 
 namespace AppBundle\Controller\Tienda;
 
-use DataTables\DataTables;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use DataTables\DataTablesInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 /**
@@ -26,7 +25,6 @@ class ReporteController extends AbstractController
      * Muestra los adeudos y abonos sumados de los clientes que han cotizado en astillero
      *
      * @Route("/", name="reporte_store_venta")
-     * @Method({"GET", "POST"})
      *
      * @param Request $request
      *
@@ -42,12 +40,21 @@ class ReporteController extends AbstractController
         );
     }
 
-    public function indexDataAction(Request $request, DataTables $dataTables)
+    /**
+     * @Route("/productos.json")
+     *
+     * @param Request $request
+     * @param DataTables $dataTables
+     *
+     * @return string
+     */
+    public function indexDataAction(Request $request, DataTablesInterface $dataTables)
     {
         try {
-            $dataTables->handle($request, 'reporte/venta');
+            $dataTables = $dataTables->handle($request, 'reporte/venta');
+            return $this->json($dataTables);
         } catch (HttpException $exception) {
-            return $exception->getMessage();
+            return $this->json($exception->getMessage(), $exception->getStatusCode());
         }
     }
 }

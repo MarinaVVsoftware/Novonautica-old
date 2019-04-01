@@ -35,52 +35,75 @@ class VentaDataTable extends AbstractDataTableHandler
         $results = new DataTableResults();
         $repository = $this->doctrine->getRepository(Venta\Concepto::class);
 
-        $query = $repository->createQueryBuilder('producto')->select('COUNT(producto.id)');
+        $query = $repository->createQueryBuilder('concepto')->select('COUNT(concepto.id)');
         $results->recordsTotal = $query->getQuery()->getSingleScalarResult();
 
-        $query = $repository->createQueryBuilder('producto');
+        $query = $repository->createQueryBuilder('concepto');
         $query
-            ->select('producto', 'venta')
-            ->leftJoin('producto.venta', 'venta');
+            ->select('concepto', 'producto', 'venta')
+            ->leftJoin('concepto.producto', 'producto')
+            ->leftJoin('concepto.venta', 'venta')
+            ->leftJoin('producto.claveUnidad', 'claveUnidad');
 
-        /*
+        $query->andWhere('venta.createdAt BETWEEN :start AND :end');
+        $query->setParameter('start', $request->customData['dates']['start']);
+        $query->setParameter('end', $request->customData['dates']['end']);
+
+        if ($request->customData['clasificacion'] !== '0') {
+            $query->andWhere('venta.tipoVenta = :clasificacion');
+            $query->setParameter('clasificacion', $request->customData['clasificacion'] === '1');
+
+        }
+
         if ($request->search->value) {
             $query->where(
-                '(LOWER(u.nombre) LIKE :search OR ' .
-                'LOWER(u.nombreUsuario) LIKE :search OR ' .
-                'LOWER(u.correo) LIKE :search)'
+                '(LOWER(producto.nombre) LIKE :search OR ' .
+                'LOWER(producto.codigoBarras) LIKE :search OR ' .
+                'LOWER(claveUnidad.nombre) LIKE :search)'
             );
             $query->setParameter('search', strtolower("%{$request->search->value}%"));
         }
-        */
 
-        /*
         foreach ($request->order as $order) {
             if ($order->column == 0) {
-                $query->addOrderBy('u.nombre', $order->dir);
+                $query->addOrderBy('producto.codigoBarras', $order->dir);
             } elseif ($order->column == 1) {
-                $query->addOrderBy('u.nombreUsuario', $order->dir);
+                $query->addOrderBy('producto.nombre', $order->dir);
+            } elseif ($order->column == 2) {
+                $query->addOrderBy('claveUnidad.nombre', $order->dir);
+            } elseif ($order->column == 3) {
+                $query->addOrderBy('concepto.cantidad', $order->dir);
+            } elseif ($order->column == 4) {
+                $query->addOrderBy('producto.precio', $order->dir);
+            } elseif ($order->column == 5) {
+                $query->addOrderBy('concepto.subtotal', $order->dir);
+            } elseif ($order->column == 6) {
+                $query->addOrderBy('concepto.iva', $order->dir);
+            } elseif ($order->column == 7) {
+                $query->addOrderBy('concepto.total', $order->dir);
             }
         }
-        */
 
         $queryCount = clone $query;
-        $queryCount->select('COUNT(u.id)');
+        $queryCount->select('COUNT(concepto.id)');
         $results->recordsFiltered = $queryCount->getQuery()->getSingleScalarResult();
 
-        $query->setMaxResults($request->length);
-        $query->setFirstResult($request->start);
+        /** @var Venta\Concepto[] $conceptos */
+        $conceptos = $query->getQuery()->getResult();
 
-        /** @var Usuario[] $usuarios */
-        $usuarios = $query->getQuery()->getResult();
+        foreach ($conceptos as $concepto) {
+            $producto = $concepto->getProducto();
+            $claveUnidad = $producto->getClaveUnidad();
 
-        foreach ($usuarios as $usuario) {
             $results->data[] = [
-                $usuario->getNombre(),
-                $usuario->getNombreUsuario(),
-                $usuario->getCorreo(),
-                $usuario->getIsActive() ? 'Activo' : 'Inactivo',
-                $usuario->getId(),
+                $producto->getCodigoBarras(),
+                $producto->getNombre(),
+                $claveUnidad->getNombre(),
+                $concepto->getCantidad(),
+                $concepto->getPrecioUnitario() / 2,
+                $concepto->getSubtotal() / 2,
+                $concepto->getIva() / 2,
+                $concepto->getTotal() / 2,
             ];
         }
 

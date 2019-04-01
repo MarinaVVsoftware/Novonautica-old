@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Venta
 {
-    const VENTA_PUBLICO = 0;
+    const VENTA_CLIENTE = 0;
     const VENTA_COLABORADOR = 1;
 
     /**
@@ -110,13 +110,13 @@ class Venta
     private $factura;
 
     public static $tiposVenta = [
-        'Público' => self::VENTA_PUBLICO,
+        'Cliente' => self::VENTA_CLIENTE,
         'Colaborador' => self::VENTA_COLABORADOR,
     ];
 
     public function __construct()
     {
-        $this->tipoVenta = self::VENTA_PUBLICO;
+        $this->tipoVenta = self::VENTA_CLIENTE;
         $this->conceptos = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }

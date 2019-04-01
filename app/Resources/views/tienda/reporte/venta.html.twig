@@ -2,7 +2,24 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+        th, td {
+            text-align: center;
+        }
+
+        div.dataTables_wrapper div.dataTables_filter {
+            text-align: initial;
+        }
+
+        .daterangepicker {
+            color: initial;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+            background-color: #292f41;
+            border-color: #2a3041;
+        }
+    </style>
 {% endblock %}
 
 {% block contwrapper %}
@@ -19,23 +36,28 @@
                         <table class="table table-condensed table-novo">
                             <thead>
                             <tr>
-                                <th>Fecha venta</th>
-                                <th>Cliente</th>
-                                <th>Categoría</th>
-                                <th>Producto</th>
                                 <th>Código barras</th>
-                                <th>Clave producto</th>
-                                <th>Descripción producto</th>
-                                <th>Clave unidad</th>
-                                <th>Descripción unidad</th>
+                                <th>Producto</th>
+                                <th>Unidad</th>
                                 <th>Cantidad</th>
                                 <th>Precio</th>
-                                <th>Sub-Total</th>
+                                <th>Subtotal</th>
                                 <th>IVA</th>
-                                <th>Descuento</th>
                                 <th>Total</th>
                             </tr>
                             </thead>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="2">
+                                        Clasificación: <span id="clasificacion-text">Público</span>
+                                    </th>
+                                    <th colspan="2">Total:</th>
+                                    <th>0.00</th>
+                                    <th>0.00</th>
+                                    <th>0.00</th>
+                                    <th>0.00</th>
+                                </tr>
+                            </tfoot>
                             <tbody>
                         </table>
                     </div>
@@ -57,43 +79,74 @@
     <script type="text/javascript" src="{{ asset('bower_components/moment/min/moment.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/daterangepicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/reliableRounding.js') }}"></script>
     <script type="text/javascript">
       (function ($, dtSettings) {
         moment.locale('es');
 
+        const clasificacionText = document.getElementById('clasificacion-text');
+        const clasificacionSelect = document.getElementById('clasificacion');
+
         const searchData = {
           start: moment().startOf('month'),
           end: moment().endOf('month'),
+          clasificacion: clasificacionSelect ? clasificacionSelect.value : 0
         };
 
         const $table = $('.table-novo').DataTable({
           ...dtSettings,
-          /*
           ajax: {
-            url: 'facturas-dt',
+            url: 'productos.json',
             data: function (d) {
               d.dates = {
                 start: searchData.start.format('YYYY-MM-DD'),
                 end: searchData.end.format('YYYY-MM-DD'),
               };
+              d.clasificacion = searchData.clasificacion;
             },
           },
           order: [[0, 'desc']],
-          */
           dom:
-              "<'row'<'col-sm-6'<'#dates'>><'col-sm-3'B><'col-sm-3'f>>" +
+              "<'row'<'col-xs-4'<'#filtro'>><'col-xs-3'<'#dates'>><'col-xs-2'B><'col-xs-3'f>>" +
               "<'row'<'col-sm-12'tr>>" +
               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
           paginate: false,
+          info: false,
           buttons: {
             buttons: [
               {
                 extend: 'excel',
                 text: 'XLS',
+                footer: true,
                 className: 'btn btn-verde btn-sm',
               }
             ]
           },
+          createdRow(row, producto) {
+            row.cells[4].innerHTML = Math.round10(producto[4] / 100, -2);
+            row.cells[5].innerHTML = Math.round10(producto[5] / 100, -2);
+            row.cells[6].innerHTML = Math.round10(producto[6] / 100, -2);
+            row.cells[7].innerHTML = Math.round10(producto[7] / 100, -2);
+          },
+          footerCallback(row, producto) {
+            const totales = producto.reduce((a, b) => {
+              a.precio += b[4] / 100;
+              a.subtotal += b[5] / 100;
+              a.iva += b[6] / 100;
+              a.total += b[7] / 100;
+              return a;
+            }, {
+              precio: 0,
+              subtotal: 0,
+              iva: 0,
+              total: 0,
+            });
+
+            row.cells[2].innerHTML = Math.round10(totales.precio, -2);
+            row.cells[3].innerHTML = Math.round10(totales.subtotal, -2);
+            row.cells[4].innerHTML = Math.round10(totales.iva, -2);
+            row.cells[5].innerHTML = Math.round10(totales.total, -2);
+          }
         });
 
         $('#dates')
@@ -128,6 +181,25 @@
               searchData.start = picker.startDate;
               searchData.end = picker.endDate;
 
+              $table.ajax.reload();
+            });
+
+        $('#filtro')
+            .html(`
+              <div class="dataTables_filter">
+                <label for="clasificacion">Clasificación
+                    <select id="clasificacion" class="form-control">
+                        <option value="0">Todo</option>
+                        <option value="1">Cliente</option>
+                        <option value="2">Colaborador</option>
+                    </select>
+                </label>
+              </div>
+            `)
+            .find('#clasificacion').get(0)
+            .addEventListener('change', function () {
+              searchData.clasificacion = this.value;
+              clasificacionText.innerHTML = this.options[this.selectedIndex].innerHTML;
               $table.ajax.reload();
             });
 
