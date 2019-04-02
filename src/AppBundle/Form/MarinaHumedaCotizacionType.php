@@ -2,10 +2,12 @@
 
 namespace AppBundle\Form;
 
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -18,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormInterface;
 use AppBundle\Entity\Cliente;
-use Symfony\Component\Validator\Constraints as Assert;
+
 
 class MarinaHumedaCotizacionType extends AbstractType
 {
@@ -79,7 +81,11 @@ class MarinaHumedaCotizacionType extends AbstractType
             ])
             ->add('dolar', MoneyType::class, [
                 'required'=>false,
-                'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
+                'attr' => [
+                    'class' => 'esdecimal',
+                    'autocomplete' => 'off',
+                    'readonly' => true
+                ],
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
@@ -123,28 +129,11 @@ class MarinaHumedaCotizacionType extends AbstractType
             ->add('notificarCliente', CheckboxType::class, [
                 'label' => '¿Notificar al cliente?',
                 'required' => false
+            ])
+            ->add('estatusPincode',HiddenType::class,[
+                'data' => '0',
+                'mapped' => false
             ]);
-
-        $builder->add(
-            'pincode',
-            TextType::class,
-            [
-                'required' => false,
-                'mapped' => false,
-                'attr' => [
-                    'minlength' => 8,
-                    'maxlength' => 8,
-                ],
-                'constraints' => [
-//                    new Assert\Callback([$this, 'validatePincode']),
-                    new Assert\Length([
-                        'min' => 8,
-                        'max' => 8,
-                        'exactMessage' => 'Un Pincode es de exactamente 8 digitos',
-                    ])
-                ],
-            ]
-        );
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();
@@ -206,8 +195,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('validanovo')
                     ->remove('notasnovo')
                     ->remove('slip')
-                    ->remove('notificarCliente')
-                    ->remove('pincode');
+                    ->remove('notificarCliente');
             }
             //para validar por novo
             else {
@@ -224,8 +212,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('validacliente')
                     ->remove('notascliente')
                     ->remove('notificarCliente')
-                    ->remove('slip')
-                    ->remove('pincode');
+                    ->remove('slip');
             }
         });
 

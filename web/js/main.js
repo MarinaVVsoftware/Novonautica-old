@@ -899,6 +899,7 @@ $('#appbundle_marinahumedacotizacion_diasEstadia').keyup(function () {
   calculaTotales();
 });
  function recalculaCantidadYprecio (){
+   dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
    dias_estadia = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
    $('#de_cantidad').html(dias_estadia);
    $('#de_cantidad_mxn').html(dias_estadia);
@@ -915,7 +916,6 @@ $('#appbundle_marinahumedacotizacion_diasEstadia').keyup(function () {
    let e_precio_mxn = (e_precio * dolar).toFixed(2);
    $('#e_precio').html('$ ' + e_precio);
    $('#e_precio_mxn').html('$ ' + e_precio_mxn);
-
    recalculaSubtotalesYtotal();
  }
 $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change', function () {
