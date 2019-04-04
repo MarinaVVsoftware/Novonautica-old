@@ -1,6 +1,8 @@
 <?php
 
 namespace AppBundle\Repository;
+use Doctrine\ORM\NonUniqueResultException;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 
 /**
  * MarinaHumedaTarifaRepository
@@ -18,5 +20,36 @@ class MarinaHumedaTarifaRepository extends \Doctrine\ORM\EntityRepository
             ->orderBy('t.tipo,t.costo','DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function compruebaExistenciaRango($id, $tipo, $a, $b)
+    {
+        $id = $id??0;
+        $qb = $this->createQueryBuilder('t');
+        try {
+            return $qb
+                ->select('count(t.id)')
+                ->where(
+                    $qb->expr()->andX(
+                        $qb->expr()->orX(
+                            ':a >= t.piesA and :a <= t.piesB',
+                            ':b >= t.piesA and :b <= t.piesB',
+                            't.piesA >= :a and t.piesA <= :b',
+                            't.piesB >= :a and t.piesB <= :b'
+                        ),
+                        't.clasificacion = 0',
+                        ':tipo = t.tipo',
+                        ':id <> t.id'
+                    )
+                )
+                ->setParameter('id', $id)
+                ->setParameter('tipo', $tipo)
+                ->setParameter('a', $a)
+                ->setParameter('b', $b)
+                ->getQuery()
+                ->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+            return '1';
+        }
     }
 }

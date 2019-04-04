@@ -31,7 +31,28 @@
     {% block contwrapper %}{% endblock %}
     {% block modals %}{% endblock %}
 </div>
-
+{% if is_granted('ROLE_ADMIN') %}
+    <div class="modal  ventanaborrar fade" id="pinCodeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">PINCODE descripción</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <textarea id="pincode-description" class="form-control info-input" rows="3"></textarea>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="modal-footer text-center">
+                    <button type="button" id="pincode-generator" class="btn btn-azul">Generar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
 {% block javascripts %}
     <script src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
@@ -53,21 +74,35 @@
 
         {% if is_granted('ROLE_ADMIN') %}
         const pincodeButton = document.getElementById('pincode-generator');
+        const pincodeButtonModal = document.getElementById('pincode-button-modal');
+        const pincodeDescription = document.getElementById('pincode-description');
+
+        pincodeButtonModal.addEventListener('click', () => {
+          event.preventDefault();
+        });
 
         pincodeButton.addEventListener('click', function (event) {
           event.preventDefault();
           event.stopPropagation();
-
-          this.children[1].innerText = 'Generando...';
+          pincodeDescription.parentNode.classList.remove('has-error');
+          pincodeDescription.parentNode.childNodes[3].innerText = '';
+          this.innerText = 'Generando...';
           this.classList.add('disabled');
 
-          $.ajax('{{ path('generate-pincode') }}')
+          if(pincodeDescription.value.replace(/\s/g, "").length > 0){
+            $.ajax('{{ path('generate-pincode') }}',{data:{description:pincodeDescription.value}})
               .done(function ({data: {pincode}}) {
-
+                pincodeDescription.value = '';
+                $('#pinCodeModal').modal('hide');
                 airModal(pincode).modal();
-                pincodeButton.children[1].innerText = 'Generar PINCODE';
+                pincodeButton.innerText = 'Generar';
                 pincodeButton.classList.remove('disabled');
               });
+          }else{
+            pincodeDescription.parentNode.classList.add('has-error');
+            pincodeDescription.parentNode.childNodes[3].innerText = 'Agrega una descripción.';
+          }
+
         });
 
         function airModal(pincode) {
@@ -82,10 +117,11 @@
                         <div class="modal-content">
                             <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Pincode generado</h4>
+                            <h4 class="modal-title">PINCODE generado</h4>
                         </div>
                         <div class="modal-body text-center">
                           <h3>${pincode.pin}</h3>
+                          <p>Descripción: ${pincode.description}</p>
                           <p>Los pincodes expiran en 24 horas</p>
                           <button type="button" class="btn btn-azul" data-dismiss="modal">OK</button>
                         </div>

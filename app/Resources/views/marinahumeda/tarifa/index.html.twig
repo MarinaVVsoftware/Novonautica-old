@@ -1,57 +1,91 @@
 {% extends 'estructura/plantilla.twig' %}
-
-{% block title %}
-    Novonautiva | Tarifas Marina Humeda
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    {{ parent() }}
 {% endblock %}
-
 {% block contwrapper %}
     <div class="content-wrapper">
         <section class="content">
             <div class="panel panel-novo">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Tarifas</h3>
+                    <h3 class="panel-title">{{ title }}</h3>
                 </div>
                 <div class="panel-body">
-                    <table class="table text-center table-novo">
-                        <thead>
-                        <tr>
-                            <th>Num</th>
-                            <th>Tipo</th>
-                            <th>Costo</th>
-                            <th>Descripción</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% set i=0 %}
-                        {% for marinaHumedaTarifa in marinaHumedaTarifas|reverse %}
-                            {% set i=i+1 %}
-                            <tr>
-                                <td>{{ i }}</td>
-                                <td>{% if marinaHumedaTarifa.tipo == 1 %}Amarre{% else %}Electricidad{% endif %}</td>
-                                <td>${{ (marinaHumedaTarifa.costo/100)|number_format(2) }}</td>
-                                <td>{{ marinaHumedaTarifa.descripcion }}</td>
-                                <td>
-                                    <a class="btn btn-azul" href="{{ path('marinahumeda-tarifas_edit', { 'id': marinaHumedaTarifa.id }) }}">
-                                        Editar
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="panel-footer">
                     <div class="row">
                         <div class="col-sm-12">
-                            <a class="btn btn-azul" href="{{ path('marinahumeda-tarifas_new') }}">
-                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                Agregar
-                            </a>
+                            <table class="table table-novo">
+                                <thead>
+                                <tr>
+                                    <th>Rango</th>
+                                    <th class="with-options">Tipo</th>
+                                    <th class="with-options">Clasificación</th>
+                                    <th>Costo</th>
+                                    <th>Descripción</th>
+                                    <th class="no-sort"></th>
+                                </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
+                </div>
+                <div class="panel-footer">
+                    <a class="btn btn-azul" href="{{ path('marinahumeda-tarifas_new') }}">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        Agregar
+                    </a>
                 </div>
             </div>
         </section>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+    <script type="text/javascript">
+      (function ($, datatableSettings) {
+        const $tabla = $('.table-novo').DataTable({
+            ...datatableSettings,
+          ajax: '{{ path('marinahumeda-tarifas_index') }}',
+          autoWidth: false,
+          order: [[1, 'asc']],
+          columns: [
+          {responsivePriority: 1},
+          {responsivePriority: 1},
+          {responsivePriority: 1},
+          {responsivePriority: 0},
+          {responsivePriority: 0},
+          {responsivePriority: 0},
+          ],
+          rowCallback: function (row,data) {
+              row.cells[5].innerHTML = `<a href="${data[5]}/editar" class="btn btn-xs btn-azul btn-block">Editar</a>`;
+          }
+      });
+
+        $tabla.columns('.with-options').every(function (i) {
+          const column = this;
+          const columnHeader = column.header();
+          const select = document.createElement('select');
+
+          select.add(new Option(columnHeader.innerHTML, ''));
+          columnHeader.innerHTML = '';
+          columnHeader.appendChild(select);
+
+          select.addEventListener('click', e => e.stopPropagation());
+          select.addEventListener('change', function () {
+            console.log(i);
+            let val = $.fn.dataTable.util.escapeRegex(this.value);
+            column.search(val, true, true).draw();
+          });
+          if(i === 1){
+            select.add(new Option('Amarre', '1'));
+            select.add(new Option('Electricidad', '2'));
+          }
+          if(i === 2){
+            select.add(new Option('General', '0'));
+            select.add(new Option('Especial', '1'));
+          }
+        });
+
+      })(jQuery, datatablesSettings)
+    </script>
 {% endblock %}

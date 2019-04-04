@@ -20,6 +20,7 @@
                                 <tr>
                                     <th>Folio</th>
                                     <th>Cliente</th>
+                                    <th>Tipo de venta</th>
                                     <th>Fecha</th>
                                     <th>IVA</th>
                                     <th>Descuento</th>
@@ -52,6 +53,7 @@
             {responsivePriority: 1},
             {responsivePriority: 2},
             {responsivePriority: 1},
+            {responsivePriority: 1},
             {responsivePriority: 2},
             {responsivePriority: 2},
             {responsivePriority: 2},
@@ -59,9 +61,9 @@
             {responsivePriority: 0},
           ],
           createdRow: function (row, venta) {
-            row.cells[7].innerHTML = `
-                <a href="${venta[7]}" class="btn btn-xs btn-azul btn-block">Productos</a>
-                <a href="${venta[7]}/pdf" target="_blank" class="btn btn-xs btn-primary btn-block">Ticket</a>
+            row.cells[8].innerHTML = `
+                <a href="${venta[8]}" class="btn btn-xs btn-azul btn-block">Productos</a>
+                <a href="${venta[8]}/pdf" target="_blank" class="btn btn-xs btn-primary btn-block">Ticket</a>
              `;
           }
         });

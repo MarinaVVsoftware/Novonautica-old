@@ -2,10 +2,12 @@
 
 namespace AppBundle\Form;
 
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -18,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormInterface;
 use AppBundle\Entity\Cliente;
+
 
 class MarinaHumedaCotizacionType extends AbstractType
 {
@@ -52,19 +55,37 @@ class MarinaHumedaCotizacionType extends AbstractType
             ])
             ->add('diasEstadia',TextType::class,[
                 'label'=>'Días Estadia',
-                'attr' => ['class' => 'esnumero'],
+                'attr' => ['class' => 'esnumero','readonly' => true],
             ])
-            ->add('descuento', NumberType::class, [
-                'empty_data' => 0,
+            ->add('descuentoEstadia', NumberType::class, [
+                'label' => 'Descuento estadía %',
+                'attr' => [
+                    'class' => 'esdecimal limite100',
+                    'autocomplete' => 'off',
+                    'max' => 100,
+                    'min' => 0,
+                    'readonly' => true
+                    ],
+                'required' => false
+            ])
+            ->add('descuentoElectricidad', NumberType::class, [
+                'label' => 'Descuento electricidad %',
+
                 'attr' => ['class' => 'esdecimal limite100',
                     'autocomplete' => 'off',
                     'max' => 100,
-                    'min' => 0
-                    ]
+                    'min' => 0,
+                    'readonly' => true
+                ],
+                'required' => false,
             ])
             ->add('dolar', MoneyType::class, [
                 'required'=>false,
-                'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
+                'attr' => [
+                    'class' => 'esdecimal',
+                    'autocomplete' => 'off',
+                    'readonly' => true
+                ],
                 'currency' => 'USD',
                 'divisor' => 100,
                 'grouping' => true,
@@ -109,7 +130,10 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'label' => '¿Notificar al cliente?',
                 'required' => false
             ])
-        ;
+            ->add('estatusPincode',HiddenType::class,[
+                'data' => '0',
+                'mapped' => false
+            ]);
 
         $formModifier = function (FormInterface $form, Cliente $cliente = null) {
             $barcos = null === $cliente ? array() : $cliente->getBarcos();
@@ -163,7 +187,8 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('fechaLlegada')
                     ->remove('fechaSalida')
                     ->remove('diasEstadia')
-                    ->remove('descuento')
+                    ->remove('descuentoEstadia')
+                    ->remove('descuentoElectricidad')
                     ->remove('dolar')
                     ->remove('mensaje')
                     ->remove('mhcservicios')
@@ -176,11 +201,11 @@ class MarinaHumedaCotizacionType extends AbstractType
             else {
                 $form
                     ->remove('cliente')
-//                    ->remove('barco')
                     ->remove('fechaLlegada')
                     ->remove('fechaSalida')
                     ->remove('diasEstadia')
-                    ->remove('descuento')
+                    ->remove('descuentoEstadia')
+                    ->remove('descuentoElectricidad')
                     ->remove('dolar')
                     ->remove('mensaje')
                     ->remove('mhcservicios')

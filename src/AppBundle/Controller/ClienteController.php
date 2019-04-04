@@ -231,42 +231,46 @@ class ClienteController extends Controller
         $deleteForm = $this->createDeleteForm($cliente);
         $editForm = $this->createForm('AppBundle\Form\ClienteType', $cliente);
         $editForm->handleRequest($request);
+        try {
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
+                foreach ($barcos as $barco) {
+                    $om = $barcomotores[$barco->getId()]; //extraemos la coleccion de motores del barco correspondiente
+                    foreach ($om as $motor) {
+                        if (false === $barco->getMotores()->contains($motor)) {
+                            $motor->getBarco()->removeMotore($motor);
+                            $motor->setBarco(null);
+                            $em->persist($motor);
+                            $em->remove($motor);
+                        }
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach ($barcos as $barco) {
-                $om = $barcomotores[$barco->getId()]; //extraemos la coleccion de motores del barco correspondiente
-                foreach ($om as $motor) {
-                    if (false === $barco->getMotores()->contains($motor)) {
-                        $motor->getBarco()->removeMotore($motor);
-                        $motor->setBarco(null);
-                        $em->persist($motor);
-                        $em->remove($motor);
+                        $em->persist($barco);
                     }
-
-                    $em->persist($barco);
                 }
-            }
 
-            foreach ($clonedRazonesSociales as $clonedRazonSocial) {
-                $clonedRazonSocial->setCorreos(
-                    preg_replace('/;\s+/', ',', $clonedRazonSocial->getCorreos())
-                );
+                foreach ($clonedRazonesSociales as $clonedRazonSocial) {
+                    $clonedRazonSocial->setCorreos(
+                        preg_replace('/;\s+/', ',', $clonedRazonSocial->getCorreos())
+                    );
 
-                if (!$cliente->getRazonesSociales()->contains($clonedRazonSocial)) {
-                    $em->remove($clonedRazonSocial);
+                    if (!$cliente->getRazonesSociales()->contains($clonedRazonSocial)) {
+                        $em->remove($clonedRazonSocial);
+                    }
                 }
-            }
 
-            foreach ($clonedCuentasBancarias as $clonedCuentasBancaria) {
-                if (!$cliente->getCuentasBancarias()->contains($clonedCuentasBancaria)) {
-                    $em->remove($clonedCuentasBancaria);
+                foreach ($clonedCuentasBancarias as $clonedCuentasBancaria) {
+                    if (!$cliente->getCuentasBancarias()->contains($clonedCuentasBancaria)) {
+                        $em->remove($clonedCuentasBancaria);
+                    }
                 }
+
+                $em->flush();
+
+                return $this->redirectToRoute('cliente_show', ['id' => $cliente->getId()]);
             }
-
-            $em->flush();
-
-            return $this->redirectToRoute('cliente_show', ['id' => $cliente->getId()]);
+        } catch (\Exception $e) {
+            $this->addFlash('notice', 'Error!');
         }
+
 
         return $this->render('cliente/edit.html.twig', [
             'title' => 'Editar cliente',

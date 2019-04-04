@@ -29,9 +29,16 @@ a {
 .pt-1{
     padding-top: 1em;
 }
+.pt-1-5{
+    padding-top: 1.5em;
+}
+.pt-2{
+    padding-top: 2em;
+}
 .pl-1{
     padding-left: 1em;
 }
+
 /*++++ colores fondo ++++*/
 .fondo-azul {
     background-color: #0097f6;
@@ -79,6 +86,9 @@ a {
 }
 .letra-negra{
     color: #000000;
+}
+.letra-verde{
+    color: #009933;
 }
 /*++ fin colores letra ++++*/
 
@@ -498,7 +508,6 @@ form > .btn-borrar:hover, .btn-borrar:hover {
 
 .panel-novo tbody tr:hover {
     /*background: #3e4766;*/
-    cursor: pointer;
 }
 
 .panel-novo tbody td input[type="text"] {
@@ -1245,4 +1254,19 @@ input[type="file"] + label * {
 }
 .gDepFSArw, .gDepSSArw {
     border-left: 4px solid #970000;
+}
+.wrapper{
+    overflow-y: hidden !important;
+}
+.br-tl-0{
+    border-top-left-radius: 0 !important;
+}
+.br-bl-0{
+    border-bottom-left-radius: 0 !important;
+}
+.br-tr-17{
+    border-top-right-radius: 17px !important;
+}
+.br-br-0{
+    border-bottom-right-radius: 17px !important;
 }

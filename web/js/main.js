@@ -84,63 +84,48 @@ $(document).ready(function () {
     window.location.href = direc;
   });
 
-
-//---- seleccionar choice al recotizar------
-  var diasestadiaprecio = $('#de_precio').data('valor');
-  var electricidadprecio = $('#e_precio').data('valor');
-  $("#appbundle_marinahumedacotizacion_mhcservicios_0_precio>option").each(function () {
-    if ($(this).val() == diasestadiaprecio) {
-      $(this).attr("selected", "selected");
+  $(".esnumero").keypress(function () {
+    return isNumberKey(event);
+  });
+  $(".esdecimal").keypress(function () {
+    return esNumeroDecimal(event, this);
+  });
+  $("#appbundle_marinahumedacotizacion_validanovo_0").click(function () {
+    $('#notarechazado').hide();
+  });
+  $("#appbundle_marinahumedacotizacion_validanovo_1").click(function () {
+    $('#notarechazado').show();
+  });
+  $("#appbundle_marinahumedacotizacion_validacliente_0").click(function () {
+    $('#notarechazado').hide();
+  });
+  $("#appbundle_marinahumedacotizacion_validacliente_1").click(function () {
+    $('#notarechazado').show();
+  });
+  $("#appbundle_astillerocotizacion_validanovo_0").click(function () {
+    $('#notarechazado').hide();
+  });
+  $("#appbundle_astillerocotizacion_validanovo_1").click(function () {
+    $('#notarechazado').show();
+  });
+  $("#appbundle_astillerocotizacion_validacliente_0").click(function () {
+    $('#notarechazado').hide();
+  });
+  $("#appbundle_astillerocotizacion_validacliente_1").click(function () {
+    $('#notarechazado').show();
+  });
+  $('.opcionrechazar').click(function () {
+    $('#notarechazado').show();
+  });
+  $('.opcionaceptar').click(function () {
+    $('#notarechazado').hide();
+  });
+  $('.limite100').on('input', function () {
+    var value = $(this).val();
+    if ((value !== '') && (value.indexOf('.') === -1)) {
+      $(this).val(Math.max(Math.min(value, 100), 0));
     }
   });
-  $("#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux>option").each(function () {
-    if ($(this).val() == electricidadprecio) {
-      $(this).attr("selected", "selected");
-    }
-  });
-//-- fin seleccionar choice al recotizar----
-    $(".esnumero").keypress(function () {
-        return isNumberKey(event);
-    });
-    $(".esdecimal").keypress(function () {
-        return esNumeroDecimal(event, this);
-    });
-    $("#appbundle_marinahumedacotizacion_validanovo_0").click(function () {
-        $('#notarechazado').hide();
-    });
-    $("#appbundle_marinahumedacotizacion_validanovo_1").click(function () {
-        $('#notarechazado').show();
-    });
-    $("#appbundle_marinahumedacotizacion_validacliente_0").click(function () {
-        $('#notarechazado').hide();
-    });
-    $("#appbundle_marinahumedacotizacion_validacliente_1").click(function () {
-        $('#notarechazado').show();
-    });
-    $("#appbundle_astillerocotizacion_validanovo_0").click(function () {
-        $('#notarechazado').hide();
-    });
-    $("#appbundle_astillerocotizacion_validanovo_1").click(function () {
-        $('#notarechazado').show();
-    });
-    $("#appbundle_astillerocotizacion_validacliente_0").click(function () {
-        $('#notarechazado').hide();
-    });
-    $("#appbundle_astillerocotizacion_validacliente_1").click(function () {
-        $('#notarechazado').show();
-    });
-    $('.opcionrechazar').click(function () {
-        $('#notarechazado').show();
-    });
-    $('.opcionaceptar').click(function () {
-        $('#notarechazado').hide();
-    });
-    $('.limite100').on('input', function () {
-        var value = $(this).val();
-            if ((value !== '') && (value.indexOf('.') === -1)) {
-                $(this).val(Math.max(Math.min(value, 100), 0));
-            }
-    });
 });
 
 function isNumberKey(evt) {
@@ -820,6 +805,12 @@ var e_precio_mxn = 0;
 var descuento = 0;
 var dolar = 0;
 //var dolar = $('#valdolar').data('valor');
+const descuento_estadia = $('#appbundle_marinahumedacotizacion_descuentoEstadia');
+const descuento_electricidad = $('#appbundle_marinahumedacotizacion_descuentoElectricidad');
+const estadiaOtroPrecio = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precioOtro');
+const electricidadOtroPrecio = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioOtro');
+const estadiaSelectPrecios = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio');
+const electricidadSelectPrecios = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioAux');
 
 $('#appbundle_marinahumedacotizacion_fechaLlegada').on("change", function () {
   dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
@@ -830,24 +821,27 @@ $('#appbundle_marinahumedacotizacion_fechaLlegada').on("change", function () {
   // $('#dias_estadia_cantidad').data('valor', dias_estadia);
   $('#appbundle_marinahumedacotizacion_diasEstadia').val(dias_estadia);
 
-
-  de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100);
+  de_precio = estadiaOtroPrecio.value ?
+    estadiaOtroPrecio.value :
+    ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100);
   de_precio_mxn = de_precio * dolar;
 
   $('#de_cantidad').html(dias_estadia);
   $('#de_cantidad_mxn').html(dias_estadia);
 
-  calculaSubtotales(dias_estadia, de_precio, $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
-  calculaSubtotales(dias_estadia, de_precio_mxn, $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
+  calculaSubtotales(dias_estadia, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
+  calculaSubtotales(dias_estadia, de_precio_mxn, descuento_estadia.val(), $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
 
-  e_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
+  e_precio = electricidadOtroPrecio.value ?
+    electricidadOtroPrecio.value :
+    ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
   e_precio_mxn = e_precio * dolar;
 
   $('#e_cantidad').html(dias_estadia);
   $('#e_cantidad_mxn').html(dias_estadia);
 
-  calculaSubtotales(dias_estadia, e_precio, $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
-  calculaSubtotales(dias_estadia, e_precio_mxn, $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+  calculaSubtotales(dias_estadia, e_precio, descuento_electricidad.val(),$('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+  calculaSubtotales(dias_estadia, e_precio_mxn, descuento_electricidad.val(),$('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
 
   calculaTotales();
 });
@@ -861,23 +855,27 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on("change", function () {
   // $('#dias_estadia_cantidad').data('valor', dias_estadia);
   $('#appbundle_marinahumedacotizacion_diasEstadia').val(dias_estadia);
 
-  de_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100);
+  de_precio = estadiaOtroPrecio.value ?
+    estadiaOtroPrecio.value :
+    ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100);
   de_precio_mxn = de_precio * dolar;
 
   $('#de_cantidad').html(dias_estadia);
   $('#de_cantidad_mxn').html(dias_estadia);
 
-  calculaSubtotales(dias_estadia, de_precio, $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
-  calculaSubtotales(dias_estadia, de_precio_mxn, $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
+  calculaSubtotales(dias_estadia, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
+  calculaSubtotales(dias_estadia, de_precio_mxn, descuento_estadia.val(),$('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
 
-  e_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
+  e_precio = electricidadOtroPrecio.value ?
+    electricidadOtroPrecio.value :
+    ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
   e_precio_mxn = e_precio * dolar;
 
   $('#e_cantidad').html(dias_estadia);
   $('#e_cantidad_mxn').html(dias_estadia);
 
-  calculaSubtotales(dias_estadia, e_precio, $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
-  calculaSubtotales(dias_estadia, e_precio_mxn, $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+  calculaSubtotales(dias_estadia, e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+  calculaSubtotales(dias_estadia, e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
 
   calculaTotales();
 });
@@ -890,61 +888,100 @@ $('#appbundle_marinahumedacotizacion_diasEstadia').keyup(function () {
   de_precio_mxn = de_precio * dolar;
   $('#de_cantidad').html(dias_estadia);
   $('#de_cantidad_mxn').html(dias_estadia);
-  calculaSubtotales(dias_estadia, de_precio, $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
-  calculaSubtotales(dias_estadia, de_precio_mxn, $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
+  calculaSubtotales(dias_estadia, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
+  calculaSubtotales(dias_estadia, de_precio_mxn, descuento_estadia.val(), $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
   e_precio = ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
   e_precio_mxn = e_precio * dolar;
   $('#e_cantidad').html(dias_estadia);
   $('#e_cantidad_mxn').html(dias_estadia);
-  calculaSubtotales(dias_estadia, e_precio, $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
-  calculaSubtotales(dias_estadia, e_precio_mxn, $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+  calculaSubtotales(dias_estadia, e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+  calculaSubtotales(dias_estadia, e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
   calculaTotales();
 });
-$('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change', function () {
-  dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-  //de_cantidad = $('#dias_estadia_cantidad').data('valor');
-  de_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
-  de_precio = ($(this).val() / 100);
-  de_precio_mxn = (de_precio * dolar).toFixed(2);
+ function recalculaCantidadYprecio (){
+   dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+   dias_estadia = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
+   $('#de_cantidad').html(dias_estadia);
+   $('#de_cantidad_mxn').html(dias_estadia);
 
+   $('#e_cantidad').html(dias_estadia);
+   $('#e_cantidad_mxn').html(dias_estadia);
+
+   let de_precio = estadiaOtroPrecio.value ? estadiaOtroPrecio.value : (estadiaSelectPrecios.value/100);
+   let de_precio_mxn = (de_precio * dolar).toFixed(2);
+   $('#de_precio').html('$ ' + de_precio);
+   $('#de_precio_mxn').html('$ ' + de_precio_mxn);
+
+   let e_precio = electricidadOtroPrecio.value ? electricidadOtroPrecio.value : (electricidadSelectPrecios.value/100);
+   let e_precio_mxn = (e_precio * dolar).toFixed(2);
+   $('#e_precio').html('$ ' + e_precio);
+   $('#e_precio_mxn').html('$ ' + e_precio_mxn);
+   recalculaSubtotalesYtotal();
+ }
+$('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change', function () {
+    estadiaOtroPrecio.value = '';
+    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+    de_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
+    de_precio = ($(this).val() / 100);
+    de_precio_mxn = (de_precio * dolar).toFixed(2);
+
+    $('#de_precio').html('$ ' + de_precio);
+    $('#de_precio_mxn').html('$ ' + de_precio_mxn);
+    calculaSubtotales(de_cantidad, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
+    calculaSubtotales(de_cantidad, de_precio_mxn, descuento_estadia.val(), $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
+    calculaTotales();
+
+});
+if(estadiaOtroPrecio){
+  estadiaOtroPrecio.addEventListener('keyup',() => {
+    estadiaSelectPrecios.value = '';
+  dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+  de_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
+  de_precio = estadiaOtroPrecio.value ? estadiaOtroPrecio.value : 0;
+  de_precio_mxn = (de_precio * dolar).toFixed(2);
   $('#de_precio').html('$ ' + de_precio);
   $('#de_precio_mxn').html('$ ' + de_precio_mxn);
-  calculaSubtotales(de_cantidad, de_precio, $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
-  calculaSubtotales(de_cantidad, de_precio_mxn, $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
+  calculaSubtotales(de_cantidad, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
+  calculaSubtotales(de_cantidad, de_precio_mxn, descuento_estadia.val(), $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
   calculaTotales();
-});
+  });
+}
 
-//-- Electricidad --
-// $('#appbundle_marinahumedacotizacion_mhcservicios_1_cantidad').keyup(function () {
-//     e_cantidad = $(this).val();
-//     e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val();
-//     e_precio_mxn = (e_precio * dolar).toFixed(2);
-//
-//     $('#e_cantidad').html(e_cantidad);
-//     $('#e_cantidad_mxn').html(e_cantidad);
-//
-//     calculaSubtotales(e_cantidad,e_precio,$('#e_subtotal'),$('#e_iva'),$('#e_descuento'),$('#e_total'));
-//     calculaSubtotales(e_cantidad,e_precio_mxn,$('#e_subtotal_mxn'),$('#e_iva_mxn'),$('#e_descuento_mxn'),$('#e_total_mxn'));
-//     calculaTotales();
-// });
 
 $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').on('change', function () {
-  dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-  //e_cantidad = $('#dias_estadia_cantidad').data('valor');
-  e_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
-  e_precio = ($(this).val() / 100);
-  e_precio_mxn = (e_precio * dolar).toFixed(2);
+    electricidadOtroPrecio.value = '';
+    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+    e_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
+    e_precio = ($(this).val() / 100);
+    e_precio_mxn = (e_precio * dolar).toFixed(2);
 
+    $('#e_precio').html('$ ' + e_precio);
+    $('#e_precio_mxn').html('$ ' + e_precio_mxn);
+    calculaSubtotales(e_cantidad, e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+    calculaSubtotales(e_cantidad, e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+    calculaTotales();
+
+});
+if(electricidadOtroPrecio){
+  electricidadOtroPrecio.addEventListener('keyup',() => {
+    electricidadSelectPrecios.value = '';
+  dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+  e_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
+  e_precio = electricidadOtroPrecio.value ? electricidadOtroPrecio.value : 0;
+  e_precio_mxn = (e_precio * dolar).toFixed(2);
   $('#e_precio').html('$ ' + e_precio);
   $('#e_precio_mxn').html('$ ' + e_precio_mxn);
-
-  calculaSubtotales(e_cantidad, e_precio, $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
-  calculaSubtotales(e_cantidad, e_precio_mxn, $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+  calculaSubtotales(e_cantidad, e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+  calculaSubtotales(e_cantidad, e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
   calculaTotales();
-});
+  });
+}
 
-//-- Descuento --
-$('#appbundle_marinahumedacotizacion_descuento').keyup(function () {
+//-- Descuentos --
+$('#appbundle_marinahumedacotizacion_descuentoEstadia').keyup(function () {
+  recalculaSubtotalesYtotal();
+});
+$('#appbundle_marinahumedacotizacion_descuentoElectricidad').keyup(function () {
   recalculaSubtotalesYtotal();
 });
 
@@ -955,36 +992,30 @@ $('#appbundle_marinahumedacotizacion_dolar').keyup(function () {
 });
 
 function recalculaSubtotalesYtotal() {
+
   dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-
-  // dias_estadia = $('#dias_estadia_cantidad').data('valor');
   dias_estadia = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
-
   de_cantidad = dias_estadia;
-  de_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100;
+  de_precio = estadiaOtroPrecio.value ? estadiaOtroPrecio.value : (estadiaSelectPrecios.value/100);
   de_precio_mxn = de_precio * dolar;
-  //$('#de_cantidad').html(de_cantidad);
-  calculaSubtotales(de_cantidad, de_precio, $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
-  calculaSubtotales(de_cantidad, de_precio_mxn, $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
+  calculaSubtotales(de_cantidad, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
+  calculaSubtotales(de_cantidad, de_precio_mxn,descuento_estadia.val(), $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
 
   e_cantidad = dias_estadia;
-  e_precio = $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100;
+  e_precio = electricidadOtroPrecio.value ? electricidadOtroPrecio.value : (electricidadSelectPrecios.value/100);
   e_precio_mxn = e_precio * dolar;
-  calculaSubtotales(e_cantidad, e_precio, $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
-  calculaSubtotales(e_cantidad, e_precio_mxn, $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+  calculaSubtotales(e_cantidad, e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+  calculaSubtotales(e_cantidad, e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
 
   calculaTotales();
 }
 
-function calculaSubtotales(cantidad, precio, tdsubtot, tdiva, tddesc, tdtot) {
-
-
+function calculaSubtotales(cantidad, precio,descuento, tdsubtot, tdiva, tddesc, tdtot) {
     var eslora = 0;
     if ($('#de_eslora').data('valor')) {
         eslora = $('#de_eslora').data('valor');
     }
     var iva = ($('#valiva').data('valor')) / 100;
-    var descuento = $('#appbundle_marinahumedacotizacion_descuento').val();
     var subtotal = cantidad * precio * eslora;
     var desctot = (subtotal * descuento) / 100;
     var subtotal_descuento = subtotal - desctot;
@@ -993,7 +1024,7 @@ function calculaSubtotales(cantidad, precio, tdsubtot, tdiva, tddesc, tdtot) {
 
   tdsubtot.html('$ ' + (subtotal).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
   tdiva.html('$ ' + (ivatot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-  tddesc.html('$ ' + (desctot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+  tddesc.html('$ ' + (desctot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' ('+descuento+'%)');
   tdtot.html('$ ' + total.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 
   tdsubtot.data('valor', subtotal);

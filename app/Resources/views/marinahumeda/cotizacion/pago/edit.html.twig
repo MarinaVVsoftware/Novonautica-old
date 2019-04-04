@@ -8,15 +8,78 @@
             margin-bottom: 1rem !important;
         }
 
-        .table > tbody > tr.pago-agregado > td .input-group-addon {
+        .help-block {
+            color: #dd4b39;
+        }
+
+        .table > tbody > tr > td .input-group-addon {
             border-radius: 0;
         }
 
-        .table > tbody > tr.pago-agregado > td {
+        .table > thead > tr > th,
+        .table > tbody > tr > td {
             padding: 0;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .content form .table > tbody > tr > td > input.form-control,
+        .content form .table > tbody > tr > td > select {
+            border-radius: 0 !important;
         }
     </style>
 {% endblock %}
+
+{% block appbundle_fulldatapago_widget %}
+    {% spaceless %}
+        <tr>
+            <td>
+                {{ form_widget(form.cantidad) }}
+                {{ form_errors(form.cantidad) }}
+            </td>
+            <td>
+                {{ form_widget(form.divisa) }}
+                {{ form_errors(form.divisa) }}
+            </td>
+            <td>
+                {{ form_widget(form.dolar ) }}
+                {{ form_errors(form.dolar) }}
+            </td>
+            <td>
+                {{ form_widget(form.fecharealpago) }}
+                {{ form_errors(form.fecharealpago) }}
+            </td>
+            <td>
+                {{ form_widget(form.metodopago) }}
+                {{ form_errors(form.metodopago) }}
+            </td>
+            <td>
+                {{ form_widget(form.cuentabancaria) }}
+                {{ form_errors(form.cuentabancaria) }}
+            </td>
+            <td>
+                {{ form_widget(form.banco) }}
+                {{ form_errors(form.banco) }}
+            </td>
+            <td>
+                {{ form_widget(form.titular) }}
+                {{ form_errors(form.titular) }}
+            </td>
+            <td>
+                {{ form_widget(form.numcuenta) }}
+                {{ form_errors(form.numcuenta) }}
+            </td>
+            <td>
+                {{ form_widget(form.codigoseguimiento) }}
+                {{ form_errors(form.codigoseguimiento) }}
+            </td>
+            <td style="vertical-align: middle">
+            </td>
+        </tr>
+    {% endspaceless %}
+{% endblock %}
+
+{% form_theme form _self %}
 
 {% block contwrapper %}
     <div class="content-wrapper">
@@ -58,71 +121,79 @@
                 <div class="panel-body">
 
                     <div class="row">
-                        <div class="col-sm-3">
-                            <label>Cliente</label>
-                            <div class='info-input'>{{ marinaHumedaCotizacion.cliente }}</div>
-                            <label>Barco</label>
-                            <div class='info-input'>{{ marinaHumedaCotizacion.barco }}</div>
-                            <label>Total Cotización (USD)</label>
-                            <div class='info-input'>$ {{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</div>
-                            <label>Pagado hasta el momento (USD)</label>
-                            <div class='info-input'>$ {{ (marinaHumedaCotizacion.pagado/100)|number_format(2) }}</div>
-                            <label>Faltante (USD)</label>
-                            <div class='info-input'>
-                                $ {{ ((marinaHumedaCotizacion.total-marinaHumedaCotizacion.pagado)/100)|number_format(2) }}</div>
+                        <div class="col-sm-4">
+                            <h4>Cliente</h4>
+                            <p>{{ marinaHumedaCotizacion.cliente }}</p>
                         </div>
+                        <div class="col-sm-4">
+                            <h4>Embarcación</h4>
+                            <p>{{ marinaHumedaCotizacion.barco }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <h4>Total de la cotización</h4>
+                            <p>$ {{ (marinaHumedaCotizacion.total/100)|number_format(2) }} USD</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <h4>Pagado hasta el momento</h4>
+                            <p>$ {{ (marinaHumedaCotizacion.pagado/100)|number_format(2) }} USD</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <h4>Saldo pendiente</h4>
+                            <p>
+                                $ {{ ((marinaHumedaCotizacion.total-marinaHumedaCotizacion.pagado)/100)|number_format(2) }}
+                                USD</p>
+                        </div>
+                    </div>
 
-                        {% form_theme form 'estructura/temaerror.html.twig' %}
+                    <hr>
+
+                    <div class="row">
                         {{ form_start(form) }}
-                        <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-sm-4 col-sm-offset-8">
-                                    <label>Monedero actual</label>
-                                    <div class='info-input'>$ {{ (marinaHumedaCotizacion.cliente.monederomarinahumeda/100)|number_format(2) }} USD</div>
+                        <div class="col-sm-12">
+
+                            <div class="row margin-bottom">
+                                <div class="col-sm-4">
+                                    <h4>Listado de pagos</h4>
+                                </div>
+                                <div class="col-sm-4 col-sm-offset-4">
+                                    <label for="monedero">Monedero actual</label>
+                                    <input type="text" id="monedero"
+                                           value="$ {{ (marinaHumedaCotizacion.cliente.monederomarinahumeda/100)|number_format(2) }} USD"
+                                           class="form-control"
+                                           readonly="readonly"
+                                    >
                                 </div>
                             </div>
-                            <p style="margin-bottom: 5px">Listado de pagos</p>
+
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <table id="servicioAdicional" class="table text-center">
+                                    <table class="table table-novo text-center">
                                         <thead>
                                         <tr>
-                                            <th>Método de pago</th>
+                                            <th>Cantidad</th>
                                             <th>Divisa</th>
-                                            <th>Pago</th>
-                                            <th>Fecha de pago</th>
-                                            <th>Valor del dolar</th>
+                                            <th>Valor del <br> dolar</th>
+                                            <th>Fecha de <br> pago</th>
+                                            <th>Método de <br> pago</th>
+                                            <th>Cuenta <br> de recepción</th>
+                                            <th>Banco</th>
+                                            <th>Titular de <br> cuenta</th>
+                                            <th>Numero de <br> cuenta</th>
+                                            <th>Codigo de <br>seguimiento</th>
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody id="pago-fields-list0"
-                                               class="lista-pagos"
-                                               data-prototype="
-                                     {% filter escape %}
-                                     {{ include('marinahumeda/cotizacion/pago/coleccion-pago.twig', { 'form': form.pagos.vars.prototype }) }}
-                                     {% endfilter %}
-                                     ">
-                                        {% for i, pagoField in form.pagos %}
-                                            {% form_theme pagoField 'marinahumeda/cotizacion/pago/coleccion-pago.twig' %}
-                                            <tr class="pago-agregado">
-                                                <td>{{ form_widget(pagoField.metodopago) }}</td>
-                                                <td>{{ form_widget(pagoField.divisa) }}</td>
-                                                <td>{{ form_widget(pagoField.cantidad) }} </td>
-                                                <td>{{ form_widget(pagoField.fecharealpago) }} </td>
-                                                <td>{{ form_widget(pagoField.dolar) }}</td>
-                                                <td style="vertical-align: middle">
-                                                    <a href="#" class="remove-pago btn btn-xs btn-naranja">
-                                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
+                                        <tbody id="pago-collection"
+                                               data-prototype="{{ form_widget(form.pagos.vars.prototype)|e('html_attr') }}"
+                                        >
+                                        {{ form_widget(form.pagos) }}
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-sm-11">
-                                    <a href="#" id="" class="add-another-pago letra-azul pull-right"
-                                       data-cantidad="{{ form.pagos|length }}" data-idlista="0">
+                                <div class="col-sm-12">
+                                    <a href="#" id="add" class="letra-azul pull-right">
                                         + Agregar Pago
                                     </a>
                                 </div>
@@ -144,4 +215,115 @@
             </div>
         </section>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      class ElementCollection {
+        constructor(addButton, prototypeHolder, elementListener) {
+          this.addButton = typeof addButton === 'string'
+              ? document.querySelector(addButton)
+              : addButton;
+
+          this.prototypeHolder = typeof prototypeHolder === 'string'
+              ? document.querySelector(prototypeHolder)
+              : prototypeHolder;
+
+          this.elementListener = elementListener || (() => {
+          });
+
+          Array
+              .from(this.prototypeHolder.querySelectorAll('tr'))
+              .forEach(element => {
+                this.appendRemoveButton(element);
+                this.elementListener(element);
+              });
+
+          this.elementCounter = this.prototypeHolder.childElementCount;
+
+          this.addButton
+              .addEventListener(
+                  'click',
+                  this.addElement.bind(this)
+              );
+        }
+
+        /* PUBLIC */
+        addElement(event) {
+          if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          let element = this._getPrototypeElement();
+
+          this.appendRemoveButton(element);
+          this.elementListener(element, event);
+          this.prototypeHolder.appendChild(element);
+
+          return this.prototypeHolder.children[this.prototypeHolder.children.length - 1];
+        }
+
+        clear() {
+          this.prototypeHolder.innerHTML = '';
+        }
+
+        removeElement(element) {
+          element = typeof element === 'number' ? this.prototypeHolder.children[(element - 1)] : element;
+          if (!element) throw new Error('No existe el elemento que quieres eliminar');
+          element.parentNode.removeChild(element);
+        }
+
+        appendRemoveButton(element) {
+          let celda = element.cells[element.cells.length - 1];
+          let removeButton = document.createElement('a');
+
+          removeButton.className = 'badge btn-xs btn-naranja';
+          removeButton.innerHTML = '<i class="fa fa-trash"></i>';
+          removeButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.removeElement(removeButton.parentNode.parentNode)
+          });
+
+          celda.appendChild(removeButton);
+        }
+
+        /* PRIVATE */
+
+        _getPrototypeElement() {
+          let prototipo = this.prototypeHolder
+              .dataset
+              .prototype
+              .replace(/__name__/g, this.elementCounter);
+
+          let tempElement = document.createElement('table');
+          tempElement.innerHTML = prototipo;
+          let element = tempElement.querySelector('tr');
+
+          this.elementCounter++;
+
+          return element;
+        }
+      }
+    </script>
+    <script>
+      (function ($) {
+
+        new ElementCollection(
+            '#add',
+            '#pago-collection',
+            function (row) {
+              $(row.cells[3], 'input').datepicker({
+                autoclose: true,
+                format: 'yyyy-mm-dd',
+                orientation: 'bottom',
+              });
+            }
+        );
+
+      })(jQuery)
+    </script>
 {% endblock %}

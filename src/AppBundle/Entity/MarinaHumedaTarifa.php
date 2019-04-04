@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MarinaHumedaTarifa
 {
+    const CLASIFICACION_GENERAL = 0;
+    const CLASIFICACION_ESPECIAL = 1;
+
     /**
      * @var int
      *
@@ -36,11 +39,18 @@ class MarinaHumedaTarifa
     private $costo;
 
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(name="pies", type="integer", nullable=true)
+     * @ORM\Column(name="pies_a", type="float", nullable=true)
      */
-    private $pies;
+    private $piesA;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="pies_b", type="float", nullable=true)
+     */
+    private $piesB;
 
     /**
      * @var string
@@ -49,9 +59,31 @@ class MarinaHumedaTarifa
      */
     private $descripcion;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="clasificacion", type="smallint")
+     */
+    private $clasificacion;
+
+    private static $clasificacionList = [
+        MarinaHumedaTarifa::CLASIFICACION_GENERAL => 'Tarifa General',
+        MarinaHumedaTarifa::CLASIFICACION_ESPECIAL => 'Tarifa Especial'
+    ];
+
+
     public function __toString()
     {
-        return '$'.($this->costo/100).' - '.$this->descripcion;
+        return
+            '$' . ($this->costo / 100)
+            . ' USD - Entre '.$this->piesA.' fts y '.$this->piesB.' fts - '
+            . $this->getClasificacionNombre();
+    }
+
+
+    public function __construct()
+    {
+        $this->clasificacion = 0;
     }
 
     /**
@@ -113,30 +145,6 @@ class MarinaHumedaTarifa
     }
 
     /**
-     * Set pies
-     *
-     * @param float $pies
-     *
-     * @return MarinaHumedaTarifa
-     */
-    public function setPies($pies)
-    {
-        $this->pies = $pies;
-
-        return $this;
-    }
-
-    /**
-     * Get pies
-     *
-     * @return float
-     */
-    public function getPies()
-    {
-        return $this->pies;
-    }
-
-    /**
      * Set descripcion
      *
      * @param string $descripcion
@@ -158,5 +166,84 @@ class MarinaHumedaTarifa
     public function getDescripcion()
     {
         return $this->descripcion;
+    }
+
+    /**
+     * Set piesA.
+     *
+     * @param float|null $piesA
+     *
+     * @return MarinaHumedaTarifa
+     */
+    public function setPiesA($piesA = null)
+    {
+        $this->piesA = $piesA;
+
+        return $this;
+    }
+
+    /**
+     * Get piesA.
+     *
+     * @return float|null
+     */
+    public function getPiesA()
+    {
+        return $this->piesA;
+    }
+
+    /**
+     * Set piesB.
+     *
+     * @param float|null $piesB
+     *
+     * @return MarinaHumedaTarifa
+     */
+    public function setPiesB($piesB = null)
+    {
+        $this->piesB = $piesB;
+
+        return $this;
+    }
+
+    /**
+     * Get piesB.
+     *
+     * @return float|null
+     */
+    public function getPiesB()
+    {
+        return $this->piesB;
+    }
+
+    /**
+     * @return int
+     */
+    public function getClasificacion()
+    {
+        if (null === $this->clasificacion) { return null; }
+        return $this->clasificacion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getClasificacionNombre()
+    {
+        if (null === $this->clasificacion) { return null; }
+        return self::$clasificacionList[$this->clasificacion];
+    }
+
+    /**
+     * @param int $clasificacion
+     */
+    public function setClasificacion($clasificacion)
+    {
+        $this->clasificacion = $clasificacion;
+    }
+
+    public static function getClasificacionList()
+    {
+        return self::$clasificacionList;
     }
 }

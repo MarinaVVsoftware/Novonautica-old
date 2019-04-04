@@ -51,16 +51,18 @@ class VentaDataTable extends AbstractDataTableHandler
             } elseif ($order->column == 1) {
                 $query->addOrderBy('v.cliente', $order->dir);
             } elseif ($order->column == 2) {
-                $query->addOrderBy('v.createdAt', $order->dir);
+                $query->addOrderBy('v.tipoVenta', $order->dir);
             } elseif ($order->column == 3) {
-                $query->addOrderBy('v.iva', $order->dir);
+                $query->addOrderBy('v.createdAt', $order->dir);
             } elseif ($order->column == 4) {
-                $query->addOrderBy('v.descuento', $order->dir);
+                $query->addOrderBy('v.iva', $order->dir);
             } elseif ($order->column == 5) {
-                $query->addOrderBy('v.subtotal', $order->dir);
+                $query->addOrderBy('v.descuento', $order->dir);
             } elseif ($order->column == 6) {
-                $query->addOrderBy('v.total', $order->dir);
+                $query->addOrderBy('v.subtotal', $order->dir);
             } elseif ($order->column == 7) {
+                $query->addOrderBy('v.total', $order->dir);
+            } elseif ($order->column == 8) {
                 $query->addOrderBy('v.id', $order->dir);
             }
         }
@@ -79,6 +81,7 @@ class VentaDataTable extends AbstractDataTableHandler
             $results->data[] = [
                 $venta->getId(),
                 $venta->getCliente() ? $venta->getCliente()->getNombre() : '',
+                $venta->getTipoVentaName(),
                 $venta->getCreatedAt()->format('d/m/Y'),
                 'MX$ ' . number_format(($venta->getIva() / 100), 2),
                 'MX$ ' . number_format(($venta->getDescuento() / 100), 2),
