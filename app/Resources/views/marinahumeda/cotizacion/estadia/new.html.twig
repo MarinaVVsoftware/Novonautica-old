@@ -166,6 +166,7 @@
                                     </div>
                                     <label>Días Estadía:</label>
                                     {{ form_widget(form.diasEstadia) }}
+                                    {{ form_errors(form.diasEstadia) }}
                                     <div class="security-icon">
                                         <i class="fa fa-lock" aria-hidden="true"></i>
                                     </div>
@@ -693,33 +694,49 @@
         }
 
         function filtraSelectPrecios(listado, eslora) {
+          let countOptions = 0;
+          let itemSeleccionable = null;
+
           listado.childNodes.forEach((item) => {
             let piesA = Number(item.dataset.pies_a);
             let piesB = Number(item.dataset.pies_b);
             let clasificacion = Number(item.dataset.clasificacion);
 
             if(estatusPincodeHide.value === '1'){
+
               (eslora >= piesA && eslora <= piesB) ?
-                item.classList.remove('hide') :
+                (item.classList.remove('hide'),
+                  countOptions++) :
                 item.classList.add('hide');
+
             }else{
-              !(eslora >= piesA && eslora <= piesB && clasificacion === 0) ?
-                item.classList.add('hide') :
+
+              if(!(eslora >= piesA && eslora <= piesB && clasificacion === 0)) {
+                item.classList.add('hide');
+              } else {
                 item.classList.remove('hide');
+                itemSeleccionable = item;
+                countOptions++;
+              }
             }
+
           });
+          procesaSelectAutomatico(countOptions, listado, itemSeleccionable);
         }
 
         function desbloqueaSelectPrecios(listado, eslora){
           if(estatusPincodeHide.value === '1' && listado) {
+            let countOptions = 0;
+
             listado.childNodes.forEach((item) => {
                 let piesA = Number(item.dataset.pies_a);
                 let piesB = Number(item.dataset.pies_b);
 
                 !(eslora >= piesA && eslora <= piesB) ?
                 item.classList.add('hide') :
-                item.classList.remove('hide');
+                  (item.classList.remove('hide'), countOptions++);
             });
+            procesaSelectAutomatico(countOptions, listado, null);
           }
         }
 
@@ -733,6 +750,19 @@
             securityIcons.forEach((icon) => {
               icon.innerHTML = '<i class="fa fa-unlock letra-verde" aria-hidden="true"></i>';
             });
+          }
+        }
+
+        function procesaSelectAutomatico(countOptions, select, item){
+          if(countOptions === 0) {
+              let opt = document.createElement('option');
+              opt.appendChild(document.createTextNode('Sin tarifa general aplicable'));
+              opt.setAttribute('selected', 'selected');
+              select.appendChild(opt);
+          } else if (countOptions === 1) {
+            if (item) {
+              item.setAttribute('selected', 'selected');
+            }
           }
         }
 

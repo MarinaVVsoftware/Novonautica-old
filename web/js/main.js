@@ -763,7 +763,7 @@ function diasEntreFechas(inicio, fin) {
   var end = new Date(fin.toString());
   var diff = new Date(end - start);
   var days = (diff / 1000 / 60 / 60 / 24);
-  return days+1;
+  return days;
 }
 function totalDiasLaborales(start, end) {
     // This makes no effort to account for holidays

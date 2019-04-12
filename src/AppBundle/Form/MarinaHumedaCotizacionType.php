@@ -20,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormInterface;
 use AppBundle\Entity\Cliente;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 class MarinaHumedaCotizacionType extends AbstractType
 {
@@ -56,6 +56,11 @@ class MarinaHumedaCotizacionType extends AbstractType
             ->add('diasEstadia',TextType::class,[
                 'label'=>'Días Estadia',
                 'attr' => ['class' => 'esnumero','readonly' => true],
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => 'Debe seleccionar rango de fechas'
+                    ])
+                ]
             ])
             ->add('descuentoEstadia', NumberType::class, [
                 'label' => 'Descuento estadía %',
