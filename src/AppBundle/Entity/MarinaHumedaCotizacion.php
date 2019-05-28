@@ -52,6 +52,13 @@ class MarinaHumedaCotizacion
     private $diasEstadia;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="diasElectricidad", type="integer", nullable=true )
+     */
+    private $diasElectricidad;
+
+    /**
      * @var float
      *
      * @ORM\Column(name="descuentoEstadia", type="float", nullable=true)
@@ -1209,6 +1216,21 @@ class MarinaHumedaCotizacion
         $this->diasEstadia = $diasEstadia;
     }
 
+    /**
+     * @return int
+     */
+    public function getDiasElectricidad()
+    {
+        return $this->diasElectricidad;
+    }
+
+    /**
+     * @param int $diasElectricidad
+     */
+    public function setDiasElectricidad($diasElectricidad)
+    {
+        $this->diasElectricidad = $diasElectricidad;
+    }
 
     /**
      * Add cotizacionnota.

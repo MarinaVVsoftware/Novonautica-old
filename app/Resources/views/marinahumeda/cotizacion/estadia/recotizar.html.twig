@@ -73,8 +73,9 @@
                     {% for label, messages in app.flashes %}
                         {% for message in messages %}
                             <div class="alert alert-{{ label }} alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <i class="icon fa fa-warning"></i> {{ message }}
+                                <button aria-hidden="true" class="close" data-dismiss="alert" type="button">×</button>
+                                <i class="icon fa fa-warning"></i>
+                                {{ message }}
                             </div>
                         {% endfor %}
                     {% endfor %}
@@ -88,32 +89,31 @@
                             <span>{{ marinaHumedaCotizacion.folio }}-{{ marinaHumedaCotizacion.foliorecotiza }}</span>
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-contorno-azul pull-right"
-                               href="{{ path('marina-humeda_show',{'id':idanterior}) }}">Regresar</a>
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('marina-humeda_show',{'id':idanterior}) }}">Regresar</a>
                         </div>
                     </div>
                 </div>
                 <div class="panel-body panel-pestanias">
                     {{ form_start(form) }}
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="primero active">
-                            <a href="#generales" aria-controls="generales" role="tab" data-toggle="tab">Generales</a>
+                        <li class="primero active" role="presentation">
+                            <a aria-controls="generales" data-toggle="tab" href="#generales" role="tab">Generales</a>
                         </li>
                         <li role="presentation">
-                            <a href="#servicios" aria-controls="servicios" role="tab" data-toggle="tab">Servicios</a>
+                            <a aria-controls="servicios" data-toggle="tab" href="#servicios" role="tab">Servicios</a>
                         </li>
                         <li role="presentation">
-                            <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Total (USD)</a>
+                            <a aria-controls="total" data-toggle="tab" href="#total" role="tab">Total (USD)</a>
                         </li>
                         <li role="presentation">
-                            <a href="#totalmxn" aria-controls="totalmxn" role="tab" data-toggle="tab">Total (MXN)</a>
+                            <a aria-controls="totalmxn" data-toggle="tab" href="#totalmxn" role="tab">Total (MXN)</a>
                         </li>
                         <li role="presentation">
-                            <a href="#correo" aria-controls="correo" role="tab" data-toggle="tab">Correo</a>
+                            <a aria-controls="correo" data-toggle="tab" href="#correo" role="tab">Correo</a>
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="generales">
+                        <div class="tab-pane active" id="generales" role="tabpanel">
                             <div class="row">
                                 <div class="col-sm-3">
                                     {% form_theme form 'estructura/temaerror.html.twig' %}
@@ -149,7 +149,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="servicios">
+                        <div class="tab-pane" id="servicios" role="tabpanel">
                             <div class="row">
                                 <div class="col-sm-3">
                                     <div class="input-daterange" id="rangoFehas">
@@ -168,9 +168,13 @@
                                     </div>
                                     <label>Días Estadía:</label>
                                     {{ form_widget(form.diasEstadia) }}
-                                    <div class="security-icon">
-                                        <i class="fa fa-lock" aria-hidden="true"></i>
-                                    </div>
+                                    <label>Días Electricidad:</label>
+                                    {{ form_widget(form.diasElectricidad) }}
+                                    {{ form_errors(form.diasElectricidad) }}
+                                    {#<div class="security-icon">
+                                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                    </div>#}
+                                    <div class="pt-1-5"></div>
                                     <label>Dolar</label>
                                     {{ form_widget(form.dolar) }}
                                 </div>
@@ -180,16 +184,16 @@
                                             <label>Precio por día:</label>
                                             {{ form_widget(form.mhcservicios.0.precio) }}
                                         </div>
-                                        <div id="estadia-otro-precio" class="col-sm-3">
-                                            <div class="security-icon">
-                                                <i class="fa fa-lock" aria-hidden="true"></i>
-                                            </div>
+                                        <div class="pt-1-5 col-sm-3" id="estadia-otro-precio">
+                                            {#<div class="security-icon">
+                                               <i class="fa fa-lock" aria-hidden="true"></i>
+                                            </div>#}
                                             {{ form_row(form.mhcservicios.children.0.precioOtro) }}
                                         </div>
-                                        <div id="estadia-descuento" class="col-sm-3">
-                                            <div class="security-icon">
-                                                <i class="fa fa-lock" aria-hidden="true"></i>
-                                            </div>
+                                        <div class="col-sm-3" id="estadia-descuento">
+                                            {#<div class="security-icon">
+                                               <i class="fa fa-lock" aria-hidden="true"></i>
+                                            </div>#}
                                             {{ form_row(form.descuentoEstadia) }}
                                         </div>
                                     </div>
@@ -198,27 +202,27 @@
                                             <label>Precio electricidad:</label>
                                             {{ form_widget(form.mhcservicios.children.1.precioAux) }}
                                         </div>
-                                        <div id="electricidad-otro-precio" class="col-sm-3">
-                                            <div class="security-icon">
-                                                <i class="fa fa-lock" aria-hidden="true"></i>
-                                            </div>
+                                        <div class="pt-1-5 col-sm-3" id="electricidad-otro-precio">
+                                            {#<div class="security-icon">
+                                               <i class="fa fa-lock" aria-hidden="true"></i>
+                                            </div>#}
                                             {{ form_row(form.mhcservicios.children.1.precioOtro) }}
                                         </div>
-                                        <div id="electricidad-descuento" class="col-sm-3">
-                                            <div class="security-icon">
-                                                <i class="fa fa-lock" aria-hidden="true"></i>
-                                            </div>
+                                        <div class="pt-1-5 col-sm-3" id="electricidad-descuento">
+                                            {#<div class="security-icon">
+                                               <i class="fa fa-lock" aria-hidden="true"></i>
+                                            </div>#}
                                             {{ form_row(form.descuentoElectricidad) }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="total">
+                        <div class="tab-pane" id="total" role="tabpanel">
                             <div class="row">
                                 <div class="col-sm-12 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="" class="valdolar">{{ (marinaHumedaCotizacion.dolar/100) }}
+                                    <div class="valdolar" id="">{{ (marinaHumedaCotizacion.dolar/100) }}
                                         MXN
                                     </div>
                                 </div>
@@ -231,44 +235,46 @@
 
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <table id="mh_nuevacotizacion" class="table text-center">
+                                    <table class="table text-center" id="mh_nuevacotizacion">
                                         <thead>
-                                        <tr>
-                                            <th>Cantidad</th>
-                                            <th>Eslora (pies)</th>
-                                            <th>Servicio</th>
-                                            <th>Prec. Unid.</th>
-                                            <th>Sub-Total</th>
-                                            <th>Descuento</th>
-                                            <th>IVA {{ marinaHumedaCotizacion.iva }} %</th>
-                                            <th>Total</th>
-                                        </tr>
+                                            <tr>
+                                                <th>Cantidad</th>
+                                                <th>Eslora (pies)</th>
+                                                <th>Servicio</th>
+                                                <th>Prec. Unid.</th>
+                                                <th>Sub-Total</th>
+                                                <th>Descuento</th>
+                                                <th>IVA
+                                                    {{ marinaHumedaCotizacion.iva }}
+                                                    %</th>
+                                                <th>Total</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td id="de_cantidad">0</td>
-                                            <td id="de_eslora" data-valor="{{ marinaHumedaCotizacion.barco.eslora }}">
-                                                {{ marinaHumedaCotizacion.barco.eslora }}
-                                            </td>
-                                            <td>Días estancia</td>
-                                            <td id="de_precio">$ 0.00</td>
-                                            <td id="de_subtotal" data-valor="0">$ 0.00</td>
-                                            <td id="de_descuento" data-valor="0">$ 0.00</td>
-                                            <td id="de_iva" data-valor="0">$ 0.00</td>
-                                            <td id="de_total" data-valor="0">$ 0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td id="e_cantidad">0</td>
-                                            <td id="e_eslora">
-                                                {{ marinaHumedaCotizacion.barco.eslora }}
-                                            </td>
-                                            <td>Conexión a electricidad</td>
-                                            <td id="e_precio">$ 0.00</td>
-                                            <td id="e_subtotal" data-valor="0">$ 0.00</td>
-                                            <td id="e_descuento" data-valor="0">$ 0.00</td>
-                                            <td id="e_iva" data-valor="0">$ 0.00</td>
-                                            <td id="e_total" data-valor="0">$ 0.00</td>
-                                        </tr>
+                                            <tr>
+                                                <td id="de_cantidad">0</td>
+                                                <td id="de_eslora" data-valor="{{ marinaHumedaCotizacion.barco.eslora }}">
+                                                    {{ marinaHumedaCotizacion.barco.eslora }}
+                                                </td>
+                                                <td>Días estancia</td>
+                                                <td id="de_precio">$ 0.00</td>
+                                                <td data-valor="0" id="de_subtotal">$ 0.00</td>
+                                                <td data-valor="0" id="de_descuento">$ 0.00</td>
+                                                <td data-valor="0" id="de_iva">$ 0.00</td>
+                                                <td data-valor="0" id="de_total">$ 0.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="e_cantidad">0</td>
+                                                <td id="e_eslora">
+                                                    {{ marinaHumedaCotizacion.barco.eslora }}
+                                                </td>
+                                                <td>Conexión a electricidad</td>
+                                                <td id="e_precio">$ 0.00</td>
+                                                <td data-valor="0" id="e_subtotal">$ 0.00</td>
+                                                <td data-valor="0" id="e_descuento">$ 0.00</td>
+                                                <td data-valor="0" id="e_iva">$ 0.00</td>
+                                                <td data-valor="0" id="e_total">$ 0.00</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -277,7 +283,9 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div id="valiva" class="" data-valor="{{ marinaHumedaCotizacion.iva }}">
-                                        <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
+                                        <small>IVA:
+                                            {{ marinaHumedaCotizacion.iva }}
+                                            %</small>
                                     </div>
                                 </div>
                             </div>
@@ -290,7 +298,8 @@
                                 <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
-                                        $ <span id="gransubtot">{{ (marinaHumedaCotizacion.subtotal/100)|number_format(2) }}</span>
+                                        $
+                                        <span id="gransubtot">{{ (marinaHumedaCotizacion.subtotal/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -304,7 +313,8 @@
                                 <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">Descuento:</p>
                                     <p>
-                                        $ <span id="grandecuento">{{ (marinaHumedaCotizacion.descuentototal/100)|number_format(2) }}</span>
+                                        $
+                                        <span id="grandecuento">{{ (marinaHumedaCotizacion.descuentototal/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -316,9 +326,12 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
-                                    <p class="letra-azul">I.V.A {{ marinaHumedaCotizacion.iva }} %:</p>
+                                    <p class="letra-azul">I.V.A
+                                        {{ marinaHumedaCotizacion.iva }}
+                                        %:</p>
                                     <p>
-                                        $ <span id="graniva">{{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }}</span>
+                                        $
+                                        <span id="graniva">{{ (marinaHumedaCotizacion.ivatotal/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -332,7 +345,8 @@
                                 <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
-                                        $ <span id="grantot">{{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</span>
+                                        $
+                                        <span id="grantot">{{ (marinaHumedaCotizacion.total/100)|number_format(2) }}</span>
                                         <span class="tipo-letra2">USD</span>
                                     </p>
                                 </div>
@@ -343,11 +357,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="totalmxn">
+                        <div class="tab-pane" id="totalmxn" role="tabpanel">
                             <div class="row">
                                 <div class="col-sm-12 text-right">
                                     <span>Tipo de cambio:</span>
-                                    <div id="" class="valdolar">{{ (marinaHumedaCotizacion.dolar/100)|number_format(2)}}
+                                    <div class="valdolar" id="">{{ (marinaHumedaCotizacion.dolar/100)|number_format(2)}}
                                         MXN
                                     </div>
                                 </div>
@@ -360,48 +374,52 @@
 
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <table id="" class="table text-center">
+                                    <table class="table text-center" id="">
                                         <thead>
-                                        <tr>
-                                            <th>Cantidad</th>
-                                            <th>Eslora (pies)</th>
-                                            <th>Servicio</th>
-                                            <th>Prec. Unid.</th>
-                                            <th>Sub-Total</th>
-                                            <th>Descuento</th>
-                                            <th>IVA {{ marinaHumedaCotizacion.iva }} %</th>
-                                            <th>Total</th>
-                                        </tr>
+                                            <tr>
+                                                <th>Cantidad</th>
+                                                <th>Eslora (pies)</th>
+                                                <th>Servicio</th>
+                                                <th>Prec. Unid.</th>
+                                                <th>Sub-Total</th>
+                                                <th>Descuento</th>
+                                                <th>IVA
+                                                    {{ marinaHumedaCotizacion.iva }}
+                                                    %</th>
+                                                <th>Total</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td id="de_cantidad_mxn">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</td>
-                                            <td id="de_eslora_mxn">{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                                            <td>Días estancia</td>
-                                            <td id="de_precio_mxn"></td>
-                                            <td id="de_subtotal_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="de_descuento_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="de_iva_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="de_total_mxn" data-valor="0">$ 0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td id="e_cantidad_mxn">{{ marinaHumedaCotizacion.mhcservicios.1.cantidad }}</td>
-                                            <td id="e_eslora_mxn">{{ marinaHumedaCotizacion.barco.eslora }}</td>
-                                            <td>Conexión a electricidad</td>
-                                            <td id="e_precio_mxn"></td>
-                                            <td id="e_subtotal_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="e_descuento_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="e_iva_mxn" data-valor="0">$ 0.00</td>
-                                            <td id="e_total_mxn" data-valor="0">$ 0.00</td>
-                                        </tr>
+                                            <tr>
+                                                <td id="de_cantidad_mxn">{{ marinaHumedaCotizacion.mhcservicios.0.cantidad }}</td>
+                                                <td id="de_eslora_mxn">{{ marinaHumedaCotizacion.barco.eslora }}</td>
+                                                <td>Días estancia</td>
+                                                <td id="de_precio_mxn"></td>
+                                                <td data-valor="0" id="de_subtotal_mxn">$ 0.00</td>
+                                                <td data-valor="0" id="de_descuento_mxn">$ 0.00</td>
+                                                <td data-valor="0" id="de_iva_mxn">$ 0.00</td>
+                                                <td data-valor="0" id="de_total_mxn">$ 0.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="e_cantidad_mxn">{{ marinaHumedaCotizacion.mhcservicios.1.cantidad }}</td>
+                                                <td id="e_eslora_mxn">{{ marinaHumedaCotizacion.barco.eslora }}</td>
+                                                <td>Conexión a electricidad</td>
+                                                <td id="e_precio_mxn"></td>
+                                                <td data-valor="0" id="e_subtotal_mxn">$ 0.00</td>
+                                                <td data-valor="0" id="e_descuento_mxn">$ 0.00</td>
+                                                <td data-valor="0" id="e_iva_mxn">$ 0.00</td>
+                                                <td data-valor="0" id="e_total_mxn">$ 0.00</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div id="" class="">
-                                        <small>IVA: {{ marinaHumedaCotizacion.iva }} %</small>
+                                    <div class="" id="">
+                                        <small>IVA:
+                                            {{ marinaHumedaCotizacion.iva }}
+                                            %</small>
                                     </div>
                                 </div>
                             </div>
@@ -414,7 +432,8 @@
                                 <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">Sub-Total:</p>
                                     <p>
-                                        $ <span id="gransubtot_mxn">{{ ((marinaHumedaCotizacion.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        $
+                                        <span id="gransubtot_mxn">{{ ((marinaHumedaCotizacion.subtotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -428,7 +447,8 @@
                                 <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">Descuento:</p>
                                     <p>
-                                        $ <span id="grandecuento_mxn">{{ ((marinaHumedaCotizacion.descuentototal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        $
+                                        <span id="grandecuento_mxn">{{ ((marinaHumedaCotizacion.descuentototal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -440,9 +460,12 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
-                                    <p class="letra-azul">I.V.A {{ marinaHumedaCotizacion.iva }} %:</p>
+                                    <p class="letra-azul">I.V.A
+                                        {{ marinaHumedaCotizacion.iva }}
+                                        %:</p>
                                     <p>
-                                        $ <span id="graniva_mxn">{{ ((marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        $
+                                        <span id="graniva_mxn">{{ ((marinaHumedaCotizacion.ivatotal * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -456,7 +479,8 @@
                                 <div class="col-sm-5 col-sm-offset-7 text-right tipo-letra1">
                                     <p class="letra-azul">Total:</p>
                                     <p>
-                                        $ <span id="grantot_mxn">{{ ((marinaHumedaCotizacion.total * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
+                                        $
+                                        <span id="grantot_mxn">{{ ((marinaHumedaCotizacion.total * marinaHumedaCotizacion.dolar)/10000)|number_format(2) }}</span>
                                         <span class="tipo-letra2">MXN</span>
                                     </p>
                                 </div>
@@ -467,7 +491,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="correo">
+                        <div class="tab-pane" id="correo" role="tabpanel">
                             <div class="row">
                                 <div class="col-sm-12">
                                     {{ form_row(form.mensaje) }}
@@ -486,13 +510,11 @@
                 <div class="panel-footer">
                     <div class="row">
                         <div class="col-sm-12">
-                            <button class="btn btn-azul" type="button"
-                                    data-toggle="modal"
-                                    data-target="#modalIngresaPincode">
+                            {#<button class="btn btn-azul" data-target="#modalIngresaPincode" data-toggle="modal" type="button">
                                 Usar PINCODE
-                            </button>
-                            <button type="submit" class="btn btn-azul pull-right">
-                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                            </button>#}
+                            <button class="btn btn-azul pull-right" type="submit">
+                                <i aria-hidden="true" class="fa fa-floppy-o"></i>
                                 Guardar
                             </button>
                         </div>
@@ -500,11 +522,13 @@
                 </div>
                 {{ form_end(form) }}
             </div>
-            <div class="modal ventanaborrar fade" id="modalIngresaPincode" tabindex="-1" role="dialog" aria-labelledby="pincodeLabel">
+            {#<div aria-labelledby="pincodeLabel" class="modal ventanaborrar fade" id="modalIngresaPincode" role="dialog" tabindex="-1">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                             <h4 class="modal-title" id="pincodeLabel">Ingresa un Pincode</h4>
                         </div>
                         <div class="modal-body">
@@ -512,146 +536,131 @@
                                 <div class="col-sm-8 col-sm-offset-2">
                                     <div class="form-group">
                                         <label class="control-label" for="pincode-input">PINCODE</label>
-                                        <input type="text"
-                                               id="pincode-input"
-                                               name="pincode-input"
-                                               class="info-input"
-                                               minlength="8"
-                                               maxlength="8">
+                                        <input class="info-input" id="pincode-input" maxlength="8" minlength="8" name="pincode-input" type="text">
                                         <span class="help-block text-center"></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button id="btn-verifica-pincode" class="btn btn-azul" type="button">OK</button>
+                            <button class="btn btn-azul" id="btn-verifica-pincode" type="button">OK</button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>#}
         </section>
     </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('js/listenerElectricityPriceMarina.js') }}"></script>
     <script type="text/javascript">
-      const dolarInput = document.getElementById('appbundle_marinahumedacotizacion_dolar');
-      const preciosEstadia = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio');
-      const preciosElectricidad = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioAux');
-      const pincodeInput = document.getElementById('pincode-input');
-      const estadiaOtroPrecioInput = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precioOtro');
-      const electricidadOtroPrecioInput = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioOtro');
-      const descuentoEstadiaInput = document.getElementById('appbundle_marinahumedacotizacion_descuentoEstadia');
-      const descuentoElectricidadInput = document.getElementById('appbundle_marinahumedacotizacion_descuentoElectricidad');
-      const eslora = document.getElementById('barcopies');
-      const btnVerificaPincode = document.getElementById('btn-verifica-pincode');
-      const securityIcons = document.querySelectorAll('.security-icon');
-      const estatusPincodeHide = document.getElementById('appbundle_marinahumedacotizacion_estatusPincode');
+        const dolarInput = document.getElementById('appbundle_marinahumedacotizacion_dolar');
+        const preciosEstadia = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio');
+        const preciosElectricidad = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioAux');
+        const pincodeInput = document.getElementById('pincode-input');
+        const estadiaOtroPrecioInput = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precioOtro');
+        const electricidadOtroPrecioInput = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioOtro');
+        const descuentoEstadiaInput = document.getElementById('appbundle_marinahumedacotizacion_descuentoEstadia');
+        const descuentoElectricidadInput = document.getElementById('appbundle_marinahumedacotizacion_descuentoElectricidad');
+        const eslora = document.getElementById('barcopies');
+        const btnVerificaPincode = document.getElementById('btn-verifica-pincode');
+        const securityIcons = document.querySelectorAll('.security-icon');
+        const estatusPincodeHide = document.getElementById('appbundle_marinahumedacotizacion_estatusPincode');{% if form.vars.data.mhcservicios[0].isPrecioOtro %}preciosEstadia.value = '';{% endif %}
+        {% if form.vars.data.mhcservicios[1].isPrecioOtro %}preciosElectricidad.value = '';{% endif %}
 
-      {% if form.vars.data.mhcservicios[0].isPrecioOtro  %}
-        preciosEstadia.value = '';
-      {% endif %}
-      {% if form.vars.data.mhcservicios[1].isPrecioOtro  %}
-        preciosElectricidad.value = '';
-      {% endif %}
+        filtraSelectPrecios(preciosEstadia, Number(eslora.dataset.valor));
+        filtraSelectPrecios(preciosElectricidad, Number(eslora.dataset.valor));
+        recalculaCantidadYprecio();
 
-      filtraSelectPrecios(preciosEstadia, Number(eslora.dataset.valor));
-      filtraSelectPrecios(preciosElectricidad, Number(eslora.dataset.valor));
-      recalculaCantidadYprecio();
-
-      desbloqueaInputsPreciosDescuentos();
-      desbloqueaSelectPrecios();
+        desbloqueaInputsPreciosDescuentos();
+        desbloqueaSelectPrecios();
 
 
-      $('#modalIngresaPincode').on('show.bs.modal', function (e) {
-        pincodeInput.parentNode.classList.remove('has-error');
-        pincodeInput.parentNode.classList.remove('has-success');
-        btnVerificaPincode.classList.remove('disabled');
-        pincodeInput.parentNode.childNodes[5].innerText = '';
-        pincodeInput.value = '';
-      });
-
-      btnVerificaPincode.addEventListener('click', () => {
-        btnVerificaPincode.classList.add('disabled');
-      $.ajax({
-        method: 'POST',
-        url: "{{ path('marina-humeda_ajax-pincode') }}",
-        data:{ pincode: pincodeInput.value, iduser: {{ iduser}} },
-        dataType: 'json',
-        success: function (data) {
-          if(data === 'notfound'){
-            pincodeInput.parentNode.classList.add('has-error');
-            pincodeInput.parentNode.childNodes[5].innerText = 'Error: No existe.';
-            btnVerificaPincode.classList.remove('disabled');
-            return
-          }
-          if(data){
+        $('#modalIngresaPincode').on('show.bs.modal', function (e) {
             pincodeInput.parentNode.classList.remove('has-error');
-            pincodeInput.parentNode.classList.add('has-success');
-            pincodeInput.parentNode.childNodes[5].innerText = 'Aprobado';
-            estatusPincodeHide.value = 1;
-
-            desbloqueaInputsPreciosDescuentos();
-            desbloqueaSelectPrecios(preciosEstadia, Number($('#de_eslora').data('valor')));
-            desbloqueaSelectPrecios(preciosElectricidad, Number($('#de_eslora').data('valor')));
-
-            setTimeout(function(){
-              $('#modalIngresaPincode').modal('hide');
-              pincodeInput.value = '';
-            }, 1000);
-          }else{
-            pincodeInput.parentNode.classList.add('has-error');
-            pincodeInput.parentNode.childNodes[5].innerText = 'Error: No vigente.';
+            pincodeInput.parentNode.classList.remove('has-success');
             btnVerificaPincode.classList.remove('disabled');
-          }
+            pincodeInput.parentNode.childNodes[5].innerText = '';
+            pincodeInput.value = '';
+        });
+
+        btnVerificaPincode.addEventListener('click', () => {
+            btnVerificaPincode.classList.add('disabled');
+            $.ajax({
+                method: 'POST',
+                url: "{{ path('marina-humeda_ajax-pincode') }}",
+                data: {
+                    pincode: pincodeInput.value,
+                    iduser: {{ iduser }}
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data === 'notfound') {
+                        pincodeInput.parentNode.classList.add('has-error');
+                        pincodeInput.parentNode.childNodes[5].innerText = 'Error: No existe.';
+                        btnVerificaPincode.classList.remove('disabled');
+                        return
+                    }
+                    if (data) {
+                        pincodeInput.parentNode.classList.remove('has-error');
+                        pincodeInput.parentNode.classList.add('has-success');
+                        pincodeInput.parentNode.childNodes[5].innerText = 'Aprobado';
+                        estatusPincodeHide.value = 1;
+
+                        desbloqueaInputsPreciosDescuentos();
+                        desbloqueaSelectPrecios(preciosEstadia, Number($('#de_eslora').data('valor')));
+                        desbloqueaSelectPrecios(preciosElectricidad, Number($('#de_eslora').data('valor')));
+
+                        setTimeout(function () {
+                            $('#modalIngresaPincode').modal('hide');
+                            pincodeInput.value = '';
+                        }, 1000);
+                    } else {
+                        pincodeInput.parentNode.classList.add('has-error');
+                        pincodeInput.parentNode.childNodes[5].innerText = 'Error: No vigente.';
+                        btnVerificaPincode.classList.remove('disabled');
+                    }
+                }
+            });
+        });
+
+        function filtraSelectPrecios(listado, eslora) {
+            listado.childNodes.forEach((item) => {
+                let piesA = Number(item.dataset.pies_a);
+                let piesB = Number(item.dataset.pies_b);
+                let clasificacion = Number(item.dataset.clasificacion);
+
+                if (estatusPincodeHide.value === '1') {
+                    (eslora >= piesA && eslora <= piesB) ? item.classList.remove('hide') : item.classList.add('hide');
+                } else {
+                    !(eslora >= piesA && eslora <= piesB && clasificacion === 0) ? item.classList.add('hide') : item.classList.remove('hide');
+                }
+            });
         }
-      });
-      });
 
-      function filtraSelectPrecios(listado, eslora) {
-        listado.childNodes.forEach((item) => {
-            let piesA = Number(item.dataset.pies_a);
-            let piesB = Number(item.dataset.pies_b);
-            let clasificacion = Number(item.dataset.clasificacion);
+        function desbloqueaSelectPrecios(listado, eslora) {
+            if (estatusPincodeHide.value === '1' && listado) {
+                listado.childNodes.forEach((item) => {
+                    let piesA = Number(item.dataset.pies_a);
+                    let piesB = Number(item.dataset.pies_b);
 
-            if (estatusPincodeHide.value === '1') {
-                (eslora >= piesA && eslora <= piesB) ?
-                item.classList.remove('hide') :
-                item.classList.add('hide');
-            } else {
-                !(eslora >= piesA && eslora <= piesB && clasificacion === 0) ?
-                item.classList.add('hide') :
-                item.classList.remove('hide');
+                    !(eslora >= piesA && eslora <= piesB) ? item.classList.add('hide') : item.classList.remove('hide');
+                });
             }
-        })
-        ;
-      }
-
-      function desbloqueaSelectPrecios(listado, eslora){
-        if(estatusPincodeHide.value === '1' && listado) {
-          listado.childNodes.forEach((item) => {
-            let piesA = Number(item.dataset.pies_a);
-          let piesB = Number(item.dataset.pies_b);
-
-          !(eslora >= piesA && eslora <= piesB) ?
-            item.classList.add('hide') :
-            item.classList.remove('hide');
-        });
         }
-      }
 
-      function desbloqueaInputsPreciosDescuentos(){
-        if(estatusPincodeHide.value === '1'){
-          dolarInput.readOnly = false;
-          estadiaOtroPrecioInput.readOnly = false;
-          electricidadOtroPrecioInput.readOnly = false;
-          descuentoEstadiaInput.readOnly = false;
-          descuentoElectricidadInput.readOnly = false;
-          securityIcons.forEach((icon) => {
-            icon.innerHTML = '<i class="fa fa-unlock letra-verde" aria-hidden="true"></i>';
-        });
+        function desbloqueaInputsPreciosDescuentos() {
+            if (estatusPincodeHide.value === '1') {
+                dolarInput.readOnly = false;
+                estadiaOtroPrecioInput.readOnly = false;
+                electricidadOtroPrecioInput.readOnly = false;
+                descuentoEstadiaInput.readOnly = false;
+                descuentoElectricidadInput.readOnly = false;
+                securityIcons.forEach((icon) => {
+                    icon.innerHTML = '<i class="fa fa-unlock letra-verde" aria-hidden="true"></i>';
+                });
+            }
         }
-      }
-
     </script>
 {% endblock %}

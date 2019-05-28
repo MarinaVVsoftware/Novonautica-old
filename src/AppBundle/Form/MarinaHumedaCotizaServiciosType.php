@@ -24,9 +24,13 @@ class MarinaHumedaCotizaServiciosType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
+        /*
+            Fix: Change the readonly to false
+            Date: 27/05/19
+            By: Manuel Gutiérrez 
+        */
         $builder->add('precioOtro', MoneyType::class, [
-            'attr' => ['class' => 'esdecimal', 'readonly' => true],
+            'attr' => ['class' => 'esdecimal', 'readonly' => false],
             'label' => 'Otro precio (USD)',
             'currency' => 'USD',
             'divisor' => 100,

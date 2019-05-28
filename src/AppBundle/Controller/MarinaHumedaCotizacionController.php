@@ -168,9 +168,14 @@ class MarinaHumedaCotizacionController extends Controller
                 $marinaElectricidad->setIsPrecioOtro(true);
             }
 
+            /**
+             * Fix: Lets the $precioElectricidad be zero.
+             * Date: May 22th 2019.
+             * By: Manuel Gutiérrez.
+             */
             if (!$precioEstadia) {
                 $this->addFlash('danger', 'Precio no seleccionado para días estadia');
-            } elseif (!$precioElectricidad) {
+            } elseif ($precioElectricidad === NULL || !is_numeric($precioElectricidad)) {
                 $this->addFlash('danger', 'Precio no seleccionado para electricidad');
             } else {
                 $granSubtotal = 0;
@@ -182,6 +187,8 @@ class MarinaHumedaCotizacionController extends Controller
                 $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
                 $cantidadDias = $marinaHumedaCotizacion->getDiasEstadia();
 
+                // Added
+                $cantidadDiasElectricidad = $marinaHumedaCotizacion->getDiasElectricidad();
                 // Días Estadía
                 $subTotal = $cantidadDias * $precioEstadia * $eslora;
                 $descuentoTot = ($subTotal * $descuentoEstadia) / 100;
@@ -203,7 +210,9 @@ class MarinaHumedaCotizacionController extends Controller
                 $granTotal += $total;
 
                 // Conexión a electricidad
-                $subTotal = $cantidadDias * $precioElectricidad * $eslora;
+                // Add
+                $subTotal = $cantidadDiasElectricidad * $precioElectricidad * $eslora;
+                //$subTotal = $cantidadDias * $precioElectricidad * $eslora;
                 $descuentoTot = ($subTotal * $descuentoElectricidad) / 100;
                 $subTotal_descuento = $subTotal - $descuentoTot;
                 $ivaTot = ($subTotal_descuento * $iva) / 100;
@@ -211,7 +220,8 @@ class MarinaHumedaCotizacionController extends Controller
 
                 $marinaElectricidad->setTipo(2);
                 $marinaElectricidad->setEstatus(1);
-                $marinaElectricidad->setCantidad($cantidadDias);
+                $marinaElectricidad->setCantidad($cantidadDiasElectricidad);
+                // $marinaElectricidad->setCantidad($cantidadDias);
                 $marinaElectricidad->setPrecio($precioElectricidad);
                 $marinaElectricidad->setSubtotal($subTotal);
                 $marinaElectricidad->setDescuento($descuentoTot);
@@ -777,6 +787,7 @@ class MarinaHumedaCotizacionController extends Controller
         $marinaHumedaCotizacion->setValidacliente(0);
         $marinaHumedaCotizacion->setMensaje($marinaHumedaCotizacionAnterior->getMensaje());
         $marinaHumedaCotizacion->setDiasEstadia($marinaHumedaCotizacionAnterior->getDiasEstadia());
+        $marinaHumedaCotizacion->setDiasElectricidad($marinaHumedaCotizacionAnterior->getDiasElectricidad());
 
         $servicios = $marinaHumedaCotizacionAnterior->getMHCservicios();
         $marinaDiasEstadia = new MarinaHumedaCotizaServicios();
@@ -826,7 +837,7 @@ class MarinaHumedaCotizacionController extends Controller
             }
             if (!$precioEstadia) {
                 $this->addFlash('danger', 'Precio no seleccionado para días estadia');
-            } elseif (!$precioElectricidad) {
+            } elseif ($precioElectricidad === NULL || !is_numeric($precioElectricidad)) {
                 $this->addFlash('danger', 'Precio no seleccionado para electricidad');
             } else {
                 $granSubtotal = 0;
@@ -837,6 +848,8 @@ class MarinaHumedaCotizacionController extends Controller
                 $descuentoElectricidad = $marinaHumedaCotizacion->getDescuentoElectricidad();
                 $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
                 $cantidadDias = $marinaHumedaCotizacion->getDiasEstadia();
+                // Added
+                $cantidadDiasElectricidad = $marinaHumedaCotizacion->getDiasElectricidad();
 
                 // Días Estadía
                 $subTotal = $cantidadDias * $precioEstadia * $eslora;
@@ -858,14 +871,17 @@ class MarinaHumedaCotizacionController extends Controller
                 $granTotal += $total;
 
                 // Conexión a electricidad
-                $subTotal = $cantidadDias * $precioElectricidad * $eslora;
+                // Added
+                $subTotal = $cantidadDiasElectricidad * $precioElectricidad * $eslora;
+                //$subTotal = $cantidadDias * $precioElectricidad * $eslora;
                 $descuentoTot = ($subTotal * $descuentoElectricidad) / 100;
                 $subTotal_descuento = $subTotal - $descuentoTot;
                 $ivaTot = ($subTotal_descuento * $iva) / 100;
                 $total = $subTotal_descuento + $ivaTot;
 
                 $marinaElectricidad->setEstatus(1);
-                $marinaElectricidad->setCantidad($cantidadDias);
+                $marinaElectricidad->setCantidad($cantidadDiasElectricidad);
+                // $marinaElectricidad->setCantidad($cantidadDias);
                 $marinaElectricidad->setPrecio($precioElectricidad);
                 $marinaElectricidad->setSubtotal($subTotal);
                 $marinaElectricidad->setDescuento($descuentoTot);
@@ -960,6 +976,7 @@ class MarinaHumedaCotizacionController extends Controller
         $marinaHumedaCotizacion->setFoliorecotiza($foliorecotizado);
         $marinaHumedaCotizacion->setMensaje($marinaHumedaCotizacionAnterior->getMensaje());
         $marinaHumedaCotizacion->setDiasEstadia($marinaHumedaCotizacionAnterior->getDiasEstadia());
+        $marinaHumedaCotizacion->setDiasElectricidad($marinaHumedaCotizacionAnterior->getDiasElectricidad());
 
         $servicios = $marinaHumedaCotizacionAnterior->getMHCservicios();
 
@@ -1017,7 +1034,7 @@ class MarinaHumedaCotizacionController extends Controller
 
             if (!$precioEstadia) {
                 $this->addFlash('danger', 'Precio no seleccionado para días estadia');
-            } elseif (!$precioElectricidad) {
+            } elseif ($precioElectricidad === NULL || !is_numeric($precioElectricidad)) {
                 $this->addFlash('danger', 'Precio no seleccionado para electricidad');
             } else {
                 $granSubtotal = 0;
@@ -1028,6 +1045,8 @@ class MarinaHumedaCotizacionController extends Controller
                 $descuentoElectricidad = $marinaHumedaCotizacion->getDescuentoElectricidad();
                 $eslora = $marinaHumedaCotizacion->getBarco()->getEslora();
                 $cantidadDias = $marinaHumedaCotizacion->getDiasEstadia();
+                // Added
+                $cantidadDiasElectricidad = $marinaHumedaCotizacion->getDiasElectricidad();
 
                 // Días Estadía
                 $subTotal = $cantidadDias * $precioEstadia * $eslora;
@@ -1049,14 +1068,17 @@ class MarinaHumedaCotizacionController extends Controller
                 $granTotal += $total;
 
                 // Conexión a electricidad
-                $subTotal = $cantidadDias * $precioElectricidad * $eslora;
+                // Add
+                $subTotal = $cantidadDiasElectricidad * $precioElectricidad * $eslora;
+                //$subTotal = $cantidadDias * $precioElectricidad * $eslora;
                 $descuentoTot = ($subTotal * $descuentoElectricidad) / 100;
                 $subTotal_descuento = $subTotal - $descuentoTot;
                 $ivaTot = ($subTotal_descuento * $iva) / 100;
                 $total = $subTotal_descuento + $ivaTot;
 
                 $marinaElectricidad->setEstatus(1);
-                $marinaElectricidad->setCantidad($cantidadDias);
+                $marinaElectricidad->setCantidad($cantidadDiasElectricidad);
+                // $marinaElectricidad->setCantidad($cantidadDias);
                 $marinaElectricidad->setPrecio($precioElectricidad);
                 $marinaElectricidad->setSubtotal($subTotal);
                 $marinaElectricidad->setDescuento($descuentoTot);

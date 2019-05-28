@@ -29,6 +29,12 @@ class MarinaHumedaCotizacionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /*
+            Fix: Change the readonly to false
+            Date: 27/05/19
+            By: Manuel Gutiérrez 
+        */
+        // Marina Humeda Cotizacion - Form
         $builder
             ->add('cliente', EntityType::class, [
                 'class' => 'AppBundle:Cliente',
@@ -55,12 +61,23 @@ class MarinaHumedaCotizacionType extends AbstractType
             ])
             ->add('diasEstadia',TextType::class,[
                 'label'=>'Días Estadia',
-                'attr' => ['class' => 'esnumero','readonly' => true],
+                'attr' => ['class' => 'esnumero diasEstadia','readonly' => true],
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => 'Debe seleccionar rango de fechas'
                     ])
                 ]
+            ])
+            ->add('diasElectricidad', TextType::class, [
+                'attr' => [
+                    'class' => 'esnumero',
+                    'readonly' => false
+                ],
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => 'Días de Electicidad no debe estar vacío.'
+                    ])
+                ],
             ])
             ->add('descuentoEstadia', NumberType::class, [
                 'label' => 'Descuento estadía %',
@@ -192,6 +209,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('fechaLlegada')
                     ->remove('fechaSalida')
                     ->remove('diasEstadia')
+                    ->remove('diasElectricidad')
                     ->remove('descuentoEstadia')
                     ->remove('descuentoElectricidad')
                     ->remove('dolar')
@@ -209,6 +227,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                     ->remove('fechaLlegada')
                     ->remove('fechaSalida')
                     ->remove('diasEstadia')
+                    ->remove('diasElectricidad')
                     ->remove('descuentoEstadia')
                     ->remove('descuentoElectricidad')
                     ->remove('dolar')

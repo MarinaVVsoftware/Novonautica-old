@@ -167,9 +167,13 @@
                                     <label>Días Estadía:</label>
                                     {{ form_widget(form.diasEstadia) }}
                                     {{ form_errors(form.diasEstadia) }}
-                                    <div class="security-icon">
-                                        <i class="fa fa-lock" aria-hidden="true"></i>
-                                    </div>
+                                    <label>Días Electricidad:</label>
+                                    {{ form_widget(form.diasElectricidad) }}
+                                    {{ form_errors(form.diasElectricidad) }}
+                                    {#<div class="security-icon">
+                                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                    </div>#}
+                                    <div class="pt-1-5"></div>
                                     <label>Dolar</label>
                                     {{ form_widget(form.dolar,{'value':(valdolar/100)}) }}
                                 </div>
@@ -180,15 +184,15 @@
                                             {{ form_widget(form.mhcservicios.children.0.precio) }}
                                         </div>
                                         <div id="estadia-otro-precio" class="col-sm-3">
-                                            <div class="security-icon">
+                                            {#<div class="security-icon">
                                                 <i class="fa fa-lock" aria-hidden="true"></i>
-                                            </div>
+                                             </div>#}
                                             {{ form_row(form.mhcservicios.children.0.precioOtro) }}
                                         </div>
                                         <div id="estadia-descuento" class="col-sm-3">
-                                            <div class="security-icon">
+                                            {#<div class="security-icon">
                                                 <i class="fa fa-lock" aria-hidden="true"></i>
-                                            </div>
+                                            </div>#}
                                             {{ form_row(form.descuentoEstadia) }}
                                         </div>
                                     </div>
@@ -197,16 +201,16 @@
                                             <label>Precio electricidad:</label>
                                             {{ form_widget(form.mhcservicios.children.1.precioAux) }}
                                         </div>
-                                        <div id="electricidad-otro-precio" class="col-sm-3">
-                                            <div class="security-icon">
+                                        <div id="electricidad-otro-precio" class="pt-1-5 col-sm-3">
+                                            {#<div class="security-icon">
                                                 <i class="fa fa-lock" aria-hidden="true"></i>
-                                            </div>
+                                            </div>#}
                                             {{ form_row(form.mhcservicios.children.1.precioOtro) }}
                                         </div>
-                                        <div id="electricidad-descuento" class="col-sm-3">
-                                            <div class="security-icon">
+                                        <div id="electricidad-descuento" class="pt-1-5 col-sm-3">
+                                            {#<div class="security-icon">
                                                 <i class="fa fa-lock" aria-hidden="true"></i>
-                                            </div>
+                                            </div>#}
                                             {{ form_row(form.descuentoElectricidad) }}
                                         </div>
                                     </div>
@@ -480,11 +484,11 @@
                 <div class="panel-footer">
                     <div class="row">
                         <div class="col-sm-12">
-                            <button class="btn btn-azul" type="button"
+                            {#<button class="btn btn-azul" type="button"
                                     data-toggle="modal"
                                     data-target="#modalIngresaPincode">
                                 Usar PINCODE
-                            </button>
+                            </button>#}
                             <button type="submit" class="btn btn-azul pull-right">
                                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 Guardar
@@ -494,7 +498,7 @@
                 </div>
                 {{ form_end(form) }}
             </div>
-            <div class="modal ventanaborrar fade" id="modalIngresaPincode" tabindex="-1" role="dialog" aria-labelledby="pincodeLabel">
+            {#<div class="modal ventanaborrar fade" id="modalIngresaPincode" tabindex="-1" role="dialog" aria-labelledby="pincodeLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -522,13 +526,14 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>#}
         </section>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('js/listenerElectricityPriceMarina.js') }}"></script>
     <script type="text/javascript">
       (function ($) {
 
