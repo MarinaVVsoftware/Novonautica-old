@@ -811,6 +811,31 @@ const estadiaOtroPrecio = document.getElementById('appbundle_marinahumedacotizac
 const electricidadOtroPrecio = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioOtro');
 const estadiaSelectPrecios = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_0_precio');
 const electricidadSelectPrecios = document.getElementById('appbundle_marinahumedacotizacion_mhcservicios_1_precioAux');
+const electricityDays = $("#appbundle_marinahumedacotizacion_diasElectricidad");
+
+// Evento para la actualizacion de las tablas y precios por dias de electricidad.
+electricityDays.on("change",function () {
+  var dias_estadia = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
+
+  // Si los dias de electricidad superan los dias de estadia, lo reduce a los dias de estadia.
+  if(dias_estadia < electricityDays.val()) {
+    electricityDays.val(dias_estadia);
+  }
+  // Setea los dias de electricidad
+  $('#e_cantidad').html(electricityDays.val());
+  $('#e_cantidad_mxn').html(electricityDays.val());
+
+  // Obtiene los precios
+  e_precio = electricidadOtroPrecio.value ?
+  electricidadOtroPrecio.value :
+  ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
+  e_precio_mxn = e_precio * dolar;
+
+  // Recalcula todo
+  calculaSubtotales(electricityDays.val(), e_precio, descuento_electricidad.val(),$('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+  calculaSubtotales(electricityDays.val(), e_precio_mxn, descuento_electricidad.val(),$('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+  calculaTotales();
+});
 
 $('#appbundle_marinahumedacotizacion_fechaLlegada').on("change", function () {
   dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
@@ -826,23 +851,29 @@ $('#appbundle_marinahumedacotizacion_fechaLlegada').on("change", function () {
     ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100);
   de_precio_mxn = de_precio * dolar;
 
+  // Si los dias de electricidad superan los dias de estadia, lo reduce a los dias de estadia.
+  if(dias_estadia < electricityDays.val()) {
+    electricityDays.val(dias_estadia);
+  }
   $('#de_cantidad').html(dias_estadia);
   $('#de_cantidad_mxn').html(dias_estadia);
 
   calculaSubtotales(dias_estadia, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
   calculaSubtotales(dias_estadia, de_precio_mxn, descuento_estadia.val(), $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
 
+  // Setea los dias de electricidad
+  $('#e_cantidad').html(electricityDays.val());
+  $('#e_cantidad_mxn').html(electricityDays.val());
+
+  // Obtiene los precios
   e_precio = electricidadOtroPrecio.value ?
-    electricidadOtroPrecio.value :
-    ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
+  electricidadOtroPrecio.value :
+  ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
   e_precio_mxn = e_precio * dolar;
 
-  $('#e_cantidad').html(dias_estadia);
-  $('#e_cantidad_mxn').html(dias_estadia);
-
-  calculaSubtotales(dias_estadia, e_precio, descuento_electricidad.val(),$('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
-  calculaSubtotales(dias_estadia, e_precio_mxn, descuento_electricidad.val(),$('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
-
+  // Recalcula todo
+  calculaSubtotales(electricityDays.val(), e_precio, descuento_electricidad.val(),$('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+  calculaSubtotales(electricityDays.val(), e_precio_mxn, descuento_electricidad.val(),$('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
   calculaTotales();
 });
 
@@ -860,23 +891,28 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on("change", function () {
     ($('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').val() / 100);
   de_precio_mxn = de_precio * dolar;
 
+  // Si los dias de electricidad superan los dias de estadia, lo reduce a los dias de estadia.
+  if(dias_estadia < electricityDays.val()) {
+    electricityDays.val(dias_estadia);
+  }
   $('#de_cantidad').html(dias_estadia);
   $('#de_cantidad_mxn').html(dias_estadia);
 
   calculaSubtotales(dias_estadia, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
   calculaSubtotales(dias_estadia, de_precio_mxn, descuento_estadia.val(),$('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
 
+  $('#e_cantidad').html(electricityDays.val());
+  $('#e_cantidad_mxn').html(electricityDays.val());
+
+  // Obtiene los precios
   e_precio = electricidadOtroPrecio.value ?
-    electricidadOtroPrecio.value :
-    ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
+  electricidadOtroPrecio.value :
+  ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
   e_precio_mxn = e_precio * dolar;
 
-  $('#e_cantidad').html(dias_estadia);
-  $('#e_cantidad_mxn').html(dias_estadia);
-
-  calculaSubtotales(dias_estadia, e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
-  calculaSubtotales(dias_estadia, e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
-
+  // Recalcula todo
+  calculaSubtotales(electricityDays.val(), e_precio, descuento_electricidad.val(),$('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+  calculaSubtotales(electricityDays.val(), e_precio_mxn, descuento_electricidad.val(),$('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
   calculaTotales();
 });
 

@@ -1,21 +1,15 @@
-$(document).ready(function () {
-    const stayDays = $("#appbundle_marinahumedacotizacion_diasEstadia");
-    const electricityDays = $("#appbundle_marinahumedacotizacion_diasElectricidad");
+/*$(document).ready(function () {
+	const stayDays = $("#appbundle_marinahumedacotizacion_diasEstadia");
+	const electricityDays = $("#appbundle_marinahumedacotizacion_diasElectricidad");
 
-    electricityDays.change(function () {
-        const electricityDaysValue = electricityDays.val();
-        const stayDaysValue = stayDays.val();
+	electricityDays.change(function () {
+		const electricityDaysValue = electricityDays.val();
+		const stayDaysValue = stayDays.val();
 
-        if (!stayDaysValue) {
-            alert("Dias de Estadía está vacio.");
-            electricityDays.val("");
-            return;
-        }
-
-        if (electricityDaysValue > stayDaysValue) {
-            alert("Días de Electricidad no debe ser mayor al número de días de estadía.");
-            electricityDays.val("");
-            return;
-        }
-    });
-});
+		if (!stayDaysValue) {
+			alert("Dias de Estadía está vacio.");
+			electricityDays.val("");
+			return;
+		}
+	});
+});*/

@@ -86,7 +86,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                     'autocomplete' => 'off',
                     'max' => 100,
                     'min' => 0,
-                    'readonly' => true
+                    'readonly' => false
                     ],
                 'required' => false
             ])
@@ -97,7 +97,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                     'autocomplete' => 'off',
                     'max' => 100,
                     'min' => 0,
-                    'readonly' => true
+                    'readonly' => false
                 ],
                 'required' => false,
             ])
@@ -106,7 +106,7 @@ class MarinaHumedaCotizacionType extends AbstractType
                 'attr' => [
                     'class' => 'esdecimal',
                     'autocomplete' => 'off',
-                    'readonly' => true
+                    'readonly' => false
                 ],
                 'currency' => 'USD',
                 'divisor' => 100,
