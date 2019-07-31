@@ -371,7 +371,6 @@ class AstilleroCotizacionController extends Controller
     public function showAction(AstilleroCotizacion $astilleroCotizacion)
     {
         $deleteForm = $this->createDeleteForm($astilleroCotizacion);
-
         return $this->render('astillero/cotizacion/show.html.twig', [
             'title' => 'Cotización',
             'astilleroCotizacion' => $astilleroCotizacion,
@@ -650,7 +649,7 @@ class AstilleroCotizacionController extends Controller
      */
     public function validaAction(Request $request, AstilleroCotizacion $astilleroCotizacion, \Swift_Mailer $mailer)
     {
-        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_VALIDATE', $astilleroCotizacion);
+        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_CLIENT_VALIDATE', $astilleroCotizacion);
 
         if ($astilleroCotizacion->isEstatus() == 0 ||
             $astilleroCotizacion->getValidanovo() == 1 ||

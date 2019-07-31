@@ -20,6 +20,7 @@ class AstilleroVoter extends Voter
 {
     const CREATE = 'ASTILLERO_COTIZACION_CREATE';
     const VALIDATE = 'ASTILLERO_COTIZACION_VALIDATE';
+    const VALIDATE_CLIENT = 'ASTILLERO_COTIZACION_CLIENT_VALIDATE';
     const REQUOTE = 'ASTILLERO_COTIZACION_REQUOTE';
     const DELETE = 'ASTILLERO_COTIZACION_DELETE';
 
@@ -40,7 +41,7 @@ class AstilleroVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, [self::CREATE, self::VALIDATE, self::REQUOTE, self::DELETE])) {
+        if (!in_array($attribute, [self::CREATE, self::VALIDATE, self::VALIDATE_CLIENT, self::REQUOTE, self::DELETE])) {
             return false;
         }
 
@@ -80,6 +81,9 @@ class AstilleroVoter extends Voter
             case self::VALIDATE:
                 return $this->canValidate($user);
                 break;
+            case self::VALIDATE_CLIENT:
+                return $this->canValidateClient($user);
+                break;
             case self::REQUOTE:
                 return $this->canRequote($user);
                 break;
@@ -103,6 +107,15 @@ class AstilleroVoter extends Voter
     private function canValidate(Usuario $usuario)
     {
         if (!in_array(self::VALIDATE, $usuario->getRoles())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function canValidateClient(Usuario $usuario)
+    {
+        if (!in_array(self::VALIDATE_CLIENT, $usuario->getRoles())) {
             return false;
         }
 
