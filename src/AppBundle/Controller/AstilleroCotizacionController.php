@@ -649,7 +649,7 @@ class AstilleroCotizacionController extends Controller
      */
     public function validaAction(Request $request, AstilleroCotizacion $astilleroCotizacion, \Swift_Mailer $mailer)
     {
-        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_CLIENT_VALIDATE', $astilleroCotizacion);
+        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_VALIDATE', $astilleroCotizacion);
 
         if ($astilleroCotizacion->isEstatus() == 0 ||
             $astilleroCotizacion->getValidanovo() == 1 ||
