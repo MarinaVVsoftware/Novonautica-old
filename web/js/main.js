@@ -392,8 +392,12 @@ function astilleroAgregaProducto(grupoProducto,idservicio){
         $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_tipoCantidad').val(grupoProducto.tipoCantidad);
         $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_promedio').val(grupoProducto.cantidad);
         $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_grupo').val(idservicio);
-        fila.children('.valorprecio').html('$ ' + parseFloat((grupoProducto.producto.precio) / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' <small>MXN</small>');
-        fila.children('.valorprecio').data('valor', ((grupoProducto.producto.precio) / 100));
+        
+        /** Fix sobre división entre 100 de los precios.
+         *  01/08/2019 Eduardo Hidalgo
+         */
+        fila.children('.valorprecio').html('$ ' + parseFloat(grupoProducto.producto.precio).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' <small>MXN</small>');
+        fila.children('.valorprecio').data('valor', grupoProducto.producto.precio);
         fila.children('.valorpromedio').append(grupoProducto.cantidad);
         // document.getElementById('appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').parentNode.dataset.tipo = grupoProducto.tipoCantidad;
         // document.getElementById('appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').parentNode.dataset.promedio = grupoProducto.cantidad;
