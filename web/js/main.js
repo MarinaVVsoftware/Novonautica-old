@@ -1479,10 +1479,13 @@ function calculaSubtotalesAstillero(fila) {
 }
 
 /** función del módulo: ASTILLERO
- * Recalcula todos los valores totales de la cotización
- * (subtotal, iva y total de la cotización en general)
+ * Recalcula todos los valores totales de la cotización obteniendo
+ * cada row de algún servicio o producto y haciendo sumatorias de sus
+ * valores.
  */
 function calculaTotalesAstillero() {
+    /* Regex para encontrar los precios en el innerHtml de los elementos */
+    const pattern = /\d{1,9}(?:[.,]\d{3})*(?:[.,]\d{1,2})/g;
     const iva = Number($('#valorsistemaiva').data('valor'));
     const descuentoPorcentaje = Number($('#appbundle_astillerocotizacion_descuento').val());
 
@@ -1494,43 +1497,33 @@ function calculaTotalesAstillero() {
     let granTotalAd = 0;
     let granDescuentoAd = 0;
 
-    /* Por cada servicio básico */
-    $("table tbody tr").each(() => {
-      /* Si el servicio básico no esta "hidden", dado que todos existen en la tabla
-      pero están ocultos hasta que se selecciona alguno. */
-      if (!$(this).hasClass('hidden')) {
-        /* Obtiene los valores totales */
-        valorSubtotal = $(this).children('.valorsubtotal').data('valor');
-        valorIva = $(this).children('.valoriva').data('valor');
-        valorTotal = $(this).children('.valortotal').data('valor');
+    /* Obtiene todos los table rows existentes */
+    let list = document.querySelectorAll(".servicio-agregado");
+    
+    /* Obtiene los valores de cada servicio o producto y los acumula */
+    list.forEach( tr => {
+      valorSubtotal, valorIva, valorTotal = 0;
 
-        /* en caso que alguno falle, lo deja en cero */
-        // (typeof valorSubtotal === "undefined") ? valorSubtotal = 0 : valorSubtotal = valorSubtotal;
-        // (typeof valorSubtotal === "undefined") ? valorIva = 0 : valorIva = valorIva;
-        // (typeof valorSubtotal === "undefined") ? valorTotal = 0 : valorTotal = valorTotal;
+      if(!tr.classList.contains("hidden")) {
+        /* busca el elemento, obtiene su texto html, usa regex para obtener el número,
+        y por último hace replace por el formato que tiene y convierte a tipo Number. */
+        valorSubtotal = Number(tr.querySelector(".valorsubtotal").innerHTML.match(pattern)[0].replace(",",""));
+        valorIva = Number(tr.querySelector(".valoriva").innerHTML.match(pattern)[0].replace(",",""));
+        valorTotal = Number(tr.querySelector(".valortotal").innerHTML.match(pattern)[0].replace(",",""));
 
-        if (typeof valorSubtotal === "undefined") {
-            valorSubtotal = 0
-        }
-        if (typeof valorIva === "undefined") {
-            valorIva = 0
-        }
-        if (typeof valorTotal === "undefined") {
-            valorTotal = 0
-        }
-
-        /* Los acumula en los totales globales */
         granSubtotalAd += valorSubtotal;
         granIvaAd += valorIva;
         granTotalAd += valorTotal;
       }
     });
 
+    /* Calcula valores totales */
     granDescuentoAd = (granSubtotalAd * descuentoPorcentaje);
-    granIvaAd = ((granSubtotalAd - granDescuentoAd) * iva);
+    granIvaAd = ((granSubtotalAd - granDescuentoAd) * iva/100);
     granTotalAd = granSubtotalAd - granDescuentoAd + granIvaAd;
 
-    $('#gransubtot').html((granSubtotalAd).toFixed(2));
+    /* Los setea en la vista y añade al número formato */
+    $('#gransubtot').html((granSubtotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     $('#grandescuento').html((granDescuentoAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     $('#graniva').html((granIvaAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     $('#grantot').html((granTotalAd).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));

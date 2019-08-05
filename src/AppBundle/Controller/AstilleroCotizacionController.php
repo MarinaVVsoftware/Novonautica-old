@@ -224,11 +224,11 @@ class AstilleroCotizacionController extends Controller
                         $precio = 0;
                     }
                     if($divisa == 'USD'){
-                        $subTotal = ($cantidad * $precio * $valordolar)/100;
+                        $subTotal = ($cantidad * $precio * $valordolar);
                     }else{
                         $subTotal = $cantidad * $precio;
                     }
-                    $ivaTot = ($subTotal * $iva) / 100;
+                    $ivaTot = ($subTotal * $iva);
                     $total = $subTotal + $ivaTot;
                     $servAst->setPrecio($precio)
                             ->setSubtotal($subTotal)
@@ -243,9 +243,8 @@ class AstilleroCotizacionController extends Controller
             }
 
             $granDescuento = ($sumas['granSubtotal'] * $astilleroCotizacion->getDescuento())/100;
-            $granIva = (($sumas['granSubtotal'] - $granDescuento) * $iva) / 100;
+            $granIva = (($sumas['granSubtotal'] - $granDescuento) * $iva);
             $granTotal = $sumas['granSubtotal'] - $granDescuento + $granIva;
-
 
             $fechaHoraActual = new \DateTime('now');
             $astilleroCotizacion
