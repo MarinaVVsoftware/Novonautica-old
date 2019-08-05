@@ -1,52 +1,52 @@
 imports:
-    - { resource: config.yml }
+  - { resource: config.yml }
 
 framework:
-    router:
-        resource: '%kernel.project_dir%/app/config/routing_dev.yml'
-        strict_requirements: true
-    profiler: { only_exceptions: false }
+  router:
+    resource: "%kernel.project_dir%/app/config/routing_dev.yml"
+    strict_requirements: true
+  profiler: { only_exceptions: false }
 
 web_profiler:
-    toolbar: true
-    intercept_redirects: false
+  toolbar: true
+  intercept_redirects: false
 
 monolog:
-    handlers:
-        main:
-            type: stream
-            path: '%kernel.logs_dir%/%kernel.environment%.log'
-            level: debug
-            channels: ['!event']
-        console:
-            type: console
-            process_psr_3_messages: false
-            channels: ['!event', '!doctrine', '!console']
-        # To follow logs in real time, execute the following command:
-        # `bin/console server:log -vv`
-        server_log:
-            type: server_log
-            process_psr_3_messages: false
-            host: 127.0.0.1:9911
-        # uncomment to get logging in your browser
-        # you may have to allow bigger header sizes in your Web server configuration
-        #firephp:
-        #    type: firephp
-        #    level: info
-        #chromephp:
-        #    type: chromephp
-        #    level: info
+  handlers:
+    main:
+      type: stream
+      path: "%kernel.logs_dir%/%kernel.environment%.log"
+      level: debug
+      channels: ["!event"]
+    console:
+      type: console
+      process_psr_3_messages: false
+      channels: ["!event", "!doctrine", "!console"]
+    # To follow logs in real time, execute the following command:
+    # `bin/console server:log -vv`
+    server_log:
+      type: server_log
+      process_psr_3_messages: false
+      host: 127.0.0.1:9911
+    # uncomment to get logging in your browser
+    # you may have to allow bigger header sizes in your Web server configuration
+    #firephp:
+    #    type: firephp
+    #    level: info
+    #chromephp:
+    #    type: chromephp
+    #    level: info
 
 swiftmailer:
-    transport: '%mailer_transport%'
-    host: '%mailer_host%'
-    username: '%mailer_user%'
-    password: '%mailer_password%'
-    port: '%mailer_port%'
-    disable_delivery: true
+  transport: "%mailer_transport%"
+  host: "%mailer_host%"
+  username: "%mailer_user%"
+  password: "%mailer_password%"
+  port: "%mailer_port%"
+  disable_delivery: true
 
 knp_snappy:
-    pdf:
-        enabled:    true
-#        binary: "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-        binary: /usr/local/bin/wkhtmltopdf
+  pdf:
+    enabled: true
+    binary: "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+#        binary: /usr/local/bin/wkhtmltopdf

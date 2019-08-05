@@ -465,16 +465,16 @@
                                                     <tr>
                                                         <td>{{ AstilleroServicio.cantidad }}</td>
                                                         <td>{{ AstilleroServicio.producto.nombre }}</td>
-                                                        <td>$ {{ (AstilleroServicio.precio/100)|number_format(2) }}
+                                                        <td>$ {{ (AstilleroServicio.precio)|number_format(2) }}
                                                             <small>{{ AstilleroServicio.divisa }}</small>
                                                         </td>
-                                                        <td>$ {{ (AstilleroServicio.subtotal/100)|number_format(2) }}
+                                                        <td>$ {{ (AstilleroServicio.subtotal)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
-                                                        <td>$ {{ (AstilleroServicio.iva/100)|number_format(2) }}
+                                                        <td>$ {{ (AstilleroServicio.iva)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
-                                                        <td>$ {{ (AstilleroServicio.total/100)|number_format(2) }}
+                                                        <td>$ {{ (AstilleroServicio.total)|number_format(2) }}
                                                             <small>MXN</small>
                                                         </td>
                                                     </tr>

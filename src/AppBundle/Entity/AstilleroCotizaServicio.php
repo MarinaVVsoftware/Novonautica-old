@@ -59,32 +59,32 @@ class AstilleroCotizaServicio
     private $grupo;
 
     /**
-     * @var int
+     * @var decimal
      *
      * @Groups({"facturacion"})
      *
-     * @ORM\Column(name="precio", type="integer", nullable=true)
+     * @ORM\Column(name="precio", type="decimal", nullable=true, precision=19, scale=4)
      */
     private $precio;
 
     /**
-     * @var int
+     * @var decimal
      *
-     * @ORM\Column(name="subtotal", type="bigint", nullable=true)
+     * @ORM\Column(name="subtotal", type="decimal", nullable=true, precision=19, scale=4)
      */
     private $subtotal;
 
     /**
-     * @var int
+     * @var decimal
      *
-     * @ORM\Column(name="iva", type="bigint", nullable=true)
+     * @ORM\Column(name="iva", type="decimal", nullable=true, precision=19, scale=4)
      */
     private $iva;
 
     /**
-     * @var int
+     * @var decimal
      *
-     * @ORM\Column(name="total", type="bigint", nullable=true)
+     * @ORM\Column(name="total", type="decimal", nullable=true, precision=19, scale=4)
      */
     private $total;
 
@@ -326,7 +326,7 @@ class AstilleroCotizaServicio
     }
 
     /**
-     * @return int
+     * @return decimal
      */
     public function getPrecio()
     {
@@ -334,7 +334,7 @@ class AstilleroCotizaServicio
     }
 
     /**
-     * @param int $precio
+     * @param decimal $precio
      * @return AstilleroCotizaServicio
      */
     public function setPrecio($precio)
