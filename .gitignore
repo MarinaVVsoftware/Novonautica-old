@@ -25,3 +25,8 @@
 /src/Hyperion/MultifacturasBundle/src/certificados/
 /volumes
 Makefile
+*.lock
+composer.lock
+bin/symfony_requirements
+var/SymfonyRequirements.php
+web/config.php
