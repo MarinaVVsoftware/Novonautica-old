@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Astillero\GrupoProducto;
 use AppBundle\Entity\AstilleroCotizacion;
 use AppBundle\Entity\AstilleroCotizaServicio;
 use AppBundle\Entity\AstilleroServicioBasico;
@@ -393,14 +394,22 @@ class AstilleroCotizacionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $valor = $em->getRepository('AppBundle:ValorSistema')->find(1);
-
         $bancoPesos = $em->getRepository('AppBundle:CuentaBancaria')->findOneBy(['empresa' => 5,'moneda' => 1]);
         $bancoDolares = $em->getRepository('AppBundle:CuentaBancaria')->findOneBy(['empresa' => 5,'moneda' => 2]);
-
-
+        $grupoProductoRepository = $em->getRepository(GrupoProducto::class);
         if ($tipo == 1) { //pesos
             $html = $this->renderView('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
                 'astilleroCotizacion' => $ac,
+                'valor' => $valor,
+                'bancoPesos' => $bancoPesos,
+                'bancoDolares' => $bancoDolares
+            ]);
+
+            $quotation = $this->PdfSimplify($ac);
+
+            $html = $this->renderView('astillero/cotizacion/pdf/cotizacionPesos-new.html.twig', [
+                'astilleroCotizacion' => $ac,
+                'quotation' => $quotation,
                 'valor' => $valor,
                 'bancoPesos' => $bancoPesos,
                 'bancoDolares' => $bancoDolares
@@ -412,8 +421,18 @@ class AstilleroCotizacionController extends Controller
                 'bancoPesos' => $bancoPesos,
                 'bancoDolares' => $bancoDolares
             ]);
-        }
 
+            $quotation = $this->PdfSimplify($ac);
+
+            $html = $this->renderView('astillero/cotizacion/pdf/cotizacionDolares-new.html.twig', [
+                'astilleroCotizacion' => $ac,
+                'quotation' => $quotation,
+                'valor' => $valor,
+                'bancoPesos' => $bancoPesos,
+                'bancoDolares' => $bancoDolares
+            ]);
+        }
+        
         $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
             'astilleroCotizacion' => $ac,
             'valor' => $valor
@@ -421,7 +440,7 @@ class AstilleroCotizacionController extends Controller
         $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig',[
             'valor' => $valor
         ]);
-
+        //die;
         $hojapdf = $this->get('knp_snappy.pdf');
 
         $options = [
@@ -1578,4 +1597,170 @@ class AstilleroCotizacionController extends Controller
         }
         return $sumas;
     }
+
+    // Takes de $ac object and return an array with the services, kits and products merged.
+    public function PdfSimplify($ac) {
+        $acServices = $ac->getAcservicios();
+        $productsFiltered = [];
+        $productsKit = [];
+        $kitsToFind = [];
+        $kits = [];
+        $kitsByProduct = [];
+        $kitsByService = [];
+        $kitsFiltered = [];
+        $productsGroup = [];
+        
+        foreach($acServices as $acService){
+            if($acService->getProducto() && $acService->getGrupo() == null) {
+                 // Get the products that does not belong to a kit.
+                array_push($productsFiltered, $acService);
+            }
+
+            if($acService->getGrupo() && $acService->getProducto()) {
+                 // Get the product that belong to the kit.
+                array_push($productsKit, $acService);
+
+                // Get service group by product.
+                array_push($kitsByProduct, $acService->getGrupo());
+            }
+
+            if($acService->getServicio() && $acService->getGrupo()) {
+                // Get the kits.
+                array_push($kits, $acService);
+
+                // Get the kits by service.
+                array_push($kitsByService, $acService->getGrupo());
+            }
+        }
+
+        // Filter the duplicates.
+        $kitsByProduct = array_unique($kitsByProduct);
+        // Filter the duplicates.
+        $kitsByService = array_unique($kitsByService);
+        // Filter the ids that are duplicates and return a new array for the services that does not have products.
+        $kitsByService = array_diff($kitsByService, $kitsByProduct);
+
+        // Loop the kits by products.
+        foreach($kitsByProduct as $kitByProduct) {
+            $cantidad = 0;
+            $grupo = 0;
+            $descripcion = "";
+            $precio = 0;
+            $subtotal = 0;
+            $iva = 0;
+            $total = 0;
+            $divisa = "";
+            // Loop the kits.
+            foreach($kits as $kit) {
+                // If the kit by product is equal to the group of the kit, set the quantity, group and description.
+                if($kitByProduct == $kit->getGrupo()) {
+                    $cantidad = $cantidad +  $kit->getCantidad();
+                    $grupo = $kit->getGrupo();
+                    $descripcion = $kit->getServicio()->getNombre();
+                }
+            }
+
+            // Loop the products
+            foreach($productsKit as $product) {
+                // If the kit by product is equal to the product group, set the price, subtotal, iva, total and "divisa".
+                if($kitByProduct == $product->getGrupo()) {
+                    $precio = $precio + $product->getPrecio();
+                    $subtotal = $subtotal + intval($product->getSubtotal());
+                    $iva = $iva + intval($product->getIva());
+                    $total = $total + intval($product->getTotal());
+                    $divisa = $product->getDivisa();
+                }
+            }
+
+            // Set the variables to the associative array.
+            $kitsFiltered["kit".$kitByProduct]["cantidad"] = $cantidad;
+            $kitsFiltered["kit".$kitByProduct]["grupo"] = $grupo;
+            $kitsFiltered["kit".$kitByProduct]["descripcion"] = $descripcion;
+            $kitsFiltered["kit".$kitByProduct]["precio"] = $precio;
+            $kitsFiltered["kit".$kitByProduct]["precio"] = $precio;
+            $kitsFiltered["kit".$kitByProduct]["subtotal"] = $subtotal;
+            $kitsFiltered["kit".$kitByProduct]["iva"] = $iva;
+            $kitsFiltered["kit".$kitByProduct]["total"] = $total;
+            $kitsFiltered["kit".$kitByProduct]["divisa"] = $divisa;
+        }
+
+        // Boolean to check when the loop needs to break.
+        $didBroken = false;
+        // Loop the kits by service.
+        foreach($kitsByService as $kitByService) {
+            $cantidad = 0;
+            $grupo = 0;
+            $precio = 0;
+            $subtotal = 0;
+            $iva = 0;
+            $total = 0;
+            $divisa = "";
+            $descripcion = "";
+            // Loop the products that belongs to a kit.
+            foreach($productsKit as $product) {
+                // If the kit by service is equal to the product group, set the "didBreak" variable to true.
+                if($kitByService == $product->getGrupo()) {
+                    $didBroken = true;
+                }
+            }
+
+            // Check if the variable is true and then, break the loop.
+            if($didBroken) {
+                break;
+            }
+
+            // If all is correct XD, loop the kits.
+            foreach($kits as $kit) {
+                // Check if the kit by service is equal to the kit group, then set the variables.
+                if($kitByService == $kit->getGrupo()) {
+                    $cantidad = $cantidad + $kit->getCantidad();
+                    $grupo = $kit->getGrupo();
+                    $precio = $precio + $kit->getPrecio();
+                    $subtotal = $subtotal + intval($kit->getSubtotal());
+                    $iva = $iva + intval($kit->getIva());
+                    $total = $total + intval($kit->getTotal());
+                    $divisa = $kit->getDivisa();
+                    $descripcion = $kit->getServicio()->getNombre();
+                }
+            }
+
+            // Set the variables to the associative array.
+            $kitsFiltered["kit".$kitByService]["cantidad"] = $cantidad;
+            $kitsFiltered["kit".$kitByService]["grupo"] = $grupo;
+            $kitsFiltered["kit".$kitByService]["precio"] = $precio;
+            $kitsFiltered["kit".$kitByService]["subtotal"] = $subtotal;
+            $kitsFiltered["kit".$kitByService]["iva"] = $iva;
+            $kitsFiltered["kit".$kitByService]["total"] = $total;
+            $kitsFiltered["kit".$kitByService]["divisa"] = $divisa;
+            $kitsFiltered["kit".$kitByService]["descripcion"] = $descripcion;
+        }
+        
+        // FOR DEBBUG PURPOSE
+        // Products that does not belongs to a kit
+        //dump($productsFiltered);
+
+        // Products that belongs to a kit
+        //dump($productsKit);
+
+        // Total of kits
+        //dump($kits);
+
+        // Unique ids that belongs to the kit
+        //dump($kitsByProduct);
+
+        // Filtered kits merged with the products
+        //dump($kitsByService);
+
+        // Kits filtered and ready.
+        //dump($kitsFiltered);
+
+        // Set the products.
+        $service_arr["products"] = $productsFiltered;
+        // Set all the kits and services.
+        $service_arr["services"] = $kitsFiltered;
+
+        // Return the array
+        return $service_arr;
+    }
+
 }

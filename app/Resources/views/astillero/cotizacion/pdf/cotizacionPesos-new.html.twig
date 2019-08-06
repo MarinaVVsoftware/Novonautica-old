@@ -1,0 +1,427 @@
+{% set servicioBasicoExists = null %}
+{% set servicioTrabajoExists = null %}
+{% set materialesExists = null %}
+{% set otrosExists = null %}
+
+{% for servicio in astilleroCotizacion.acservicios %}
+    {% if servicio.astilleroserviciobasico is not null %}
+        {% set servicioBasicoExists = true %}
+    {% endif %}
+    {% if servicio.servicio is not null %}
+        {% set servicioTrabajoExists = true %}
+    {% endif %}
+    {% if servicio.producto is not null %}
+        {% set materialesExists = true %}
+    {% endif %}
+    {% if servicio.otroservicio is not null %}
+        {% set otrosExists = true %}
+    {% endif %}
+{% endfor %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css"
+          href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+     <script src="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('js/test.js') }}"></script>
+    <title>Cotizacion PDF</title>
+    <style>
+        body {
+            color: #666;
+            width: 100% !important;
+            height: 100%;
+            font-size: 12px;
+        }
+
+        h4, h5, h6 {
+            margin-top: 5px !important;
+            margin-bottom: 5px !important;
+        }
+
+        .informacion p {
+            margin: 0 !important;
+        }
+
+        .nopadding {
+            padding: 0;
+        }
+
+        table.table {
+            page-break-inside: avoid;
+        }
+
+        table.table thead tr th:nth-last-child(2),
+        table.table thead tr th:last-child {
+            width: 17%;
+        }
+
+        table.table thead tr th {
+            border: 1px solid #458fce !important;
+            border-bottom: 0 !important;
+            background-color: #458fce;
+            color: #fff;
+        }
+
+        table.table tfoot tr th {
+            border: 1px solid #ddd !important;
+            background-color: #ddd;
+        }
+
+        .table-condensed > tbody > tr > td {
+            border: 1px solid #ddd !important;
+        }
+
+        .grey-background {
+            background-color: #ddd;
+        }
+
+        .condiciones {
+            font-size: 10px;
+        }
+
+        .container-fluid {
+            page-break-after: always;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row informacion" style="background-color: #EAEAEA; padding-top: .5rem; padding-bottom: 1rem;">
+        <div class="col-xs-4">
+            <h4>Información</h4>
+            <p><strong>Embarcación: </strong> {{ astilleroCotizacion.barco.nombre }}</p>
+            <p><strong>Modelo: </strong> {{ astilleroCotizacion.barco.modelo }}</p>
+            <p><strong>Eslora: </strong> {{ astilleroCotizacion.barco.eslora }}</p>
+            <p><strong>Manga: </strong> {{ astilleroCotizacion.barco.manga }}</p>
+
+            {% if astilleroCotizacion.barco.nombreCapitan is not empty %}
+                <p><strong>Capitán: </strong> {{ astilleroCotizacion.barco.nombreCapitan }}</p>
+                <p><strong>Telefono del capitán: </strong> {{ astilleroCotizacion.barco.telefonoCapitan }}</p>
+                <p><strong>Correo del capitán: </strong> {{ astilleroCotizacion.barco.correoCapitan }}</p>
+            {% endif %}
+
+            {% if astilleroCotizacion.barco.nombreResponsable is not empty %}
+                <p><strong>Encargado: </strong> {{ astilleroCotizacion.barco.nombreResponsable }}</p>
+                <p><strong>Telefono del encargado: </strong> {{ astilleroCotizacion.barco.telefonoResponsable }}</p>
+                <p><strong>Correo del encargado: </strong> {{ astilleroCotizacion.barco.correoResponsable }}</p>
+            {% endif %}
+        </div>
+        <div class="col-xs-4">
+            <h4>&nbsp;</h4>
+            <p><strong>Fecha de llegada: </strong>{{ astilleroCotizacion.fechaLlegada|date('d-m-Y') }}</p>
+            <p><strong>Fecha de salida: </strong>{{ astilleroCotizacion.fechaSalida|date('d-m-Y') }}</p>
+            <p><strong>Días de estadía: </strong>{{ astilleroCotizacion.diasEstadia }}</p>
+        </div>
+        <div class="col-xs-4">
+            <h4>&nbsp;</h4>
+            {# TODO: Dias adicionales aun no se calcula #}
+            {# <p><strong>Días adicionales:</strong> </sp</p> #}
+            <p><strong>Lugar de trabajo: </strong>Astillero V&V</p>
+            <p><strong>Banco: </strong></p>
+            <p><strong>Número de cuenta: </strong></p>
+            <p><strong>Clabe bancaria: </strong></p>
+        </div>
+    </div>
+    <div class="row text-right">
+        <div class="col-xs-6 text-left">Tipo cambio: ${{ (astilleroCotizacion.dolar/100)|number_format(2) }} MXN</div>
+        <div class="col-xs-6">Precios en: MXN</div>
+    </div>
+    <div class="row">
+        {% if servicioBasicoExists %}
+            <div class="col-xs-12 nopadding">
+                <h5 class="text-center">Servicios básicos</h5>
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Precio unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% set sumaserv = 0 %}
+                    {% for unservicio in astilleroCotizacion.acservicios %}
+                        {% if unservicio.astilleroserviciobasico and unservicio.estatus %}
+                            <tr>
+                                <td>{{ unservicio.astilleroserviciobasico.nombre }}</td>
+                                <td>
+
+                                    {% if unservicio.astilleroserviciobasico.id is defined and (unservicio.astilleroserviciobasico.id == 2 or unservicio.astilleroserviciobasico.id == 9) %}
+                                        {{ unservicio.cantidad/astilleroCotizacion.barco.eslora }}
+                                        (pie por día)
+                                    {% else %}
+                                        {{ unservicio.cantidad }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if unservicio.divisa == 'USD' %}
+                                        $ {{ ((unservicio.precio*astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                    {% else %}
+                                        $ {{ (unservicio.precio/100)|number_format(2) }}
+                                    {% endif %}
+                                </td>
+                                <td>$ {{ (unservicio.subtotal/100)|number_format(2) }}</td>
+                            </tr>
+                            {% set sumaserv=sumaserv+unservicio.subtotal %}
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="2" style="background-color: #fff; border-bottom: 0 !important"></th>
+                        <th class="text-right">Sub-total estadía:</th>
+                        <th>$ {{ (sumaserv/100)|number_format(2) }}</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        {% endif %}
+
+        {% if servicioTrabajoExists %}
+            <div class="col-xs-12 nopadding">
+                <h5 class="text-center">Trabajos</h5>
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Unidad</th>
+                        <th>Precio unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% set sumaserv = 0 %}
+                    {% for servicio in quotation.services %}
+                        <tr>
+                            <td>{{ servicio.descripcion }}</td>
+                            <td>{{ servicio.cantidad }}</td>
+                            <td>Serv.</td>
+                            <td>
+                                {% if servicio.divisa == 'USD' %}
+                                    $ {{ ((servicio.precio*astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                {% else %}
+                                    $ {{ (servicio.precio/100)|number_format(2) }}
+                                {% endif %}
+                            </td>
+                            <td>$ {{ (servicio.subtotal/100)|number_format(2) }}</td>
+                        </tr>
+                        {% set sumaserv=sumaserv+servicio.subtotal %}
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="3" style="background-color: #fff; border-bottom: 0 !important"></th>
+                        <th class="text-right">Total trabajos</th>
+                        <th>$ {{ (sumaserv/100)|number_format(2) }}</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        {% endif %}
+
+        {% if materialesExists %}
+            <div class="col-xs-12 nopadding">
+                <h5 class="text-center">Materiales</h5>
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Unidad</th>
+                        <th>Precio unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% set sumaserv = 0 %}
+                    {% for unservicio in quotation.products %}
+                        {% if unservicio.producto and unservicio.estatus %}
+                            <tr>
+                                <td>{{ unservicio.producto.nombre }}</td>
+                                <td>{{ unservicio.cantidad }}</td>
+                                <td>{{ unservicio.producto.unidad }}</td>
+                                <td>
+                                    {% if unservicio.divisa == 'USD' %}
+                                        $ {{ ((unservicio.precio*astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                    {% else %}
+                                        $ {{ (unservicio.precio/100)|number_format(2) }}
+                                    {% endif %}
+                                </td>
+                                <td>$ {{ (unservicio.subtotal/100)|number_format(2) }}</td>
+                            </tr>
+                            {% set sumaserv=sumaserv+unservicio.subtotal %}
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="3" style="background-color: #fff; border: 0; border-bottom: 0 !important"></th>
+                        <th class="text-right">Total materiales</th>
+                        <th>$ {{ (sumaserv/100)|number_format(2) }}</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        {% endif %}
+
+        {% if otrosExists %}
+            <div class="col-xs-12 nopadding">
+                <h5 class="text-center">Otros</h5>
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Unidad</th>
+                        <th>Precio unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% set sumaserv = 0 %}
+                    {% for unservicio in astilleroCotizacion.acservicios %}
+                        {% if unservicio.otroservicio and unservicio.estatus %}
+                            <tr>
+                                <td>{{ unservicio.otroservicio }}</td>
+                                <td>{{ unservicio.cantidad }}</td>
+                                <td>Serv.</td>
+                                <td>$ {{ (unservicio.precio/100)|number_format(2) }}</td>
+                                <td>$ {{ (unservicio.subtotal/100)|number_format(2) }}</td>
+                            </tr>
+                            {% set sumaserv=sumaserv+unservicio.subtotal %}
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="3" style="background-color: #fff; border: 0; border-bottom: 0 !important"></th>
+                        <th class="text-right">Total materiales</th>
+                        <th>$ {{ (sumaserv/100)|number_format(2) }}</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4 col-xs-offset-8 nopadding">
+            <table class="table table-condensed table-bordered">
+                <tbody>
+                <tr>
+                    <th>Sub-total</th>
+                    <td class="borde-bajo-doble">
+                        $ {{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</td>
+                </tr>
+                {% if astilleroCotizacion.descuento %}
+                <tr>
+                    <th>Descuento {{ astilleroCotizacion.descuento }}%</th>
+                    <td class="borde-bajo-doble">
+                        $ {{ (astilleroCotizacion.descuentototal/100)|number_format(2) }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <th>IVA {{ astilleroCotizacion.iva }}%</th>
+                    <td class="borde-bajo-doble">
+                        $ {{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</td>
+                </tr>
+                <tr class="grey-background">
+                    <th>Total general</th>
+                    <td class="borde-bajo-doble">$ {{ (astilleroCotizacion.total/100)|number_format(2) }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% if astilleroCotizacion.pagos|length > 0 %}
+        <div class="row">
+            <div class="col-xs-12 nopadding">
+                <h5 class="text-center">Resumen de anticipos</h5>
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Número</th>
+                        <th>Fecha</th>
+                        <th>Forma de pago</th>
+                        <th>Importe</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for pago in astilleroCotizacion.pagos %}
+                        <tr>
+                            <td>Anticipo {{ loop.index }}</td>
+                            <td>{{ pago.fechaRealPago|date('d-m-Y') }}</td>
+                            <td>{{ pago.metodopago }}</td>
+                            <td>$ {{ (pago.cantidad/100)|number_format(2) }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr class="grey-background">
+                            <th colspan="2" style="background-color: #fff; border: 0; border-bottom: 0 !important;"></th>
+                            <th class="text-right">Total anticipos</th>
+                            <th>$ {{ (astilleroCotizacion.pagado/100)|number_format(2) }}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div class="container-fluid" style="padding-top: 2rem">
+    <div class="row">
+        <div class="col-xs-12 nopadding">
+            <p class="text-center" style="background-color: #458fce; color:#fff; padding: .5rem 1rem">
+                Por este medio nos permitimos proporcionar a ustedes los datos bancarios, para pagos mediante
+                transferencias, siendo los siguientes:
+            </p>
+        </div>
+        <div class="col-xs-6">
+            {% if bancoPesos %}
+            <p>
+                DATOS BANCARIOS PESOS<br>
+                Razón social: {{ bancoPesos.razonSocial }}<br>
+                R.F.C.: {{ bancoPesos.rfc }}<br>
+                Banco: {{ bancoPesos.banco }}<br>
+                Moneda: {{ bancoPesos.monedaNombre }}<br>
+                No. De Cuenta: {{ bancoPesos.numCuenta }}<br>
+                Sucursal: {{ bancoPesos.sucursal }}<br>
+                Clabe Interbancaria: {{ bancoPesos.clabe }}
+            </p>
+            {% endif %}
+        </div>
+        <div class="col-xs-6">
+            {% if bancoDolares %}
+            <p>
+                DATOS BANCARIOS DOLARES<br>
+                Razón social: {{ bancoDolares.razonSocial }}<br>
+                R.F.C.: {{ bancoDolares.rfc }}<br>
+                Banco: {{ bancoDolares.banco }}<br>
+                Moneda: {{ bancoDolares.monedaNombre }}<br>
+                No. De Cuenta: {{ bancoDolares.numCuenta }}<br>
+                Sucursal: {{ bancoDolares.sucursal }}<br>
+                Clabe Interbancaria: {{ bancoDolares.clabe }}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row condiciones">
+        <div class="col-xs-12 nopadding">
+            <h4 class="text-center" style="background-color: #458fce; color:#fff; padding: .5rem 0;">Términos y
+                Condiciones</h4>
+        </div>
+        <div class="col-xs-12">
+            <p>
+             {{ valor.terminosAstillero|raw }}
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
