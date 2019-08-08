@@ -713,9 +713,41 @@
                             </a>
                         </div>
                     </div>
+
                     {% if astilleroCotizacion.validanovo == 0 and
+                        not is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE_SMALL")')) and
                         is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") or (user.isAdmin())')) and
+                        (astilleroCotizacion.total/100) > 7000 and
                         astilleroCotizacion.borrador == false
+                    %}
+                        <div class="row espacio-linea-arriba2">
+                            <div class="col-sm-12">
+                                <a class="btn btn-azul pull-right"
+                                   href="{{ path('astillero_validar', { 'id': astilleroCotizacion.id }) }}">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    Validar
+                                </a>
+                            </div>
+                        </div>
+                    {% elseif astilleroCotizacion.validanovo == 0 and
+                        is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") and has_role("ASTILLERO_COTIZACION_VALIDATE_SMALL")')) and
+                        astilleroCotizacion.borrador == false 
+                    %}
+                        <div class="row espacio-linea-arriba2">
+                            <div class="col-sm-12">
+                                <a class="btn btn-azul pull-right"
+                                   href="{{ path('astillero_validar', { 'id': astilleroCotizacion.id }) }}">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    Validar
+                                </a>
+                            </div>
+                        </div>
+                    {% elseif
+                        not is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE")')) and
+                        is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE_SMALL")')) and 
+                        (astilleroCotizacion.total/100) <= 7000 and
+                        astilleroCotizacion.validanovo == 0 and
+                        astilleroCotizacion.borrador == false 
                     %}
                         <div class="row espacio-linea-arriba2">
                             <div class="col-sm-12">

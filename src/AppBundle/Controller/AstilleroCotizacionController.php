@@ -42,7 +42,7 @@ class AstilleroCotizacionController extends Controller
      * @param Request $request
      * @param DataTablesInterface $dataTables
      *
-     * @return JsonResponse|Response
+     * 
      */
     public function indexAction(Request $request, DataTablesInterface $dataTables)
     {
@@ -54,6 +54,7 @@ class AstilleroCotizacionController extends Controller
                 return $this->json($e->getMessage(), $e->getCode());
             }
         }
+        
         return $this->render('astillero/cotizacion/index.html.twig', [
             'title' => 'Cotizaciones',
             'borrador' => '0'
@@ -101,7 +102,7 @@ class AstilleroCotizacionController extends Controller
      */
     public function newAction(Request $request, \Swift_Mailer $mailer)
     {
-        $astilleroCotizacion = new AstilleroCotizacion();
+        $astilleroCotizacion = new AstilleroCotizacion();        
         $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_CREATE', $astilleroCotizacion);
 
         $em = $this->getDoctrine()->getManager();
@@ -371,6 +372,7 @@ class AstilleroCotizacionController extends Controller
      */
     public function showAction(AstilleroCotizacion $astilleroCotizacion)
     {
+        
         $deleteForm = $this->createDeleteForm($astilleroCotizacion);
         return $this->render('astillero/cotizacion/show.html.twig', [
             'title' => 'Cotización',
@@ -668,7 +670,15 @@ class AstilleroCotizacionController extends Controller
      */
     public function validaAction(Request $request, AstilleroCotizacion $astilleroCotizacion, \Swift_Mailer $mailer)
     {
-        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_VALIDATE', $astilleroCotizacion);
+        $roles = $this->getUser()->getRoles();
+
+        if(in_array("ASTILLERO_COTIZACION_VALIDATE",$roles)) {
+            $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_VALIDATE', $astilleroCotizacion);
+        }
+
+        if(in_array("ASTILLERO_COTIZACION_VALIDATE_SMALL",$roles)) {
+            $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_VALIDATE_SMALL', $astilleroCotizacion);
+        }
 
         if ($astilleroCotizacion->isEstatus() == 0 ||
             $astilleroCotizacion->getValidanovo() == 1 ||
@@ -786,7 +796,7 @@ class AstilleroCotizacionController extends Controller
 
             return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
         }
-
+        
         return $this->render('astillero/cotizacion/validar.html.twig', [
             'title' => 'Validación',
             'astilleroCotizacion' => $astilleroCotizacion,

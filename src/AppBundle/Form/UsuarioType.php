@@ -74,6 +74,7 @@ class UsuarioType extends AbstractType
                     'Crear' => 'ASTILLERO_COTIZACION_CREATE',
                     'Eliminar' => 'ASTILLERO_COTIZACION_DELETE',
                     'Validar Negocio' => 'ASTILLERO_COTIZACION_VALIDATE',
+                    'Validación de Bajo Costo' => 'ASTILLERO_COTIZACION_VALIDATE_SMALL',
                     'Validar Cliente' => 'ASTILLERO_COTIZACION_CLIENT_VALIDATE',
                     'Recotizar' => 'ASTILLERO_COTIZACION_REQUOTE',
                     'Pagos' => 'ROLE_ASTILLERO_PAGO',

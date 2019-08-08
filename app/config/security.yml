@@ -1,294 +1,310 @@
 security:
-    encoders:
-        AppBundle\Entity\Usuario: bcrypt
-        AppBundle\Entity\Cliente: plaintext
-        AppBundle\Entity\Astillero\Proveedor: plaintext
+  always_authenticate_before_granting: true
+  encoders:
+    AppBundle\Entity\Usuario: bcrypt
+    AppBundle\Entity\Cliente: plaintext
+    AppBundle\Entity\Astillero\Proveedor: plaintext
 
-    providers:
-        Usuario:
-            entity:
-                class: AppBundle:Usuario
+  providers:
+    Usuario:
+      entity:
+        class: AppBundle:Usuario
 
-        Cliente:
-            entity:
-                class: AppBundle:Cliente
-                property: correo
+    Cliente:
+      entity:
+        class: AppBundle:Cliente
+        property: correo
 
-        Supplier:
-            entity:
-                class: AppBundle:Astillero\Proveedor
-                property: correo
-    firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+    Supplier:
+      entity:
+        class: AppBundle:Astillero\Proveedor
+        property: correo
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
 
-        clients:
-            provider: Cliente
-            pattern: ^/clients
-            anonymous: ~
-            logout_on_user_change: true
-            form_login:
-                check_path: clients_login
-                login_path: clients_login
+    clients:
+      provider: Cliente
+      pattern: ^/clients
+      anonymous: ~
+      logout_on_user_change: true
+      form_login:
+        check_path: clients_login
+        login_path: clients_login
 
-                # Login correctamente
-                always_use_default_target_path: false
-                default_target_path: clients_index
-                target_path_parameter: _target_path
-                use_referer: false
+        # Login correctamente
+        always_use_default_target_path: false
+        default_target_path: clients_index
+        target_path_parameter: _target_path
+        use_referer: false
 
-                # Login erroneo
-                failure_path: clients_login
-                failure_forward: false
-                failure_path_parameter: _failure_path
+        # Login erroneo
+        failure_path: clients_login
+        failure_forward: false
+        failure_path_parameter: _failure_path
 
-                # Parametros para formulario de login
-                username_parameter: _email
-                password_parameter: _password
+        # Parametros para formulario de login
+        username_parameter: _email
+        password_parameter: _password
 
-                # Solo permite login a traves del metodo post
-                post_only: true
+        # Solo permite login a traves del metodo post
+        post_only: true
 
-                # Guarda la sesion para evitar doble login
-                require_previous_session: true
-            logout:
-                path: clients_logout
-                target: clients_login
-                invalidate_session: false
+        # Guarda la sesion para evitar doble login
+        require_previous_session: true
+      logout:
+        path: clients_logout
+        target: clients_login
+        invalidate_session: false
 
-        proveedores:
-            provider: Supplier
-            pattern: ^/suppliers
-            anonymous: ~
-            logout_on_user_change: true
-            form_login:
-                check_path: suppliers_login
-                login_path: suppliers_login
+    proveedores:
+      provider: Supplier
+      pattern: ^/suppliers
+      anonymous: ~
+      logout_on_user_change: true
+      form_login:
+        check_path: suppliers_login
+        login_path: suppliers_login
 
-                # Login correctamente
-                always_use_default_target_path: false
-                default_target_path: suppliers_index
-                target_path_parameter: _target_path
-                use_referer: false
+        # Login correctamente
+        always_use_default_target_path: false
+        default_target_path: suppliers_index
+        target_path_parameter: _target_path
+        use_referer: false
 
-                # Login erroneo
-                failure_path: suppliers_login
-                failure_forward: false
-                failure_path_parameter: _failure_path
+        # Login erroneo
+        failure_path: suppliers_login
+        failure_forward: false
+        failure_path_parameter: _failure_path
 
-                # Parametros para formulario de login
-                username_parameter: _email
-                password_parameter: _password
+        # Parametros para formulario de login
+        username_parameter: _email
+        password_parameter: _password
 
-                # Solo permite login a traves del metodo post
-                post_only: true
+        # Solo permite login a traves del metodo post
+        post_only: true
 
-                # Guarda la sesion para evitar doble login
-                require_previous_session: true
-            logout:
-                path: suppliers_logout
-                target: suppliers_login
-                invalidate_session: false
+        # Guarda la sesion para evitar doble login
+        require_previous_session: true
+      logout:
+        path: suppliers_logout
+        target: suppliers_login
+        invalidate_session: false
 
-        main:
-            provider: Usuario
-            anonymous: ~
-            pattern: .*
-            logout_on_user_change: true
-            methods: [GET, POST, DELETE]
-            form_login:
-                check_path: login
-                login_path: login
+    main:
+      provider: Usuario
+      anonymous: ~
+      pattern: .*
+      logout_on_user_change: true
+      methods: [GET, POST, DELETE]
+      form_login:
+        check_path: login
+        login_path: login
 
-                # Login correctamente
-                always_use_default_target_path: false
-                default_target_path: inicio
-                target_path_parameter: _target_path
-                use_referer: false
+        # Login correctamente
+        always_use_default_target_path: false
+        default_target_path: inicio
+        target_path_parameter: _target_path
+        use_referer: false
 
-                # Login erroneo
-                failure_path: login
-                failure_forward: false
-                failure_path_parameter: _failure_path
+        # Login erroneo
+        failure_path: login
+        failure_forward: false
+        failure_path_parameter: _failure_path
 
-                # Parametros para formulario de login
-                username_parameter: _correo
-                password_parameter: _password
+        # Parametros para formulario de login
+        username_parameter: _correo
+        password_parameter: _password
 
-                # Protección csrf
-                csrf_token_generator: security.csrf.token_manager
+        # Protección csrf
+        csrf_token_generator: security.csrf.token_manager
 
-                # Solo permite login a traves del metodo post
-                post_only: true
+        # Solo permite login a traves del metodo post
+        post_only: true
 
-                # Guarda la sesion para evitar doble login
-                require_previous_session: true
-            logout:
-                path: logout
-                target: login
-                invalidate_session: false
+        # Guarda la sesion para evitar doble login
+        require_previous_session: true
+      logout:
+        path: logout
+        target: login
+        invalidate_session: false
 
-    access_control:
-        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+  access_control:
+    - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
-        - { path: ^/suppliers/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/suppliers/.*, roles: ROLE_SUPPLIERS }
-        - { path: ^/suppliers, roles: ROLE_SUPPLIERS }
+    - { path: ^/suppliers/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/suppliers/.*, roles: ROLE_SUPPLIERS }
+    - { path: ^/suppliers, roles: ROLE_SUPPLIERS }
 
-        - { path: ^/clients/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/clients/.*, roles: ROLE_CLIENTS }
-        - { path: ^/clients, roles: ROLE_CLIENTS }
+    - { path: ^/clients/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/clients/.*, roles: ROLE_CLIENTS }
+    - { path: ^/clients, roles: ROLE_CLIENTS }
 
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/forgot, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/forgot, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
-        - { path: ^/cliente, roles: ROLE_CLIENTE }
+    - { path: ^/cliente, roles: ROLE_CLIENTE }
 
-        - { path: ^/marina/monedero, roles: ROLE_MARINA_MONEDERO }
-        - { path: ^/marina/slip, roles: ROLE_MARINA_SLIP }
-        - { path: ^/marina/servicios-adicionales, roles: ROLE_MARINA_SERVICIOADICIONAL }
-        - { path: ^/marina/cotizacion/estadia/tarifas, roles: ROLE_MARINA_TARIFF }
-        - { path: ^/marina, roles: ROLE_MARINA }
+    - { path: ^/marina/monedero, roles: ROLE_MARINA_MONEDERO }
+    - { path: ^/marina/slip, roles: ROLE_MARINA_SLIP }
+    - {
+        path: ^/marina/servicios-adicionales,
+        roles: ROLE_MARINA_SERVICIOADICIONAL,
+      }
+    - { path: ^/marina/cotizacion/estadia/tarifas, roles: ROLE_MARINA_TARIFF }
+    - { path: ^/marina, roles: ROLE_MARINA }
 
-        - { path: ^/combustible/catalogo, roles: ROLE_COMBUSTIBLE_CATALOGO }
-        - { path: ^/combustible, roles: ROLE_COMBUSTIBLE }
+    - { path: ^/combustible/catalogo, roles: ROLE_COMBUSTIBLE_CATALOGO }
+    - { path: ^/combustible, roles: ROLE_COMBUSTIBLE }
 
-        - { path: ^/astillero/monedero, roles: ROLE_ASTILLERO_MONEDERO }
-        - { path: ^/astillero/producto, roles: ROLE_ASTILLERO_PRODUCTO }
-        - { path: ^/astillero/servicio-basico/, roles: ROLE_ASTILLERO_SERVICIOBASICO }
-        - { path: ^/astillero/servicio/, roles: ROLE_ASTILLERO_SERVICIO }
-        - { path: ^/astillero, roles: ROLE_ASTILLERO }
-        - { path: ^/astillero/odt, roles: ROLE_ODT }
+    - { path: ^/astillero/monedero, roles: ROLE_ASTILLERO_MONEDERO }
+    - { path: ^/astillero/producto, roles: ROLE_ASTILLERO_PRODUCTO }
+    - {
+        path: ^/astillero/servicio-basico/,
+        roles: ROLE_ASTILLERO_SERVICIOBASICO,
+      }
+    - { path: ^/astillero/servicio/, roles: ROLE_ASTILLERO_SERVICIO }
+    - { path: ^/astillero, roles: ROLE_ASTILLERO }
+    - { path: ^/astillero/odt, roles: ROLE_ODT }
 
-        - { path: ^/reporte/astillero, roles: ROLE_REPORTE_ASTILLERO }
-        - { path: ^/reporte/marina, roles: ROLE_REPORTE_MARINA }
-        - { path: ^/reporte, roles: ROLE_REPORTE }
+    - { path: ^/reporte/astillero, roles: ROLE_REPORTE_ASTILLERO }
+    - { path: ^/reporte/marina, roles: ROLE_REPORTE_MARINA }
+    - { path: ^/reporte, roles: ROLE_REPORTE }
 
-        - { path: ^/embarcacion/marca/, roles: ROLE_EMBARCACION_MARCA }
-        - { path: ^/embarcacion/modelo/, roles: ROLE_EMBARCACION_MODELO }
-        - { path: ^/embarcacion, roles: ROLE_EMBARCACION }
+    - { path: ^/embarcacion/marca/, roles: ROLE_EMBARCACION_MARCA }
+    - { path: ^/embarcacion/modelo/, roles: ROLE_EMBARCACION_MODELO }
+    - { path: ^/embarcacion, roles: ROLE_EMBARCACION }
 
-        - { path: ^/tienda/producto/, roles: ROLE_TIENDA_PRODUCTO }
-        - { path: ^/tienda/venta/, roles: ROLE_TIENDA_POV }
-        - { path: ^/tienda/inventario/registro$, roles: ROLE_TIENDA_INVENTARIO }
-        - { path: ^/tienda/inventario/registro/*, roles: ROLE_TIENDA_REGISTRO }
-        - { path: ^/tienda, roles: ROLE_TIENDA }
+    - { path: ^/tienda/producto/, roles: ROLE_TIENDA_PRODUCTO }
+    - { path: ^/tienda/venta/, roles: ROLE_TIENDA_POV }
+    - { path: ^/tienda/inventario/registro$, roles: ROLE_TIENDA_INVENTARIO }
+    - { path: ^/tienda/inventario/registro/*, roles: ROLE_TIENDA_REGISTRO }
+    - { path: ^/tienda, roles: ROLE_TIENDA }
 
-        - { path: ^/jrfmarine, roles: ROLE_JRF }
-        - { path: ^/jrfmarine/productos, roles: ROLE_JRF_PRODUCTO }
-        - { path: ^/jrfmarine/marcas, roles: ROLE_JRF_MARCA }
-        - { path: ^/jrfmarine/categorias, roles: ROLE_JRF_CATEGORIA }
-        - { path: ^/jrfmarine/subcategorias, roles: ROLE_JRF_SUBCATEGORIA }
+    - { path: ^/jrfmarine, roles: ROLE_JRF }
+    - { path: ^/jrfmarine/productos, roles: ROLE_JRF_PRODUCTO }
+    - { path: ^/jrfmarine/marcas, roles: ROLE_JRF_MARCA }
+    - { path: ^/jrfmarine/categorias, roles: ROLE_JRF_CATEGORIA }
+    - { path: ^/jrfmarine/subcategorias, roles: ROLE_JRF_SUBCATEGORIA }
 
-        - { path: ^/contabilidad/facturacion/emisor/, roles: ROLE_CONTABILIDAD_EMISOR }
-        - { path: ^/contabilidad/egreso, roles: ROLE_CONTABILIDAD_EGRESO }
-        - { path: ^/contabilidad, roles: ROLE_CONTABILIDAD }
+    - {
+        path: ^/contabilidad/facturacion/emisor/,
+        roles: ROLE_CONTABILIDAD_EMISOR,
+      }
+    - { path: ^/contabilidad/egreso, roles: ROLE_CONTABILIDAD_EGRESO }
+    - { path: ^/contabilidad, roles: ROLE_CONTABILIDAD }
 
-        - { path: ^/proveedor/oficio, roles: ROLE_OFICIO }
-        - { path: ^/proveedor, roles: ROLE_PROVEEDOR }
+    - { path: ^/proveedor/oficio, roles: ROLE_OFICIO }
+    - { path: ^/proveedor, roles: ROLE_PROVEEDOR }
 
-        - { path: ^/historial-correo/notificacion, roles: ROLE_HCORREO_NOTIFICACION }
-        - { path: ^/historial-correo, roles: ROLE_HCORREO }
+    - {
+        path: ^/historial-correo/notificacion,
+        roles: ROLE_HCORREO_NOTIFICACION,
+      }
+    - { path: ^/historial-correo, roles: ROLE_HCORREO }
 
-        - { path: ^/solicitud, roles: ROLE_SOLICITUD }
-        - { path: ^/compra, roles: ROLE_COMPRA }
+    - { path: ^/solicitud, roles: ROLE_SOLICITUD }
+    - { path: ^/compra, roles: ROLE_COMPRA }
 
-        - { path: ^/almacen/inventario/modificar, roles: ROLE_INVENTARIO_MODIFICAR }
-        - { path: ^/almacen/inventario, roles: ROLE_INVENTARIO }
-        - { path: ^/almacen, roles: ROLE_ALMACEN }
+    - { path: ^/almacen/inventario/modificar, roles: ROLE_INVENTARIO_MODIFICAR }
+    - { path: ^/almacen/inventario, roles: ROLE_INVENTARIO }
+    - { path: ^/almacen, roles: ROLE_ALMACEN }
 
-        - { path: ^/usuario, roles: ROLE_RH }
+    - { path: ^/usuario, roles: ROLE_RH }
 
-        - { path: ^/ajustes/cuentas-bancarias/, roles: ROLE_AJUSTES_CUENTAS_BANCARIAS }
-        - { path: ^/ajustes, roles: ROLE_AJUSTES }
+    - {
+        path: ^/ajustes/cuentas-bancarias/,
+        roles: ROLE_AJUSTES_CUENTAS_BANCARIAS,
+      }
+    - { path: ^/ajustes, roles: ROLE_AJUSTES }
 
-        - { path: ^/agenda, roles: ROLE_AGENDA }
+    - { path: ^/agenda, roles: ROLE_AGENDA }
 
-        - { path: ^/pago, roles: ROLE_ADMIN }
+    - { path: ^/pago, roles: ROLE_ADMIN }
 
-        - { path: ^/perfil, roles: ROLE_USER }
-        - { path: ^/.*, roles: ROLE_USER }
+    - { path: ^/perfil, roles: ROLE_USER }
+    - { path: ^/.*, roles: ROLE_USER }
 
-    role_hierarchy:
-        ROLE_WHOLE_MARINA:
-            - ROLE_MARINA
-            - ROLE_MARINA_MONEDERO
-            - ROLE_MARINA_SLIP
-            - ROLE_MARINA_SERVICIOADICIONAL
-            - ROLE_MARINA_TARIFF
-            - ROLE_MARINA_PAGO
-        ROLE_WHOLE_COMBUSTIBLE:
-            - ROLE_COMBUSTIBLE
-            - ROLE_COMBUSTIBLE_PAGO
-            - ROLE_COMBUSTIBLE_CATALOGO
-        ROLE_WHOLE_ASTILLERO:
-            - ROLE_ASTILLERO
-            - ROLE_ASTILLERO_MONEDERO
-            - ROLE_ASTILLERO_PRODUCTO
-            - ROLE_ASTILLERO_SERVICIO
-            - ROLE_ASTILLERO_PAGO
-            - ROLE_ASTILLERO_SERVICIOBASICO
-        ROLE_WHOLE_ODT:
-            - ROLE_ODT
-            - ROLE_ODT_CONTRATISTA_EDIT
-            - ROLE_ODT_PAGO
-            - ROLE_ODT_ACTIVIDAD
-            - ROLE_ODT_DELETE
-        ROLE_WHOLE_REPORTE:
-            - ROLE_REPORTE
-            - ROLE_REPORTE_MARINA
-            - ROLE_REPORTE_ASTILLERO
-        ROLE_WHOLE_EMBARCACION:
-            - ROLE_EMBARCACION
-            - ROLE_EMBARCACION_MARCA
-            - ROLE_EMBARCACION_MODELO
-        ROLE_WHOLE_TIENDA:
-            - ROLE_TIENDA
-            - ROLE_TIENDA_PRODUCTO
-            - ROLE_TIENDA_POV
-            - ROLE_ADMIN_POV
-            - ROLE_TIENDA_INVENTARIO
-            - ROLE_TIENDA_REGISTRO
-        ROLE_WHOLE_JRF:
-            - ROLE_JRF
-            - ROLE_JRF_PRODUCTO
-            - ROLE_JRF_MARCA
-            - ROLE_JRF_CATEGORIA
-            - ROLE_JRF_SUBCATEGORIA
-        ROLE_WHOLE_CONTABILIDAD:
-            - ROLE_CONTABILIDAD
-            - ROLE_CONTABILIDAD_EMISOR
-            - ROLE_CONTABILIDAD_EGRESO
-        ROLE_WHOLE_CORREO:
-            - ROLE_HCORREO
-            - ROLE_HCORREO_NOTIFICACION
-        ROLE_WHOLE_AJUSTES:
-            - ROLE_AJUSTES
-            - ROLE_AJUSTES_CUENTAS_BANCARIAS
-        ROLE_WHOLE_AGENDA:
-            - ROLE_AGENDA
-        ROLE_ADMIN:
-            - ROLE_USER
-            - ROLE_CLIENTE
-            - ROLE_CLIENTE_VER_CONTACTO
-            - ROLE_WHOLE_MARINA
-            - ROLE_WHOLE_COMBUSTIBLE
-            - ROLE_WHOLE_ASTILLERO
-            - ROLE_WHOLE_ODT
-            - ROLE_WHOLE_REPORTE
-            - ROLE_WHOLE_EMBARCACION
-            - ROLE_WHOLE_TIENDA
-            - ROLE_WHOLE_JRF
-            - ROLE_WHOLE_CONTABILIDAD
-            - ROLE_WHOLE_CORREO
-            - ROLE_RH
-            - ROLE_WHOLE_AJUSTES
-            - ROLE_AGENDA
-            - ROLE_SOLICITUD
-            - ROLE_COMPRA
-            - ROLE_ALMACEN
-            - ROLE_INVENTARIO
-            - ROLE_PROVEEDOR
-            - ROLE_OFICIO
+  role_hierarchy:
+    ROLE_WHOLE_MARINA:
+      - ROLE_MARINA
+      - ROLE_MARINA_MONEDERO
+      - ROLE_MARINA_SLIP
+      - ROLE_MARINA_SERVICIOADICIONAL
+      - ROLE_MARINA_TARIFF
+      - ROLE_MARINA_PAGO
+    ROLE_WHOLE_COMBUSTIBLE:
+      - ROLE_COMBUSTIBLE
+      - ROLE_COMBUSTIBLE_PAGO
+      - ROLE_COMBUSTIBLE_CATALOGO
+    ROLE_WHOLE_ASTILLERO:
+      - ROLE_ASTILLERO
+      - ROLE_ASTILLERO_MONEDERO
+      - ROLE_ASTILLERO_PRODUCTO
+      - ROLE_ASTILLERO_SERVICIO
+      - ROLE_ASTILLERO_PAGO
+      - ROLE_ASTILLERO_SERVICIOBASICO
+    ROLE_WHOLE_ODT:
+      - ROLE_ODT
+      - ROLE_ODT_CONTRATISTA_EDIT
+      - ROLE_ODT_PAGO
+      - ROLE_ODT_ACTIVIDAD
+      - ROLE_ODT_DELETE
+    ROLE_WHOLE_REPORTE:
+      - ROLE_REPORTE
+      - ROLE_REPORTE_MARINA
+      - ROLE_REPORTE_ASTILLERO
+    ROLE_WHOLE_EMBARCACION:
+      - ROLE_EMBARCACION
+      - ROLE_EMBARCACION_MARCA
+      - ROLE_EMBARCACION_MODELO
+    ROLE_WHOLE_TIENDA:
+      - ROLE_TIENDA
+      - ROLE_TIENDA_PRODUCTO
+      - ROLE_TIENDA_POV
+      - ROLE_ADMIN_POV
+      - ROLE_TIENDA_INVENTARIO
+      - ROLE_TIENDA_REGISTRO
+    ROLE_WHOLE_JRF:
+      - ROLE_JRF
+      - ROLE_JRF_PRODUCTO
+      - ROLE_JRF_MARCA
+      - ROLE_JRF_CATEGORIA
+      - ROLE_JRF_SUBCATEGORIA
+    ROLE_WHOLE_CONTABILIDAD:
+      - ROLE_CONTABILIDAD
+      - ROLE_CONTABILIDAD_EMISOR
+      - ROLE_CONTABILIDAD_EGRESO
+    ROLE_WHOLE_CORREO:
+      - ROLE_HCORREO
+      - ROLE_HCORREO_NOTIFICACION
+    ROLE_WHOLE_AJUSTES:
+      - ROLE_AJUSTES
+      - ROLE_AJUSTES_CUENTAS_BANCARIAS
+    ROLE_WHOLE_AGENDA:
+      - ROLE_AGENDA
+    ROLE_ADMIN:
+      - ROLE_USER
+      - ROLE_CLIENTE
+      - ROLE_CLIENTE_VER_CONTACTO
+      - ROLE_WHOLE_MARINA
+      - ROLE_WHOLE_COMBUSTIBLE
+      - ROLE_WHOLE_ASTILLERO
+      - ROLE_WHOLE_ODT
+      - ROLE_WHOLE_REPORTE
+      - ROLE_WHOLE_EMBARCACION
+      - ROLE_WHOLE_TIENDA
+      - ROLE_WHOLE_JRF
+      - ROLE_WHOLE_CONTABILIDAD
+      - ROLE_WHOLE_CORREO
+      - ROLE_RH
+      - ROLE_WHOLE_AJUSTES
+      - ROLE_AGENDA
+      - ROLE_SOLICITUD
+      - ROLE_COMPRA
+      - ROLE_ALMACEN
+      - ROLE_INVENTARIO
+      - ROLE_PROVEEDOR
+      - ROLE_OFICIO

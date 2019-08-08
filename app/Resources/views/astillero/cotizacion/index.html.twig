@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
     <style>
         .list-unstyled li {
-            margin-bottom: .5rem;
+            margin-bottom: 0.5rem;
         }
     </style>
 {% endblock %}
@@ -22,21 +22,21 @@
                     <div class="table-responsive scroll-novo">
                         <table class="table-novo table text-center">
                             <thead>
-                            <tr>
-                                <th>Folio</th>
-                                <th class="with-choices">Cliente</th>
-                                <th class="with-choices">Barco</th>
-                                <th>Fecha Inicio</th>
-                                <th>Fecha Fin</th>
-                                <th>Descuento</th>
-                                <th>Subtotal</th>
-                                <th>Iva</th>
-                                <th>Total</th>
-                                <th class="with-options">Validación</th>
-                                <th class="with-options">Aceptación</th>
-                                <th class="with-options-pay">Pago</th>
-                                <th>Acciones</th>
-                            </tr>
+                                <tr>
+                                    <th>Folio</th>
+                                    <th class="with-choices">Cliente</th>
+                                    <th class="with-choices">Barco</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Descuento</th>
+                                    <th>Subtotal</th>
+                                    <th>Iva</th>
+                                    <th>Total</th>
+                                    <th class="with-options">Validación</th>
+                                    <th class="with-options">Aceptación</th>
+                                    <th class="with-options-pay">Pago</th>
+                                    <th>Acciones</th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -47,14 +47,14 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
-    <script type="text/javascript">
-      (function ($, settings) {
+{{ parent() }}
+<script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+<script type="text/javascript">
+    (function ($, settings) {
         const aceptado = `<img src="{{ asset('img/status-aprobado-icon.svg') }}" class="center-block">`;
         const rechazado = `<img src="{{ asset('img/status-desaprovado-icon.svg') }}" class="center-block">`;
         const pendiente = `<img src="{{ asset('img/status-pendiente-icon.svg') }}" class="center-block">`;
-
+    
         const $tabla = $('.table-novo').DataTable({
           ...settings,
             {%  if borrador == 0 %}
@@ -84,60 +84,71 @@
               if (data[i] === 1) row.children[i].innerHTML = rechazado;
               if (data[i] === 2) row.children[i].innerHTML = aceptado;
             }
-
-            row.lastElementChild.innerHTML = writeLastChild(data[9], data[10], data[11], data[12]);
+    
+            row.lastElementChild.innerHTML = writeLastChild(data[8],data[9], data[10], data[11], data[12]);
           }
         });
-
+    
         $tabla.columns('.with-options').every(function () {
           const column = this;
           const columnHeader = column.header();
           const select = document.createElement('select');
-
+    
           select.add(new Option(columnHeader.innerHTML, ''));
           columnHeader.innerHTML = '';
           columnHeader.appendChild(select);
-
+    
           select.addEventListener('click', e => e.stopPropagation());
           select.addEventListener('change', function () {
             let val = $.fn.dataTable.util.escapeRegex(this.value);
             column.search(val, true, true).draw();
           });
-
+    
           select.add(new Option('Aceptada', '2'));
           select.add(new Option('Rechazada', '1'));
           select.add(new Option('Pendiente', null));
         });
-
+    
           $tabla.columns('.with-options-pay').every(function () {
               const column = this;
               const columnHeader = column.header();
               const select = document.createElement('select');
-
+    
               select.add(new Option(columnHeader.innerHTML, ''));
               columnHeader.innerHTML = '';
               columnHeader.appendChild(select);
-
+    
               select.addEventListener('click', e => e.stopPropagation());
               select.addEventListener('change', function () {
                   let val = $.fn.dataTable.util.escapeRegex(this.value);
                   column.search(val, true, true).draw();
               });
-
+    
               select.add(new Option('Pagado', '2'));
               select.add(new Option('En proceso', '1'));
               select.add(new Option('Pendiente', null));
           });
-
-        function writeLastChild(validacion, aceptacion, pago, item) {
+    
+        function writeLastChild(total,validacion, aceptacion, pago, item) {
             const btnClass = 'btn btn-xs btn-block btn-';
           return `
           <td>
             <ul class="list-unstyled">
               <li><a class="btn btn-xs btn-block btn-morado-claro" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}' }}">Detalle</a></li>
-              {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") or (user.isAdmin())')) %}
-                   ${item.borrador === false && validacion === 0 ? `<li><a class="${btnClass}azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
-                   ${(item.borrador === false && validacion === 2 && aceptacion === 0) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/validar' }}">Aceptar</a></li>` : ''}
+              {% if  
+                  not is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE_SMALL")')) and 
+                  is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") or (user.isAdmin())')) 
+              %}
+                  ${item.borrador === false && validacion === 0 && parseFloat(total.replace(/[^0-9.-]+/g, '')) > 7000 ? `<li><a class="${btnClass}azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
+              {% elseif is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE") and has_role("ASTILLERO_COTIZACION_VALIDATE_SMALL")')) %}
+                  ${item.borrador === false && validacion === 0 ? `<li><a class="${btnClass}azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
+              {% elseif not is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE")')) and 
+                  is_granted(expression('has_role("ASTILLERO_COTIZACION_VALIDATE_SMALL")')) 
+              %}
+                  ${item.borrador === false && validacion === 0 && parseFloat(total.replace(/[^0-9.-]+/g, '')) <= 7000 ? `<li><a class="${btnClass}azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/validar' }}">Validar</a></li>` : ''}
+              {% endif %}
+              {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_CLIENT_VALIDATE") or (user.isAdmin())')) %}
+                  ${(item.borrador === false && validacion === 2 && aceptacion === 0) ? `<li><a class="btn btn-xs btn-block btn-azul" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/validar' }}">Aceptar</a></li>` : ''}
               {% endif %}
               {% if is_granted(expression('has_role("ASTILLERO_COTIZACION_REQUOTE") or (user.isAdmin())')) %}
               ${(validacion === 1 || aceptacion === 1) && item.estatus ? `<li><a class="${btnClass}naranja" href="{{ app.request.getBaseURL() ~ '/astillero/' ~ '${item.id}/recotizar' }}">Recotizar</a></li>` : ''}
@@ -157,4 +168,4 @@
         }
       })(jQuery, datatablesSettings);
     </script>
-{% endblock %}
+        {% endblock %}
