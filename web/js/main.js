@@ -462,70 +462,108 @@ function recalculaPreciosServicios(){
     // calculaSubtotalesAstillero($(fila))
     //agregaPrecioServiciosExtra(fila,idservicio,elemento)
 }
-//---- aparecer form collection con select de servicios ----
-$('.add-servicio').click(function (e) {
+
+/** función del módulo: ASTILLERO
+ * Añade el servicio seleccionado a la tabla de servicios y añade los productos que
+ * pertenecen al kit o servicio a la pestaña de productos.
+ */
+document.querySelectorAll(".add-servicio").forEach(service => {
+  /* Añade el evento click a cada servicio/kit */
+  service.addEventListener("click", e => {
+
     e.preventDefault();
-    var totServicios = $('#serviciosextra').data('cantidad');
-    var servicioListPrimero = jQuery('#serviciosextra');
-    var newWidget = $('#serviciosextra').data('prototype');
-    newWidget = newWidget.replace(/__name__/g, totServicios);
-    newWidget = newWidget.replace('td-otroservicio', 'hide');
-    newWidget = newWidget.replace('td-producto', 'hide');
-    newWidget = newWidget.replace('td-servicio', 'hide');
-    newWidget = newWidget.replace('input-group', 'hide');
-    newWidget = newWidget.replace('valorpromedio hide', 'valorpromedio');
-    totServicios++;
-    $('#serviciosextra').data('cantidad', totServicios);
-    var newLi = jQuery('<tr class="servicio-agregado" data-id="' + (totServicios - 1) + '"></tr>').html(newWidget);
-    newLi.appendTo(servicioListPrimero);
-    newLi.before(newLi);
-    let cantidad = 1;
-    if($(this).data('tipo_cantidad') === 1){
-        cantidad = typeof($('#eslora').data('valor')) === 'undefined' ? 1 : $('#eslora').data('valor');
-    }
-    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').val(cantidad);
-    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').parent().data('valor', cantidad);
-    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_servicio').val($(this).data('id'));
-    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_tipoCantidad').val($(this).data('tipo_cantidad'));
-    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_promedio').val($(this).data('dias_descuento'));
-    $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_servicio').parent().parent().children('.valorpromedio').append($(this).data('dias_descuento'));
-    //------------- descuenta dias estadia --------------------
-    // let diasEstadia = Number($('#appbundle_astillerocotizacion_diasEstadia').val()) - Number($(this).data('dias_descuento'));
-    // $('#appbundle_astillerocotizacion_diasEstadia').val(diasEstadia);
+
+    let service = event.target || event.srcElement;
+    let tableServices = document.getElementById("serviciosextra");
+    let servicesLength = parseInt(tableServices.getAttribute("data-cantidad"));
+    let newWidget = tableServices.getAttribute("data-prototype");
+
+    /* aun no descubro para que es esta línea */
+    tableServices.setAttribute("data-cantidad", servicesLength + 1);
+
+    /* Setea varias variables dentro del html del servicio/kit */
+    newWidget = newWidget.replace(/__name__/g, servicesLength);
+    newWidget = newWidget.replace("td-otroservicio", "hide");
+    newWidget = newWidget.replace("td-producto", "hide");
+    newWidget = newWidget.replace("td-servicio", "hide");
+    newWidget = newWidget.replace("input-group", "hide");
+    newWidget = newWidget.replace("valorpromedio hide", "valorpromedio");
+
+    /* Crea el servicio, le añade atributos, y lo añade a la tabla de servicios/kits */
+    var serviceAdding = document.createElement("tr");
+    serviceAdding.classList.add("servicio-agregado");
+    serviceAdding.setAttribute("data-id", servicesLength);
+    serviceAdding.innerHTML = newWidget;
+    tableServices.appendChild(serviceAdding);
+    
+    /* Obtiene la row creada */
+    var row = document.getElementById(`appbundle_astillerocotizacion_acservicios_${servicesLength}_servicio`).parentNode.parentNode;
+
+    /* Variables para setear dentro de la row */
+    let daysDiscount = service.getAttribute("data-dias_descuento");
+    let id = service.getAttribute("data-id");
+    let dollar = document.getElementById("appbundle_astillerocotizacion_dolar").value;
+    let price = parseFloat(service.getAttribute("data-precio")).toFixed(4);
+    let priceToShow = parseFloat(price);
+    let currency = service.getAttribute("data-divisa");
+
+    /* Obtiene la length */
+    let length = 1;
+    let lengthHtml = document.getElementById("eslora");
+    if (service.getAttribute("data-tipo_cantidad") == 1) 
+      if (typeof lengthHtml != "undefined" && lengthHtml != null) 
+        length = parseInt(
+          document.getElementById("eslora").getAttribute("data-valor")
+        );
+    
+    /* setea los valores de la nueva row de servicio/kit creado */
+    document.getElementById(`appbundle_astillerocotizacion_acservicios_${servicesLength}_cantidad`).value = length;
+    document.getElementById(`appbundle_astillerocotizacion_acservicios_${servicesLength}_cantidad`).parentNode.setAttribute("data-valor", length);
+    document.getElementById(`appbundle_astillerocotizacion_acservicios_${servicesLength}_servicio`).value = id;
+    document.getElementById(`appbundle_astillerocotizacion_acservicios_${servicesLength}_tipoCantidad`).value = length;
+    document.getElementById(`appbundle_astillerocotizacion_acservicios_${servicesLength}_promedio`).setAttribute("data-dias_descuento", daysDiscount);
+    row.querySelector(".valorpromedio").setAttribute("data-dias_descuento", daysDiscount);
+    row.querySelector(".valorpromedio").innerHTML = daysDiscount;
+
     calculaDiasEstadiaAstillero();
-    //--------- fin descuenta dias estadia --------------------
 
-    var fila = $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_servicio').parent().parent();
-    var idservicio = $(this).data('id');
-    var dolar = $('#appbundle_astillerocotizacion_dolar').val();
-    var precio = 0;
-    $(fila).children('.valorgrupo').children('input').val(idservicio);
-    $(fila.children('.td-libre')).html($(this).data('nombre'));
-    $(fila.children('.valorprecio')).html('$'+($(this).data('precio')/100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+' '+$(this).data('divisa'));
-    if($(this).data('divisa')==='USD'){
-        precio = (($(this).data('precio') * dolar)/100).toFixed(2);
-    }else{
-        precio = ($(this).data('precio')/100).toFixed(2);
-    }
-    var precioreal = ($(this).data('precio')/100).toFixed(2);
-    $(fila.children('.valorprecio')).data('valor',precio);
-    $(fila.children('.valorprecio')).data('valorreal',precioreal);
-    $(fila.children('.valorprecio')).data('divisa',$(this).data('divisa'));
+    /* Recalcula el precio, por alguna razón había bugs con los kits */
+    price = parseFloat(price);
+    /* Calcula el precio en dólares si es necesario */
+    if (currency === "USD")
+      priceToShow = parseFloat(price / dollar).toFixed(2);
+    else priceToShow = parseFloat(price).toFixed(2);
+
+    row.querySelector('.valorgrupo').querySelector('input').value = id;
+    row.querySelector('.td-libre').innerHTML = service.getAttribute("data-nombre");
+    // row.querySelector('.valorprecio').innerHTML = parseFloat(service.getAttribute("data-precio")).toFixed(2);
+    row.querySelector('.valorprecio').innerHTML = `$ ${priceToShow.replace(/(\d)(?=(\d{3})+\.)/g, '$1,')} ${currency}`;
+    row.querySelector('.valorprecio').setAttribute('data-valor', priceToShow);
+    row.querySelector('.valorprecio').setAttribute('data-valorreal', price);
+    row.querySelector('.valorprecio').setAttribute('data-divisa', currency);
+
+    /* Calcula los subtotales. Cuando se haga refactorización de la función "calculaSubtotalesAstillero" 
+    se dará como parámetro row. */
+    var fila = $(`#appbundle_astillerocotizacion_acservicios_${servicesLength}_servicio`).parent().parent();
     calculaSubtotalesAstillero(fila);
+    // calculaSubtotalesAstillero(row);
 
-    // let url = `${location.protocol + '//' + location.host}/astillero/servicio/buscarservicio/${idservicio}`;
+    /* Construye la url del endpoint para obtener los productos del servicio/kit */
     var baseurl = location.href.endsWith('/') ? location.href : location.href + '/';
-    var url = baseurl + '../servicio/buscarservicio/' + idservicio;
+    var url = baseurl + '../servicio/buscarservicio/' + id;
 
     $.ajax({
-        method: "GET",
-        url,
-        dataType: 'json',
-        success: function({gruposProductos}) {
-            gruposProductos.forEach(grupo => astilleroAgregaProducto(grupo, idservicio))
-        }
+      url,
+      method: "GET",
+      dataType: 'json',
+      success: ({gruposProductos}) => {
+          gruposProductos.forEach(grupo => astilleroAgregaProducto(grupo, id))
+      }
     });
+  });
 });
+
+
 function agregaPrecioServiciosExtra(fila,idservicio,boton){
     var dolar = $('#appbundle_astillerocotizacion_dolar').val();
     var precio = 0;
@@ -1456,8 +1494,13 @@ function astilleroOcultaMuestraFila (estatus,fila,filamx) {
  * @param {*} fila Row de algun servicio
  */
 function calculaSubtotalesAstillero(fila) {
-  const iva = $('#valorsistemaiva').data('valor');
-  const precio = fila.children('.valorprecio').data('valor');
+  let dolar = $('#appbundle_astillerocotizacion_dolar').val();
+  let iva = $('#valorsistemaiva').data('valor');
+  let precio = fila.children('.valorprecio').data('valor');
+
+  /* Convierte el precio a pesos si viene en dólares, para calcular los totales */
+  if(fila.children('.valorprecio').data("divisa") === "USD")
+    precio = precio * dolar;
 
   let nuevaCantidad = fila.children('.valorcantidad').data('valor');
   let nuevoSubtotal = nuevaCantidad * precio;
@@ -1467,11 +1510,11 @@ function calculaSubtotalesAstillero(fila) {
   let nuevoTotal = nuevoSubtotal + nuevoIva;
 
   /* Renderea los nuevos valores y los setea */
-  fila.children('.valorsubtotal').html('$ ' + (nuevoSubtotal).toFixed(2) + ' <small>MXN</small>');
+  fila.children('.valorsubtotal').html('$ ' + (nuevoSubtotal).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' <small>MXN</small>');
   fila.children('.valorsubtotal').data('valor', nuevoSubtotal);
-  fila.children('.valoriva').html('$ ' + (nuevoIva).toFixed(2) + ' <small>MXN</small>');
+  fila.children('.valoriva').html('$ ' + (nuevoIva).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' <small>MXN</small>');
   fila.children('.valoriva').data('valor', nuevoIva);
-  fila.children('.valortotal').html('$ ' + (nuevoTotal).toFixed(2) + ' <small>MXN</small>');
+  fila.children('.valortotal').html('$ ' + (nuevoTotal).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' <small>MXN</small>');
   fila.children('.valortotal').data('valor', nuevoTotal);
 
   /* Recalcula los totales de la cotización */
@@ -1485,9 +1528,12 @@ function calculaSubtotalesAstillero(fila) {
  */
 function calculaTotalesAstillero() {
     /* Regex para encontrar los precios en el innerHtml de los elementos */
-    const pattern = /\d{1,9}(?:[.,]\d{3})*(?:[.,]\d{1,2})/g;
+    const pricePattern = /\d{1,9}(?:[.,]\d{3})*(?:[.,]\d{1,2})/g;
+    const dollarPattern = /\bUSD\b/;
     const iva = Number($('#valorsistemaiva').data('valor'));
     const descuentoPorcentaje = Number($('#appbundle_astillerocotizacion_descuento').val());
+    let dollar = document.getElementById("appbundle_astillerocotizacion_dolar").value;
+    let currency = "MXN";
 
     let valorSubtotal = 0;
     let valorIva = 0;
@@ -1507,9 +1553,14 @@ function calculaTotalesAstillero() {
       if(!tr.classList.contains("hidden")) {
         /* busca el elemento, obtiene su texto html, usa regex para obtener el número,
         y por último hace replace por el formato que tiene y convierte a tipo Number. */
-        valorSubtotal = Number(tr.querySelector(".valorsubtotal").innerHTML.match(pattern)[0].replace(",",""));
-        valorIva = Number(tr.querySelector(".valoriva").innerHTML.match(pattern)[0].replace(",",""));
-        valorTotal = Number(tr.querySelector(".valortotal").innerHTML.match(pattern)[0].replace(",",""));
+        valorSubtotal = Number(tr.querySelector(".valorsubtotal").innerHTML.match(pricePattern)[0].replace(",",""));
+        valorIva = Number(tr.querySelector(".valoriva").innerHTML.match(pricePattern)[0].replace(",",""));
+        valorTotal = Number(tr.querySelector(".valortotal").innerHTML.match(pricePattern)[0].replace(",",""));
+
+        if(tr.querySelector(".valorprecio").innerHTML.match(dollarPattern)) {
+          currency = tr.querySelector(".valorprecio").innerHTML.match(dollarPattern)[0];
+          valorSubtotal = valorSubtotal / dollar;
+        }
 
         granSubtotalAd += valorSubtotal;
         granIvaAd += valorIva;

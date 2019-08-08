@@ -101,16 +101,16 @@ class AstilleroCotizacionController extends Controller
     public function newAction(Request $request, \Swift_Mailer $mailer)
     {
         $astilleroCotizacion = new AstilleroCotizacion();
-        $this->denyAccessUnlessGranted('ASTILLERO_COTIZACION_CREATE', $astilleroCotizacion);
+        $this->denyAccessUnlessGranted("ASTILLERO_COTIZACION_CREATE", $astilleroCotizacion);
 
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         /* Obtiene los precios de los servicios básicos de la DB */
-        $queryBasico = $qb->select('sb')->from(astilleroServicioBasico::class, 'sb')->getQuery();
+        $queryBasico = $qb->select("sb")->from(astilleroServicioBasico::class, "sb")->getQuery();
         $preciosBasicos = $queryBasico->getArrayResult();
         
         /* Otiene los valores generales de sistema, dolar e IVA y el email template */
-        $sistema = $em->getRepository('AppBundle:ValorSistema')->find(1);
+        $sistema = $em->getRepository("AppBundle:ValorSistema")->find(1);
         $dolar = $sistema->getDolar();
         $iva = $sistema->getIva();
         $mensaje = $sistema->getMensajeCorreoAstillero();
@@ -127,23 +127,23 @@ class AstilleroCotizacionController extends Controller
         $astilleroInspeccionar = new AstilleroCotizaServicio();
 
         $astilleroGrua
-            ->setPrecio($preciosBasicos[0]['precio'])
-            ->setDivisa('MXN');
+            ->setPrecio($preciosBasicos[0]["precio"])
+            ->setDivisa("MXN");
 
         $astilleroEstadia
             ->setCantidad(6)
-            ->setPrecio($preciosBasicos[1]['precio'])
-            ->setDivisa('USD');
+            ->setPrecio($preciosBasicos[1]["precio"])
+            ->setDivisa("USD");
         
-        $astilleroRampa = $this->calculaServicio($astilleroRampa, 1, $preciosBasicos[2]['precio'], $iva, 'MXN');
-        $astilleroKarcher = $this->calculaServicio($astilleroKarcher, 1, $preciosBasicos[3]['precio'], $iva, 'MXN');
-        $astilleroExplanada = $this->calculaServicio($astilleroExplanada, 1, $preciosBasicos[4]['precio'], $iva, 'MXN');
-        $astilleroElectricidad = $this->calculaServicio($astilleroElectricidad, 1, $preciosBasicos[5]['precio'], $iva, 'MXN');
-        $astilleroLimpieza = $this->calculaServicio($astilleroLimpieza, 1, $preciosBasicos[6]['precio'], $iva, 'MXN');
+        $astilleroRampa = $this->calculaServicio($astilleroRampa, 1, $preciosBasicos[2]["precio"], $iva, "MXN");
+        $astilleroKarcher = $this->calculaServicio($astilleroKarcher, 1, $preciosBasicos[3]["precio"], $iva, "MXN");
+        $astilleroExplanada = $this->calculaServicio($astilleroExplanada, 1, $preciosBasicos[4]["precio"], $iva, "MXN");
+        $astilleroElectricidad = $this->calculaServicio($astilleroElectricidad, 1, $preciosBasicos[5]["precio"], $iva, "MXN");
+        $astilleroLimpieza = $this->calculaServicio($astilleroLimpieza, 1, $preciosBasicos[6]["precio"], $iva, "MXN");
 
         $astilleroInspeccionar
-            ->setPrecio($preciosBasicos[7]['precio'])
-            ->setDivisa('MXN');
+            ->setPrecio($preciosBasicos[7]["precio"])
+            ->setDivisa("MXN");
 
         $astilleroCotizacion
             ->addAcservicio($astilleroGrua)
@@ -154,17 +154,17 @@ class AstilleroCotizacionController extends Controller
             ->addAcservicio($astilleroElectricidad)
             ->addAcservicio($astilleroLimpieza)
             ->addAcservicio($astilleroInspeccionar);
-
+        
         /* Crea los formularios dentro de la vista */
-        $form = $this->createForm('AppBundle\Form\AstilleroCotizacionType', $astilleroCotizacion);
+        $form = $this->createForm("AppBundle\Form\AstilleroCotizacionType", $astilleroCotizacion);
         $form->handleRequest($request);
 
-        /* Si el form se ejecuta correctamente */
+        /* si se hace submiy y todos los datos están correctos */
         if ($form->isSubmitted() && $form->isValid()) {
             $valordolar = $astilleroCotizacion->getDolar();
             $eslora = $astilleroCotizacion->getBarco()->getEslora();
             $cantidadDias = $astilleroCotizacion->getDiasEstadia();
-            $sumas = ['granSubtotal'=>0, 'granIva'=>0, 'granTotal'=>0];
+            $sumas = ["granSubtotal"=>0, "granIva"=>0, "granTotal"=>0];
 
             // Uso de grua
             $servicio = $this->getDoctrine()->getRepository(AstilleroServicioBasico::class)->find(1);
@@ -207,6 +207,8 @@ class AstilleroCotizacionController extends Controller
             $precio = $astilleroInspeccionar->getPrecio();
             $sumas = $this->guardarServicioBasico($astilleroInspeccionar, $servicio, $cantidad, $precio, $iva, $sumas, $valordolar);
 
+            dump($astilleroCotizacion);
+
             foreach ($astilleroCotizacion->getAcservicios() as $servAst) {
                 if ($servAst->getAstilleroserviciobasico() == null) {
                     $cantidad = $servAst->getCantidad();
@@ -214,16 +216,17 @@ class AstilleroCotizacionController extends Controller
                         $divisa = $servAst->getServicio()->getDivisa();
                         $precio = $servAst->getServicio()->getPrecio();
                     }elseif($servAst->getOtroservicio() != null){
-                        $divisa = 'MXN';
+                        $divisa = "MXN";
                         $precio = $servAst->getPrecio();
                     }elseif($servAst->getProducto() != null){
-                        $divisa = 'MXN';
+                        $divisa = "MXN";
                         $precio = $servAst->getProducto()->getPrecio();
+                        dump($servAst->getProducto()->getPrecio());
                     }else{
-                        $divisa = 'MXN';
+                        $divisa = "MXN";
                         $precio = 0;
                     }
-                    if($divisa == 'USD'){
+                    if($divisa == "USD"){
                         $subTotal = ($cantidad * $precio * $valordolar);
                     }else{
                         $subTotal = $cantidad * $precio;
@@ -236,21 +239,21 @@ class AstilleroCotizacionController extends Controller
                             ->setTotal($total)
                             ->setDivisa($divisa)
                             ->setEstatus(true);
-                    $sumas = ['granSubtotal'=>$sumas['granSubtotal']+=$subTotal,
-                              'granIva'=>$sumas['granIva']+=$ivaTot,
-                              'granTotal'=>$sumas['granTotal']+=$total];
+                    $sumas = ["granSubtotal"=>$sumas["granSubtotal"]+=$subTotal,
+                              "granIva"=>$sumas["granIva"]+=$ivaTot,
+                              "granTotal"=>$sumas["granTotal"]+=$total];
                 }
             }
 
-            $granDescuento = ($sumas['granSubtotal'] * $astilleroCotizacion->getDescuento())/100;
-            $granIva = (($sumas['granSubtotal'] - $granDescuento) * $iva);
-            $granTotal = $sumas['granSubtotal'] - $granDescuento + $granIva;
+            $granDescuento = ($sumas["granSubtotal"] * $astilleroCotizacion->getDescuento())/100;
+            $granIva = (($sumas["granSubtotal"] - $granDescuento) * $iva);
+            $granTotal = $sumas["granSubtotal"] - $granDescuento + $granIva;
 
-            $fechaHoraActual = new \DateTime('now');
+            $fechaHoraActual = new \DateTime("now");
             $astilleroCotizacion
                 ->setDolar($astilleroCotizacion->getDolar())
                 ->setIva($iva)
-                ->setSubtotal($sumas['granSubtotal'])
+                ->setSubtotal($sumas["granSubtotal"])
                 ->setDescuentototal($granDescuento)
                 ->setIvatotal($granIva)
                 ->setTotal($granTotal)
@@ -262,8 +265,8 @@ class AstilleroCotizacionController extends Controller
             $cliente->addAstilleroCotizacione($astilleroCotizacion);
             $astilleroCotizacion->setCliente($cliente);
 
-            $guardarEditable = $form->get('guardareditable')->isClicked();
-            $guardarFinalizar = $form->get('guardarfinalizar')->isClicked();
+            $guardarEditable = $form->get("guardareditable")->isClicked();
+            $guardarFinalizar = $form->get("guardarfinalizar")->isClicked();
 
             if ($guardarEditable) {
                 $astilleroCotizacion->setBorrador(true);
@@ -287,28 +290,28 @@ class AstilleroCotizacionController extends Controller
 
             if ($guardarFinalizar) {
                 $pincode = $em->getRepository(Pincode::class)
-                    ->getOneValid($form->get('pincode')->getViewData());
+                    ->getOneValid($form->get("pincode")->getViewData());
                 if($pincode){
                     $em->remove($pincode);
                 }
                 // Buscar correos a notificar
-                $notificables = $em->getRepository('AppBundle:Correo\Notificacion')->findBy([
-                    'evento' => Correo\Notificacion::EVENTO_CREAR,
-                    'tipo' => Correo\Notificacion::TIPO_ASTILLERO
+                $notificables = $em->getRepository("AppBundle:Correo\Notificacion")->findBy([
+                    "evento" => Correo\Notificacion::EVENTO_CREAR,
+                    "tipo" => Correo\Notificacion::TIPO_ASTILLERO
                 ]);
 
                 $this->enviaCorreoNotificacion($mailer, $notificables, $astilleroCotizacion);
             }
 
-            return $this->redirectToRoute('astillero_show', ['id' => $astilleroCotizacion->getId()]);
+            return $this->redirectToRoute("astillero_show", ["id" => $astilleroCotizacion->getId()]);
         }
 
-        return $this->render('astillero/cotizacion/new.html.twig', [
-            'title' => 'Nueva cotización',
-            'astilleroCotizacion' => $astilleroCotizacion,
-            'valdolar' => $dolar,
-            'valiva' => $iva,
-            'form' => $form->createView()
+        return $this->render("astillero/cotizacion/new.html.twig", [
+            "title" => "Nueva cotización",
+            "astilleroCotizacion" => $astilleroCotizacion,
+            "valdolar" => $dolar,
+            "valiva" => $iva,
+            "form" => $form->createView()
         ]);
     }
 

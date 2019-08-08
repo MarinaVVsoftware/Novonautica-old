@@ -513,6 +513,7 @@
                                             <td id="grua_cantidad" class="valorcantidad" data-valor="0">0</td>
                                             <td>Sacar varada y boradura</td>
                                             <td id="grua_precio" class="valorprecio"
+                                                data-divisa="{{ astilleroCotizacion.acservicios[0].divisa }}"
                                                 data-valor="{{ astilleroCotizacion.acservicios[0].precio }}">
                                                 ${{ astilleroCotizacion.acservicios[0].precio|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[0].divisa }}</small>
@@ -531,6 +532,7 @@
                                             </td>
                                             <td>Uso de karcher</td>
                                             <td id="karcher_precio" class="valorprecio"
+                                                data-divisa="{{ astilleroCotizacion.acservicios[3].divisa }}"
                                                 data-valor="{{ astilleroCotizacion.acservicios[3].precio }}">
                                                 ${{ astilleroCotizacion.acservicios[3].precio|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[3].divisa }}</small>
@@ -561,6 +563,7 @@
                                             </td>
                                             <td>Conexión a electricidad</td>
                                             <td id="electricidad_precio" class="valorprecio"
+                                                data-divisa="{{ astilleroCotizacion.acservicios[5].divisa }}"
                                                 data-valor="{{ astilleroCotizacion.acservicios[5].precio }}">
                                                 ${{ astilleroCotizacion.acservicios[5].precio|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[5].divisa }}</small>
@@ -592,7 +595,8 @@
                                             </td>
                                             <td>Estadía</td>
                                             <td id="estadia_precio" class="valorprecio"
-                                                data-valor="{{ astilleroCotizacion.acservicios[1].precio*valdolar }}">
+                                                data-divisa="{{ astilleroCotizacion.acservicios[1].divisa }}"
+                                                data-valor="{{ astilleroCotizacion.acservicios[1].precio }}">
                                                 ${{ astilleroCotizacion.acservicios[1].precio|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[1].divisa }}</small>
                                             </td>
@@ -610,6 +614,7 @@
                                             </td>
                                             <td>Limpieza de locación</td>
                                             <td id="limpieza_precio" class="valorprecio"
+                                                data-divisa="{{ astilleroCotizacion.acservicios[6].divisa }}"
                                                 data-valor="{{ astilleroCotizacion.acservicios[6].precio }}">
                                                 ${{ astilleroCotizacion.acservicios[6].precio|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[6].divisa }}</small>
@@ -640,6 +645,7 @@
                                             </td>
                                             <td>Uso de rampa</td>
                                             <td id="rampa_precio" class="valorprecio"
+                                                data-divisa="{{ astilleroCotizacion.acservicios[2].divisa }}"
                                                 data-valor="{{ astilleroCotizacion.acservicios[2].precio }}">
                                                 ${{ astilleroCotizacion.acservicios[2].precio|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[2].divisa }}</small>
@@ -670,6 +676,7 @@
                                             </td>
                                             <td>Uso de explanada</td>
                                             <td id="explanada_precio" class="valorprecio"
+                                                data-divisa="{{ astilleroCotizacion.acservicios[4].divisa }}"
                                                 data-valor="{{ astilleroCotizacion.acservicios[4].precio }}">
                                                 ${{ astilleroCotizacion.acservicios[4].precio|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[4].divisa }}</small>
@@ -699,6 +706,7 @@
                                             </td>
                                             <td>Sacar para inspeccionar</td>
                                             <td id="inspeccionar_precio" class="valorprecio"
+                                                data-divisa="{{ astilleroCotizacion.acservicios[7].divisa }}"
                                                 data-valor="{{ astilleroCotizacion.acservicios[7].precio }}">
                                                 ${{ astilleroCotizacion.acservicios[7].precio|number_format(2) }}
                                                 <small>{{ astilleroCotizacion.acservicios[7].divisa }}</small>
@@ -767,32 +775,34 @@
                                                     <td class="td-servicio hide">{{ form_widget(servicioagregado.servicio) }}</td>
                                                     <td class="td-otroservicio hide">{{ form_widget(servicioagregado.otroservicio) }}</td>
                                                     <td class="valorprecio"
-                                                        data-valor="{% if servicioagregado.vars.value.divisa == 'USD' %}
-                                                                {{ ((servicioagregado.vars.value.precio*astilleroCotizacion.dolar)/10000) }}
+                                                        {# se eliminó este bloque condicional de la divisa. Se mantiene por si a caso. #}
+                                                        {# data-valor="{% if servicioagregado.vars.value.divisa == 'USD' %}
+                                                                {{ (servicioagregado.vars.value.precio * astilleroCotizacion.dolar) / 100 }}
                                                             {% else %}
-                                                                {{ ((servicioagregado.vars.value.precio)/100) }}
-                                                            {% endif %}"
-                                                        data-valorreal="{{ servicioagregado.vars.value.precio/100 }}"
+                                                                {{ (servicioagregado.vars.value.precio) }}
+                                                            {% endif %}" #}
+                                                        data-valor="{{ (servicioagregado.vars.value.precio) }}"
+                                                        data-valorreal="{{ servicioagregado.vars.value.precio }}"
                                                         data-divisa="{{ servicioagregado.vars.value.divisa }}">
-                                                        $ {{ ((servicioagregado.vars.value.precio/100)|number_format(2)) }}
+                                                        $ {{ servicioagregado.vars.value.precio|number_format(2) }}
                                                         <small>{{ servicioagregado.vars.value.divisa }}</small>
                                                         <div class="hide">
                                                             {{ form_widget(servicioagregado.precio,{'attr':{'class':'hidden'}}) }}
                                                         </div>
                                                     </td>
                                                     <td class="valorsubtotal"
-                                                        data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">
-                                                        $ {{ (servicioagregado.vars.value.subtotal/100)|number_format(2) }}
+                                                        data-valor="{{ servicioagregado.vars.value.subtotal }}">
+                                                        $ {{ servicioagregado.vars.value.subtotal|number_format(2) }}
                                                         <small>MXN</small>
                                                     </td>
                                                     <td class="valoriva"
-                                                        data-valor="{{ servicioagregado.vars.value.iva/100 }}">
-                                                        $ {{ (servicioagregado.vars.value.iva/100)|number_format(2) }}
+                                                        data-valor="{{ servicioagregado.vars.value.iva }}">
+                                                        $ {{ servicioagregado.vars.value.iva|number_format(2) }}
                                                         <small>MXN</small>
                                                     </td>
                                                     <td class="valortotal"
-                                                        data-valor="{{ servicioagregado.vars.value.total/100 }}">
-                                                        $ {{ (servicioagregado.vars.value.total/100)|number_format(2) }}
+                                                        data-valor="{{ servicioagregado.vars.value.total }}">
+                                                        $ {{ servicioagregado.vars.value.total|number_format(2) }}
                                                         <small>MXN</small>
                                                     </td>
                                                     <td class="valortipo hide">
@@ -830,7 +840,7 @@
                                                    data-nombre="{{ serv.data.nombre }}"
                                                    data-precio="{{ serv.data.precio }}"
                                                    data-divisa="{{ serv.data.divisa }}"
-                                                   data-tipo_cantidad="{{ serv.data.tipoCantidad }}"
+                                                   data-tipo_cantidad="{{ serv.data.tipoCantidad ? serv.data.tipoCantidad : 0 }}"
                                                    data-dias_descuento="{{ serv.data.diasDescuento }}">
                                                     + {{ serv.data.nombre }}
                                                 </a>
@@ -882,22 +892,22 @@
                                                     <td class="td-servicio hide">{{ form_widget(servicioagregado.servicio) }}</td>
                                                     <td class="td-otroservicio">{{ form_widget(servicioagregado.otroservicio,{ 'attr': {'required': 'required'} }) }}</td>
                                                     <td class="valorprecio"
-                                                        data-valor="{{ servicioagregado.vars.value.precio/100 }}">
+                                                        data-valor="{{ servicioagregado.vars.value.precio }}">
                                                         {{ form_widget(servicioagregado.precio,{ 'attr': {'required': 'required'} }) }}
                                                     </td>
                                                     <td class="valorsubtotal"
-                                                        data-valor="{{ servicioagregado.vars.value.subtotal/100 }}">
-                                                        $ {{ (servicioagregado.vars.value.subtotal/100)|number_format(2) }}
+                                                        data-valor="{{ servicioagregado.vars.value.subtotal }}">
+                                                        $ {{ servicioagregado.vars.value.subtotal|number_format(2) }}
                                                         <small>MXN</small>
                                                     </td>
                                                     <td class="valoriva"
-                                                        data-valor="{{ servicioagregado.vars.value.iva/100 }}">
-                                                        $ {{ (servicioagregado.vars.value.iva/100)|number_format(2) }}
+                                                        data-valor="{{ servicioagregado.vars.value.iva }}">
+                                                        $ {{ servicioagregado.vars.value.iva|number_format(2) }}
                                                         <small>MXN</small>
                                                     </td>
                                                     <td class="valortotal"
-                                                        data-valor="{{ servicioagregado.vars.value.total/100 }}">
-                                                        $ {{ (servicioagregado.vars.value.total/100)|number_format(2) }}
+                                                        data-valor="{{ servicioagregado.vars.value.total }}">
+                                                        $ {{ servicioagregado.vars.value.total|number_format(2) }}
                                                         <small>MXN</small>
                                                     </td>
                                                     <td class="hide">
@@ -975,7 +985,7 @@
                                                     <td class="td-otroservicio hide">{{ form_widget(servicioagregado.otroservicio) }}</td>
                                                     <td class="valorprecio"
                                                         data-valor="{{ servicioagregado.vars.value.precio }}">
-                                                        $ {{ ((servicioagregado.vars.value.precio)|number_format(2)) }}
+                                                        $ {{ (servicioagregado.vars.value.precio)|number_format(2) }}
                                                         <small>{{ servicioagregado.vars.value.divisa }}</small>
                                                         <div class="hide">
                                                             {{ form_widget(servicioagregado.precio,{'attr':{'class':'hidden'}}) }}
