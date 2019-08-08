@@ -159,9 +159,9 @@ class AstilleroCotizacionController extends Controller
         $form = $this->createForm("AppBundle\Form\AstilleroCotizacionType", $astilleroCotizacion);
         $form->handleRequest($request);
 
-        /* si se hace submiy y todos los datos están correctos */
+        /* si se hace submit y todos los datos están correctos */
         if ($form->isSubmitted() && $form->isValid()) {
-            $valordolar = $astilleroCotizacion->getDolar();
+            $valordolar = ($astilleroCotizacion->getDolar())/100;
             $eslora = $astilleroCotizacion->getBarco()->getEslora();
             $cantidadDias = $astilleroCotizacion->getDiasEstadia();
             $sumas = ["granSubtotal"=>0, "granIva"=>0, "granTotal"=>0];
@@ -207,53 +207,65 @@ class AstilleroCotizacionController extends Controller
             $precio = $astilleroInspeccionar->getPrecio();
             $sumas = $this->guardarServicioBasico($astilleroInspeccionar, $servicio, $cantidad, $precio, $iva, $sumas, $valordolar);
 
-            dump($astilleroCotizacion);
-
+            /* Obtiene el precio de cada servicio que se incluye en la cotización. Ya sea
+            "otros", "servicio básico", un "kit" o un "producto" todos vienen como "servicios", y debe
+            inferir su tipo. */
             foreach ($astilleroCotizacion->getAcservicios() as $servAst) {
                 if ($servAst->getAstilleroserviciobasico() == null) {
                     $cantidad = $servAst->getCantidad();
+
+                    /* Busca el tipo de servicio que es */
                     if ($servAst->getServicio() != null) {
                         $divisa = $servAst->getServicio()->getDivisa();
                         $precio = $servAst->getServicio()->getPrecio();
-                    }elseif($servAst->getOtroservicio() != null){
+                    } elseif($servAst->getOtroservicio() != null) {
                         $divisa = "MXN";
                         $precio = $servAst->getPrecio();
-                    }elseif($servAst->getProducto() != null){
+                    } elseif($servAst->getProducto() != null) {
                         $divisa = "MXN";
                         $precio = $servAst->getProducto()->getPrecio();
-                        dump($servAst->getProducto()->getPrecio());
-                    }else{
+                    } else {
                         $divisa = "MXN";
                         $precio = 0;
                     }
-                    if($divisa == "USD"){
+                    if($divisa == "USD") {
                         $subTotal = ($cantidad * $precio * $valordolar);
-                    }else{
+                    }else {
                         $subTotal = $cantidad * $precio;
                     }
-                    $ivaTot = ($subTotal * $iva);
+
+                    /* Calcular los valores totales */
+                    $ivaTot = $subTotal * ($iva/100);
                     $total = $subTotal + $ivaTot;
+
+                    /* Setea los valores */
                     $servAst->setPrecio($precio)
                             ->setSubtotal($subTotal)
                             ->setIva($ivaTot)
                             ->setTotal($total)
                             ->setDivisa($divisa)
                             ->setEstatus(true);
+                    
+                    /* Recupera en un objeto los totales y los va acumulando */
                     $sumas = ["granSubtotal"=>$sumas["granSubtotal"]+=$subTotal,
                               "granIva"=>$sumas["granIva"]+=$ivaTot,
                               "granTotal"=>$sumas["granTotal"]+=$total];
                 }
             }
 
-            $granDescuento = ($sumas["granSubtotal"] * $astilleroCotizacion->getDescuento())/100;
-            $granIva = (($sumas["granSubtotal"] - $granDescuento) * $iva);
-            $granTotal = $sumas["granSubtotal"] - $granDescuento + $granIva;
+            /* Cálculo de los totales de la cotización */
+            $descuento = $astilleroCotizacion->getDescuento() / 100;
+            $granSubtotal = $sumas["granSubtotal"];
+            $granDescuento = $granSubtotal * $descuento;
+            $subtotalConDescuento = $granSubtotal - $granDescuento;
+            $granIva = $subtotalConDescuento * ($iva/100);
+            $granTotal = $subtotalConDescuento + $granIva;
 
             $fechaHoraActual = new \DateTime("now");
             $astilleroCotizacion
                 ->setDolar($astilleroCotizacion->getDolar())
                 ->setIva($iva)
-                ->setSubtotal($sumas["granSubtotal"])
+                ->setSubtotal($granSubtotal)
                 ->setDescuentototal($granDescuento)
                 ->setIvatotal($granIva)
                 ->setTotal($granTotal)
@@ -397,6 +409,13 @@ class AstilleroCotizacionController extends Controller
                 'bancoDolares' => $bancoDolares
             ]);
         }
+
+        return $this->render('astillero/cotizacion/pdf/cotizacionpdf.html.twig', [
+            'astilleroCotizacion' => $ac,
+            'valor' => $valor,
+            'bancoPesos' => $bancoPesos,
+            'bancoDolares' => $bancoDolares
+        ]);
 
         $header = $this->renderView('astillero/cotizacion/pdf/pdfencabezado.twig', [
             'astilleroCotizacion' => $ac,
@@ -1516,14 +1535,17 @@ class AstilleroCotizacionController extends Controller
         $mailer->send($message);
     }
 
-    private function guardarServicioBasico($objeto,$servicio,$cantidad,$precio,$iva,$sumas,$dolar){
-        if($objeto->getDivisa()=='USD'){
-            $subTotal = ($cantidad * $precio * $dolar)/100;
-        }else{
+    private function guardarServicioBasico($objeto, $servicio, $cantidad, $precio, $iva, $sumas, $dolar) {
+        if($objeto->getDivisa()=='USD') {
+            $subTotal = $cantidad * $precio * $dolar;
+        } else {
             $subTotal = $cantidad * $precio;
         }
-        $ivaTot = ($subTotal * $iva) / 100;
+
+        /* Calcular los valores totales */
+        $ivaTot = $subTotal * ($iva/100);
         $total = $subTotal + $ivaTot;
+
         $objeto
             ->setAstilleroserviciobasico($servicio)
             ->setServicio(null)

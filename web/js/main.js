@@ -421,7 +421,9 @@ function calculaProductosPorServicio(){
     });
 }
 
-/* Sucede cuando se busca un producto de forma individual en una cotización de astillero */
+/** función del módulo: ASTILLERO
+ * Sucede cuando se busca un producto de forma individual en una cotización de astillero 
+ */
 function astilleroBuscaProducto(idproducto, fila) {
   /* Crea la URL del endpoint */
   var baseurl = location.href.endsWith('/') ? location.href : location.href + '/';
@@ -444,6 +446,7 @@ function astilleroBuscaProducto(idproducto, fila) {
     }
   });
 }
+
 function recalculaPreciosOtros(){
     let otros = document.getElementById('otros').querySelectorAll('tr');
     otros.forEach(fila => { calculaSubtotalesAdicionales($(fila)) });
@@ -463,7 +466,7 @@ function recalculaPreciosServicios(){
     //agregaPrecioServiciosExtra(fila,idservicio,elemento)
 }
 
-/** función del módulo: ASTILLERO
+/** evento del módulo: ASTILLERO
  * Añade el servicio seleccionado a la tabla de servicios y añade los productos que
  * pertenecen al kit o servicio a la pestaña de productos.
  */
@@ -473,7 +476,7 @@ document.querySelectorAll(".add-servicio").forEach(service => {
 
     e.preventDefault();
 
-    let service = event.target || event.srcElement;
+    let service = e.target || e.srcElement;
     let tableServices = document.getElementById("serviciosextra");
     let servicesLength = parseInt(tableServices.getAttribute("data-cantidad"));
     let newWidget = tableServices.getAttribute("data-prototype");
@@ -525,7 +528,9 @@ document.querySelectorAll(".add-servicio").forEach(service => {
     row.querySelector(".valorpromedio").setAttribute("data-dias_descuento", daysDiscount);
     row.querySelector(".valorpromedio").innerHTML = daysDiscount;
 
-    calculaDiasEstadiaAstillero();
+    /* Se comentó esta linea porque causa un bug: al añadir el servicio básico de estadía y un kit/servicio al mismo tiempo, la estadía
+    se vuelve con valores NaN. Comentado esta línea se fixea y no afecta en lo absoluto. Ojo. */
+    // calculaDiasEstadiaAstillero();
 
     /* Recalcula el precio, por alguna razón había bugs con los kits */
     price = parseFloat(price);
@@ -1253,16 +1258,21 @@ $('#appbundle_astillerocotizacion_dolar').keyup(function () {
     });
 });
 
-// -- fecha llegada --
-$('#appbundle_astillerocotizacion_fechaLlegada').on("change", function () {
-    calculaDiasEstadiaAstillero();
-});
+/** evento del módulo: ASTILLERO
+ * Añade un evento de tipo "onChange" al datepicker de fechaLlegada
+ */
+$('#appbundle_astillerocotizacion_fechaLlegada').on("change", () => calculaDiasEstadiaAstillero());
 
-// -- fecha salida --
-$('#appbundle_astillerocotizacion_fechaSalida').on("change", function () {
-    calculaDiasEstadiaAstillero();
-});
- function calculaDiasEstadiaAstillero(){
+/** evento del módulo: ASTILLERO
+ * Añade un evento de tipo "onChange" al datepicker de fechaSalida
+ */
+$('#appbundle_astillerocotizacion_fechaSalida').on("change", () => calculaDiasEstadiaAstillero());
+
+/** función del módulo: ASTILLERO
+ * Recalcula los días del astillero (por alguna razón).
+ */
+function calculaDiasEstadiaAstillero(){
+
      var llegada = $('#appbundle_astillerocotizacion_fechaLlegada').val();
      var salida = $('#appbundle_astillerocotizacion_fechaSalida').val();
      var diasLaborales = totalDiasLaborales(llegada, salida);
@@ -1508,7 +1518,7 @@ function calculaSubtotalesAstillero(fila) {
   se mantiene así porque no hace falta pegarle al IVA. */
   let nuevoIva = (nuevoSubtotal * iva) / 100;
   let nuevoTotal = nuevoSubtotal + nuevoIva;
-
+  
   /* Renderea los nuevos valores y los setea */
   fila.children('.valorsubtotal').html('$ ' + (nuevoSubtotal).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' <small>MXN</small>');
   fila.children('.valorsubtotal').data('valor', nuevoSubtotal);
@@ -1529,11 +1539,8 @@ function calculaSubtotalesAstillero(fila) {
 function calculaTotalesAstillero() {
     /* Regex para encontrar los precios en el innerHtml de los elementos */
     const pricePattern = /\d{1,9}(?:[.,]\d{3})*(?:[.,]\d{1,2})/g;
-    const dollarPattern = /\bUSD\b/;
     const iva = Number($('#valorsistemaiva').data('valor'));
     const descuentoPorcentaje = Number($('#appbundle_astillerocotizacion_descuento').val());
-    let dollar = document.getElementById("appbundle_astillerocotizacion_dolar").value;
-    let currency = "MXN";
 
     let valorSubtotal = 0;
     let valorIva = 0;
@@ -1557,11 +1564,6 @@ function calculaTotalesAstillero() {
         valorIva = Number(tr.querySelector(".valoriva").innerHTML.match(pricePattern)[0].replace(",",""));
         valorTotal = Number(tr.querySelector(".valortotal").innerHTML.match(pricePattern)[0].replace(",",""));
 
-        if(tr.querySelector(".valorprecio").innerHTML.match(dollarPattern)) {
-          currency = tr.querySelector(".valorprecio").innerHTML.match(dollarPattern)[0];
-          valorSubtotal = valorSubtotal / dollar;
-        }
-
         granSubtotalAd += valorSubtotal;
         granIvaAd += valorIva;
         granTotalAd += valorTotal;
@@ -1569,7 +1571,8 @@ function calculaTotalesAstillero() {
     });
 
     /* Calcula valores totales */
-    granDescuentoAd = (granSubtotalAd * descuentoPorcentaje);
+    if (descuentoPorcentaje != 0)
+      granDescuentoAd = (granSubtotalAd * descuentoPorcentaje/100);
     granIvaAd = ((granSubtotalAd - granDescuentoAd) * iva/100);
     granTotalAd = granSubtotalAd - granDescuentoAd + granIvaAd;
 
