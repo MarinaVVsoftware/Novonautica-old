@@ -10,8 +10,7 @@
                             <h3 class="panel-title">{{ title }}</h3>
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-contorno-azul pull-right"
-                               href="{{ path('astillero_servicio_index') }}">Regresar</a>
+                            <a class="btn btn-contorno-azul pull-right" href="{{ path('astillero_servicio_index') }}">Regresar</a>
                         </div>
                     </div>
                 </div>
@@ -23,7 +22,7 @@
                         </div>
                         <div class="col-sm-4">
                             <label>Precio</label>
-                            <div class="info-input">{{ (servicio.precio/100)|number_format(2) }}
+                            <div class="info-input">{{ servicio.precio|number_format(2) }}
                                 <small>{{ servicio.divisa }}</small>
                             </div>
                         </div>
@@ -57,7 +56,8 @@
                             <label>Clave Servicio</label>
                             <div class="info-input">
                                 {% if servicio.claveProdServ %}
-                                    {{ servicio.claveProdServ.claveProdServ }} /
+                                    {{ servicio.claveProdServ.claveProdServ }}
+                                    /
                                     {{ servicio.claveProdServ.descripcion }}
                                 {% endif %}
                             </div>
@@ -66,7 +66,8 @@
                             <label>Clave Unidad</label>
                             <div class="info-input">
                                 {% if servicio.claveUnidad %}
-                                    {{ servicio.claveUnidad.claveUnidad }} /
+                                    {{ servicio.claveUnidad.claveUnidad }}
+                                    /
                                     {{ servicio.claveUnidad.nombre }}
                                 {% endif %}
                             </div>
@@ -77,28 +78,28 @@
                             <div class="col-sm-12 espacio-linea-arriba2">
                                 <table class="table">
                                     <thead>
-                                    <tr>
-                                        <th>Producto</th>
-                                        <th>Tipo</th>
-                                        <th>Cantidad</th>
-                                        <th>Observaciones</th>
-                                    </tr>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Tipo</th>
+                                            <th>Cantidad</th>
+                                            <th>Observaciones</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {% for grupo in servicio.gruposProductos %}
-                                        <tr>
-                                            <td>{{ grupo.producto }}</td>
-                                            <td>
-                                                {% if grupo.tipoCantidad == 1 %}
-                                                    Promedio por pie
-                                                {% else %}
-                                                    Cantidad fija
-                                                {% endif %}
-                                            </td>
-                                            <td>{{ grupo.cantidad }}</td>
-                                            <td>{{ grupo.observaciones }}</td>
-                                        </tr>
-                                    {% endfor %}
+                                        {% for grupo in servicio.gruposProductos %}
+                                            <tr>
+                                                <td>{{ grupo.producto }}</td>
+                                                <td>
+                                                    {% if grupo.tipoCantidad == 1 %}
+                                                        Promedio por pie
+                                                    {% else %}
+                                                        Cantidad fija
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ grupo.cantidad }}</td>
+                                                <td>{{ grupo.observaciones }}</td>
+                                            </tr>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
@@ -106,9 +107,9 @@
                     {% endif %}
                     <div class="row">
                         <div class="col-sm-12 espacio-linea-arriba2">
-                            <a class="btn btn-azul pull-right"
-                               href="{{ path('astillero_servicio_edit', { 'id': servicio.id }) }}">
-                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar
+                            <a class="btn btn-azul pull-right" href="{{ path('astillero_servicio_edit', { 'id': servicio.id }) }}">
+                                <i aria-hidden="true" class="fa fa-pencil-square-o"></i>
+                                Editar
                             </a>
                         </div>
                     </div>
