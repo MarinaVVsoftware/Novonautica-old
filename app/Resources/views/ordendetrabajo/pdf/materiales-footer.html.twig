@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" type="text/css" href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+    <style type="text/css"></style>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    {{ valor.direccion }}
+                    C.P.
+                    {{ valor.codigoPostal }}
+                    Tel:
+                    {{ valor.telefono }}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -134,7 +134,10 @@ class OrdenDeTrabajoController extends Controller
                 'tipo' => Correo\Notificacion::TIPO_ODT
             ]);
             $this->enviaCorreoNotificacion($mailer, $notificables, $ordenDeTrabajo);
-            return $this->redirectToRoute('ordendetrabajo_index');
+            //return $this->redirectToRoute('ordendetrabajo_index');
+
+            // Redirect to the ODT detail.
+            return $this->redirectToRoute('ordendetrabajo_show', ['id' => $ordenDeTrabajo->getId()]);
         }
 
         return $this->render(
@@ -200,6 +203,62 @@ class OrdenDeTrabajoController extends Controller
             'ordenDeTrabajo' => $ordenDeTrabajo,
             'folio' => $folio,
         ]);
+    }
+
+    /**
+     * Display a generated PDF with all the items in the ODT.
+     * 
+     * @Route("/{id}/materiales/pdf", name="odt-materiales-pdf")
+     * @Method("GET")
+     * 
+     * @param OrdenDeTrabajo $ordenDeTrabajo
+     * 
+     * @return PdfResponse
+     */
+    public function displayOdtPdfAction(OrdenDeTrabajo $ordenDeTrabajo) {
+        $em = $this ->getDoctrine()->getManager();
+        $valor = $em->getRepository('AppBundle:ValorSistema')->find(1);
+        $acServices = $ordenDeTrabajo->getAstilleroCotizacion()->getAcservicios();
+        $products = [];
+
+        foreach($acServices as $acService) {
+            if($acService->getProducto()) {
+                array_push($products, $acService);
+            }
+        }
+
+        // Tomar la informacion de la cotizacion
+        $html = $this->renderView('ordendetrabajo/pdf/materiales-body.html.twig', [
+            'astilleroCotizacion' => $ordenDeTrabajo->getAstilleroCotizacion(),
+            'products' => $products
+        ]);
+
+        $header = $this->renderView('ordendetrabajo/pdf/materiales-head.html.twig', [
+            'valor' => $valor,
+            'astillero' => $ordenDeTrabajo->getAstilleroCotizacion(),
+        ]);
+
+        $footer = $this->renderView('ordendetrabajo/pdf/materiales-footer.html.twig', [
+            'valor' => $valor
+        ]);
+
+        $hojapdf = $this->get('knp_snappy.pdf');
+
+        
+        $options = [
+            'margin-top' => 19,
+            'margin-right' => 0,
+            'margin-left' => 0,
+            'header-html' => utf8_decode($header),
+            'footer-html' => utf8_decode($footer)
+        ];
+
+        return new PdfResponse(
+            $hojapdf->getOutputFromHtml($html, $options),
+            'Lista de Materiales-'.$ordenDeTrabajo->getAstilleroCotizacion()->getFolio().'-'.$ordenDeTrabajo->getAstilleroCotizacion()->getFoliorecotiza().'.pdf',
+            'application/pdf',
+            'inline'
+        );
     }
 
     /**
