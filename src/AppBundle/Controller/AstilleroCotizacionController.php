@@ -437,7 +437,7 @@ class AstilleroCotizacionController extends Controller
         $footer = $this->renderView('astillero/cotizacion/pdf/pdfpie.twig',[
             'valor' => $valor
         ]);
-        //die;
+
         $hojapdf = $this->get('knp_snappy.pdf');
 
         $options = [
