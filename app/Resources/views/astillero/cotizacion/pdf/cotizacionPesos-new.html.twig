@@ -125,8 +125,8 @@
         </div>
     </div>
     <div class="row text-right">
-        <div class="col-xs-6 text-left">Tipo cambio: ${{ (astilleroCotizacion.dolar/100)|number_format(2) }} MXN</div>
-        <div class="col-xs-6">Precios en: MXN</div>
+        <div class="col-xs-6 text-left">Tipo cambio: ${{ (astilleroCotizacion.dolar / 100)|number_format(2) }} MXN</div>
+        <div class="col-xs-6">Precios en: USD</div>
     </div>
     <div class="row">
         {% if servicioBasicoExists %}
@@ -148,9 +148,8 @@
                             <tr>
                                 <td>{{ unservicio.astilleroserviciobasico.nombre }}</td>
                                 <td>
-
                                     {% if unservicio.astilleroserviciobasico.id is defined and (unservicio.astilleroserviciobasico.id == 2 or unservicio.astilleroserviciobasico.id == 9) %}
-                                        {{ unservicio.cantidad/astilleroCotizacion.barco.eslora }}
+                                        {{ unservicio.cantidad / astilleroCotizacion.barco.eslora }}
                                         (pie por día)
                                     {% else %}
                                         {{ unservicio.cantidad }}
@@ -158,14 +157,14 @@
                                 </td>
                                 <td>
                                     {% if unservicio.divisa == 'USD' %}
-                                        $ {{ ((unservicio.precio*astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                        $ {{ (unservicio.precio * (astilleroCotizacion.dolar / 100))|number_format(2) }}
                                     {% else %}
-                                        $ {{ (unservicio.precio/100)|number_format(2) }}
+                                        $ {{ unservicio.precio|number_format(2) }}
                                     {% endif %}
                                 </td>
-                                <td>$ {{ (unservicio.subtotal/100)|number_format(2) }}</td>
+                                <td>$ {{ unservicio.subtotal|number_format(2) }}</td>
                             </tr>
-                            {% set sumaserv=sumaserv+unservicio.subtotal %}
+                            {% set sumaserv = sumaserv + unservicio.subtotal %}
                         {% endif %}
                     {% endfor %}
                     </tbody>
@@ -173,7 +172,7 @@
                     <tr>
                         <th colspan="2" style="background-color: #fff; border-bottom: 0 !important"></th>
                         <th class="text-right">Sub-total estadía:</th>
-                        <th>$ {{ (sumaserv/100)|number_format(2) }}</th>
+                        <th>$ {{ sumaserv|number_format(2) }}</th>
                     </tr>
                     </tfoot>
                 </table>
@@ -202,21 +201,21 @@
                             <td>Serv.</td>
                             <td>
                                 {% if servicio.divisa == 'USD' %}
-                                    $ {{ ((servicio.precio*astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                    $ {{ servicio.precio|number_format(2) }}
                                 {% else %}
-                                    $ {{ (servicio.precio/100)|number_format(2) }}
+                                    $ {{ servicio.precio|number_format(2) }}
                                 {% endif %}
                             </td>
-                            <td>$ {{ (servicio.subtotal/100)|number_format(2) }}</td>
+                            <td>$ {{ servicio.subtotal|number_format(2) }}</td>
                         </tr>
-                        {% set sumaserv=sumaserv+servicio.subtotal %}
+                        {% set sumaserv = sumaserv + servicio.subtotal %}
                     {% endfor %}
                     </tbody>
                     <tfoot>
                     <tr>
                         <th colspan="3" style="background-color: #fff; border-bottom: 0 !important"></th>
                         <th class="text-right">Total trabajos</th>
-                        <th>$ {{ (sumaserv/100)|number_format(2) }}</th>
+                        <th>$ {{ sumaserv|number_format(2) }}</th>
                     </tr>
                     </tfoot>
                 </table>
@@ -246,14 +245,14 @@
                                 <td>{{ unservicio.producto.unidad }}</td>
                                 <td>
                                     {% if unservicio.divisa == 'USD' %}
-                                        $ {{ ((unservicio.precio*astilleroCotizacion.dolar)/10000)|number_format(2) }}
+                                        $ {{ unservicio.precio|number_format(2) }}
                                     {% else %}
-                                        $ {{ (unservicio.precio/100)|number_format(2) }}
+                                        $ {{ unservicio.precio|number_format(2) }}
                                     {% endif %}
                                 </td>
-                                <td>$ {{ (unservicio.subtotal/100)|number_format(2) }}</td>
+                                <td>$ {{ unservicio.subtotal|number_format(2) }}</td>
                             </tr>
-                            {% set sumaserv=sumaserv+unservicio.subtotal %}
+                            {% set sumaserv = sumaserv + unservicio.subtotal %}
                         {% endif %}
                     {% endfor %}
                     </tbody>
@@ -261,7 +260,7 @@
                     <tr>
                         <th colspan="3" style="background-color: #fff; border: 0; border-bottom: 0 !important"></th>
                         <th class="text-right">Total materiales</th>
-                        <th>$ {{ (sumaserv/100)|number_format(2) }}</th>
+                        <th>$ {{ sumaserv|number_format(2) }}</th>
                     </tr>
                     </tfoot>
                 </table>
@@ -289,10 +288,10 @@
                                 <td>{{ unservicio.otroservicio }}</td>
                                 <td>{{ unservicio.cantidad }}</td>
                                 <td>Serv.</td>
-                                <td>$ {{ (unservicio.precio/100)|number_format(2) }}</td>
-                                <td>$ {{ (unservicio.subtotal/100)|number_format(2) }}</td>
+                                <td>$ {{ unservicio.precio|number_format(2) }}</td>
+                                <td>$ {{ unservicio.subtotal|number_format(2) }}</td>
                             </tr>
-                            {% set sumaserv=sumaserv+unservicio.subtotal %}
+                            {% set sumaserv = sumaserv + unservicio.subtotal %}
                         {% endif %}
                     {% endfor %}
                     </tbody>
@@ -300,7 +299,7 @@
                     <tr>
                         <th colspan="3" style="background-color: #fff; border: 0; border-bottom: 0 !important"></th>
                         <th class="text-right">Total materiales</th>
-                        <th>$ {{ (sumaserv/100)|number_format(2) }}</th>
+                        <th>$ {{ sumaserv|number_format(2) }}</th>
                     </tr>
                     </tfoot>
                 </table>
@@ -315,23 +314,23 @@
                 <tr>
                     <th>Sub-total</th>
                     <td class="borde-bajo-doble">
-                        $ {{ (astilleroCotizacion.subtotal/100)|number_format(2) }}</td>
+                        $ {{ astilleroCotizacion.subtotal|number_format(2) }}</td>
                 </tr>
                 {% if astilleroCotizacion.descuento %}
                 <tr>
                     <th>Descuento {{ astilleroCotizacion.descuento }}%</th>
                     <td class="borde-bajo-doble">
-                        $ {{ (astilleroCotizacion.descuentototal/100)|number_format(2) }}</td>
+                        $ {{ astilleroCotizacion.descuentototal|number_format(2) }}</td>
                 </tr>
                 {% endif %}
                 <tr>
                     <th>IVA {{ astilleroCotizacion.iva }}%</th>
                     <td class="borde-bajo-doble">
-                        $ {{ (astilleroCotizacion.ivatotal/100)|number_format(2) }}</td>
+                        $ {{ astilleroCotizacion.ivatotal|number_format(2) }}</td>
                 </tr>
                 <tr class="grey-background">
                     <th>Total general</th>
-                    <td class="borde-bajo-doble">$ {{ (astilleroCotizacion.total/100)|number_format(2) }}</td>
+                    <td class="borde-bajo-doble">$ {{ astilleroCotizacion.total|number_format(2) }}</td>
                 </tr>
                 </tbody>
             </table>
@@ -356,7 +355,7 @@
                             <td>Anticipo {{ loop.index }}</td>
                             <td>{{ pago.fechaRealPago|date('d-m-Y') }}</td>
                             <td>{{ pago.metodopago }}</td>
-                            <td>$ {{ (pago.cantidad/100)|number_format(2) }}</td>
+                            <td>$ {{ pago.cantidad|number_format(2) }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -364,7 +363,7 @@
                         <tr class="grey-background">
                             <th colspan="2" style="background-color: #fff; border: 0; border-bottom: 0 !important;"></th>
                             <th class="text-right">Total anticipos</th>
-                            <th>$ {{ (astilleroCotizacion.pagado/100)|number_format(2) }}</th>
+                            <th>$ {{ astilleroCotizacion.pagado|number_format(2) }}</th>
                         </tr>
                     </tfoot>
                 </table>

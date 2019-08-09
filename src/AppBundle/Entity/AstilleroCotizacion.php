@@ -77,16 +77,16 @@ class AstilleroCotizacion
     /**
      * @var float
      *
-     * @ORM\Column(name="iva", type="float", nullable=true)
+     * @ORM\Column(name="iva", type="float", nullable=true, precision=19, scale=4)
      */
     private $iva;
 
     /**
-     * @var integer
+     * @var decimal
      *
      * @Groups({"facturacion"})
      *
-     * @ORM\Column(name="subtotal", type="bigint", nullable=true)
+     * @ORM\Column(name="subtotal", type="bigint", nullable=true, precision=19, scale=4)
      */
     private $subtotal;
 
@@ -98,20 +98,20 @@ class AstilleroCotizacion
     private $descuentototal;
 
     /**
-     * @var integer
+     * @var decimal
      *
      * @Groups({"facturacion"})
      *
-     * @ORM\Column(name="ivatotal", type="bigint", nullable=true)
+     * @ORM\Column(name="ivatotal", type="decimal", nullable=true, precision=19, scale=4)
      */
     private $ivatotal;
 
     /**
-     * @var integer
+     * @var decimal
      *
      * @Groups({"facturacion"})
      *
-     * @ORM\Column(name="total", type="bigint", nullable=true)
+     * @ORM\Column(name="total", type="decimal", nullable=true,  precision=19, scale=4)
      */
     private $total;
 
@@ -515,7 +515,7 @@ class AstilleroCotizacion
     /**
      * Set subtotal
      *
-     * @param int $subtotal
+     * @param decimal $subtotal
      *
      * @return AstilleroCotizacion
      */
@@ -529,7 +529,7 @@ class AstilleroCotizacion
     /**
      * Get subtotal
      *
-     * @return int
+     * @return decimal
      */
     public function getSubtotal()
     {
@@ -539,7 +539,7 @@ class AstilleroCotizacion
     /**
      * Set ivatotal
      *
-     * @param int $ivatotal
+     * @param decimal $ivatotal
      *
      * @return AstilleroCotizacion
      */
@@ -553,7 +553,7 @@ class AstilleroCotizacion
     /**
      * Get ivatotal
      *
-     * @return int
+     * @return decimal
      */
     public function getIvatotal()
     {
@@ -563,7 +563,7 @@ class AstilleroCotizacion
     /**
      * Set total
      *
-     * @param int $total
+     * @param decimal $total
      *
      * @return AstilleroCotizacion
      */
@@ -577,7 +577,7 @@ class AstilleroCotizacion
     /**
      * Get total
      *
-     * @return int
+     * @return decimal
      */
     public function getTotal()
     {

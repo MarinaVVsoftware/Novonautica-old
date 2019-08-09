@@ -38,12 +38,12 @@ class Servicio
     private $nombre;
 
     /**
-     * @var int
+     * @var decimal
      * @Assert\NotBlank(
      *     message="Precio no puede quedar vacío"
      * )
      *
-     * @ORM\Column(name="precio", type="bigint", nullable=true)
+     * @ORM\Column(name="precio", type="decimal", nullable=true, precision=19, scale=4)
      */
     private $precio;
 
@@ -169,7 +169,7 @@ class Servicio
     /**
      * Set precio
      *
-     * @param integer $precio
+     * @param decimal $precio
      *
      * @return Servicio
      */
@@ -183,7 +183,7 @@ class Servicio
     /**
      * Get precio
      *
-     * @return int
+     * @return decimal
      */
     public function getPrecio()
     {

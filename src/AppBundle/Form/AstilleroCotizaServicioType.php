@@ -42,8 +42,7 @@ class AstilleroCotizaServicioType extends AbstractType
             ->add('precio', MoneyType::class, [
                 'required'=>false,
                 'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
-                'currency' => 'USD',
-                'divisor' => 100,
+                'currency' => 'MXN',
                 'grouping' => true,
             ])
             ->add('estatus', null,[

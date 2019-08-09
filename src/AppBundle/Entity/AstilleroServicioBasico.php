@@ -34,9 +34,9 @@ class AstilleroServicioBasico
     private $nombre;
 
     /**
-     * @var int
+     * @var decimal
      *
-     * @ORM\Column(name="precio", type="integer")
+     * @ORM\Column(name="precio", type="decimal", precision=19, scale=4)
      */
     private $precio;
 
@@ -97,7 +97,7 @@ class AstilleroServicioBasico
     /**
      * Set precio.
      *
-     * @param int|null $precio
+     * @param decimal|null $precio
      *
      * @return AstilleroServicioBasico
      */
@@ -111,7 +111,7 @@ class AstilleroServicioBasico
     /**
      * Get precio.
      *
-     * @return int|null
+     * @return decimal|null
      */
     public function getPrecio()
     {
