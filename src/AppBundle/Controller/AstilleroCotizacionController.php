@@ -795,7 +795,7 @@ class AstilleroCotizacionController extends Controller
                 if(count($products) > 1) {
                     $email = (new \Swift_Message('Se ha validado una cotizacion'))
                     ->setFrom('noresponser@novonautica.com')
-                    ->setTo('CORREO A CAMBIAR POR EL JEFE DE PATIO')
+                    ->setTo('CORREO A CAMBIAR')
                     ->setBcc('admin@novonautica.com')
                     ->setBody(
                         $this->renderView(':astillero:cotizacion:correo.materiales.twig', [
