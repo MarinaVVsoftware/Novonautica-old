@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta content="ie=edge" http-equiv="X-UA-Compatible">
+        <link rel="stylesheet" type="text/css" href="{{ app.request.scheme ~ '://' ~ app.request.httpHost ~ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+        <title>Cotizacion PDF</title>
+
+        <style>
+            body {
+                color: #666;
+                width: 90% !important;
+                font-size: 12px;
+            }
+
+            h4,
+            h5,
+            h6 {
+                margin-top: 5px !important;
+                margin-bottom: 5px !important;
+            }
+
+            .informacion p {
+                margin: 0 !important;
+            }
+
+            .nopadding {
+                padding: 0;
+            }
+
+            table.table thead tr th:nth-last-child(2),
+            table.table thead tr th:last-child {
+                width: 17%;
+            }
+
+            table.table thead tr th {
+                border: 1px solid #458fce !important;
+                border-bottom: 0 !important;
+                background-color: #458fce;
+                color: #fff;
+            }
+
+            table.table tfoot tr th {
+                border: 1px solid #ddd !important;
+                background-color: #ddd;
+            }
+
+            .table-condensed > tbody > tr > td {
+                border: 1px solid #ddd !important;
+            }
+
+            .grey-background {
+                background-color: #ddd;
+            }
+
+            .condiciones {
+                font-size: 10px;
+            }
+
+            .container-fluid {
+                page-break-after: always;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-3" style="margin-top: 5px">
+                    <img src="{{ absolute_url(asset('img/cotizacion-03.png') ) }}" class="img-responsive imagenlogo">
+                </div>
+                <div class="col-xs-9 text-right letra-blanca fondo-bicolor-arriba" style="height: 90px; padding-top: 3px">
+                    <h4 style="margin: 0px;">
+                        <strong>Lista de Materiales</strong>
+                    </h4>
+                    <p>
+                        <strong>Folio:</strong>
+                        {% if astilleroCotizacion.foliorecotiza == 0 %}
+                            {{ astilleroCotizacion.folio }}
+                        {% else %}
+                            {{ astilleroCotizacion.folio }}-{{ astilleroCotizacion.foliorecotiza }}
+                        {% endif %}
+                        <br>
+                        <strong>Fecha:</strong>
+                        {{ astilleroCotizacion.fecharegistro|date('d/m/Y') }}
+                        <br>
+                        <strong>Cambio:</strong>
+                        ${{ (astilleroCotizacion.dolar/100)|number_format(2) }}
+                        <small>MXN</small>
+                        <br>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row informacion" style="background-color: #EAEAEA; padding-top: .5rem; padding-bottom: 1rem;">
+                <div class="col-xs-4">
+                    <h4>Información</h4>
+                    <p>
+                        <strong>Embarcación:
+                        </strong>
+                        {{ astilleroCotizacion.barco.nombre }}</p>
+                    <p>
+                        <strong>Modelo:
+                        </strong>
+                        {{ astilleroCotizacion.barco.modelo }}</p>
+
+                    {% if astilleroCotizacion.barco.nombreCapitan is not empty %}
+                        <p>
+                            <strong>Capitán:
+                            </strong>
+                            {{ astilleroCotizacion.barco.nombreCapitan }}</p>
+                        <p>
+                            <strong>Telefono del capitán:
+                            </strong>
+                            {{ astilleroCotizacion.barco.telefonoCapitan }}</p>
+                    {% endif %}
+
+                    {% if astilleroCotizacion.barco.nombreResponsable is not empty %}
+                        <p>
+                            <strong>Encargado:
+                            </strong>
+                            {{ astilleroCotizacion.barco.nombreResponsable }}</p>
+                        <p>
+                            <strong>Telefono del encargado:
+                            </strong>
+                            {{ astilleroCotizacion.barco.telefonoResponsable }}</p>
+                    {% endif %}
+                </div>
+                <div class="col-xs-4">
+                    <h4>&nbsp;</h4>
+                    <p>
+                        <strong>Lugar de trabajo:
+                        </strong>Astillero V&V
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-top:30px; text-align:center;">
+                <div class="col-xs-12">
+                    <h4 style="margin-bottom: 5px;">LISTA DE MATERIALES</h4>
+                    <table class="table table-condesed">
+                        <thead>
+                            <tr style="text-align:left;">
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Unidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                                <tr style="text-align:left;">
+                                    <td>{{ product.producto.identificador }}</td>
+                                    <td>{{ product.producto.nombre }}</td>
+                                    <td>{{ product.cantidad }}</td>
+                                    <td>{{ product.producto.unidad }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
