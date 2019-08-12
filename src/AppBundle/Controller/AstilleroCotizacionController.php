@@ -309,12 +309,12 @@ class AstilleroCotizacionController extends Controller
                     $em->remove($pincode);
                 }
                 // Buscar correos a notificar
-                $notificables = $em->getRepository("AppBundle:Correo\Notificacion")->findBy([
+                /*$notificables = $em->getRepository("AppBundle:Correo\Notificacion")->findBy([
                     "evento" => Correo\Notificacion::EVENTO_CREAR,
                     "tipo" => Correo\Notificacion::TIPO_ASTILLERO
                 ]);
 
-                $this->enviaCorreoNotificacion($mailer, $notificables, $astilleroCotizacion);
+                $this->enviaCorreoNotificacion($mailer, $notificables, $astilleroCotizacion);*/
             }
 
             return $this->redirectToRoute("astillero_show", ["id" => $astilleroCotizacion->getId()]);
