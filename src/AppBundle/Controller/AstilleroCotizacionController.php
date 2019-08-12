@@ -797,6 +797,30 @@ class AstilleroCotizacionController extends Controller
                     'tipo' => Correo\Notificacion::TIPO_ASTILLERO
                 ]);
 
+                $acServices = $astilleroCotizacion()->getAcservicios();
+                $products = [];
+        
+                foreach($acServices as $acService) {
+                    if($acService->getProducto()) {
+                        array_push($products, $acService);
+                    }
+                }
+
+                if(count($products) > 1) {
+                    $email = (new \Swift_Message('Se ha validado una cotizacion'))
+                    ->setFrom('noresponser@novonautica.com')
+                    ->setTo('CORREO A CAMBIAR')
+                    ->setBcc('admin@novonautica.com')
+                    ->setBody(
+                        $this->renderView(':astillero:cotizacion:correo.materiales.twig', [
+                            'astilleroCotizacion' => $astilleroCotizacion,
+                            'products' => $products
+                        ]),
+                        'text/html'
+                    );
+                    $mailer->send($email);
+                }
+                
                 $this->enviaCorreoNotificacion($mailer, $notificables, $astilleroCotizacion);
             }
 
