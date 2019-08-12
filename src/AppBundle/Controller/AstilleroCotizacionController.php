@@ -698,7 +698,7 @@ class AstilleroCotizacionController extends Controller
                 && $astilleroCotizacion->getValidacliente() !== 2
                 || $astilleroCotizacion->isNotificarCliente()
             ) {
-                
+
                 $token = $astilleroCotizacion->getFolio() . bin2hex(random_bytes(16));
                 $astilleroCotizacion->setToken($token);
 
@@ -796,7 +796,7 @@ class AstilleroCotizacionController extends Controller
                 if(count($products) > 1) {
                     $email = (new \Swift_Message('Se ha validado una cotizacion'))
                     ->setFrom('noresponser@novonautica.com')
-                    ->setTo('CORREO A CAMBIAR')
+                    ->setTo('astileroadm@marinavv.com')
                     ->setBcc('admin@novonautica.com')
                     ->setBody(
                         $this->renderView(':astillero:cotizacion:correo.materiales.twig', [
