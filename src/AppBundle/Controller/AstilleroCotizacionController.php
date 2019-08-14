@@ -438,7 +438,7 @@ class AstilleroCotizacionController extends Controller
             'valor' => $valor
         ]);
 
-        return $this->render('astillero/cotizacion/pdf/cotizacionDolares-new.html.twig', [
+        return $this->render('astillero/cotizacion/pdf/cotizacionPesos-new.html.twig', [
             'astilleroCotizacion' => $ac,
             'quotation' => $quotation,
             'valor' => $valor,

@@ -273,10 +273,11 @@
                     success: function(dato) {
                       throwAlert(`El producto "${dato.nombre}" tiene ${dato.existencia || '0'} existencía${dato.existencia > 1 ? 's' : ''} en el inventario`, 'info');
 
-                         var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-                         fila.children('.valorprecio').children('.input-group').children('input').val(dato.precio/100);
-                         fila.children('.valorunidad').html(dato.unidad);
-                         calculaSubtotalesAdicionales(fila);
+                        var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
+                        fila.children('.valorprecio').children('.input-group').children('input').val(dato.precio/100);
+                        fila.children('.valorunidad').html(dato.unidad);
+                        /* ALERT! esta función es de marina húmeda. Fix pendiente */
+                        calculaSubtotalesAdicionales(fila);
                     }
                 });
             }
