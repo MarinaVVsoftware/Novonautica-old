@@ -39,7 +39,7 @@ class AstilleroServicioBasicoType extends AbstractType
                 'required'=>false,
                 'attr' => ['class' => 'esdecimal','autocomplete' => 'off'],
                 'currency' => 'USD',
-                'divisor' => 100,
+                // 'divisor' => 100,
                 'grouping' => true,
             ]);
 

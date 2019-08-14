@@ -46,7 +46,7 @@ class ProductoType extends AbstractType
         $builder->add('precio', MoneyType::class, [
             'attr' => ['class' => 'esdecimal', 'autocomplete' => 'off'],
             'currency' => 'MXN',
-            'divisor' => 100,
+            // 'divisor' => 100,
             'grouping' => true,
             'empty_data' => 0,
             'label' => 'Precio (MXN)',
