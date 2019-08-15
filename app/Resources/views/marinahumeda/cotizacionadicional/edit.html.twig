@@ -250,6 +250,7 @@
                         var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
                         fila.children('.valorprecio').children('.input-group').children('input').val(dato.precio/100);
                         fila.children('.valorunidad').html(dato.unidad);
+                        /* ALERT! esta función es de marina húmeda. Fix pendiente */
                         calculaSubtotalesAdicionales(fila);
                     }
                 });

@@ -60,7 +60,6 @@ class PagoAstilleroType extends AbstractType
             ->add('cantidad',MoneyType::class,[
                 'label' => 'Pago',
                 'currency' => 'USD',
-                'divisor' => 100,
                 'grouping' => true,
                 'attr' => ['class' => 'esdecimal']
             ])

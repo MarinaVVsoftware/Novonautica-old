@@ -343,7 +343,7 @@
                             <td>Anticipo {{ loop.index }}</td>
                             <td>{{ pago.fechaRealPago|date('d-m-Y') }}</td>
                             <td>{{ pago.metodopago }}</td>
-                            <td>$ {{ (pago.cantidad / pago.dolar)|number_format(2) }}</td>
+                            <td>$ {{ (pago.cantidad / (astilleroCotizacion.dolar / 100))|number_format(2) }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
