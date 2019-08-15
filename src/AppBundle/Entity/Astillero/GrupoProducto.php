@@ -45,6 +45,13 @@ class GrupoProducto
     private $observaciones;
 
     /**
+     * @var int|null
+     * 
+     * @ORM\Column(name="porcentaje_excedente", type="smallint", nullable=true)
+     */
+    private $porcentajeExcedente;
+
+    /**
      * @var Servicio
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Astillero\Servicio", mappedBy="gruposProductos")
      */
@@ -117,6 +124,30 @@ class GrupoProducto
     public function getObservaciones()
     {
         return $this->observaciones;
+    }
+
+     /**
+     * Set porcentaje_excedente.
+     *
+     * @param int $porcentajeExcedente.
+     *
+     * @return GrupoProducto
+     */
+    public function setPorcentajeExcedente($porcentajeExcedente)
+    {
+        $this->porcentajeExcedente = $porcentajeExcedente;
+
+        return $this;
+    }
+
+    /**
+     * Get porcentaje_excedente.
+     *
+     * @return int|null
+     */
+    public function getPorcentajeExcedente()
+    {
+        return $this->porcentajeExcedente;
     }
 
     /**
