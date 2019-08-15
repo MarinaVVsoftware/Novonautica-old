@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 //collectio al agregar servicios en cotización astillero
 jQuery('.add-another-servicio').click(function (e) {
   e.preventDefault();
@@ -89,15 +79,9 @@ $('.add-producto').click(function (e){
 });
 
 function astilleroAgregaProducto(grupoProducto,idservicio){
-  console.log("astilleroAgregaProducto");
-  console.log({
-    grupoProducto, idservicio
-  });
-
     var totServicios = $('#serviciosextra').data('cantidad');
     var servicioListPrimero = jQuery('#productos');
     var newWidget = $('#serviciosextra').data('prototype');
-
     newWidget = newWidget.replace(/__name__/g, totServicios);
     newWidget = newWidget.replace('td-otroservicio', 'hide');
     newWidget = newWidget.replace('td-servicio', 'hide');
@@ -129,6 +113,13 @@ function astilleroAgregaProducto(grupoProducto,idservicio){
             productosCantidad = Math.round(eslora * grupoProducto.cantidad);
         } else {
             productosCantidad = grupoProducto.cantidad;
+        }
+        
+        let surplusPercentage = grupoProducto.porcentajeExcedente;
+        if(surplusPercentage) {
+          // Realizar la formula de cantidades aqui.
+          let quantity = (surplusPercentage * productosCantidad)/100;
+          console.log(quantity);
         }
         //fila.data('servicio-pertenece',idservicio);
         $('#appbundle_astillerocotizacion_acservicios_' + (totServicios - 1) + '_cantidad').val(productosCantidad);
@@ -194,6 +185,7 @@ function astilleroBuscaProducto(idproducto, fila) {
 }
 
 /* ALERT! esta función consume otra función de marina húmeda. Fix pendiente */
+/* ALERTA NO SE PARA QUE FUNCIONA ESTO AYUDAA 😭 */
 /** función del módulo: ASTILLERO
  */
 function recalculaPreciosOtros(){
@@ -233,6 +225,7 @@ document.querySelectorAll(".add-servicio").forEach(service => {
     let newWidget = tableServices.getAttribute("data-prototype");
 
     /* aun no descubro para que es esta línea */
+    // Set the attribute "data-cantidad" with the value "servicesLenght+1".
     tableServices.setAttribute("data-cantidad", servicesLength + 1);
 
     /* Setea varias variables dentro del html del servicio/kit */
