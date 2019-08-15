@@ -125,9 +125,9 @@ class AstilleroCotizacion
     private $adeudo;
 
     /**
-     * @var integer
+     * @var decimal
      *
-     * @ORM\Column(name="pagado", type="bigint", nullable=true)
+     * @ORM\Column(name="pagado", type="decimal", nullable=true, precision=19, scale=4)
      */
     private $pagado;
 
@@ -926,7 +926,7 @@ class AstilleroCotizacion
     }
 
     /**
-     * @return int
+     * @return decimal
      */
     public function getPagado()
     {
@@ -934,7 +934,7 @@ class AstilleroCotizacion
     }
 
     /**
-     * @param int $pagado
+     * @param decimal $pagado
      */
     public function setPagado($pagado)
     {

@@ -604,13 +604,13 @@
                                 <div class="col-sm-5">
                                     <label>Total a pagar</label>
                                     <div class="info-input">
-                                        $ {{ (astilleroCotizacion.total/100)|number_format(2) }} MXN
+                                        $ {{ astilleroCotizacion.total|number_format(2) }} MXN
                                     </div>
                                 </div>
                                 <div class="col-sm-5">
                                     <label></label>
                                     <div class="info-input">
-                                        $ {{ (astilleroCotizacion.total/(astilleroCotizacion.dolar/100))|number_format(2) }} USD
+                                        $ {{ (astilleroCotizacion.total / (astilleroCotizacion.dolar / 100))|number_format(2) }} USD
                                     </div>
                                 </div>
                             </div>
@@ -638,12 +638,12 @@
                                             {#{% set factura = pago.factura %}#}
                                             <tr>
                                                 <td>{{ pago.metodopago }}</td>
-                                                <td>$ {{ (pago.cantidad/100)|number_format(2) }} MXN</td>
+                                                <td>$ {{ pago.cantidad|number_format(2) }} MXN</td>
                                                 <td>{% if pago.fechaRealPago %}
                                                         {{ pago.fechaRealPago|date('d-m-Y') }}
                                                     {% endif %}</td>
-                                                <td>$ {{ (pago.dolar/100)|number_format(2) }} MXN</td>
-                                                <td>$ {{ (pago.cantidad / pago.dolar)|number_format(2) }} USD</td>
+                                                <td>$ {{ (pago.dolar / 100)|number_format(2) }} MXN</td>
+                                                <td>$ {{ (pago.cantidad / (pago.dolar / 100))|number_format(2) }} USD</td>
                                                 {#<td>
                                                     {% if factura %}
                                                         <a href="{{ path('contabilidad_factura_pdf', { 'id': factura.id }) }}"
@@ -656,7 +656,7 @@
                                                     {% endif %}
                                                 </td>#}
                                             </tr>
-                                            {% set totUSD = totUSD + (pago.cantidad / pago.dolar)  %}
+                                            {% set totUSD = totUSD + (pago.cantidad / (pago.dolar / 100))  %}
                                         {% endfor %}
                                         </tbody>
                                     </table>
@@ -671,7 +671,7 @@
                                 <div class="col-sm-5">
                                     <label>Pagado hasta el momento</label>
                                     <div class="info-input">
-                                        $ {{ (astilleroCotizacion.pagado/100)|number_format(2) }} MXN
+                                        $ {{ astilleroCotizacion.pagado|number_format(2) }} MXN
                                     </div>
                                 </div>
                                 <div class="col-sm-5">
@@ -685,13 +685,13 @@
                                 <div class="col-sm-5">
                                     <label>Saldo faltante</label>
                                     <div class="info-input">
-                                        $ {{ ((astilleroCotizacion.total-astilleroCotizacion.pagado)/100)|number_format(2) }} MXN
+                                        $ {{ (astilleroCotizacion.total - astilleroCotizacion.pagado)|number_format(2) }} MXN
                                     </div>
                                 </div>
                                 <div class="col-sm-5">
                                     <label></label>
                                     <div class="info-input">
-                                        $ {{ ((astilleroCotizacion.total-astilleroCotizacion.pagado)/(astilleroCotizacion.dolar/100))|number_format(2) }} USD
+                                        $ {{ ((astilleroCotizacion.total - astilleroCotizacion.pagado) / (astilleroCotizacion.dolar / 100))|number_format(2) }} USD
                                     </div>
                                 </div>
                             </div>

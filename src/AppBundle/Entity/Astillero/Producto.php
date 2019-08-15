@@ -48,10 +48,10 @@ class Producto
     private $nombre;
 
     /**
-     * @var int
+     * @var decimal
      * @Assert\NotBlank(message="Precio no puede quedar vacío")
      *
-     * @ORM\Column(name="precio", type="bigint", nullable=true)
+     * @ORM\Column(name="precio", type="decimal", nullable=true, precision=19, scale=4)
      */
     private $precio;
 
