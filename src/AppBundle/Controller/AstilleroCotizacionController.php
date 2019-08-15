@@ -696,7 +696,7 @@ class AstilleroCotizacionController extends Controller
 
             if ($astilleroCotizacion->getValidanovo() === 2
                 && $astilleroCotizacion->getValidacliente() !== 2
-                || $astilleroCotizacion->isNotificarCliente()
+                && $astilleroCotizacion->isNotificarCliente()
             ) {
 
                 $token = $astilleroCotizacion->getFolio() . bin2hex(random_bytes(16));
