@@ -687,28 +687,41 @@ function totalDiasLaborales(start, end) {
  * Recalcula los días del astillero (por alguna razón).
  */
 function calculaDiasEstadiaAstillero() {
-  var llegada = $("#appbundle_astillerocotizacion_fechaLlegada").val();
-  var salida = $("#appbundle_astillerocotizacion_fechaSalida").val();
-  var diasLaborales = totalDiasLaborales(llegada, salida);
-  var diasDescuento = 0;
+  let llegada = document.getElementById(
+    "appbundle_astillerocotizacion_fechaLlegada"
+  ).value;
+  let salida = document.getElementById(
+    "appbundle_astillerocotizacion_fechaSalida"
+  ).value;
+  let diasLaborales = totalDiasLaborales(llegada, salida);
+  let diasDescuento = 0;
+
   document
     .getElementById("serviciosextra")
     .querySelectorAll("tr")
     .forEach(
       servicio =>
         (diasDescuento += Number(
-          $(servicio)
-            .children(".valorpromedio")
-            .children("input")
-            .val()
+          servicio.querySelector(".valorpromedio").innerHTML
         ))
     );
-  var dias = diasLaborales - diasDescuento;
-  $("#appbundle_astillerocotizacion_diasEstadia").val(dias);
-  var nueva_estadia_cantidad = dias * $("#estadia_cantidad").data("eslora");
-  $("#estadia_cantidad").data("dias", dias);
-  $("#estadia_cantidad").data("valor", nueva_estadia_cantidad);
-  $("#estadia_cantidad").html(dias + " (pie por día)");
+
+  let dias = diasLaborales - diasDescuento;
+
+  document.getElementById(
+    "appbundle_astillerocotizacion_diasEstadia"
+  ).value = dias;
+
+  let nuevaEstadiaCantidad =
+    dias * document.getElementById("estadia_cantidad").dataset["eslora"];
+  document.getElementById("estadia_cantidad").dataset["dias"] = dias;
+  document.getElementById("estadia_cantidad").dataset[
+    "valor"
+  ] = nuevaEstadiaCantidad;
+  document.getElementById(
+    "estadia_cantidad"
+  ).innerHTML = `${dias} (pie por día)`;
+
   calculaSubtotalesAstillero($("#fila_estadia"));
 }
 
@@ -745,6 +758,13 @@ function calculaSubtotalesAstillero(fila) {
   /* Convierte el precio a pesos si viene en dólares, para calcular los totales */
   if (fila.children(".valorprecio").data("divisa") === "USD")
     precio = precio * dolar;
+
+  console.log({
+    fila,
+    precio,
+    dolar,
+    iva
+  });
 
   let nuevaCantidad = 0;
 
@@ -894,48 +914,51 @@ function getIdService(id) {
 }
 
 /* Eventos "click" de los checkboxs en la pestaña "Servicios Básicos" */
-document
-  .getElementById(getIdService(0))
-  .addEventListener("click", () =>
-    astilleroOcultaMuestraFila(getIdService(0), "fila_grua")
-  );
-document
-  .getElementById(getIdService(1))
-  .addEventListener("click", () =>
-    astilleroOcultaMuestraFila(getIdService(1), "fila_estadia")
-  );
-document
-  .getElementById(getIdService(2))
-  .addEventListener("click", () =>
-    astilleroOcultaMuestraFila(getIdService(2), "cotizarampa")
-  );
-document
-  .getElementById(getIdService(3))
-  .addEventListener("click", () =>
-    astilleroOcultaMuestraFila(getIdService(3), "cotizakarcher")
-  );
-document
-  .getElementById(getIdService(4))
-  .addEventListener("click", () =>
-    astilleroOcultaMuestraFila(getIdService(4), "cotizaexplanada")
-  );
-document
-  .getElementById(getIdService(5))
-  .addEventListener("click", () =>
-    astilleroOcultaMuestraFila(getIdService(5), "cotizaelectricidad")
-  );
-document
-  .getElementById(getIdService(6))
-  .addEventListener("click", () =>
-    astilleroOcultaMuestraFila(getIdService(6), "cotizalimpieza")
-  );
-document
-  .getElementById(getIdService(7))
-  .addEventListener("click", () =>
-    astilleroOcultaMuestraFila(getIdService(7), "cotizainspeccionar")
-  );
+if (document.getElementById(getIdService(0)) != null)
+  document
+    .getElementById(getIdService(0))
+    .addEventListener("click", () =>
+      astilleroOcultaMuestraFila(getIdService(0), "fila_grua")
+    );
+if (document.getElementById(getIdService(1)) != null) {
+  document
+    .getElementById(getIdService(1))
+    .addEventListener("click", () =>
+      astilleroOcultaMuestraFila(getIdService(1), "fila_estadia")
+    );
+  document
+    .getElementById(getIdService(2))
+    .addEventListener("click", () =>
+      astilleroOcultaMuestraFila(getIdService(2), "cotizarampa")
+    );
+  document
+    .getElementById(getIdService(3))
+    .addEventListener("click", () =>
+      astilleroOcultaMuestraFila(getIdService(3), "cotizakarcher")
+    );
+  document
+    .getElementById(getIdService(4))
+    .addEventListener("click", () =>
+      astilleroOcultaMuestraFila(getIdService(4), "cotizaexplanada")
+    );
+  document
+    .getElementById(getIdService(5))
+    .addEventListener("click", () =>
+      astilleroOcultaMuestraFila(getIdService(5), "cotizaelectricidad")
+    );
+  document
+    .getElementById(getIdService(6))
+    .addEventListener("click", () =>
+      astilleroOcultaMuestraFila(getIdService(6), "cotizalimpieza")
+    );
+  document
+    .getElementById(getIdService(7))
+    .addEventListener("click", () =>
+      astilleroOcultaMuestraFila(getIdService(7), "cotizainspeccionar")
+    );
+}
 if (document.getElementById(getIdService(8)) != null)
-  ocument
+  document
     .getElementById(getIdService(8))
     .addEventListener("click", () =>
       astilleroOcultaMuestraFila(getIdService(8), "fila_dia_adicional")
