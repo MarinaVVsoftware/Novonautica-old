@@ -438,14 +438,6 @@ class AstilleroCotizacionController extends Controller
             'valor' => $valor
         ]);
 
-        return $this->render('astillero/cotizacion/pdf/cotizacionPesos-new.html.twig', [
-            'astilleroCotizacion' => $ac,
-            'quotation' => $quotation,
-            'valor' => $valor,
-            'bancoPesos' => $bancoPesos,
-            'bancoDolares' => $bancoDolares
-        ]);
-
         $hojapdf = $this->get('knp_snappy.pdf');
 
         $options = [
