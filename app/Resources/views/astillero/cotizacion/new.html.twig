@@ -1244,51 +1244,62 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-      (function ($) {
-        /* Variables */
-        let $selectBarcoBuscar = $('.selectbarcobuscar');
-        let $productos = $('#productos');
-        let discountInput = document.getElementById('appbundle_astillerocotizacion_descuento');
-        let pincodeContainer = document.getElementById('pincode-container');
-        
-        let thereIsDiscount = () => {
-          if (Number(discountInput.value) > 0) {
-            pincodeContainer.classList.remove('hidden');
-          } else {
+    /* Javascript Module Pattern */
+    (() => {
+        /* variables elementos html */
+        let selectBarcoBuscar = document.querySelector(".selectbarcobuscar");
+        let productos = document.getElementById("productos");
+        let discountInput = document.getElementById("appbundle_astillerocotizacion_descuento");
+
+        /* Detecta si se ha establecido algún descuento, de ser
+        así, muestra el input de "pincode". */
+        const thereIsDiscount = () => {
+            let pincodeContainer = document.getElementById('pincode-container');
+            Number(discountInput.value) > 0 ?
+            pincodeContainer.classList.remove('hidden') : 
             pincodeContainer.classList.add('hidden');
-          }
         };
 
-        /* Ejecuta una primera vez las funciones al hacer el render */
-        generateAndGetClientData();
-        thereIsDiscount();
+        const generateProductList = () => {
+          var idproducto = $('.select-busca-producto:focus option:selected').val();
+          var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
+          astilleroBuscaProducto(idproducto, fila);
+        }
 
-        /* Bindings en diferentes forms de la vista */
-        $selectBarcoBuscar.on('change', generateAndGetClientData);
-        $productos.on('change', generateProductList);
-        discountInput.addEventListener('input', thereIsDiscount);
+        function calculaServiciosExtraAstillero() {
+          let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
+          servicios.forEach(servicio => agregaCantidadServicioAstillero(servicio));
+        }
 
-        function generateAndGetClientData() {
+        function agregaCantidadServicioAstillero(fila) {
+          if (Number($(fila).children('.valortipo').children('input').val()) === 1) {
+            let eslora = document.getElementById('eslora') ? document.getElementById('eslora').dataset.valor : 1;
+            $(fila).children('.valorcantidad').children('input').val(eslora);
+            $(fila).children('.valorcantidad').data('valor', eslora);
+            calculaSubtotalesAstillero($(fila));
+          }
+        }
+
+        /* Petición AJAX que obtiene el cliente, sus datos, y los muestra en 
+        la pestaña de "Generales" en Astillero */
+        const generateAndGetClientData = () => {
             /* Carga la animación de loading y limpia los estados */
-            $('#loading').show();
-            $("#info-barco").empty();
-            $("#info-cliente").empty();
+            document.getElementById("loading").style.display = "";
+            document.getElementById("info-barco").innerHTML = "";
+            document.getElementById("info-cliente").innerHTML = "";
 
             /* usa la url general para traer todos los barcos y popular el select,
             pero le añade el id a la url cuando se selecciona un barco para obtener
             los datos de ese barco. */
-            var url = "{{ path('ajax_busca_barco_todo', {'id':'iddelbarco'}) }}";
-            url = url.replace("iddelbarco", $selectBarcoBuscar.val());
+            let url = `/ajax/buscabarcotodo/${selectBarcoBuscar.value}`;
 
-            /* Realiza una peticion GET vía AJAX */
-            $.ajax({
-                url: url,
-                method: "GET",
-                dataType: 'json',
-                success: (barco) => {
+            /* Realiza una peticion GET vía FETCH */
+            fetch(url, {method: "GET"})
+            .then(res => res.json())
+            .then(barco => {
                 /* Variables */
                     let cliente = barco.cliente;
-                    let nuevaEstadiaCantidad = $("#estadia_cantidad").data('dias') * barco.eslora;
+                    let nuevaEstadiaCantidad = Number(document.getElementById("estadia_cantidad").dataset["dias"]) * barco.eslora;
 
                     /* Crea el html de los datos del barco y cliente y los renderea */
                     const htmlBarco = "<label>Modelo</label>" +
@@ -1310,19 +1321,21 @@
                         "<div class='info-input'>" + cliente.telefono + "</div>" +
                         "<label>Dirección</label>" +
                         "<div class='info-input'>" + cliente.direccion + "</div>";
-                    $("#info-barco").append(htmlBarco);
-                    $("#info-cliente").append(htmlCliente);
-                    $('.barco-nombre').html("<label>Barco</label>" + "<div class='info-input'>" + barco.nombre + "</div>");
-                    $('.barco-eslora').html("<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>");
-                    $('.cliente-nombre').html("<label>Cliente</label>" + "<div class='info-input'>" + barco.cliente.nombre + "</div>");
+                    
+                    /* Muestra la información del cliente y del barco */
+                    document.getElementById("info-barco").innerHTML = htmlBarco;
+                    document.getElementById("info-cliente").innerHTML = htmlCliente;
+                    document.querySelector('.barco-nombre').innerHTML = "<label>Barco</label>" + "<div class='info-input'>" + barco.nombre + "</div>";
+                    document.querySelector('.barco-eslora').innerHTML = "<label>Eslora</label>" + "<div class='info-input'>" + barco.eslora + "</div>";
+                    document.querySelector('.cliente-nombre').innerHTML = "<label>Cliente</label>" + "<div class='info-input'>" + barco.cliente.nombre + "</div>";
 
                     /* Modifica los servicios básicos a partir de la eslora obtenida */
-                    $("#grua_cantidad").data('valor', barco.eslora);
-                    $("#grua_cantidad").html(barco.eslora);
-                    $("#estadia_cantidad").data('eslora', barco.eslora);
-                    $("#estadia_cantidad").data('valor', nuevaEstadiaCantidad);
-                    $("#inspeccionar_cantidad").data('valor', barco.eslora);
-                    $("#inspeccionar_cantidad").html(barco.eslora);
+                    document.getElementById("grua_cantidad").dataset["valor"] = barco.eslora;
+                    document.getElementById("grua_cantidad").innerHTML = barco.eslora;
+                    document.getElementById("estadia_cantidad").dataset["eslora"] = barco.eslora;
+                    document.getElementById("estadia_cantidad").dataset["valor"] = nuevaEstadiaCantidad;
+                    document.getElementById("inspeccionar_cantidad").dataset["valor"] = barco.eslora;
+                    document.getElementById("inspeccionar_cantidad").innerHTML = barco.eslora;
 
                     /* Recalcula todos los precios de los servicios que utilizan la eslora */
                     calculaSubtotalesAstillero($('#fila_grua'));
@@ -1333,30 +1346,18 @@
 
                     /* Quita la animación de carga */
                     $('#loading').hide();
-                }
             });
         }
 
-        function generateProductList() {
-          var idproducto = $('.select-busca-producto:focus option:selected').val();
-          var fila = $('.select-busca-producto:focus option:selected').parent().parent().parent();
-          astilleroBuscaProducto(idproducto, fila);
-        }
+        /* Ejecuta una primera vez las funciones al hacer el render */
+        generateAndGetClientData();
+        thereIsDiscount();
 
-        function calculaServiciosExtraAstillero() {
-          let servicios = document.getElementById('serviciosextra').querySelectorAll('tr');
-          servicios.forEach(servicio => agregaCantidadServicioAstillero(servicio));
-        }
-
-        function agregaCantidadServicioAstillero(fila) {
-          if (Number($(fila).children('.valortipo').children('input').val()) === 1) {
-            let eslora = document.getElementById('eslora') ? document.getElementById('eslora').dataset.valor : 1;
-            $(fila).children('.valorcantidad').children('input').val(eslora);
-            $(fila).children('.valorcantidad').data('valor', eslora);
-            calculaSubtotalesAstillero($(fila));
-          }
-        }
-      })(jQuery);
+        /* Bindings en diferentes forms de la vista */
+        selectBarcoBuscar.onchange = generateAndGetClientData;
+        productos.onchange = generateProductList;
+        discountInput.addEventListener("input", thereIsDiscount);
+      })();
 
       $('.btnPrevious').click(function () {
         $('.nav-tabs > .active').prev('li').find('a').trigger('click');
