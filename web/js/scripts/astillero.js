@@ -1,5 +1,5 @@
 //collectio al agregar servicios en cotización astillero
-jQuery(".add-another-servicio").click(function(e) {
+jQuery(".add-another-servicio").click(function (e) {
   e.preventDefault();
   var totServicios = $("#serviciosextra").data("cantidad");
   var servicioListPrimero = jQuery("#otros");
@@ -30,7 +30,7 @@ jQuery(".add-another-servicio").click(function(e) {
   newLi.before(newLi);
 });
 
-$("#serviciosextra").on("click", ".remove-servicio", function(e) {
+$("#serviciosextra").on("click", ".remove-servicio", function (e) {
   e.preventDefault();
   // Descomentar si se requiere que se borre el servicio con los productos asociados
   var fila = $(this)
@@ -42,7 +42,7 @@ $("#serviciosextra").on("click", ".remove-servicio", function(e) {
     .val();
   if (idservicio > 0) {
     //si se borra un servicio con productos asociados
-    $.each($("#productos tr"), function(i, filaproducto) {
+    $.each($("#productos tr"), function (i, filaproducto) {
       // si pertenecen al mismo kit los productos con los servicios
       if (
         $(filaproducto)
@@ -70,7 +70,7 @@ $("#serviciosextra").on("click", ".remove-servicio", function(e) {
   //calculaTotalesAstillero();
   return false;
 });
-$("#otros").on("click", ".remove-servicio", function(e) {
+$("#otros").on("click", ".remove-servicio", function (e) {
   e.preventDefault();
   $(this)
     .parent()
@@ -79,7 +79,7 @@ $("#otros").on("click", ".remove-servicio", function(e) {
   calculaTotalesAstillero();
   return false;
 });
-$("#productos").on("click", ".remove-servicio", function(e) {
+$("#productos").on("click", ".remove-servicio", function (e) {
   e.preventDefault();
   $(this)
     .parent()
@@ -88,7 +88,7 @@ $("#productos").on("click", ".remove-servicio", function(e) {
   calculaTotalesAstillero();
   return false;
 });
-$(".lista-servicios").on("click", ".elimina-producto", function(e) {
+$(".lista-servicios").on("click", ".elimina-producto", function (e) {
   e.preventDefault();
   // var fila = $(this).parent().parent();
   // var idservicio = fila.children('.valorgrupo').children('input').val();
@@ -112,7 +112,7 @@ $(".lista-servicios").on("click", ".elimina-producto", function(e) {
   return false;
 });
 //---- aparecer form collection con select de productos ----
-$(".add-producto").click(function(e) {
+$(".add-producto").click(function (e) {
   e.preventDefault();
   astilleroAgregaProducto(0, 0);
 });
@@ -140,8 +140,8 @@ function astilleroAgregaProducto(grupoProducto, idservicio) {
 
   var fila = $(
     "#appbundle_astillerocotizacion_acservicios_" +
-      (totServicios - 1) +
-      "_producto"
+    (totServicios - 1) +
+    "_producto"
   )
     .parent()
     .parent();
@@ -151,20 +151,20 @@ function astilleroAgregaProducto(grupoProducto, idservicio) {
   if (grupoProducto === 0) {
     $(
       "#appbundle_astillerocotizacion_acservicios_" +
-        (totServicios - 1) +
-        "_cantidad"
+      (totServicios - 1) +
+      "_cantidad"
     ).val(1);
     $(
       "#appbundle_astillerocotizacion_acservicios_" +
-        (totServicios - 1) +
-        "_cantidad"
+      (totServicios - 1) +
+      "_cantidad"
     )
       .parent()
       .data("valor", 1);
     $(
       "#appbundle_astillerocotizacion_acservicios_" +
-        (totServicios - 1) +
-        "_producto"
+      (totServicios - 1) +
+      "_producto"
     ).val("");
   } else {
     var productosCantidad = 0;
@@ -188,43 +188,43 @@ function astilleroAgregaProducto(grupoProducto, idservicio) {
     //fila.data('servicio-pertenece',idservicio);
     $(
       "#appbundle_astillerocotizacion_acservicios_" +
-        (totServicios - 1) +
-        "_cantidad"
+      (totServicios - 1) +
+      "_cantidad"
     ).val(productosCantidad);
     $(
       "#appbundle_astillerocotizacion_acservicios_" +
-        (totServicios - 1) +
-        "_cantidad"
+      (totServicios - 1) +
+      "_cantidad"
     )
       .parent()
       .data("valor", productosCantidad);
     $(
       "#appbundle_astillerocotizacion_acservicios_" +
-        (totServicios - 1) +
-        "_producto"
+      (totServicios - 1) +
+      "_producto"
     ).val(grupoProducto.producto.id);
     $(
       "#appbundle_astillerocotizacion_acservicios_" +
-        (totServicios - 1) +
-        "_tipoCantidad"
+      (totServicios - 1) +
+      "_tipoCantidad"
     ).val(grupoProducto.tipoCantidad);
     $(
       "#appbundle_astillerocotizacion_acservicios_" +
-        (totServicios - 1) +
-        "_promedio"
+      (totServicios - 1) +
+      "_promedio"
     ).val(grupoProducto.cantidad);
     $(
       "#appbundle_astillerocotizacion_acservicios_" +
-        (totServicios - 1) +
-        "_grupo"
+      (totServicios - 1) +
+      "_grupo"
     ).val(idservicio);
 
     fila.children(".valorprecio").html(
       "$ " +
-        parseFloat(grupoProducto.producto.precio)
-          .toFixed(2)
-          .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-        " <small>MXN</small>"
+      parseFloat(grupoProducto.producto.precio)
+        .toFixed(2)
+        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+      " <small>MXN</small>"
     );
     fila.children(".valorprecio").data("valor", grupoProducto.producto.precio);
     fila.children(".valorpromedio").append(grupoProducto.cantidad);
@@ -239,7 +239,7 @@ function calculaProductosPorServicio() {
       ? 0
       : $("#eslora").data("valor");
   var productos = 0;
-  $.each($("#productos").children(), function(i, fila) {
+  $.each($("#productos").children(), function (i, fila) {
     var celdaCantidad = $(fila).children(".valorcantidad");
     var celdaTipo = $(fila)
       .children(".valortipo")
@@ -322,8 +322,8 @@ function recalculaPreciosServicios() {
       $(
         botonera.querySelector(
           "[data-id='" +
-            fila.querySelector(".select-busca-servicio").value +
-            "']"
+          fila.querySelector(".select-busca-servicio").value +
+          "']"
         )
       )
     );
@@ -475,11 +475,11 @@ function agregaPrecioServiciosExtra(fila, idservicio, boton) {
   $(fila.children(".td-libre")).html(boton.data("nombre"));
   $(fila.children(".valorprecio")).html(
     "$" +
-      (boton.data("precio") / 100)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-      " " +
-      boton.data("divisa")
+    (boton.data("precio") / 100)
+      .toFixed(2)
+      .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+    " " +
+    boton.data("divisa")
   );
   if (boton.data("divisa") === "USD") {
     precio = ((boton.data("precio") * dolar) / 100).toFixed(2);
@@ -493,7 +493,7 @@ function agregaPrecioServiciosExtra(fila, idservicio, boton) {
   calculaSubtotalesAstillero(fila);
 }
 
-$(".lista-pagos").on("click", ".remove-pago", function(e) {
+$(".lista-pagos").on("click", ".remove-pago", function (e) {
   e.preventDefault();
   $(this)
     .parent()
@@ -503,10 +503,10 @@ $(".lista-pagos").on("click", ".remove-pago", function(e) {
 });
 
 //---------- colection al agregar contratista a ODT -----------------
-jQuery(".add-another-proveedor").click(function(e) {
+jQuery(".add-another-proveedor").click(function (e) {
   coleccionContratistaODT(e, this, "", 0, 0, 1, 0);
 });
-$(".lista-proveedores").on("click", ".remove-proveedor", function(e) {
+$(".lista-proveedores").on("click", ".remove-proveedor", function (e) {
   e.preventDefault();
   $(this)
     .parent()
@@ -536,8 +536,8 @@ function coleccionContratistaODT(
   newLi.appendTo(proveedorListPrimero);
   $(
     "#appbundle_ordendetrabajo_contratistas_" +
-      (totProveedor - 1) +
-      "_cotizacionInicial"
+    (totProveedor - 1) +
+    "_cotizacionInicial"
   ).val(descripcion);
   $(
     "#appbundle_ordendetrabajo_contratistas_" + (totProveedor - 1) + "_cantidad"
@@ -575,7 +575,7 @@ function coleccionContratistaODT(
   return newLi[0];
 }
 //---------- colection al agregar bancos a un proveedor -----------------
-jQuery(".add-another-banco").click(function(e) {
+jQuery(".add-another-banco").click(function (e) {
   e.preventDefault();
   var totBanco = $(this).data("cantidad");
   var lista = $(this).data("idlista");
@@ -589,7 +589,7 @@ jQuery(".add-another-banco").click(function(e) {
   newLi.before(newLi);
 });
 
-$(".lista-bancos").on("click", ".remove-banco", function(e) {
+$(".lista-bancos").on("click", ".remove-banco", function (e) {
   e.preventDefault();
   $(this)
     .parent()
@@ -599,7 +599,7 @@ $(".lista-bancos").on("click", ".remove-banco", function(e) {
 });
 
 //----- colección agregar elementos (uso general) ------
-jQuery(".agrega-elemento").click(function(e) {
+jQuery(".agrega-elemento").click(function (e) {
   e.preventDefault();
   var totElementos = $(this).data("cantidad");
   var lista = $(this).data("idlista");
@@ -614,7 +614,7 @@ jQuery(".agrega-elemento").click(function(e) {
   $(".select-buscador").select2();
 });
 
-$(".lista-elementos").on("click", ".elimina-elemento", function(e) {
+$(".lista-elementos").on("click", ".elimina-elemento", function (e) {
   e.preventDefault();
   $(this)
     .parent()
@@ -625,7 +625,7 @@ $(".lista-elementos").on("click", ".elimina-elemento", function(e) {
 
 //--- select dependiente para astillero cotización ---
 var elclienteastillero = $("#appbundle_astillerocotizacion_cliente");
-elclienteastillero.change(function() {
+elclienteastillero.change(function () {
   // ... retrieve the corresponding form.
   var form = $(this).closest("form");
   // Simulate form data, but only include the selected elcliente value.
@@ -637,7 +637,7 @@ elclienteastillero.change(function() {
     url: form.attr("action"),
     type: form.attr("method"),
     data: data,
-    success: function(html) {
+    success: function (html) {
       // Replace current position field ...
       $("#appbundle_astillerocotizacion_barco").replaceWith(
         // ... with the returned one from the AJAX response.
@@ -696,17 +696,19 @@ function calculaDiasEstadiaAstillero() {
   let diasLaborales = totalDiasLaborales(llegada, salida);
   let diasDescuento = 0;
 
-  document
-    .getElementById("serviciosextra")
-    .querySelectorAll("tr")
-    .forEach(
-      servicio =>
-        (diasDescuento += Number(
-          servicio.querySelector(".valorpromedio").innerHTML
-        ))
-    );
+  // document
+  //   .getElementById("serviciosextra")
+  //   .querySelectorAll("tr")
+  //   .forEach(
+  //     servicio =>
+  //       (diasDescuento += Number(
+  //         servicio.querySelector(".valorpromedio").innerHTML
+  //       ))
+  //   );
 
   let dias = diasLaborales - diasDescuento;
+
+  console.log({ llegada, salida, diasLaborales, diasDescuento });
 
   document.getElementById(
     "appbundle_astillerocotizacion_diasEstadia"
@@ -759,19 +761,12 @@ function calculaSubtotalesAstillero(fila) {
   if (fila.children(".valorprecio").data("divisa") === "USD")
     precio = precio * dolar;
 
-  console.log({
-    fila,
-    precio,
-    dolar,
-    iva
-  });
-
   let nuevaCantidad = 0;
 
   fila.attr("id") == "fila_estadia"
     ? (nuevaCantidad = document.getElementById("estadia_cantidad").dataset[
-        "valor"
-      ])
+      "valor"
+    ])
     : (nuevaCantidad = fila.children(".valorcantidad").data("valor"));
 
   let nuevoSubtotal = nuevaCantidad * precio;
@@ -785,24 +780,24 @@ function calculaSubtotalesAstillero(fila) {
     .children(".valorsubtotal")
     .html(
       "$ " +
-        nuevoSubtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-        " <small>MXN</small>"
+      nuevoSubtotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+      " <small>MXN</small>"
     );
   fila.children(".valorsubtotal").data("valor", nuevoSubtotal);
   fila
     .children(".valoriva")
     .html(
       "$ " +
-        nuevoIva.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-        " <small>MXN</small>"
+      nuevoIva.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+      " <small>MXN</small>"
     );
   fila.children(".valoriva").data("valor", nuevoIva);
   fila
     .children(".valortotal")
     .html(
       "$ " +
-        nuevoTotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-        " <small>MXN</small>"
+      nuevoTotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+      " <small>MXN</small>"
     );
   fila.children(".valortotal").data("valor", nuevoTotal);
 
@@ -981,7 +976,7 @@ $("#appbundle_astillerocotizacion_fechaSalida").on("change", () =>
 );
 
 /* Astillero -> Servicios Básicos -> Días de estadía */
-$("#appbundle_astillerocotizacion_diasEstadia").keyup(function() {
+$("#appbundle_astillerocotizacion_diasEstadia").keyup(function () {
   var dias = $(this).val();
   var nueva_estadia_cantidad = dias * $("#estadia_cantidad").data("eslora");
   $("#estadia_cantidad").data("dias", dias);
@@ -1024,7 +1019,7 @@ $("#appbundle_astillerocotizacion_dolar").keyup(() => {
     calculaSubtotalesAstillero($("#fila_dia_adicional"));
   }
 
-  $("#serviciosextra .servicio-agregado").each(function() {
+  $("#serviciosextra .servicio-agregado").each(function () {
     divisa = $(this)
       .children(".valorprecio")
       .data("divisa");
@@ -1042,29 +1037,29 @@ $("#appbundle_astillerocotizacion_dolar").keyup(() => {
 });
 
 /* Astillero -> Servicios Básicos -> Descuento */
-$("#appbundle_astillerocotizacion_descuento").keyup(function() {
+$("#appbundle_astillerocotizacion_descuento").keyup(function () {
   calculaTotalesAstillero();
 });
 
 /* Bindings de inputs de "servicios básicos" */
 
-$("#appbundle_astillerocotizacion_acservicios_0_precio").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_0_precio").keyup(function () {
   var grua_precio = $(this)
     .val()
     .replace(",", "");
   $("#grua_precio").html(
     "$ " +
-      parseFloat(grua_precio)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-      " <small>MXN</small>"
+    parseFloat(grua_precio)
+      .toFixed(2)
+      .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+    " <small>MXN</small>"
   );
   $("#grua_precio").data("valor", grua_precio);
   var fila = $("#fila_grua");
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_1_precio").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_1_precio").keyup(function () {
   var estadia_precio = $(this)
     .val()
     .replace(",", "");
@@ -1073,16 +1068,16 @@ $("#appbundle_astillerocotizacion_acservicios_1_precio").keyup(function() {
   $("#estadia_precio").data("valor", estadia_precio_usd.toFixed(2));
   $("#estadia_precio").html(
     "$ " +
-      parseFloat(estadia_precio)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-      " <small>USD</small>"
+    parseFloat(estadia_precio)
+      .toFixed(2)
+      .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+    " <small>USD</small>"
   );
   var fila = $("#fila_estadia");
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_2_cantidad").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_2_cantidad").keyup(function () {
   var rampa_cantidad = $(this).val();
   $("#rampa_cantidad").html(rampa_cantidad);
   $("#rampa_cantidad").data("valor", rampa_cantidad);
@@ -1090,23 +1085,23 @@ $("#appbundle_astillerocotizacion_acservicios_2_cantidad").keyup(function() {
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_2_precio").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_2_precio").keyup(function () {
   var rampa_precio = $(this)
     .val()
     .replace(",", "");
   $("#rampa_precio").html(
     "$ " +
-      parseFloat(rampa_precio)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-      " <small>MXN</small>"
+    parseFloat(rampa_precio)
+      .toFixed(2)
+      .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+    " <small>MXN</small>"
   );
   $("#rampa_precio").data("valor", rampa_precio);
   var fila = $("#cotizarampa");
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_3_cantidad").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_3_cantidad").keyup(function () {
   var karcher_cantidad = $(this).val();
   $("#karcher_cantidad").html(karcher_cantidad);
   $("#karcher_cantidad").data("valor", karcher_cantidad);
@@ -1114,23 +1109,23 @@ $("#appbundle_astillerocotizacion_acservicios_3_cantidad").keyup(function() {
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_3_precio").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_3_precio").keyup(function () {
   var karcher_precio = $(this)
     .val()
     .replace(",", "");
   $("#karcher_precio").html(
     "$ " +
-      parseFloat(karcher_precio)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-      " <small>MXN</small>"
+    parseFloat(karcher_precio)
+      .toFixed(2)
+      .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+    " <small>MXN</small>"
   );
   $("#karcher_precio").data("valor", karcher_precio);
   var fila = $("#cotizakarcher");
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_4_cantidad").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_4_cantidad").keyup(function () {
   var explanada_cantidad = $(this).val();
   $("#explanada_cantidad").html(explanada_cantidad);
   $("#explanada_cantidad").data("valor", explanada_cantidad);
@@ -1138,23 +1133,23 @@ $("#appbundle_astillerocotizacion_acservicios_4_cantidad").keyup(function() {
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_4_precio").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_4_precio").keyup(function () {
   var explanada_precio = $(this)
     .val()
     .replace(",", "");
   $("#explanada_precio").html(
     "$ " +
-      parseFloat(explanada_precio)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-      " <small>MXN</small>"
+    parseFloat(explanada_precio)
+      .toFixed(2)
+      .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+    " <small>MXN</small>"
   );
   $("#explanada_precio").data("valor", explanada_precio);
   var fila = $("#cotizaexplanada");
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_5_cantidad").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_5_cantidad").keyup(function () {
   var electricidad_cantidad = $(this).val();
   $("#electricidad_cantidad").html(electricidad_cantidad);
   $("#electricidad_cantidad").data("valor", electricidad_cantidad);
@@ -1162,23 +1157,23 @@ $("#appbundle_astillerocotizacion_acservicios_5_cantidad").keyup(function() {
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_5_precio").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_5_precio").keyup(function () {
   var electricidad_precio = $(this)
     .val()
     .replace(",", "");
   $("#electricidad_precio").html(
     "$ " +
-      parseFloat(electricidad_precio)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-      " <small>MXN</small>"
+    parseFloat(electricidad_precio)
+      .toFixed(2)
+      .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+    " <small>MXN</small>"
   );
   $("#electricidad_precio").data("valor", electricidad_precio);
   var fila = $("#cotizaelectricidad");
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_6_cantidad").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_6_cantidad").keyup(function () {
   var limpieza_cantidad = $(this).val();
   $("#limpieza_cantidad").html(limpieza_cantidad);
   $("#limpieza_cantidad").data("valor", limpieza_cantidad);
@@ -1186,43 +1181,43 @@ $("#appbundle_astillerocotizacion_acservicios_6_cantidad").keyup(function() {
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_6_precio").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_6_precio").keyup(function () {
   var limpieza_precio = $(this)
     .val()
     .replace(",", "");
   $("#limpieza_precio").html(
     "$ " +
-      parseFloat(limpieza_precio)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-      " <small>MXN</small>"
+    parseFloat(limpieza_precio)
+      .toFixed(2)
+      .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+    " <small>MXN</small>"
   );
   $("#limpieza_precio").data("valor", limpieza_precio);
   var fila = $("#cotizalimpieza");
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_7_precio").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_7_precio").keyup(function () {
   var inspeccionar_precio = $(this)
     .val()
     .replace(",", "");
   $("#inspeccionar_precio").html(
     "$ " +
-      parseFloat(inspeccionar_precio)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
-      " <small>MXN</small>"
+    parseFloat(inspeccionar_precio)
+      .toFixed(2)
+      .replace(/(\d)(?=(\d{3})+\.)/g, "$1,") +
+    " <small>MXN</small>"
   );
   $("#inspeccionar_precio").data("valor", inspeccionar_precio);
   var fila = $("#cotizainspeccionar");
   calculaSubtotalesAstillero(fila);
 });
 
-$("#appbundle_astillerocotizacion_acservicios_8_cantidad").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_8_cantidad").keyup(function () {
   astilleroDiasAdicionalesCantidad($(this).val());
 });
 
-$("#appbundle_astillerocotizacion_acservicios_8_precio").keyup(function() {
+$("#appbundle_astillerocotizacion_acservicios_8_precio").keyup(function () {
   var dias_adicionales_precio = $(this).val();
   var dolar = $("#appbundle_astillerocotizacion_dolar").val();
   var dias_adicionales_precio_mxn = dias_adicionales_precio * dolar;
@@ -1237,7 +1232,7 @@ $("#appbundle_astillerocotizacion_acservicios_8_precio").keyup(function() {
  * SIN ORDENAR
  ***************************************/
 
-$(".tabla-astillero").on("keyup", "input", function() {
+$(".tabla-astillero").on("keyup", "input", function () {
   var clasecelda = $(this)
     .parent()
     .attr("class");
