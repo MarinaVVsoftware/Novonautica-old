@@ -34,7 +34,7 @@ $(document).ready(function () {
   var $selectBuscador = $('.select-buscador');
 
   if ($selectBuscador.length) {
-  $selectBuscador.select2();
+    $selectBuscador.select2();
   }
 
   if ($.fn.datepicker) {
@@ -187,7 +187,7 @@ function esNumeroDecimal(e, field) {
     can.on('input', function () {
       calculateProducto(this, precio, subtotalHolder);
       console.log($(this).parent().parent().find('.entregado'));
-        $(this).parent().parent().find('.entregado').val($(this).val());
+      $(this).parent().parent().find('.entregado').val($(this).val());
     });
   });
 
@@ -327,8 +327,8 @@ elclientemh.change(function () {
     success: function (html) {
       // Replace current position field ...
       $('#appbundle_marinahumedacotizacion_barco').replaceWith(
-          // ... with the returned one from the AJAX response.
-          $(html).find('#appbundle_marinahumedacotizacion_barco')
+        // ... with the returned one from the AJAX response.
+        $(html).find('#appbundle_marinahumedacotizacion_barco')
       );
       // barco field now displays the appropriate barcos.
     }
@@ -351,8 +351,8 @@ elcliente.change(function () {
     success: function (html) {
       // Replace current position field ...
       $('#appbundle_marinahumedacotizacionadicional_barco').replaceWith(
-          // ... with the returned one from the AJAX response.
-          $(html).find('#appbundle_marinahumedacotizacionadicional_barco')
+        // ... with the returned one from the AJAX response.
+        $(html).find('#appbundle_marinahumedacotizacionadicional_barco')
       );
       // barco field now displays the appropriate barcos.
     }
@@ -388,11 +388,11 @@ var electricityDays = $("#appbundle_marinahumedacotizacion_diasElectricidad");
 
 /* Marina Húmeda */
 // Evento para la actualizacion de las tablas y precios por dias de electricidad.
-electricityDays.on("change",function () {
+electricityDays.on("change", function () {
   var dias_estadia = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
 
   // Si los dias de electricidad superan los dias de estadia, lo reduce a los dias de estadia.
-  if(dias_estadia < electricityDays.val()) {
+  if (dias_estadia < electricityDays.val()) {
     electricityDays.val(dias_estadia);
   }
   // Setea los dias de electricidad
@@ -401,13 +401,13 @@ electricityDays.on("change",function () {
 
   // Obtiene los precios
   e_precio = electricidadOtroPrecio.value ?
-  electricidadOtroPrecio.value :
-  ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
+    electricidadOtroPrecio.value :
+    ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
   e_precio_mxn = e_precio * dolar;
 
   // Recalcula todo
-  calculaSubtotales(electricityDays.val(), e_precio, descuento_electricidad.val(),$('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
-  calculaSubtotales(electricityDays.val(), e_precio_mxn, descuento_electricidad.val(),$('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+  calculaSubtotales(electricityDays.val(), e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+  calculaSubtotales(electricityDays.val(), e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
   calculaTotales();
 });
 
@@ -427,7 +427,7 @@ $('#appbundle_marinahumedacotizacion_fechaLlegada').on("change", function () {
   de_precio_mxn = de_precio * dolar;
 
   // Si los dias de electricidad superan los dias de estadia, lo reduce a los dias de estadia.
-  if(dias_estadia < electricityDays.val()) {
+  if (dias_estadia < electricityDays.val()) {
     electricityDays.val(dias_estadia);
   }
   $('#de_cantidad').html(dias_estadia);
@@ -442,13 +442,13 @@ $('#appbundle_marinahumedacotizacion_fechaLlegada').on("change", function () {
 
   // Obtiene los precios
   e_precio = electricidadOtroPrecio.value ?
-  electricidadOtroPrecio.value :
-  ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
+    electricidadOtroPrecio.value :
+    ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
   e_precio_mxn = e_precio * dolar;
 
   // Recalcula todo
-  calculaSubtotales(electricityDays.val(), e_precio, descuento_electricidad.val(),$('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
-  calculaSubtotales(electricityDays.val(), e_precio_mxn, descuento_electricidad.val(),$('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+  calculaSubtotales(electricityDays.val(), e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+  calculaSubtotales(electricityDays.val(), e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
   calculaTotales();
 });
 
@@ -468,27 +468,27 @@ $('#appbundle_marinahumedacotizacion_fechaSalida').on("change", function () {
   de_precio_mxn = de_precio * dolar;
 
   // Si los dias de electricidad superan los dias de estadia, lo reduce a los dias de estadia.
-  if(dias_estadia < electricityDays.val()) {
+  if (dias_estadia < electricityDays.val()) {
     electricityDays.val(dias_estadia);
   }
   $('#de_cantidad').html(dias_estadia);
   $('#de_cantidad_mxn').html(dias_estadia);
 
   calculaSubtotales(dias_estadia, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
-  calculaSubtotales(dias_estadia, de_precio_mxn, descuento_estadia.val(),$('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
+  calculaSubtotales(dias_estadia, de_precio_mxn, descuento_estadia.val(), $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
 
   $('#e_cantidad').html(electricityDays.val());
   $('#e_cantidad_mxn').html(electricityDays.val());
 
   // Obtiene los precios
   e_precio = electricidadOtroPrecio.value ?
-  electricidadOtroPrecio.value :
-  ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
+    electricidadOtroPrecio.value :
+    ($('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').val() / 100);
   e_precio_mxn = e_precio * dolar;
 
   // Recalcula todo
-  calculaSubtotales(electricityDays.val(), e_precio, descuento_electricidad.val(),$('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
-  calculaSubtotales(electricityDays.val(), e_precio_mxn, descuento_electricidad.val(),$('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+  calculaSubtotales(electricityDays.val(), e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+  calculaSubtotales(electricityDays.val(), e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
   calculaTotales();
 });
 
@@ -513,88 +513,88 @@ $('#appbundle_marinahumedacotizacion_diasEstadia').keyup(function () {
 });
 
 /* Marina Húmeda */
-function recalculaCantidadYprecio (){
-   dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-   dias_estadia = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
-   $('#de_cantidad').html(dias_estadia);
-   $('#de_cantidad_mxn').html(dias_estadia);
+function recalculaCantidadYprecio() {
+  dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+  dias_estadia = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
+  $('#de_cantidad').html(dias_estadia);
+  $('#de_cantidad_mxn').html(dias_estadia);
 
-   $('#e_cantidad').html(dias_estadia);
-   $('#e_cantidad_mxn').html(dias_estadia);
+  $('#e_cantidad').html(dias_estadia);
+  $('#e_cantidad_mxn').html(dias_estadia);
 
-   let de_precio = estadiaOtroPrecio.value ? estadiaOtroPrecio.value : (estadiaSelectPrecios.value/100);
-   let de_precio_mxn = (de_precio * dolar).toFixed(2);
-   $('#de_precio').html('$ ' + de_precio);
-   $('#de_precio_mxn').html('$ ' + de_precio_mxn);
+  let de_precio = estadiaOtroPrecio.value ? estadiaOtroPrecio.value : (estadiaSelectPrecios.value / 100);
+  let de_precio_mxn = (de_precio * dolar).toFixed(2);
+  $('#de_precio').html('$ ' + de_precio);
+  $('#de_precio_mxn').html('$ ' + de_precio_mxn);
 
-   let e_precio = electricidadOtroPrecio.value ? electricidadOtroPrecio.value : (electricidadSelectPrecios.value/100);
-   let e_precio_mxn = (e_precio * dolar).toFixed(2);
-   $('#e_precio').html('$ ' + e_precio);
-   $('#e_precio_mxn').html('$ ' + e_precio_mxn);
-   recalculaSubtotalesYtotal();
+  let e_precio = electricidadOtroPrecio.value ? electricidadOtroPrecio.value : (electricidadSelectPrecios.value / 100);
+  let e_precio_mxn = (e_precio * dolar).toFixed(2);
+  $('#e_precio').html('$ ' + e_precio);
+  $('#e_precio_mxn').html('$ ' + e_precio_mxn);
+  recalculaSubtotalesYtotal();
 }
 
 /* Marina Húmeda */
 $('#appbundle_marinahumedacotizacion_mhcservicios_0_precio').on('change', function () {
-    estadiaOtroPrecio.value = '';
-    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-    de_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
-    de_precio = ($(this).val() / 100);
-    de_precio_mxn = (de_precio * dolar).toFixed(2);
-
-    $('#de_precio').html('$ ' + de_precio);
-    $('#de_precio_mxn').html('$ ' + de_precio_mxn);
-    calculaSubtotales(de_cantidad, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
-    calculaSubtotales(de_cantidad, de_precio_mxn, descuento_estadia.val(), $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
-    calculaTotales();
-
-});
-
-/* Marina Húmeda */
-if(estadiaOtroPrecio){
-  estadiaOtroPrecio.addEventListener('keyup',() => {
-    estadiaSelectPrecios.value = '';
+  estadiaOtroPrecio.value = '';
   dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
   de_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
-  de_precio = estadiaOtroPrecio.value ? estadiaOtroPrecio.value : 0;
+  de_precio = ($(this).val() / 100);
   de_precio_mxn = (de_precio * dolar).toFixed(2);
+
   $('#de_precio').html('$ ' + de_precio);
   $('#de_precio_mxn').html('$ ' + de_precio_mxn);
   calculaSubtotales(de_cantidad, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
   calculaSubtotales(de_cantidad, de_precio_mxn, descuento_estadia.val(), $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
   calculaTotales();
+
+});
+
+/* Marina Húmeda */
+if (estadiaOtroPrecio) {
+  estadiaOtroPrecio.addEventListener('keyup', () => {
+    estadiaSelectPrecios.value = '';
+    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+    de_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
+    de_precio = estadiaOtroPrecio.value ? estadiaOtroPrecio.value : 0;
+    de_precio_mxn = (de_precio * dolar).toFixed(2);
+    $('#de_precio').html('$ ' + de_precio);
+    $('#de_precio_mxn').html('$ ' + de_precio_mxn);
+    calculaSubtotales(de_cantidad, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
+    calculaSubtotales(de_cantidad, de_precio_mxn, descuento_estadia.val(), $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
+    calculaTotales();
   });
 }
 
 /* Marina Húmeda */
 $('#appbundle_marinahumedacotizacion_mhcservicios_1_precioAux').on('change', function () {
-    electricidadOtroPrecio.value = '';
-    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
-    e_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
-    e_precio = ($(this).val() / 100);
-    e_precio_mxn = (e_precio * dolar).toFixed(2);
-
-    $('#e_precio').html('$ ' + e_precio);
-    $('#e_precio_mxn').html('$ ' + e_precio_mxn);
-    calculaSubtotales(e_cantidad, e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
-    calculaSubtotales(e_cantidad, e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
-    calculaTotales();
-
-});
-
-/* Marina Húmeda */
-if(electricidadOtroPrecio){
-  electricidadOtroPrecio.addEventListener('keyup',() => {
-    electricidadSelectPrecios.value = '';
+  electricidadOtroPrecio.value = '';
   dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
   e_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
-  e_precio = electricidadOtroPrecio.value ? electricidadOtroPrecio.value : 0;
+  e_precio = ($(this).val() / 100);
   e_precio_mxn = (e_precio * dolar).toFixed(2);
+
   $('#e_precio').html('$ ' + e_precio);
   $('#e_precio_mxn').html('$ ' + e_precio_mxn);
   calculaSubtotales(e_cantidad, e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
   calculaSubtotales(e_cantidad, e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
   calculaTotales();
+
+});
+
+/* Marina Húmeda */
+if (electricidadOtroPrecio) {
+  electricidadOtroPrecio.addEventListener('keyup', () => {
+    electricidadSelectPrecios.value = '';
+    dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
+    e_cantidad = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
+    e_precio = electricidadOtroPrecio.value ? electricidadOtroPrecio.value : 0;
+    e_precio_mxn = (e_precio * dolar).toFixed(2);
+    $('#e_precio').html('$ ' + e_precio);
+    $('#e_precio_mxn').html('$ ' + e_precio_mxn);
+    calculaSubtotales(e_cantidad, e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
+    calculaSubtotales(e_cantidad, e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
+    calculaTotales();
   });
 }
 
@@ -619,13 +619,13 @@ function recalculaSubtotalesYtotal() {
   dolar = $('#appbundle_marinahumedacotizacion_dolar').val();
   dias_estadia = $('#appbundle_marinahumedacotizacion_diasEstadia').val();
   de_cantidad = dias_estadia;
-  de_precio = estadiaOtroPrecio.value ? estadiaOtroPrecio.value : (estadiaSelectPrecios.value/100);
+  de_precio = estadiaOtroPrecio.value ? estadiaOtroPrecio.value : (estadiaSelectPrecios.value / 100);
   de_precio_mxn = de_precio * dolar;
   calculaSubtotales(de_cantidad, de_precio, descuento_estadia.val(), $('#de_subtotal'), $('#de_iva'), $('#de_descuento'), $('#de_total'));
-  calculaSubtotales(de_cantidad, de_precio_mxn,descuento_estadia.val(), $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
+  calculaSubtotales(de_cantidad, de_precio_mxn, descuento_estadia.val(), $('#de_subtotal_mxn'), $('#de_iva_mxn'), $('#de_descuento_mxn'), $('#de_total_mxn'));
 
   e_cantidad = dias_estadia;
-  e_precio = electricidadOtroPrecio.value ? electricidadOtroPrecio.value : (electricidadSelectPrecios.value/100);
+  e_precio = electricidadOtroPrecio.value ? electricidadOtroPrecio.value : (electricidadSelectPrecios.value / 100);
   e_precio_mxn = e_precio * dolar;
   calculaSubtotales(e_cantidad, e_precio, descuento_electricidad.val(), $('#e_subtotal'), $('#e_iva'), $('#e_descuento'), $('#e_total'));
   calculaSubtotales(e_cantidad, e_precio_mxn, descuento_electricidad.val(), $('#e_subtotal_mxn'), $('#e_iva_mxn'), $('#e_descuento_mxn'), $('#e_total_mxn'));
@@ -634,21 +634,21 @@ function recalculaSubtotalesYtotal() {
 }
 
 /* Marina Húmeda */
-function calculaSubtotales(cantidad, precio,descuento, tdsubtot, tdiva, tddesc, tdtot) {
-    var eslora = 0;
-    if ($('#de_eslora').data('valor')) {
-        eslora = $('#de_eslora').data('valor');
-    }
-    var iva = ($('#valiva').data('valor')) / 100;
-    var subtotal = cantidad * precio * eslora;
-    var desctot = (subtotal * descuento) / 100;
-    var subtotal_descuento = subtotal - desctot;
-    var ivatot = subtotal_descuento * iva;
-    var total = (subtotal_descuento + ivatot).toFixed(2);
+function calculaSubtotales(cantidad, precio, descuento, tdsubtot, tdiva, tddesc, tdtot) {
+  var eslora = 0;
+  if ($('#de_eslora').data('valor')) {
+    eslora = $('#de_eslora').data('valor');
+  }
+  var iva = ($('#valiva').data('valor')) / 100;
+  var subtotal = cantidad * precio * eslora;
+  var desctot = (subtotal * descuento) / 100;
+  var subtotal_descuento = subtotal - desctot;
+  var ivatot = subtotal_descuento * iva;
+  var total = (subtotal_descuento + ivatot).toFixed(2);
 
   tdsubtot.html('$ ' + (subtotal).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
   tdiva.html('$ ' + (ivatot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-  tddesc.html('$ ' + (desctot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' ('+descuento+'%)');
+  tddesc.html('$ ' + (desctot).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' (' + descuento + '%)');
   tdtot.html('$ ' + total.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 
   tdsubtot.data('valor', subtotal);
@@ -661,23 +661,24 @@ function calculaSubtotales(cantidad, precio,descuento, tdsubtot, tdiva, tddesc, 
 function calculaTotales() {
 
   var gransubtotal = (
-      parseFloat($('#de_subtotal').data('valor')) +
-      parseFloat($('#e_subtotal').data('valor'))
+    parseFloat($('#de_subtotal').data('valor')) +
+    parseFloat($('#e_subtotal').data('valor'))
   ).toFixed(2);
 
   var graniva = (
-      parseFloat($('#de_iva').data('valor')) +
-      parseFloat($('#e_iva').data('valor'))
+    parseFloat($('#de_iva').data('valor')) +
+    parseFloat($('#e_iva').data('valor'))
   ).toFixed(2);
 
   var grandescuento = (
-      parseFloat($('#de_descuento').data('valor')) +
-      parseFloat($('#e_descuento').data('valor'))
+    parseFloat($('#de_descuento').data('valor')) +
+    parseFloat($('#e_descuento').data('valor'))
   ).toFixed(2);
 
   var grantotal = (
-      parseFloat($('#de_total').data('valor')) +
-      parseFloat($('#e_total').data('valor'))
+    parseFloat($('#de_total').data('valor')) +
+    parseFloat($('#e_total').data('valor'))
+
   ).toFixed(2);
 
   $('#gransubtot').html(gransubtotal.replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
@@ -704,7 +705,7 @@ $('#servicioAdicional').on('keyup', 'input', function () {
 
 /* Marina Húmeda */
 $('#appbundle_marinahumedacotizacionadicional_iva').on('keyup', function () {
-    document.querySelectorAll('.servicio-agregado').forEach(fila =>{calculaSubtotalesAdicionales($(fila))});
+  document.querySelectorAll('.servicio-agregado').forEach(fila => { calculaSubtotalesAdicionales($(fila)) });
 });
 
 /* ALERT! -> esta función se consume por astillero. Cuidado. */
@@ -756,7 +757,7 @@ if (inputFiles.length) { // Hay que asegurarse que hay inputs en la pagina para 
       label.innerHTML = this.files.length > 1 ? `${this.files.length} archivos seleccionados` : e.target.value.split('\\').pop();
     });
   })
-  ;
+    ;
 }
 
 /* CONFIGURACIÓN BÁSICA PARA DATATABLES */
@@ -782,8 +783,8 @@ const datatablesSettings = {
   },
   searchDelay: 500,
   columnDefs: [
-    {targets: 'no-sort', orderable: false},
-    {targets: 'no-show', visible: false, searchable: false}
+    { targets: 'no-sort', orderable: false },
+    { targets: 'no-show', visible: false, searchable: false }
   ],
   initComplete: function () {
     this.api().columns('.with-choices').every(function () {
@@ -806,11 +807,11 @@ const datatablesSettings = {
         url: `${location.protocol + '//' + location.host + location.pathname}${columnName}.json`,
         success: function (options) {
           options
-              .map(opt => opt.nombre || opt.name)
-              .filter((item, index, array) => array.indexOf(item || '') === index)
-              .sort()
-              .forEach(optionValue => select.add(new Option(optionValue, optionValue)))
-          ;
+            .map(opt => opt.nombre || opt.name)
+            .filter((item, index, array) => array.indexOf(item || '') === index)
+            .sort()
+            .forEach(optionValue => select.add(new Option(optionValue, optionValue)))
+            ;
         }
       });
       // LIMITADO A LOS DATOS QUE RECIBE EN EL PRIMER QUERY
@@ -880,13 +881,13 @@ function throwAlert(message, type) {
 }
 
 const formularioGeneral = document.querySelector('form');
-if( formularioGeneral ) {
-    if(!$(':input[type="submit"]').hasClass('no-loading')){
-        $(':input[type="submit"]').data('loading-text', 'Cargando...');
-        formularioGeneral.addEventListener('submit', function () {
-            $(':input[type="submit"]').button('loading');
-        });
-    }
+if (formularioGeneral) {
+  if (!$(':input[type="submit"]').hasClass('no-loading')) {
+    $(':input[type="submit"]').data('loading-text', 'Cargando...');
+    formularioGeneral.addEventListener('submit', function () {
+      $(':input[type="submit"]').button('loading');
+    });
+  }
 }
 
 /** ********************************************************************
